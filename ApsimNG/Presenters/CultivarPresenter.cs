@@ -38,7 +38,7 @@ namespace UserInterface.Presenters
             this.view = view as IEditorView;
             this.explorerPresenter = explorerPresenter;
 
-            this.view.Lines = this.cultivar.Commands;
+            this.view.Lines = this.cultivar.Command;
             intellisense = new IntellisensePresenter(this.view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
@@ -65,7 +65,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (this.view.Lines != this.cultivar.Commands)
+                if (this.view.Lines != this.cultivar.Command)
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
@@ -104,7 +104,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.Lines = this.cultivar.Commands;
+            this.view.Lines = this.cultivar.Command;
         }
 
         /// <summary>

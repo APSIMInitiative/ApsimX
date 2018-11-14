@@ -142,6 +142,10 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
+    <Compile Include="Core\ApsimFile\Structure.cs" />
+    <Compile Include="Core\ApsimFile\XmlConverters.cs" />
+    <Compile Include="Core\ApsimFile\XmlToJson.cs" />
     <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />
@@ -174,8 +178,9 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
-    <Compile Include="Core\ApsimFile\Format.cs" />
+    <Compile Include="Core\ApsimFile\FileFormat.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
+    <Compile Include="Core\Interfaces\IOptionallySerialiseChildren.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
@@ -669,7 +674,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <None Include="Resources\ruminant.prm" />
-    <None Include="Resources\Wheat.xml">
+    <None Include="Resources\Wheat.json">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -680,23 +685,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OilPalm.xml">
+    <None Include="Resources\OilPalm.json">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Oats.xml">
+    <None Include="Resources\Oats.json">
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="Resources\Maize.xml" />
-    <None Include="Resources\Chicory.xml" />
-    <None Include="Resources\Potato.xml" />
-    <None Include="Resources\Plantain.xml" />
-    <Content Include="Resources\SurfaceOrganicMatter.xml">
+    </None>
+    <None Include="Resources\Maize.json" />
+    <None Include="Resources\Chicory.json" />
+    <None Include="Resources\Potato.json" />
+    <None Include="Resources\Plantain.json" />
+    <None Include="Resources\SurfaceOrganicMatter.json">
       <SubType>Designer</SubType>
-    </Content>
-    <None Include="Resources\SCRUM.xml" />
-    <None Include="Resources\Slurp.xml" />
+    </None>
+    <None Include="Resources\SCRUM.json" />
+    <None Include="Resources\Slurp.json" />
     <None Include="Resources\Supplement.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -708,12 +713,4 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>-->
-  <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
-    <!-- Delete the file because I can't figure out how to force the SGen task. -->
-    <Delete Files="$(TargetDir)$(TargetName).XmlSerializers.dll" ContinueOnError="true" />
-    <SGen Condition="'$(OS)' == 'Windows_NT' OR '$(OS)' == 'WINDOWS'" BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
-      <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
-    </SGen>
-    <Exec Condition="'$(OS)' == 'Unix' AND Exists('$(ProjectDir)sgen.exe')" Command="mono '$(ProjectDir)/sgen.exe' /force '$(TargetFileName)'" WorkingDirectory="$(TargetDir)" />
-  </Target>
 </Project>

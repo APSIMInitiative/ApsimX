@@ -1,0 +1,3734 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
+  <Name>Simulations</Name>
+  <Memo>
+    <Name>Notes on the ClimateController</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+    <MemoText><![CDATA[The purpose of the “ClimateController” Manager component is to modify the daily weather supplied to the simulation before any other components use the data.  It can be used, for example:
+
+* to approximate climate change by adding a few degrees of temperature to MinT and MaxT;
+* to 'correct' a weather file if the rainfall or temerature is known to be not quite appropriate for a location;
+* create a heat stress event by modifying temperatures for a short defined period of time;
+* create a drought by setting Rain to zero for a period of time.
+
+Of course many other possibilities exist.  See the testing below for various ways of interacting with the ClimateController component.
+
+
+**General parameters**:
+
+* *AllowControl*, “Enable?” – enables or not the whole component
+* *EnableDate*, “Start the climate controls beginning on date (dd/mmm/yyyy): ” – if this date is greater than the simulation start date then the climate controls will only be applied on and after this date.  This date can appear part way through a within-year control window (see below).
+* *WithinYearControl*, “Implement climate control only during part of the year?")] ” – if the controls are to be applied during only part of a year (e.g. warming up the winter months) then set this to Yes and then set appropriate dates for the next two parameters
+* *ControlStart*, “Within each year, the first day to start the climate controls is (dd-mmm)")] Within each year, end last day of climate control is (dd-mmm)” – the date without a year (e.g. 15-mar) that is the first day that the climate controls will start if WithinYearControl is set to Yes
+* *ControlEnd*, “” – the date without a year (e.g. 30-apr) that is the last day of climate controls if WithinYearControl is set to Yes
+
+Weather parameters:
+
+* *RainfallMultiplier*, “Rainfall multiplier (-)” – the value by which to multiply the value of rain from the weather file, set <1 to decrease rainfall, =1 to have no effect, and >1 to increase rainfall
+* *RainfallAddition*, “Rainfall addition (mm)” – the value to add to the value of rain from the weather file, set <0 to decrease rainfall, =0 to have no effect, and >0 to increase rainfall
+
+And as above but for other weather variables:
+
+* RadiationMultiplier
+* RadiationAddition
+* MinTMultiplier
+* MinTAddition
+* MaxTMultiplier
+* MaxTAddition
+* WindMultiplier
+* WindAddition
+* VPMultiplier
+* VPAddition
+
+Limitations:
+
+* the component makes no checks at all about the validity of the changes (e.g. Radiation can be set bit be negative)
+* there is currently no year-on-year change allowed (e.g. temperatures increasing by an increasing percentage each year compared to the base weather file)
+* it should be possible to have more than one ClimateController component in the simulation to create more complex patterns but this has not been tested
+]]></MemoText>
+  </Memo>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+  </DataStore>
+  <Folder>
+    <Name>TestClimateControlSettings</Name>
+    <Memo>
+      <Name>Tests of the general settings</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <MemoText><![CDATA[This series of simulations tests that:
+
+* That disabling or enabling the whole component works (CompletelyOff)
+* Enabling the start of any climate control works (EnableFrom01Jan, EnableFrom05Jan, EnableFrom15Jan)
+* That the within-year window of control works (WithinYearControl)
+* That the start of any climate control works properly with a winthin-year window (WithinYearControlAndEnableDate)]]></MemoText>
+    </Memo>
+    <Experiment>
+      <Name>ClimateControlTestSettings</Name>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>ClimateScenarios</Name>
+          <Factor>
+            <Name>CompletelyOff</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=false</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>EnableFrom01Jan</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-01</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>EnableFrom05Jan</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-05</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>EnableFrom15Jan</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-15</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>WithinYearControl</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-01</string>
+              <string>[ClimateController].Script.WithinYearControl=true</string>
+              <string>[ClimateController].Script.ControlStart=05-jan</string>
+              <string>[ClimateController].Script.ControlEnd=25-jan</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>WithinYearControlAndEnableDate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-10</string>
+              <string>[ClimateController].Script.WithinYearControl=true</string>
+              <string>[ClimateController].Script.ControlStart=05-jan</string>
+              <string>[ClimateController].Script.ControlEnd=25-jan</string>
+            </Specifications>
+          </Factor>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Specifications />
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </Factors>
+      <Simulation>
+        <Name>ClimateControl</Name>
+        <Clock>
+          <Name>Clock</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <StartDate>1980-01-01T00:00:00</StartDate>
+          <EndDate>1981-01-31T00:00:00</EndDate>
+        </Clock>
+        <Weather>
+          <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <ExcelWorkSheetName />
+        </Weather>
+        <Manager>
+          <Name>ClimateController</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <AllowControl>True</AllowControl>
+            <EnableDate>1980-01-15</EnableDate>
+            <WithinYearControl>False</WithinYearControl>
+            <ControlStart>15-jan</ControlStart>
+            <ControlEnd>20-jan</ControlEnd>
+            <RainfallMultiplier>0</RainfallMultiplier>
+            <RainfallAddition>15</RainfallAddition>
+            <RadiationMultiplier>0</RadiationMultiplier>
+            <RadiationAddition>45</RadiationAddition>
+            <MinTMultiplier>0</MinTMultiplier>
+            <MinTAddition>35</MinTAddition>
+            <MaxTMultiplier>0</MaxTMultiplier>
+            <MaxTAddition>65</MaxTAddition>
+            <WindMultiplier>0</WindMultiplier>
+            <WindAddition>15</WindAddition>
+            <VPMultiplier>0</VPMultiplier>
+            <VPAddition>30</VPAddition>
+          </Script>
+          <Code><![CDATA[using System;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        // - Links to APSIM models
+        [Link] Zone zone;
+        [Link] Clock clock;
+        [Link] Weather weather;
+        [Link] ISummary summary = null;
+
+        // - Paramters for this manager
+        [Description("Enable? Set to 'No' to completely disable this manager")] public bool AllowControl { get; set; }
+
+        [Separator("General settings")]
+        [Description("Start the climate controls beginning on date (dd/mmm/yyyy): ")] public DateTime EnableDate { get; set; }
+        [Description("Implement climate control only during part of the year?")] public bool WithinYearControl { get; set; }
+        [Description("Within each year, the first day to start the climate controls is (dd-mmm)")] public string ControlStart { get; set; }
+        [Description("Within each year, end last day of climate control is (dd-mmm)")] public string ControlEnd { get; set; }
+
+        [Separator("Rainfall")]
+        [Description("Rainfall multiplier (-): ")] public double RainfallMultiplier { get; set; }
+        [Description("Rainfall addition (mm): ")] public double RainfallAddition { get; set; }
+
+        [Separator("Radiation")]
+        [Description("Radiation multiplier (-): ")] public double RadiationMultiplier { get; set; }
+        [Description("Radiation addition (MJ/m2): ")] public double RadiationAddition { get; set; }
+
+        [Separator("Minimum temperature")]
+        [Description("Minimum temperature multiplier (-): ")] public double MinTMultiplier { get; set; }
+        [Description("Minimum temperature addition (C): ")] public double MinTAddition { get; set; }
+
+        [Separator("Maximum temperature")]
+        [Description("Maximum temperature multiplier (-): ")] public double MaxTMultiplier { get; set; }
+        [Description("Maximum temperature addition (C): ")] public double MaxTAddition { get; set; }
+
+        [Separator("Wind speed")]
+        [Description("Wind speed multiplier (-): ")] public double WindMultiplier { get; set; }
+        [Description("Wind speed addition (m/s): ")] public double WindAddition { get; set; }
+
+        [Separator("Vapour pressure")]
+        [Description("Vapour pressure multiplier (-): ")] public double VPMultiplier { get; set; }
+        [Description("Vapour pressure addition (hPa): ")] public double VPAddition { get; set; }
+
+        [XmlIgnore] public bool DoControl { get; set; }
+        [XmlIgnore] public int DoControlInt { get; set; }
+
+        [EventSubscribe("PreparingNewWeatherData")] private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Check if this manager is enabled
+            if ((AllowControl) && (clock.Today >= EnableDate))
+            {
+            	DoControl = true;
+	            if (WithinYearControl)
+	            	DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); 
+            }
+
+            if (DoControl)
+            	DoControlInt = 1;
+            else
+            	DoControlInt = 0;
+
+            if (DoControl)
+            {
+                // do the weather alterations 
+                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;
+                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;
+                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;
+                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;
+                weather.Wind = WindMultiplier * weather.Wind + WindAddition;
+                weather.VP = VPMultiplier * weather.VP + VPAddition;
+            }
+        }
+	}
+}
+]]></Code>
+        </Manager>
+        <Summary>
+          <Name>Summary</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <CaptureErrors>true</CaptureErrors>
+          <CaptureWarnings>true</CaptureWarnings>
+          <CaptureSummaryText>true</CaptureSummaryText>
+        </Summary>
+        <SoilArbitrator>
+          <Name>SoilArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Field</Name>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+            <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+            <NightInterceptionFraction>0.5</NightInterceptionFraction>
+            <ReferenceHeight>2</ReferenceHeight>
+          </MicroClimate>
+          <Irrigation>
+            <Name>Irrigation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </Irrigation>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <ResourceName>SurfaceOrganicMatter</ResourceName>
+            <InitialResidueName>Sward</InitialResidueName>
+            <InitialResidueType>grass</InitialResidueType>
+            <InitialResidueMass>1000</InitialResidueMass>
+            <InitialStandingFraction>0</InitialStandingFraction>
+            <InitialCPR>0</InitialCPR>
+            <InitialCNR>15</InitialCNR>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Soil>
+            <Name>LismoreSoil</Name>
+            <Analysis>
+              <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <Rocks>
+                <double>0</double>
+                <double>0</double>
+                <double>10</double>
+                <double>40</double>
+                <double>60</double>
+                <double>70</double>
+                <double>70</double>
+              </Rocks>
+              <Texture />
+              <MunsellColour />
+              <PH>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+              </PH>
+              <CEC>
+                <double>12.5</double>
+                <double>10</double>
+                <double>9</double>
+                <double>5</double>
+                <double>4</double>
+                <double>4</double>
+                <double>4</double>
+              </CEC>
+              <ParticleSizeSand>
+                <double>15</double>
+                <double>20</double>
+                <double>25</double>
+                <double>35</double>
+                <double>40</double>
+                <double>40</double>
+                <double>40</double>
+              </ParticleSizeSand>
+              <ParticleSizeSilt>
+                <double>65</double>
+                <double>65</double>
+                <double>63</double>
+                <double>57</double>
+                <double>54</double>
+                <double>55</double>
+                <double>55</double>
+              </ParticleSizeSilt>
+              <ParticleSizeClay>
+                <double>20</double>
+                <double>15</double>
+                <double>12</double>
+                <double>8</double>
+                <double>6</double>
+                <double>5</double>
+                <double>5</double>
+              </ParticleSizeClay>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>SwardSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <LL>
+                  <double>0.15</double>
+                  <double>0.14</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>RyegrassSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <LL>
+                  <double>0.15</double>
+                  <double>0.14</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>WhiteCloverSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <LL>
+                  <double>0.15</double>
+                  <double>0.14</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.35</double>
+                <double>1</double>
+                <double>0.53</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.12</double>
+                <double>0.055</double>
+                <double>0.015</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </AirDry>
+              <LL15>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.055</double>
+                <double>0.015</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </LL15>
+              <DUL>
+                <double>0.36</double>
+                <double>0.34</double>
+                <double>0.19</double>
+                <double>0.065</double>
+                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.03</double>
+              </DUL>
+              <SAT>
+                <double>0.45</double>
+                <double>0.43</double>
+                <double>0.25</double>
+                <double>0.15</double>
+                <double>0.11</double>
+                <double>0.11</double>
+                <double>0.11</double>
+              </SAT>
+              <KS>
+                <double>5000</double>
+                <double>2500</double>
+                <double>3000</double>
+                <double>10000</double>
+                <double>17500</double>
+                <double>20000</double>
+                <double>20000</double>
+              </KS>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>6</SummerU>
+              <SummerCona>3.5</SummerCona>
+              <WinterDate>1-apr</WinterDate>
+              <WinterU>2</WinterU>
+              <WinterCona>2</WinterCona>
+              <DiffusConst>88</DiffusConst>
+              <DiffusSlope>35</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>73</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>0</slope>
+              <discharge_width>0</discharge_width>
+              <catchment_area>0</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <SWCON>
+                <double>0.5</double>
+                <double>0.52</double>
+                <double>0.55</double>
+                <double>0.6</double>
+                <double>0.65</double>
+                <double>0.65</double>
+                <double>0.65</double>
+              </SWCON>
+              <KLAT>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </KLAT>
+              <ResidueInterception>0</ResidueInterception>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <RootCN>40</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>12</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <Depth>
+                <string>0-15</string>
+                <string>15-30</string>
+                <string>30-50</string>
+                <string>50-65</string>
+                <string>65-90</string>
+                <string>90-120</string>
+                <string>120-150</string>
+              </Depth>
+              <OC>
+                <double>3</double>
+                <double>1</double>
+                <double>0.6</double>
+                <double>0.4</double>
+                <double>0.25</double>
+                <double>0.15</double>
+                <double>0.1</double>
+              </OC>
+              <FBiom>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+              </FBiom>
+              <FInert>
+                <double>0.5</double>
+                <double>0.7</double>
+                <double>0.83</double>
+                <double>0.9</double>
+                <double>0.95</double>
+                <double>0.99</double>
+                <double>0.99</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <InitialWater>
+              <Name>Initial water</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <PercentMethod>EvenlyDistributed</PercentMethod>
+              <FractionFull>0.95</FractionFull>
+              <DepthWetSoil>NaN</DepthWetSoil>
+            </InitialWater>
+            <Sample>
+              <Name>Initial nitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <NO3>
+                <double>5</double>
+                <double>2.5</double>
+                <double>1</double>
+                <double>0.75</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+              </NO3>
+              <NH4>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+              </NH4>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <RecordNumber>0</RecordNumber>
+            <SoilType>NZ_Sedimentary</SoilType>
+            <LocalName>Lismore</LocalName>
+            <Site>Winchmore</Site>
+            <NearestTown>Ashburton</NearestTown>
+            <Region>Canterbury</Region>
+            <Country>New Zealand</Country>
+            <NaturalVegetation />
+            <Latitude>-48.48</Latitude>
+            <Longitude>0</Longitude>
+          </Soil>
+          <Report>
+            <Name>Results</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today as Date</string>
+              <string>[Weather].Rain</string>
+              <string>[Weather].Radn</string>
+              <string>[Weather].MaxT</string>
+              <string>[Weather].MinT</string>
+              <string>[Weather].Wind</string>
+              <string>[Weather].VP</string>
+              <string>[ClimateController].Script.doControl as doControl</string>
+              <string>[ClimateController].Script.doControlInt as doControlInt</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].EndOfDay</string>
+            </EventNames>
+          </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </Simulation>
+      <Folder>
+        <Name>Plots</Name>
+        <Graph>
+          <Name>Rainfall</Name>
+          <Series>
+            <Name>Rainfall</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.Rain</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Radiation</Name>
+          <Series>
+            <Name>Radiation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.Radn</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries>
+            <string>EnableFrom01Jan</string>
+            <string>EnableFrom05Jan</string>
+            <string>EnableFrom15Jan</string>
+          </DisabledSeries>
+        </Graph>
+        <Graph>
+          <Name>MinT</Name>
+          <Series>
+            <Name>MinT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.MinT</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>MaxT</Name>
+          <Series>
+            <Name>MaxT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.MinT</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Wind</Name>
+          <Series>
+            <Name>Wind</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.Wind</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>VapourPressure</Name>
+          <Series>
+            <Name>Wind</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.VP</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <DisabledSimNames />
+    </Experiment>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
+  <Folder>
+    <Name>TestClimateControlValues</Name>
+    <Memo>
+      <Name>Tests of the climate settings</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <MemoText><![CDATA[This series of simulations tests that the mulitpliers and additions to the various climate elements have been properly enabled.  There are four combinations tested:
+
+* The unmodified weather file (NoControl)
+* Multiply by 0 and add 0 so that the parameter value will be 0 (Mult0Add0)
+* Multiply by 0 and add 20 so that the parameter value will be 20 (Mult0Add20)
+* Multiply by 0.5 and add 0 so that the parameter value will be half that in the weather file (Mult0Add20)
+]]></MemoText>
+    </Memo>
+    <Experiment>
+      <Name>ClimateControlTestValues</Name>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>ClimateScenarios</Name>
+          <Factor>
+            <Name>NoControl</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=false</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-01</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+              <string>[ClimateController].Script.RainfallMultiplier=0</string>
+              <string>[ClimateController].Script.RainfallAddition=0</string>
+              <string>[ClimateController].Script.RadiationMultiplier=0</string>
+              <string>[ClimateController].Script.RadiationAddition=0</string>
+              <string>[ClimateController].Script.MinTMultiplier=0</string>
+              <string>[ClimateController].Script.MinTAddition=0</string>
+              <string>[ClimateController].Script.MaxTMultiplier=0</string>
+              <string>[ClimateController].Script.MaxTAddition=0</string>
+              <string>[ClimateController].Script.WindMultiplier=0</string>
+              <string>[ClimateController].Script.WindAddition=0</string>
+              <string>[ClimateController].Script.VPMultiplier=0</string>
+              <string>[ClimateController].Script.VPAddition=0</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Mult0Add0</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-01</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+              <string>[ClimateController].Script.RainfallMultiplier=0</string>
+              <string>[ClimateController].Script.RainfallAddition=0</string>
+              <string>[ClimateController].Script.RadiationMultiplier=0</string>
+              <string>[ClimateController].Script.RadiationAddition=0</string>
+              <string>[ClimateController].Script.MinTMultiplier=0</string>
+              <string>[ClimateController].Script.MinTAddition=0</string>
+              <string>[ClimateController].Script.MaxTMultiplier=0</string>
+              <string>[ClimateController].Script.MaxTAddition=0</string>
+              <string>[ClimateController].Script.WindMultiplier=0</string>
+              <string>[ClimateController].Script.WindAddition=0</string>
+              <string>[ClimateController].Script.VPMultiplier=0</string>
+              <string>[ClimateController].Script.VPAddition=0</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Mult0Add20</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-01</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+              <string>[ClimateController].Script.RainfallMultiplier=0</string>
+              <string>[ClimateController].Script.RainfallAddition=20</string>
+              <string>[ClimateController].Script.RadiationMultiplier=0</string>
+              <string>[ClimateController].Script.RadiationAddition=20</string>
+              <string>[ClimateController].Script.MinTMultiplier=0</string>
+              <string>[ClimateController].Script.MinTAddition=20</string>
+              <string>[ClimateController].Script.MaxTMultiplier=0</string>
+              <string>[ClimateController].Script.MaxTAddition=20</string>
+              <string>[ClimateController].Script.WindMultiplier=0</string>
+              <string>[ClimateController].Script.WindAddition=20</string>
+              <string>[ClimateController].Script.VPMultiplier=0</string>
+              <string>[ClimateController].Script.VPAddition=20</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>MultHalfAdd0</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Specifications>
+              <string>[ClimateController].Script.AllowControl=true</string>
+              <string>[ClimateController].Script.EnableDate=1980-1-01</string>
+              <string>[ClimateController].Script.WithinYearControl=false</string>
+              <string>[ClimateController].Script.RainfallMultiplier=0.5</string>
+              <string>[ClimateController].Script.RainfallAddition=0</string>
+              <string>[ClimateController].Script.RadiationMultiplier=0.5</string>
+              <string>[ClimateController].Script.RadiationAddition=0</string>
+              <string>[ClimateController].Script.MinTMultiplier=0.5</string>
+              <string>[ClimateController].Script.MinTAddition=0</string>
+              <string>[ClimateController].Script.MaxTMultiplier=0.5</string>
+              <string>[ClimateController].Script.MaxTAddition=0</string>
+              <string>[ClimateController].Script.WindMultiplier=0.5</string>
+              <string>[ClimateController].Script.WindAddition=0</string>
+              <string>[ClimateController].Script.VPMultiplier=0.5</string>
+              <string>[ClimateController].Script.VPAddition=0</string>
+            </Specifications>
+          </Factor>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Specifications />
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </Factors>
+      <Simulation>
+        <Name>ClimateControl1</Name>
+        <Clock>
+          <Name>Clock</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <StartDate>1980-01-01T00:00:00</StartDate>
+          <EndDate>1981-01-31T00:00:00</EndDate>
+        </Clock>
+        <Weather>
+          <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <ExcelWorkSheetName />
+        </Weather>
+        <Manager>
+          <Name>ClimateController</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <AllowControl>True</AllowControl>
+            <EnableDate>1980-01-15</EnableDate>
+            <WithinYearControl>False</WithinYearControl>
+            <ControlStart>15-jan</ControlStart>
+            <ControlEnd>20-jan</ControlEnd>
+            <RainfallMultiplier>0</RainfallMultiplier>
+            <RainfallAddition>15</RainfallAddition>
+            <RadiationMultiplier>0</RadiationMultiplier>
+            <RadiationAddition>45</RadiationAddition>
+            <MinTMultiplier>0</MinTMultiplier>
+            <MinTAddition>35</MinTAddition>
+            <MaxTMultiplier>0</MaxTMultiplier>
+            <MaxTAddition>65</MaxTAddition>
+            <WindMultiplier>0</WindMultiplier>
+            <WindAddition>15</WindAddition>
+            <VPMultiplier>0</VPMultiplier>
+            <VPAddition>30</VPAddition>
+          </Script>
+          <Code><![CDATA[using System;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        // - Links to APSIM models
+        [Link] Zone zone;
+        [Link] Clock clock;
+        [Link] Weather weather;
+        [Link] ISummary summary = null;
+
+        // - Paramters for this manager
+        [Description("Enable? Set to 'No' to completely disable this manager")] public bool AllowControl { get; set; }
+
+        [Separator("General settings")]
+        [Description("Start the climate controls beginning on date (dd/mmm/yyyy): ")] public DateTime EnableDate { get; set; }
+        [Description("Implement climate control only during part of the year?")] public bool WithinYearControl { get; set; }
+        [Description("Within each year, the first day to start the climate controls is (dd-mmm)")] public string ControlStart { get; set; }
+        [Description("Within each year, end last day of climate control is (dd-mmm)")] public string ControlEnd { get; set; }
+
+        [Separator("Rainfall")]
+        [Description("Rainfall multiplier (-): ")] public double RainfallMultiplier { get; set; }
+        [Description("Rainfall addition (mm): ")] public double RainfallAddition { get; set; }
+
+        [Separator("Radiation")]
+        [Description("Radiation multiplier (-): ")] public double RadiationMultiplier { get; set; }
+        [Description("Radiation addition (MJ/m2): ")] public double RadiationAddition { get; set; }
+
+        [Separator("Minimum temperature")]
+        [Description("Minimum temperature multiplier (-): ")] public double MinTMultiplier { get; set; }
+        [Description("Minimum temperature addition (C): ")] public double MinTAddition { get; set; }
+
+        [Separator("Maximum temperature")]
+        [Description("Maximum temperature multiplier (-): ")] public double MaxTMultiplier { get; set; }
+        [Description("Maximum temperature addition (C): ")] public double MaxTAddition { get; set; }
+
+        [Separator("Wind speed")]
+        [Description("Wind speed multiplier (-): ")] public double WindMultiplier { get; set; }
+        [Description("Wind speed addition (m/s): ")] public double WindAddition { get; set; }
+
+        [Separator("Vapour pressure")]
+        [Description("Vapour pressure multiplier (-): ")] public double VPMultiplier { get; set; }
+        [Description("Vapour pressure addition (hPa): ")] public double VPAddition { get; set; }
+
+        [XmlIgnore] public bool DoControl { get; set; }
+        [XmlIgnore] public int DoControlInt { get; set; }
+
+        [EventSubscribe("PreparingNewWeatherData")] private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Check if this manager is enabled
+            if ((AllowControl) && (clock.Today >= EnableDate))
+            {
+            	DoControl = true;
+	            if (WithinYearControl)
+	            	DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); 
+            }
+
+            if (DoControl)
+            	DoControlInt = 1;
+            else
+            	DoControlInt = 0;
+
+            if (DoControl)
+            {
+                // do the weather alterations 
+                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;
+                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;
+                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;
+                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;
+                weather.Wind = WindMultiplier * weather.Wind + WindAddition;
+                weather.VP = VPMultiplier * weather.VP + VPAddition;
+            }
+        }
+	}
+}
+]]></Code>
+        </Manager>
+        <Summary>
+          <Name>Summary</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <CaptureErrors>true</CaptureErrors>
+          <CaptureWarnings>true</CaptureWarnings>
+          <CaptureSummaryText>true</CaptureSummaryText>
+        </Summary>
+        <SoilArbitrator>
+          <Name>SoilArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Field</Name>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+            <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+            <NightInterceptionFraction>0.5</NightInterceptionFraction>
+            <ReferenceHeight>2</ReferenceHeight>
+          </MicroClimate>
+          <Irrigation>
+            <Name>Irrigation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </Irrigation>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <ResourceName>SurfaceOrganicMatter</ResourceName>
+            <InitialResidueName>Sward</InitialResidueName>
+            <InitialResidueType>grass</InitialResidueType>
+            <InitialResidueMass>1000</InitialResidueMass>
+            <InitialStandingFraction>0</InitialStandingFraction>
+            <InitialCPR>0</InitialCPR>
+            <InitialCNR>15</InitialCNR>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Soil>
+            <Name>LismoreSoil</Name>
+            <Analysis>
+              <Name>Analysis</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <Rocks>
+                <double>0</double>
+                <double>0</double>
+                <double>10</double>
+                <double>40</double>
+                <double>60</double>
+                <double>70</double>
+                <double>70</double>
+              </Rocks>
+              <Texture />
+              <MunsellColour />
+              <PH>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+                <double>6</double>
+              </PH>
+              <CEC>
+                <double>12.5</double>
+                <double>10</double>
+                <double>9</double>
+                <double>5</double>
+                <double>4</double>
+                <double>4</double>
+                <double>4</double>
+              </CEC>
+              <ParticleSizeSand>
+                <double>15</double>
+                <double>20</double>
+                <double>25</double>
+                <double>35</double>
+                <double>40</double>
+                <double>40</double>
+                <double>40</double>
+              </ParticleSizeSand>
+              <ParticleSizeSilt>
+                <double>65</double>
+                <double>65</double>
+                <double>63</double>
+                <double>57</double>
+                <double>54</double>
+                <double>55</double>
+                <double>55</double>
+              </ParticleSizeSilt>
+              <ParticleSizeClay>
+                <double>20</double>
+                <double>15</double>
+                <double>12</double>
+                <double>8</double>
+                <double>6</double>
+                <double>5</double>
+                <double>5</double>
+              </ParticleSizeClay>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>SwardSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <LL>
+                  <double>0.15</double>
+                  <double>0.14</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>RyegrassSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <LL>
+                  <double>0.15</double>
+                  <double>0.14</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>WhiteCloverSoil</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <LL>
+                  <double>0.15</double>
+                  <double>0.14</double>
+                  <double>0.06</double>
+                  <double>0.02</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </LL>
+                <KL>
+                  <double>0.1</double>
+                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.04</double>
+                  <double>0.01</double>
+                  <double>0</double>
+                  <double>0</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                  <double>0</double>
+                </XF>
+              </SoilCrop>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <BD>
+                <double>1.3</double>
+                <double>1.35</double>
+                <double>1</double>
+                <double>0.53</double>
+                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </BD>
+              <AirDry>
+                <double>0.05</double>
+                <double>0.12</double>
+                <double>0.055</double>
+                <double>0.015</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </AirDry>
+              <LL15>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.055</double>
+                <double>0.015</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </LL15>
+              <DUL>
+                <double>0.36</double>
+                <double>0.34</double>
+                <double>0.19</double>
+                <double>0.065</double>
+                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.03</double>
+              </DUL>
+              <SAT>
+                <double>0.45</double>
+                <double>0.43</double>
+                <double>0.25</double>
+                <double>0.15</double>
+                <double>0.11</double>
+                <double>0.11</double>
+                <double>0.11</double>
+              </SAT>
+              <KS>
+                <double>5000</double>
+                <double>2500</double>
+                <double>3000</double>
+                <double>10000</double>
+                <double>17500</double>
+                <double>20000</double>
+                <double>20000</double>
+              </KS>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>6</SummerU>
+              <SummerCona>3.5</SummerCona>
+              <WinterDate>1-apr</WinterDate>
+              <WinterU>2</WinterU>
+              <WinterCona>2</WinterCona>
+              <DiffusConst>88</DiffusConst>
+              <DiffusSlope>35</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>73</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>0</slope>
+              <discharge_width>0</discharge_width>
+              <catchment_area>0</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <SWCON>
+                <double>0.5</double>
+                <double>0.52</double>
+                <double>0.55</double>
+                <double>0.6</double>
+                <double>0.65</double>
+                <double>0.65</double>
+                <double>0.65</double>
+              </SWCON>
+              <KLAT>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </KLAT>
+              <ResidueInterception>0</ResidueInterception>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <RootCN>40</RootCN>
+              <RootWt>1000</RootWt>
+              <SoilCN>12</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <Depth>
+                <string>0-15</string>
+                <string>15-30</string>
+                <string>30-50</string>
+                <string>50-65</string>
+                <string>65-90</string>
+                <string>90-120</string>
+                <string>120-150</string>
+              </Depth>
+              <OC>
+                <double>3</double>
+                <double>1</double>
+                <double>0.6</double>
+                <double>0.4</double>
+                <double>0.25</double>
+                <double>0.15</double>
+                <double>0.1</double>
+              </OC>
+              <FBiom>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+              </FBiom>
+              <FInert>
+                <double>0.5</double>
+                <double>0.7</double>
+                <double>0.83</double>
+                <double>0.9</double>
+                <double>0.95</double>
+                <double>0.99</double>
+                <double>0.99</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <InitialWater>
+              <Name>Initial water</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <PercentMethod>EvenlyDistributed</PercentMethod>
+              <FractionFull>0.95</FractionFull>
+              <DepthWetSoil>NaN</DepthWetSoil>
+            </InitialWater>
+            <Sample>
+              <Name>Initial nitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>200</double>
+                <double>150</double>
+                <double>250</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <NO3>
+                <double>5</double>
+                <double>2.5</double>
+                <double>1</double>
+                <double>0.75</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
+              </NO3>
+              <NH4>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+              </NH4>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <RecordNumber>0</RecordNumber>
+            <SoilType>NZ_Sedimentary</SoilType>
+            <LocalName>Lismore</LocalName>
+            <Site>Winchmore</Site>
+            <NearestTown>Ashburton</NearestTown>
+            <Region>Canterbury</Region>
+            <Country>New Zealand</Country>
+            <NaturalVegetation />
+            <Latitude>-48.48</Latitude>
+            <Longitude>0</Longitude>
+          </Soil>
+          <Report>
+            <Name>Results</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today as Date</string>
+              <string>[Weather].Rain</string>
+              <string>[Weather].Radn</string>
+              <string>[Weather].MaxT</string>
+              <string>[Weather].MinT</string>
+              <string>[Weather].Wind</string>
+              <string>[Weather].VP</string>
+              <string>[ClimateController].Script.doControl as doControl</string>
+              <string>[ClimateController].Script.doControlInt as doControlInt</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].EndOfDay</string>
+            </EventNames>
+          </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </SoluteManager>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </Simulation>
+      <Folder>
+        <Name>Plots</Name>
+        <Graph>
+          <Name>Rainfall</Name>
+          <Series>
+            <Name>Rainfall</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.Rain</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Radiation</Name>
+          <Series>
+            <Name>Radiation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.Radn</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>MinT</Name>
+          <Series>
+            <Name>MinT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.MinT</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>MaxT</Name>
+          <Series>
+            <Name>MaxT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.MinT</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Wind</Name>
+          <Series>
+            <Name>Wind</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.Wind</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>VapourPressure</Name>
+          <Series>
+            <Name>Wind</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorToVaryColours>ClimateScenarios</FactorToVaryColours>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>Results</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Weather.VP</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <DisabledSimNames />
+    </Experiment>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
+  <Folder>
+    <Name>PracticalTest</Name>
+    <Memo>
+      <Name>A test showing a practical example</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <MemoText><![CDATA[This test has two simulations.  The first is DalbyWheat with unmodified rainfall and in the second the rainfall is doubled.]]></MemoText>
+    </Memo>
+    <Graph>
+      <Name>Wheat Yield Time Series</Name>
+      <Series>
+        <Name>Wheat Yield</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorToVaryColours>Simulation</FactorToVaryColours>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Yield</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Yield (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
+    <Simulation>
+      <Name>DalbyWheatNormalRainfall</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <StartDate>1990-01-01T00:00:00</StartDate>
+        <EndDate>1995-12-31T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>SummaryFile</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <CaptureErrors>true</CaptureErrors>
+        <CaptureWarnings>true</CaptureWarnings>
+        <CaptureSummaryText>true</CaptureSummaryText>
+      </Summary>
+      <Weather>
+        <Name>Weather</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      </Weather>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Field</Name>
+        <Report>
+          <Name>Report</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Wheat].Phenology.Zadok.Stage</string>
+            <string>[Wheat].Phenology.CurrentStageName</string>
+            <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].AboveGround.N</string>
+            <string>[Wheat].Grain.Total.Wt*10 as Yield</string>
+            <string>[Wheat].Grain.Protein</string>
+            <string>[Wheat].Grain.Size</string>
+            <string>[Wheat].Grain.Number</string>
+            <string>[Wheat].Grain.Total.Wt</string>
+            <string>[Wheat].Grain.Total.N</string>
+            <string>[Wheat].Total.Wt</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Wheat].Harvesting</string>
+          </EventNames>
+        </Report>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </Fertiliser>
+        <Soil>
+          <Name>Soil</Name>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>WheatSoil</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.01056473311131</double>
+              <double>1.07145631083388</double>
+              <double>1.09393858528057</double>
+              <double>1.15861335018721</double>
+              <double>1.17301160318016</double>
+              <double>1.16287303586874</double>
+              <double>1.18749547755906</double>
+            </BD>
+            <AirDry>
+              <double>0.130250054518252</double>
+              <double>0.198689390775399</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </AirDry>
+            <LL15>
+              <double>0.260500109036505</double>
+              <double>0.248361738469248</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </LL15>
+            <DUL>
+              <double>0.52100021807301</double>
+              <double>0.496723476938497</double>
+              <double>0.488437607673005</double>
+              <double>0.480296969355493</double>
+              <double>0.471583596524955</double>
+              <double>0.457070570557793</double>
+              <double>0.452331759845006</double>
+            </DUL>
+            <SAT>
+              <double>0.588654817693846</double>
+              <double>0.565676863836273</double>
+              <double>0.557192986686577</double>
+              <double>0.532787415023694</double>
+              <double>0.527354112007486</double>
+              <double>0.531179986464627</double>
+              <double>0.521888499034317</double>
+            </SAT>
+            <KS>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+            </KS>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
+            <DiffusConst>40</DiffusConst>
+            <DiffusSlope>16</DiffusSlope>
+            <Salb>0.12</Salb>
+            <CN2Bare>73</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SWCON>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </SWCON>
+            <ResidueInterception>0</ResidueInterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <RootCN>40</RootCN>
+            <RootWt>1000</RootWt>
+            <SoilCN>12</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
+            <OC>
+              <double>1.2</double>
+              <double>0.96</double>
+              <double>0.6</double>
+              <double>0.3</double>
+              <double>0.18</double>
+              <double>0.12</double>
+              <double>0.12</double>
+            </OC>
+            <FBiom>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.4</double>
+              <double>0.6</double>
+              <double>0.8</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Analysis>
+            <Name>Analysis</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <InitialWater>
+            <Name>InitialWater</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <PercentMethod>EvenlyDistributed</PercentMethod>
+            <FractionFull>1</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+          </InitialWater>
+          <Sample>
+            <Name>InitialN</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NO3>
+            <NH4>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </NH4>
+            <SW>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </SW>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
+            <NO3Units>ppm</NO3Units>
+            <NH4Units>ppm</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <RecordNumber>0</RecordNumber>
+          <ASCOrder>Vertosol</ASCOrder>
+          <ASCSubOrder>Black</ASCSubOrder>
+          <SoilType>Clay</SoilType>
+          <LocalName />
+          <Site>Norwin</Site>
+          <NearestTown>Norwin</NearestTown>
+          <Region>Darling Downs and Granite Belt</Region>
+          <State>Queensland</State>
+          <Country>Australia</Country>
+          <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+          <ApsoilNumber>900</ApsoilNumber>
+          <Latitude>-27.581836</Latitude>
+          <Longitude>151.320206</Longitude>
+          <LocationAccuracy> +/- 20m</LocationAccuracy>
+          <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+          <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        </Soil>
+        <SurfaceOrganicMatter>
+          <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ResourceName>SurfaceOrganicMatter</ResourceName>
+          <InitialResidueName>wheat_stubble</InitialResidueName>
+          <InitialResidueType>wheat</InitialResidueType>
+          <InitialResidueMass>500</InitialResidueMass>
+          <InitialStandingFraction>0</InitialStandingFraction>
+          <InitialCPR>0</InitialCPR>
+          <InitialCNR>100</InitialCNR>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <Plant>
+          <Name>Wheat</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ResourceName>Wheat</ResourceName>
+          <CropType>Wheat</CropType>
+        </Plant>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
+        </MicroClimate>
+        <Manager>
+          <Name>SowingFertiliser</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <Amount>160</Amount>
+            <CropName>wheat</CropName>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        
+        
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount { get; set;}
+        
+        [Description("Crop to be fertilised")]
+        public string CropName { get; set;}
+        
+        
+        
+
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
+        {
+            Model crop = sender as Model;
+            if (crop.Name.ToLower()==CropName.ToLower())
+                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+        }
+        
+    }
+}
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Harvest</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Wheat.IsReadyForHarvesting)
+            {
+               Wheat.Harvest();
+               Wheat.EndCrop();    
+            }
+        
+        }
+        
+    }
+}
+]]></Code>
+        </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </SoluteManager>
+        <Manager>
+          <Name>SowingRule1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <StartDate>1-may</StartDate>
+            <EndDate>10-jul</EndDate>
+            <MinESW>100</MinESW>
+            <MinRain>5</MinRain>
+            <RainDays>7</RainDays>
+            <CultivarName>Hartog</CultivarName>
+            <SowingDepth>30</SowingDepth>
+            <RowSpacing>250</RowSpacing>
+            <Population>120</Population>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        [Link] Plant Wheat;
+        [Link] Soil Soil; 
+        Accumulator accumulatedRain;
+        
+        [Description("Start of sowing window (d-mmm)")]
+        public string StartDate { get; set;}
+        [Description("End of sowing window (d-mmm)")]
+        public string EndDate { get; set;}
+        [Description("Minimum extractable soil water for sowing (mm)")]
+        public double MinESW { get; set;}
+        [Description("Accumulated rainfall required for sowing (mm)")]
+        public double MinRain { get; set;}
+        [Description("Duration of rainfall accumulation (d)")]
+        public int RainDays { get; set;}
+        [Description("Cultivar to be sown")]
+        [Display(Type=DisplayType.CultivarName)]
+        public string CultivarName { get; set;}
+        [Description("Sowing depth (mm)")]
+        public double SowingDepth { get; set;}        
+        [Description("Row spacing (mm)")]
+        public double RowSpacing { get; set;}    
+        [Description("Plant population (/m2)")]
+        public double Population { get; set;}    
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+        }
+        
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            accumulatedRain.Update();
+            
+            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+                !Wheat.IsAlive &&
+                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
+                accumulatedRain.Sum > MinRain)
+            {
+               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    
+            }
+        
+        }
+        
+    }
+}
+]]></Code>
+        </Manager>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+    </Simulation>
+    <Simulation>
+      <Name>DalbyWheatDoubleRainfall</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <StartDate>1990-01-01T00:00:00</StartDate>
+        <EndDate>1995-12-31T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>SummaryFile</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <CaptureErrors>true</CaptureErrors>
+        <CaptureWarnings>true</CaptureWarnings>
+        <CaptureSummaryText>true</CaptureSummaryText>
+      </Summary>
+      <Weather>
+        <Name>Weather</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      </Weather>
+      <Manager>
+        <Name>ClimateController</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Script>
+          <AllowControl>True</AllowControl>
+          <EnableDate>1990-01-01</EnableDate>
+          <WithinYearControl>False</WithinYearControl>
+          <ControlStart>01-jan</ControlStart>
+          <ControlEnd>31-dec</ControlEnd>
+          <RainfallMultiplier>2</RainfallMultiplier>
+          <RainfallAddition>0</RainfallAddition>
+          <RadiationMultiplier>1</RadiationMultiplier>
+          <RadiationAddition>0</RadiationAddition>
+          <MinTMultiplier>1</MinTMultiplier>
+          <MinTAddition>0</MinTAddition>
+          <MaxTMultiplier>1</MaxTMultiplier>
+          <MaxTAddition>0</MaxTAddition>
+          <WindMultiplier>1</WindMultiplier>
+          <WindAddition>0</WindAddition>
+          <VPMultiplier>1</VPMultiplier>
+          <VPAddition>0</VPAddition>
+        </Script>
+        <Code><![CDATA[using System;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        // - Links to APSIM models
+        [Link] Zone zone;
+        [Link] Clock clock;
+        [Link] Weather weather;
+        [Link] ISummary summary = null;
+
+        // - Paramters for this manager
+        [Description("Enable? Set to 'No' to completely disable this manager")] public bool AllowControl { get; set; }
+
+        [Separator("General settings")]
+        [Description("Start the climate controls beginning on date (dd/mmm/yyyy): ")] public DateTime EnableDate { get; set; }
+        [Description("Implement climate control only during part of the year?")] public bool WithinYearControl { get; set; }
+        [Description("Within each year, the first day to start the climate controls is (dd-mmm)")] public string ControlStart { get; set; }
+        [Description("Within each year, end last day of climate control is (dd-mmm)")] public string ControlEnd { get; set; }
+
+        [Separator("Rainfall")]
+        [Description("Rainfall multiplier (-): ")] public double RainfallMultiplier { get; set; }
+        [Description("Rainfall addition (mm): ")] public double RainfallAddition { get; set; }
+
+        [Separator("Radiation")]
+        [Description("Radiation multiplier (-): ")] public double RadiationMultiplier { get; set; }
+        [Description("Radiation addition (MJ/m2): ")] public double RadiationAddition { get; set; }
+
+        [Separator("Minimum temperature")]
+        [Description("Minimum temperature multiplier (-): ")] public double MinTMultiplier { get; set; }
+        [Description("Minimum temperature addition (C): ")] public double MinTAddition { get; set; }
+
+        [Separator("Maximum temperature")]
+        [Description("Maximum temperature multiplier (-): ")] public double MaxTMultiplier { get; set; }
+        [Description("Maximum temperature addition (C): ")] public double MaxTAddition { get; set; }
+
+        [Separator("Wind speed")]
+        [Description("Wind speed multiplier (-): ")] public double WindMultiplier { get; set; }
+        [Description("Wind speed addition (m/s): ")] public double WindAddition { get; set; }
+
+        [Separator("Vapour pressure")]
+        [Description("Vapour pressure multiplier (-): ")] public double VPMultiplier { get; set; }
+        [Description("Vapour pressure addition (hPa): ")] public double VPAddition { get; set; }
+
+        [XmlIgnore] public bool DoControl { get; set; }
+        [XmlIgnore] public int DoControlInt { get; set; }
+
+        [EventSubscribe("PreparingNewWeatherData")] private void OnDoManagement(object sender, EventArgs e)
+        {
+            // Check if this manager is enabled
+            if ((AllowControl) && (clock.Today >= EnableDate))
+            {
+            	DoControl = true;
+	            if (WithinYearControl)
+	            	DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); 
+            }
+
+            if (DoControl)
+            	DoControlInt = 1;
+            else
+            	DoControlInt = 0;
+
+            if (DoControl)
+            {
+                // do the weather alterations 
+                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;
+                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;
+                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;
+                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;
+                weather.Wind = WindMultiplier * weather.Wind + WindAddition;
+                weather.VP = VPMultiplier * weather.VP + VPAddition;
+            }
+        }
+	}
+}
+]]></Code>
+      </Manager>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Field</Name>
+        <Report>
+          <Name>Report</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Wheat].Phenology.Zadok.Stage</string>
+            <string>[Wheat].Phenology.CurrentStageName</string>
+            <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].AboveGround.N</string>
+            <string>[Wheat].Grain.Total.Wt*10 as Yield</string>
+            <string>[Wheat].Grain.Protein</string>
+            <string>[Wheat].Grain.Size</string>
+            <string>[Wheat].Grain.Number</string>
+            <string>[Wheat].Grain.Total.Wt</string>
+            <string>[Wheat].Grain.Total.N</string>
+            <string>[Wheat].Total.Wt</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Wheat].Harvesting</string>
+          </EventNames>
+        </Report>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </Fertiliser>
+        <Soil>
+          <Name>Soil</Name>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>WheatSoil</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <LL>
+                <double>0.261</double>
+                <double>0.248</double>
+                <double>0.28</double>
+                <double>0.306</double>
+                <double>0.36</double>
+                <double>0.392</double>
+                <double>0.446</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.01056473311131</double>
+              <double>1.07145631083388</double>
+              <double>1.09393858528057</double>
+              <double>1.15861335018721</double>
+              <double>1.17301160318016</double>
+              <double>1.16287303586874</double>
+              <double>1.18749547755906</double>
+            </BD>
+            <AirDry>
+              <double>0.130250054518252</double>
+              <double>0.198689390775399</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </AirDry>
+            <LL15>
+              <double>0.260500109036505</double>
+              <double>0.248361738469248</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </LL15>
+            <DUL>
+              <double>0.52100021807301</double>
+              <double>0.496723476938497</double>
+              <double>0.488437607673005</double>
+              <double>0.480296969355493</double>
+              <double>0.471583596524955</double>
+              <double>0.457070570557793</double>
+              <double>0.452331759845006</double>
+            </DUL>
+            <SAT>
+              <double>0.588654817693846</double>
+              <double>0.565676863836273</double>
+              <double>0.557192986686577</double>
+              <double>0.532787415023694</double>
+              <double>0.527354112007486</double>
+              <double>0.531179986464627</double>
+              <double>0.521888499034317</double>
+            </SAT>
+            <KS>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+              <double>20</double>
+            </KS>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
+            <DiffusConst>40</DiffusConst>
+            <DiffusSlope>16</DiffusSlope>
+            <Salb>0.12</Salb>
+            <CN2Bare>73</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SWCON>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </SWCON>
+            <ResidueInterception>0</ResidueInterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <RootCN>40</RootCN>
+            <RootWt>1000</RootWt>
+            <SoilCN>12</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+              <string>150-180</string>
+            </Depth>
+            <OC>
+              <double>1.2</double>
+              <double>0.96</double>
+              <double>0.6</double>
+              <double>0.3</double>
+              <double>0.18</double>
+              <double>0.12</double>
+              <double>0.12</double>
+            </OC>
+            <FBiom>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.4</double>
+              <double>0.6</double>
+              <double>0.8</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Analysis>
+            <Name>Analysis</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+              <double>8</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <InitialWater>
+            <Name>InitialWater</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <PercentMethod>EvenlyDistributed</PercentMethod>
+            <FractionFull>1</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+          </InitialWater>
+          <Sample>
+            <Name>InitialN</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NO3>
+            <NH4>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </NH4>
+            <SW>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </SW>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
+            <NO3Units>ppm</NO3Units>
+            <NH4Units>ppm</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <RecordNumber>0</RecordNumber>
+          <ASCOrder>Vertosol</ASCOrder>
+          <ASCSubOrder>Black</ASCSubOrder>
+          <SoilType>Clay</SoilType>
+          <LocalName />
+          <Site>Norwin</Site>
+          <NearestTown>Norwin</NearestTown>
+          <Region>Darling Downs and Granite Belt</Region>
+          <State>Queensland</State>
+          <Country>Australia</Country>
+          <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+          <ApsoilNumber>900</ApsoilNumber>
+          <Latitude>-27.581836</Latitude>
+          <Longitude>151.320206</Longitude>
+          <LocationAccuracy> +/- 20m</LocationAccuracy>
+          <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+          <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+        </Soil>
+        <SurfaceOrganicMatter>
+          <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ResourceName>SurfaceOrganicMatter</ResourceName>
+          <InitialResidueName>wheat_stubble</InitialResidueName>
+          <InitialResidueType>wheat</InitialResidueType>
+          <InitialResidueMass>500</InitialResidueMass>
+          <InitialStandingFraction>0</InitialStandingFraction>
+          <InitialCPR>0</InitialCPR>
+          <InitialCNR>100</InitialCNR>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <Plant>
+          <Name>Wheat</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ResourceName>Wheat</ResourceName>
+          <CropType>Wheat</CropType>
+        </Plant>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+          <SoilHeatFluxFraction>0.4</SoilHeatFluxFraction>
+          <NightInterceptionFraction>0.5</NightInterceptionFraction>
+          <ReferenceHeight>2</ReferenceHeight>
+        </MicroClimate>
+        <Manager>
+          <Name>SowingFertiliser</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <Amount>160</Amount>
+            <CropName>wheat</CropName>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        
+        
+        [Description("Amount of fertiliser to be applied (kg/ha)")]
+        public double Amount { get; set;}
+        
+        [Description("Crop to be fertilised")]
+        public string CropName { get; set;}
+        
+        
+        
+
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
+        {
+            Model crop = sender as Model;
+            if (crop.Name.ToLower()==CropName.ToLower())
+                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+        }
+        
+    }
+}
+]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Harvest</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Plant Wheat;
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (Wheat.IsReadyForHarvesting)
+            {
+               Wheat.Harvest();
+               Wheat.EndCrop();    
+            }
+        
+        }
+        
+    }
+}
+]]></Code>
+        </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </SoluteManager>
+        <Manager>
+          <Name>SowingRule1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Script>
+            <StartDate>1-may</StartDate>
+            <EndDate>10-jul</EndDate>
+            <MinESW>100</MinESW>
+            <MinRain>5</MinRain>
+            <RainDays>7</RainDays>
+            <CultivarName>Hartog</CultivarName>
+            <SowingDepth>30</SowingDepth>
+            <RowSpacing>250</RowSpacing>
+            <Population>120</Population>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        [Link] Plant Wheat;
+        [Link] Soil Soil; 
+        Accumulator accumulatedRain;
+        
+        [Description("Start of sowing window (d-mmm)")]
+        public string StartDate { get; set;}
+        [Description("End of sowing window (d-mmm)")]
+        public string EndDate { get; set;}
+        [Description("Minimum extractable soil water for sowing (mm)")]
+        public double MinESW { get; set;}
+        [Description("Accumulated rainfall required for sowing (mm)")]
+        public double MinRain { get; set;}
+        [Description("Duration of rainfall accumulation (d)")]
+        public int RainDays { get; set;}
+        [Description("Cultivar to be sown")]
+        [Display(Type=DisplayType.CultivarName)]
+        public string CultivarName { get; set;}
+        [Description("Sowing depth (mm)")]
+        public double SowingDepth { get; set;}        
+        [Description("Row spacing (mm)")]
+        public double RowSpacing { get; set;}    
+        [Description("Plant population (/m2)")]
+        public double Population { get; set;}    
+        
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+        }
+        
+
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            accumulatedRain.Update();
+            
+            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+                !Wheat.IsAlive &&
+                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
+                accumulatedRain.Sum > MinRain)
+            {
+               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    
+            }
+        
+        }
+        
+    }
+}
+]]></Code>
+        </Manager>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+    </Simulation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
+  <ReadOnly>false</ReadOnly>
+  <ExplorerWidth>309</ExplorerWidth>
+</Simulations>

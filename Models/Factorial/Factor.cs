@@ -45,6 +45,8 @@ namespace Models.Factorial
         /// </summary>
         public List<FactorValue> CreateValues()
         {
+            if (Specifications == null)
+                Specifications = new List<string>();
             List<FactorValue> factorValues = new List<FactorValue>();
 
             // Example specifications:
@@ -57,7 +59,6 @@ namespace Models.Factorial
             //      [FertiliserRule]
             //    compound specification has multiple other specifications that
             //    result in a single factor value being returned.
-
 
             List<List<PathValuesPair>> allValues = new List<List<PathValuesPair>>();
             List<PathValuesPair> fixedValues = new List<PathValuesPair>();

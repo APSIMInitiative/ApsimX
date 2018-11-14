@@ -395,11 +395,14 @@ namespace Models.GrazPlan
 
             set
             {
-                Array.Resize(ref this.genotypeInits, value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
+                if (value != null)
                 {
-                    this.genotypeInits[idx] = new SingleGenotypeInits();
-                    this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
+                    Array.Resize(ref this.genotypeInits, value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                    {
+                        this.genotypeInits[idx] = new SingleGenotypeInits();
+                        this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
+                    }
                 }
             }
         }
@@ -419,10 +422,13 @@ namespace Models.GrazPlan
 
             set
             {
-                int offset = this.animalInits.Length;
-                Array.Resize(ref this.animalInits, offset + value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
-                    this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                if (value != null)
+                {
+                    int offset = this.animalInits.Length;
+                    Array.Resize(ref this.animalInits, offset + value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                        this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                }
             }
         }
 
@@ -441,10 +447,13 @@ namespace Models.GrazPlan
 
             set
             {
-                int offset = this.animalInits.Length;
-                Array.Resize(ref this.animalInits, offset + value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
-                    this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                if (value != null)
+                {
+                    int offset = this.animalInits.Length;
+                    Array.Resize(ref this.animalInits, offset + value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                        this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                }
             }
         }
 
@@ -507,7 +516,7 @@ namespace Models.GrazPlan
 
             set
             {
-                if (this.stockModel.Enterprises != null)
+                if (value != null && this.stockModel.Enterprises != null)
                 {
                     while (this.stockModel.Enterprises.Count > 0)
                         this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
@@ -533,7 +542,7 @@ namespace Models.GrazPlan
 
             set
             {
-                if (this.stockModel.GrazingPeriods != null)
+                if (value != null && this.stockModel.GrazingPeriods != null)
                 {
                     while (this.stockModel.GrazingPeriods.Count() > 0)
                     {

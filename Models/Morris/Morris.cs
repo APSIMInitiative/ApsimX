@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Factorial;
     using Models.Interfaces;
     using System;
@@ -155,13 +156,17 @@
         [EventSubscribe("BeginRun")]
         private void OnBeginRun()
         {
-            Initialise();
-            simulationNumber = 1;
+            if (Enabled)
+            {
+                Initialise();
+                simulationNumber = 1;
+            }
         }
 
         /// <summary>Gets the next job to run</summary>
         public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
+            hasRun = true;
             if (allCombinations.Count == 0)
                 return null;
 
@@ -221,14 +226,13 @@
         /// <returns>Empty string if successful, error message if it fails.</returns>
         public void GenerateApsimXFile(string path)
         {
-            hasRun = true;
             Simulation sim = NextSimulationToRun();
             while (sim != null)
             {
                 Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
 
-                string xml = Apsim.Serialise(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), xml);
+                string st = FileFormat.WriteToString(sims);
+                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
                 sim = NextSimulationToRun();
             }
         }
@@ -319,9 +323,11 @@
         /// <param name="dataStore">The data store.</param>
         public void Run(IStorageReader dataStore)
         {
+            if (!hasRun)
+                return;
             string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
             DataTable predictedData = dataStore.RunQuery(sql);
-            if (predictedData != null && hasRun)
+            if (predictedData != null)
             {
 
                 // Determine how many years we have per simulation

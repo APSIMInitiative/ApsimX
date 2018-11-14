@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Wheat</Name>
+    <Clock>
+      <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <StartDate>1900-01-01T00:00:00</StartDate>
+      <EndDate>2000-12-31T00:00:00</EndDate>
+    </Clock>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </DataStore>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>296</ExplorerWidth>
+</Simulations>

@@ -430,10 +430,16 @@ namespace Models.Functions.SupplyFunctions
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, capped hourlyVPD and transpEffCoef
             hourlyPotTr_VPDLimited = new List<double>();
 
-            XYPairs interpol = new XYPairs();
-            interpol.X = hourlyVPD.ToArray();
-            interpol.Y = hourlyPotDM.ToArray();
-            double dmVPDThresh = interpol.ValueIndexed(VPDThresh);
+            double dmVPDThresh = 0;
+            if (hourlyVPD.Max() > VPDThresh)
+            {
+                XYPairs interpol = new XYPairs
+                {
+                    X = hourlyVPD.ToArray(),
+                    Y = hourlyPotDM.ToArray()
+                };
+                dmVPDThresh = interpol.ValueIndexed(VPDThresh);
+            }
 
             for (int i = 0; i < 24; i++)
             {
@@ -444,7 +450,7 @@ namespace Models.Functions.SupplyFunctions
                     hourlyPotTr_VPDLimited.Add(hourlyPotTr[i] - reduction);
 
                 } else
-                    hourlyPotTr_VPDLimited.Add(hourlyPotDM[i]);
+                    hourlyPotTr_VPDLimited.Add(hourlyPotTr[i]);
             }
         }
         //------------------------------------------------------------------------------------------------
