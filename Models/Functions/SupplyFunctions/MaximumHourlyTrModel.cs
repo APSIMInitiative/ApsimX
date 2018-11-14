@@ -428,30 +428,35 @@ namespace Models.Functions.SupplyFunctions
         private void CalcVPDCappedTr()
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, capped hourlyVPD and transpEffCoef
-            hourlyPotTr_VPDLimited = new List<double>();
 
             double dmVPDThresh = 0;
             if (hourlyVPD.Max() > VPDThresh)
             {
+                hourlyPotTr_VPDLimited = new List<double>();
                 XYPairs interpol = new XYPairs
                 {
                     X = hourlyVPD.ToArray(),
                     Y = hourlyPotDM.ToArray()
                 };
                 dmVPDThresh = interpol.ValueIndexed(VPDThresh);
-            }
 
-            for (int i = 0; i < 24; i++)
-            {
-                if (hourlyVPD[i] > VPDThresh)
+                for (int i = 0; i < 24; i++)
                 {
-                    double trVPDThresh = dmVPDThresh * VPDThresh / transpEffCoef; // Hourly transpiration at VPDThresh
-                    double reduction = Math.Max(0, hourlyPotTr[i] - trVPDThresh) * HighVPDReduction; // Reduction in the part of hourly transpiration above trVPDThresh
-                    hourlyPotTr_VPDLimited.Add(hourlyPotTr[i] - reduction);
-
-                } else
-                    hourlyPotTr_VPDLimited.Add(hourlyPotTr[i]);
+                    if (hourlyVPD[i] > VPDThresh)
+                    {
+                        double trVPDThresh = dmVPDThresh * VPDThresh / transpEffCoef; // Hourly transpiration at VPDThresh
+                        double reduction = Math.Max(0, hourlyPotTr[i] - trVPDThresh) * HighVPDReduction; // Reduction in the part of hourly transpiration above trVPDThresh
+                        hourlyPotTr_VPDLimited.Add(hourlyPotTr[i] - reduction);
+                    }
+                    else
+                        hourlyPotTr_VPDLimited.Add(hourlyPotTr[i]);
+                }
             }
+            else
+            {
+                hourlyPotTr_VPDLimited = new List<double>(hourlyPotTr);
+            }
+
         }
         //------------------------------------------------------------------------------------------------
 
