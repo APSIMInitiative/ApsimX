@@ -13,6 +13,7 @@ namespace Models
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
+    using Models.Storage;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -48,7 +49,7 @@ namespace Models
                 if (args.Length >= 1)
                     fileName = args[0];
 
-                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/?]";
+                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/m] [/?]";
                 if (args.Contains("/?"))
                 {
                     string detailedHelpInfo = usageMessage;
@@ -61,12 +62,13 @@ namespace Models
                     detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
                     detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
                     detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
+                    detailedHelpInfo += "    /m                   Use the experimental multi-process job runner." + Environment.NewLine;
                     detailedHelpInfo += "    /?                   Show detailed help information.";
                     Console.WriteLine(detailedHelpInfo);
                     return 1;
                 }
 
-                if (args.Length < 1 || args.Length > 8)
+                if (args.Length < 1 || args.Length > 9)
                 {
                     Console.WriteLine(usageMessage);
                     return 1;
@@ -85,8 +87,9 @@ namespace Models
                 // If the filename argument has a wildcard then create a IJobManager to go look for matching files to run.
                 // Otherwise, create a JobManager to open the filename and run it in a separate, external process
                 IJobManager job;
-                if (fileName.Contains('*') || fileName.Contains('?'))
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"));
+                bool hasWildcard = fileName.Contains('*') || fileName.Contains('?');
+                if (hasWildcard)
+                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"), args.Contains("/m"));
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
@@ -94,6 +97,17 @@ namespace Models
                 IJobRunner jobRunner;
                 if (args.Contains("/SingleThreaded"))
                     jobRunner = new JobRunnerSync();
+                else if (args.Contains("/m"))
+                {
+                    // If the multi-process switch has been provided as well as a wildcard in the filename,
+                    // we want to use the single threaded job runner, but run each job in multi-process mode.
+                    // TODO : might be useful to allow users to run a directory of apsimx files via the multi-
+                    // process job runner. This could be faster if they have many small files.
+                    if (hasWildcard)
+                        jobRunner = new JobRunnerSync();
+                    else
+                        jobRunner = new JobRunnerMultiProcess(args.Contains("/Verbose"));
+                }
                 else
                     jobRunner = new JobRunnerAsync();
                 if (args.Select(arg => arg.ToLower()).Contains("/csv"))

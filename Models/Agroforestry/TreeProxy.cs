@@ -190,7 +190,7 @@ namespace Models.Agroforestry
         /// Tree canopy widths
         /// </summary>
         [Summary]
-        public double[] CanopyWidths { get; set; }
+        public double[] CanopyWidths { get; set; } = new double[0];
 
         /// <summary>
         /// Tree leaf areas

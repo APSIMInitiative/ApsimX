@@ -63,8 +63,7 @@ namespace Models
 
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>
-        [XmlElement("Operation")]
-        public List<Operation> Schedule { get; set; }
+        public List<Operation> Operation { get; set; }
 
         /// <summary>Simulation is commencing.</summary>
         /// <param name="sender">The sender.</param>
@@ -81,8 +80,11 @@ namespace Models
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            if (Operation == null)
+                Operation = new List<Operation>();
+
             DateTime operationDate;
-            foreach (Operation operation in Schedule.Where(o => o.Enabled))
+            foreach (Operation operation in Operation.Where(o => o.Enabled))
             {
                 operationDate = DateUtilities.validateDateString(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)

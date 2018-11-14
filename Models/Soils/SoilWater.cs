@@ -1577,15 +1577,6 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// Called when [loaded].
-        /// </summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
-        {
-
-        }
-
-        /// <summary>
         /// Called when [simulation commencing].
         /// </summary>
         /// <param name="sender">The sender.</param>

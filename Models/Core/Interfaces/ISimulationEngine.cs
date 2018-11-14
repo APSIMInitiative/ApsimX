@@ -18,13 +18,9 @@ namespace Models.Core.Interfaces
         string FileName { get; }
 
         /// <summary>
-        /// Perform model substitutions, if necessary, then issue a "Loaded" event
+        /// Perform model substitutions
         /// </summary>
         void MakeSubsAndLoad(Simulation simulation);
-        
-        /// <summary>Make model substitutions if necessary.</summary>
-        /// <param name="model">The mode to make substitutions in</param>                                                          
-        void MakeSubstitutions(IModel model);
 
         /// <summary>Run a simulation</summary>
         /// <param name="simulation">The simulation to run</param>

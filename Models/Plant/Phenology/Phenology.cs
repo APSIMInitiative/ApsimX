@@ -279,9 +279,8 @@ namespace Models.PMF.Phen
         ///7. Private methods
         /// -----------------------------------------------------------------------------------------------------------
 
-        /// <summary>Initialize the phase list of phenology.</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
                 foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))

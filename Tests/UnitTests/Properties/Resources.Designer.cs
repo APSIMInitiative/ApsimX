@@ -59,45 +59,5 @@ namespace UnitTests.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Continuous_Wheat {
-            get {
-                object obj = ResourceManager.GetObject("Continuous_Wheat", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Continuous_Wheat1 {
-            get {
-                object obj = ResourceManager.GetObject("Continuous_Wheat1", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Goondiwindi {
-            get {
-                object obj = ResourceManager.GetObject("Goondiwindi", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] TestFile {
-            get {
-                object obj = ResourceManager.GetObject("TestFile", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

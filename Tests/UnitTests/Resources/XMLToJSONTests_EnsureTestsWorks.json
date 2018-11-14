@@ -1,0 +1,74 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "Name": "DataStore",
+      "Children": [
+        {
+          "$type": "Models.Tests, Models",
+          "Name": "Test with no stats",
+          "AcceptedStats": null
+        },
+        {
+          "$type": "Models.Tests, Models",
+          "Name": "Test with one stat",
+          "AcceptedStats": [
+            {
+              "Name": "MaxLeafSize.Script.MaxLeafSize",
+              "n": 137,
+              "Slope": 1.0249885182199205,
+              "Intercept": -87.8828733653645,
+              "SEslope": 0.027203290933558777,
+              "SEintercept": 36.338643450782946,
+              "R2": 0.91316625822182118,
+              "RMSE": 220.84183606992877,
+              "NSE": 0.89174017848484943,
+              "ME": -59.022390864536483,
+              "MAE": 153.41315252397067,
+              "RSR": 0.32782556922829786
+            }
+          ],
+          "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR",
+          "POName": "LeafSizeObsPred"
+        },
+        {
+          "$type": "Models.Tests, Models",
+          "Name": "Test with two stat",
+          "AcceptedStats": [
+            {
+              "Name": "ET",
+              "n": 123,
+              "Slope": 1.1316911691807905,
+              "Intercept": -0.42852485758004422,
+              "SEslope": 0.043714911759702088,
+              "SEintercept": 0.1695726877605401,
+              "R2": 0.84706542402663543,
+              "RMSE": 0.75711046274626093,
+              "NSE": 0.75067193089921658,
+              "ME": 0.041670683467817562,
+              "MAE": 0.55823408215881576,
+              "RSR": 0.49729368750107755
+            },
+            {
+              "Name": "ProfileWater",
+              "n": 1327,
+              "Slope": 0.87658770051688029,
+              "Intercept": 76.038910287756153,
+              "SEslope": 0.013020263518700569,
+              "SEintercept": 5.4794675052507227,
+              "R2": 0.7737996752709706,
+              "RMSE": 58.787578405735566,
+              "NSE": 0.70273305322129209,
+              "ME": 25.835469273289075,
+              "MAE": 33.060033011877238,
+              "RSR": 0.54501645158729284
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
