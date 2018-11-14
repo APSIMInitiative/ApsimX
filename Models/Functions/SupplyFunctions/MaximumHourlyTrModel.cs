@@ -148,8 +148,6 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyPotDM;
         private List<double> hourlyActDM;
 
-        private XYPairs tempResponseFunc = new XYPairs();
-
         /// <summary>Total potential daily assimilation in g/m2</summary>
         private double dailyPotDM;
 
@@ -250,24 +248,7 @@ namespace Models.Functions.SupplyFunctions
                 double maxLag = 1.5;        // 1.86;  // a, Greg=1.5
                 double nightCoef = 4;       // 2.20;  // b, Greg=4.0
 
-                latR = Math.PI / 180.0 * Weather.Latitude;       // convert latitude (degrees) to radians
-                double GlobalRadiation = Weather.Radn * 1e6;     // solar radiation
-                double PI = Math.PI;
-                double RAD = PI / 180.0;
-
-                //Declination of the sun as function of Daynumber (vDay)
-                double Dec = -Math.Asin(Math.Sin(23.45 * RAD) * Math.Cos(2.0 * PI * ((double)Clock.Today.DayOfYear + 10.0) / 365.0));
-
-                //vSin, vCos and vRsc are intermediate variables
-                double Sin = Math.Sin(latR) * Math.Sin(Dec);
-                double Cos = Math.Cos(latR) * Math.Cos(Dec);
-                double Rsc = Sin / Cos;
-
-                //Astronomical daylength (hr)
-                double DayL = 12.0 * (1.0 + 2.0 * Math.Asin(Sin / Cos) / PI);
-                double DailySinE = 3600.0 * (DayL * (Sin + 0.4 * (Sin * Sin + Cos * Cos * 0.5))
-                         + 12.0 * Cos * (2.0 + 3.0 * 0.4 * Sin) * Math.Sqrt(1.0 - Rsc * Rsc) / PI);
-
+                double DayL = DayLength();                                      // Astronomical daylength (hr)
                 double nightL = (24.0 - DayL);                                  // night length, hours
                 double riseHour = 0.5 * (24 - DayL);
                 double setHour = riseHour + DayL;                               // determine if the hour is during the day or night
@@ -360,8 +341,7 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlySVP at the air temperature in hPa
             hourlySVP = new List<double>();
-            for (int i = 0; i < 24; i++)
-                hourlySVP.Add(MetUtilities.svp(hourlyTemp[i]));
+            for (int i = 0; i < 24; i++) hourlySVP.Add(MetUtilities.svp(hourlyTemp[i]));
         }
         //------------------------------------------------------------------------------------------------
 
@@ -382,8 +362,11 @@ namespace Models.Functions.SupplyFunctions
             double tempResponse = 1;
             hourlyRUE = new List<double>();
 
-            tempResponseFunc.X = new double[4] { 0, 15, 25, 35 };
-            tempResponseFunc.Y = new double[4] { 0, 1, 1, 0 };
+            XYPairs tempResponseFunc = new XYPairs
+            {
+                X = new double[4] { 0, 15, 25, 35 },
+                Y = new double[4] { 0, 1, 1, 0 }
+            };
 
             for (int i = 0; i < 24; i++)
             {
@@ -555,8 +538,7 @@ namespace Models.Functions.SupplyFunctions
                 if (!string.Equals(SWType, "daily"))
                 {
                     sumTr = hourlyActTr.Sum();
-                    for (int i = 0; i < 24; i++)
-                        hourlyActTr[i] *= MathUtilities.Divide(rootWaterSupp, sumTr, 0);
+                    for (int i = 0; i < 24; i++) hourlyActTr[i] *= MathUtilities.Divide(rootWaterSupp, sumTr, 0);
                 }
             }
         }
