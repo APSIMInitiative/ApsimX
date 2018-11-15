@@ -54,6 +54,13 @@ namespace Models.AgPasture
 
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        /// <summary>Invoked for incorporating soil FOM.</summary>
+        /// <param name="Data">The data about biomass deposited by this plant into the soil FOM</param>
+        public delegate void FOMLayerDelegate(FOMLayerType Data);
+
+        /// <summary>Occurs when plant is detaching senesced roots.</summary>
+        public event FOMLayerDelegate IncorpFOM;
+
         /// <summary>Invoked for incorporating surface OM.</summary>
         /// <param name="Data">The data about biomass deposited by this plant onto the soil surface</param>
         public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
@@ -168,9 +175,6 @@ namespace Models.AgPasture
             set { myWaterDemand = value; }
         }
 
-        /// <summary>Sets the actual water demand.</summary>
-        public double WaterDemand { get; set; }
-
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
@@ -274,16 +278,16 @@ namespace Models.AgPasture
             DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.DoDetachBiomassToSoilFOM(root.DMTotal, root.NTotal);
+            plantZoneRoots.DoEndOrgan(CarbonFractionInDM);
+            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoEndOrgan(CarbonFractionInDM);
 
             // zero all variables
             RefreshVariables();
             leaves.DoResetOrgan();
             stems.DoResetOrgan();
             stolons.DoResetOrgan();
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.DoResetOrgan();
+            plantZoneRoots.DoResetOrgan();
 
             isAlive = false;
             phenologicStage = -1;
@@ -309,10 +313,10 @@ namespace Models.AgPasture
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     // Find the zone in our root zones.
-                    PastureBelowGroundOrgan myRoot = roots.Find(root => root.ZoneName == zone.Zone.Name);
-                    if (myRoot != null)
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
+                    if (root != null)
                     {
-                        double[] organSupply = myRoot.EvaluateSoilWaterAvailable(zone);
+                        double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
                         if (organSupply != null)
                         {
                             supplies.Add(organSupply);
@@ -363,22 +367,22 @@ namespace Models.AgPasture
 
                 // Get the zone this plant is in
                 Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                foreach (ZoneWaterAndN zone in soilstate.Zones)
+                foreach (ZoneWaterAndN Z in soilstate.Zones)
                 {
-                    PastureBelowGroundOrgan myRoot = roots.Find(root => root.ZoneName == zone.Zone.Name);
-                    if (myRoot != null)
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                    if (root != null)
                     {
-                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
+                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(Z.Zone);
                         zones.Add(UptakeDemands);
 
                         // Get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailable(zone, mySoilWaterUptake);
+                        root.EvaluateSoilNitrogenAvailable(Z, mySoilWaterUptake);
 
-                        UptakeDemands.NO3N = myRoot.mySoilNO3Available;
-                        UptakeDemands.NH4N = myRoot.mySoilNH4Available;
-                        UptakeDemands.Water = new double[zone.NO3N.Length];
+                        UptakeDemands.NO3N = root.mySoilNO3Available;
+                        UptakeDemands.NH4N = root.mySoilNH4Available;
+                        UptakeDemands.Water = new double[Z.NO3N.Length];
 
-                        NSupply += (MathUtilities.Sum(myRoot.mySoilNH4Available) + MathUtilities.Sum(myRoot.mySoilNO3Available)) * zone.Zone.Area;
+                        NSupply += (MathUtilities.Sum(root.mySoilNH4Available) + MathUtilities.Sum(root.mySoilNO3Available)) * Z.Zone.Area;
                     }
                 }
 
@@ -422,13 +426,13 @@ namespace Models.AgPasture
             foreach (ZoneWaterAndN zone in zones)
             {
                 // Find the zone in our root zones.
-                PastureBelowGroundOrgan myRoot = roots.Find(root => root.ZoneName == zone.Zone.Name);
-                if (myRoot != null)
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
+                if (root != null)
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        myRoot.mySoil.SoilWater.RemoveWater(zone.Water);
+                        root.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
         }
@@ -441,16 +445,16 @@ namespace Models.AgPasture
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
 
-            foreach (ZoneWaterAndN zone in zones)
+            foreach (ZoneWaterAndN Z in zones)
             {
-                PastureBelowGroundOrgan myRoot = roots.Find(root => root.ZoneName == zone.Zone.Name);
-                if (myRoot != null)
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                if (root != null)
                 {
-                    myRoot.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, zone.NO3N);
-                    myRoot.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, zone.NH4N);
+                    root.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, Z.NO3N);
+                    root.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, Z.NH4N);
 
-                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
-                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
+                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, Z.NH4N);
+                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, Z.NO3N);
                 }
             }
         }
@@ -1567,7 +1571,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Factor to compute root distribution (controls where, below maxRootDepth, the function is zero).</summary>
-        private double myRootBottomDistributionFactor = 1.05;
+        private double rootBottomDistributionFactor = 1.05;
 
         ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1800,14 +1804,18 @@ namespace Models.AgPasture
         [ChildLinkByName]
         private PastureAboveGroundOrgan stems = null;
 
+
         // TODO: Currently STOCK will graze all stolons that it can see even though
         // some will be on the ground and shouldn't be accessible to the animals.
         /// <summary>Holds info about state of stolons (DM and N).</summary>
         [ChildLinkByName]
         private PastureAboveGroundOrgan stolons = null;
 
-        /// <summary>Holds the info about state of roots (DM and N). It is a list of root organs, one for each zone where roots are growing.</summary>
-        private List<PastureBelowGroundOrgan> roots;
+        /// <summary>Holds a list of root organs, one for each zone where roots are growing.</summary>
+        internal List<PastureBelowGroundOrgan> rootZones;
+
+        /// <summary>Holds info about state of roots (DM and N) in the zone where the plant is located.</summary>
+        internal PastureBelowGroundOrgan plantZoneRoots;
 
         /// <summary>Holds the basic state variables for this plant (to be used for reset).</summary>
         private SpeciesBasicStateSettings InitialState;
@@ -1998,8 +2006,8 @@ namespace Models.AgPasture
         {
             get
             {
-                double[] available = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
+                double[] available = plantZoneRoots.mySoilNH4Available;
+                foreach (PastureBelowGroundOrgan root in rootZones)
                     available = MathUtilities.Add(available, root.mySoilNH4Available);
                 return available;
             }
@@ -2011,8 +2019,8 @@ namespace Models.AgPasture
         {
             get
             {
-                double[] available = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
+                double[] available = plantZoneRoots.mySoilNO3Available;
+                foreach (PastureBelowGroundOrgan root in rootZones)
                     available = MathUtilities.Add(available, root.mySoilNO3Available);
                 return available;
             }
@@ -2291,8 +2299,8 @@ namespace Models.AgPasture
         {
             get
             {
-                double dmTotal = 0.0;
-                foreach (PastureBelowGroundOrgan root in roots)
+                double dmTotal = plantZoneRoots.DMTotal;
+                foreach (PastureBelowGroundOrgan root in rootZones)
                     dmTotal += root.DMTotal;
                 return dmTotal;
             }
@@ -2385,9 +2393,9 @@ namespace Models.AgPasture
         {
             get
             {
-                double rootWt = 0.0;
-                foreach (PastureBelowGroundOrgan root in roots)
-                    rootWt += root.DMTotal;
+                double rootWt = plantZoneRoots.DMTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    rootWt += zone.DMTotal;
                 return rootWt;
             }
         }
@@ -2399,9 +2407,9 @@ namespace Models.AgPasture
         {
             get
             {
-                double[] rootLayerWt = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
-                    rootLayerWt = MathUtilities.Add(rootLayerWt, root.Tissue[0].DMLayer);
+                double[] rootLayerWt = plantZoneRoots.Tissue[0].DMLayer;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    rootLayerWt = MathUtilities.Add(rootLayerWt, zone.Tissue[0].DMLayer);
                 return rootLayerWt;
             }
         }
@@ -2447,9 +2455,9 @@ namespace Models.AgPasture
         {
             get
             {
-                double nTotal = 0.0;
-                foreach (PastureBelowGroundOrgan root in roots)
-                    nTotal += root.NTotal;
+                double nTotal = plantZoneRoots.NTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    nTotal += zone.NTotal;
                 return nTotal;
             }
         }
@@ -2541,9 +2549,9 @@ namespace Models.AgPasture
         {
             get
             {
-                double nTotal = 0.0;
-                foreach (PastureBelowGroundOrgan root in roots)
-                    nTotal += root.NTotal;
+                double nTotal = plantZoneRoots.NTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    nTotal += zone.NTotal;
                 return nTotal;
             }
         }
@@ -2753,10 +2761,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return leaves.NSenescedRemobilisable 
-                     + stems.NSenescedRemobilisable 
-                     + stolons.NSenescedRemobilisable 
-                     + roots.Sum(root => root.NSenescedRemobilisable);
+                return leaves.NSenescedRemobilisable + stems.NSenescedRemobilisable + stolons.NSenescedRemobilisable + plantZoneRoots.NSenescedRemobilisable;
             }
         }
 
@@ -2773,10 +2778,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double RemobilisableLuxuryN
         {
-            get { return leaves.NLuxuryRemobilisable 
-                       + stems.NLuxuryRemobilisable 
-                       + stolons.NLuxuryRemobilisable 
-                       + roots.Sum(root => root.NLuxuryRemobilisable); }
+            get { return leaves.NLuxuryRemobilisable + stems.NLuxuryRemobilisable + stolons.NLuxuryRemobilisable + plantZoneRoots.NLuxuryRemobilisable; }
         }
 
         /// <summary>Gets the amount of luxury N actually remobilised (kgN/ha).</summary>
@@ -2903,6 +2905,15 @@ namespace Models.AgPasture
                 SoilCrop soilInfo = (SoilCrop)mySoil.Crop(Name);
                 return soilInfo.LL;
             }
+        }
+
+        /// <summary>Gets or sets the amount of water demanded by the plant (mm).</summary>
+        [Description("Amount of water demanded by the plant")]
+        [Units("mm")]
+        public double WaterDemand
+        {
+            get { return myWaterDemand; }
+            set { myWaterDemand = value; }
         }
 
         /// <summary>Gets the amount of plant available water in each soil layer (mm).</summary>
@@ -3119,7 +3130,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double RootDepth
         {
-            get { return roots[0].Depth; }
+            get { return plantZoneRoots.Depth; }
         }
 
         /// <summary>Gets the layer at bottom of root zone ().</summary>
@@ -3127,7 +3138,7 @@ namespace Models.AgPasture
         [Units("-")]
         public int RootFrontier
         {
-            get { return roots[0].BottomLayer; }
+            get { return plantZoneRoots.BottomLayer; }
         }
 
         /// <summary>Gets the fraction of root dry matter for each soil layer (0-1).</summary>
@@ -3135,13 +3146,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double[] RootWtFraction
         {
-            get
-            {
-                double[] fractions = new double[nLayers];
-                for (int layer = 0; layer < nLayers; layer++)
-                    fractions[layer] = roots.Sum(root => root.Tissue[0].DMLayer[layer]) / RootWt;
-                return fractions;
-            }
+            get { return plantZoneRoots.Tissue[0].FractionWt; }
         }
 
         /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
@@ -3152,11 +3157,11 @@ namespace Models.AgPasture
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = roots.Sum(root => root.Tissue[0].DM) * mySpecificRootLength; // m root/m2 
+                double totalRootLength = plantZoneRoots.Tissue[0].DM * mySpecificRootLength; // m root/m2 
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = RootWtFraction[layer] * totalRootLength / mySoil.Thickness[layer];
+                    result[layer] = plantZoneRoots.Tissue[0].FractionWt[layer] * totalRootLength / mySoil.Thickness[layer];
                 }
                 return result;
             }
@@ -3635,42 +3640,34 @@ namespace Models.AgPasture
             // get the number of layers in the soil profile
             nLayers = mySoil.Thickness.Length;
 
-            // set up the organs (only root here, other organs are initialise indirectly, they have 4 tissues, last one is dead)
-            roots = new List<PastureBelowGroundOrgan>();
-            // set the base or main root zone (use 2 tissues one live other dead), more zones can be added by user
-            roots.Add(new PastureBelowGroundOrgan(Name, 2,
-                                                  myInitialRootDM, myInitialRootDepth,
-                                                  myNThresholdsForRoots[0], myNThresholdsForRoots[1], myNThresholdsForRoots[2],
-                                                  myMinimumGreenWt * MinimumGreenRootProp, myFractionNLuxuryRemobilisable[0],
-                                                  SpecificRootLength, myRootDepthMaximum,
-                                                  myRootDistributionDepthParam, myRootDistributionExponent, myRootBottomDistributionFactor,
-                                                  myWaterAvailableMethod, myNitrogenAvailableMethod,
-                                                  KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
-                                                  ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
-                                                  mySoil));
+            // set up the organs (use 4 or 2 tissues, the last is dead)
+            rootZones = new List<PastureBelowGroundOrgan>();
+            plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
+                                                         myWaterAvailableMethod, myNitrogenAvailableMethod,
+                                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                                         mySoil, Name,
+                                                         InitialRootDepth, myInitialRootDM, SpecificRootLength, 
+                                                         ReferenceRLD, ExponentSoilMoisture, ReferenceKSuptake,
+                                                         myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor,
+                                                         myRootDistributionExponent);
+            rootZones.Add(plantZoneRoots);
 
-            // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
-                // find the zone and get its soil
                 Zone zone = Apsim.Find(this, rootZone.ZoneName) as Zone;
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
-                Soil zoneSoil = Apsim.Child(zone, typeof(Soil)) as Soil;
-                if (zoneSoil == null)
+                Soil soil = Apsim.Child(zone, typeof(Soil)) as Soil;
+                if (soil == null)
                     throw new Exception("Cannot find a soil in zone : " + rootZone.ZoneName);
-
-                //add the zone to the list
-                roots.Add(new PastureBelowGroundOrgan(Name, 2,
-                                                      rootZone.RootDM, rootZone.RootDepth,
-                                                      myNThresholdsForRoots[0], myNThresholdsForRoots[1], myNThresholdsForRoots[2],
-                                                      myMinimumGreenWt * MinimumGreenRootProp, myFractionNLuxuryRemobilisable[0],
-                                                      SpecificRootLength, myRootDepthMaximum,
-                                                      myRootDistributionDepthParam, myRootDistributionExponent, myRootBottomDistributionFactor,
-                                                      myWaterAvailableMethod, myNitrogenAvailableMethod,
-                                                      KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
-                                                      ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
-                                                      zoneSoil));
+                rootZones.Add(new PastureBelowGroundOrgan(2, nLayers,
+                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,
+                                                          KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                                          soil, Name,
+                                                          rootZone.RootDepth, rootZone.RootDM, rootZone.SpecificRootLength, 
+                                                          ReferenceRLD, ExponentSoilMoisture, ReferenceKSuptake,
+                                                          myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor,
+                                                          myRootDistributionExponent));
             }
 
             // initialise soil water and N variables
@@ -3706,7 +3703,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Initialises, checks, and saves the variables representing the initial plant state.</summary>
-        private void    CheckInitialState()
+        private void CheckInitialState()
         {
             // 1. Choose the appropriate DM partition, based on species family
             double[] initialDMFractions;
@@ -3730,6 +3727,10 @@ namespace Models.AgPasture
             stolons.NConcMinimum = myNThresholdsForStolons[1];
             stolons.NConcMaximum = myNThresholdsForStolons[2];
 
+            plantZoneRoots.NConcOptimum = myNThresholdsForRoots[0];
+            plantZoneRoots.NConcMinimum = myNThresholdsForRoots[1];
+            plantZoneRoots.NConcMaximum = myNThresholdsForRoots[2];
+
             // 3. Save initial state (may be used later for reset)
             InitialState = new SpeciesBasicStateSettings();
             if (myInitialShootDM > Epsilon)
@@ -3738,7 +3739,7 @@ namespace Models.AgPasture
                 InitialState.PhenoStage = 1;
                 for (int pool = 0; pool < 11; pool++)
                     InitialState.DMWeight[pool] = initialDMFractions[pool] * myInitialShootDM;
-                InitialState.DMWeight[11] = myInitialRootDM; //Note: this is now held in 'roots'
+                InitialState.DMWeight[11] = myInitialRootDM;
                 InitialState.RootDepth = myInitialRootDepth;
                 if (myInitialRootDepth > RootDepthMaximum)
                     throw new ApsimXException(this, "The value for the initial root depth is greater than the value set for maximum depth");
@@ -3755,7 +3756,7 @@ namespace Models.AgPasture
                 InitialState.NAmount[8] = InitialState.DMWeight[8] * stolons.NConcOptimum;
                 InitialState.NAmount[9] = InitialState.DMWeight[9] * stolons.NConcOptimum;
                 InitialState.NAmount[10] = InitialState.DMWeight[10] * stolons.NConcOptimum;
-                InitialState.NAmount[11] = InitialState.DMWeight[11] * roots[0].NConcOptimum; //Note: this is now held in 'roots'
+                InitialState.NAmount[11] = InitialState.DMWeight[11] * plantZoneRoots.NConcOptimum;
             }
             else if (myInitialShootDM > -Epsilon)
             {
@@ -3772,9 +3773,11 @@ namespace Models.AgPasture
             leaves.MinimumLiveDM = myMinimumGreenWt * MinimumGreenLeafProp;
             stems.MinimumLiveDM = myMinimumGreenWt * (1.0 - MinimumGreenLeafProp);
             stolons.MinimumLiveDM = 0.0;
+            plantZoneRoots.MinimumLiveDM = myMinimumGreenWt * MinimumGreenRootProp;
             stolons.FractionStanding = myFractionStolonStanding;
 
             // 5. Set remobilisation rate for luxury N in each tissue
+            plantZoneRoots.Tissue[0].FractionNLuxuryRemobilisable = myFractionNLuxuryRemobilisable[0];
             for (int tissue = 0; tissue < 3; tissue++)
             {
                 leaves.Tissue[tissue].FractionNLuxuryRemobilisable = myFractionNLuxuryRemobilisable[tissue];
@@ -3831,6 +3834,7 @@ namespace Models.AgPasture
             stolons.Tissue[0].Namount = InitialState.NAmount[8];
             stolons.Tissue[1].Namount = InitialState.NAmount[9];
             stolons.Tissue[2].Namount = InitialState.NAmount[10];
+            plantZoneRoots.Tissue[0].Namount = InitialState.NAmount[11];
 
             // 5. Set initial phenological stage
             phenologicStage = InitialState.PhenoStage;
@@ -3857,14 +3861,11 @@ namespace Models.AgPasture
             stolons.Tissue[1].DM = myMinimumGreenWt * emergenceDMFractions[9];
             stolons.Tissue[2].DM = myMinimumGreenWt * emergenceDMFractions[10];
 
-            // 2. Set root depth and DM
-            foreach (PastureBelowGroundOrgan root in roots)
-            {
-                root.Depth = myRootDepthMinimum;
-                double[] rootFractions = root.CurrentRootDistributionTarget(myRootDepthMaximum);
-                for (int layer = 0; layer < nLayers; layer++)
-                    root.Tissue[0].DMLayer[layer] = root.MinimumLiveDM * rootFractions[layer];
-            }
+            // 2. Set root depth and DM (root DM equals shoot)
+            plantZoneRoots.Depth = myRootDepthMinimum;            
+            double[] rootFractions = plantZoneRoots.CurrentRootDistributionTarget(myRootDepthMaximum);
+            for (int layer = 0; layer < nLayers; layer++)
+                plantZoneRoots.Tissue[0].DMLayer[layer] = plantZoneRoots.MinimumLiveDM * rootFractions[layer];
 
             // 3. Set the N amounts in each plant part (assume to be at optimum)
             leaves.Tissue[0].Nconc = leaves.NConcOptimum;
@@ -3878,8 +3879,7 @@ namespace Models.AgPasture
             stolons.Tissue[0].Nconc = stolons.NConcOptimum;
             stolons.Tissue[1].Nconc = stolons.NConcOptimum;
             stolons.Tissue[2].Nconc = stolons.NConcOptimum;
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.Tissue[0].Nconc = root.NConcOptimum;
+            plantZoneRoots.Tissue[0].Nconc = plantZoneRoots.NConcOptimum;
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
@@ -4031,8 +4031,7 @@ namespace Models.AgPasture
             leaves.DoCleanTransferAmounts();
             stems.DoCleanTransferAmounts();
             stolons.DoCleanTransferAmounts();
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.DoCleanTransferAmounts();
+            plantZoneRoots.DoCleanTransferAmounts();
         }
 
         /// <summary>Performs the calculations for potential growth.</summary>
@@ -4102,8 +4101,7 @@ namespace Models.AgPasture
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    foreach (PastureBelowGroundOrgan root in roots)
-                        root.DoDetachBiomassToSoilFOM(root.DMDetached, root.NDetached);
+                    DoAddDetachedRootToSoilFOM(detachedRootDM, detachedRootN);
                 }
             }
             //else { // Growth is controlled by Sward (all species) }
@@ -4268,7 +4266,7 @@ namespace Models.AgPasture
             tempEffectOnRespiration = TemperatureEffectOnRespiration(Tmean(0.5));
 
             // Total DM converted to C (kg/ha)
-            double liveBiomassC = (AboveGroundLiveWt + roots.Sum(root => root.DMLive)) * CarbonFractionInDM;
+            double liveBiomassC = (AboveGroundLiveWt + plantZoneRoots.DMLive) * CarbonFractionInDM;
             double result = liveBiomassC * myMaintenanceRespirationCoefficient * tempEffectOnRespiration * glfNc;
             return Math.Max(0.0, result);
         }
@@ -4380,14 +4378,12 @@ namespace Models.AgPasture
             }
 
             // Check minimum DM for roots too
-            double liveRootDM = roots.Sum(root => root.DMLive);
-            double minimumLiveDM = roots.Sum(root => root.MinimumLiveDM);
-            if (liveRootDM * (1.0 - gamaR) < minimumLiveDM)
+            if (plantZoneRoots.DMLive * (1.0 - gamaR) < plantZoneRoots.MinimumLiveDM)
             {
-                if (liveRootDM <= minimumLiveDM)
+                if (plantZoneRoots.DMLive <= plantZoneRoots.MinimumLiveDM)
                     gamaR = 0.0;
                 else
-                    gamaR = MathUtilities.Divide(liveRootDM - minimumLiveDM, liveRootDM, 0.0);
+                    gamaR = MathUtilities.Divide(plantZoneRoots.DMLive - plantZoneRoots.MinimumLiveDM, plantZoneRoots.DMLive, 0.0);
             }
 
             // Make sure rates are within bounds
@@ -4411,8 +4407,7 @@ namespace Models.AgPasture
 
             // - Roots (only 2 tissues)
             turnoverRates = new double[] {gamaR, 1.0};
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.DoTissueTurnover(turnoverRates);
+            plantZoneRoots.DoTissueTurnover(turnoverRates);
 
             // TODO: consider C remobilisation
             // ChRemobSugar = dSenescedRoot * KappaCRemob;
@@ -4427,8 +4422,8 @@ namespace Models.AgPasture
             // Get the amounts detached today
             detachedShootDM = leaves.DMDetached + stems.DMDetached + stolons.DMDetached;
             detachedShootN = leaves.NDetached + stems.NDetached + stolons.NDetached;
-            detachedRootDM = roots.Sum(root => root.DMDetached);
-            detachedRootN = roots.Sum(root => root.NDetached);
+            detachedRootDM = plantZoneRoots.DMDetached;
+            detachedRootN = plantZoneRoots.NDetached;
         }
 
         /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
@@ -4450,17 +4445,7 @@ namespace Models.AgPasture
                 leaves.Tissue[0].DMTransferedIn += toLeaf * dGrowthAfterNutrient;
                 stems.Tissue[0].DMTransferedIn += toStem * dGrowthAfterNutrient;
                 stolons.Tissue[0].DMTransferedIn += toStolon * dGrowthAfterNutrient;
-                double allocFraction;
-                foreach (PastureBelowGroundOrgan root in roots)
-                {
-                    // allocate dm to all root zones, proportional to existing DM (TODO: this should not be simply proportional)
-                    if (RootWt > 0.0)
-                        allocFraction = root.DMTotal / RootWt;
-                    else
-                        allocFraction = 1.0 / roots.Count;
-
-                    root.Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrient * allocFraction;
-                }
+                plantZoneRoots.Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrient;
 
                 // Evaluate allocation of N
                 if (dNewGrowthN > demandOptimumN)
@@ -4468,22 +4453,13 @@ namespace Models.AgPasture
                     // Available N was more than enough to meet basic demand (i.e. there is luxury uptake)
                     // allocate N taken up based on maximum N content
                     double Nsum = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
-                                + (toStolon * stolons.NConcMaximum) + (toRoot * roots[0].NConcMaximum);
+                                + (toStolon * stolons.NConcMaximum) + (toRoot * plantZoneRoots.NConcMaximum);
                     if (Nsum > Epsilon)
                     {
-                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * (toLeaf * leaves.NConcMaximum / Nsum);
-                        stems.Tissue[0].NTransferedIn += dNewGrowthN * (toStem * stems.NConcMaximum / Nsum);
-                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * (toStolon * stolons.NConcMaximum / Nsum);
-                        foreach (PastureBelowGroundOrgan root in roots)
-                        {
-                            // allocate N to all root zones, proportional to existing DM (TODO: this should not be simply proportional)
-                            if (RootWt > 0.0)
-                                allocFraction = root.DMTotal / RootWt;
-                            else
-                                allocFraction = 1.0 / roots.Count;
-
-                            root.Tissue[0].NTransferedIn += dNewGrowthN * (toRoot * roots[0].NConcMaximum / Nsum) * allocFraction;
-                        }
+                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * leaves.NConcMaximum / Nsum;
+                        stems.Tissue[0].NTransferedIn += dNewGrowthN * toStem * stems.NConcMaximum / Nsum;
+                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * stolons.NConcMaximum / Nsum;
+                        plantZoneRoots.Tissue[0].NTransferedIn += dNewGrowthN * toRoot * plantZoneRoots.NConcMaximum / Nsum;
                     }
                     else
                     {
@@ -4495,22 +4471,13 @@ namespace Models.AgPasture
                 {
                     // Available N was not enough to meet basic demand, allocate N taken up based on optimum N content
                     double Nsum = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
-                                + (toStolon * stolons.NConcOptimum) + (toRoot * roots[0].NConcOptimum);
+                                + (toStolon * stolons.NConcOptimum) + (toRoot * plantZoneRoots.NConcOptimum);
                     if (Nsum > Epsilon)
                     {
-                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * (toLeaf * leaves.NConcOptimum / Nsum);
-                        stems.Tissue[0].NTransferedIn += dNewGrowthN * (toStem * stems.NConcOptimum / Nsum);
-                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * (toStolon * stolons.NConcOptimum / Nsum);
-                        foreach (PastureBelowGroundOrgan root in roots)
-                        {
-                            // allocate N to all root zones, proportional to existing DM (TODO: this should not be simply proportional)
-                            if (RootWt > 0.0)
-                                allocFraction = root.DMTotal / RootWt;
-                            else
-                                allocFraction = 1.0 / roots.Count;
-
-                            root.Tissue[0].NTransferedIn += dNewGrowthN * (toRoot * roots[0].NConcOptimum / Nsum) * allocFraction;
-                        }
+                        leaves.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * leaves.NConcOptimum / Nsum;
+                        stems.Tissue[0].NTransferedIn += dNewGrowthN * toStem * stems.NConcOptimum / Nsum;
+                        stolons.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * stolons.NConcOptimum / Nsum;
+                        plantZoneRoots.Tissue[0].NTransferedIn += dNewGrowthN * toRoot * plantZoneRoots.NConcOptimum / Nsum;
                     }
                     else
                     {
@@ -4521,10 +4488,7 @@ namespace Models.AgPasture
 
                 // Update N variables
                 dGrowthShootN = leaves.Tissue[0].NTransferedIn + stems.Tissue[0].NTransferedIn + stolons.Tissue[0].NTransferedIn;
-                dGrowthRootN = roots.Sum(root => root.Tissue[0].NTransferedIn);
-
-                if (Math.Abs(dNewGrowthN - dGrowthShootN - dGrowthRootN) > Epsilon)
-                    throw new ApsimXException(this, "Allocation of new growth resulted in loss of mass balance");
+                dGrowthRootN = plantZoneRoots.Tissue[0].NTransferedIn;
 
                 // Evaluate root elongation and allocate new growth in each layer
                 EvaluateRootElongation();
@@ -4545,10 +4509,8 @@ namespace Models.AgPasture
             dGrowthNet = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
             // Save some variables for mass balance check
-            double preTotalWt = AboveGroundWt + BelowGroundWt;
-            double preTotalN = AboveGroundN + BelowGroundN;
-            double tesabN = AboveGroundN;
-            double tesblN = BelowGroundN;
+            double preTotalWt = AboveGroundWt + plantZoneRoots.DMTotal;
+            double preTotalN = AboveGroundN + plantZoneRoots.NTotal;
 
             // Update each organ, returns test for mass balance
             if (leaves.DoOrganUpdate() == false)
@@ -4560,13 +4522,11 @@ namespace Models.AgPasture
             if (stolons.DoOrganUpdate() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            foreach (PastureBelowGroundOrgan root in roots)
-                if (root.DoOrganUpdate() == false)
-                    throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
+            if (plantZoneRoots.DoOrganUpdate() == false)
+                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
-            double postTotalWt = AboveGroundWt + BelowGroundWt;
-            double postTotalN = AboveGroundN + BelowGroundN;
-            double test = LeafWt + StemWt + StolonWt;
+            double postTotalWt = AboveGroundWt + plantZoneRoots.DMTotal;
+            double postTotalN = AboveGroundN + plantZoneRoots.NTotal;
 
             // Check for loss of mass balance in the whole plant
             if (Math.Abs(preTotalWt + dGrowthAfterNutrient - detachedShootDM - detachedRootDM - postTotalWt) > Epsilon)
@@ -4593,34 +4553,31 @@ namespace Models.AgPasture
             if (dGrowthRootDM > Epsilon)
             {
                 // root DM is changing due to growth, check potential changes in distribution
-                foreach (PastureBelowGroundOrgan root in roots)
+                double[] growthRootFraction;
+                double[] currentRootTarget = plantZoneRoots.CurrentRootDistributionTarget(myRootDepthMaximum);
+                if (MathUtilities.AreEqual(plantZoneRoots.Tissue[0].FractionWt, currentRootTarget))
                 {
-                    double[] growthRootFraction;
-                    double[] currentRootTarget = root.CurrentRootDistributionTarget(myRootDepthMaximum);
-                    if (MathUtilities.AreEqual(root.Tissue[0].FractionWt, currentRootTarget))
-                    {
-                        // no need to change the distribution
-                        growthRootFraction = root.Tissue[0].FractionWt;
-                    }
-                    else
-                    {
-                        // root distribution should change, get preliminary distribution (average of current and target)
-                        growthRootFraction = new double[nLayers];
-                        for (int layer = 0; layer <= root.BottomLayer; layer++)
-                            growthRootFraction[layer] = 0.5 * (root.Tissue[0].FractionWt[layer] + currentRootTarget[layer]);
+                    // no need to change the distribution
+                    growthRootFraction = plantZoneRoots.Tissue[0].FractionWt;
+                }
+                else
+                {
+                    // root distribution should change, get preliminary distribution (average of current and target)
+                    growthRootFraction = new double[nLayers];
+                    for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
+                        growthRootFraction[layer] = 0.5 * (plantZoneRoots.Tissue[0].FractionWt[layer] + currentRootTarget[layer]);
 
-                        // normalise distribution of allocation
-                        double layersTotal = growthRootFraction.Sum();
-                        for (int layer = 0; layer <= root.BottomLayer; layer++)
-                            growthRootFraction[layer] = growthRootFraction[layer] / layersTotal;
-                    }
+                    // normalise distribution of allocation
+                    double layersTotal = growthRootFraction.Sum();
+                    for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
+                        growthRootFraction[layer] = growthRootFraction[layer] / layersTotal;
+                }
 
-                    // allocate new growth to each layer in the root zone
-                    for (int layer = 0; layer <= root.BottomLayer; layer++)
-                    {
-                        root.Tissue[0].DMLayersTransferedIn[layer] = root.Tissue[0].DMTransferedIn * growthRootFraction[layer];
-                        root.Tissue[0].NLayersTransferedIn[layer] = root.Tissue[0].NTransferedIn * growthRootFraction[layer];
-                    }
+                // allocate new growth to each layer in the root zone
+                for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
+                {
+                    plantZoneRoots.Tissue[0].DMLayersTransferedIn[layer] = dGrowthRootDM * growthRootFraction[layer];
+                    plantZoneRoots.Tissue[0].NLayersTransferedIn[layer] = dGrowthRootN * growthRootFraction[layer];
                 }
             }
         }
@@ -4752,7 +4709,7 @@ namespace Models.AgPasture
 
             // N demand for new growth, with optimum N (kg/ha)
             demandOptimumN = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
-                       + (toStol * stolons.NConcOptimum) + (toRoot * roots[0].NConcOptimum);
+                       + (toStol * stolons.NConcOptimum) + (toRoot * plantZoneRoots.NConcOptimum);
 
             // get the factor to reduce the demand under elevated CO2
             double fN = NOptimumVariationDueToCO2();
@@ -4760,7 +4717,7 @@ namespace Models.AgPasture
 
             // N demand for new growth, with luxury uptake (maximum [N])
             demandLuxuryN = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
-                       + (toStol * stolons.NConcMaximum) + (toRoot * roots[0].NConcMaximum);
+                       + (toStol * stolons.NConcMaximum) + (toRoot * plantZoneRoots.NConcMaximum);
             // It is assumed that luxury uptake is not affected by CO2 variations
         }
 
@@ -4803,7 +4760,7 @@ namespace Models.AgPasture
             {
                 //  respiration cost of symbiont (presence of rhizobia is assumed to be proportional to root mass)
                 double Tfactor = TemperatureEffectOnRespiration(Tmean(0.5));
-                double maintenanceCost = roots.Sum(root => root.DMLive) * CarbonFractionInDM * mySymbiontCostFactor * Tfactor;
+                double maintenanceCost = plantZoneRoots.DMLive * CarbonFractionInDM * mySymbiontCostFactor * Tfactor;
 
                 //  respiration cost of actual N fixation (assumed as a simple linear function of N fixed)
                 double activityCost = fixedN * myNFixingCostFactor;
@@ -4846,8 +4803,7 @@ namespace Models.AgPasture
                 leaves.Tissue[leaves.Tissue.Length- 1].DoRemobiliseN(fracRemobilised);
                 stems.Tissue[stems.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 stolons.Tissue[stolons.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
-                foreach (PastureBelowGroundOrgan root in roots)
-                    root.Tissue[root.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                plantZoneRoots.Tissue[plantZoneRoots.TissueCount - 1].DoRemobiliseN(fracRemobilised);
             }
         }
 
@@ -4875,10 +4831,7 @@ namespace Models.AgPasture
                             stems.Tissue[tissue].DoRemobiliseN(1.0);
                             stolons.Tissue[tissue].DoRemobiliseN(1.0);
                             if (tissue == 0)
-                            {
-                                foreach (PastureBelowGroundOrgan root in roots)
-                                    root.Tissue[tissue].DoRemobiliseN(1.0);
-                            }
+                                plantZoneRoots.Tissue[tissue].DoRemobiliseN(1.0);
                         }
                     }
                 }
@@ -4892,17 +4845,14 @@ namespace Models.AgPasture
                     {
                         Nluxury = leaves.Tissue[tissue].NRemobilisable + stems.Tissue[tissue].NRemobilisable + stolons.Tissue[tissue].NRemobilisable;
                         if (tissue == 0)
-                            Nluxury = roots.Sum(root => root.Tissue[tissue].NRemobilisable);
+                            Nluxury += plantZoneRoots.Tissue[tissue].NRemobilisable;
                         Nusedup = Math.Min(Nluxury, Nmissing);
                         fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
                         leaves.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         stems.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         stolons.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         if (tissue == 0)
-                        {
-                            foreach (PastureBelowGroundOrgan root in roots)
-                                root.Tissue[tissue].DoRemobiliseN(fracRemobilised);
-                        }
+                            plantZoneRoots.Tissue[tissue].DoRemobiliseN(fracRemobilised);
 
                         luxuryNRemobilised += Nusedup;
                         Nmissing -= Nusedup;
@@ -4943,6 +4893,45 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        private void DoAddDetachedRootToSoilFOM(double amountDM, double amountN)
+        {
+            // ****  RCichota, Jun/2014
+            // root senesced are returned to soil (as FOM) considering return is proportional to root mass
+
+            if (amountDM + amountN > 0.0)
+            {
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = amountDM * plantZoneRoots.Tissue[0].FractionWt[layer];
+                    fomData.N = amountN * plantZoneRoots.Tissue[0].FractionWt[layer];
+                    fomData.C = amountDM * CarbonFractionInDM * plantZoneRoots.Tissue[0].FractionWt[layer];
+                    fomData.P = 0.0; // P not considered here
+                    fomData.AshAlk = 0.0; // Ash not considered here
+
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0; // not used here
+                    layerData.LabileP = 0; // not used here
+
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                if (IncorpFOM != null)
+                {
+                    FOMLayerType FOMData = new FOMLayerType();
+                    FOMData.Type = mySpeciesFamily.ToString();
+                    FOMData.Layer = FOMdataLayer;
+                    IncorpFOM.Invoke(FOMData);
+                }
+            }
+        }
+
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4965,7 +4954,7 @@ namespace Models.AgPasture
         /// </remarks>
         private void EvaluateAllocationToShoot()
         {
-            if (roots.Sum(root=>root.DMLive) > Epsilon)
+            if (plantZoneRoots.DMLive > Epsilon)
             {
                 // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
                 double glfMin = Math.Min(Math.Min(glfWaterSupply, glfWaterLogging), glfNSupply);
@@ -4974,7 +4963,7 @@ namespace Models.AgPasture
                 double glfFactor = 1.0 - myShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / myShootRootGlfFactor));
 
                 // get the current shoot/root ratio (partition will try to make this value closer to targetSR)
-                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, roots.Sum(root => root.DMLive), 1000000.0);
+                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, plantZoneRoots.DMLive, 1000000.0);
 
                 // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
                 double reproFac = 1.0;
@@ -5043,12 +5032,11 @@ namespace Models.AgPasture
             dRootDepth = 0.0;
             if (phenologicStage > 0)
             {
-                if ((dGrowthRootDM - detachedRootDM) > Epsilon)
+                if (((dGrowthRootDM - detachedRootDM) > Epsilon) && (plantZoneRoots.Depth < myRootDepthMaximum))
                 {
                     double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
                     dRootDepth = myRootElongationRate * tempFactor;
-                    foreach(PastureBelowGroundOrgan root in roots)
-                        root.Depth = Math.Min(myRootDepthMaximum, Math.Max(myRootDepthMinimum, root.Depth + dRootDepth));
+                    plantZoneRoots.Depth = Math.Min(myRootDepthMaximum, Math.Max(myRootDepthMinimum, plantZoneRoots.Depth + dRootDepth));
                 }
                 else
                 {
@@ -5124,8 +5112,7 @@ namespace Models.AgPasture
                 leaves.DoKillOrgan(fractionToKill);
                 stems.DoKillOrgan(fractionToKill);
                 stolons.DoKillOrgan(fractionToKill);
-                foreach (PastureBelowGroundOrgan root in roots)
-                    root.DoKillOrgan(fractionToKill);
+                plantZoneRoots.DoKillOrgan(fractionToKill);
             }
             else
             {
@@ -5140,8 +5127,7 @@ namespace Models.AgPasture
             leaves.DoResetOrgan();
             stems.DoResetOrgan();
             stolons.DoResetOrgan();
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.DoResetOrgan();
+            plantZoneRoots.DoResetOrgan();
             SetInitialState();
         }
 
@@ -5841,7 +5827,7 @@ namespace Models.AgPasture
             double fractionLayer;   // fraction of layer with roots 
 
             // gather water status over the root zone
-            for (int layer = 0; layer <= roots[0].BottomLayer; layer++)
+            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
             {
                 fractionLayer = FractionLayerWithRoots(layer);
                 mySWater += mySoil.Water[layer] * fractionLayer;
@@ -5978,16 +5964,16 @@ namespace Models.AgPasture
         internal double FractionLayerWithRoots(int layer)
         {
             double fractionInLayer = 0.0;
-            if (layer < roots[0].BottomLayer)
+            if (layer < plantZoneRoots.BottomLayer)
             {
                 fractionInLayer = 1.0;
             }
-            else if (layer == roots[0].BottomLayer)
+            else if (layer == plantZoneRoots.BottomLayer)
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
                     depthTillTopThisLayer += mySoil.Thickness[z];
-                fractionInLayer = (roots[0].Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                fractionInLayer = (plantZoneRoots.Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
                 fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
 
@@ -5995,13 +5981,14 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
+        /// <returns>The index of a layer</returns>
         private int RootZoneBottomLayer()
         {
             int result = 0;
             double currentDepth = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
-                if (roots[0].Depth > currentDepth)
+                if (plantZoneRoots.Depth > currentDepth)
                 {
                     result = layer;
                     currentDepth += mySoil.Thickness[layer];
