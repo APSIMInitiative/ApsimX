@@ -18,7 +18,25 @@ gtk-alternative-sort-arrows = 1
 # Windows users don't expect the PC Speaker beeping at them when they backspace in an empty textview and stuff like that
 gtk-error-bell = 0
 
-gtk-color-scheme = "bg_color:#242424\nfg_color:#ffffff\nbase_color:#353535\ntext_color:#ffffff\nselected_bg_color:#3465a4\nselected_fg_color:#f9f9f9\ntooltip_bg_color:#141414\ntooltip_fg_color:#dedede\ntitlebar_bg_color:#2d2d2d\ntitlebar_fg_color:#3468aa\nmenubar_bg_color:#191919\nmenubar_fg_color:#dcdcdc\ntoolbar_bg_color:#dedede\ntoolbar_fg_color:#555555\nmenu_bg_color:#2d2d2d\nmenu_fg_color:#dcdcdc\npanel_bg_color:#242424\npanel_fg_color:#dcdcdc\nlink_color:#fc6f5d"
+gtk-color-scheme = "bg_color:#242424
+fg_color:#ffffff
+base_color:#353535
+text_color:#ffffff
+selected_bg_color:#3465a4
+selected_fg_color:#f9f9f9
+tooltip_bg_color:#141414
+tooltip_fg_color:#dedede
+titlebar_bg_color:#2d2d2d
+titlebar_fg_color:#3468aa
+menubar_bg_color:#191919
+menubar_fg_color:#dcdcdc
+toolbar_bg_color:#dedede
+toolbar_fg_color:#555555
+menu_bg_color:#2d2d2d
+menu_fg_color:#dcdcdc
+panel_bg_color:#242424
+panel_fg_color:#dcdcdc
+link_color:#fc6f5d"
 
 binding "ms-windows-tree-view"
 {
