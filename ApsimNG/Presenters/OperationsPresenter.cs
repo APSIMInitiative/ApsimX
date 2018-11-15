@@ -122,7 +122,7 @@ namespace UserInterface.Presenters
                     }
                 }
 
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Schedule", operations));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Operation", operations));
                 this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             }
             catch (Exception err)
