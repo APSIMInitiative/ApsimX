@@ -98,7 +98,8 @@ namespace UserInterface.Views
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-            BackColor = OxyPlot.OxyColors.White;
+            Gdk.Color foreground = MainWidget.Style.Foreground(StateType.Selected);
+            ForegroundColour = OxyColor.FromRgb((byte)(foreground.Red / 65535 * 255), (byte)(foreground.Green / 65535 * 255), (byte)(foreground.Blue / 65535 * 255));
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -173,10 +174,34 @@ namespace UserInterface.Views
         /// </summary>
         public int LeftRightPadding { get; set; }
 
+        /// <summary>
+        /// Controls the background colour of the graph.
+        /// </summary>
         public OxyColor BackColor
         {
-            get { return this.plot1.Model.Background; }
-            set { this.plot1.Model.Background = value; }
+            get
+            {
+                return this.plot1.Model.Background;
+            }
+            set
+            {
+                this.plot1.Model.Background = value;
+            }
+        }
+
+        /// <summary>
+        /// Controls the foreground colour of the graph.
+        /// </summary>
+        public OxyColor ForegroundColour
+        {
+            get
+            {
+                return this.plot1.Model.TextColor;
+            }
+            set
+            {
+                this.plot1.Model.TextColor = value;
+            }
         }
 
         public int Width
