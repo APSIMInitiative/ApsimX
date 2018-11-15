@@ -49,9 +49,8 @@ namespace Models.Functions
             XYPairs.Y = y;
         }
 
-        /// <summary>Called when [loaded].</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             if (XYPairs != null)
             {

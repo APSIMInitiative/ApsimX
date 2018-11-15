@@ -57,6 +57,12 @@ namespace Models.Core
     {
         /// <summary>The path to use to find a link match.</summary>
         public string Path { get; set; }
+
+        /// <summary>Should the fields name be used when matching?</summary>
+        public override bool UseNameToMatch(IVariable field)
+        {
+            return false;
+        }
     }
 
     /// <summary>

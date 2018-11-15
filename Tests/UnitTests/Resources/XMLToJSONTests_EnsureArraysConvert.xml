@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <Report>
+    <Name>Report</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ExperimentFactorNames />
+    <ExperimentFactorValues />
+    <VariableNames>
+      <string>[Clock].Today</string>
+      <string>[Wheat].Phenology.Zadok.Stage</string>
+      <string>[Wheat].Phenology.CurrentStageName</string>
+      <string>[Wheat].AboveGround.Wt</string>
+      <string>[Wheat].AboveGround.N</string>
+      <string>[Wheat].Grain.Total.Wt*10 as Yield</string>
+      <string>[Wheat].Grain.Protein</string>
+      <string>[Wheat].Grain.Size</string>
+      <string>[Wheat].Grain.Number</string>
+      <string>[Wheat].Grain.Total.Wt</string>
+      <string>[Wheat].Grain.Total.N</string>
+      <string>[Wheat].Total.Wt</string>
+    </VariableNames>
+    <EventNames>
+      <string>[Wheat].Harvesting</string>
+    </EventNames>
+    <Thickness>
+      <double>150</double>
+      <double>150</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+    </Thickness>
+    <PH>
+      <double>NaN</double>
+      <double>NaN</double>
+      <double>NaN</double>
+      <double>NaN</double>
+      <double>NaN</double>
+      <double>NaN</double>
+      <double>NaN</double>
+    </PH>
+  </Report>
+</Simulations>

@@ -19,6 +19,7 @@ namespace UserInterface.Presenters
     using Models.Storage;
     using Models.Report;
     using Utility;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -27,9 +28,6 @@ namespace UserInterface.Presenters
     {
         [Link(IsOptional = true)]
         IStorageReader storage = null;
-
-        [Link(IsOptional = true)]
-        IStorageWriter storageWriter = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -111,7 +109,8 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
-                                              typeof(Folder) },
+                                              typeof(Folder),
+                                              typeof(Morris)},
                      ShortcutKey = "F6")]
         public void RunAPSIMMultiProcess(object sender, EventArgs e)
         {
@@ -188,9 +187,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                string xml = Apsim.Serialise(model);
-                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
-                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
+                string st = FileFormat.WriteToString(model);
+                this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
             }
         }
 
@@ -208,23 +207,7 @@ namespace UserInterface.Presenters
             if (externalCBText == null || externalCBText == "")
                 this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
             else
-            {
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                try
-                {
-                    doc.LoadXml(externalCBText);
-                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
-                }
-                catch (System.Xml.XmlException)
-                {
-                    // External clipboard does not contain valid xml
-                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
-                }
-                catch (Exception ex)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(ex);
-                }
-            }
+                this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -294,7 +277,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    this.command = new Commands.RunCommand(model, this.explorerPresenter, multiProcessRunner, storageWriter);
+                    this.command = new RunCommand(model, this.explorerPresenter, multiProcessRunner);
                     this.command.Do(null);
                 }
             }

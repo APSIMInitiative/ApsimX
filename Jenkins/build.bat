@@ -38,11 +38,16 @@ if not exist "%solution_file%" (
 	exit /b 1
 )
 
+rem Copy DeploymentSupport files.
+echo Copying DeploymentSupport files...
+xcopy /e /i %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib>nul
+copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin>nul
+echo Done.
+
 rem Restore NuGet packages.
 echo Restoring NuGet packages...
 pushd "%apsimx%">nul
 nuget restore -verbosity quiet
-echo Done.
 popd>nul
 
 rem Set verbosity to minimal, don't display the logo, 
@@ -64,8 +69,11 @@ exit /b %errorlevel%
 
 :getVersion
 rem We generate a version number by calling a webservice.
-set PULL_ID=%ghprbPullId%
 echo PULL_ID=%PULL_ID%
+if "%PULL_ID%"=="" (
+	echo Error: PULL_ID is not set.
+	exit /b 1
+)
 echo Getting version number from web service...
 curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
 echo Done.

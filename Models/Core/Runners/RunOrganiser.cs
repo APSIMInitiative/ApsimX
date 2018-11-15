@@ -42,6 +42,17 @@
             }
         }
 
+        /// <summary>
+        /// The object used to write data for the simulations.
+        /// </summary>
+        public IStorageWriter Storage
+        {
+            get
+            {
+                return Apsim.Find(simulations, typeof(IStorageWriter)) as IStorageWriter;
+            }
+        }
+
         /// <summary>Constructor</summary>
         /// <param name="model">The model to run.</param>
         /// <param name="simulations">simulations object.</param>
@@ -70,7 +81,7 @@
 
                 // Send event telling all models that we're about to begin running.
                 Dictionary<string, string> simAndFolderNames = new Dictionary<string, string>();
-                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>())
+                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Where(m => m.Enabled).Cast<ISimulationGenerator>())
                 {
                     string folderName = Apsim.Parent(simulation as IModel, typeof(Folder)).Name;
                     foreach (string simulationName in simulation.GetSimulationNames())

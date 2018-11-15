@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="RenameModelCommand.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
     using Models.Core;
-    using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// A command for renaming a model.
@@ -43,8 +38,7 @@ namespace UserInterface.Commands
             originalName = this.modelToRename.Name;
 
             // Set the new name.
-            this.modelToRename.Name = newName;
-            Apsim.EnsureNameIsUnique(this.modelToRename);
+            Structure.Rename(modelToRename, newName);
             explorerView.Tree.Rename(originalPath, this.modelToRename.Name);
         }
 

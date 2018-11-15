@@ -143,6 +143,12 @@
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
+
+            EventBox labelBox = new EventBox();
+            Label label = new Label("NOTE: This version of APSIM writes .apsimx files as JSON, not XML. These files cannot be opened with older versions of APSIM.");
+            labelBox.Add(label);
+            labelBox.ModifyBg(StateType.Normal, new Gdk.Color(0xff, 0xff, 0x00)); // yellow
+            vbox1.PackStart(labelBox, false, true, 0);
             vbox1.PackEnd(listButtonView1.MainWidget, true, true, 0);
             listButtonView2 = new ListButtonView(this);
             listButtonView2.ButtonsAreToolbar = true;

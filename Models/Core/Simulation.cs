@@ -11,6 +11,7 @@ using Models.Factorial;
 using System.ComponentModel;
 using Models.Core.Runners;
 using System.Linq;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -219,8 +220,9 @@ namespace Models.Core
         /// <param name="path">Directory to write the file to.</param>
         public void GenerateApsimXFile(string path)
         {
-            string xml = Apsim.Serialise(Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() }));
-            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), xml);
+            IModel obj = Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() });
+            string st = FileFormat.WriteToString(obj);
+            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), st);
         }
     }
 }
