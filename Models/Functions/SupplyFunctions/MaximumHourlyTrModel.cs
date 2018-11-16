@@ -200,9 +200,7 @@ namespace Models.Functions.SupplyFunctions
                 CalcTemperature();
                 CalcSVP();
                 CalcVPD();
-                CalcRadiation();
                 CalcRUE();
-
                 if (string.Equals(AssimilateType, "net") || (GrossAssimilateModel != null))
                 {
                     CalcRadiation();
