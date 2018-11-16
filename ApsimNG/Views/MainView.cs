@@ -698,6 +698,10 @@
                     using (StreamReader darkTheme = new StreamReader(rcStream))
                         Rc.ParseString(darkTheme.ReadToEnd());
                 }
+
+                // Remove black colour from colour pallete.
+                Color black = Color.FromArgb(0, 0, 0);
+                ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
             }
             else
                 Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
