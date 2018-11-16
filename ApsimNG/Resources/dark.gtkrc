@@ -100,10 +100,6 @@ GtkCheckButton::indicator-spacing = 4
 
 	GtkWidget::focus-line-width = 1
 
-	# The following line prevents the Firefox tabs
-	# from jumping a few pixels when you create a new tab
-	GtkWidget::focus-padding = 0
-
 	GtkWidget::wide-separators = 1
 	GtkWidget::separator-width = 1
 	GtkWidget::separator-height = 1
@@ -122,9 +118,6 @@ GtkCheckButton::indicator-spacing = 4
 
 	GtkToolbar::shadow-type = GTK_SHADOW_NONE # Makes toolbars flat and unified
 	GtkMenuBar::shadow-type = GTK_SHADOW_NONE # Makes menubars flat and unified
-
-	xthickness = 1
-	ythickness = 1
 
 	fg[NORMAL] = @fg_color
 	fg[PRELIGHT] = @fg_color
