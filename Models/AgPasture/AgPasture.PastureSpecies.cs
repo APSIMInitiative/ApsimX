@@ -3650,7 +3650,6 @@ namespace Models.AgPasture
         {
             public string ZoneName;
             public double RootDepth;
-            public double SpecificRootLength;
             public double RootDM;
         }
         private List<RootZone> RootZonesInitialisations = new List<RootZone>();
@@ -3658,9 +3657,9 @@ namespace Models.AgPasture
         /// <summary>
         /// Add a zone where roots are to grow.
         /// </summary>
-        public void AddZone(string zoneName, double rootDepth, double rootDM, double specificRootLength)
+        public void AddZone(string zoneName, double rootDepth, double rootDM)
         {
-            RootZonesInitialisations.Add(new RootZone() { ZoneName = zoneName, RootDepth = rootDepth, RootDM = rootDM, SpecificRootLength = specificRootLength });
+            RootZonesInitialisations.Add(new RootZone() { ZoneName = zoneName, RootDepth = rootDepth, RootDM = rootDM, });
         }
 
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
