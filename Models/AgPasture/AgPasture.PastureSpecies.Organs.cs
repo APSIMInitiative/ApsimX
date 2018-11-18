@@ -25,41 +25,6 @@ namespace Models.AgPasture
         [ChildLink]
         public GenericTissue[] Tissue;
 
-        /// <summary>Return live biomass. Used by STOCK. g/m^2</summary>
-        public Biomass Live
-        {
-            get
-            {
-                double availPropn = 1.0;
-                if (this.Name == "Stolons")
-                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
-                Biomass live = new Biomass();
-                live.StructuralWt = DMLive * 0.10 * availPropn;
-                live.StructuralN = NLive * 0.10 * availPropn;
-                live.DMDOfStructural = DigestibilityLive;
-                return live;
-            }
-        }
-
-        /// <summary>Return dead biomass. Used by STOCK. g/m^2</summary>
-        public Biomass Dead
-        {
-            get
-            {
-                double availPropn = 1.0;
-                if (this.Name == "Stolons")
-                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
-                Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead * 0.10 * availPropn;
-                dead.StructuralN = NDead * 0.10 * availPropn;
-                dead.DMDOfStructural = DigestibilityDead;
-                return dead;
-            }
-        }
-
-        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
-
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
@@ -105,6 +70,35 @@ namespace Models.AgPasture
         #endregion ---------------------------------------------------------------------------------------------------------
 
         #region Organ properties (summary of tissues)  ---------------------------------------------------------------------
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+
+        /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
+        public Biomass Live
+        {
+            get
+            {
+                Biomass live = new Biomass();
+                live.StructuralWt = DMLive * 0.10 * FractionStanding;
+                live.StructuralN = NLive * 0.10 * FractionStanding;
+                live.DMDOfStructural = DigestibilityLive;
+                return live;
+            }
+        }
+
+        /// <summary>Return dead biomass. Used by STOCK (g/m2).</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                Biomass dead = new Biomass();
+                dead.StructuralWt = DMDead * 0.10 * FractionStanding;
+                dead.StructuralN = NDead * 0.10 * FractionStanding;
+                dead.DMDOfStructural = DigestibilityDead;
+                return dead;
+            }
+        }
 
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
         internal double DMTotal
