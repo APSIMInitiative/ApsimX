@@ -54,13 +54,6 @@ namespace Models.AgPasture
 
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Invoked for incorporating soil FOM.</summary>
-        /// <param name="Data">The data about biomass deposited by this plant into the soil FOM</param>
-        public delegate void FOMLayerDelegate(FOMLayerType Data);
-
-        /// <summary>Occurs when plant is detaching senesced roots.</summary>
-        public event FOMLayerDelegate IncorpFOM;
-
         /// <summary>Invoked for incorporating surface OM.</summary>
         /// <param name="Data">The data about biomass deposited by this plant onto the soil surface</param>
         public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
@@ -278,9 +271,10 @@ namespace Models.AgPasture
             DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
-            plantZoneRoots.DoEndOrgan(CarbonFractionInDM);
-            foreach (PastureBelowGroundOrgan root in rootZones)
-                root.DoEndOrgan(CarbonFractionInDM);
+            plantZoneRoots.DoDetachBiomass(BelowGroundWt, BelowGroundN);            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoDetachBiomass(root.DMTotal, root.NTotal);
+            // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
+
 
             // zero all variables
             RefreshVariables();
@@ -288,6 +282,8 @@ namespace Models.AgPasture
             stems.DoResetOrgan();
             stolons.DoResetOrgan();
             plantZoneRoots.DoResetOrgan();
+            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoResetOrgan();
 
             isAlive = false;
             phenologicStage = -1;
@@ -4111,7 +4107,10 @@ namespace Models.AgPasture
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    DoAddDetachedRootToSoilFOM(detachedRootDM, detachedRootN);
+                    plantZoneRoots.DoDetachBiomass(detachedRootDM, detachedRootN);
+                    foreach (PastureBelowGroundOrgan root in rootZones)
+                        root.DoDetachBiomass(root.DMDetached, root.NDetached);
+                    // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
                 }
             }
             //else { // Growth is controlled by Sward (all species) }
@@ -4903,45 +4902,6 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
-        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
-        /// <param name="amountN">The N amount to send (kg/ha)</param>
-        private void DoAddDetachedRootToSoilFOM(double amountDM, double amountN)
-        {
-            // ****  RCichota, Jun/2014
-            // root senesced are returned to soil (as FOM) considering return is proportional to root mass
-
-            if (amountDM + amountN > 0.0)
-            {
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-
-                for (int layer = 0; layer < nLayers; layer++)
-                {
-                    FOMType fomData = new FOMType();
-                    fomData.amount = amountDM * plantZoneRoots.Tissue[0].FractionWt[layer];
-                    fomData.N = amountN * plantZoneRoots.Tissue[0].FractionWt[layer];
-                    fomData.C = amountDM * CarbonFractionInDM * plantZoneRoots.Tissue[0].FractionWt[layer];
-                    fomData.P = 0.0; // P not considered here
-                    fomData.AshAlk = 0.0; // Ash not considered here
-
-                    FOMLayerLayerType layerData = new FOMLayerLayerType();
-                    layerData.FOM = fomData;
-                    layerData.CNR = 0.0; // not used here
-                    layerData.LabileP = 0; // not used here
-
-                    FOMdataLayer[layer] = layerData;
-                }
-
-                if (IncorpFOM != null)
-                {
-                    FOMLayerType FOMData = new FOMLayerType();
-                    FOMData.Type = mySpeciesFamily.ToString();
-                    FOMData.Layer = FOMdataLayer;
-                    IncorpFOM.Invoke(FOMData);
-                }
-            }
-        }
-
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5138,6 +5098,9 @@ namespace Models.AgPasture
             stems.DoResetOrgan();
             stolons.DoResetOrgan();
             plantZoneRoots.DoResetOrgan();
+            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoResetOrgan();
+            // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
             SetInitialState();
         }
 

@@ -437,6 +437,9 @@ namespace Models.AgPasture
 
         #endregion ---------------------------------------------------------------------------------------------------------
 
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        const double CarbonFractionInDM = 0.4;
+
         /// <summary>Minimum significant difference between two values.</summary>
         const double Epsilon = 0.000000001;
     }
@@ -989,13 +992,12 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Adds root material (DM and N) to the soil's FOM pool.</summary>
-        public void DoEndOrgan(double CarbonFractionInDM)
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        public void DoDetachBiomass(double amountDM, double amountN)
         {
             FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-
-            double amountDM = DMTotal;
-            double amountN = NTotal;
             for (int layer = 0; layer < nLayers; layer++)
             {
                 FOMType fomData = new FOMType();
@@ -1008,7 +1010,7 @@ namespace Models.AgPasture
                 FOMLayerLayerType layerData = new FOMLayerLayerType();
                 layerData.FOM = fomData;
                 layerData.CNR = 0.0; // not used here
-                layerData.LabileP = 0; // not used here
+                layerData.LabileP = 0.0; // not used here
 
                 FOMdataLayer[layer] = layerData;
             }
@@ -1386,6 +1388,9 @@ namespace Models.AgPasture
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------
+
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        const double CarbonFractionInDM = 0.4;
 
         /// <summary>Minimum significant difference between two values.</summary>
         const double Epsilon = 0.000000001;
