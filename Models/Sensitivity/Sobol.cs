@@ -278,7 +278,7 @@
                 // Read in the 2 data frames (X1, X2) that R wrote.
                 if (!File.Exists(sobolx1FileName))
                 {
-                    string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+                    string rFileName = Path.Combine(Path.GetTempPath(), "sobolscript.r");
                     if (!File.Exists(rFileName))
                         throw new Exception("Cannot find file: " + rFileName);
                     string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
@@ -398,7 +398,7 @@
         /// </summary>
         private DataTable RunR(string script)
         {
-            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string rFileName = Path.Combine(Path.GetTempPath(), "sobolscript.r");
             File.WriteAllText(rFileName, script);
             R r = new R();
             Console.WriteLine(r.GetPackage("boot"));

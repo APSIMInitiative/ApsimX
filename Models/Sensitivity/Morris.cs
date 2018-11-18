@@ -457,7 +457,7 @@
         /// </summary>
         private DataTable RunRToGetParameterValues()
         {
-            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript.r");
             string script = GetMorrisRScript();
             script += "write.table(apsimMorris$X, row.names = F, col.names = T, sep = \",\")" + Environment.NewLine;
             File.WriteAllText(rFileName, script);
@@ -473,7 +473,7 @@
         {
             string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
             string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
-            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript.r");
             string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
             string statsFileName = Path.Combine(Path.GetTempPath(), "stats.csv");
 
