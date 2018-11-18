@@ -55,7 +55,7 @@ namespace UserInterface.Presenters
                 string markdown = this.memoViewer.GetMarkdown();
                 if (markdown != this.memoModel.Text)
                 {
-                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "Text", markdown));
                 }
             }
             catch (Exception err)

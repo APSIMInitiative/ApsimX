@@ -33,15 +33,20 @@ namespace APSIMRunner
                     StorageViaSockets storage = new StorageViaSockets();
                     try
                     {
-                        simulationRunner = job.job as RunSimulation;
+                        IRunnable jobToRun = job.job;
+                        if (jobToRun is RunExternal)
+                            jobToRun.Run(new CancellationTokenSource());
+                        else
+                        {
+                            simulationRunner = job.job as RunSimulation;
 
-                        // Replace datastore with a socket writer
-                        simulationRunner.Services = new object[] { storage };
-
-                        // Run simulation
-                        simulationName = simulationRunner.simulationToRun.Name;
-                        simulationRunner.cloneSimulationBeforeRun = false;
-                        simulationRunner.Run(new CancellationTokenSource());
+                            // Replace datastore with a socket writer
+                            simulationRunner.Services = new object[] { storage };
+                            // Run simulation
+                            simulationName = simulationRunner.simulationToRun.Name;
+                            simulationRunner.cloneSimulationBeforeRun = false;
+                            simulationRunner.Run(new CancellationTokenSource());
+                        }
                     }
                     catch (Exception err)
                     {
