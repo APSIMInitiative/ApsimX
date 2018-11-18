@@ -6,9 +6,8 @@
     public interface ITest : IModel
     {
         /// <summary>
-        /// Runs the test. Returns true iff successful.
+        /// Runs the test. Throws an exception on failure.
         /// </summary>
-        /// <returns>True iff successful.</returns>
-        bool Run();
+        void Run();
     }
 }

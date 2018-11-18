@@ -119,17 +119,14 @@
                     // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
                     // manager's name instead.
                     string testName = test.Parent is Manager ? test.Parent.Name : test.Name;
-                    bool successful = false;
                     try
                     {
-                        successful = test.Run();
+                        test.Run();
                     }
                     catch (Exception err)
                     {
                         throw new Exception("Encountered an error while running test " + testName, err);
                     }
-                    if (!successful)
-                        throw new ApsimXException(test, "Failed test " + testName);
                 }
             }
         }

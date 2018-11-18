@@ -22,7 +22,7 @@ namespace UnitTests
         [Test]
         public void ManagerScriptTest()
         {
-            string managerCode = "using System; using Models.Core; namespace Models { public class Script : Model, ITest { public bool Run() { @action } } }";
+            string managerCode = "using System; using Models.Core; namespace Models { public class Script : Model, ITest { public void Run() { @action } } }";
             Manager testManager = new Manager()
             {
                 Name = "TestScript"
@@ -50,7 +50,7 @@ namespace UnitTests
             // Test should pass if it doesn't throw.
             jobRunner.AllJobsCompleted -= EnsureSimulationRanRed;
             jobRunner.AllJobsCompleted += EnsureSimulationRanGreen;
-            testManager.Code = managerCode.Replace("@action", "return true;");
+            testManager.Code = managerCode.Replace("@action", "return;");
             jobRunner.Run(jobManager, true);
         }
 
