@@ -3736,10 +3736,6 @@ namespace Models.AgPasture
             stolons.NConcMinimum = myNThresholdsForStolons[1];
             stolons.NConcMaximum = myNThresholdsForStolons[2];
 
-            plantZoneRoots.NConcOptimum = myNThresholdsForRoots[0];
-            plantZoneRoots.NConcMinimum = myNThresholdsForRoots[1];
-            plantZoneRoots.NConcMaximum = myNThresholdsForRoots[2];
-
             // 3. Save initial state (may be used later for reset)
             InitialState = new SpeciesBasicStateSettings();
             if (myInitialShootDM > Epsilon)
@@ -3782,11 +3778,9 @@ namespace Models.AgPasture
             leaves.MinimumLiveDM = myMinimumGreenWt * MinimumGreenLeafProp;
             stems.MinimumLiveDM = myMinimumGreenWt * (1.0 - MinimumGreenLeafProp);
             stolons.MinimumLiveDM = 0.0;
-            plantZoneRoots.MinimumLiveDM = myMinimumGreenWt * MinimumGreenRootProp;
             stolons.FractionStanding = myFractionStolonStanding;
 
             // 5. Set remobilisation rate for luxury N in each tissue
-            plantZoneRoots.Tissue[0].FractionNLuxuryRemobilisable = myFractionNLuxuryRemobilisable[0];
             for (int tissue = 0; tissue < 3; tissue++)
             {
                 leaves.Tissue[tissue].FractionNLuxuryRemobilisable = myFractionNLuxuryRemobilisable[tissue];
@@ -3830,6 +3824,13 @@ namespace Models.AgPasture
             stolons.Tissue[0].DM = InitialState.DMWeight[8];
             stolons.Tissue[1].DM = InitialState.DMWeight[9];
             stolons.Tissue[2].DM = InitialState.DMWeight[10];
+            plantZoneRoots.Tissue[0].DM = InitialState.DMWeight[11];
+
+            // 2. Set root depth and DM
+            plantZoneRoots.Depth = InitialState.RootDepth;
+            double[] rootFractions = plantZoneRoots.CurrentRootDistributionTarget();
+            for (int layer = 0; layer < nLayers; layer++)
+                plantZoneRoots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFractions[layer];
 
             // 3. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
             leaves.Tissue[0].Namount = InitialState.NAmount[0];

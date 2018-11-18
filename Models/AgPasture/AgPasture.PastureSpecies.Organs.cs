@@ -466,7 +466,7 @@ namespace Models.AgPasture
         /// <param name="minNconc">The minimum N concentration</param>
         /// <param name="maxNconc">The maximum N concentration</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        /// <param name="fractionNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
+        /// <param name="fractionLuxNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
         /// <param name="specificRootLength">The specific root length (m/g)</param>
         /// <param name="rootDepthMaximum">The maximum root depth</param>
         /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
@@ -486,7 +486,7 @@ namespace Models.AgPasture
         public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
                                        double initialDM, double initialDepth,
                                        double optNconc, double minNconc, double maxNconc,
-                                       double minLiveDM, double fractionNremobilisable,
+                                       double minLiveDM, double fractionLuxNremobilisable,
                                        double specificRootLength, double rootDepthMaximum,
                                        double rootDistributionDepthParam, double rootDistributionExponent,
                                        double rootBottomDistributionFactor,
@@ -505,13 +505,11 @@ namespace Models.AgPasture
 
             // save the parameters for this organ
             mySpeciesName = nameOfSpecies;            
-            myInitialDMWeight = initialDM;
-            myInitialRootDepth = initialDepth;
             NConcOptimum = optNconc;
             NConcMinimum = minNconc;
             NConcMaximum = maxNconc;
             MinimumLiveDM = minLiveDM;
-            Tissue[0].FractionNLuxuryRemobilisable = fractionNremobilisable;
+            Tissue[0].FractionNLuxuryRemobilisable = fractionLuxNremobilisable;
             mySpecificRootLength = specificRootLength;
             myRootDepthMaximum = rootDepthMaximum;
             myRootDistributionDepthParam = rootDistributionDepthParam;
@@ -542,11 +540,14 @@ namespace Models.AgPasture
                 throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
-            Depth = myInitialRootDepth;
+            Depth = initialDepth;
             TargetDistribution = RootDistributionTarget();
             double[] iniRootFraction = CurrentRootDistributionTarget();
             for (int layer = 0; layer < nLayers; layer++)
+            {
                 Tissue[0].DMLayer[layer] = initialDM * iniRootFraction[layer];
+                Tissue[0].NamountLayer[layer] = NConcOptimum * Tissue[0].DMLayer[layer];
+            }
         }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
@@ -556,12 +557,6 @@ namespace Models.AgPasture
 
         /// <summary>Name of root zone.</summary>
         internal string myZoneName { get; private set; }
-
-        /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
-        private double myInitialDMWeight = 500.0;
-
-        /// <summary>Initial rooting depth (mm).</summary>
-        private double myInitialRootDepth = 750.0;
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
         internal double NConcOptimum = 2.0;
@@ -1356,7 +1351,6 @@ namespace Models.AgPasture
 
             return result;
         }
-
 
         /// <summary>Computes the current target distribution of roots in the soil profile.</summary>
         /// <remarks>
