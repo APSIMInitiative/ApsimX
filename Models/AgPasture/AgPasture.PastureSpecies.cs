@@ -313,7 +313,7 @@ namespace Models.AgPasture
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     // Find the zone in our root zones.
-                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == zone.Zone.Name);
                     if (root != null)
                     {
                         double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
@@ -369,7 +369,7 @@ namespace Models.AgPasture
                 Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
                 {
-                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == Z.Zone.Name);
                     if (root != null)
                     {
                         ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(Z.Zone);
@@ -426,7 +426,7 @@ namespace Models.AgPasture
             foreach (ZoneWaterAndN zone in zones)
             {
                 // Find the zone in our root zones.
-                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == zone.Zone.Name);
                 if (root != null)
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
@@ -447,7 +447,7 @@ namespace Models.AgPasture
 
             foreach (ZoneWaterAndN Z in zones)
             {
-                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == Z.Zone.Name);
                 if (root != null)
                 {
                     root.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, Z.NO3N);
@@ -1571,7 +1571,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Factor to compute root distribution (controls where, below maxRootDepth, the function is zero).</summary>
-        private double rootBottomDistributionFactor = 1.05;
+        private double myRootBottomDistributionFactor = 1.05;
 
         ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3640,34 +3640,43 @@ namespace Models.AgPasture
             // get the number of layers in the soil profile
             nLayers = mySoil.Thickness.Length;
 
-            // set up the organs (use 4 or 2 tissues, the last is dead)
+            // set up the organs (only root here, other organs are initialise indirectly, they have 4 tissues, last one is dead)
             rootZones = new List<PastureBelowGroundOrgan>();
-            plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
-                                                         myWaterAvailableMethod, myNitrogenAvailableMethod,
-                                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
-                                                         mySoil, Name,
-                                                         InitialRootDepth, myInitialRootDM, SpecificRootLength, 
-                                                         ReferenceRLD, ExponentSoilMoisture, ReferenceKSuptake,
-                                                         myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor,
-                                                         myRootDistributionExponent);
+            // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
+            plantZoneRoots = new PastureBelowGroundOrgan(Name, 2,
+                                        myInitialRootDM, myInitialRootDepth,
+                                        myNThresholdsForRoots[0], myNThresholdsForRoots[1], myNThresholdsForRoots[2],
+                                        myMinimumGreenWt * MinimumGreenRootProp, myFractionNLuxuryRemobilisable[0],
+                                        SpecificRootLength, myRootDepthMaximum,
+                                        myRootDistributionDepthParam, myRootDistributionExponent, myRootBottomDistributionFactor,
+                                        myWaterAvailableMethod, myNitrogenAvailableMethod,
+                                        KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                        ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
+                                        mySoil);
             rootZones.Add(plantZoneRoots);
 
+            // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
+                // find the zone and get its soil
                 Zone zone = Apsim.Find(this, rootZone.ZoneName) as Zone;
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
-                Soil soil = Apsim.Child(zone, typeof(Soil)) as Soil;
-                if (soil == null)
+                Soil zoneSoil = Apsim.Child(zone, typeof(Soil)) as Soil;
+                if (zoneSoil == null)
                     throw new Exception("Cannot find a soil in zone : " + rootZone.ZoneName);
-                rootZones.Add(new PastureBelowGroundOrgan(2, nLayers,
-                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,
-                                                          KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
-                                                          soil, Name,
-                                                          rootZone.RootDepth, rootZone.RootDM, rootZone.SpecificRootLength, 
-                                                          ReferenceRLD, ExponentSoilMoisture, ReferenceKSuptake,
-                                                          myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor,
-                                                          myRootDistributionExponent));
+
+                //add the zone to the list
+                rootZones.Add(new PastureBelowGroundOrgan(Name, 2,
+                                         rootZone.RootDM, rootZone.RootDepth,
+                                         myNThresholdsForRoots[0], myNThresholdsForRoots[1], myNThresholdsForRoots[2],
+                                         myMinimumGreenWt * MinimumGreenRootProp, myFractionNLuxuryRemobilisable[0],
+                                         SpecificRootLength, myRootDepthMaximum,
+                                         myRootDistributionDepthParam, myRootDistributionExponent, myRootBottomDistributionFactor,
+                                         myWaterAvailableMethod, myNitrogenAvailableMethod,
+                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                         ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
+                                         zoneSoil));
             }
 
             // initialise soil water and N variables
@@ -3863,7 +3872,7 @@ namespace Models.AgPasture
 
             // 2. Set root depth and DM (root DM equals shoot)
             plantZoneRoots.Depth = myRootDepthMinimum;            
-            double[] rootFractions = plantZoneRoots.CurrentRootDistributionTarget(myRootDepthMaximum);
+            double[] rootFractions = plantZoneRoots.CurrentRootDistributionTarget();
             for (int layer = 0; layer < nLayers; layer++)
                 plantZoneRoots.Tissue[0].DMLayer[layer] = plantZoneRoots.MinimumLiveDM * rootFractions[layer];
 
@@ -4554,7 +4563,7 @@ namespace Models.AgPasture
             {
                 // root DM is changing due to growth, check potential changes in distribution
                 double[] growthRootFraction;
-                double[] currentRootTarget = plantZoneRoots.CurrentRootDistributionTarget(myRootDepthMaximum);
+                double[] currentRootTarget = plantZoneRoots.CurrentRootDistributionTarget();
                 if (MathUtilities.AreEqual(plantZoneRoots.Tissue[0].FractionWt, currentRootTarget))
                 {
                     // no need to change the distribution
@@ -4803,7 +4812,7 @@ namespace Models.AgPasture
                 leaves.Tissue[leaves.Tissue.Length- 1].DoRemobiliseN(fracRemobilised);
                 stems.Tissue[stems.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 stolons.Tissue[stolons.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
-                plantZoneRoots.Tissue[plantZoneRoots.TissueCount - 1].DoRemobiliseN(fracRemobilised);
+                plantZoneRoots.Tissue[plantZoneRoots.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
             }
         }
 
