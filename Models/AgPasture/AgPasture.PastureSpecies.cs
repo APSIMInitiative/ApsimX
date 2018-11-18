@@ -310,10 +310,10 @@ namespace Models.AgPasture
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     // Find the zone in our root zones.
-                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == zone.Zone.Name);
-                    if (root != null)
+                    PastureBelowGroundOrgan myRoot = rootZones.Find(root => root.myZoneName == zone.Zone.Name);
+                    if (myRoot != null)
                     {
-                        double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
+                        double[] organSupply = myRoot.EvaluateSoilWaterAvailable(zone);
                         if (organSupply != null)
                         {
                             supplies.Add(organSupply);
@@ -364,22 +364,22 @@ namespace Models.AgPasture
 
                 // Get the zone this plant is in
                 Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == Z.Zone.Name);
-                    if (root != null)
+                    PastureBelowGroundOrgan myRoot = rootZones.Find(root => root.myZoneName == zone.Zone.Name);
+                    if (myRoot != null)
                     {
-                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(Z.Zone);
+                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
                         zones.Add(UptakeDemands);
 
                         // Get the N amount available in the soil
-                        root.EvaluateSoilNitrogenAvailable(Z, mySoilWaterUptake);
+                        myRoot.EvaluateSoilNitrogenAvailable(zone, mySoilWaterUptake);
 
-                        UptakeDemands.NO3N = root.mySoilNO3Available;
-                        UptakeDemands.NH4N = root.mySoilNH4Available;
-                        UptakeDemands.Water = new double[Z.NO3N.Length];
+                        UptakeDemands.NO3N = myRoot.mySoilNO3Available;
+                        UptakeDemands.NH4N = myRoot.mySoilNH4Available;
+                        UptakeDemands.Water = new double[zone.NO3N.Length];
 
-                        NSupply += (MathUtilities.Sum(root.mySoilNH4Available) + MathUtilities.Sum(root.mySoilNO3Available)) * Z.Zone.Area;
+                        NSupply += (MathUtilities.Sum(myRoot.mySoilNH4Available) + MathUtilities.Sum(myRoot.mySoilNO3Available)) * zone.Zone.Area;
                     }
                 }
 
@@ -423,13 +423,13 @@ namespace Models.AgPasture
             foreach (ZoneWaterAndN zone in zones)
             {
                 // Find the zone in our root zones.
-                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == zone.Zone.Name);
-                if (root != null)
+                PastureBelowGroundOrgan myRoot = rootZones.Find(root => root.myZoneName == zone.Zone.Name);
+                if (myRoot != null)
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        root.mySoil.SoilWater.RemoveWater(zone.Water);
+                        myRoot.mySoil.SoilWater.RemoveWater(zone.Water);
                 }
             }
         }
@@ -442,16 +442,16 @@ namespace Models.AgPasture
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
 
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN zone in zones)
             {
-                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.myZoneName == Z.Zone.Name);
-                if (root != null)
+                PastureBelowGroundOrgan myRoot = rootZones.Find(root => root.myZoneName == zone.Zone.Name);
+                if (myRoot != null)
                 {
-                    root.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, Z.NO3N);
-                    root.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, Z.NH4N);
+                    myRoot.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, zone.NO3N);
+                    myRoot.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, zone.NH4N);
 
-                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, Z.NH4N);
-                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, Z.NO3N);
+                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
+                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
                 }
             }
         }
@@ -1879,10 +1879,10 @@ namespace Models.AgPasture
         private double dGrowthPot;
 
         /// <summary>Daily potential growth after water stress (kg DM/ha).</summary>
-        private double dGrowthAfterWater;
+        private double dGrowthAfterWaterLimitations;
 
         /// <summary>Daily growth after nutrient stress, actual growth (kg DM/ha).</summary>
-        private double dGrowthAfterNutrient;
+        private double dGrowthAfterNutrientLimitations;
 
         /// <summary>Effective plant growth, actual growth minus senescence (kg DM/ha).</summary>
         private double dGrowthNet;
@@ -2666,7 +2666,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double NetPotentialGrowthAfterWaterWt
         {
-            get { return dGrowthAfterWater; }
+            get { return dGrowthAfterWaterLimitations; }
         }
 
         /// <summary>Gets the net potential growth rate after nutrient stress (kgDM/ha).</summary>
@@ -2674,7 +2674,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double NetPotentialGrowthAfterNutrientWt
         {
-            get { return dGrowthAfterNutrient; }
+            get { return dGrowthAfterNutrientLimitations; }
         }
 
         /// <summary>Gets the net, or actual, plant growth rate (kgDM/ha).</summary>
@@ -3158,7 +3158,7 @@ namespace Models.AgPasture
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = plantZoneRoots.Tissue[0].FractionWt[layer] * totalRootLength / mySoil.Thickness[layer];
+                    result[layer] = RootWtFraction[layer] * totalRootLength / mySoil.Thickness[layer];
                 }
                 return result;
             }
@@ -4039,6 +4039,8 @@ namespace Models.AgPasture
             stems.DoCleanTransferAmounts();
             stolons.DoCleanTransferAmounts();
             plantZoneRoots.DoCleanTransferAmounts();
+            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoCleanTransferAmounts();
         }
 
         /// <summary>Performs the calculations for potential growth.</summary>
@@ -4159,7 +4161,7 @@ namespace Models.AgPasture
             glfWaterLogging = WaterLoggingFactor();
 
             // adjust today's growth for limitations related to soil water
-            dGrowthAfterWater = dGrowthPot * Math.Min(glfWaterSupply, glfWaterLogging);
+            dGrowthAfterWaterLimitations = dGrowthPot * Math.Min(glfWaterSupply, glfWaterLogging);
         }
 
         /// <summary>Calculates the actual plant growth (after all growth limitations, before senescence).</summary>
@@ -4190,7 +4192,7 @@ namespace Models.AgPasture
                 glfNSupply = 1.0;
 
             // adjust today's growth for limitations related to soil nutrient supply
-            dGrowthAfterNutrient = dGrowthAfterWater * Math.Min(glfNit, myGlfSoilFertility);
+            dGrowthAfterNutrientLimitations = dGrowthAfterWaterLimitations * Math.Min(glfNit, myGlfSoilFertility);
         }
 
         /// <summary>Computes the plant's gross potential growth rate.</summary>
@@ -4439,11 +4441,11 @@ namespace Models.AgPasture
         /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
         internal void EvaluateNewGrowthAllocation()
         {
-            if (dGrowthAfterNutrient > Epsilon)
+            if (dGrowthAfterNutrientLimitations > Epsilon)
             {
                 // Get the actual growth above and below ground
-                dGrowthShootDM = dGrowthAfterNutrient * fractionToShoot;
-                dGrowthRootDM = Math.Max(0.0, dGrowthAfterNutrient - dGrowthShootDM);
+                dGrowthShootDM = dGrowthAfterNutrientLimitations * fractionToShoot;
+                dGrowthRootDM = Math.Max(0.0, dGrowthAfterNutrientLimitations - dGrowthShootDM);
 
                 // Get the fractions of new growth to allocate to each plant organ
                 double toLeaf = fractionToShoot * fractionToLeaf;
@@ -4452,10 +4454,10 @@ namespace Models.AgPasture
                 double toRoot = 1.0 - fractionToShoot;
 
                 // Allocate new DM growth to the growing tissues
-                leaves.Tissue[0].DMTransferedIn += toLeaf * dGrowthAfterNutrient;
-                stems.Tissue[0].DMTransferedIn += toStem * dGrowthAfterNutrient;
-                stolons.Tissue[0].DMTransferedIn += toStolon * dGrowthAfterNutrient;
-                plantZoneRoots.Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrient;
+                leaves.Tissue[0].DMTransferedIn += toLeaf * dGrowthAfterNutrientLimitations;
+                stems.Tissue[0].DMTransferedIn += toStem * dGrowthAfterNutrientLimitations;
+                stolons.Tissue[0].DMTransferedIn += toStolon * dGrowthAfterNutrientLimitations;
+                plantZoneRoots.Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrientLimitations;
 
                 // Evaluate allocation of N
                 if (dNewGrowthN > demandOptimumN)
@@ -4539,7 +4541,7 @@ namespace Models.AgPasture
             double postTotalN = AboveGroundN + plantZoneRoots.NTotal;
 
             // Check for loss of mass balance in the whole plant
-            if (Math.Abs(preTotalWt + dGrowthAfterNutrient - detachedShootDM - detachedRootDM - postTotalWt) > Epsilon)
+            if (Math.Abs(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt) > Epsilon)
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             if (Math.Abs(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN) > Epsilon)
@@ -4712,10 +4714,10 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
         internal void EvaluateNitrogenDemand()
         {
-            double toRoot = dGrowthAfterWater * (1.0 - fractionToShoot);
-            double toStol = dGrowthAfterWater * fractionToShoot * myFractionToStolon;
-            double toLeaf = dGrowthAfterWater * fractionToShoot * fractionToLeaf;
-            double toStem = dGrowthAfterWater * fractionToShoot * (1.0 - myFractionToStolon - fractionToLeaf);
+            double toRoot = dGrowthAfterWaterLimitations * (1.0 - fractionToShoot);
+            double toStol = dGrowthAfterWaterLimitations * fractionToShoot * myFractionToStolon;
+            double toLeaf = dGrowthAfterWaterLimitations * fractionToShoot * fractionToLeaf;
+            double toStem = dGrowthAfterWaterLimitations * fractionToShoot * (1.0 - myFractionToStolon - fractionToLeaf);
 
             // N demand for new growth, with optimum N (kg/ha)
             demandOptimumN = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
@@ -5956,7 +5958,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
-        /// <returns>The index of a layer</returns>
         private int RootZoneBottomLayer()
         {
             int result = 0;
