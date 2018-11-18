@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -23,15 +19,11 @@ namespace UnitTests
         public void ManagerScriptTest()
         {
             string managerCode = "using System; using Models.Core; namespace Models { public class Script : Model, ITest { public void Run() { @action } } }";
-            Manager testManager = new Manager()
-            {
-                Name = "TestScript"
-            };
+            Manager testManager = new Manager();
+            testManager.Name = "TestScript";
 
-            Folder testFolder = new Folder()
-            {
-                Name = "TestFolder"
-            };
+            Folder testFolder = new Folder();
+            testFolder.Name = "TestFolder";
 
             testFolder.Children = new List<Model>() { testManager };
             testManager.Parent = testFolder;
@@ -54,11 +46,23 @@ namespace UnitTests
             jobRunner.Run(jobManager, true);
         }
 
+        /// <summary>
+        /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
+        /// Asserts that the job ran successfully.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
         private void EnsureSimulationRanGreen(object sender, AllCompletedArgs args)
         {
             Assert.Null(args.exceptionThrown);
         }
 
+        /// <summary>
+        /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
+        /// Asserts that the job ran unsuccessfully.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
         private void EnsureSimulationRanRed(object sender, AllCompletedArgs args)
         {
             Assert.NotNull(args.exceptionThrown);
