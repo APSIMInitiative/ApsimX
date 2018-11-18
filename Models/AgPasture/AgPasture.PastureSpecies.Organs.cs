@@ -1522,7 +1522,7 @@ namespace Models.AgPasture
         const double CNratioCellWall = 100.0;
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double MyPrecision = 0.000000001;
+        internal const double MyPrecision = 0.0000000001;
 
         #endregion ---------------------------------------------------------------------------------------------------------
     }
@@ -1631,7 +1631,7 @@ namespace Models.AgPasture
             // additions need to consider distribution over the profile
             DMTransferedIn = DMLayersTransferedIn.Sum();
             NTransferedIn = NLayersTransferedIn.Sum();
-            if ((DMTransferedIn > MyPrecision) && (NTransferedIn > MyPrecision))
+            if ((DMTransferedIn > MyPrecision) || (NTransferedIn > MyPrecision))
             {
                 for (int layer = 0; layer < nLayers; layer++)
                 {
