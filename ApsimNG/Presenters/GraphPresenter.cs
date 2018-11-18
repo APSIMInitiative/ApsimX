@@ -174,7 +174,7 @@ namespace UserInterface.Presenters
         /// <param name="definition">The definition.</param>
         private void DrawOnView(SeriesDefinition definition)
         {
-            if (graph.DisabledSeries != null && 
+            if (graph.DisabledSeries == null ||
                 !graph.DisabledSeries.Contains(definition.title))
             {
                 try
