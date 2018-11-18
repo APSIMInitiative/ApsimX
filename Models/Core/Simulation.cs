@@ -22,6 +22,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
+    [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
     public class Simulation : Model, ISimulationGenerator
