@@ -997,28 +997,31 @@ namespace Models.AgPasture
         /// <param name="amountN">The N amount to send (kg/ha)</param>
         public void DoDetachBiomass(double amountDM, double amountN)
         {
-            FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
+            if (amountDM + amountN > 0.0)
             {
-                FOMType fomData = new FOMType();
-                fomData.amount = amountDM * Tissue[0].FractionWt[layer];
-                fomData.N = amountN * Tissue[0].FractionWt[layer];
-                fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
-                fomData.P = 0.0; // P not considered here
-                fomData.AshAlk = 0.0; // Ash not considered here
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = amountDM * Tissue[0].FractionWt[layer];
+                    fomData.N = amountN * Tissue[0].FractionWt[layer];
+                    fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
+                    fomData.P = 0.0; // P not considered here
+                    fomData.AshAlk = 0.0; // Ash not considered here
 
-                FOMLayerLayerType layerData = new FOMLayerLayerType();
-                layerData.FOM = fomData;
-                layerData.CNR = 0.0; // not used here
-                layerData.LabileP = 0.0; // not used here
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0; // not used here
+                    layerData.LabileP = 0.0; // not used here
 
-                FOMdataLayer[layer] = layerData;
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = mySpeciesName;
+                FOMData.Layer = FOMdataLayer;
+                SoilNitrogen.DoIncorpFOM(FOMData);
             }
-
-            FOMLayerType FOMData = new FOMLayerType();
-            FOMData.Type = mySpeciesName;
-            FOMData.Layer = FOMdataLayer;
-            SoilNitrogen.DoIncorpFOM(FOMData);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>

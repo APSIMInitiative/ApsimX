@@ -271,7 +271,8 @@ namespace Models.AgPasture
             DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
-            plantZoneRoots.DoDetachBiomass(BelowGroundWt, BelowGroundN);            foreach (PastureBelowGroundOrgan root in rootZones)
+            plantZoneRoots.DoDetachBiomass(plantZoneRoots.DMTotal, plantZoneRoots.NTotal);
+            foreach (PastureBelowGroundOrgan root in rootZones)
                 root.DoDetachBiomass(root.DMTotal, root.NTotal);
             // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
 
@@ -4108,8 +4109,8 @@ namespace Models.AgPasture
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
                     plantZoneRoots.DoDetachBiomass(detachedRootDM, detachedRootN);
-                    foreach (PastureBelowGroundOrgan root in rootZones)
-                        root.DoDetachBiomass(root.DMDetached, root.NDetached);
+                    //foreach (PastureBelowGroundOrgan root in rootZones)
+                    //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
                 }
             }
@@ -5083,6 +5084,9 @@ namespace Models.AgPasture
                 stems.DoKillOrgan(fractionToKill);
                 stolons.DoKillOrgan(fractionToKill);
                 plantZoneRoots.DoKillOrgan(fractionToKill);
+                foreach (PastureBelowGroundOrgan root in rootZones)
+                    root.DoKillOrgan(fractionToKill);
+                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
             }
             else
             {
@@ -5508,9 +5512,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>
-        /// Biomass has been removed from the plant by animals
-        /// </summary>
+        /// <summary>Biomass has been removed from the plant by animals.</summary>
         /// <param name="fractionRemoved">The fraction of biomass removed</param>
         public void BiomassRemovalComplete(double fractionRemoved)
         {
