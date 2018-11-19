@@ -87,6 +87,23 @@ namespace Models.Core.Runners
             if (wait)
                 while (!t.IsCompleted)
                     Thread.Sleep(200);
+
+            try
+            {
+                jobs.Completed();
+            }
+            catch (Exception err)
+            {
+                errors += Environment.NewLine + err.ToString();
+            }
+
+            if (AllJobsCompleted != null)
+            {
+                AllCompletedArgs args = new AllCompletedArgs();
+                if (errors != null)
+                    args.exceptionThrown = new Exception(errors);
+                AllJobsCompleted.Invoke(this, args);
+            }
         }
 
         /// <summary>Stop all jobs currently running</summary>
@@ -101,23 +118,6 @@ namespace Models.Core.Runners
                     server = null;
                     DeleteRunners();
                     runningJobs.Clear();
-
-                    try
-                    {
-                        jobs.Completed();
-                    }
-                    catch (Exception err)
-                    {
-                        errors += Environment.NewLine + err.ToString();
-                    }
-
-                    if (AllJobsCompleted != null)
-                    {
-                        AllCompletedArgs args = new AllCompletedArgs();
-                        if (errors != null)
-                            args.exceptionThrown = new Exception(errors);
-                        AllJobsCompleted.Invoke(this, args);
-                    }
                 }
             }
         }
