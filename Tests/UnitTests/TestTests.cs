@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.Core.Runners;
 using NUnit.Framework;
 
 namespace UnitTests
@@ -32,18 +33,39 @@ namespace UnitTests
 
             Simulations simToRun = Simulations.Create(new List<IModel>() { testFolder, storage });
             IJobManager jobManager = Runner.ForSimulations(simToRun, simToRun, true);
-            IJobRunner jobRunner = new JobRunnerSync();
 
             // Test should fail if it throws.
-            jobRunner.AllJobsCompleted += EnsureSimulationRanRed;
             testManager.Code = managerCode.Replace("@action", "throw new Exception(\"Test has failed.\");");
-            jobRunner.Run(jobManager, true);
+            TestWithAllJobRunners(jobManager, EnsureSimulationRanRed);
 
             // Test should pass if it doesn't throw.
-            jobRunner.AllJobsCompleted -= EnsureSimulationRanRed;
-            jobRunner.AllJobsCompleted += EnsureSimulationRanGreen;
             testManager.Code = managerCode.Replace("@action", "return;");
-            jobRunner.Run(jobManager, true);
+            TestWithAllJobRunners(jobManager, EnsureSimulationRanGreen);
+        }
+
+        /// <summary>
+        /// Runs an <see cref="IJobManager"/> with all implementations of <see cref="IJobRunner"/>.
+        /// </summary>
+        /// <param name="jobManager">The job manager to run.</param>
+        /// <param name="onSimulationCompleted">Event handler which will be invoked by each job runner after it finishes running.</param>
+        private void TestWithAllJobRunners(IJobManager jobManager, EventHandler<AllCompletedArgs> onSimulationCompleted)
+        {
+            IJobRunner jobRunner = new JobRunnerSync();
+            jobRunner.AllJobsCompleted += onSimulationCompleted;
+            Assert.DoesNotThrow(() => jobRunner.Run(jobManager, true));
+
+            jobRunner.AllJobsCompleted -= onSimulationCompleted;
+
+            jobRunner = new JobRunnerAsync();
+            jobRunner.AllJobsCompleted += onSimulationCompleted;
+            Assert.DoesNotThrow(() => jobRunner.Run(jobManager, true));
+
+            jobRunner.AllJobsCompleted -= onSimulationCompleted;
+
+            jobRunner = new JobRunnerMultiProcess(false);
+            jobRunner.AllJobsCompleted += onSimulationCompleted;
+            Assert.DoesNotThrow(() => jobRunner.Run(jobManager, true));
+            jobRunner.AllJobsCompleted -= onSimulationCompleted;
         }
 
         /// <summary>
@@ -54,7 +76,8 @@ namespace UnitTests
         /// <param name="args">Event arguments.</param>
         private void EnsureSimulationRanGreen(object sender, AllCompletedArgs args)
         {
-            Assert.Null(args.exceptionThrown);
+            if (args.exceptionThrown != null)
+                throw new Exception(string.Format("Exception was thrown when running via {0}, when we expected no error to be thrown.", sender.GetType().Name), args.exceptionThrown);
         }
 
         /// <summary>
@@ -65,7 +88,8 @@ namespace UnitTests
         /// <param name="args">Event arguments.</param>
         private void EnsureSimulationRanRed(object sender, AllCompletedArgs args)
         {
-            Assert.NotNull(args.exceptionThrown);
+            if (args.exceptionThrown == null)
+                throw new Exception(string.Format("{0} failed to throw an exception, when we expected an error to be thrown.", sender.GetType().Name));
         }
     }
 }
