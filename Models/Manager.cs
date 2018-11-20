@@ -29,7 +29,7 @@
         private string CompiledCode;
 
         /// <summary>Has the manager model been fully created yet?</summary>
-        [NonSerialized]
+        [XmlIgnore]
         private bool isCreated = false;
         
         /// <summary>The code to compile.</summary>
