@@ -110,8 +110,6 @@
             // Optionally run the tests
             if (runTests)
             {
-                foreach (Tests test in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
-                    test.Test();
                 foreach (ITest test in Apsim.ChildrenRecursively(simulations, typeof(ITest)))
                 {
                     // If we run into problems, we will want to include the name of the test in the 
