@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
+    <Compile Include="TestTests.cs" />
     <Compile Include="XMLToJSONTests.cs" />
     <Compile Include="DocumentationTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
