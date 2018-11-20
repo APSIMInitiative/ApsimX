@@ -56,7 +56,6 @@ namespace UnitTests
             baseSim.Children = new List<Model>() { excelWeather, clock, summary };
             MockStorage storage = new MockStorage();
             Simulations simsToRun = Simulations.Create(new List<IModel> { baseSim, storage });
-            simsToRun.Write(@"C:\ApsimX\Test.apsimx");
 
             IJobManager jobManager = Runner.ForSimulations(simsToRun, simsToRun, false);
             IJobRunner jobRunner = new JobRunnerSync();
