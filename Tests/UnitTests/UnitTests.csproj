@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
+    <Compile Include="WeatherFileTests.cs" />
     <Compile Include="XMLToJSONTests.cs" />
     <Compile Include="DocumentationTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
@@ -175,6 +176,7 @@
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureSupplimentConverts.json" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureModelsWithSameNameConverts.json" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureStockConverts.json" />
+    <EmbeddedResource Include="Resources\WeatherFile.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
