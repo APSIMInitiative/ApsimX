@@ -52,7 +52,7 @@
             this.jobName = model.Name;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
-            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
+            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, true);
 
             if (multiProcess)
                 jobRunner = new JobRunnerMultiProcess(false);
