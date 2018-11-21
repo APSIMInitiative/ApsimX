@@ -55,17 +55,17 @@ namespace Models.PMF
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [ChildLinkByName]
-        private IArbitrationMethod NArbitrator = null;
+        protected IArbitrationMethod NArbitrator = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [ChildLinkByName]
-        private IArbitrationMethod DMArbitrator = null;
+        protected IArbitrationMethod DMArbitrator = null;
 
         /// <summary>The kgha2gsm</summary>
         private const double kgha2gsm = 0.1;
 
         /// <summary>The list of organs</summary>
-        private List<IArbitration> Organs = new List<IArbitration>();
+        protected List<IArbitration> Organs = new List<IArbitration>();
 
         /// <summary>The variables for DM</summary>
         [XmlIgnore]
@@ -299,13 +299,13 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
             foreach (IOrgan organ in Plant.Organs)
@@ -324,7 +324,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantPartioning")]
-        private void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        virtual protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
             {
@@ -403,7 +403,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantPartioning")]
-        private void OnDoActualPlantPartioning(object sender, EventArgs e)
+        virtual protected void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
             {
@@ -419,13 +419,13 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
+        virtual protected void OnPlantEnding(object sender, EventArgs e)
         {
             Clear();
         }
 
         /// <summary>Clears this instance.</summary>
-        private void Clear()
+        virtual protected void Clear()
         {
             string[] organNames = new string[0];
             DM = new BiomassArbitrationType("DM", Organs);
