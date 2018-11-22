@@ -345,6 +345,8 @@ namespace Models.AgPasture
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
+                    uptake.PlantAvailableNO3N = new double[uptake.Water.Length];
+                    uptake.PlantAvailableNH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
                 }
                 return ZWNs;
@@ -380,6 +382,8 @@ namespace Models.AgPasture
 
                         UptakeDemands.NO3N = root.mySoilNO3Available;
                         UptakeDemands.NH4N = root.mySoilNH4Available;
+                        UptakeDemands.PlantAvailableNO3N = new double[Z.NO3N.Length];
+                        UptakeDemands.PlantAvailableNH4N = new double[Z.NO3N.Length];
                         UptakeDemands.Water = new double[Z.NO3N.Length];
 
                         NSupply += (MathUtilities.Sum(root.mySoilNH4Available) + MathUtilities.Sum(root.mySoilNO3Available)) * Z.Zone.Area;
