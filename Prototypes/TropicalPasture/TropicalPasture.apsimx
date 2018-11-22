@@ -10582,7 +10582,115 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1973-10-01",
+                                  "Date": "1973-02-01",
+                                  "Action": "[CuttingManagement].Script.Reset();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1973-12-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1974-02-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1974-04-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1974-12-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-02-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-04-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-12-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-02-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-04-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-12-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-02-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-04-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-12-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-02-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-04-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-12-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-02-01",
+                                  "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
                                   "Enabled": true
                                 }
@@ -10607,6 +10715,7 @@
                                 "[TropicalPasture].AboveGroundLive.Wt",
                                 "[TropicalPasture].AboveGroundDead.Wt",
                                 "[TropicalPasture].BelowGround.Wt",
+                                "[TropicalPasture].Leaf.LAI",
                                 "[Soil].SoilWater.SWmm",
                                 "[Soil].NO3N",
                                 "[CuttingManagement].Script.ForageRemoved"
@@ -10646,7 +10755,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] public double ForageRemoved { get; set; }\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            ForageRemoved = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n        \tif (TropicalPasture == null)\r\n        \t\tthrow new Exception(\"Tropical pasture is null\");\r\n        \tdouble L = (double)Apsim.Get(TropicalPasture, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            ForageRemoved += LeafRemovalFraction * L;\r\n               \r\n            double S = (double)Apsim.Get(TropicalPasture, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            ForageRemoved += StemRemovalFraction * S;\r\n               \r\n            if (Remove == null)\r\n            throw new Exception(\"Remove is null\");\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n\r\n            if (TropicalPasture == null)\r\n            \tthrow new Exception(\"Cannot find tropical pasture model\");\r\n\r\n            \r\n            TropicalPasture.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] public double ForageRemoved { get; set; }\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            ForageRemoved = 0;\r\n        }\r\n\r\n        public void Reset()\r\n        {\r\n        ForageRemoved = 0.0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n        \tif (TropicalPasture == null)\r\n        \t\tthrow new Exception(\"Tropical pasture is null\");\r\n        \tdouble L = (double)Apsim.Get(TropicalPasture, \"Leaf.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            ForageRemoved += LeafRemovalFraction * L;\r\n               \r\n            double S = (double)Apsim.Get(TropicalPasture, \"Stem.Wt\");\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            ForageRemoved += StemRemovalFraction * S;\r\n               \r\n            if (Remove == null)\r\n            throw new Exception(\"Remove is null\");\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n\r\n            if (TropicalPasture == null)\r\n            \tthrow new Exception(\"Cannot find tropical pasture model\");\r\n\r\n            \r\n            TropicalPasture.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [],
                               "Name": "CuttingManagement",
                               "IncludeInDocumentation": true,
@@ -10707,6 +10816,98 @@
                   ],
                   "LegendPosition": 0,
                   "DisabledSeries": [],
+                  "Name": "ForageRemoved",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "CuttingManagement.Script.ForageRemoved",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "ForageRemoval",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [],
                   "Name": "Biomass",
                   "Children": [
                     {
@@ -10738,7 +10939,39 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
                     },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [],
+                  "Name": "LAI",
+                  "Children": [
                     {
                       "$type": "Models.Graph.Series, Models",
                       "Type": 1,
@@ -10748,14 +10981,14 @@
                       "FactorToVaryColours": "N",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 11,
                       "MarkerSize": 0,
-                      "Line": 4,
+                      "Line": 0,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "Observed",
+                      "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "TropicalPasture.AboveGround.Wt",
+                      "YFieldName": "TropicalPasture.Leaf.LAI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -10763,7 +10996,7 @@
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
-                      "Name": "Observed",
+                      "Name": "Predicted",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
