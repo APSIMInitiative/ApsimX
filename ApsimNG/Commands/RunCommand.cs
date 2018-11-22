@@ -162,7 +162,7 @@
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             int numSimulations = 0;
-            if (jobManager.SimulationNamesBeingRun != null)
+            if (jobManager?.SimulationNamesBeingRun != null)
                 numSimulations = jobManager.SimulationNamesBeingRun.Count;
 
             double numberComplete = 0.0;
