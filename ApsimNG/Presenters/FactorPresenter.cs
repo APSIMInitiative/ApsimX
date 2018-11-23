@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
             this.factorView = view as IEditorView;
             this.presenter = explorerPresenter;
             intellisense = new IntellisensePresenter(factorView as ViewBase);
-            this.factorView.Lines = this.factor.Specifications.ToArray();
+            this.factorView.Lines = this.factor.Specifications?.ToArray() ?? new string[0];
 
             this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;

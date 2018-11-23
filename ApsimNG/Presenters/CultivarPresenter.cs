@@ -69,7 +69,7 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Commands", this.view.Lines);
+                    Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Command", this.view.Lines);
                     this.explorerPresenter.CommandHistory.Add(command);
 
                     this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;

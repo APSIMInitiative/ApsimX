@@ -70,9 +70,9 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            scriptModel = manager.Children[0];
-
-            propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
+            scriptModel = manager.Children.FirstOrDefault();
+            if (scriptModel != null)
+                propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
             managerView.Editor.ScriptMode = true;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -179,6 +179,12 @@ namespace UserInterface.Presenters
                 }
 
                 explorerPresenter.MainPresenter.ShowMessage("\"" + manager.Name + "\" compiled successfully", Simulation.MessageType.Information);
+
+                // User could have added more inputs to manager script - therefore we update the property presenter.
+                scriptModel = manager.Children.FirstOrDefault();
+                if (scriptModel != null)
+                    propertyPresenter.Attach(scriptModel, managerView.GridView, explorerPresenter);
+
             }
             catch (Exception err)
             {

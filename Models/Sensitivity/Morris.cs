@@ -5,6 +5,7 @@
     using Models.Core.ApsimFile;
     using Models.Factorial;
     using Models.Interfaces;
+    using Models.Sensitivity;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -456,7 +457,7 @@
         /// </summary>
         private DataTable RunRToGetParameterValues()
         {
-            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript.r");
             string script = GetMorrisRScript();
             script += "write.table(apsimMorris$X, row.names = F, col.names = T, sep = \",\")" + Environment.NewLine;
             File.WriteAllText(rFileName, script);
@@ -472,7 +473,7 @@
         {
             string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
             string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
-            string rFileName = Path.Combine(Path.GetTempPath(), "script.r");
+            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript.r");
             string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
             string statsFileName = Path.Combine(Path.GetTempPath(), "stats.csv");
 
@@ -572,21 +573,6 @@
             }
         }
 
-        /// <summary>A encapsulation of a parameter to analyse</summary>
-        public class Parameter
-        {
-            /// <summary>Name of parameter</summary>
-            public string Name;
-
-            /// <summary>Model path of parameter</summary>
-            public string Path;
-
-            /// <summary>Lower bound of parameter</summary>
-            public double LowerBound;
-
-            /// <summary>Upper bound of parameter</summary>
-            public double UpperBound;
-        }
 
 
     }
