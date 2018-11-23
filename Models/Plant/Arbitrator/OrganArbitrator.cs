@@ -167,6 +167,8 @@ namespace Models.PMF
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
+                    uptake.PlantAvailableNO3N = new double[uptake.Water.Length];
+                    uptake.PlantAvailableNH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
                 }
                 return ZWNs;
@@ -232,6 +234,8 @@ namespace Models.PMF
 
                     UptakeDemands.NO3N = new double[zone.NO3N.Length];
                     UptakeDemands.NH4N = new double[zone.NH4N.Length];
+                    UptakeDemands.PlantAvailableNO3N = new double[zone.NO3N.Length];
+                    UptakeDemands.PlantAvailableNH4N = new double[zone.NO3N.Length];
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
