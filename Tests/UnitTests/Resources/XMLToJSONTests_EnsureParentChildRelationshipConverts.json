@@ -1,0 +1,28 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Wheat",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Name": "Clock",
+          "IncludeInDocumentation": true,
+          "StartDate": "1900-01-01",
+          "EndDate": "2000-12-31"
+        }
+      ],
+      "IncludeInDocumentation": true
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "Name": "DataStore",
+      "IncludeInDocumentation": true
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "ExplorerWidth": 296
+}

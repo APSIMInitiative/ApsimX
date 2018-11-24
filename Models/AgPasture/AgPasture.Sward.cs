@@ -290,7 +290,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double BelowGroundWt
         {
-            get { return mySpecies.Sum(species => species.RootWt); }
+            get { return mySpecies.Sum(species => species.BelowGroundWt); }
         }
 
         /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>
@@ -1126,9 +1126,8 @@ namespace Models.AgPasture
 
         #region Initialisation methods  ------------------------------------------------------------------------------------
 
-        /// <summary>Called when the simulation is loaded.</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             // get the number and reference to the mySpecies in the sward
             numSpecies = Apsim.Children(this, typeof(PastureSpecies)).Count;

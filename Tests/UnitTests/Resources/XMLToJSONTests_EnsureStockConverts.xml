@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+
+  <Stock>
+    <Name>Stock</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <RandSeed>0</RandSeed>
+    <GenoTypes />
+    <Sheep />
+    <Cattle />
+    <PaddockList>
+      <PaddockInit>
+        <forages />
+        <name />
+        <area>1</area>
+        <slope>0</slope>
+      </PaddockInit>
+    </PaddockList>
+    <EnterpriseList />
+    <GrazingPeriods />
+  </Stock>
+  
+</Simulations>
