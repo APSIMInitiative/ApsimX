@@ -83,7 +83,6 @@
     <EmbeddedResource Include="Resources\Glade\GridView.glade" />
     <EmbeddedResource Include="Resources\Glade\TabbedMetDataView.glade" />
     <EmbeddedResource Include="Resources\Glade\GraphView.glade" />
-    <EmbeddedResource Include="Resources\Glade\SummaryView.glade" />
     <EmbeddedResource Include="Resources\Glade\HTMLView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -118,6 +117,7 @@
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
+    <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -211,6 +211,8 @@
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
+    <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
+    <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
@@ -433,6 +435,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Fodderbeet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
@@ -635,6 +640,8 @@
     <EmbeddedResource Include="Resources\MenuImages\Clear Status.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -939,6 +946,7 @@
       <HintPath>Assemblies\MonoMac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>

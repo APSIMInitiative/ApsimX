@@ -14,7 +14,7 @@ namespace Models.PMF
 
     /// <summary>
     /// # [Name]
-    /// Cultivar class for holding cultivar overrides.
+    /// Class for holding parameter overrides that are used to define a cultivar.
     /// </summary>
     /// <remarks>
     /// A cultivar includes \p Aliases to indicate other common names
@@ -43,8 +43,7 @@ namespace Models.PMF
         /// <summary>
         /// Gets or sets a collection of names this cultivar is known as.
         /// </summary>
-        [XmlElement("Alias")]
-        public string[] Aliases
+        public string[] Alias
         {
             get
             {
@@ -57,8 +56,7 @@ namespace Models.PMF
         /// <summary>
         /// Gets or sets a collection of commands that must be executed when applying this cultivar.
         /// </summary>
-        [XmlElement("Command")]
-        public string[] Commands { get; set; }
+        public string[] Command { get; set; }
 
         /// <summary>
         /// Find a cultivar in a list of cultivars and return it. Will throw if not found
@@ -72,7 +70,7 @@ namespace Models.PMF
             foreach (Cultivar cultivar in cultivars)
             {
                 if (cultivar.Name.Equals(cultivarName, StringComparison.CurrentCultureIgnoreCase) ||
-                    (cultivar.Aliases != null && StringUtilities.Contains(cultivar.Aliases, cultivarName)))
+                    (cultivar.Alias != null && StringUtilities.Contains(cultivar.Alias, cultivarName)))
                 {
                     return cultivar;
                 }
@@ -88,9 +86,9 @@ namespace Models.PMF
         /// <param name="model">The underlying model to apply the commands to</param>
         public void Apply(Model model)
         {
-            if (this.Commands != null)
+            if (this.Command != null)
             {
-                foreach (string command in this.Commands)
+                foreach (string command in this.Command)
                 {
                     string propertyName = command;
                     string propertyValue = StringUtilities.SplitOffAfterDelimiter(ref propertyName, "=");
@@ -102,7 +100,7 @@ namespace Models.PMF
                     {
                         IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
                         if (property == null)
-                            throw new Exception("Cannot find cultivar property: " + propertyName);
+                            throw new Exception(string.Format("Invalid command in cultivar {0}: {1}", Name, propertyName));
                         if (property.GetType() != null)
                         {
                             object oldValue = property.Value;
@@ -160,9 +158,10 @@ namespace Models.PMF
             if (IncludeInDocumentation)
             {
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("Cultivar class for holding cultivar overrides.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This cultivar is defined by overriding some of the base parameters of the plant model.", indent));
                 tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
-                tags.Add(new AutoDocumentation.Paragraph(Commands.Aggregate((a, b) => a + "<br>" + b), indent));
+                if (Command != null)
+                    tags.Add(new AutoDocumentation.Paragraph(Command.Aggregate((a, b) => a + "<br>" + b), indent));
             }
         }
     }

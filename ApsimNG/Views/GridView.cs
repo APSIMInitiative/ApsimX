@@ -392,7 +392,7 @@
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
-                if (categoryRows.Contains(rowNo))
+                if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
                     Color separatorColour = Color.LightSteelBlue;
@@ -455,6 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
+                                comboRend.CellBackgroundGdk = Grid.Style.Base(cellState);
                                 return;
                             }
                         }
@@ -508,11 +509,21 @@
         /// <param name="isSep">Added as a separator if true; removed as a separator if false.</param>
         public void SetRowAsSeparator(int row, bool isSep = true)
         {
-            bool present = categoryRows.Contains(row);
+            bool present = IsSeparator(row);
             if (isSep && !present)
                 categoryRows.Add(row);
             else if (!isSep && present)
                 categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Checks if a row is a separator row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True iff the row is a separator row.</returns>
+        public bool IsSeparator(int row)
+        {
+            return categoryRows.Contains(row);
         }
 
         /// <summary>
@@ -1096,7 +1107,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
                     }
                     else
                     {
@@ -1123,7 +1134,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
                     }
 
                     EndEdit();
@@ -2367,7 +2378,7 @@
         /// </summary>
         private void EditSelectedCell()
         {
-            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
+            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex)) )
             {
                 userEditingCell = true;
                 Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);

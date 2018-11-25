@@ -184,6 +184,8 @@ namespace Models.PMF.Organs
                 {
                     if (xf[i] > 0)
                         MaxDepth += soil.Thickness[i];
+                    else
+                        break;
                 }
                 else
                     MaxDepth += soil.Thickness[i];

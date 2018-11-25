@@ -14,6 +14,7 @@ namespace Models.PMF.Organs
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Plant))]
     public class ReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
     {
         #region Parameter Input Classes
@@ -344,16 +345,13 @@ namespace Models.PMF.Organs
             if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
 
-
-            MaintenanceRespiration = 0;
             //Do Maintenance respiration
-            if (MaintenanceRespirationFunction != null)
-
+            MaintenanceRespiration = 0;
+            if (MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
             {
                 MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
                 MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
             }
-
         }
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)

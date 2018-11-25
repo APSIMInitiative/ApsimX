@@ -48,29 +48,6 @@ namespace Models.Functions.SupplyFunctions
         /// <summary> The amount of DM that is fixed by photosynthesis </summary>
         public double GrossPhotosynthesis { get; set; }
 
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-
-        [EventSubscribe("DoPotentialPlantGrowth")]
-
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsEmerged)
-            {
-                GrossPhotosynthesis = DailyCanopyGrossPhotosythesis(Canopy.LAI,
-                                                      Weather.Latitude,
-                                                      Clock.Today.DayOfYear,
-                                                      Weather.Radn,
-                                                      Weather.MaxT,
-                                                      Weather.MinT,
-                                                      Weather.CO2,
-                                                      1.0) * 30/ 44 * 0.1;     
-                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
-
-            }
-        }
-
         ///<summary>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         ///float DLL DailyCanopyGrossPhotosythesis(LPSTR pCrop,float fLAI, float fLatitude,int nDay,
         ///                                        float fRad,float fTmpMax,float fTmpMin,float fCO2,
@@ -102,22 +79,24 @@ namespace Models.Functions.SupplyFunctions
         ///Reference:1. Wang,Enli. xxxx.
         ///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% </summary>
         public double DailyCanopyGrossPhotosythesis(double LAI, double Latitude, int Day,
-                                                double Radn, double Tmax, double Tmin, double CO2,
-                                               double Fact)
+                                                double Radn, double Tmax, double Tmin, double CO2, 
+                                                double DifFr,
+                                                double Fact)
         {
             int i;
             double AveGrossPs;
             double GrossPs;
-            double DailyGrossPs; 
+            double DailyGrossPs;
             double PAR;
             double PARDIF;
             double PARDIR;
             //double vAveGrossPsMax;
 
-            double GlobalRadiation, SinHeight, Dayl, AtmTrans, DifFr;
+            //double GlobalRadiation, SinHeight, Dayl, AtmTrans, DifFr;
+            double GlobalRadiation, SinHeight, Dayl, AtmTrans;
             double Dec, Sin, Cos, Rsc, SolarConst, DailySin, DailySinE, Hour, RadExt;
             double LUE, PgMax, Temp;
-            
+
             int nGauss = 5;
             double[] xGauss = { 0.0469101, 0.2307534, 0.5000000, 0.7692465, 0.9530899 };
             double[] wGauss = { 0.1184635, 0.2393144, 0.2844444, 0.2393144, 0.1184635 };
@@ -125,7 +104,7 @@ namespace Models.Functions.SupplyFunctions
             double RAD = PI / 180.0;
 
             GlobalRadiation = (double)Radn * 1E6;    //J/m2.d
-            
+
 
             //===========================================================================================
             //Dailenght, Solar constant and daily extraterrestrial radiation
@@ -172,17 +151,24 @@ namespace Models.Functions.SupplyFunctions
                 PAR = 0.5 * GlobalRadiation * SinHeight * (1.0 + 0.4 * SinHeight) / DailySinE;
                 AtmTrans = PAR / (0.5 * SolarConst * SinHeight);
 
-                if (AtmTrans <= 0.22)
-                    DifFr = 1.0;
-                else
+                if (DifFr < 0)
                 {
-                    if ((AtmTrans > 0.22) && (AtmTrans <= 0.35))
-                        DifFr = 1.0 - 6.4 * (AtmTrans - 0.22) * (AtmTrans - 0.22);
-                    else
-                        DifFr = 1.47 - 1.66 * AtmTrans;
-                }
 
-                DifFr = Math.Max(DifFr, 0.15 + 0.85 * (1.0 - Math.Exp(-0.1 / SinHeight)));
+                    if (AtmTrans <= 0.22)
+                        DifFr = 1.0;
+                    else
+                    {
+                        if ((AtmTrans > 0.22) && (AtmTrans <= 0.35))
+                            DifFr = 1.0 - 6.4 * (AtmTrans - 0.22) * (AtmTrans - 0.22);
+                        else
+                            DifFr = 1.47 - 1.66 * AtmTrans;
+                    }
+                    DifFr = Math.Max(DifFr, 0.15 + 0.85 * (1.0 - Math.Exp(-0.1 / SinHeight)));
+                }
+                if (DifFr < 0 | DifFr > 1)
+                {
+                    throw new Exception("Diffuse fraction should be between 0 and 1.");
+                }
 
                 //Diffuse PAR (PARDIF) and direct PAR (PARDIR)
                 PARDIF = Math.Min(PAR, SinHeight * DifFr * AtmTrans * 0.5 * SolarConst);
@@ -210,6 +196,20 @@ namespace Models.Functions.SupplyFunctions
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Value(int arrayIndex = -1)
         {
+            if (Plant.IsEmerged)
+            {
+                GrossPhotosynthesis = DailyCanopyGrossPhotosythesis(Canopy.LAI,
+                                                      Weather.Latitude,
+                                                      Clock.Today.DayOfYear,
+                                                      Weather.Radn,
+                                                      Weather.MaxT,
+                                                      Weather.MinT,
+                                                      Weather.CO2,
+                                                      Weather.DiffuseFraction,
+                                                      1.0) * 30 / 44 * 0.1;
+                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
+
+            }
             return GrossPhotosynthesis;
         }
     }

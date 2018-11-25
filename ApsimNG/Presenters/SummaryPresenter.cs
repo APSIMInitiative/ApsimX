@@ -1,20 +1,15 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SummaryPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-using EventArguments;
-using System;
-using System.IO;
-using System.Linq;
-using Models;
-using Models.Core;
-using Models.Factorial;
-using UserInterface.Views;
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-
+    using EventArguments;
+    using System;
+    using System.IO;
+    using System.Linq;
+    using Models;
+    using Models.Core;
+    using Models.Factorial;
+    using global::UserInterface.Views;
+    using global::EventArguments;
+    using global::UserInterface.Commands;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -23,10 +18,10 @@ namespace UserInterface.Presenters
         private Summary summaryModel;
 
         /// <summary>The view model to work with.</summary>
-        private ISummaryView view;
+        private ISummaryView summaryView;
 
         /// <summary>The explorer presenter which manages this presenter.</summary>
-        private ExplorerPresenter presenter;
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>Our data store</summary>
         [Link]
@@ -35,12 +30,12 @@ namespace UserInterface.Presenters
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
         /// <param name="view">The view to attach to</param>
-        /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        /// <param name="parentPresenter">The parent explorer presenter</param>
+        public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
-            this.summaryModel = model as Summary;
-            this.presenter = explorerPresenter;
-            this.view = view as ISummaryView;
+            summaryModel = model as Summary;
+            this.explorerPresenter = parentPresenter;
+            summaryView = view as ISummaryView;
             // populate the simulation names in the view.
             Simulation parentSimulation = Apsim.Parent(this.summaryModel, typeof(Simulation)) as Simulation;
             if (parentSimulation != null)
@@ -49,42 +44,52 @@ namespace UserInterface.Presenters
                 {
                     Experiment experiment = parentSimulation.Parent as Experiment;
                     string[] simulationNames = experiment.GetSimulationNames().ToArray();
-                    this.view.SimulationNames = simulationNames;
+                    summaryView.SimulationDropDown.Values = simulationNames;
                     if (simulationNames.Length > 0)
                     {
-                        this.view.SimulationName = simulationNames[0];
+                        summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
                     }
                 }
                 else
                 {
-                    this.view.SimulationNames = new string[] { parentSimulation.Name };
-                    this.view.SimulationName = parentSimulation.Name;
+                    summaryView.SimulationDropDown.Values = new string[] { parentSimulation.Name };
+                    summaryView.SimulationDropDown.SelectedValue = parentSimulation.Name;
                 }
 
                 // Populate the view.
                 this.SetHtmlInView();
 
+                summaryView.SummaryCheckBox.IsChecked = summaryModel.CaptureSummaryText;
+                summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
+                summaryView.WarningCheckBox.IsChecked = summaryModel.CaptureWarnings;
+                summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
+                summaryView.ErrorCheckBox.IsChecked = summaryModel.CaptureErrors;
+                summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
+
                 // Subscribe to the simulation name changed event.
-                this.view.SimulationNameChanged += this.OnSimulationNameChanged;
+                summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
 
                 // Subscribe to the view's copy event.
-                this.view.Copy += OnCopy;
+                summaryView.HtmlView.Copy += OnCopy;
             }
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.view.SimulationNameChanged -= this.OnSimulationNameChanged;
-            this.view.Copy -= OnCopy;
+            summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
+            summaryView.HtmlView.Copy -= OnCopy;
+            summaryView.SummaryCheckBox.Changed -= OnSummaryCheckBoxChanged;
+            summaryView.WarningCheckBox.Changed -= OnWarningCheckBoxChanged;
+            summaryView.ErrorCheckBox.Changed -= OnErrorCheckBoxChanged;
         }
 
         /// <summary>Populate the summary view.</summary>
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(this.dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
-            this.view.SetSummaryContent(writer.ToString());
+            Summary.WriteReport(this.dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
+            summaryView.HtmlView.SetContents(writer.ToString(), false);
             writer.Close();
         }
 
@@ -93,7 +98,25 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationNameChanged(object sender, EventArgs e)
         {
-            this.SetHtmlInView();
+            SetHtmlInView();
+        }
+
+        private void OnSummaryCheckBoxChanged(object sender, EventArgs e)
+        {
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureSummaryText", summaryView.SummaryCheckBox.IsChecked);
+            explorerPresenter.CommandHistory.Add(command);
+        }
+
+        private void OnWarningCheckBoxChanged(object sender, EventArgs e)
+        {
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureWarnings", summaryView.WarningCheckBox.IsChecked);
+            explorerPresenter.CommandHistory.Add(command);
+        }
+
+        private void OnErrorCheckBoxChanged(object sender, EventArgs e)
+        {
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureErrors", summaryView.ErrorCheckBox.IsChecked);
+            explorerPresenter.CommandHistory.Add(command);
         }
 
         /// <summary>
@@ -103,7 +126,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments.</param>
         private void OnCopy(object sender, CopyEventArgs e)
         {
-            this.presenter.SetClipboardText(e.Text, "CLIPBOARD");
+            this.explorerPresenter.SetClipboardText(e.Text, "CLIPBOARD");
         }
     }
 }
