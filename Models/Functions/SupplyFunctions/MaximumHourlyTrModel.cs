@@ -135,6 +135,7 @@ namespace Models.Functions.SupplyFunctions
 
         private double latR;
         private double transpEffCoef;
+        private double minVPD;
 
         private List<double> hourlyTemp;
         private List<double> hourlyRad;
@@ -347,7 +348,13 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPD at the air temperature in kPa
             hourlyVPD = new List<double>();
-            for (int i = 0; i < 24; i++) hourlyVPD.Add(0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(Weather.MinT)));
+            minVPD = 0;
+            for (int i = 0; i < 24; i++)
+            {
+                double vpd = 0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(Weather.MinT));
+                hourlyVPD.Add(vpd);
+                if (vpd > 0 && minVPD == 0) minVPD = vpd;
+            }
         }
         //------------------------------------------------------------------------------------------------
 
@@ -419,7 +426,7 @@ namespace Models.Functions.SupplyFunctions
                     X = hourlyVPD.ToArray(),
                     Y = hourlyPotDM.ToArray()
                 };
-                dmVPDThresh = interpol.ValueIndexed(VPDThresh);
+                dmVPDThresh = interpol.ValueIndexed(Math.Max(VPDThresh, minVPD));
 
                 for (int i = 0; i < 24; i++)
                 {
