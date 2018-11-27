@@ -42,7 +42,7 @@ namespace UserInterface.Presenters
             this.memoViewer = view as HTMLView;
             this.explorerPresenter = explorerPresenter;
             this.memoViewer.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            this.memoViewer.SetContents(this.memoModel.MemoText, true);
+            this.memoViewer.SetContents(this.memoModel.Text, true);
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace UserInterface.Presenters
             try
             {
                 string markdown = this.memoViewer.GetMarkdown();
-                if (markdown != this.memoModel.MemoText)
+                if (markdown != this.memoModel.Text)
                 {
-                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "Text", markdown));
                 }
             }
             catch (Exception err)
@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.memoModel)
             {
-                this.memoViewer.SetContents(((Memo)changedModel).MemoText, true);
+                this.memoViewer.SetContents(((Memo)changedModel).Text, true);
             }
         }
 

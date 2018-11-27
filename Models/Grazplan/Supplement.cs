@@ -911,10 +911,13 @@ namespace Models.GrazPlan
             set
             {
                 theModel.ClearPaddockList();
-                paddocksGiven = value.Length > 0;
-                if (paddocksGiven)
-                    for (int i = 0; i < value.Length; i++)
-                        theModel.AddPaddock(i, value[i]);
+                if (value != null)
+                {
+                    paddocksGiven = value.Length > 0;
+                    if (paddocksGiven)
+                        for (int i = 0; i < value.Length; i++)
+                            theModel.AddPaddock(i, value[i]);
+                }
             }
         }
 

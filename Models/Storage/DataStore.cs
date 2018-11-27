@@ -709,7 +709,7 @@
         private void StopDBWriteThread()
         {
             stoppingWriteToDB = true;
-            writeTask.Wait();
+            writeTask?.Wait();
         }
 
         /// <summary>Worker method for writing to the .db file. This runs in own thread.</summary>

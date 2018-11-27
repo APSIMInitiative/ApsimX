@@ -25,41 +25,6 @@ namespace Models.AgPasture
         [ChildLink]
         public GenericTissue[] Tissue;
 
-        /// <summary>Return live biomass. Used by STOCK. g/m^2</summary>
-        public Biomass Live
-        {
-            get
-            {
-                double availPropn = 1.0;
-                if (this.Name == "Stolons")
-                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
-                Biomass live = new Biomass();
-                live.StructuralWt = DMLive * 0.10 * availPropn;
-                live.StructuralN = NLive * 0.10 * availPropn;
-                live.DMDOfStructural = DigestibilityLive;
-                return live;
-            }
-        }
-
-        /// <summary>Return dead biomass. Used by STOCK. g/m^2</summary>
-        public Biomass Dead
-        {
-            get
-            {
-                double availPropn = 1.0;
-                if (this.Name == "Stolons")
-                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
-                Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead * 0.10 * availPropn;
-                dead.StructuralN = NDead * 0.10 * availPropn;
-                dead.DMDOfStructural = DigestibilityDead;
-                return dead;
-            }
-        }
-
-        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
-
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
@@ -105,6 +70,35 @@ namespace Models.AgPasture
         #endregion ---------------------------------------------------------------------------------------------------------
 
         #region Organ properties (summary of tissues)  ---------------------------------------------------------------------
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+
+        /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
+        public Biomass Live
+        {
+            get
+            {
+                Biomass live = new Biomass();
+                live.StructuralWt = DMLive * 0.10 * FractionStanding;
+                live.StructuralN = NLive * 0.10 * FractionStanding;
+                live.DMDOfStructural = DigestibilityLive;
+                return live;
+            }
+        }
+
+        /// <summary>Return dead biomass. Used by STOCK (g/m2).</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                Biomass dead = new Biomass();
+                dead.StructuralWt = DMDead * 0.10 * FractionStanding;
+                dead.StructuralN = NDead * 0.10 * FractionStanding;
+                dead.DMDOfStructural = DigestibilityDead;
+                return dead;
+            }
+        }
 
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
         internal double DMTotal
@@ -463,7 +457,10 @@ namespace Models.AgPasture
         /// <summary>The solute manager in this zone</summary>
         public SoluteManager solutes = null;
 
-        /// <summary>Initialise the tissues for the roots.</summary>
+        /// <summary>The collection of tissues for this organ.</summary>
+        internal RootTissue[] Tissue { get; set; }
+
+        /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="nameOfSpecies">Name of the pasture species</param>
         /// <param name="numTissues">Number of tissues in this organ</param>
         /// <param name="initialDM">Initial dry matter weight</param>
@@ -472,7 +469,7 @@ namespace Models.AgPasture
         /// <param name="minNconc">The minimum N concentration</param>
         /// <param name="maxNconc">The maximum N concentration</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        /// <param name="fractionNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
+        /// <param name="fractionLuxNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
         /// <param name="specificRootLength">The specific root length (m/g)</param>
         /// <param name="rootDepthMaximum">The maximum root depth</param>
         /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
@@ -492,7 +489,7 @@ namespace Models.AgPasture
         public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
                                        double initialDM, double initialDepth,
                                        double optNconc, double minNconc, double maxNconc,
-                                       double minLiveDM, double fractionNremobilisable,
+                                       double minLiveDM, double fractionLuxNremobilisable,
                                        double specificRootLength, double rootDepthMaximum,
                                        double rootDistributionDepthParam, double rootDistributionExponent,
                                        double rootBottomDistributionFactor,
@@ -503,18 +500,19 @@ namespace Models.AgPasture
                                        double referenceRLD, double exponentSoilMoisture,
                                        Soil theSoil)
         {
-            //Initialise the tissues (typically, there are two tissues below ground, one live and one dead)
+            // Typically two tissues below ground, one live and one dead
             Tissue = new RootTissue[numTissues];
             nLayers = theSoil.Thickness.Length;
             for (int t = 0; t < Tissue.Length; t++)
                 Tissue[t] = new RootTissue(nLayers);
 
             // save the parameters for this organ
+            mySpeciesName = nameOfSpecies;            
             NConcOptimum = optNconc;
             NConcMinimum = minNconc;
             NConcMaximum = maxNconc;
             MinimumLiveDM = minLiveDM;
-            Tissue[0].FractionNLuxuryRemobilisable = fractionNremobilisable;
+            Tissue[0].FractionNLuxuryRemobilisable = fractionLuxNremobilisable;
             mySpecificRootLength = specificRootLength;
             myRootDepthMaximum = rootDepthMaximum;
             myRootDistributionDepthParam = rootDistributionDepthParam;
@@ -531,9 +529,9 @@ namespace Models.AgPasture
             myReferenceRLD = referenceRLD;
             myExponentSoilMoisture = exponentSoilMoisture;
 
-            // Initialise variables and links to soil
+            // Link to soil and initialise variables
             mySoil = theSoil;
-            ZoneName = mySoil.Parent.Name;
+            myZoneName = mySoil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
             solutes = Apsim.Find(mySoil, typeof(SoluteManager)) as SoluteManager;
@@ -545,42 +543,35 @@ namespace Models.AgPasture
                 throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
-            mySpeciesName = nameOfSpecies;
-            myInitialDMWeight = initialDM;
-            myInitialRootDepth = initialDepth;
-            Depth = myInitialRootDepth;
-            RootDistributionTarget(myRootDepthMaximum, myRootDistributionDepthParam, myRootBottomDistributionFactor, myRootDistributionExponent);
-            double[] iniRootFraction = CurrentRootDistributionTarget(myRootDepthMaximum);
+            Depth = initialDepth;
+            TargetDistribution = RootDistributionTarget();
+            double[] iniRootFraction = CurrentRootDistributionTarget();
             for (int layer = 0; layer < nLayers; layer++)
-                Tissue[0].DMLayer[layer] = myInitialDMWeight * iniRootFraction[layer];
-            Tissue[0].Namount = myInitialDMWeight * optNconc;
+            {
+                Tissue[0].DMLayer[layer] = initialDM * iniRootFraction[layer];
+                Tissue[0].NamountLayer[layer] = NConcOptimum * Tissue[0].DMLayer[layer];
+            }
         }
-
-        /// <summary>The collection of tissues for this organ.</summary>
-        internal RootTissue[] Tissue { get; set; }
-
-        /// <summary>Amount of plant available water in the soil (mm).</summary>
-        internal double[] mySoilWaterAvailable { get; private set; }
-
-        /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
-        internal double[] mySoilNH4Available { get; private set; }
-
-        /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
-        internal double[] mySoilNO3Available { get; private set; }
-
-        /// <summary>Name of root zone.</summary>
-        internal string ZoneName { get; private set; }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
 
-        /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
-        private double myInitialDMWeight = 500.0;
-
-        /// <summary>Initial rooting depth (mm).</summary>
-        private double myInitialRootDepth = 750.0;
-
         /// <summary>Name of pasture species</summary>
         private string mySpeciesName;
+
+        /// <summary>Name of root zone.</summary>
+        internal string myZoneName { get; private set; }
+
+        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
+        internal double NConcOptimum = 2.0;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        internal double NConcMaximum = 2.5;
+
+        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
+        internal double NConcMinimum = 0.6;
+
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        internal double MinimumLiveDM = 0.0;
 
         /// <summary>Specific root length (m/gDM).</summary>
         private double mySpecificRootLength = 100.0;
@@ -630,28 +621,13 @@ namespace Models.AgPasture
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
 
-        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        internal double NConcOptimum = 2.0;
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        internal double NConcMaximum  = 2.5;
-
-        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        internal double NConcMinimum = 0.6;
-
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        internal double MinimumLiveDM = 0.0;
-
         /// <summary>Gets or sets the rooting depth (mm).</summary>
         internal double Depth { get; set; }
 
         /// <summary>Gets or sets the layer at the bottom of the root zone.</summary>
-        internal int BottomLayer
+        internal int BottomLayer 
         {
-            get
-            {
-                return RootZoneBottomLayer();
-            }
+            get { return RootZoneBottomLayer(); }
         }
 
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
@@ -926,28 +902,6 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
-        /// <param name="layer">The index for the layer being considered</param>
-        /// <returns>The fraction of the layer that is explored by roots (0-1)</returns>
-        internal double FractionLayerWithRoots(int layer)
-        {
-            double fractionInLayer = 0.0;
-            if (layer < BottomLayer)
-            {
-                fractionInLayer = 1.0;
-            }
-            else if (layer == BottomLayer)
-            {
-                double depthTillTopThisLayer = 0.0;
-                for (int z = 0; z < layer; z++)
-                    depthTillTopThisLayer += mySoil.Thickness[z];
-                fractionInLayer = (Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
-                fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
-            }
-
-            return fractionInLayer;
-        }
-
         /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
         public double[] RootLengthDensity
         {
@@ -962,6 +916,174 @@ namespace Models.AgPasture
                 }
                 return result;
             }
+        }
+
+        /// <summary>Amount of plant available water in the soil (mm).</summary>
+        internal double[] mySoilWaterAvailable { get; private set; }
+
+        /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
+        internal double[] mySoilNH4Available { get; private set; }
+
+        /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
+        internal double[] mySoilNO3Available { get; private set; }
+
+        #endregion ---------------------------------------------------------------------------------------------------------
+
+        #region Organ methods  ---------------------------------------------------------------------------------------------
+
+        /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
+        internal void DoResetOrgan()
+        {
+            for (int t = 0; t < Tissue.Length; t++)
+            {
+                Tissue[t].DM = 0.0;
+                Tissue[t].Namount = 0.0;
+                Tissue[t].Pamount = 0.0;
+                DoCleanTransferAmounts();
+            }
+        }
+
+        /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
+        internal void DoCleanTransferAmounts()
+        {
+            for (int t = 0; t < Tissue.Length; t++)
+            {
+                Tissue[t].DMTransferedIn = 0.0;
+                Tissue[t].DMTransferedOut = 0.0;
+                Tissue[t].NTransferedIn = 0.0;
+                Tissue[t].NTransferedOut = 0.0;
+                Tissue[t].NRemobilisable = 0.0;
+                Tissue[t].NRemobilised = 0.0;
+                Array.Clear(Tissue[t].DMLayersTransferedIn, 0, Tissue[t].DMLayersTransferedIn.Length);
+                Array.Clear(Tissue[t].NLayersTransferedIn, 0, Tissue[t].NLayersTransferedIn.Length);
+            }
+        }
+
+        /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
+        /// <param name="fraction">The fraction to kill in each tissue</param>
+        internal void DoKillOrgan(double fraction = 1.0)
+        {
+            if (1.0 - fraction > Epsilon)
+            {
+                double fractionRemaining = 1.0 - fraction;
+                for (int t = 0; t < Tissue.Length - 1; t++)
+                {
+                    for (int layer = 0; layer <= BottomLayer; layer++)
+                    {
+                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer] * fraction;
+                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer] * fraction;
+                        Tissue[t].DMLayer[layer] *= fractionRemaining;
+                        Tissue[t].NamountLayer[layer] *= fractionRemaining;
+                    }
+                }
+            }
+            else
+            {
+                for (int t = 0; t < Tissue.Length - 1; t++)
+                {
+                    for (int layer = 0; layer <= BottomLayer; layer++)
+                    {
+                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer];
+                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer];
+                    }
+                    Tissue[t].DM = 0.0;
+                    Tissue[t].Namount = 0.0;
+                }
+            }
+        }
+
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        public void DoDetachBiomass(double amountDM, double amountN)
+        {
+            if (amountDM + amountN > 0.0)
+            {
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = amountDM * Tissue[0].FractionWt[layer];
+                    fomData.N = amountN * Tissue[0].FractionWt[layer];
+                    fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
+                    fomData.P = 0.0; // P not considered here
+                    fomData.AshAlk = 0.0; // Ash not considered here
+
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0; // not used here
+                    layerData.LabileP = 0.0; // not used here
+
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = mySpeciesName;
+                FOMData.Layer = FOMdataLayer;
+                SoilNitrogen.DoIncorpFOM(FOMData);
+            }
+        }
+
+        /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
+        /// <param name="turnoverRate">The turnover rate for each tissue</param>
+        /// <returns>The DM and N amount detached from this organ</returns>
+        internal void DoTissueTurnover(double[] turnoverRate)
+        {
+            double turnoverDM;
+            double turnoverN;
+
+            // get amounts turned over
+            for (int t = 0; t < Tissue.Length; t++)
+            {
+                if (turnoverRate[t] > 0.0)
+                {
+                    turnoverDM = Tissue[t].DM * turnoverRate[t];
+                    turnoverN = Tissue[t].Namount * turnoverRate[t];
+                    Tissue[t].DMTransferedOut += turnoverDM;
+                    Tissue[t].NTransferedOut += turnoverN;
+
+                    if (t < Tissue.Length - 1)
+                    {
+                        // pass amounts turned over from this tissue to the next
+                        Tissue[t + 1].DMTransferedIn += turnoverDM;
+                        Tissue[t + 1].NTransferedIn += turnoverN;
+
+                        // incoming stuff need to be given for each layer
+                        for (int layer = 0; layer <= BottomLayer; layer++)
+                        {
+                            Tissue[t + 1].DMLayersTransferedIn[layer] = turnoverDM * Tissue[t].FractionWt[layer];
+                            Tissue[t + 1].NLayersTransferedIn[layer] = turnoverN * Tissue[t].FractionWt[layer];
+                        }
+
+                        // get the amounts remobilisable (luxury N)
+                        double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
+                    }
+                    else
+                    {
+                        // N transferred into dead tissue in excess of minimum N concentration is remobilisable
+                        double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
+                    }
+                }
+            }
+        }
+
+        /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
+        internal bool DoOrganUpdate()
+        {
+            // save current state
+            double previousDM = DMTotal;
+            double previousN = NTotal;
+
+            // update all tissues
+            for (int t = 0; t < Tissue.Length; t++)
+                Tissue[t].DoUpdateTissue();
+
+            // check mass balance
+            bool dmIsOk = Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal) <= Epsilon;
+            bool nIsOk = Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal) <= Epsilon;
+            return (dmIsOk || nIsOk);
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
@@ -1137,162 +1259,27 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
-
-        #region Organ methods  ---------------------------------------------------------------------------------------------
-
-        /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
-        internal void DoResetOrgan()
+        /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
+        /// <param name="layer">The index for the layer being considered</param>
+        /// <returns>The fraction of the layer that is explored by roots (0-1)</returns>
+        internal double FractionLayerWithRoots(int layer)
         {
-            for (int t = 0; t < Tissue.Length; t++)
+            double fractionInLayer = 0.0;
+            if (layer < BottomLayer)
             {
-                Tissue[t].DM = 0.0;
-                Tissue[t].Namount = 0.0;
-                Tissue[t].Pamount = 0.0;
-                DoCleanTransferAmounts();
+                fractionInLayer = 1.0;
             }
-        }
-
-        /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
-        internal void DoCleanTransferAmounts()
-        {
-            for (int t = 0; t < Tissue.Length; t++)
+            else if (layer == BottomLayer)
             {
-                Tissue[t].DMTransferedIn = 0.0;
-                Tissue[t].DMTransferedOut = 0.0;
-                Tissue[t].NTransferedIn = 0.0;
-                Tissue[t].NTransferedOut = 0.0;
-                Tissue[t].NRemobilisable = 0.0;
-                Tissue[t].NRemobilised = 0.0;
-                Array.Clear(Tissue[t].DMLayersTransferedIn, 0, Tissue[t].DMLayersTransferedIn.Length);
-                Array.Clear(Tissue[t].NLayersTransferedIn, 0, Tissue[t].NLayersTransferedIn.Length);
-            }
-        }
-
-        /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
-        /// <param name="fraction">The fraction to kill in each tissue</param>
-        internal void DoKillOrgan(double fraction = 1.0)
-        {
-            if (1.0 - fraction > Epsilon)
-            {
-                double fractionRemaining = 1.0 - fraction;
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                {
-                    for (int layer = 0; layer <= BottomLayer; layer++)
-                    {
-                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer] * fraction;
-                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer] * fraction;
-                        Tissue[t].DMLayer[layer] *= fractionRemaining;
-                        Tissue[t].NamountLayer[layer] *= fractionRemaining;
-                    }
-                }
-            }
-            else
-            {
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                {
-                    for (int layer = 0; layer <= BottomLayer; layer++)
-                    {
-                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer];
-                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer];
-                    }
-                    Tissue[t].DM = 0.0;
-                    Tissue[t].Namount = 0.0;
-                }
-            }
-        }
-
-        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
-        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
-        /// <param name="amountN">The N amount to send (kg/ha)</param>
-        public void DoDetachBiomassToSoilFOM(double amountDM, double amountN)
-        {
-            FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                FOMType fomData = new FOMType();
-                fomData.amount = amountDM * Tissue[0].FractionWt[layer];
-                fomData.N = amountN * Tissue[0].FractionWt[layer];
-                fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
-                fomData.P = 0.0; // P not considered here
-                fomData.AshAlk = 0.0; // Ash not considered here
-
-                FOMLayerLayerType layerData = new FOMLayerLayerType();
-                layerData.FOM = fomData;
-                layerData.CNR = 0.0; // not used here
-                layerData.LabileP = 0.0; // not used here
-
-                FOMdataLayer[layer] = layerData;
+                double depthTillTopThisLayer = 0.0;
+                for (int z = 0; z < layer; z++)
+                    depthTillTopThisLayer += mySoil.Thickness[z];
+                fractionInLayer = (Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
 
-            FOMLayerType FOMData = new FOMLayerType();
-            FOMData.Type = mySpeciesName;
-            FOMData.Layer = FOMdataLayer;
-            SoilNitrogen.DoIncorpFOM(FOMData);
+            return fractionInLayer;
         }
-
-        /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
-        /// <param name="turnoverRate">The turnover rate for each tissue</param>
-        /// <returns>The DM and N amount detached from this organ</returns>
-        internal void DoTissueTurnover(double[] turnoverRate)
-        {
-            double turnoverDM;
-            double turnoverN;
-
-            // get amounts turned over
-            for (int t = 0; t < Tissue.Length; t++)
-            {
-                if (turnoverRate[t] > 0.0)
-                {
-                    turnoverDM = Tissue[t].DM * turnoverRate[t];
-                    turnoverN = Tissue[t].Namount * turnoverRate[t];
-                    Tissue[t].DMTransferedOut += turnoverDM;
-                    Tissue[t].NTransferedOut += turnoverN;
-
-                    if (t < Tissue.Length - 1)
-                    {
-                        // pass amounts turned over from this tissue to the next
-                        Tissue[t + 1].DMTransferedIn += turnoverDM;
-                        Tissue[t + 1].NTransferedIn += turnoverN;
-
-                        // incoming stuff need to be given for each layer
-                        for (int layer = 0; layer <= BottomLayer; layer++)
-                        {
-                            Tissue[t + 1].DMLayersTransferedIn[layer] = turnoverDM * Tissue[t].FractionWt[layer];
-                            Tissue[t + 1].NLayersTransferedIn[layer] = turnoverN * Tissue[t].FractionWt[layer];
-                        }
-
-                        // get the amounts remobilisable (luxury N)
-                        double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
-                    }
-                    else
-                    {
-                        // N transferred into dead tissue in excess of minimum N concentration is remobilisable
-                        double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
-                    }
-                }
-            }
-        }
-
-        /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
-        internal bool DoOrganUpdate()
-        {
-            // save current state
-            double previousDM = DMTotal;
-            double previousN = NTotal;
-
-            // update all tissues
-            for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].DoUpdateTissue();
-
-            // check mass balance
-            bool dmIsOk = Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal) <= Epsilon;
-            bool nIsOk = Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal) <= Epsilon;
-            return (dmIsOk || nIsOk);
-        }
-
 
         /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
         /// <returns>The index of a layer</returns>
@@ -1319,13 +1306,8 @@ namespace Models.AgPasture
         /// This distribution is solely based on root parameters (maximum depth and distribution parameters)
         /// These values will be used to allocate initial rootDM as well as any growth over the profile
         /// </remarks>
-        /// <param name="myRootDepthMaximum"></param>
-        /// <param name="myRootDistributionDepthParam"></param>
-        /// <param name="rootBottomDistributionFactor"></param>
-        /// <param name="myRootDistributionExponent"></param>
         /// <returns>A weighting factor for each soil layer (mm equivalent)</returns>
-        public void RootDistributionTarget(double myRootDepthMaximum, double myRootDistributionDepthParam, 
-                                           double rootBottomDistributionFactor, double myRootDistributionExponent)
+        public double[] RootDistributionTarget()
         {
             // 1. Base distribution calculated using a combination of linear and power functions:
             //  It considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion),
@@ -1356,7 +1338,7 @@ namespace Models.AgPasture
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = myRootDepthMaximum * rootBottomDistributionFactor;
+                    double maxRootDepth = myRootDepthMaximum * myRootBottomDistributionFactor;
                     result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), myRootDistributionExponent + 1)
                                   - Math.Pow(maxRootDepth - Math.Min(depthBottom, myRootDepthMaximum), myRootDistributionExponent + 1);
                     result[layer] /= (myRootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, myRootDistributionExponent);
@@ -1372,18 +1354,16 @@ namespace Models.AgPasture
                 depthTop += mySoil.Thickness[layer];
             }
 
-            TargetDistribution = result;
+            return result;
         }
-
 
         /// <summary>Computes the current target distribution of roots in the soil profile.</summary>
         /// <remarks>
         /// This distribution is a correction of the target distribution, taking into account the depth of soil
         /// as well as the current rooting depth
         /// </remarks>
-        /// <param name="myRootDepthMaximum"></param>
         /// <returns>The proportion of root mass expected in each soil layer (0-1)</returns>
-        public double[] CurrentRootDistributionTarget(double myRootDepthMaximum)
+        public double[] CurrentRootDistributionTarget()
         {
             double cumProportion = 0.0;
             double topLayersDepth = 0.0;
@@ -1542,7 +1522,7 @@ namespace Models.AgPasture
         const double CNratioCellWall = 100.0;
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double MyPrecision = 0.000000001;
+        internal const double MyPrecision = 0.0000000001;
 
         #endregion ---------------------------------------------------------------------------------------------------------
     }
@@ -1651,7 +1631,7 @@ namespace Models.AgPasture
             // additions need to consider distribution over the profile
             DMTransferedIn = DMLayersTransferedIn.Sum();
             NTransferedIn = NLayersTransferedIn.Sum();
-            if ((DMTransferedIn > MyPrecision) && (NTransferedIn > MyPrecision))
+            if ((DMTransferedIn > MyPrecision) || (NTransferedIn > MyPrecision))
             {
                 for (int layer = 0; layer < nLayers; layer++)
                 {
