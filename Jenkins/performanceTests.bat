@@ -18,7 +18,13 @@ if not exist APSIM.PerformanceTests (
 	echo Cloning APSIM.PerformanceTests...
 	git clone https://github.com/APSIMInitiative/APSIM.PerformanceTests
 )
+
+rem Cleanup any modified files.
 cd APSIM.PerformanceTests\APSIM.PerformanceTests.Collector
+git checkout .
+git clean -fdxq
+git checkout master
+git pull
 
 echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
 nuget restore -verbosity quiet
