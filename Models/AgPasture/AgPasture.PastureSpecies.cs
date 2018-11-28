@@ -2944,7 +2944,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets or sets the amount of water demanded by the plant (mm).</summary>
-        [Description("Amount of water demanded by the plant")]
+        [XmlIgnore]
         [Units("mm")]
         public double WaterDemand
         {
@@ -4053,6 +4053,12 @@ namespace Models.AgPasture
             defoliatedN = 0.0;
             defoliatedDigestibility = 0.0;
 
+            grossPhotosynthesis = 0.0;
+            dGrowthPot = 0.0;
+            dGrowthAfterWaterLimitations = 0.0;
+            dGrowthAfterNutrientLimitations = 0.0;
+            dGrowthNet = 0.0;
+            dNewGrowthN = 0.0;
             dGrowthShootDM = 0.0;
             dGrowthShootN = 0.0;
             dGrowthRootDM = 0.0;
@@ -4062,6 +4068,10 @@ namespace Models.AgPasture
             detachedShootN = 0.0;
             detachedRootDM = 0.0;
             detachedRootN = 0.0;
+
+            demandOptimumN = 0.0;
+            demandLuxuryN = 0.0;
+            fixedN = 0.0;
 
             senescedNRemobilised = 0.0;
             luxuryNRemobilised = 0.0;
@@ -4790,7 +4800,6 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of atmospheric nitrogen fixed through symbiosis.</summary>
         internal void EvaluateNitrogenFixation()
         {
-            fixedN = 0.0;
             double adjNDemand = demandOptimumN * myGlfSoilFertility;
             if (isLegume && adjNDemand > Epsilon)
             {
