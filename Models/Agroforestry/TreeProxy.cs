@@ -460,6 +460,8 @@ namespace Models.Agroforestry
                         double[] SW = Z.Water;
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
+                        Uptake.PlantAvailableNO3N = new double[SW.Length];
+                        Uptake.PlantAvailableNH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
                         double[] RLD = GetRLD(ZI);
@@ -533,6 +535,8 @@ namespace Models.Agroforestry
                         
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
+                        Uptake.PlantAvailableNO3N = new double[SW.Length];
+                        Uptake.PlantAvailableNH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
                         double[] BD = ThisSoil.BD;

@@ -338,6 +338,8 @@ namespace Models.AgPasture
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
+                    uptake.PlantAvailableNO3N = new double[uptake.Water.Length];
+                    uptake.PlantAvailableNH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
                 }
                 return ZWNs;
@@ -373,6 +375,8 @@ namespace Models.AgPasture
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
+                        UptakeDemands.PlantAvailableNO3N = new double[zone.NO3N.Length];
+                        UptakeDemands.PlantAvailableNH4N = new double[zone.NO3N.Length];
                         UptakeDemands.Water = new double[zone.NO3N.Length];
 
                         NSupply += (MathUtilities.Sum(myRoot.mySoilNH4Available) + MathUtilities.Sum(myRoot.mySoilNO3Available)) * zone.Zone.Area;
@@ -389,7 +393,7 @@ namespace Models.AgPasture
                 double NDemand = mySoilNDemand * parentZone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 // 3. Estimate fraction of N used up
-                double fractionUsed = 0.0;
+                double fractionUsed = 0.0;   
                 if (NSupply > Epsilon)
                     fractionUsed = Math.Min(1.0, NDemand / NSupply);
 
