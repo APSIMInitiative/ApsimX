@@ -32,25 +32,25 @@ namespace Models.PMF
             //leaf
 
             //then allocate metabolic relative to demand
-            var grainIndex = 0;
+            //var grainIndex = 0;
             var rootIndex = 1;
             var leafIndex = 2;
             var rachisIndex = 3;
             var stemIndex = 4;
 
-            var demand = BAT.TotalPlantDemand - BAT.StructuralDemand[grainIndex];
+            var demand = BAT.TotalPlantDemand;// - BAT.StructuralDemand[grainIndex];
             var supplyDemand = 0.0;
             if (demand > 0.0)
-                supplyDemand = Math.Min(TotalSupply / demand, 1.0);
+                supplyDemand = Math.Min( (TotalSupply * 10.0) / demand, 1.0);
 
             double rootAllocation = supplyDemand * BAT.StructuralDemand[rootIndex];
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
             NotAllocated -= (rootAllocation);
             TotalAllocated += (rootAllocation);
 
-            AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            AllocateStructural(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
             AllocateStructural(stemIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            AllocateStructural(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
             AllocateMetabolic(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
             AllocateMetabolic(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
