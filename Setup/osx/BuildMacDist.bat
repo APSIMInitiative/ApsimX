@@ -46,7 +46,7 @@ xcopy /I /Y /Q %apsimx%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\
 set PLIST_FILE=.\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Info.plist
 (
 echo ^<?xml version="1.0" encoding="UTF-8"?^>
-echo ^<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"^>
+echo ^<^^!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"^>
 echo ^<plist version="1.0"^>
 echo ^<dict^>
 echo    ^<key^>CFBundleDevelopmentRegion^</key^>

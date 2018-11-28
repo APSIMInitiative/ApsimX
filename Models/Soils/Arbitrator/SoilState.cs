@@ -38,6 +38,8 @@ namespace Models.Soils.Arbitrator
                     NewZ.Water = soil.Water;
                     NewZ.NO3N = soil.NO3N;
                     NewZ.NH4N = soil.NH4N;
+                    NewZ.PlantAvailableNO3N = soil.PlantAvailableNO3N;
+                    NewZ.PlantAvailableNH4N = soil.PlantAvailableNH4N;
                     Zones.Add(NewZ);
                 }
             }
@@ -59,6 +61,8 @@ namespace Models.Soils.Arbitrator
                 NewZ.Water = Z.Water;
                 NewZ.NO3N = Z.NO3N;
                 NewZ.NH4N = Z.NH4N;
+                NewZ.PlantAvailableNO3N = Z.PlantAvailableNO3N;
+                NewZ.PlantAvailableNH4N = Z.PlantAvailableNH4N;
                 NewState.Zones.Add(NewZ);
             }
 
@@ -70,6 +74,8 @@ namespace Models.Soils.Arbitrator
                             NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);
                             NewZ.NO3N = MathUtilities.Subtract(NewZ.NO3N, Z.NO3N);
                             NewZ.NH4N = MathUtilities.Subtract(NewZ.NH4N, Z.NH4N);
+                            NewZ.PlantAvailableNO3N = MathUtilities.Subtract(NewZ.PlantAvailableNO3N, Z.PlantAvailableNO3N);
+                            NewZ.PlantAvailableNH4N = MathUtilities.Subtract(NewZ.PlantAvailableNH4N, Z.PlantAvailableNH4N);
 
                             for (int i = 0; i < NewZ.Water.Length; i++)
                             {
@@ -79,6 +85,10 @@ namespace Models.Soils.Arbitrator
                                     NewZ.NO3N[i] = 0;
                                 if (NewZ.NH4N[i] < 0)
                                     NewZ.NH4N[i] = 0;
+                                if (NewZ.PlantAvailableNO3N[i] < 0)
+                                    NewZ.PlantAvailableNO3N[i] = 0;
+                                if (NewZ.PlantAvailableNH4N[i] < 0)
+                                    NewZ.PlantAvailableNH4N[i] = 0;
                             }
                         }
             return NewState;
