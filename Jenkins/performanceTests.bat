@@ -24,10 +24,10 @@ echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
 nuget restore -verbosity quiet
 
 echo Compiling APSIM.PerformanceTests.Collector...
-msbuild /v:m /m APSIM.PerformanceTests.Collector.sln
+msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
 
 echo Running performance tests collector...
-APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
+bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 
 set err=%errorlevel%
 if errorlevel 1 (
