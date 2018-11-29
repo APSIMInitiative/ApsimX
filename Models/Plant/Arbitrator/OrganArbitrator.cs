@@ -112,6 +112,11 @@ namespace Models.PMF
         [XmlIgnore]
         public double WDemand { get; private set; }
 
+        /// <summary>Gets the water Supply.</summary>
+        /// <value>The water supply.</value>
+        [XmlIgnore]
+        public double WSupply { get; private set; }
+
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
         [XmlIgnore]
@@ -157,6 +162,8 @@ namespace Models.PMF
                 if (waterSupply > 0)
                     fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
 
+                WSupply = waterSupply;
+                
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
                 List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
@@ -187,6 +194,7 @@ namespace Models.PMF
             foreach (ZoneWaterAndN Z in zones)
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
 
+            WSupply = waterSupply;
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)

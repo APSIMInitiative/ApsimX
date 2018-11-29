@@ -38,10 +38,12 @@ namespace Models.PMF
             var rachisIndex = 3;
             var stemIndex = 4;
 
+            //var demand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand;// - BAT.StructuralDemand[grainIndex];
             var demand = BAT.TotalPlantDemand;// - BAT.StructuralDemand[grainIndex];
             var supplyDemand = 0.0;
             if (demand > 0.0)
-                supplyDemand = Math.Min( (BAT.TotalPlantSupply * 10.0) / demand, 1.0);
+                supplyDemand = Math.Min( (BAT.TotalUptakeSupply * 10.0) / demand, 1.0);
+
 
             double rootAllocation = supplyDemand * BAT.StructuralDemand[rootIndex];
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
@@ -105,25 +107,39 @@ namespace Models.PMF
         public void DoRetranslocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
-            //allocate structural first - will be a different order to biomass so need to hard code the order until an interface is created
-            //roots
-            //stem
-            //rachis
-            //leaf
+            //var rootIndex = 1;
+            var leafIndex = 2;
+            var rachisIndex = 3;
+            var stemIndex = 4;
+            var grainIndex = 0;
 
-            ////First time round allocate to met priority demands of each organ
-            for (int i = 2; i < Organs.Length; i++)
+            AllocateStructuralFrom(Organs, stemIndex, leafIndex, ref TotalAllocated, BAT);
+            AllocateStructuralFrom(Organs, rachisIndex, leafIndex, ref TotalAllocated, BAT);
+            AllocateStructuralFrom(Organs, leafIndex, stemIndex, ref TotalAllocated, BAT);
+            AllocateStructuralFrom(Organs, leafIndex, leafIndex, ref TotalAllocated, BAT);
+
+            AllocateStructuralFrom(Organs, grainIndex, rachisIndex, ref TotalAllocated, BAT);
+            AllocateStructuralFrom(Organs, grainIndex, stemIndex, ref TotalAllocated, BAT);
+            AllocateStructuralFrom(Organs, grainIndex, leafIndex, ref TotalAllocated, BAT);
+        }
+
+        /// <summary>Relatives the allocation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="iSink">The organs.</param>
+        /// <param name="iSupply">The organs.</param>
+        /// <param name="TotalAllocated">The total allocated.</param>
+        /// <param name="BAT">The bat.</param>
+        public void AllocateStructuralFrom(IArbitration[] Organs, int iSink, int iSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        {
+            double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
+            if ((StructuralRequirement) > 0.0)
             {
-                double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
-                if ((StructuralRequirement) > 0.0)
-                {
-                    double StructuralAllocation = Math.Min(StructuralRequirement, NotAllocated);
-                    BAT.StructuralAllocation[i] += StructuralAllocation;
-                    NotAllocated -= (StructuralAllocation);
-                    TotalAllocated += (StructuralAllocation);
-                }
+                double StructuralAllocation = Math.Min(StructuralRequirement, BAT.RetranslocationSupply[iSupply]);
+                BAT.StructuralAllocation[iSink] += StructuralAllocation;
+                TotalAllocated += (StructuralAllocation);
             }
         }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

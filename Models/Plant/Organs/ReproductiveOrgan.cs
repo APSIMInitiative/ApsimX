@@ -181,7 +181,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Number > 0)
-                    return Live.Wt / Number;
+                    return Live.Wt / Number * 1000;
                 else
                     return 0;
             }
