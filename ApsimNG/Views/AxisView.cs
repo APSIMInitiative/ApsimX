@@ -50,7 +50,7 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view</param>
         public AxisView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
             table1 = (Table)builder.GetObject("table1");
             entryMin = (Entry)builder.GetObject("entryMin");
             entryMax = (Entry)builder.GetObject("entryMax");

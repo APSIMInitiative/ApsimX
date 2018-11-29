@@ -146,7 +146,7 @@
             string path = Path.Combine(imageDirectory, imageName);
             using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources." + imageName).CopyTo(file);
+                GetImageResource(imageName).CopyTo(file);
             }
 
             return path;
@@ -273,6 +273,20 @@
         }
 
         #endregion
+
+        /// <summary>
+        /// Fetches an image from a resource, using a case-insensitive search.
+        /// </summary>
+        /// <param name="imageName">Name of the iamge.</param>
+        /// <returns></returns>
+        private static Stream GetImageResource(string imageName)
+        {
+            string imagePath = "ApsimNG.Resources." + imageName;
+            foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
+                    return Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            throw new Exception("Unable to locate resource: " + imageName);
+        }
 
         /// <summary>
         /// Add a paragraph.
