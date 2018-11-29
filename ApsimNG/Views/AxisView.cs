@@ -177,20 +177,15 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTimeIntervalType intervalType;
                 if (string.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
+                else if (Enum.TryParse(entryInterval.Text, out intervalType))
+                    return (double)intervalType;
                 else
                     return Convert.ToDouble(
-                                            entryInterval.Text, 
+                                            entryInterval.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
-            }
-
-            set
-            {
-                if (double.IsNaN(value))
-                    entryInterval.Text = string.Empty;
-                else
-                    entryInterval.Text = value.ToString();
             }
         }
 
@@ -202,7 +197,12 @@ namespace UserInterface.Views
         public void SetMinimum(double value, bool isDate)
         {
             if (!entryMin.HasFocus)
-                entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            {
+                if (double.IsNaN(value))
+                    entryMin.Text = string.Empty;
+                else
+                    entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
         }
 
         /// <summary>
@@ -213,7 +213,28 @@ namespace UserInterface.Views
         public void SetMaximum(double value, bool isDate)
         {
             if (!entryMax.HasFocus)
-                entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            {
+                if (double.IsNaN(value))
+                    entryMax.Text = string.Empty;
+                else
+                    entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the interval textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime interval.</param>
+        public void SetInterval(double value, bool isDate)
+        {
+            if (!entryInterval.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryInterval.Text = string.Empty;
+                else
+                    entryInterval.Text = isDate ? ((DateTimeIntervalType)((int)value)).ToString() : value.ToString();
+            }
         }
 
         /// <summary>
