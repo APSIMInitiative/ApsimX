@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using Gtk;
     using Interfaces;
+    using OxyPlot.Axes;
 
     /// <summary>
     /// A Windows forms implementation of an AxisView
@@ -130,20 +131,15 @@ namespace UserInterface.Views
         { 
             get
             {
+                DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
+                else if (DateTime.TryParse(entryMin.Text, out date))
+                    return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
-                                            entryMin.Text, 
+                                            entryMin.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
-            }
-            
-            set
-            {
-                if (double.IsNaN(value))
-                    entryMin.Text = string.Empty;
-                else
-                    entryMin.Text = value.ToString();
             }
         }
 
@@ -154,11 +150,14 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
+                else if (DateTime.TryParse(entryMax.Text, out date))
+                    return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
-                                            entryMax.Text, 
+                                            entryMax.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
             }
             
@@ -193,6 +192,28 @@ namespace UserInterface.Views
                 else
                     entryInterval.Text = value.ToString();
             }
+        }
+
+        /// <summary>
+        /// Sets the text in the minimum textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMinimum(double value, bool isDate)
+        {
+            if (!entryMin.HasFocus)
+                entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+        }
+
+        /// <summary>
+        /// Sets the text in the minimum textbox based on a DateTime stored as a double.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMaximum(double value, bool isDate)
+        {
+            if (!entryMax.HasFocus)
+                entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
         }
 
         /// <summary>
