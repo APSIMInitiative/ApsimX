@@ -41,7 +41,7 @@ namespace Models.PMF
             var demand = BAT.TotalPlantDemand;// - BAT.StructuralDemand[grainIndex];
             var supplyDemand = 0.0;
             if (demand > 0.0)
-                supplyDemand = Math.Min( (TotalSupply * 10.0) / demand, 1.0);
+                supplyDemand = Math.Min( (BAT.TotalPlantSupply * 10.0) / demand, 1.0);
 
             double rootAllocation = supplyDemand * BAT.StructuralDemand[rootIndex];
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
