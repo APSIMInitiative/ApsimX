@@ -18,7 +18,7 @@
       "Children": [
         {
           "$type": "Models.Weather, Models",
-          "FileName": "WeatherFiles\\WaggaWagga.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\WaggaWagga.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
