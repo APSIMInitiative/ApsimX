@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -17,8 +18,9 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
-    [Description("This resource represents a labour type (e.g. Joe, Male, 36 years old).")]
-    public class LabourType : CLEMModel, IResourceWithTransactionType, IResourceType, IValidatableObject
+    [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Age in years.
@@ -33,14 +35,6 @@ namespace Models.CLEM.Resources
         [Description("Gender")]
         [Required]
         public Sex Gender { get; set; }
-
-        /// <summary>
-        /// Maximum Labour Supply (in days) for each month of the year. 
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(new double[] { 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4 })]
-        [Description("Max Labour Supply (in days) for each month of the year")]
-        [Required, ArrayItemCount(12)]
-        public double[] MaxLabourSupply { get; set; }
 
         /// <summary>
         /// Age in years.
@@ -68,11 +62,29 @@ namespace Models.CLEM.Resources
         public Guid LastActivityRequestID { get; set; }
 
         /// <summary>
+        /// The amount of labour supplied to the last activity for this labour type
+        /// </summary>
+        [XmlIgnore]
+        public double LastActivityRequestAmount { get; set; }
+
+        /// <summary>
+        /// The number of hours provided to the current activity
+        /// </summary>
+        [XmlIgnore]
+        public double LastActivityLabour { get; set; }
+
+        /// <summary>
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [XmlIgnore]
         public double AvailableDays { get { return availableDays; } }
         private double availableDays;
+
+        /// <summary>
+        /// Link to the current labour availability for this person
+        /// </summary>
+        [XmlIgnore]
+        public LabourSpecificationItem LabourAvailability { get; set; }
 
         /// <summary>
         /// Constructor
@@ -83,28 +95,34 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Determines the amount of labour up to a max available for the specified Activity.
+        /// </summary>
+        /// <param name="ActivityID">Unique activity ID</param>
+        /// <param name="MaxLabourAllowed">Max labour allowed</param>
+        /// <returns></returns>
+        public double LabourCurrentlyAvailableForActivity(Guid ActivityID, double MaxLabourAllowed)
+        {
+            if(ActivityID == LastActivityRequestID)
+            {
+                return Math.Max(0, MaxLabourAllowed - LastActivityLabour);
+            }
+            else
+            {
+                return Amount;
+            }
+        }
+
+        /// <summary>
         /// Reset the available days for a given month
         /// </summary>
         /// <param name="month"></param>
         public void SetAvailableDays(int month)
         {
-            availableDays = Math.Min(30.4, this.MaxLabourSupply[month - 1]);
-        }
-
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (MaxLabourSupply.Length != 12)
+            availableDays = 0;
+            if(LabourAvailability != null)
             {
-                string[] memberNames = new string[] { "MaxLabourSupply" };
-                results.Add(new ValidationResult("Invalid number of values provided (expecting 12 months of values)", memberNames));
+                availableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1));
             }
-            return results;
         }
 
         #region Transactions
@@ -112,10 +130,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to labour store of this type
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="Activity">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual adding resource</param>
+        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
         {
             if (ResourceAmount.GetType().ToString() != "System.Double")
             {
@@ -124,8 +142,9 @@ namespace Models.CLEM.Resources
             double addAmount = (double)ResourceAmount;
             this.availableDays = this.availableDays + addAmount;
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = addAmount;
-            details.Activity = ActivityName;
+            details.Debit = addAmount;
+            details.Activity = Activity.Name;
+            details.ActivityType = Activity.GetType().Name;
             details.Reason = Reason;
             details.ResourceType = this.Name;
             LastTransaction = details;
@@ -137,7 +156,7 @@ namespace Models.CLEM.Resources
         /// Remove from labour store
         /// </summary>
         /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        public new void Remove(ResourceRequest Request)
         {
             if (Request.Required == 0) return;
             double amountRemoved = Request.Required;
@@ -148,8 +167,9 @@ namespace Models.CLEM.Resources
             LastActivityRequestID = Request.ActivityID;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
+            details.Credit = amountRemoved;
             details.Activity = Request.ActivityModel.Name;
+            details.ActivityType = Request.ActivityModel.GetType().Name;
             details.Reason = Request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -161,7 +181,7 @@ namespace Models.CLEM.Resources
         /// Set amount of animal food available
         /// </summary>
         /// <param name="NewValue">New value to set food store to</param>
-        public void Set(double NewValue)
+        public new void Set(double NewValue)
         {
             this.availableDays = NewValue;
         }
@@ -220,6 +240,67 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            if (FormatForParentControl == false)
+            {
+                html = "<div class=\"activityentry\">";
+                if (this.Individuals == 0)
+                {
+                    html += "No individuals are proivded for this labour type";
+                }
+                else
+                {
+                    if (this.Individuals > 1)
+                    {
+                        html += "<span class=\"setvalue\">"+this.Individuals.ToString()+"</span> x ";
+                    }
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge)+"</span> year old ";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower())+"</span>";
+                }
+                html += "</div>";
+            }
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        {
+            if (FormatForParentControl)
+            {
+                return "";
+            }
+            else
+            {
+                return base.ModelSummaryClosingTags(FormatForParentControl);
+            }
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        {
+            if (FormatForParentControl)
+            {
+                return "";
+            }
+            else
+            {
+                return base.ModelSummaryOpeningTags(FormatForParentControl);
+            }
+        }
 
     }
 }

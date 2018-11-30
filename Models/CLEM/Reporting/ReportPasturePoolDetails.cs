@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Reporting
 {
@@ -18,20 +19,19 @@ namespace Models.CLEM.Reporting
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Zones.CircularZone))]
-    [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
+    [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class ReportPasturePoolDetails: Models.Report.Report
     {
         [Link]
         private ResourcesHolder Resources = null;
-        //        [Link]
-        //        ISummary Summary = null;
+//        [Link]
+//        ISummary Summary = null;
 
         /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
         private List<IReportColumn> columns = null;
 
         /// <summary>An array of column names to write to storage.</summary>

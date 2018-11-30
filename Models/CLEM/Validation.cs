@@ -34,6 +34,12 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            // check valid property name
+            if (validationContext.ObjectType.GetProperty(DateToCompareToFieldName) == null)
+            {
+                throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [DateGreaterThan] on property [{1}] in [{2}]", DateToCompareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
+            }
+
             DateTime laterDate = (DateTime)value;
             DateTime earlierDate = (DateTime)validationContext.ObjectType.GetProperty(DateToCompareToFieldName).GetValue(validationContext.ObjectInstance, null);
             string[] memberNames = new string[] { validationContext.MemberName };
@@ -44,7 +50,7 @@ namespace Models.CLEM
             }
             else
             {
-                DefaultErrorMessage = "Date (" + laterDate.ToString() + ") must be greater than " + DateToCompareToFieldName.ToString() +"(" + earlierDate.ToString() +")";
+                DefaultErrorMessage = "Date [" + laterDate.ToString() + "] must be greater than " + DateToCompareToFieldName.ToString() +"[" + earlierDate.ToString() +"]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -134,7 +140,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class MonthAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)";
+        private string DefaultErrorMessage = "Value must represent a month from [1] (Jan) to [12] (Dec)";
 
         /// <summary>
         /// 
@@ -203,7 +209,7 @@ namespace Models.CLEM
             }
             else
             {
-                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than " + CompareValue.ToString();
+                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than [" + CompareValue.ToString() +"]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -245,7 +251,7 @@ namespace Models.CLEM
             }
             else
             {
-                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than or equal to " + CompareValue.ToString();
+                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than or equal to [" + CompareValue.ToString()+"]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -282,6 +288,12 @@ namespace Models.CLEM
             double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
+            // check valid property name
+            if(validationContext.ObjectType.GetProperty(CompareToFieldName) == null)
+            {
+                throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [GreaterThan] on property [{1}] in [{2}]", CompareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
+            }
+
             double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(CompareToFieldName).GetValue(validationContext.ObjectInstance, null));
 
             if (maxvalue > minvalue)
@@ -290,7 +302,7 @@ namespace Models.CLEM
             }
             else
             {
-                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than " + CompareToFieldName + "(" + minvalue.ToString() +")";
+                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than " + CompareToFieldName + "[" + minvalue.ToString() +"]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -326,6 +338,12 @@ namespace Models.CLEM
             double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
+            // check valid property name
+            if (validationContext.ObjectType.GetProperty(CompareToFieldName) == null)
+            {
+                throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [DateGreaterThan] on property [{1}] in [{2}]", CompareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
+            }
+
             double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(CompareToFieldName).GetValue(validationContext.ObjectInstance, null));
 
             if (maxvalue >= minvalue)
@@ -334,7 +352,7 @@ namespace Models.CLEM
             }
             else
             {
-                DefaultErrorMessage = "Value (" + maxvalue.ToString() + ") must be greater than or equal to " + CompareToFieldName + "(" + minvalue.ToString() + ")";
+                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than or equal to " + CompareToFieldName + "[" + minvalue.ToString() + "]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }

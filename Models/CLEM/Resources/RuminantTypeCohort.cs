@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Activities;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -20,12 +21,11 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This specifies a ruminant cohort used for identifying purchase individuals and initalising the herd at the start of the simulation.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantTypeCohort : CLEMModel
     {
         [Link]
         private ResourcesHolder Resources = null;
-        [Link]
-        ISummary Summary = null;
 
         /// <summary>
         /// Gender
@@ -75,6 +75,14 @@ namespace Models.CLEM.Resources
         [Description("Breeding sire?")]
         [Required]
         public bool Sire { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantTypeCohort()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
 
         /// <summary>
         /// Create the individual ruminant animals using the Cohort parameterisations.
@@ -148,6 +156,104 @@ namespace Models.CLEM.Resources
             return Individuals;
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            if (!FormatForParentControl)
+            {
+                html += "\n<div class=\"activityentry\">";
+                if (Number <= 0)
+                {
+                    html += "<span class=\"errorlink\">"+Number.ToString()+"</span> x ";
+                }
+                else if(Number > 1)
+                {
+                    html += "<span class=\"setvalue\">" + Number.ToString() + "</span> x ";
+                }
+                else
+                {
+                    html += "A ";
+                }
+                html += "<span class=\"setvalue\">";
+                html += Age.ToString("0")+ "</span> month old ";
+                html += "<span class=\"setvalue\">" + Gender.ToString() + "</span></div>";
+                if(Suckling)
+                {
+                    html += "\n<div class=\"activityentry\">"+((Number>1)?"These individuals are suckling":"This individual is a suckling")+"</div>";
+                }
+                if (Sire)
+                {
+                    html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>";
+                }
+                if(WeightSD > 0)
+                {
+                    html += "\n<div class=\"activityentry\">Individuals will be randomally assigned a weight based on a mean of <span class=\""+((Weight==0)?"errorlink":"setvalue")+"\">" + Weight.ToString() + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>";
+                }
+                else
+                {
+                    html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + " <span class=\"" + ((Weight == 0) ? "errorlink" : "setvalue") + "\">" + Weight.ToString() + "</span> kg</div>";
+                }
+                html += "</div>";
+            }
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        {
+            string html = "";
+            if (FormatForParentControl)
+            {
+                html += "\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>";
+            }
+            else
+            {
+                html += "\n</div>";
+            }
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        {
+            if (!FormatForParentControl)
+                return base.ModelSummaryClosingTags(true);
+            else
+                return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        {
+            if (!FormatForParentControl)
+                return base.ModelSummaryOpeningTags(true);
+            else
+                return "";
+        }
 
     }
 }

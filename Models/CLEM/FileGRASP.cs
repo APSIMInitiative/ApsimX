@@ -9,6 +9,8 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
+using Models.CLEM.Activities;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileGRASP.cs" company="APSIM Initiative">
@@ -27,8 +29,12 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.CLEMFileGRASPView")]
     [PresenterName("UserInterface.Presenters.CLEMFileGRASPPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
+    [Version(1, 0, 1, "Shaun Verrall", "CSIRO", "")]
     public class FileGRASP : CLEMModel, IFileGRASP
     {
 
@@ -196,9 +202,14 @@ namespace Models.CLEM
         private double[] distinctStkRates;
 
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileGRASP()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
 
-
-
+        }
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -245,6 +256,11 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // check filename exists
+            if(!File.Exists(this.FullFileName))
+            {
+                throw new ApsimXException(this, "Unable to find specified file [" + this.FullFileName + "]");
+            }
 
             //this.doSeek = true;
             this.regionIndex = 0;
@@ -812,8 +828,26 @@ namespace Models.CLEM
             }
         }
 
-
-
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Using ";
+            if (FileName == null || FileName == "")
+            {
+                html += "<span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"filelink\">" + FileName + "</span>";
+            }
+            html += "\n</div>";
+            return html;
+        }
     }
 
 

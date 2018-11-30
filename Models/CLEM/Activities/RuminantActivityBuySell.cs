@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -21,20 +22,17 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase
     {
-        [Link]
-        ISummary Summary = null;
-
         /// <summary>
-        /// name of account to use
+        /// Bank account to use
         /// </summary>
-        [Description("Name of bank account to use")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
+        [Description("Bank account to use")]
+        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
         public string BankAccountName { get; set; }
 
         private FinanceType bankAccount = null;
-        private List<LabourFilterGroupSpecified> labour = null;
         private TruckingSettings trucking = null;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -44,12 +42,23 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
+            List<Ruminant> testherd = this.CurrentHerd(true);
 
-            bankAccount = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            // check if finance is available and warn if not supplying bank account.
+            if (Resources.ResourceGroupExist(typeof(Finance)))
+            {
+                if (Resources.ResourceItemsExist(typeof(Finance)))
+                {
+                    if (BankAccountName == "")
+                    {
+                        Summary.WriteWarning(this, "No bank account has been specified in [a={0}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
+                    }
+                }
+            }
+            if (BankAccountName != "")
+            {
+                bankAccount = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            }
 
             // get trucking settings
             trucking = Apsim.Children(this, typeof(TruckingSettings)).FirstOrDefault() as TruckingSettings;
@@ -63,7 +72,7 @@ namespace Models.CLEM.Activities
                 {
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
                     {
-                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd ({0}). No transactions will be recorded for activity ({1}).", herd.Key, this.Name));
+                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
                     }
                 }
             }
@@ -88,7 +97,7 @@ namespace Models.CLEM.Activities
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 // only triggered on buy not sell.
-                this.TriggerOnActivityPerformed();
+                //this.TriggerOnActivityPerformed();
             }
         }
 
@@ -107,12 +116,16 @@ namespace Models.CLEM.Activities
             double AESum = 0;
 
             // get current untrucked list of animals flagged for sale
-            List<Ruminant> herd = this.CurrentHerd(true).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
+            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
 
             if (trucking == null)
             {
                 // no trucking just sell
                 head = herd.Count();
+                if(herd.Count()>0)
+                {
+                    SetStatusSuccess();
+                }
                 foreach (var ind in herd)
                 {
                     AESum += ind.AdultEquivalent;
@@ -150,12 +163,16 @@ namespace Models.CLEM.Activities
                         }
                         if (nonloaded)
                         {
-                            Summary.WriteWarning(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed {0}", this.PredictedHerdBreed));
+                            Summary.WriteWarning(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed));
                             break;
                         }
                         herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
                     }
                     // create trucking emissions
+                    if(trucks>0)
+                    {
+                        SetStatusSuccess();
+                    }
                     trucking.ReportEmissions(trucks, true);
                 }
             }
@@ -201,7 +218,7 @@ namespace Models.CLEM.Activities
                 // add and remove from bank
                 if(saleValue > 0)
                 {
-                    bankAccount.Add(saleValue, this.Name, this.PredictedHerdName+" sales");
+                    bankAccount.Add(saleValue, this, this.PredictedHerdName+" sales");
                 }
             }
 
@@ -214,6 +231,10 @@ namespace Models.CLEM.Activities
 
             // get current untrucked list of animal purchases
             List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
+            if (herd.Count() > 0)
+            {
+                SetStatusSuccess();
+            }
 
             double fundsAvailable = 0;
             if (bankAccount != null)
@@ -357,7 +378,7 @@ namespace Models.CLEM.Activities
                     }
                     if (nonloaded)
                     {
-                        Summary.WriteWarning(this, String.Format("There was a problem loading the purchase truck as purchase individuals did not meet the loading criteria for breed {0}", this.PredictedHerdBreed));
+                        Summary.WriteWarning(this, String.Format("There was a problem loading the purchase truck as purchase individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed));
                         break;
                     }
                     if (shortfall > 0) break;
@@ -368,6 +389,7 @@ namespace Models.CLEM.Activities
                 if(trucking != null & trucks > 0 )
                 {
                     trucking.ReportEmissions(trucks, false);
+                    SetStatusSuccess();
                 }
 
                 if (bankAccount != null && (trucks > 0 || trucking == null))
@@ -395,6 +417,7 @@ namespace Models.CLEM.Activities
 
                     ResourceRequest expenseRequest = new ResourceRequest
                     {
+                        Available = bankAccount.Amount,
                         ActivityModel = this,
                         AllowTransmutation = false
                     };
@@ -425,63 +448,50 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
-
-            for (int i = 0; i < 2; i++)
-            {
-                string BuySellString = (i == 0) ? "Purchase" : "Sell";
-
-                List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => a.SaleFlag.ToString().Contains(BuySellString) & a.Breed == this.PredictedHerdBreed).ToList();
-                int head = herd.Count();
-                double AE = herd.Sum(a => a.AdultEquivalent);
-
-                if (head > 0)
-                {
-                    // for each labour item specified
-                    foreach (var item in labour)
-                    {
-                        double daysNeeded = 0;
-                        switch (item.UnitType)
-                        {
-                            case LabourUnitType.Fixed:
-                                daysNeeded = item.LabourPerUnit;
-                                break;
-                            case LabourUnitType.perHead:
-                                daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-                                break;
-                            case LabourUnitType.perAE:
-                                daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
-                                break;
-                            default:
-                                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                        }
-                        if (daysNeeded > 0)
-                        {
-                            if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                            ResourceRequestList.Add(new ResourceRequest()
-                            {
-                                AllowTransmutation = false,
-                                Required = daysNeeded,
-                                ResourceType = typeof(Labour),
-                                ResourceTypeName = "",
-                                ActivityModel = this,
-                                Reason = BuySellString,
-                                FilterDetails = new List<object>() { item }
-                            }
-                            );
-                        }
-                    }
-                }
-
-            }
-            return ResourceRequestList;
+            return null;
         }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") | a.SaleFlag.ToString().Contains("Sale")) & a.Breed == this.PredictedHerdBreed).ToList();
+            int head = herd.Count();
+            double AE = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (Requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = AE / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+
 
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
         {
+            Status = ActivityStatus.NotNeeded;
             return; 
         }
 
@@ -492,6 +502,14 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>
@@ -522,6 +540,28 @@ namespace Models.CLEM.Activities
         {
             if (ActivityPerformed != null)
                 ActivityPerformed(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Purchases and sales will use ";
+            if (BankAccountName == null || BankAccountName == "")
+            {
+                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + BankAccountName + "</span>";
+            }
+            html += "</div>";
+
+            return html;
         }
 
 

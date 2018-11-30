@@ -631,8 +631,41 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the associated display type for the related property.
+        /// Gets or sets the types for the ResourceGroups whose Resource items are valid choices in the Resource name editor.
+        /// eg. [Display(CLEMResourceNameResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
+        /// Will create a dropdown list with all the Resource items from only the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// </summary>
+        public Type[] CLEMResourceNameResourceGroups
+        {
+            get
+            {
+                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                if (displayAttribute != null && displayAttribute.CLEMResourceNameResourceGroups != null)
+                {
+                    return displayAttribute.CLEMResourceNameResourceGroups;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets strings that are manually added to the Resource name editor.
+        /// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
+        /// Will add these strings to the dropdown list created by CLEMResourceNameResourceGroups. 
+        /// </summary>
+        public string[] CLEMExtraEntries
+        {
+            get
+            {
+                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                if (displayAttribute != null && displayAttribute.CLEMExtraEntries != null)
+                {
+                    return displayAttribute.CLEMExtraEntries;
+                }
+                return null;
+            }
+        }
+        /// Gets the associated display type for the related property.
         public override DisplayAttribute Display
         {
             get

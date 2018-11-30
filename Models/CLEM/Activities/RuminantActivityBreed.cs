@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -22,11 +23,13 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
-        private List<LabourFilterGroupSpecified> labour;
-
+        private List<LabourRequirement> labour;
+        [Link]
+        Clock Clock = null;
         /// <summary>
         /// Maximum conception rate for uncontrolled matings
         /// </summary>
@@ -41,6 +44,8 @@ namespace Models.CLEM.Activities
         [Required]
         public bool UseAI { get; set; }
 
+        
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -48,13 +53,123 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
-
             this.InitialiseHerd(false, true);
 
             // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
+            labour = Apsim.Children(this, typeof(LabourRequirement)).Cast<LabourRequirement>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            if (labour.Count() == 0) labour = new List<LabourRequirement>();
+
+            // check that timer exists for AI
+            if(UseAI)
+            {
+                if(!this.TimingExists)
+                {
+                    Summary.WriteWarning(this, String.Format("Breeding with Artificial Insemination (AI) requires a Timer otherwise breeding will be undertaken every time step in activity [a={0}]", this.Name));
+                }
+            }
         }
+
+        /// <summary>An event handler to allow us to make final changes just prior to simulation.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
+        private void CLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
+        {
+            // set up pre start conception status of breeders
+            List<Ruminant> herd = CurrentHerd(true);
+
+            int aDay = Clock.Today.Year;
+
+            // go back (gestation - 1) months
+            // this won't include those individuals due to give birth on day 1.
+
+            int monthsAgoStart = Clock.Today.Month - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength))-1);
+            int monthsAgoStop = -1;
+
+            for (int i = monthsAgoStart; i <= monthsAgoStop; i++)
+            {
+                DateTime previousDate = Clock.Today.AddMonths(i);
+
+                // get list of all individuals of breeding age and condition
+                // grouped by location
+                var breeders = from ind in herd
+                               where
+                               (ind.Gender == Sex.Male & ind.Age + i >= ind.BreedParams.MinimumAge1stMating) ||
+                               (ind.Gender == Sex.Female &
+                               ind.Age + i >= ind.BreedParams.MinimumAge1stMating //&
+                               // ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
+                               )
+                               group ind by ind.Location into grp
+                               select grp;
+
+                int breedersCount = breeders.Count();
+                int numberPossible = breedersCount;
+                int numberServiced = 1;
+                double limiter = 1;
+
+                // for each location where parts of this herd are located
+                foreach (var location in breeders)
+                {
+                    // uncontrolled conception
+                    if (!UseAI)
+                    {
+                        // check if males and females of breeding condition are together
+                        if (location.GroupBy(a => a.Gender).Count() == 2)
+                        {
+                            // servicing rate
+                            int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+                            int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+                            double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
+                            double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
+
+                            foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                            {
+                                if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                {
+                                    // calculate conception
+                                    double conceptionRate = ConceptionRate(female) * maleLimiter;
+                                    conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
+                                    if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                    {
+                                        female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate, i);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // controlled conception
+                    else
+                    {
+                        if (this.TimingCheck(previousDate))
+                        {
+                            numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
+                            foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                            {
+                                if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                {
+                                    // calculate conception
+                                    double conceptionRate = ConceptionRate(female);
+                                    if (numberServiced <= numberPossible) // labour/finance limited number
+                                    {
+                                        if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                        {
+                                            //female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate, i);
+                                        }
+                                        numberServiced++;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
+
+
+        }
+
 
         /// <summary>An event handler to perform herd breeding </summary>
         /// <param name="sender">The sender.</param>
@@ -62,8 +177,9 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalBreeding")]
         private void OnCLEMAnimalBreeding(object sender, EventArgs e)
         {
-//            RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = CurrentHerd(true); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
+
+            int aDay = Clock.Today.Year;
 
             // get list of all individuals of breeding age and condition
             // grouped by location
@@ -82,10 +198,12 @@ namespace Models.CLEM.Activities
             int breedersCount = breeders.Count();
             int numberPossible = breedersCount;
             int numberServiced = 1;
+            double limiter = 1;
             if (UseAI & TimingOK)
             {
                 // attempt to get required resources
                 List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
+                CheckResources(resourcesneeded, Guid.NewGuid());
                 bool tookRequestedResources = TakeResources(resourcesneeded, true);
                 // get all shortfalls
                 if (tookRequestedResources & (ResourceRequestList != null))
@@ -111,8 +229,7 @@ namespace Models.CLEM.Activities
                         else
                             labourlimit = amountLabourNeeded / amountLabourProvided;
                     }
-                    double limiter = Math.Min(cashlimit, labourlimit);
-                    numberPossible = Convert.ToInt32(limiter * breedersCount);
+                    limiter = Math.Min(cashlimit, labourlimit);
 
                     // TODO: determine if fixed payments were not possible
                     // TODO: determine limits by insufficient labour or cash for per head payments
@@ -139,8 +256,7 @@ namespace Models.CLEM.Activities
                         // calculate foetus and newborn mortality 
                         // total mortality / (gestation months + 1) to get monthly mortality
                         // done here before births to account for post birth motality as well..
-                        double rnd = ZoneCLEM.RandomGenerator.NextDouble();
-                        if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                        if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
                         }
@@ -158,7 +274,7 @@ namespace Models.CLEM.Activities
                         {
                             // Foetal mortality is now performed each timestep at base of this method
                             object newCalf = null;
-                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() > 0.5);
+                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() >= 0.5);
                             if (isMale)
                             {
                                 newCalf = new RuminantMale();
@@ -213,7 +329,7 @@ namespace Models.CLEM.Activities
                                 conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                                 if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                 {
-                                    female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
+                                    female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.TwinRate, conceptionRate, 0);
                                 }
                             }
                         }
@@ -224,6 +340,7 @@ namespace Models.CLEM.Activities
                 {
                     if (this.TimingOK)
                     {
+                        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
                         foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                         {
                             if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
@@ -234,7 +351,7 @@ namespace Models.CLEM.Activities
                                 {
                                     if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                     {
-                                        female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
+                                        female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.TwinRate, conceptionRate, 0);
                                     }
                                     numberServiced++;
                                 }
@@ -280,35 +397,38 @@ namespace Models.CLEM.Activities
                     {
                         case 0:
                             // first mating
-                            if (female.BreedParams.MinimumAge1stMating >= 24)
+                            //if (female.BreedParams.MinimumAge1stMating >= 24)
+                            if (female.Age >= 24)
                             {
                                 // 1st mated at 24 months or older
-                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[1] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[1]));
+                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[1]));
                             }
-                            else if (female.BreedParams.MinimumAge1stMating >= 12)
+                            //else if (female.BreedParams.MinimumAge1stMating >= 12)
+                            else if (female.Age >= 12)
                             {
                                 // 1st mated between 12 and 24 months
-                                double rate24 = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[1] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[1]));
-                                double rate12 = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[0] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[0]));
-                                rate = (rate12 + rate24) / 2;
-                                // Not sure what the next code was doing in old version
+                                double rate24 = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[1] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[1]));
+                                double rate12 = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[0]));
+                                // interpolate, not just average
+                                double propOfYear = (female.Age - 12) / 12;
+                                rate = rate12 + ((rate24-rate12)*propOfYear);
                                 //Concep_rate = ((730 - Anim_concep(rumcat)) * temp1 + (Anim_concep(rumcat) - 365) * temp2) / 365 ' interpolate between 12 & 24 months
                             }
                             else
                             {
                                 // first mating < 12 months old
-                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[0] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[0]));
+                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[0] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[0]));
                             }
                             break;
                         case 1:
                             // second offspring mother
-                            rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[2] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[2] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[2]));
+                            rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[2] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[2] * female.Weight / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[2]));
                             break;
                         default:
                             // females who have had more than two births (twins should count as one birth)
                             if (female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
                             {
-                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[3] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[3] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[3]));
+                                rate = female.BreedParams.AdvancedConceptionParameters.ConceptionRateAsymptote[3] / (1 + Math.Exp(female.BreedParams.AdvancedConceptionParameters.ConceptionRateCoefficent[3] * female.Weight / female.StandardReferenceWeight + female.BreedParams.AdvancedConceptionParameters.ConceptionRateIntercept[3]));
                             }
                             break;
                     }
@@ -316,7 +436,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     // use default values 
-                    rate = female.BreedParams.ConceptionRateAsymptote / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept));
+                    rate = female.BreedParams.ConceptionRateAsymptote / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept));
                 }
 
             }
@@ -465,6 +585,48 @@ namespace Models.CLEM.Activities
             if (ActivityPerformed != null)
                 ActivityPerformed(this, e);
         }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            if (UseAI)
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "Using Artificial insemination";
+                html += "</div>";
+            }
+            else
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "Maximum conception rate is <span class=\"setvalue\">" + MaximumConceptionRateUncontrolled.ToString("0.###") + "</span> using uncontrolled breeding";
+                html += "</div>";
+            }
+            return html;
+        }
+
 
     }
 }

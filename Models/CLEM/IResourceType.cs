@@ -16,9 +16,9 @@ namespace Models.CLEM
         /// Add this Amount to the existing Amount.
         /// </summary>
         /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="ActivityName">Name of activity requesting resource</param>
+        /// <param name="Activity">Name of activity requesting resource</param>
         /// <param name="Reason">Name of individual requesting resource</param>
-        void Add(object ResourceAmount, string ActivityName, string Reason);
+        void Add(object ResourceAmount, CLEMModel Activity, string Reason);
 
         /// <summary>
         /// Remove this Amount from the existing Amount
@@ -32,13 +32,14 @@ namespace Models.CLEM
         void Set(double NewAmount);
 
         /// <summary>
-        /// Initialise the variables that store the current state of the resource.
-        /// </summary>
-        void Initialise();
-
-        /// <summary>
         /// Get the current amount of this resource available.
         /// </summary>
         double Amount { get; }
+
+        /// <summary>
+        /// Get the current price of this resource.
+        /// </summary>
+        ResourcePricing Price { get; }
+
     }
 }

@@ -16,7 +16,7 @@ namespace UserInterface.Views
     using APSIM.Shared.Utilities;
 
     /// <summary>
-    /// This provides a wrapper view to display model type, description adnd help link
+    /// This provides a wrapper view to display model type, description and help link
     /// These are taken from the namespace and Description Attribute
     /// The Explorer presenter will use this wrapper if a Description attributre is present.
     /// </summary>
@@ -26,6 +26,7 @@ namespace UserInterface.Views
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
+        private Label modelVersionLabel = null;
         private Viewport bottomView = null;
 
         public ModelDetailsWrapperView(ViewBase owner) : base(owner)
@@ -61,6 +62,22 @@ namespace UserInterface.Views
             modelHelpLinkLabel.ModifyBase(StateType.Normal, new Gdk.Color(131, 0, 131));
             modelHelpLinkLabel.Visible = false;
 
+            modelVersionLabel = new Label()
+            {
+                Xalign = 0.0f,
+                Xpad = 4
+            };
+            font = new Pango.FontDescription
+            {
+                Size = Convert.ToInt32(8 * Pango.Scale.PangoScale),
+                Weight = Pango.Weight.Normal,
+            };
+            modelVersionLabel.ModifyFont(font);
+            modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
+            modelVersionLabel.LineWrapMode = Pango.WrapMode.Word;
+            modelVersionLabel.Wrap = true;
+            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+
             bottomView = new Viewport
             {
                 ShadowType = ShadowType.None
@@ -68,10 +85,10 @@ namespace UserInterface.Views
 
             vbox1.PackStart(modelTypeLabel, false, true, 0);
             vbox1.PackStart(modelDescriptionLabel, false, true, 0);
+            vbox1.PackStart(modelVersionLabel, false, true, 4);
             vbox1.PackStart(modelHelpLinkLabel, false, true, 0);
             vbox1.Add(bottomView);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
-
 
             _mainWidget = vbox1;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -87,6 +104,7 @@ namespace UserInterface.Views
         {
             // modelTypeLabel.WidthRequest = args.Allocation.Width - 8;
             modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
+            modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
             // modelHelpLinkLabel.WidthRequest = args.Allocation.Width - 8;
         }
 
@@ -123,6 +141,12 @@ namespace UserInterface.Views
         {
             get { return modelDescriptionLabel.Text; }
             set { modelDescriptionLabel.Markup = value; }
+        }
+
+        public string ModelVersionText
+        {
+            get { return modelVersionLabel.Text; }
+            set { modelVersionLabel.Markup = value; }
         }
 
         public string ModelHelpURL

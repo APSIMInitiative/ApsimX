@@ -26,7 +26,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
         [Description("Predicted/observed table name")]
-        [Display(Type = DisplayType.TableName)]
+        [Display(Type = DisplayTypeEnum.TableName)]
         public string TableName { get; set; }
 
         /// <summary>

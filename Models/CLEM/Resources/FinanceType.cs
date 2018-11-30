@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Finance))]
     [Description("This resource represents a finance type (e.g. General bank account).")]
-    public class FinanceType : CLEMModel, IResourceWithTransactionType, IResourceType
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Opening balance
@@ -94,18 +96,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
-        }
-
-        /// <summary>
-        /// Initialise resource type
-        /// </summary>
-        public void Initialise()
-        {
             this.amount = 0;
             if (OpeningBalance > 0)
             {
-                Add(OpeningBalance, "Bank", "Opening balance");
+                Add(OpeningBalance, this, "Opening balance");
             }
         }
 
@@ -136,11 +130,11 @@ namespace Models.CLEM.Resources
         /// Add money to account
         /// </summary>
         /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="Activity">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual adding resource</param>
+        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
         {
-            if(ResourceAmount.GetType().ToString()!="System.Double")
+            if (ResourceAmount.GetType().ToString()!="System.Double")
             {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
             }
@@ -151,8 +145,9 @@ namespace Models.CLEM.Resources
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.Activity = ActivityName;
+                details.Debit = addAmount;
+                details.Activity = Activity.Name;
+                details.ActivityType = Activity.GetType().Name;
                 details.Reason = Reason;
                 details.ResourceType = this.Name;
                 LastTransaction = details;
@@ -174,7 +169,7 @@ namespace Models.CLEM.Resources
         /// Remove from finance type store
         /// </summary>
         /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        public new void Remove(ResourceRequest Request)
         {
             if (Request.Required == 0) return;
             double amountRemoved = Math.Round(Request.Required, 2, MidpointRounding.ToEven); 
@@ -187,8 +182,9 @@ namespace Models.CLEM.Resources
             Request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
+            details.Credit = amountRemoved;
             details.Activity = Request.ActivityModel.Name;
+            details.ActivityType = Request.ActivityModel.GetType().Name;
             details.Reason = Request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -199,11 +195,58 @@ namespace Models.CLEM.Resources
         /// Set the amount in an account.
         /// </summary>
         /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        public new void Set(double NewAmount)
         {
             amount = Math.Round(NewAmount, 2, MidpointRounding.ToEven);
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">";
+            html += "Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00")+"</span>";
+            if (this.EnforceWithdrawalLimit)
+            {
+                html += " that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>"; 
+            }
+            else
+            {
+                html += " with no withdrawal limit";
+            }
+            html += "</div>";
+            html += "\n<div class=\"activityentry\">";
+            if (this.InterestRateCharged + this.InterestRatePaid == 0)
+            {
+                html += "No interest rates included";
+            }
+            else
+            {
+                html += "Interest rate of ";
+                if (this.InterestRateCharged > 0)
+                {
+                    html += "<span class=\"setvalue\">";
+                    html += this.InterestRateCharged.ToString("0.##") + "</span>% charged ";
+                    if (this.InterestRatePaid > 0)
+                    {
+                        html += "and ";
+                    }
+                }
+                if (this.InterestRatePaid > 0)
+                {
+                    html += "<span class=\"setvalue\">";
+                    html += this.InterestRatePaid.ToString("0.##") + "</span>% paid";
+                }
+            }
+            html += "</div>";
+            return html;
+        }
+
     }
 }

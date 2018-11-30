@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -16,9 +18,10 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
-    public class ActivitiesHolder: CLEMModel
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
-        private ActivityFolder TimeStep = new ActivityFolder() { Name = "TimeStep" };
+        private ActivityFolder TimeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
 
         /// <summary>
         /// List of the all the Activities.
@@ -61,6 +64,65 @@ namespace Models.CLEM.Activities
                 (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
             }
         }
+
+        //private List<string> activityNames;
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            //string[] memberNames = new string[] { "Collect product activity" };
+            //// check all activity names are unique.
+            //activityNames = new List<string>();
+            //foreach (Model model in this.Children)
+            //{
+            //    GetActivityNames(model, "");
+            //}
+
+            //foreach (var item in activityNames.GroupBy(a => a.Split('.').Last(), (key, group) =>  new { name = key, Items = group.ToList() }))
+            //{
+            //    if(item.Items.Count()> 1)
+            //    {
+            //        string res = "Activity names must be unique! Rename one of the following activities";
+            //        foreach (var match in item.Items)
+            //        {
+            //            res += string.Format("\n[{0}]", match);
+            //        }
+            //        results.Add(new ValidationResult(res));
+            //    }
+            //}
+            return results;
+        }
+
+        //private void GetActivityNames(Model model, string name)
+        //{
+        //    name += "." + model.Name;
+        //    switch (model.GetType().Name)
+        //    {
+        //        case "LabourRequirement":
+        //        case "LabourFilter":
+        //        case "LabourFilterGroup":
+        //        case "RuminantFilterGroup":
+        //        case "RuminantFilter":
+        //        case "RuminantFeedGroup":
+        //        case "RuminantDestockGroup":
+        //        case "OtherAnimalsFilterGroup":
+        //        case "OtherAnimalsFilter":
+        //        case "Memo":
+        //            break;
+        //        default:
+        //            activityNames.Add(name);
+        //            break;
+        //    }
+        //    foreach (Model m in model.Children)
+        //    {
+        //        GetActivityNames(m, name);
+        //    }
+        //}
 
         /// <summary>
         /// Last resource request that was in defecit
@@ -182,7 +244,7 @@ namespace Models.CLEM.Activities
         {
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.GetResourcesForAllActivities();
+                child.GetResourcesForAllActivities(this);
             }
         }
 
@@ -232,5 +294,32 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            return "\n<h1>Activities summary</h1>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        {
+            return "\n<div class=\"activity\">";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        {
+            return "\n</div>";
+        }
     }
 }

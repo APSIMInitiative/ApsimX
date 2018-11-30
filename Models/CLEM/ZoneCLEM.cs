@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,9 +18,13 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.CLEMView")]
+    //[PresenterName("UserInterface.Presenters.CLEMPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
     [HelpUri("http://www.csiro.au")]
+    [Version(1,0,1,"","CSIRO","")]
     public class ZoneCLEM: Zone, IValidatableObject
     {
         [Link]
@@ -86,13 +91,13 @@ namespace Models.CLEM
         [XmlIgnore]
         public new double Slope { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ZoneCLEM()
-        {
-            this.SetDefaults();
-        }
+        ///// <summary>
+        ///// Constructor
+        ///// </summary>
+        //public ZoneCLEM()
+        //{
+        //    this.SetDefaults();
+        //}
 
         /// <summary>
         /// Validate object
@@ -144,7 +149,7 @@ namespace Models.CLEM
             // some values assigned in commencing will not be checked before processing, but will be caught here
             if (!Validate(Simulation, ""))
             {
-                string error = "Invalid parameters in model (see summary for details)";
+                string error = "@i:Invalid parameters in model";
                 throw new ApsimXException(this, error);
             }
 
@@ -194,7 +199,30 @@ namespace Models.CLEM
         /// <returns>Boolean indicating whether validation was successful</returns>
         private bool Validate(Model model, string ModelPath)
         {
-            ModelPath += "["+model.Name+"]";
+            string starter = "[";
+            if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
+            {
+                starter = "[r=";
+            }
+            if(model.GetType() == typeof(ResourcesHolder))
+            {
+                starter = "[r=";
+            }
+            if (model.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                starter = "[r=";
+            }
+            if (model.GetType() == typeof(ActivitiesHolder))
+            {
+                starter = "[a=";
+            }
+            if (model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
+            {
+                starter = "[a=";
+            }
+
+            ModelPath += starter+model.Name+"]";
+            ModelPath = ModelPath.Replace("][", "]&shy;[");
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
@@ -205,7 +233,21 @@ namespace Models.CLEM
                 // report all errors
                 foreach (var validateError in validationResults)
                 {
-                    string error = String.Format("Invalid parameter value in model object " + ModelPath + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault() + Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
+                    // get description
+                    string text = "";
+                    var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
+                    if (property != null)
+                    {
+                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                        var description = (DescriptionAttribute)attribute;
+                        text = description.ToString();
+                    }
+                    string error = String.Format("@validation:Invalid parameter value in " + ModelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
+                    if (text != "")
+                    {
+                        error += String.Format(Environment.NewLine + "DESCRIPTION: " + text );
+                    }
+                    error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
                     Summary.WriteWarning(this, error);
                 }
             }
@@ -220,39 +262,70 @@ namespace Models.CLEM
             return valid;
         }
 
-        /// <summary>
-        /// Method to set defaults from   
+            /// <summary>
+        /// 
         /// </summary>
-        public void SetDefaults()
+        /// <param name="Model"></param>
+        /// <param name="UseFullDescription">Use full verbose description</param>
+        /// <param name="HTMLString"></param>
+        /// <returns></returns>
+        public string GetFullSummary(object Model, bool UseFullDescription, string HTMLString)
         {
-            foreach (var property in GetType().GetProperties())
+            string html = "";
+            html += "\n<div class=\"holdermain\">";
+            html += "\n<div class=\"clearfix defaultbanner\">";
+            html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
+            html += "</div>";
+            html += "\n<div class=\"defaultcontent\">";
+            html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
+            if (RandomSeed == 0)
             {
-                foreach (Attribute attr in property.GetCustomAttributes(true))
-                {
-                    if (attr is System.ComponentModel.DefaultValueAttribute)
-                    {
-                        System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
-                        try
-                        {
-                            if (property.PropertyType.IsArray)
-                            {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                            else
-                            {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Summary.WriteWarning(this, ex.Message);
-                            //eat it... Or maybe Debug.Writeline(ex);
-                        }
-                    }
-                }
+                html += "Every run of this simulation will be different.";
             }
-        }
+            else
+            {
+                html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
+            }
+            html += "\n</div>";
+            html += "\n</div>";
 
+            // get clock
+            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+            Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
+
+            html += "\n<div class=\"clearfix defaultbanner\">";
+            html += "<div class=\"namediv\">" + clk.Name + "</div>";
+            html += "<div class=\"typediv\">Clock</div>";
+            html += "</div>";
+            html += "\n<div class=\"defaultcontent\">";
+            html += "\n<div class=\"activityentry\">This simulation runs from ";
+            if (clk.StartDate == null)
+            {
+                html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
+            }
+            html += " to ";
+            if (clk.EndDate == null)
+            {
+                html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
+            }
+            html += "\n</div>";
+            html += "\n</div>";
+            html += "\n</div>";
+
+            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            {
+                html += cm.GetFullSummary(cm, true, "");
+            }
+            return html;
+        }
 
         /// <summary>
         /// Method to determine if this is the month to calculate ecological indicators
@@ -274,6 +347,103 @@ namespace Models.CLEM
                 this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
             }
         }
+
+
+        ///// <summary>
+        ///// Provides the description of the model settings for summary (GetFullSummary)
+        ///// </summary>
+        ///// <param name="FormatForParentControl">Use full verbose description</param>
+        ///// <returns></returns>
+        //public override string ModelSummary(bool FormatForParentControl)
+        //{
+        //    string html = "";
+        //    html += "\n<div class=\"holdermain\">";
+        //    html += "\n<div class=\"clearfix defaultbanner\">" + this.ModelSummaryNameTypeHeader() + "</div>";
+        //    html += "\n<div class=\"defaultcontent\">";
+        //    html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
+        //    if(RandomSeed==0)
+        //    {
+        //        html += "Every run of this simulation will be different.";
+        //    }
+        //    else
+        //    {
+        //        html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
+        //    }
+        //    html += "\n</div>";
+        //    html += "\n</div>";
+
+        //    // get clock
+        //    IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+        //    Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
+
+        //    html += "\n<div class=\"clearfix defaultbanner\">";
+        //    html += "<div class=\"namediv\">" + clk.Name + "</div>";
+        //    html += "<div class=\"typediv\">Clock</div>";
+        //    html += "</div>";
+        //    html += "\n<div class=\"defaultcontent\">";
+        //    html += "\n<div class=\"activityentry\">This simulation runs from ";
+        //    if (clk.StartDate == null)
+        //    {
+        //        html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+        //    }
+        //    else
+        //    {
+        //        html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
+        //    }
+        //    html += " to ";
+        //    if (clk.EndDate == null)
+        //    {
+        //        html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
+        //    }
+        //    else
+        //    {
+        //        html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
+        //    }
+        //    html += "\n</div>";
+        //    html += "\n</div>";
+
+        //    html += "\n</div>";
+        //    return html;
+        //}
+
+        ///// <summary>
+        ///// Provides the closing html tags for object
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        //{
+        //    string html = "";
+        //    return html;
+        //}
+
+        ///// <summary>
+        ///// Provides the closing html tags for object
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        //{
+        //    string html = "";
+        //    return html;
+        //}
+
+        ///// <summary>
+        ///// Provides the closing html tags for object
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        //{
+        //    return "";
+        //}
+
+        ///// <summary>
+        ///// Provides the closing html tags for object
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        //{
+        //    return "";
+        //}
+
 
     }
 }

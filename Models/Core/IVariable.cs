@@ -75,5 +75,21 @@ namespace Models.Core
         /// <param name="attributeType">Type of attribute to find</param>
         /// <returns>The attribute or null if not found</returns>
         public abstract Attribute GetAttribute(Type attributeType);
+
+        ///// <summary>
+        ///// Gets or sets the types for the ResourceGroups whose Resource items are valid choices in the Resource name editor.
+        ///// eg. [Display(CLEMResourceNameResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
+        ///// Will create a dropdown list with all the Resource items from only the AnimalFoodStore, HumanFoodStore and ProductStore.
+        ///// </summary>
+        //public abstract Type[] CLEMResourceNameResourceGroups { get; }
+
+
+        ///// <summary>
+        ///// Gets or sets strings that are manually added to the Resource name editor.
+        ///// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
+        ///// Will add these strings to the dropdown list created by CLEMResourceNameResourceGroups. 
+        ///// </summary>
+        //public abstract string[] CLEMExtraEntries { get; }
+
     }
 } 

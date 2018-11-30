@@ -5,7 +5,7 @@ using UserInterface.Interfaces;
 namespace UserInterface.Views
 {
     //duplicate of InputView because we want to place this at the top of our simulation not onto the Datastore
-    interface ICLEMFileGRASPView
+    interface ICLEMFileCropView
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
@@ -28,7 +28,7 @@ namespace UserInterface.Views
         IGridView GridView { get; }
     }
 
-    public class CLEMFileGRASPView : ViewBase, Views.ICLEMFileGRASPView
+    public class CLEMFileCropView : ViewBase, Views.ICLEMFileCropView
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
@@ -49,7 +49,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Constructor
         /// </summary>
-        public CLEMFileGRASPView(ViewBase owner) : base(owner)
+        public CLEMFileCropView(ViewBase owner) : base(owner)
         {
             Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.InputView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
@@ -113,12 +113,12 @@ namespace UserInterface.Views
         {
             if (BrowseButtonClicked != null)
             {
-                string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "*.*");
-                if (!string.IsNullOrEmpty(fileName))
+                string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "ASCII Text Files (*.*) | *.*") ;
+                if (!String.IsNullOrEmpty(fileName))
                 {
                     OpenDialogArgs args = new OpenDialogArgs();
-                    args.FileName = fileName;
-                    BrowseButtonClicked?.Invoke(this, args);
+                    args.FileName = fileName; //Dialogs seem to return the full file path not just the filename.
+                    BrowseButtonClicked.Invoke(this, args);
                 }
             }
         }

@@ -211,7 +211,30 @@
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
+    <Compile Include="Interfaces\IPropertyTreeView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
+    <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMFileGRASPPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
+    <Compile Include="Presenters\CLEM\LabourAllocationPresenter.cs" />
+    <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
+    <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
+    <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
+    <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
+    <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
+    <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
+    <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
+    <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
+    <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
+    <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
+    <Compile Include="Views\CLEM\CLEMView.cs" />
+    <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
+    <Compile Include="Views\CLEM\PropertyTreeView.cs" />
+    <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
@@ -246,11 +269,8 @@
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
-    <Compile Include="Presenters\CLEMFileGRASPPresenter.cs" />
-    <Compile Include="Presenters\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
-    <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
@@ -261,7 +281,6 @@
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\INewCloudJobPresenter.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
-    <Compile Include="Presenters\CLEMFileCropPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IntellisensePresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
@@ -278,7 +297,6 @@
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
-    <Compile Include="Presenters\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\StockPresenter.cs" />
@@ -287,7 +305,6 @@
     <Compile Include="Presenters\DirectedGraphPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
-    <Compile Include="Presenters\ModelDetailsWrapperPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -307,11 +324,8 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CLEMFileSQLiteGRASPView.cs" />
-    <Compile Include="Views\CLEMFileGRASPView.cs" />
     <Compile Include="Views\CloudJobDisplayView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\ActivityLedgerGridView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
@@ -331,7 +345,6 @@
     <Compile Include="Views\GridView.cs" />
     <Compile Include="Views\HTMLView.cs" />
     <Compile Include="Views\InitialWaterView.cs" />
-    <Compile Include="Views\CLEMFileCropView.cs" />
     <Compile Include="Views\InputView.cs" />
     <Compile Include="Views\IntellisenseView.cs" />
     <Compile Include="Views\LegendView.cs" />
@@ -341,10 +354,8 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\NewAzureJobView.cs" />
     <Compile Include="Views\ProfileView.cs" />
-    <Compile Include="Views\ReportActivityLedgerView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
     <Compile Include="Views\StockView.cs" />
@@ -639,6 +650,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
+    <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

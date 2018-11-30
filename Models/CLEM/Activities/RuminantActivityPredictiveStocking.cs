@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -22,17 +23,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
         Clock Clock = null;
-
-        ///// <summary>
-        ///// Herd to manage for dry season pasture availability
-        ///// </summary>
-        //[Description("Name of herd to manage")]
-        //[Required]
-        //public string HerdName { get; set; }
 
         /// <summary>
         /// Month for assessing dry season feed requirements
@@ -57,36 +52,8 @@ namespace Models.CLEM.Activities
 
         // minimum no that can be sold off... now controlled by sale and transport activity 
 
-        ///// <summary>
-        ///// Minimum breedeer age allowed to be sold
-        ///// </summary>
-        //[Description("Minimum breedeer age allowed to be sold")]
-        //[Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
-        //public double MinimumBreederAgeLimit { get; set; }
-
         // restock proportion. I don't understand this.
         // Maximum % restock breeders/age group
-
-        ///// <summary>
-        ///// Allow dry cows to be sold if feed shortage
-        ///// </summary>
-        //[Description("Allow dry cows to be sold if feed shortage")]
-        //[Required]
-        //public bool SellDryCows { get; set; }
-
-        ///// <summary>
-        ///// Allow wet cows to be sold if feed shortage
-        ///// </summary>
-        //[Description("Allow wet cows to be sold if feed shortage")]
-        //[Required]
-        //public bool SellWetCows { get; set; }
-
-        ///// <summary>
-        ///// Allow steers to be sold if feed shortage
-        ///// </summary>
-        //[Description("Allow steers to be sold if feed shortage")]
-        //[Required]
-        //public bool SellSteers { get; set; }
 
         /// <summary>
         /// Validate this model
@@ -132,9 +99,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
+            this.Status = ActivityStatus.Ignored;
             // this event happens after management has marked individuals for purchase or sale.
             if (Clock.Today.Month == AssessmentMonth)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
                 RuminantHerd ruminantHerd = Resources.RuminantHerd();
                 foreach (var paddockGroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
@@ -152,7 +121,7 @@ namespace Models.CLEM.Activities
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
                     ShortfallAE = 0;
-                    GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                    GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     double pastureBiomass = pasture.Amount;
 
                     // Adjust fodder balance for detachment rate (6%/month)
@@ -164,10 +133,12 @@ namespace Models.CLEM.Activities
                     }
 
                     // Shortfall in Fodder in kg per hectare
-                    double pastureShortFallKgHa = pastureBiomass / pasture.Area;
-                    pastureShortFallKgHa = Math.Max(0, pastureShortFallKgHa - FeedLowLimit);
+                    // pasture at end of period in kg/ha
+                    double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
+                    // shortfall from low limit
+                    pastureShortFallKgHa = Math.Max(0, FeedLowLimit - pastureShortFallKgHa);
                     // Shortfall in Fodder in kg for paddock
-                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Area;
+                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
 
                     if (pastureShortFallKg == 0) return;
 
@@ -201,6 +172,7 @@ namespace Models.CLEM.Activities
                 int cnt = 0;
                 while (cnt < herd.Count() & AEforSale > 0)
                 {
+                    this.Status = ActivityStatus.Success;
                     AEforSale -= herd[cnt].AdultEquivalent;
                     herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
                     if (AEforSale < herd.Min(a => a.AdultEquivalent))
@@ -236,6 +208,24 @@ namespace Models.CLEM.Activities
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
@@ -277,6 +267,58 @@ namespace Models.CLEM.Activities
         {
             if (ActivityPerformed != null)
                 ActivityPerformed(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
+            html += "<span class=\"setvalue\">";
+            html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+            html += "</span> for a dry season of ";
+            html += "<span class=\"setvalue\">";
+            html += DrySeasonLength.ToString("#0");
+            html += "</span> months ";
+            html += "</div>";
+            html += "\n<div class=\"activityentry\">The herd will be sold to maintain ";
+            html += "<span class=\"setvalue\">";
+            html += FeedLowLimit.ToString("#,##0");
+            html += "</span> kg/ha at the end of this period";
+            html += "</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"labourgroupsborder\">";
+            html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
+
+            if(Apsim.Children(this, typeof(RuminantDestockGroup)).Count() == 0)
+            {
+                html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
+            }
+            return html;
         }
 
     }

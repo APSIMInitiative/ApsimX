@@ -8,7 +8,7 @@ namespace Models.CLEM
 {
 
     /// <summary>
-    /// Crop payment style
+    /// Crop store style
     /// </summary>
     public enum StoresForCrops
     {
@@ -110,6 +110,21 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Mustering timing type
+    /// </summary>
+    public enum MusterTimingType
+    {
+        /// <summary>
+        /// At start of time step
+        /// </summary>
+        StartOfTimestep,
+        /// <summary>
+        /// At end of time step
+        /// </summary>
+        EndOfTimeStep
+    }
+
+    /// <summary>
     /// Animal pricing style
     /// </summary>
     public enum PricingStyleType
@@ -143,6 +158,24 @@ namespace Models.CLEM
         perTree,
     }
 
+    /// <summary>
+    /// Crop payment style
+    /// </summary>
+    public enum ResourcePaymentStyleType
+    {
+        /// <summary>
+        /// Fixed price
+        /// </summary>
+        Fixed,
+        /// <summary>
+        /// Amount per unit of resource
+        /// </summary>
+        perUnit,
+        /// <summary>
+        /// Amount per block of resource
+        /// </summary>
+        perBlock,
+    }
 
     /// <summary>
     /// Animal payment style
@@ -212,9 +245,13 @@ namespace Models.CLEM
     public enum RuminantFeedActivityTypes
     {
         /// <summary>
-        /// Feed specified amount daily in selected months
+        /// Feed specified amount daily to all individuals
         /// </summary>
         SpecifiedDailyAmount,
+        /// <summary>
+        /// Feed specified amount daily to each individual
+        /// </summary>
+        SpecifiedDailyAmountPerIndividual,
         /// <summary>
         /// Feed proportion of animal weight in selected months
         /// </summary>
@@ -265,6 +302,49 @@ namespace Models.CLEM
         /// Ignore missing resources and return null
         /// </summary>
         Ignore
+    }
+
+    /// <summary>
+    /// Style of HTML reporting
+    /// </summary>
+    public enum HTMLSummaryStyle
+    {
+        /// <summary>
+        /// Determine best match
+        /// </summary>
+        Default,
+        /// <summary>
+        /// Main resource
+        /// </summary>
+        Resource,
+        /// <summary>
+        /// Sub resource
+        /// </summary>
+        SubResource,
+        /// <summary>
+        /// Sub resource nested
+        /// </summary>
+        SubResourceLevel2,
+        /// <summary>
+        /// Main activity
+        /// </summary>
+        Activity,
+        /// <summary>
+        /// Sub activity
+        /// </summary>
+        SubActivity,
+        /// <summary>
+        /// Sub activity nested
+        /// </summary>
+        SubActivityLevel2,
+        /// <summary>
+        /// Helper model
+        /// </summary>
+        Helper,
+        /// <summary>
+        /// FileReader model
+        /// </summary>
+        FileReader
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,9 +15,13 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantFilterGroup))]
+    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
+    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantFilter: CLEMModel
     {
         /// <summary>
@@ -77,11 +82,98 @@ namespace Models.CLEM.Groupings
         }
         private string _value;
 
+        /// <summary>
+        /// Convert filter to string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string str = "";
+
+            if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
+            {
+                str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE")| (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
+                str += Parameter;
+            }
+            else
+            {
+                str += Parameter;
+                switch (Operator)
+                {
+                    case FilterOperators.Equal:
+                        str += "=";
+                        break;
+                    case FilterOperators.NotEqual:
+                        str += "<>";
+                        break;
+                    case FilterOperators.LessThan:
+                        str += "<";
+                        break;
+                    case FilterOperators.LessThanOrEqual:
+                        str += "<=";
+                        break;
+                    case FilterOperators.GreaterThan:
+                        str += ">";
+                        break;
+                    case FilterOperators.GreaterThanOrEqual:
+                        str += ">=";
+                        break;
+                    default:
+                        break;
+                }
+                str += Value;
+            }
+            return str;
+        }
 
         private void UpdateName()
         {
-            this.Name = String.Format("Filter[{0}{1}{2}]", Parameter.ToString(), Operator.ToSymbol(), Value);
+           // this.Name = String.Format("Filter {0} {2}", Parameter.ToString(), Operator.ToSymbol(), Value);
         }
+
+        /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        public RuminantFilter Clone()
+        {
+            RuminantFilter clone = new RuminantFilter()
+            {
+                Parameter = this.Parameter,
+                Operator = this.Operator,
+                Value = this.Value
+            };
+            return clone;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            return "<div class=\"filter\">"+this.ToString()+"</div>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        {
+            return "";
+        }
+
     }
 
     /// <summary>
@@ -137,6 +229,10 @@ namespace Models.CLEM.Groupings
         /// Is female pregnant
         /// </summary>
         IsPregnant,
+        /// <summary>
+        /// Is female a heifer (weaned, >= breed age and weight, no offspring)
+        /// </summary>
+        IsHeifer,
         /// <summary>
         /// Is male draught individual
         /// </summary>

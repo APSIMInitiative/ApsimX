@@ -17,9 +17,9 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(CLEMActivityBase))]
-    [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
+    //[ValidParent(ParentType = typeof(CLEMActivityBase))]
+    //[ValidParent(ParentType = typeof(ActivitiesHolder))]
+    //[ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     public class RuminantActivityPredictiveStockingOrig: CLEMRuminantActivityBase
     {
@@ -122,10 +122,10 @@ namespace Models.CLEM.Activities
                     }
 
                     // Shortfall in Fodder in kg per hectare
-                    double pastureShortFallKgHa = pastureBiomass / pasture.Area;
+                    double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
                     pastureShortFallKgHa = Math.Max(0, pastureShortFallKgHa - FeedLowLimit);
                     // Shortfalll in Fodder in kg for paddock
-                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Area;
+                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
 
                     if (pastureShortFallKg == 0) return;
 
@@ -239,6 +239,24 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             return; ;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>

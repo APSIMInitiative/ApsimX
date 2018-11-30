@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,8 +17,9 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
-    [Description("This resource represents a manure store. This is a special type of Porduct Store Type and is needed for manure management and must be named \"Manure\".")]
-    public class ProductStoreTypeManure: CLEMModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class ProductStoreTypeManure: CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// List of all uncollected manure stores
@@ -126,8 +128,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="storeName">Name of store to add manure to</param>
         /// <param name="resourceLimiter">Reduction due to limited resources</param>
-        /// <param name="activityName">Name of activity performing collection</param>
-        public void Collect(string storeName, double resourceLimiter, string activityName)
+        /// <param name="activity">Name of activity performing collection</param>
+        public void Collect(string storeName, double resourceLimiter, CLEMModel activity)
         {
             ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
             if (store != null)
@@ -145,15 +147,16 @@ namespace Models.CLEM.Resources
                     // if 0 delete
                     store.Pools.RemoveAll(a => a.Amount == 0);
                 }
-                this.Add(amountMoved, activityName, ((storeName=="")?"General":storeName));
+                this.Add(amountMoved, activity, ((storeName=="")?"General":storeName));
             }
         }
 
-        private double amount;
         /// <summary>
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
         /// <summary>
         /// Initialise resource type
@@ -188,10 +191,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add money to account
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="Activity">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual adding resource</param>
+        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
         {
             if (ResourceAmount.GetType().ToString() != "System.Double")
             {
@@ -203,8 +206,9 @@ namespace Models.CLEM.Resources
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.Activity = ActivityName;
+                details.Debit = addAmount;
+                details.Activity = Activity.Name;
+                details.ActivityType = Activity.GetType().Name;
                 details.Reason = Reason;
                 details.ResourceType = this.Name;
                 LastTransaction = details;
@@ -226,7 +230,7 @@ namespace Models.CLEM.Resources
         /// Remove from finance type store
         /// </summary>
         /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        public new void Remove(ResourceRequest Request)
         {
             if (Request.Required == 0) return;
             // avoid taking too much
@@ -237,8 +241,9 @@ namespace Models.CLEM.Resources
             Request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
+            details.Credit = amountRemoved;
             details.Activity = Request.ActivityModel.Name;
+            details.ActivityType = Request.ActivityModel.GetType().Name;
             details.Reason = Request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -249,12 +254,28 @@ namespace Models.CLEM.Resources
         /// Set the amount in an account.
         /// </summary>
         /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        public new void Set(double NewAmount)
         {
             amount = NewAmount;
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "<div class=\"activityentry\">";
+            html += "Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>";
+            html += "<div class=\"activityentry\">";
+            html += "Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by "+ this.MoistureDecayRate.ToString("0.###") + "</span> each month.";
+            html += "</div>";
+            return html;
+        }
+
     }
 
     /// <summary>
@@ -286,6 +307,7 @@ namespace Models.CLEM.Resources
         /// Amount (dry weight) in pool
         /// </summary>
         public double Amount { get; set; }
+        
         /// <summary>
         /// Proportion water in pool
         /// </summary>

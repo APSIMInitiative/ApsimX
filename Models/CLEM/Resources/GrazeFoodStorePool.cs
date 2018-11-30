@@ -75,6 +75,11 @@ namespace Models.CLEM.Resources
         public double Growth { get; set; }
 
         /// <summary>
+        /// pricing
+        /// </summary>
+        public ResourcePricing Price => throw new NotImplementedException();
+
+        /// <summary>
         /// Reset timestep stores
         /// </summary>
         public void Reset()
@@ -89,9 +94,9 @@ namespace Models.CLEM.Resources
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
         /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="Activity">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual adding resource</param>
+        public void Add(object ResourceAmount, CLEMModel Activity, string Reason)
         {
             throw new NotImplementedException();
         }
@@ -121,9 +126,9 @@ namespace Models.CLEM.Resources
         /// 
         /// </summary>
         /// <param name="RemoveAmount"></param>
-        /// <param name="ActivityName"></param>
+        /// <param name="Activity"></param>
         /// <param name="Reason"></param>
-        public double Remove(double RemoveAmount, string ActivityName, string Reason)
+        public double Remove(double RemoveAmount, CLEMModel Activity, string Reason)
         {
             RemoveAmount = Math.Min(this.amount, RemoveAmount);
             this.Consumed += RemoveAmount;

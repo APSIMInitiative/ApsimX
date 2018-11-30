@@ -16,8 +16,8 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(CLEMActivityBase))]
-    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    //[ValidParent(ParentType = typeof(CLEMActivityBase))]
+    //[ValidParent(ParentType = typeof(ActivitiesHolder))]
     public class RuminantActivityGraze : CLEMActivityBase
     {
         [Link]
@@ -127,6 +127,24 @@ namespace Models.CLEM.Activities
         {
             if (ResourceShortfallOccurred != null)
                 ResourceShortfallOccurred(this, e);
+        }
+
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            throw new NotImplementedException();
         }
     }
 

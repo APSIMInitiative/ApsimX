@@ -55,7 +55,8 @@ namespace UserInterface.Presenters
                 if (data != null)
                 {
                     // get unique rows
-                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("Name")).Distinct().ToList<string>();
+//                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("Name")).Distinct().ToList<string>();
+                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
                     // get unique columns
                     List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
                     // create table
@@ -71,9 +72,11 @@ namespace UserInterface.Presenters
                         if (item != "TimeStep")
                         {
                             DataRow dr = tbl.NewRow();
-                            dr["Activity"] = item;
+                            string name = data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item).FirstOrDefault()["Name"].ToString();
+                            dr["Activity"] = name;
+//                            dr["Activity"] = item;
 
-                            foreach (var activityTick in data.AsEnumerable().Where(a => a.Field<string>("Name") == item))
+                            foreach (var activityTick in data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item))
                             {
                                 DateTime dte = (DateTime)activityTick["Date"];
                                 string status = activityTick["Status"].ToString();
@@ -101,6 +104,24 @@ namespace UserInterface.Presenters
                     data = dataStore.GetData(
                                             tableName: ModelName,
                                             count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
+
+                    if(data != null)
+                    {
+                        // need to filter by current simulation
+                        string SimulationName = explorerPresenter.CurrentNodePath.Split('.')[2];
+
+                        //var filteredData = data.AsEnumerable()
+                        //    .Where(row => row.Field<String>("SimulationName") == "PastureCutCarry");
+                        var filteredData = data.AsEnumerable()
+                            .Where(row => row.Field<String>("SimulationName") == SimulationName);
+                        if(filteredData.Any())
+                        {
+                            data = filteredData.CopyToDataTable();
+                        }
+                        //data = data.AsEnumerable()
+                        //    .Where(row => row.Field<String>("SimulationName") == "PastureCutCarry")
+                        //    .CopyToDataTable();
+                    }
 
                 }
                 catch (Exception e)

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -18,14 +19,18 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs milking based upon the current herd filtering.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityMilking: CLEMRuminantActivityBase
     {
-        /// <summary>
-        /// Labour settings
-        /// </summary>
-        private List<LabourFilterGroupSpecified> labour { get; set; }
+        private object milkStore;
 
-        private HumanFoodStoreType milkStore;
+        /// <summary>
+        /// Resource type to store milk in
+        /// </summary>
+        [Description("Store to place milk")]
+        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
+        public string ResourceTypeName { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -35,22 +40,18 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(false, true);
 
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-
             // find milk store
-            milkStore = Resources.GetResourceItem(this, typeof(HumanFoodStore), "Milk", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+            milkStore = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFMilking")]
+        [EventSubscribe("CLEMAnimalMilking")]
         private void OnCLEMMilking(object sender, EventArgs e)
         {
             // take all milk
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList();
             double milkTotal = herd.Sum(a => a.MilkAmount);
             if (milkTotal > 0)
             {
@@ -58,16 +59,8 @@ namespace Models.CLEM.Activities
                 herd.Select(a => a.MilkingPerformed == true);
 
                 // only provide what labour would allow
-                // calculate labour limit
-                double labourLimit = 1;
-                double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-                double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-                if (labourNeeded > 0)
-                {
-                    labourLimit = labourProvided / labourNeeded;
-                }
-
-                milkStore.Add(milkTotal * labourLimit, this.Name, this.PredictedHerdName);
+                double labourLimit = this.LabourLimitProportion;
+                (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName);
             }
         }
 
@@ -77,46 +70,41 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
+            return null;
+        }
 
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
             List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
             int head = herd.Count();
-            if (head > 0)
+            double daysNeeded = 0;
+            switch (Requirement.UnitType)
             {
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
-                    {
-                        case LabourUnitType.Fixed:
-                            daysNeeded = item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perHead:
-                            daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                    }
-                    if (daysNeeded > 0)
-                    {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            Reason = "Milking",
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
-                    }
-                }
-
+                case LabourUnitType.Fixed:
+                    daysNeeded = Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    double numberUnits = head / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
             }
-            return ResourceRequestList;
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>

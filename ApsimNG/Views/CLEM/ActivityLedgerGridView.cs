@@ -67,7 +67,7 @@ namespace UserInterface.Views
         /// </summary>
         public ActivityLedgerGridView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             gridview = (Gtk.TreeView)builder.GetObject("gridview");
@@ -372,6 +372,7 @@ namespace UserInterface.Views
                     case "Calculation":
                     case "NotNeeded":
                     case "Timer":
+                    case "NoTask":
                         (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
                         break;
                     default:

@@ -49,6 +49,19 @@ namespace Models.CLEM.Resources
         public double WeightLossDueToCalf { get; set; }
 
         /// <summary>
+        /// Indicates if this female is a heifer
+        /// Heifer equals less than min breed age and no offspring
+        /// </summary>
+        public bool IsHeifer
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                return (this.Weaned && this.NumberOfBirths == 0 && this.Age < this.BreedParams.MinimumAge1stMating);
+            }
+        }
+
+        /// <summary>
         /// Indicates if birth is due this month
         /// Knows whether the feotus(es) have survived
         /// </summary>
@@ -117,7 +130,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(bool Twins, double Rate)
+        public void UpdateConceptionDetails(bool Twins, double Rate, int AgeOffsett)
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
@@ -127,7 +140,7 @@ namespace Models.CLEM.Resources
             PreviousConceptionRate = Rate;
             CarryingTwins = Twins;
             WeightAtConception = this.Weight;
-            AgeAtLastConception = this.Age;
+            AgeAtLastConception = this.Age + AgeOffsett;
             SuccessfulPregnancy = true;
         }
 
@@ -181,6 +194,11 @@ namespace Models.CLEM.Resources
         /// Amount of milk available in the month (L)
         /// </summary>
         public double MilkAmount { get; set; }
+
+        /// <summary>
+        /// Potential amount of milk produced (L/day)
+        /// </summary>
+        public double MilkProductionPotential { get; set; }
 
         /// <summary>
         /// Amount of milk produced (L/day)

@@ -10,6 +10,8 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
+using Models.CLEM.Activities;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileCrop.cs" company="APSIM Initiative">
@@ -29,8 +31,11 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.CLEMFileCropView")]
     [PresenterName("UserInterface.Presenters.CLEMFileCropPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
-    public class FileCrop : Model
+    [Version(1, 0, 1, "Shaun Verrall", "CSIRO", "")]
+    public class FileCrop : CLEMModel
     {
         /// <summary>
         /// A reference to the text file reader object
@@ -82,18 +87,27 @@ namespace Models.CLEM
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). 
+        /// The Commands.ChangeProperty() uses this property to change the model.
+        /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
         [XmlIgnore]
         public string FullFileName
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                if ((this.FileName == null) || (this.FileName  == ""))
+                {
+                    return "";
+                }  
                 else
-                    return this.FileName;
+                {
+                    Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                    if (simulation != null)
+                        return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    else
+                        return this.FileName;
+                }
             }
             set
             {
@@ -122,7 +136,7 @@ namespace Models.CLEM
         {
             if (!File.Exists(FullFileName))
             {
-                string errorMsg = String.Format("Could not locate file ({0}) for ({1})", FullFileName, this.Name);
+                string errorMsg = String.Format("Could not locate file [x={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
 
@@ -163,6 +177,15 @@ namespace Models.CLEM
         /// </summary>
         [XmlIgnore]
         public string ErrorMessage = string.Empty;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileCrop()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
+
+        }
 
         /// <summary>
         /// 
@@ -324,31 +347,31 @@ namespace Models.CLEM
                     if (this.soilNumIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("SoilNum") == null)
-                            throw new Exception("Cannot find SoilNum column in crop file: " + this.FullFileName);
+                            throw new Exception("Cannot find [o=SoilNum] column in crop file [x=" + this.FullFileName.Replace("\\","\\&shy;")+"]");
                     }
 
                     if (this.cropNameIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("CropName") == null)
-                            throw new Exception("Cannot find CropName column in crop file: " + this.FullFileName);
+                            throw new Exception("Cannot find [o=CropName] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                     }
 
                     if (this.yearIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Year") == null)
-                            throw new Exception("Cannot find Year column in crop file: " + this.FullFileName);
+                            throw new Exception("Cannot find [o=Year] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                     }
 
                     if (this.monthIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Month") == null)
-                            throw new Exception("Cannot find Month column in crop file: " + this.FullFileName);
+                            throw new Exception("Cannot find [o=Month] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                     }
 
                     if (this.AmtKgIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("AmtKg") == null)
-                            throw new Exception("Cannot find AmtKg column in crop file: " + this.FullFileName);
+                            throw new Exception("Cannot find [o=AmtKg] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                     }
 
                     //Npct is an optional column. You don't need to provide it. So don't throw an error.
@@ -384,7 +407,26 @@ namespace Models.CLEM
             }
         }
 
-
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Using ";
+            if (FileName == null || FileName == "")
+            {
+                html += "<span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + FileName + "</span>";
+            }
+            html += "\n</div>";
+            return html;
+        }
     }
 
 

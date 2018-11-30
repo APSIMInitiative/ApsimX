@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -21,12 +22,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityPredictiveStockingENSO: CLEMActivityBase
     {
         [Link]
         Clock Clock = null;
-        [Link]
-        ISummary Summary = null;
 
         /// <summary>
         /// Herd to manage for dry season pasture availability
@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
             //check file exists
             if (!File.Exists(fullFilename))
             {
-                Summary.WriteWarning(this, String.Format("Could not find ENSO SIO datafile {0} for {1}", MonthlySIOFile, this.Name));
+                Summary.WriteWarning(this, String.Format("@error:Could not find ENSO SIO datafile [x={0}[ for [a={1}]", MonthlySIOFile, this.Name));
             }
 
             // load data
@@ -489,7 +489,23 @@ namespace Models.CLEM.Activities
                 ActivityPerformed(this, e);
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
 
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
     }
 
     /// <summary>

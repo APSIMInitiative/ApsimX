@@ -9,6 +9,8 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
+using Models.CLEM.Activities;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
@@ -25,8 +27,12 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.CLEMFileSQLiteGRASPView")]
     [PresenterName("UserInterface.Presenters.CLEMFileSQLiteGRASPPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
+    [Version(1, 0, 1, "Shaun Verrall", "CSIRO", "")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>
@@ -35,8 +41,6 @@ namespace Models.CLEM
         [Link]
         private Clock clock = null;
 
-
-
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
@@ -44,8 +48,6 @@ namespace Models.CLEM
         [Description("Pasture file name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture file name must be supplied.")]
         public string FileName { get; set; }
-
-
 
         /// <summary>
         /// APSIMx SQLite class
@@ -67,11 +69,13 @@ namespace Models.CLEM
         [XmlIgnore]
         private double[] distinctStkRates;
 
-
-
-
-
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileSQLiteGRASP()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
+        }
 
         /// <summary>
         /// Opens the SQLite database if necessary
@@ -510,6 +514,28 @@ namespace Models.CLEM
 
 
         #endregion
+
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Using ";
+            if (FileName == null || FileName == "")
+            {
+                html += "<span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"filelink\">" + FileName + "</span>";
+            }
+            html += "\n</div>";
+            return html;
+        }
 
     }
 

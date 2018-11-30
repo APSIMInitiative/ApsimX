@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -18,7 +19,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     [Description("This resource represents a human food store (e.g. Eggs).")]
-    public class HumanFoodStoreType : CLEMModel, IResourceType, IResourceWithTransactionType
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Dry Matter (%)
@@ -74,20 +76,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         [XmlIgnore]
         public double Amount { get { return amount; } }
-        private double amount;
-
-        /// <summary>
-        /// Initialise the current state to the starting amount of fodder
-        /// </summary>
-        public void Initialise()
-        {
-            this.Age = this.StartingAge;
-            this.amount = 0;
-            if (StartingAmount > 0)
-            {
-                Add(StartingAmount, this.Name, "Starting value");
-            }
-        }
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -95,7 +85,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
+            this.Age = this.StartingAge;
+            this.amount = 0;
+            if (StartingAmount > 0)
+            {
+                Add(StartingAmount, this, "Starting value");
+            }
         }
 
         #region Transactions
@@ -103,10 +98,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen in a Res) of food being added</param>
-        /// <param name="ActivityName">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual radding resource</param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="Activity">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual adding resource</param>
+        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
         {
             double addAmount = 0;
             double nAdded = 0;
@@ -129,8 +124,9 @@ namespace Models.CLEM.Resources
 
             this.amount = this.amount + addAmount;
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = addAmount;
-            details.Activity = ActivityName;
+            details.Debit = addAmount;
+            details.Activity = Activity.Name;
+            details.ActivityType = Activity.GetType().Name;
             details.Reason = Reason;
             details.ResourceType = this.Name;
             LastTransaction = details;
@@ -142,7 +138,7 @@ namespace Models.CLEM.Resources
         /// Remove from human food store
         /// </summary>
         /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        public new void Remove(ResourceRequest Request)
         {
             if (Request.Required == 0) return;
             double amountRemoved = Request.Required;
@@ -153,46 +149,14 @@ namespace Models.CLEM.Resources
             Request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
+            details.Credit = amountRemoved;
             details.Activity = Request.ActivityModel.Name;
+            details.ActivityType = Request.ActivityModel.GetType().Name;
             details.Reason = Request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
-
-        ///// <summary>
-        ///// Remove from food store
-        ///// </summary>
-        ///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-        ///// <param name="ActivityName">Name of activity requesting resource</param>
-        ///// <param name="Reason">Name of individual requesting resource</param>
-        //public double Remove(double RemoveAmount, string ActivityName, string Reason)
-        //{
-        //    double amountRemoved = RemoveAmount;
-        //    if (this.amount - RemoveAmount < 0)
-        //    {
-        //        string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-        //            + "Current Amount: " + this.amount + Environment.NewLine
-        //            + "Tried to Remove: " + RemoveAmount;
-        //        Summary.WriteWarning(this, message);
-        //        amountRemoved = this.amount;
-        //        this.amount = 0;
-        //    }
-        //    else
-        //    {
-        //        this.amount = this.amount - RemoveAmount;
-        //    }
-        //    ResourceTransaction details = new ResourceTransaction();
-        //    details.ResourceType = this.Name;
-        //    details.Debit = amountRemoved * -1;
-        //    details.Activity = ActivityName;
-        //    details.Reason = Reason;
-        //    LastTransaction = details;
-        //    TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-        //    OnTransactionOccurred(te);
-        //    return amountRemoved;
-        //}
 
         /// <summary>
         /// Remove Food
@@ -207,7 +171,7 @@ namespace Models.CLEM.Resources
         /// Set amount of animal food available
         /// </summary>
         /// <param name="NewValue">New value to set food store to</param>
-        public void Set(double NewValue)
+        public new void Set(double NewValue)
         {
             this.amount = NewValue;
         }

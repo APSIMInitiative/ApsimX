@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -16,15 +18,14 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public abstract class CLEMActivityBase: CLEMModel
     {
         /// <summary>
-        /// 
+        /// Link to resources
         /// </summary>
         [Link]
         public ResourcesHolder Resources = null;
-        [Link]
-        ISummary Summary = null;
 
         /// <summary>
         /// Current list of resources requested by this activity
@@ -44,6 +45,36 @@ namespace Models.CLEM.Activities
         [XmlIgnore]
         public ActivityStatus Status { get; set; }
 
+        private bool enabled = true;
+        /// <summary>
+        /// Current status of this activity
+        /// </summary>
+        [XmlIgnore]
+        public bool ActivityEnabled
+        {
+            get
+            {
+                return enabled;
+            }
+            set
+            {
+                if(value!=enabled)
+                {
+                    foreach (var child in this.Children.OfType<CLEMActivityBase>())
+                    {
+                        child.ActivityEnabled = value;
+                    }
+                    enabled = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resource allocation style
+        /// </summary>
+        [XmlIgnore]
+        public ResourceAllocationStyle AllocationStyle { get; set; }
+
         /// <summary>
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
@@ -52,6 +83,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
+                // use timing to not perform activity based on Enabled state
+                if (!ActivityEnabled) return false;
+
+                // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
@@ -60,16 +95,52 @@ namespace Models.CLEM.Activities
                     current = current.Parent as IModel;
                 }
                 return (result == 0);
-
-                // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
-                // return this.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue() ? 0 : 1) == 0;
             }
+        }
+
+        /// <summary>
+        /// Method to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree and a specified date
+        /// </summary>
+        /// <returns>T/F</returns>
+        public bool TimingCheck(DateTime date)
+        {
+            // use timing to not perform activity based on Enabled state
+            if (!ActivityEnabled) return false;
+
+            // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
+            int result = 0;
+            IModel current = this as IModel;
+            while (current.GetType() != typeof(ZoneCLEM))
+            {
+                result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
+                current = current.Parent as IModel;
+            }
+            return (result == 0);
         }
 
         /// <summary>
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
         /// <returns>T/F</returns>
+        public bool TimingExists
+        {
+            get
+            {
+                // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
+                int result = 0;
+                IModel current = this as IModel;
+                while (current.GetType() != typeof(ZoneCLEM))
+                {
+                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Count();
+                    current = current.Parent as IModel;
+                }
+                return (result != 0);
+            }
+        }
+
+        /// <summary>
+        /// Sets the status of the activity to success if the activity was in fact needed this time step
+        /// </summary>
         public void SetStatusSuccess()
         {
             if(Status== ActivityStatus.NotNeeded)
@@ -87,7 +158,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Protected method to cascade calls for activities performed for all activities in the UI tree. 
+        /// Protected method to cascade clearing of status for all dynamic activities created for this activity. 
         /// </summary>
         protected void ClearActivitiesPerformedStatus()
         {
@@ -96,14 +167,14 @@ namespace Models.CLEM.Activities
             {
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
-                    activity.Status = ActivityStatus.NotNeeded;
+                    activity.Status = ActivityStatus.Ignored;
                     activity.ClearAllAllActivitiesPerformedStatus();
                 }
             }
             // clear status for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
             {
-                activity.Status = ActivityStatus.NotNeeded;
+                activity.Status = ActivityStatus.Ignored;
                 activity.ClearAllAllActivitiesPerformedStatus();
             }
         }
@@ -117,23 +188,22 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Protected method to cascade calls for activities performed for all activities in the UI tree. 
+        /// Protected method to cascade calls for activities performed for all dynamically created activities
         /// </summary>
         protected void ReportActivitiesPerformed()
         {
+            this.TriggerOnActivityPerformed();
             // call activity performed for all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
-                    activity.TriggerOnActivityPerformed();
                     activity.ReportAllAllActivitiesPerformed();
                 }
             }
-            // call acticity performed  for all children of type CLEMActivityBase
+            // call activity performed  for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
             {
-                activity.TriggerOnActivityPerformed();
                 activity.ReportAllAllActivitiesPerformed();
             }
         }
@@ -174,34 +244,57 @@ namespace Models.CLEM.Activities
         /// Method to cascade calls for resources for all activities in the UI tree. 
         /// Responds to CLEMGetResourcesRequired in the Activity model holing top level list of activities
         /// </summary>
-        public virtual void GetResourcesForAllActivities()
+        public virtual void GetResourcesForAllActivities(CLEMModel model)
         {
             if (this.TimingOK)
             {
-                ResourcesForAllActivities();
+                ResourcesForAllActivities(model);
+            }
+            else
+            {
+                this.Status = ActivityStatus.Ignored;
+                if (ActivityList != null)
+                {
+                    foreach (CLEMActivityBase activity in ActivityList)
+                    {
+                        activity.Status = ActivityStatus.Ignored;
+                    }
+                }
+                // get resources required for all children of type CLEMActivityBase
+                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                {
+                    activity.Status = ActivityStatus.Ignored;
+                }
             }
         }
 
         /// <summary>
         /// protected method to cascade calls for resources for all activities in the UI tree. 
         /// </summary>
-        protected void ResourcesForAllActivities()
+        protected void ResourcesForAllActivities(CLEMModel model)
         {
             // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-            GetResourcesRequiredForActivity();
+
+            if ((model.GetType() == typeof(ActivitiesHolder)&this.AllocationStyle== ResourceAllocationStyle.Automatic)|| (model.GetType() != typeof(ActivitiesHolder)))
+            {
+                // this will be perfomred if
+                // (a) the call has come from the Activity Holder and is therefore using the GetResourcesRequired event and the allocation style is automatic, or
+                // (b) the call has come from the Activity
+                GetResourcesRequiredForActivity();
+            }
 
             // get resources required for all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
-                    activity.GetResourcesForAllActivities();
+                    activity.GetResourcesForAllActivities(model);
                 }
             }
             // get resources required for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
             {
-                activity.GetResourcesForAllActivities();
+                activity.GetResourcesForAllActivities(model);
             }
         }
 
@@ -221,16 +314,9 @@ namespace Models.CLEM.Activities
             // determine what resources are needed for initialisation
             ResourceRequestList = GetResourcesNeededForinitialisation();
 
+            CheckResources(ResourceRequestList, Guid.NewGuid());
             bool tookRequestedResources = TakeResources(ResourceRequestList, false);
 
-            // no resources required perform Activity if code is present.
-            // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-            // if reportErrorAndStop do not perform Activity
-            // if SkipActivity still attempt to perform initialisation but no resources will show in Supplied fields of ResourceRequestItems
-            //if (tookRequestedResources || (ResourceRequestList == null) || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
-            //{
-            //    DoInitialisation();
-            //}
             ResourceRequestList = null;
         }
 
@@ -247,58 +333,344 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ResourcesRequiredForActivity()
         {
-            // determine what resources are needed
-            ResourceRequestList = GetResourcesNeededForActivity();
+            // clear Resources Required list
+            ResourceRequestList = new List<ResourceRequest>();
 
-            bool tookRequestedResources = TakeResources(ResourceRequestList, false);
-
-            // if no resources required perform Activity if code is present.
-            // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-            // if reportErrorAndStop or SkipActivity do not perform Activity
-            if (tookRequestedResources || (ResourceRequestList == null))
+            if (this.TimingOK)
             {
-                DoActivity();
+                // add any labour resources required (automated here so not needed in Activity code)
+                ResourceRequestList.AddRange(GetLabourResourcesNeededForActivity());
+
+                // add any non-labour resources needed (from method in Activity code)
+                var requests = GetResourcesNeededForActivity();
+                if (requests != null)
+                {
+                    ResourceRequestList.AddRange(requests);
+                }
+
+                // check availability
+                CheckResources(ResourceRequestList, Guid.NewGuid());
+
+                // adjust if needed
+                AdjustResourcesNeededForActivity();
+
+                // take resources
+                bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+
+                // if no resources required perform Activity if code is present.
+                // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+                // if reportErrorAndStop or SkipActivity do not perform Activity
+                if (tookRequestedResources | (ResourceRequestList.Count == 0))
+                {
+                    DoActivity();
+                }
             }
         }
 
         /// <summary>
-        /// Try to take the Resources based on Resource Request List provided.
-        /// Returns true if it was able to take the resources it needed.
-        /// Returns false if it was unable to take the resources it needed.
+        /// A common method to get the labour resource requests from the activity.
         /// </summary>
-        /// <param name="ResourceRequestList"></param>
-        /// <param name="TriggerActivityPerformed"></param>
-        public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
+        /// <returns></returns>
+        protected List<ResourceRequest> GetLabourResourcesNeededForActivity()
         {
-            bool resourceAvailable = false;
-
-            // no resources required or this is an Activity folder.
-            if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
-
-            Guid uniqueRequestID = Guid.NewGuid();
-            // check resource amounts available
-            foreach (ResourceRequest request in ResourceRequestList)
+            List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
+            foreach (LabourRequirement item in Children.Where(a => a.GetType() == typeof(LabourRequirement) | a.GetType().IsSubclassOf(typeof(LabourRequirement))))
             {
-                request.ActivityID = uniqueRequestID;
-                request.Available = 0;
-                // get resource
-                if (request.Resource == null)
+                double daysNeeded = GetDaysLabourRequired(item);
+                if (daysNeeded > 0)
                 {
-                    //If it hasn't been assigned try and find it now.
-                    request.Resource = Resources.GetResourceItem(request, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                    foreach (LabourFilterGroup fg in item.Children.OfType<LabourFilterGroup>())
+                    {
+                        int numberOfPpl = 1;
+                        if (item.ApplyToAll)
+                        {
+                            // how many matches
+                            numberOfPpl = (Resources.GetResourceGroupByType(typeof(Labour)) as Labour).Items.Filter(fg).Count();
+                        }
+                        for (int i = 0; i < numberOfPpl; i++)
+                        {
+                            labourResourceRequestList.Add(new ResourceRequest()
+                            {
+                                AllowTransmutation = true,
+                                Required = daysNeeded,
+                                ResourceType = typeof(Labour),
+                                ResourceTypeName = "",
+                                ActivityModel = this,
+                                FilterDetails = new List<object>() { fg }
+                            }
+                            );
+                        }
+                    }
                 }
-                if (request.Resource != null)
+            }
+            return labourResourceRequestList;
+        }
+
+        /// <summary>
+        /// Method to provide the proportional limit based on labour shortfall
+        /// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
+        /// </summary>
+        /// <returns></returns>
+        public double LabourLimitProportion
+        {
+            get
+            {
+                double proportion = 1.0;
+                if (ResourceRequestList == null) return proportion;
+                double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
+
+                foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).ToList())
                 {
-                    // get amount available
-                    request.Available = Math.Min(request.Resource.Amount, request.Required);
+                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
+                    {
+                        proportion *= item.Provided / item.Required;
+                    }
+                }
+                return proportion;
+            }
+        }
+
+        /// <summary>
+        /// Method to provide the proportional limit based on specified resource type
+        /// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
+        /// </summary>
+        /// <returns></returns>
+        public double LimitProportion(Type ResourceType)
+        {
+            double proportion = 1.0;
+            if (ResourceRequestList == null) return proportion;
+            double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == ResourceType).Sum(a => a.Required);
+
+            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == ResourceType).ToList())
+            {
+                if (ResourceType == typeof(LabourType))
+                {
+                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
+                    {
+                        proportion *= item.Provided / item.Required;
+                    }
+                }
+                else // all other types
+                {
+                    proportion *= item.Provided / item.Required;
+                }
+            }
+            return proportion;
+        }
+
+        /// <summary>
+        /// Method to determine if activity limited based on labour shortfall has been set
+        /// </summary>
+        /// <returns></returns>
+        public bool IsLabourLimitSet
+        {
+            get
+            {
+                foreach (LabourRequirement item in Children.Where(a => a.GetType().IsSubclassOf(typeof(LabourRequirement))))
+                {
+                    if (item.LabourShortfallAffectsActivity)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Method to determine available labour based on filters and take it if requested.
+        /// </summary>
+        /// <param name="request">Resource request details</param>
+        /// <param name="RemoveFromResource">Determines if only calculating available labour or labour removed</param>
+        /// <returns></returns>
+        private double TakeLabour(ResourceRequest request, bool RemoveFromResource)
+        {
+            double amountProvided = 0;
+            double amountNeeded = request.Required;
+            LabourFilterGroup current = request.FilterDetails.OfType<LabourFilterGroup>().FirstOrDefault() as LabourFilterGroup;
+
+            LabourRequirement lr;
+            if (current!=null)
+            {
+                lr = current.Parent as LabourRequirement;
+            }
+            else
+            {
+                lr = Apsim.Children(this, typeof(LabourRequirement)).FirstOrDefault() as LabourRequirement;
+            }
+
+            int currentIndex = 0;
+            if (current==null)
+            {
+                // no filtergroup provided so assume any labour
+                current = new LabourFilterGroup();
+            }
+
+            request.ResourceTypeName = "Labour";
+            ResourceRequest removeRequest = new ResourceRequest()
+            {
+                ActivityID = request.ActivityID,
+                ActivityModel = request.ActivityModel,
+                AdditionalDetails = request.AdditionalDetails,
+                AllowTransmutation = request.AllowTransmutation,
+                Available = request.Available,
+                FilterDetails = request.FilterDetails,
+                Provided = request.Provided,
+                Reason = request.Reason,
+                Required = request.Required,
+                Resource = request.Resource,
+                ResourceType = request.ResourceType,
+                ResourceTypeName = request.ResourceTypeName
+            };
+
+            // start with top most LabourFilterGroup
+            while (current != null & amountProvided < amountNeeded)
+            {
+                List<LabourType> items = (Resources.GetResourceGroupByType(request.ResourceType) as Labour).Items;
+                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) | (a.LastActivityRequestID == request.ActivityID & a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
+                items = items.Filter(current as Model);
+
+                // search for people who can do whole task first
+                while (amountProvided < amountNeeded & items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)
+                {
+                    // get labour least available but with the amount needed
+                    LabourType lt = items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).OrderBy(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson)).FirstOrDefault();
+
+                    double amount = Math.Min(amountNeeded - amountProvided, lt.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
+
+                    // limit to max allowed per person
+                    amount = Math.Min(amount, lr.MaximumPerPerson);
+                    // limit to min per person to do activity
+                    if (amount < lr.MinimumPerPerson)
+                    {
+                        request.Reason = "Min labour limit";
+                        return amountProvided;
+                    }
+
+                    amountProvided += amount;
+                    removeRequest.Required = amount;
+                    if (RemoveFromResource)
+                    {
+                        lt.LastActivityRequestID = request.ActivityID;
+                        lt.LastActivityRequestAmount = amount;
+                        lt.Remove(removeRequest);
+                    }
+                }
+
+                // if still needed and allow partial resource use.
+                if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+                {
+                    if (amountProvided < amountNeeded)
+                    {
+                        // then search for those that meet criteria and can do part of task
+                        foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson))) 
+                        {
+                            if (amountProvided >= amountNeeded) break;
+
+                            double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
+
+                            // limit to max allowed per person
+                            amount = Math.Min(amount, lr.MaximumPerPerson);
+
+                            // limit to min per person to do activity
+                            if (amount >= lr.MinimumPerPerson)
+                            {
+                                amountProvided += amount;
+                                removeRequest.Required = amount;
+                                if (RemoveFromResource)
+                                {
+                                    if(item.LastActivityRequestID != request.ActivityID)
+                                    {
+                                        item.LastActivityRequestAmount = 0;
+                                    }
+                                    item.LastActivityRequestID = request.ActivityID;
+                                    item.LastActivityRequestAmount += amount;
+                                    item.Remove(removeRequest);
+                                }
+                            }
+                            else
+                            {
+                                currentIndex = request.FilterDetails.Count;
+                            }
+                        }
+                    }
+                }
+                currentIndex++;
+                if(current.Children.OfType<LabourFilterGroup>().Count() > 0)
+                {
+                    current = current.Children.OfType<LabourFilterGroup>().FirstOrDefault();
                 }
                 else
                 {
-                    if (!resourceAvailable)
+                    current = null;
+                }
+            }
+            // report amount gained.
+            return amountProvided;
+        }
+
+        /// <summary>
+        /// Method to determine available non-labour resources and take if requested.
+        /// </summary>
+        /// <param name="request">Resource request details</param>
+        /// <param name="RemoveFromResource">Determines if only calculating available labour or labour removed</param>
+        /// <returns></returns>
+        private double TakeNonLabour(ResourceRequest request, bool RemoveFromResource)
+        {
+            // get available resource
+            if (request.Resource == null)
+            {
+                //If it hasn't been assigned try and find it now.
+                request.Resource = Resources.GetResourceItem(request, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+            }
+            if (request.Resource != null)
+            {
+                // get amount available
+                request.Available = Math.Min(request.Resource.Amount, request.Required);
+            }
+
+            if(RemoveFromResource & request.Resource != null)
+            {
+                request.Resource.Remove(request);
+            }
+
+            return request.Available;
+        }
+
+        /// <summary>
+        /// Determine resources available and perform transmutation if needed.
+        /// </summary>
+        /// <param name="ResourceRequestList">List of requests</param>
+        /// <param name="uniqueActivityID">Unique id for the activity</param>
+        public void CheckResources(List<ResourceRequest> ResourceRequestList, Guid uniqueActivityID)
+        {
+            if ((ResourceRequestList == null) || (ResourceRequestList.Count() == 0))
+            {
+                this.Status = ActivityStatus.Success;
+                return;
+            }
+            foreach (ResourceRequest request in ResourceRequestList)
+            {
+                request.ActivityID = uniqueActivityID;
+                request.Available = 0;
+
+                // If resource group does not exist then provide required.
+                // This means when resource is not added to model it will not limit simulations
+                if (request.ResourceType == null || Resources.GetResourceGroupByType(request.ResourceType) == null)
+                {
+                    request.Available = request.Required;
+                    request.Provided = request.Required;
+                }
+                else
+                {
+                    if (request.ResourceType == typeof(Labour))
                     {
-                        // if resource does not exist in simulation assume unlimited resource available
-                        // otherwise 0 will be assigned to available when no resouces match request
-                        request.Available = request.Required;
+                        // get available labour based on rules.
+                        request.Available = TakeLabour(request, false);
+                    }
+                    else
+                    {
+                        request.Available = TakeNonLabour(request, false);
                     }
                 }
             }
@@ -335,13 +707,33 @@ namespace Models.CLEM.Activities
                 }
             }
 
+            bool deficitFound = false;
             // report any resource defecits here
             foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
                 OnShortfallOccurred(rrEventArgs);
                 Status = ActivityStatus.Partial;
+                deficitFound = true;
             }
+            if(!deficitFound)
+            {
+                this.Status = ActivityStatus.Success;
+            }
+
+        }
+
+        /// <summary>
+        /// Try to take the Resources based on Resource Request List provided.
+        /// Returns true if it was able to take the resources it needed.
+        /// Returns false if it was unable to take the resources it needed.
+        /// </summary>
+        /// <param name="ResourceRequestList"></param>
+        /// <param name="TriggerActivityPerformed"></param>
+        public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
+        {
+            // no resources required or this is an Activity folder.
+            if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
 
             // remove activity resources 
             // check if deficit and performWithPartial
@@ -352,14 +744,14 @@ namespace Models.CLEM.Activities
                     string resourcelist = "";
                     foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
                     {
-                        Summary.WriteWarning(this, String.Format("Insufficient ({0}) resource of type ({1}) for activity ({2})", item.ResourceType, item.ResourceTypeName, this.Name));
+                        Summary.WriteWarning(this, String.Format("@error:Insufficient [r={0}] resource of type [r={1}] for activity [a={2}]", item.ResourceType, item.ResourceTypeName, this.Name));
                         resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
                     }
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
+                        Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
                         Status = ActivityStatus.Critical;
-                        throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
+                        throw new Exception(String.Format("@i:Insufficient resources [r={0}] for activity [a={1}]", resourcelist, this.Name));
                     }
                 }
 
@@ -367,20 +759,25 @@ namespace Models.CLEM.Activities
                 {
                     // get resource
                     request.Provided = 0;
-                    if (request.Resource != null)
-                    {
-                        // remove resource
-                        request.Resource.Remove(request);
+                    // do not take if the resource does not exist
+                    if (request.ResourceType != null && Resources.GetResourceGroupByType(request.ResourceType) != null)
+                    { 
+                        if (request.ResourceType == typeof(Labour))
+                        {
+                            // get available labour based on rules.
+                            request.Available = TakeLabour(request, true);
+                        }
+                        else
+                        {
+                            request.Available = TakeNonLabour(request, true);
+                        }
                     }
                 }
-                //return true; //could take all the resources it needed or is able to do with partial amounts
             }
             else
             {
                 Status = ActivityStatus.Ignored;
-                //return false;  //could not take all the resources it needed.
             }
-
             return Status != ActivityStatus.Ignored;
         }
 
@@ -399,6 +796,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to trigger an Activity Performed event 
         /// </summary>
+        /// <param name="status">The status of this activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
             this.Status = status;
@@ -409,7 +807,6 @@ namespace Models.CLEM.Activities
             this.OnActivityPerformed(activitye);
         }
 
-
         /// <summary>
         /// Insufficient resources available action
         /// </summary>
@@ -417,9 +814,19 @@ namespace Models.CLEM.Activities
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>
+        /// Abstract method to determine the number of days labour required based on Activity requirements and labour settings.
+        /// </summary>
+        public abstract double GetDaysLabourRequired(LabourRequirement Requirement);
+
+        /// <summary>
         /// Abstract method to determine list of resources and amounts needed. 
         /// </summary>
         public abstract List<ResourceRequest> GetResourcesNeededForActivity();
+
+        /// <summary>
+        /// Abstract method to adjust activities needed based on shortfalls before they are taken from resource pools. 
+        /// </summary>
+        public abstract void AdjustResourcesNeededForActivity();
 
         /// <summary>
         /// Abstract method to determine list of resources and amounts needed for initilaisation. 
@@ -493,9 +900,28 @@ namespace Models.CLEM.Activities
         /// </summary>
         Calculation,
         /// <summary>
-        /// Indicated activity occurred but was not needed
+        /// Indicates activity occurred but was not needed
         /// </summary>
-        NotNeeded
+        NotNeeded,
+        /// <summary>
+        /// Indicates activity was place holder or parent activity
+        /// </summary>
+        NoTask
+    }
+
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ResourceAllocationStyle
+    {
+        /// <summary>
+        /// Automatically perform in CLEMGetResourcesRequired
+        /// </summary>
+        Automatic,
+        /// <summary>
+        /// Manually perform in activity code.
+        /// </summary>
+        Manual
     }
 
 }

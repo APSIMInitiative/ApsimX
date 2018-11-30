@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,11 +21,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        ISummary Summary = null;
-
         ///// <summary>
         ///// Name of herd to trade
         ///// </summary>
@@ -76,10 +75,8 @@ namespace Models.CLEM.Activities
   //      public int PurchaseMonth { get; set; }
 
         private RuminantType herdToUse;
-        private List<LabourFilterGroupSpecified> labour { get; set; }
 
-
-        //TODO: devide how many to stock.
+        //TODO: decide how many to stock.
         // stocking rate for paddock
         // fixed number
 
@@ -131,19 +128,12 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(false, false);
 
-            // check if labour and warn it is not used for this activity
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour != null)
-            {
-                Summary.WriteWarning(this, "Warning: Labour was supplied for activity ["+this.Name+"] but is not used for Trade activities. Please add labour requirements to the Buy/Sell Activity associated with this trade herd.");
-            }
-
             // get herd to add to 
             herdToUse = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
             if(!herdToUse.PricingAvailable())
             {
-                Summary.WriteWarning(this, "Warning: No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
+                Summary.WriteWarning(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
             }
         }
 
@@ -210,7 +200,6 @@ namespace Models.CLEM.Activities
                         Resources.RuminantHerd().PurchaseIndividuals.Add(ruminantBase as Ruminant);
                     }
                 }
-                //this.TriggerOnActivityPerformed();
             }
             // sale details any timestep when conditions are met.
             foreach (Ruminant ind in this.CurrentHerd(true))
@@ -228,7 +217,6 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            // check for labour
             return null;
         }
 
@@ -236,6 +224,24 @@ namespace Models.CLEM.Activities
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
@@ -278,6 +284,22 @@ namespace Models.CLEM.Activities
             if (ActivityPerformed != null)
                 ActivityPerformed(this, e);
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Trade individuals are kept for at least ";
+            html += "<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months or until";
+            html += "<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg ";
+            html += "</div>";
+            return html;
+        }
+
 
     }
 }

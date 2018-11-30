@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -23,13 +24,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the collection of manure from a specified paddock in the simulation.")]
-    public class RuminantActivityCollectManurePaddock: CLEMActivityBase
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class ManureActivityCollectPaddock: CLEMActivityBase
     {
-        /// <summary>
-        /// Labour settings
-        /// </summary>
-        private List<LabourFilterGroupSpecified> labour { get; set; }
-
         private ProductStoreTypeManure manureStore;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -39,10 +36,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
-
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
         }
 
         /// <summary>
@@ -58,51 +51,50 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         private List<ResourceRequest> GetResourcesNeededForActivityLocal()
         {
-            ResourceRequestList = null;
+            return null;
+        }
+
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
             double amountAvailable = 0;
             // determine wet weight to move
-            if (manureStore!=null)
+            if (manureStore != null)
             {
                 ManureStoreUncollected msu = manureStore.UncollectedStores.Where(a => a.Name.ToLower() == GrazeFoodStoreTypeName.ToLower()).FirstOrDefault();
-                if(msu != null)
+                if (msu != null)
                 {
                     amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
                 }
             }
-            // determine labour required
-            if (amountAvailable > 0)
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (Requirement.UnitType)
             {
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
-                    {
-                        case LabourUnitType.perKg:
-                            daysNeeded = item.LabourPerUnit * amountAvailable;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                    }
-                    if (daysNeeded > 0)
-                    {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            Reason = "Manure collection",
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
-                    }
-                }
-
+                case LabourUnitType.perUnit:
+                    numberUnits = amountAvailable / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.Fixed:
+                    daysNeeded = Requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
             }
-            return ResourceRequestList;
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>
@@ -110,7 +102,22 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            return;
+            Status = ActivityStatus.Critical;
+            // get all shortfalls
+            double labourLimit = this.LabourLimitProportion;
+
+            if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+            {
+                manureStore.Collect(manureStore.Name, labourLimit, this);
+                if (labourLimit == 1)
+                {
+                    SetStatusSuccess();
+                }
+                else
+                {
+                    this.Status = ActivityStatus.Partial;
+                }
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -119,29 +126,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
-            // is manure in resources
             if (manureStore != null)
             {
-                if (this.TimingOK)
-                {
-                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
-                    bool tookRequestedResources = TakeResources(resourcesneeded, true);
-                    // get all shortfalls
-                    double labourNeeded = 0;
-                    double labourLimit = 1;
-                    if (tookRequestedResources & (ResourceRequestList != null))
-                    {
-                        labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-                        double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-                        labourLimit = labourProvided / labourNeeded;
-                    }
-
-                    if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
-                    {
-                        manureStore.Collect(manureStore.Name, labourLimit, this.Name);
-                        SetStatusSuccess();
-                    }
-                }
+                // get resources
+                GetResourcesRequiredForActivity();
             }
         }
 
@@ -193,6 +181,27 @@ namespace Models.CLEM.Activities
                 ActivityPerformed(this, e);
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Collect manure from ";
+            if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>";
+            }
+            html += "</div>";
+
+            return html;
+        }
 
     }
 }

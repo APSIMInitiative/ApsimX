@@ -9,6 +9,7 @@ using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -19,8 +20,11 @@ namespace Models.CLEM.Resources
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.HTMLView")]
+    //[PresenterName("UserInterface.Presenters.CLEMSummaryPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
 
@@ -45,19 +49,43 @@ namespace Models.CLEM.Resources
         /// List of the all the Resource Groups.
         /// </summary>
         [XmlIgnore]
-        private List<IModel> ResourceTypeList;
+        private List<IModel> ResourceGroupList;
 
-        [Link]
-        ISummary Summary = null;
-
-        private IModel GetByName(string Name)
+        private IModel GetGroupByName(string Name)
         {
-            return ResourceTypeList.Find(x => x.Name == Name);
+            return ResourceGroupList.Find(x => x.Name == Name);
         }
 
-        private IModel GetByType(Type type)
+        private IModel GetGroupByType(Type type)
         {
-            return ResourceTypeList.Find(x => x.GetType() == type);
+            return ResourceGroupList.Find(x => x.GetType() == type);
+        }
+
+
+        /// <summary>
+        /// Determines whether resource items of the specified group type exist 
+        /// </summary>
+        /// <param name="ResourceGroupType"></param>
+        /// <returns></returns>
+        public bool ResourceItemsExist(Type ResourceGroupType)
+        {
+            Model resourceGroup = Apsim.Children(this, ResourceGroupType).FirstOrDefault() as Model;
+            if (resourceGroup != null)
+            {
+                return resourceGroup.Children.Count() > 0;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether resource group of the specified type exist 
+        /// </summary>
+        /// <param name="ResourceGroupType"></param>
+        /// <returns></returns>
+        public bool ResourceGroupExist(Type ResourceGroupType)
+        {
+            Model resourceGroup = Apsim.Children(this, ResourceGroupType).FirstOrDefault() as Model;
+            return (resourceGroup != null);
         }
 
         /// <summary>
@@ -65,9 +93,19 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public object GetResourceByName(string Name)
+        public object GetResourceGroupByName(string Name)
         {
-            return ResourceTypeList.Find(x => x.Name == Name);
+            return ResourceGroupList.Find(x => x.Name == Name);
+        }
+
+        /// <summary>
+        /// Get resource by type
+        /// </summary>
+        /// <param name="ResourceGroupType"></param>
+        /// <returns></returns>
+        public object GetResourceGroupByType(Type ResourceGroupType)
+        {
+            return ResourceGroupList.Find(x => x.GetType() == ResourceGroupType);
         }
 
         /// <summary>
@@ -83,15 +121,15 @@ namespace Models.CLEM.Resources
             {
                 if (Request.ResourceType == null)
                 {
-                    string errorMsg = String.Format("Resource type must be supplied in resource request from {0}", Request.ActivityModel.Name);
-                    Summary.WriteWarning(Request.ActivityModel, String.Format("Resource type must be supplied in resource request from {0}",Request.ActivityModel.Name));
+                    string errorMsg = String.Format("Resource type must be supplied in resource request from [a={0}]", Request.ActivityModel.Name);
+                    //Summary.WriteWarning(Request.ActivityModel, String.Format("Resource type must be supplied in resource request from [a={0}]",Request.ActivityModel.Name));
                     throw new Exception(errorMsg);
                 }
 
-                IModel resourceGroup = this.GetByType(Request.ResourceType);
+                IModel resourceGroup = this.GetGroupByType(Request.ResourceType);
                 if(resourceGroup== null)
                 {
-                    string errorMsg = String.Format("Unable to locate resources of type ({0}) for ({1})", Request.ResourceType, Request.ActivityModel.Name);
+                    string errorMsg = String.Format("@error:Unable to locate resources of type [r{0}] for [a={1}]", Request.ResourceType, Request.ActivityModel.Name);
                     switch (MissingResourceAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -127,14 +165,23 @@ namespace Models.CLEM.Resources
                             return items.OrderByDescending(a => a.Amount).FirstOrDefault();
                         }
                     default:
-                        string errorMsg = "Resource cannot be filtered. Filtering not implemented for " + resourceGroupObject.GetType().ToString() + " from activity (" + Request.ActivityModel.Name + ")";
+                        string errorMsg = "Resource cannot be filtered. Filtering not implemented for [r=" + resourceGroupObject.GetType().ToString() + "] from activity [a=" + Request.ActivityModel.Name + "]";
                         Summary.WriteWarning(Request.ActivityModel, errorMsg);
                         throw new Exception(errorMsg);
                 }
             }
             else
             {
-                return GetResourceItem(Request.ActivityModel, Request.ResourceType, Request.ResourceTypeName, MissingResourceAction, MissingResourceTypeAction);
+                // check style of ResourceTypeName used
+                // this is either "Group.Type" from dropdown menus or "Type" only. 
+                if (Request.ResourceTypeName.Contains("."))
+                {
+                    return GetResourceItem(Request.ActivityModel, Request.ResourceTypeName, MissingResourceAction, MissingResourceTypeAction);
+                }
+                else
+                {
+                    return GetResourceItem(Request.ActivityModel, Request.ResourceType, Request.ResourceTypeName, MissingResourceAction, MissingResourceTypeAction);
+                }
             }
         }
 
@@ -142,21 +189,21 @@ namespace Models.CLEM.Resources
         /// Retrieve a ResourceType from a ResourceGroup with specified names
         /// </summary>
         /// <param name="RequestingModel">name of model requesting resource</param>
-        /// <param name="ResourceType">Type of the resource group</param>
-        /// <param name="ResourceTypeName">Name of the resource item</param>
+        /// <param name="ResourceGroupType">Type of the resource group</param>
+        /// <param name="ResourceItemName">Name of the resource item</param>
         /// <param name="MissingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="MissingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
-        public Model GetResourceItem(Model RequestingModel, Type ResourceType, string ResourceTypeName, OnMissingResourceActionTypes MissingResourceAction, OnMissingResourceActionTypes MissingResourceTypeAction)
+        public Model GetResourceItem(Model RequestingModel, Type ResourceGroupType, string ResourceItemName, OnMissingResourceActionTypes MissingResourceAction, OnMissingResourceActionTypes MissingResourceTypeAction)
         {
             // locate specified resource
-            Model resourceGroup = Apsim.Children(this, ResourceType).FirstOrDefault() as Model;
+            Model resourceGroup = Apsim.Children(this, ResourceGroupType).FirstOrDefault() as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
+                Model resource = resourceGroup.Children.Where(a => a.Name == ResourceItemName).FirstOrDefault();
                 if (resource == null)
                 {
-                    string errorMsg = String.Format("Unable to locate resources type ({0}) in resources ({1}) for ({2})", ResourceTypeName, ResourceType.ToString(), RequestingModel.Name);
+                    string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", ResourceItemName, ResourceGroupType.ToString(), RequestingModel.Name);
                     switch (MissingResourceTypeAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -173,7 +220,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                string errorMsg = String.Format("Unable to locate resources of type ({0}) for ({1})", ResourceType.ToString(), RequestingModel.Name);
+                string errorMsg = String.Format("@error:Unable to locate resources of type [r={0}] for [a={1}]", ResourceGroupType.ToString(), RequestingModel.Name);
                 switch (MissingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -189,12 +236,76 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Retrieve a ResourceType from a ResourceGroup with specified names
+        /// </summary>
+        /// <param name="RequestingModel">name of model requesting resource</param>
+        /// <param name="ResourceGroupAndItem">Period seperated list of resource group and type</param>
+        /// <param name="MissingResourceAction">Action to take if requested resource group not found</param>
+        /// <param name="MissingResourceTypeAction">Action to take if requested resource type not found</param>
+        /// <returns>A reference to the item of type object</returns>
+        public Model GetResourceItem(Model RequestingModel, string ResourceGroupAndItem, OnMissingResourceActionTypes MissingResourceAction, OnMissingResourceActionTypes MissingResourceTypeAction)
+        {
+            if(ResourceGroupAndItem == null)
+            {
+                ResourceGroupAndItem = " . ";
+            }
+
+            // locate specified resource
+            string[] names = ResourceGroupAndItem.Split('.');
+            if(names.Count()!=2)
+            {
+                string errorMsg = String.Format("@error:Invalid resource group and type string for [{0}], expecting 'Resourcename.ResourceTypeName'. Value provided [{1}] ", RequestingModel.Name, ResourceGroupAndItem);
+                throw new Exception(errorMsg);
+                //Summary.WriteWarning(RequestingModel, errorMsg);
+            }
+
+            Model resourceGroup = this.GetResourceGroupByName(names[0]) as Model;
+            if (resourceGroup != null)
+            {
+                Model resource = resourceGroup.Children.Where(a => a.Name == names[1]).FirstOrDefault();
+                if (resource == null)
+                {
+                    string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], RequestingModel.Name);
+                    switch (MissingResourceTypeAction)
+                    {
+                        case OnMissingResourceActionTypes.ReportErrorAndStop:
+                            throw new Exception(errorMsg);
+                        case OnMissingResourceActionTypes.ReportWarning:
+                            Summary.WriteWarning(RequestingModel, errorMsg);
+                            break;
+                        default:
+                            break;
+                    }
+                    return null;
+                }
+                return resource;
+            }
+            else
+            {
+                string errorMsg = String.Format("@error:Unable to locate resources of type [r={0}] for [a={1}]", names[0], RequestingModel.Name);
+                switch (MissingResourceAction)
+                {
+                    case OnMissingResourceActionTypes.ReportErrorAndStop:
+                        throw new Exception(errorMsg);
+                    case OnMissingResourceActionTypes.ReportWarning:
+                        Summary.WriteWarning(RequestingModel, errorMsg);
+                        break;
+                    default:
+                        break;
+                }
+                return null;
+            }
+        }
+
+
+
+        /// <summary>
         /// Get the Resource Group for Products
         /// </summary>
         /// <returns></returns>
         public ProductStore Products()
         {
-            return GetByType(typeof(ProductStore)) as ProductStore;
+            return GetGroupByType(typeof(ProductStore)) as ProductStore;
         }
 
         /// <summary>
@@ -203,7 +314,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public AnimalFoodStore AnimalFoodStore()
         {
-            return GetByType(typeof(AnimalFoodStore)) as AnimalFoodStore;
+            return GetGroupByType(typeof(AnimalFoodStore)) as AnimalFoodStore;
         }
 
         /// <summary>
@@ -212,7 +323,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public OtherAnimals OtherAnimalsStore()
         {
-            return GetByType(typeof(OtherAnimals)) as OtherAnimals;
+            return GetGroupByType(typeof(OtherAnimals)) as OtherAnimals;
         }
 
         /// <summary>
@@ -221,7 +332,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public HumanFoodStore HumanFoodStore()
         {
-            return GetByType(typeof(HumanFoodStore)) as HumanFoodStore;
+            return GetGroupByType(typeof(HumanFoodStore)) as HumanFoodStore;
         }
 
         /// <summary>
@@ -230,7 +341,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public GreenhouseGases GreenhouseGases()
         {
-            return GetByType(typeof(GreenhouseGases)) as GreenhouseGases;
+            return GetGroupByType(typeof(GreenhouseGases)) as GreenhouseGases;
         }
 
         /// <summary>
@@ -239,7 +350,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public Labour LabourFamily()
         {
-            return GetByType(typeof(Labour)) as Labour;
+            return GetGroupByType(typeof(Labour)) as Labour;
         }
 
         /// <summary>
@@ -248,7 +359,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public Land Land()
         {
-            return GetByType(typeof(Land)) as Land;
+            return GetGroupByType(typeof(Land)) as Land;
         }
 
         /// <summary>
@@ -257,7 +368,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public GrazeFoodStore GrazeFoodStore()
         {
-            return GetByType(typeof(GrazeFoodStore)) as GrazeFoodStore;
+            return GetGroupByType(typeof(GrazeFoodStore)) as GrazeFoodStore;
         }
 
         /// <summary>
@@ -266,7 +377,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public RuminantHerd RuminantHerd()
         {
-            return GetByType(typeof(RuminantHerd)) as RuminantHerd;
+            return GetGroupByType(typeof(RuminantHerd)) as RuminantHerd;
         }
 
         /// <summary>
@@ -275,7 +386,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public Finance FinanceResource()
         {
-            return GetByType(typeof(Finance)) as Finance;
+            return GetGroupByType(typeof(Finance)) as Finance;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -284,7 +395,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ResourceTypeList = Apsim.Children(this, typeof(IModel));
+            ResourceGroupList = Apsim.Children(this, typeof(IModel));
         }
 
         /// <summary>
@@ -359,7 +470,7 @@ namespace Models.CLEM.Resources
                             if(!QueryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans.Name, "");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans, "");
                             }
                         }
                     }
@@ -388,5 +499,34 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            return "<h1>Resources summary</h1>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        {
+            return "\n<div class=\"resource\">";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        {
+            return "\n</div>";
+        }
+
     }
 }

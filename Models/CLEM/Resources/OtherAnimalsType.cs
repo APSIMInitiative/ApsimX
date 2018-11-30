@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
     [Description("This resource represents an other animal group (e.g. Chickens).")]
-    public class OtherAnimalsType : CLEMModel, IResourceWithTransactionType
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Current cohorts of this Other Animal Type.
@@ -92,6 +94,11 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
+        /// Amount
+        /// </summary>
+        public double Amount => throw new NotImplementedException();
+
+        /// <summary>
         /// Override base event
         /// </summary>
         protected void OnTransactionOccurred(EventArgs e)
@@ -129,8 +136,9 @@ namespace Models.CLEM.Resources
 
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = cohortToAdd.Number;
+            details.Debit = cohortToAdd.Number;
             details.Activity = ActivityName;
+            details.ActivityType = "Unknown";
             details.Reason = Reason;
             details.ResourceType = this.Name;
             details.ExtraInformation = cohortToAdd;
@@ -173,8 +181,9 @@ namespace Models.CLEM.Resources
 
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction();
-            details.Debit = cohortToRemove.Number * -1;
+            details.Credit = cohortToRemove.Number;
             details.Activity = ActivityName;
+            details.ActivityType = "Unknown";
             details.Reason = Reason;
             details.ResourceType = this.Name;
             details.ExtraInformation = cohortToRemove;
@@ -188,7 +197,7 @@ namespace Models.CLEM.Resources
         /// Set the amount in an account.
         /// </summary>
         /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        public new void Set(double NewAmount)
         {
         }
 

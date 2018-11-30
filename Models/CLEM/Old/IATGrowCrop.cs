@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(IATCropLand))]
+    //[ValidParent(ParentType = typeof(IATCropLand))]
     public class IATGrowCrop: CLEMActivityBase
     {
         [Link]
@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
                             if (totalamount > 0)
                             {
                                 //TODO: check that there is no N provided with grain
-                                LinkedHumanFoodItem.Add(totalamount, this.Name, "Harvest");
+                                LinkedHumanFoodItem.Add(totalamount, this, "Harvest");
                             }
                             break;
             
@@ -256,7 +256,7 @@ namespace Models.CLEM.Activities
                                 {
                                     //Add without adding any new nitrogen.
                                     //The nitrogen value for this feed item in the store remains the same.
-                                    LinkedAnimalFoodItem.Add(totalamount, this.Name, "Harvest");
+                                    LinkedAnimalFoodItem.Add(totalamount, this, "Harvest");
                                 }
                                 else
                                 {
@@ -265,7 +265,7 @@ namespace Models.CLEM.Activities
                                         Amount = totalamount,
                                         PercentN = nextHarvest.Npct
                                     };
-                                    LinkedAnimalFoodItem.Add(packet, this.Name, "Harvest");
+                                    LinkedAnimalFoodItem.Add(packet, this, "Harvest");
                                 }
                             }
                             break;
@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
                         case StoresForCrops.ProductStore:
                             if (totalamount > 0)
                             {
-                                LinkedProductItem.Add(totalamount, this.Name, "Harvest");
+                                LinkedProductItem.Add(totalamount, this, "Harvest");
                             }
                             break;
 
@@ -332,6 +332,23 @@ namespace Models.CLEM.Activities
                 ActivityPerformed(this, e);
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

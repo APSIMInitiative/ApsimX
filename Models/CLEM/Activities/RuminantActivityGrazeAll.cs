@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -21,7 +23,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
-    public class RuminantActivityGrazeAll : CLEMActivityBase
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]
         private Clock Clock = null;
@@ -32,7 +35,7 @@ namespace Models.CLEM.Activities
         /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
         [Description("Number of hours grazed")]
-        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -41,51 +44,61 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // create activity for each pasture type and breed at startup
-            foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children)
+            if (Resources.GrazeFoodStore() != null)
             {
-                RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
-                ragp.GrazeFoodStoreModel = pastureType;
-                ragp.Clock = Clock;
-                ragp.Parent = this;
-                ragp.Name = "Graze_" + pastureType.Name;
-                ragp.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
-                ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
-
-                foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+                // create activity for each pasture type (and common land) and breed at startup
+                // do not include common land pasture..
+                foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) | a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
-                    RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
-                    {
-                        GrazeFoodStoreModel = pastureType,
-                        RuminantTypeModel = herdType,
-                        HoursGrazed = HoursGrazed,
-                        Parent = ragp,
-                        Name = ragp.Name+"_"+herdType.Name,
-                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
-                    };
-                    if (ragpb.Resources == null)
-                    {
-                        ragpb.Resources = this.Resources;
-                    }
-                    if (ragpb.Clock == null)
-                    {
-                        ragpb.Clock = this.Clock;
-                    }
-                    ragpb.InitialiseHerd(true, true);
-                    if (ragp.ActivityList == null)
-                    {
-                        ragp.ActivityList = new List<CLEMActivityBase>();
-                    }
-                    ragp.ActivityList.Add(ragpb);
-                    ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
-                    ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
-                }
-                if (ActivityList == null)
-                {
-                    ActivityList = new List<CLEMActivityBase>();
-                }
-                ActivityList.Add(ragp);
+                    RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
+                    ragp.GrazeFoodStoreModel = pastureType;
+                    ragp.Clock = Clock;
+                    ragp.Parent = this;
+                    ragp.Name = "Graze_" + (pastureType as Model).Name;
+                    ragp.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
+                    ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
+                    ragp.Resources = this.Resources;
+                    ragp.InitialiseHerd(true, true);
 
+                    foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+                    {
+                        RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
+                        {
+                            GrazeFoodStoreModel = pastureType,
+                            RuminantTypeModel = herdType,
+                            HoursGrazed = HoursGrazed,
+                            Parent = ragp,
+                            Name = ragp.Name + "_" + herdType.Name,
+                            OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
+                        };
+                        if (ragpb.Resources == null)
+                        {
+                            ragpb.Resources = this.Resources;
+                        }
+                        if (ragpb.Clock == null)
+                        {
+                            ragpb.Clock = this.Clock;
+                        }
+                        ragpb.InitialiseHerd(true, true);
+                        if (ragp.ActivityList == null)
+                        {
+                            ragp.ActivityList = new List<CLEMActivityBase>();
+                        }
+                        ragp.ActivityList.Add(ragpb);
+                        ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
+                        ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
+                    }
+                    if (ActivityList == null)
+                    {
+                        ActivityList = new List<CLEMActivityBase>();
+                    }
+                    ActivityList.Add(ragp);
+
+                }
+            }
+            else
+            {
+                Summary.WriteWarning(this, "No GrazeFoodStore is available for the ruminant grazing activity!");
             }
         }
 
@@ -130,10 +143,55 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            List<Ruminant> herd = this.CurrentHerd(false);
+            int head = herd.Count();
+            double AE = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (Requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = AE / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
         {
+            if(Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+            {
+                Status = ActivityStatus.NoTask;
+            }
             return;
         }
 
@@ -176,6 +234,28 @@ namespace Models.CLEM.Activities
                 ActivityPerformed(this, e);
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">All individuals in managed pastures will graze for ";
+            if(HoursGrazed <= 0)
+            {
+                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
+            }
+            else
+            {
+                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+            }
+
+            html += "the maximum 8 hours each day</span>";
+            html += "</div>";
+            return html;
+        }
 
     }
 }

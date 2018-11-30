@@ -7,6 +7,7 @@
 namespace UserInterface.Presenters
 {
     using System;
+    using System.IO;
     using Models;
     using Models.Core;
     using Views;
@@ -67,6 +68,7 @@ namespace UserInterface.Presenters
         {
             try
             {
+                //Dialogs seem to return the full file path not just the filename.
                 this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.model, "FullFileName", e.FileName));
             }
             catch (Exception err)
@@ -81,7 +83,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model object</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.FileName = this.model.FullFileName;
+            this.view.FileName = this.model.FileName; //set the views filename to the relative filename path not the absolute filename path.
             this.view.GridView.DataSource = this.model.GetTable();
             if (this.view.GridView.DataSource == null)
             {

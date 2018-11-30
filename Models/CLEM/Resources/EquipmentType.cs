@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Equipment))]
     [Description("This resource represents an equipment store type (e.g. Tractor, bore).")]
-    public class EquipmentType : CLEMModel, IResourceWithTransactionType, IResourceType
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Starting amount
@@ -39,11 +41,12 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public double Odometer { get; set; }
 
-        private double amount;
         /// <summary>
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -62,7 +65,7 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (StartingAmount > 0)
             {
-                Add(StartingAmount, this.Name, "Starting value");
+                Add(StartingAmount, this, "Starting value");
             }
         }
 
@@ -91,10 +94,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add money to account
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="Activity">Name of activity adding resource</param>
+        /// <param name="Reason">Name of individual adding resource</param>
+        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
         {
             if (ResourceAmount.GetType().ToString() != "System.Double")
             {
@@ -106,8 +109,9 @@ namespace Models.CLEM.Resources
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.Activity = ActivityName;
+                details.Debit = addAmount;
+                details.Activity = Activity.Name;
+                details.ActivityType = Activity.GetType().Name;
                 details.Reason = Reason;
                 details.ResourceType = this.Name;
                 LastTransaction = details;
@@ -129,7 +133,7 @@ namespace Models.CLEM.Resources
         /// Remove from finance type store
         /// </summary>
         /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        public new void Remove(ResourceRequest Request)
         {
             if (Request.Required == 0) return;
             // avoid taking too much
@@ -140,8 +144,9 @@ namespace Models.CLEM.Resources
             Request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
+            details.Credit = amountRemoved;
             details.Activity = Request.ActivityModel.Name;
+            details.ActivityType = Request.ActivityModel.GetType().Name;
             details.Reason = Request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -152,7 +157,7 @@ namespace Models.CLEM.Resources
         /// Set the amount in an account.
         /// </summary>
         /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        public new void Set(double NewAmount)
         {
             amount = NewAmount;
         }

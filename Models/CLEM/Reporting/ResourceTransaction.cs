@@ -22,6 +22,10 @@ namespace Models.CLEM
         /// </summary>
         public string Activity { get; set; }
         /// <summary>
+        /// Name of sender or activity
+        /// </summary>
+        public string ActivityType { get; set; }
+        /// <summary>
         /// Reason or cateogry
         /// </summary>
         public string Reason { get; set; }

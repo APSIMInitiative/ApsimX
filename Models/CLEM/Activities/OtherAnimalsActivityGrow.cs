@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -18,6 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of a specified type of other animal.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class OtherAnimalsActivityGrow : CLEMActivityBase
     {
         /// <summary>
@@ -25,6 +27,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of Other Animal Type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type to use required")]
+        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(OtherAnimals) })]
         public string OtherAnimalType { get; set; }
 
         private OtherAnimalsType animalType { get; set; }
@@ -36,7 +39,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate OtherAnimalsType resource
-            animalType = Resources.GetResourceItem(this, typeof(OtherAnimals), OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
+            animalType = Resources.GetResourceItem(this, OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
             // grow all individuals
-            foreach (OtherAnimalsTypeCohort cohort in animalType.Cohorts.Where(a => a.GetType() == typeof(OtherAnimalsTypeCohort)))
+            foreach (OtherAnimalsTypeCohort cohort in animalType.Cohorts.OfType<OtherAnimalsTypeCohort>())
             {
                 cohort.Age++;
             }
@@ -117,5 +120,22 @@ namespace Models.CLEM.Activities
                 ActivityPerformed(this, e);
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
     }
 }

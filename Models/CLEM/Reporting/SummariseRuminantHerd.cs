@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Models.CLEM.Activities;
+using Models.Core.Attributes;
 
 namespace Models.CLEM
 {
@@ -18,6 +19,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class SummariseRuminantHerd: CLEMModel
     {
         [Link]
@@ -107,6 +109,18 @@ namespace Models.CLEM
                 }
             }
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
+
     }
 
     /// <summary>

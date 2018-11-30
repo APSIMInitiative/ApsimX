@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -16,6 +17,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class TruckingSettings : CLEMModel
     {
         [Link]
@@ -81,6 +83,14 @@ namespace Models.CLEM.Activities
         private GreenhouseGasesType MethaneStore;
         private GreenhouseGasesType NOxStore;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TruckingSettings()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -141,10 +151,70 @@ namespace Models.CLEM.Activities
 
                     if (gasstore != null & emissions > 0)
                     {
-                        gasstore.Add(NumberOfTrucks * DistanceToMarket * emissions , this.Parent.Name, "Trucking "+(IsSales?"sales":"purchases"));
+                        gasstore.Add(NumberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(IsSales?"sales":"purchases"));
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("#.###") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.###") + "</span> per km per truck";
+            html += "</div>";
+
+            html += "\n<div class=\"activityentry\">Each truck load can carry <span class=\"setvalue\">" + Number450kgPerTruck.ToString("#.###") + "</span> 450 kg individuals ";
+            html += "</div>";
+
+            if(MinimumLoadBeforeSelling>0 | MinimumTrucksBeforeSelling>0)
+            {
+                html += "\n<div class=\"activityentry\">";
+                if(MinimumTrucksBeforeSelling>0)
+                {
+                    html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required";
+                }
+                if (MinimumLoadBeforeSelling > 0)
+                {
+                    if(MinimumTrucksBeforeSelling>0)
+                    {
+                        html += " and each ";
+                    }
+                    else
+                    {
+                        html += "Each ";
+
+                    }
+                    html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full";
+                }
+                html += "</div>";
+            }
+
+            if (TruckMethaneEmissions > 0 | TruckNOxEmissions > 0)
+            {
+                html += "\n<div class=\"activityentry\">Each truck will emmit <span class=\"setvalue\">";
+                if (TruckMethaneEmissions > 0)
+                {
+                    html += TruckMethaneEmissions.ToString("0.###") + "</span> kg methane per km";
+                }
+                if (MinimumLoadBeforeSelling > 0)
+                {
+                    if (MinimumTrucksBeforeSelling > 0)
+                    {
+                        html += " and ";
+                    }
+                    else
+                    html += "<span class=\"setvalue\">" + TruckNOxEmissions.ToString("0.###") + "</span> kg NO<sub>x</sub> per km";
+                }
+                html += "</div>";
+            }
+
+            return html;
+        }
+
     }
 }

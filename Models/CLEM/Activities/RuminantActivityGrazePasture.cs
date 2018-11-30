@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -21,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds within a specified pasture (paddock) in the simulation.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -36,14 +39,15 @@ namespace Models.CLEM.Activities
         /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
-        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
         /// <summary>
-        /// Name of paddock or pasture to graze
+        /// Paddock or pasture to graze
         /// </summary>
-        [Description("Name of GrazeFoodStoreType to graze")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Graze Food Store required")]
+        [Description("GrazeFoodStore/pasture to graze")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
+        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -61,7 +65,7 @@ namespace Models.CLEM.Activities
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
             //Create list of children by breed
             foreach (RuminantType herdType in Resources.RuminantHerd().Children)
@@ -72,7 +76,7 @@ namespace Models.CLEM.Activities
                     RuminantTypeModel = herdType,
                     Parent = this,
                     Clock = this.Clock,
-                    Name = "Graze_" + GrazeFoodStoreModel.Name + "_" + herdType.Name
+                    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name
                 };
                 if (ragpb.Resources == null)
                 {
@@ -141,7 +145,40 @@ namespace Models.CLEM.Activities
             {
                 item.SetupPoolsAndLimits(limit);
             }
-            return null;
+            return ResourceRequestList;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="Requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name).ToList();
+            int head = herd.Count();
+            double AE = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (Requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = AE / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+            }
+            return daysNeeded;
         }
 
         /// <summary>
@@ -177,6 +214,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            if (Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+            {
+                Status = ActivityStatus.NoTask;
+            }
             return;
         }
 
@@ -187,6 +228,14 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>
@@ -219,6 +268,37 @@ namespace Models.CLEM.Activities
                 ActivityPerformed(this, e);
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">All individuals in ";
+            if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>";
+            }
+            html += " will graze for ";
+            if (HoursGrazed <= 0)
+            {
+                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
+            }
+            else
+            {
+                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+            }
+
+            html += "the maximum 8 hours each day</span>";
+            html += "</div>";
+            return html;
+        }
 
     }
 }

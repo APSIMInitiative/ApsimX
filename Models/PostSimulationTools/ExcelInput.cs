@@ -31,7 +31,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the file name to read from.
         /// </summary>
         [Description("EXCEL file name (must be .xlsx)")]
-        [Display(Type=DisplayType.FileName)]
+        [Display(Type=DisplayTypeEnum.FileName)]
         public string FileName
         {
             get

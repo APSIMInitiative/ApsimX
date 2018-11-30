@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Xml;
@@ -12,7 +13,9 @@
     using Importer;
     using Interfaces;
     using Models;
+    using Models.CLEM;
     using Models.Core;
+    using Models.Core.Attributes;
     using Views;
 
     public class ModelDetailsWrapperPresenter : IPresenter
@@ -65,9 +68,33 @@
                     View.ModelHelpURL = helpAtt.ToString();
                 }
 
+                var vs = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
+                if (vs.Count() > 0)
+                {
+                    VersionAttribute verAtt = vs.ToList<Attribute>().Last() as VersionAttribute;
+                    if (verAtt != null)
+                    {
+                        string v = "Version ";
+                        v += verAtt.ToString();
+                        View.ModelVersionText = v;
+                    }
+                    else
+                    {
+                        View.ModelVersionText = "";
+                    }
+                }
+
                 if (viewName != null && presenterName != null)
                 {
-                    ShowInLowerPanel(model, viewName.ToString(), presenterName.ToString());
+                    // if model CLEMModel
+                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) || model is ZoneCLEM)
+                    {
+                        ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
+                    }
+                    else
+                    {
+                        ShowInLowerPanel(model, viewName.ToString(), presenterName.ToString());
+                    }
                 }
             }
         }

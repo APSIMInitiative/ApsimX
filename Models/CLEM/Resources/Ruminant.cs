@@ -109,6 +109,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Determine if weaned and less that 12 months old. Weaner
+        /// </summary>
+        public bool Weaner
+        {
+            get
+            {
+                return (Weaned & Age<12);
+            }
+        }
+
+        /// <summary>
         /// The current weight as a proportion of Standard Reference Weight
         /// </summary>
         public double ProportionOfSRW
@@ -132,6 +143,12 @@ namespace Models.CLEM.Resources
         public double MilkIntake { get; set; }
 
         /// <summary>
+        /// Required monthly intake of milk
+        /// </summary>
+        /// <units>kg/month</units>
+        public double MilkIntakePotential { get; set; }
+
+        /// <summary>
         /// Percentage Nitrogen of current intake
         /// </summary>
         public double PercentNOfIntake { get; set; }
@@ -149,12 +166,6 @@ namespace Models.CLEM.Resources
         public double PotentialIntake { get; set; }
 
         /// <summary>
-        /// Normalised animal weight
-        /// </summary>
-        /// <units>kg</units>
-        public double NormalisedAnimalWeight { get; set; }
-
-        /// <summary>
         /// Number in this class (1 if individual model)
         /// </summary>
         public double Number { get; set; }
@@ -164,6 +175,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         public HerdChangeReason SaleFlag { get; set; }
 
+        /// <summary>
+        /// List of individual tags
+        /// </summary>
+        public List<string> Tags { get; set; }
 
         /// <summary>
         /// Determines if the change resson is her positive or negative
@@ -252,6 +267,41 @@ namespace Models.CLEM.Resources
                 {
                     return BreedParams.SRWFemale;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Normalised animal weight
+        /// </summary>
+        /// <units>kg</units>
+        public double NormalisedAnimalWeight
+        {
+            get
+            {
+                return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            }
+        }
+
+        /// <summary>
+        /// Relative size (normalised weight / standard reference weight)
+        /// </summary>
+        public double RelativeSize
+        {
+            get
+            {
+                return NormalisedAnimalWeight/StandardReferenceWeight;
+            }
+        }
+
+        /// <summary>
+        /// Relative condition (base weight / normalised weight)
+        /// </summary>
+        public double RelativeCondition
+        {
+            get
+            {
+                //TODO check that conceptus weight does not need to be removed for pregnant females.
+                return Weight / NormalisedAnimalWeight;
             }
         }
 
@@ -353,6 +403,8 @@ namespace Models.CLEM.Resources
             this.Cashmere = 0;
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
+
+            this.Tags = new List<string>();
         }
     }
 

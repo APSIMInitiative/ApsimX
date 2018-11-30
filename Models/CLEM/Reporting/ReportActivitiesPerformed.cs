@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Reporting
 {
@@ -23,10 +24,10 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This report automatically generates an activity performed ledger and provides a table of activity success.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class ReportActivitiesPerformed: Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
         private List<IReportColumn> columns = null;
 
         /// <summary>An array of column names to write to storage.</summary>
@@ -67,6 +68,7 @@ namespace Models.CLEM.Reporting
             variableNames.Add("[Clock].Today as Date");
             variableNames.Add("[Activities].LastActivityPerformed.Name as Name");
             variableNames.Add("[Activities].LastActivityPerformed.Status as Status");
+            variableNames.Add("[Activities].LastActivityPerformed.UniqueID as UniqueID");
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
 

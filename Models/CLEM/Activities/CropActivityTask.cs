@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -17,9 +18,16 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
+    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
-        private List<LabourFilterGroupSpecified> labour;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        protected CropActivityTask()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+        }
 
         /// <summary>
         /// Validate model
@@ -34,31 +42,7 @@ namespace Models.CLEM.Activities
                 string[] memberNames = new string[] { "Parent model" };
                 results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
             }
-
-            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-            foreach (CropActivityFee item in Apsim.Children(this, typeof(CropActivityFee)))
-            {
-                if (!ProductParent.IsTreeCrop)
-                {
-                    if (item.PaymentStyle == CropPaymentStyleType.perTree)
-                    {
-                        string[] memberNames = new string[] { item.Name + ".PaymentStyle" };
-                        results.Add(new ValidationResult("The payment style " + item.PaymentStyle.ToString() + " is not supported for crops defined non tree crops", memberNames));
-                    }
-                }
-            }
             return results;
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
         }
 
         /// <summary>
@@ -67,85 +51,58 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
+            return null;
+        }
 
-            if (this.TimingOK)
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        {
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (Requirement.UnitType)
             {
-                // get all crop fees for task
-                foreach (CropActivityFee item in Apsim.Children(this, typeof(CropActivityFee)))
-                {
-                    if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                    double sumneeded = 0;
-                    switch (item.PaymentStyle)
-                    {
-                        case CropPaymentStyleType.Fixed:
-                            sumneeded = item.Amount;
-                            break;
-                        case CropPaymentStyleType.perHa:
-                            CropActivityManageCrop CropParent = Parent.Parent as CropActivityManageCrop;
-                            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-                            sumneeded = CropParent.Area * ProductParent.UnitsToHaConverter * item.Amount;
-                            break;
-                        case CropPaymentStyleType.perTree:
-                            CropParent = Parent.Parent as CropActivityManageCrop;
-                            ProductParent = Parent as CropActivityManageProduct;
-                            sumneeded = ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter * item.Amount;
-                            break;
-                        default:
-                            throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
-                    }
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = sumneeded,
-                        ResourceType = typeof(Finance),
-                        ResourceTypeName = "General account",
-                        ActivityModel = this,
-                        FilterDetails = null,
-                        Reason = item.Name
-                    }
-                    );
-                }
-
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
-                    {
-                        case LabourUnitType.Fixed:
-                            daysNeeded = item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perHa:
-                            CropActivityManageCrop CropParent = Parent.Parent as CropActivityManageCrop;
-                            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-                            daysNeeded = Math.Ceiling(CropParent.Area * ProductParent.UnitsToHaConverter / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perTree:
-                            CropParent = Parent.Parent as CropActivityManageCrop;
-                            ProductParent = Parent as CropActivityManageProduct;
-                            daysNeeded = Math.Ceiling(ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                    }
-                    if (daysNeeded > 0)
-                    {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
-                    }
-                }
+                case LabourUnitType.Fixed:
+                    daysNeeded = Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHa:
+                    CropActivityManageCrop CropParent = Parent.Parent as CropActivityManageCrop;
+                    CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
+                    numberUnits = CropParent.Area * ProductParent.UnitsToHaConverter / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perTree:
+                    CropParent = Parent.Parent as CropActivityManageCrop;
+                    ProductParent = Parent as CropActivityManageProduct;
+                    numberUnits = ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    //daysNeeded = Math.Ceiling(ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter / Requirement.UnitSize) * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perKg:
+                    CropParent = Parent.Parent as CropActivityManageCrop;
+                    ProductParent = Parent as CropActivityManageProduct;
+                    numberUnits = ProductParent.AmountHarvested;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    //daysNeeded = Math.Ceiling(ProductParent.AmountHarvested) * Requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perUnit:
+                    CropParent = Parent.Parent as CropActivityManageCrop;
+                    ProductParent = Parent as CropActivityManageProduct;
+                    numberUnits = ProductParent.AmountHarvested / Requirement.UnitSize;
+                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+//                    daysNeeded = Math.Ceiling(ProductParent.AmountHarvested / Requirement.UnitSize) * Requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
             }
-            return ResourceRequestList;
+            return daysNeeded;
         }
 
         /// <summary>
@@ -194,5 +151,30 @@ namespace Models.CLEM.Activities
             if (ActivityPerformed != null)
                 ActivityPerformed(this, e);
         }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool FormatForParentControl)
+        {
+            string html = "";
+            if(Apsim.Children(this, typeof(CropActivityFee)).Count() + Apsim.Children(this, typeof(LabourRequirement)).Count() == 0)
+            {
+                html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
+            }
+            return html;
+        }
+
+
     }
 }
