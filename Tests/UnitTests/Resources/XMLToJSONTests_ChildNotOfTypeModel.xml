@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Wheat</Name>
+    <Graph>
+      <Name>G</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Yield</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+    </Graph>
+  </Simulation>
+</Simulations>

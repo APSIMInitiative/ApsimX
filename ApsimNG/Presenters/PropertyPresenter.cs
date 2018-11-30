@@ -131,13 +131,18 @@ namespace UserInterface.Presenters
         /// </summary>
         public override void Detach()
         {
-            base.Detach();
-            grid.EndEdit();
-            grid.CellsChanged -= OnCellValueChanged;
-            grid.ButtonClick -= OnFileBrowseClick;
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            intellisense.Cleanup();
+            try
+            {
+                base.Detach();
+                grid.CellsChanged -= OnCellValueChanged;
+                grid.ButtonClick -= OnFileBrowseClick;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                intellisense.Cleanup();
+            }
+            catch (NullReferenceException)
+            {
+            }
         }
 
         /// <summary>

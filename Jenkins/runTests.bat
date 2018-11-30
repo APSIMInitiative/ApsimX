@@ -77,5 +77,5 @@ echo Deleting temp directory...
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
-models.exe %testdir%\*.apsimx /Recurse
+models.exe %testdir%\*.apsimx /Recurse /RunTests
 endlocal

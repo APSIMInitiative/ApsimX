@@ -102,7 +102,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="StructureTests.cs" />
+    <Compile Include="ImporterTests.cs" />
+    <Compile Include="WeatherFileTests.cs" />
+    <Compile Include="TestTests.cs" />
+    <Compile Include="XMLToJSONTests.cs" />
     <Compile Include="DocumentationTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
     <Compile Include="StorageTests.cs" />
@@ -121,7 +125,7 @@
     <Compile Include="MockClock.cs" />
     <Compile Include="MockWeather.cs" />
     <Compile Include="SWIMTests.cs" />
-    <Compile Include="TestConverter.cs" />
+    <Compile Include="ConverterTests.cs" />
     <Compile Include="APITest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -143,22 +147,37 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Resources\Continuous Wheat.apsim">
-      <SubType>Designer</SubType>
-    </None>
-    <EmbeddedResource Include="Resources\Continuous_Wheat.apsimx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\APSIMFileReaderTests1.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FileFormat_ReadFromString.json" />
+    <EmbeddedResource Include="Resources\FileFormat_CheckThatModelsCanThrowExceptionsDuringCreation.json" />
+    <EmbeddedResource Include="Resources\FileFormat_WriteSingleModel.json" />
     <None Include="Resources\Goondiwindi.met" />
-    <None Include="Resources\Test3.apsimxForUnitTest" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureParentChildRelationshipConverts.json" />
+    <EmbeddedResource Include="Resources\APITest.xml" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureParentChildRelationshipConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureArraysConvert.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureArraysOfModelsWorks.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureManagerWorks.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_ChildNotOfTypeModel.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureMemoWorks.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureTestsWorks.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureOneLineModelConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureCultivarConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureResidueTypesConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureLeavesIsntWritten.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureListListStringWorks.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureXSITypeConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureSupplimentConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureModelsWithSameNameConverts.json" />
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureStockConverts.json" />
+    <EmbeddedResource Include="Resources\WeatherFile.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
@@ -186,7 +205,91 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\APSIMFileReaderTests2.xml">
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureArraysConvert.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureArraysOfModelsWorks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureManagerWorks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_ChildNotOfTypeModel.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\APSoilSoil.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureMemoWorks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureTestsWorks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureOneLineModelConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ConverterTests_Version32 after.xml" />
+    <EmbeddedResource Include="Resources\ConverterTests_Version32 before.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureCultivarConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureResidueTypesConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureLeavesIsntWritten.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureListListStringWorks.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureXSITypeConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ImporterTests_SoilImports.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureSupplimentConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureModelsWithSameNameConverts.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureStockConverts.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

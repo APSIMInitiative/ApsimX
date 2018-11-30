@@ -70,16 +70,21 @@ namespace Models.PostSimulationTools
             }
             set
             {
-                string[] formattedSheetNames = new string[value.Length];
-                for (int i = 0; i < value.Length; i++)
+                if (value == null)
+                    sheetNames = new string[0];
+                else
                 {
-                    if (Char.IsNumber(value[i][0]))
-                        formattedSheetNames[i] = "\"" + value[i] + "\"";
-                    else
-                        formattedSheetNames[i] = value[i];
-                }
+                    string[] formattedSheetNames = new string[value.Length];
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        if (Char.IsNumber(value[i][0]))
+                            formattedSheetNames[i] = "\"" + value[i] + "\"";
+                        else
+                            formattedSheetNames[i] = value[i];
+                    }
 
-                sheetNames = formattedSheetNames;
+                    sheetNames = formattedSheetNames;
+                }
             }
         }
 
