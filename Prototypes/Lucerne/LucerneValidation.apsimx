@@ -8681,7 +8681,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -13624,7 +13624,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -17285,7 +17285,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -21423,7 +21423,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -25432,7 +25432,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -29677,7 +29677,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -33549,7 +33549,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -37420,7 +37420,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -42466,7 +42466,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -45875,7 +45875,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -48990,7 +48990,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -52277,7 +52277,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -55908,7 +55908,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -59126,7 +59126,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -62303,7 +62303,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -66209,7 +66209,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -75725,7 +75725,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -79279,7 +79279,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -82229,7 +82229,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -85217,7 +85217,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
@@ -88200,7 +88200,7 @@ namespace Models
         [Description("Seeds sown (/m2)")]
         public double SowingRate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }

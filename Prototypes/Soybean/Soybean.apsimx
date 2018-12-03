@@ -4444,7 +4444,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -8252,7 +8252,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -11843,7 +11843,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -13559,7 +13559,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -16916,7 +16916,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -17573,7 +17573,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -18230,7 +18230,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -19276,7 +19276,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -20114,7 +20114,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -21399,7 +21399,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -22100,7 +22100,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -22917,7 +22917,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -24440,7 +24440,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -27185,7 +27185,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -28767,7 +28767,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -31052,7 +31052,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -32402,7 +32402,7 @@ namespace Models
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
@@ -34024,7 +34024,7 @@ Simulation results for the combined datasets from the various countries are show
                [Description("Seeds sown (/m2)")]
                public double SowingRate { get; set; }
                [Description("Cultivar")]
-               [Display(Type=DisplayType.CultivarName)]
+               [Display(Type=DisplayTypeEnum.CultivarName)]
                public string CultivarName { get; set; }
                [Description("Sowing Date")]
                public DateTime SowingDate { get; set; }
