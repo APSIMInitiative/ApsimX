@@ -26,6 +26,11 @@
         private bool userEditingCell = false;
 
         /// <summary>
+        /// Iff true, the user can add new rows to the grid.
+        /// </summary>
+        private bool canGrow = true;
+
+        /// <summary>
         /// The value before the user starts editing a cell.
         /// </summary>
         private object valueBeforeEdit;
@@ -308,10 +313,20 @@
         }
 
         /// <summary>
-        /// Gets or sets the number of rows in grid.
-        /// Setting this when <see cref="CanGrow"/> is false will generate an exception.
+        /// Iff true, the user can add new rows to the grid.
         /// </summary>
-        public bool CanGrow { get; set; } = true;
+        public bool CanGrow
+        {
+            get
+            {
+                return canGrow;
+            }
+            set
+            {
+                canGrow = value;
+                PopulateGrid();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the currently selected cell. Null if none selected.
@@ -377,7 +392,7 @@
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
-                if (categoryRows.Contains(rowNo))
+                if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
                     Color separatorColour = Color.LightSteelBlue;
@@ -440,6 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
+                                comboRend.CellBackgroundGdk = Grid.Style.Base(cellState);
                                 return;
                             }
                         }
@@ -493,11 +509,21 @@
         /// <param name="isSep">Added as a separator if true; removed as a separator if false.</param>
         public void SetRowAsSeparator(int row, bool isSep = true)
         {
-            bool present = categoryRows.Contains(row);
+            bool present = IsSeparator(row);
             if (isSep && !present)
                 categoryRows.Add(row);
             else if (!isSep && present)
                 categoryRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Checks if a row is a separator row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True iff the row is a separator row.</returns>
+        public bool IsSeparator(int row)
+        {
+            return categoryRows.Contains(row);
         }
 
         /// <summary>
@@ -652,19 +678,31 @@
             if (userEditingCell)
             {
                 userEditingCell = false;
-                // NB - this assumes that the editing control is a Gtk.Entry control
-                // This may change in future versions of Gtk
+                string text = string.Empty;
+                string path = string.Empty;
                 if (editControl is Entry)
                 {
-                    string text = (editControl as Entry).Text;
-                    EditedArgs args = new EditedArgs();
-                    args.Args = new object[2];
-                    args.Args[0] = editPath; // Path
-                    args.Args[1] = text;     // NewText
-                    OnCellValueChanged(editSender, args);
+                    text = (editControl as Entry).Text;
+                    path = editPath;
+                }
+                else if (editControl is ComboBox)
+                {
+                    text = (editControl as ComboBox).ActiveText;
+                    path = editPath;
+                }
+                else if (GetCurrentCell != null)
+                {
+                    text = GetCurrentCell.Value.ToString();
+                    path = GetCurrentCell.RowIndex.ToString();
                 }
                 else
-                    ShowError(new Exception("Unable to finish editing cell."));
+                    throw new Exception("Unable to finish editing cell.");
+
+                EditedArgs args = new EditedArgs();
+                args.Args = new object[2];
+                args.Args[0] = path; // Path
+                args.Args[1] = text;     // NewText
+                OnCellValueChanged(editSender, args);
             }
         }
 
@@ -791,6 +829,59 @@
         }
 
         /// <summary>
+        /// Does some cleanup work on the Grid.
+        /// </summary>
+        public void Dispose()
+        {
+            if (splitter.Child1.Visible)
+            {
+                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
+                Grid.Selection.Changed -= GridviewCursorChanged;
+                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
+                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
+            }
+            Grid.ButtonPressEvent -= OnButtonDown;
+            fixedColView.ButtonPressEvent -= OnButtonDown;
+            Grid.FocusInEvent -= FocusInEvent;
+            Grid.FocusOutEvent -= FocusOutEvent;
+            Grid.KeyPressEvent -= GridviewKeyPressEvent;
+            fixedColView.FocusInEvent -= FocusInEvent;
+            fixedColView.FocusOutEvent -= FocusOutEvent;
+            Grid.ExposeEvent -= GridviewExposed;
+
+            // It's good practice to disconnect the event handlers, as it makes memory leaks
+            // less likely. However, we may not "own" the event handlers, so how do we 
+            // know what to disconnect?
+            // We can do this via reflection. Here's how it currently can be done in Gtk#.
+            // Windows.Forms would do it differently.
+            // This may break if Gtk# changes the way they implement event handlers.
+            foreach (Widget w in popupMenu)
+            {
+                if (w is MenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as MenuItem).Activated -= handler;
+                        }
+                    }
+                }
+            }
+            ClearGridColumns();
+            gridModel.Dispose();
+            popupMenu.Dispose();
+            accel.Dispose();
+            if (table != null)
+                table.Dispose();
+            _mainWidget.Destroyed -= MainWidgetDestroyed;
+            _owner = null;
+        }
+
+        /// <summary>
         /// Column index of the left-most selected cell.
         /// </summary>
         private int FirstSelectedColumn()
@@ -848,7 +939,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnMoveCursor(object sender, EventArgs args)
         {
-            UpdateSelectedCell();
+            try
+            {
+                UpdateSelectedCell();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -887,52 +985,7 @@
         /// <param name="e">The event arguments.</param>
         private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            if (splitter.Child1.Visible)
-            {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
-                Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
-                fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
-            }
-            Grid.ButtonPressEvent -= OnButtonDown;
-            fixedColView.ButtonPressEvent -= OnButtonDown;
-            Grid.FocusInEvent -= FocusInEvent;
-            Grid.FocusOutEvent -= FocusOutEvent;
-            Grid.KeyPressEvent -= GridviewKeyPressEvent;
-            fixedColView.FocusInEvent -= FocusInEvent;
-            fixedColView.FocusOutEvent -= FocusOutEvent;
-            Grid.ExposeEvent -= GridviewExposed;
-
-            // It's good practice to disconnect the event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in popupMenu)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-            }
-            ClearGridColumns();
-            gridModel.Dispose();
-            popupMenu.Dispose();
-            accel.Dispose();
-            if (table != null)
-                table.Dispose();
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            Dispose();
         }
 
         /// <summary>
@@ -961,6 +1014,7 @@
                     else if (render is CellRendererToggle)
                     {
                         (render as CellRendererToggle).Toggled -= ToggleRenderToggled;
+                        (render as CellRendererToggle).EditingStarted -= OnCellBeginEdit;
                     }
                     else if (render is CellRendererCombo)
                     {
@@ -1053,7 +1107,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
                     }
                     else
                     {
@@ -1080,7 +1134,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || categoryRows.Contains(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
                     }
 
                     EndEdit();
@@ -1095,11 +1149,13 @@
                         selectionRowMax = -1;
                         selectionColMax = -1;
                     }
+                    else
+                        Grid.SetCursor(new TreePath(new int[1] { nextRow }), Grid.GetColumn(nextCol), false);
 
                     while (GLib.MainContext.Iteration()) ;
                     args.RetVal = true;
                 }
-                else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && IsPrintableChar(args.Event.Key))
+                else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && !ReadOnly && IsPrintableChar(args.Event.Key))
                 {
                     // Initiate cell editing when user starts typing.
                     Grid.SetCursor(new TreePath(new int[1] { rowIdx }), Grid.GetColumn(colIdx), true);
@@ -1131,10 +1187,13 @@
 
                         // Due to the intellisense popup (briefly) taking focus, the current cell will usually go out of edit mode
                         // before the period is inserted by the Gtk event handler. Therefore, we insert it manually now, and stop
-                        // this signal from propagating further.
-                        // editable.Text += ".";
-                        editable.InsertText(".", ref caretLocation);
-                        editable.Position = caretLocation;
+                        // this signal from propagating further. 
+                        int position = editable.Position;
+                        editable.Text = editable.Text.Substring(0, position) + "." + editable.Text.Substring(position);
+                        editable.Position = position + 1;
+                        args.RetVal = true;
+                        while (GLib.MainContext.Iteration()) ;
+                        caretLocation = position + 1;
                     }
                     else
                     {
@@ -1214,12 +1273,13 @@
 
         /// <summary>
         /// Calculates the size of a given cell.
-        /// Results are returned in a tuple, where Item1 is the width and Item2 is the height of the cell.
+        /// Results are returned as a Point, where the X-coordinate is the width of the cell,
+        /// and the y-coordinate is the height of the cell.
         /// </summary>
         /// <param name="col">Column number of the cell.</param>
         /// <param name="row">Row number of the cell.</param>
         /// <returns>The cell size.</returns>
-        private Tuple<int, int> GetCellSize(int col, int row)
+        private Point GetCellSize(int col, int row)
         {
             int cellHeight, offsetX, offsetY, cellWidth;
             Gdk.Rectangle rectangle = new Gdk.Rectangle();
@@ -1231,47 +1291,45 @@
             // And now get padding from CellRenderer
             CellRenderer renderer = column.CellRenderers[row];
             cellHeight += (int)renderer.Ypad;
-            return new Tuple<int, int>(column.Width, cellHeight);
+            return new Point(column.Width, cellHeight);
         }
 
         /// <summary>
         /// Calculates the XY coordinates of a given cell relative to the origin of the TreeView.
-        /// Results are returned in a tuple, where Item1 is the x-coord and Item2 is the y-coord.
         /// </summary>
         /// <param name="col">Column number of the cell.</param>
         /// <param name="row">Row number of the cell.</param>
         /// <returns>The cell position.</returns>
-        private Tuple<int, int> GetCellPosition(int col, int row)
+        private Point GetCellPosition(int col, int row)
         {
             int x = 0;
 
             for (int i = 0; i < col; i++)
             {
-                Tuple<int, int> cellSize = GetCellSize(i, 0);
-                x += cellSize.Item1;
+                Point cellSize = GetCellSize(i, 0);
+                x += cellSize.X;
             }
 
             // Rows are uniform in height, so we just get the height of the first cell in the table, 
             // then multiply by the number of rows.
-            int y = GetCellSize(0, 0).Item2 * row;
+            int y = GetCellSize(0, 0).Y * row;
 
-            return new Tuple<int, int>(x, y);
+            return new Point(x, y);
         }
 
         /// <summary>
         /// Calculates the absolute coordinates of the top-left corner of a given cell on the screen. 
-        /// Results are returned in a tuple, where Item1 is the x-coordinate and Item2 is the y-coordinate.
         /// </summary>
         /// <param name="col">Column of the cell.</param>
         /// <param name="row">Row of the cell.</param>
         /// <returns>The absolute cell position.</returns>
-        private Tuple<int, int> GetAbsoluteCellPosition(int col, int row)
+        private Point GetAbsoluteCellPosition(int col, int row)
         {
             int frameX, frameY, containerX, containerY;
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
             Grid.GdkWindow.GetOrigin(out containerX, out containerY);
-            Tuple<int, int> relCoordinates = GetCellPosition(col, row + 1);
-            return new Tuple<int, int>(relCoordinates.Item1 + containerX, relCoordinates.Item2 + containerY);
+            Point relCoordinates = GetCellPosition(col, row + 1);
+            return new Point(relCoordinates.X + containerX, relCoordinates.Y + containerY);
         }
 
         /// <summary>
@@ -1402,6 +1460,7 @@
                     userEditingCell = false;
                 };
                 CellRendererCombo comboRender = new CellRendererDropDown();
+                comboRender.EditingStarted += OnCellBeginEdit;
                 comboRender.Edited += ComboRenderEdited;
                 comboRender.Visible = false;
                 comboRender.EditingStarted += ComboRenderEditing;
@@ -1464,6 +1523,8 @@
                 // DataRow dataRow = this.DataSource.Rows[row];
                 // gridmodel.AppendValues(dataRow.ItemArray);
             }
+            if (CanGrow)
+                gridModel.Append();
             Grid.Model = gridModel;
 
             SetColumnHeaders(Grid);
@@ -1649,7 +1710,12 @@
             try
             {
                 if (GetCurrentCell == null)
-                    return;
+                {
+                    if (selectedCellColumnIndex >= 0 && selectedCellRowIndex >= 0)
+                        GetCurrentCell = new GridCell(this, selectedCellColumnIndex, selectedCellRowIndex);
+                    else
+                        return;
+                }
 
                 string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
                 string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
@@ -2312,7 +2378,7 @@
         /// </summary>
         private void EditSelectedCell()
         {
-            if ( !(GetColumn(selectedCellColumnIndex).ReadOnly || categoryRows.Contains(selectedCellRowIndex)) )
+            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex)) )
             {
                 userEditingCell = true;
                 Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);

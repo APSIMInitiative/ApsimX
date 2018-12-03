@@ -168,7 +168,7 @@ namespace Models.Report
                              IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             Values = new List<object>();
-            this.variableName = variableName;
+            this.variableName = variableName.Trim();
             this.Name = columnName;
             this.storage = storage;
             this.locator = locator;
@@ -224,6 +224,15 @@ namespace Models.Report
             string columnName = RemoveWordAfter(ref descriptor, "as");
             string to = RemoveWordAfter(ref descriptor, "to");
             string from = RemoveWordAfter(ref descriptor, "from");
+            if (clock is IModel)
+            {
+                object fromValue = Apsim.Get(clock as IModel, from);
+                if (fromValue != null)
+                    from = fromValue.ToString();
+                object toValue = Apsim.Get(clock as IModel, to);
+                if (toValue != null)
+                    to = toValue.ToString();
+            }
             string aggregationFunction = RemoveWordBefore(ref descriptor, "of");
 
             string variableName = descriptor;  // variable name is what is left over.

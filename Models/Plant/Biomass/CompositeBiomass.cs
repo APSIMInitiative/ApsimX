@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Models.PMF
 {
     /// <summary>
-    /// This is a composite biomass class. *i.e.* a biomass made up of 1 or more biomass objects.
+    /// This is a composite biomass class, representing the sum of 1 or more biomass objects.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -170,13 +170,12 @@ namespace Models.PMF
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
-                tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a composite of the following biomass objects:", indent));
+                tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
 
                 string st = string.Empty;
-                foreach (string PropertyName in Propertys)
-                {
-                    st = st + Environment.NewLine + "* " + PropertyName;
-                }
+                if (Propertys != null)
+                    foreach (string PropertyName in Propertys)
+                        st += Environment.NewLine + "* " + PropertyName;
                 tags.Add(new AutoDocumentation.Paragraph(st, indent));
             }
         }

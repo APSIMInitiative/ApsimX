@@ -227,7 +227,7 @@ namespace Models.Storage
         /// <param name="fieldName">Column name to look for</param>
         public bool HasColumn(string fieldName)
         {
-            return Columns.Find(column => column.Name.Equals(fieldName, StringComparison.CurrentCultureIgnoreCase)) != null;
+            return Columns.Find(column => column.Name.Equals(fieldName)) != null;
         }
 
 
@@ -237,9 +237,9 @@ namespace Models.Storage
         private string LookupUnitsForColumn(IDatabaseConnection connection, string columnName)
         {
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT Units FROM _Units WHERE TableName='");
+            sql.Append("SELECT [Units] FROM [_Units] WHERE [TableName]='");
             sql.Append(Name);
-            sql.Append("' AND ColumnHeading='");
+            sql.Append("' AND [ColumnHeading]='");
             sql.Append(columnName.Trim('\''));
             sql.Append("'");
             DataTable data = connection.ExecuteQuery(sql.ToString());
@@ -277,7 +277,7 @@ namespace Models.Storage
             {
                 foreach (Column col in Columns)
                 {
-                    if (!existingColumns.Contains(col.Name))
+                    if (!existingColumns.Contains(col.Name, StringComparer.CurrentCultureIgnoreCase))
                     {
                         string dataTypeString;
                         if (col.DatabaseDataType == null)
@@ -285,8 +285,7 @@ namespace Models.Storage
                         else
                             dataTypeString = col.DatabaseDataType;
 
-                        string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + col.Name + "] " + dataTypeString;
-                        connection.ExecuteNonQuery(sql);
+                        connection.AddColumn(Name, col.Name, dataTypeString);
                     }
                 }
             }

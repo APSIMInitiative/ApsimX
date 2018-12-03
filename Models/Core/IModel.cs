@@ -43,5 +43,17 @@ using System.IO;
         /// Gets or sets whether the model is enabled
         /// </summary>
         bool Enabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the model is readonly.
+        /// </summary>
+        bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Called when the model has been newly created in memory whether from 
+        /// cloning or deserialisation.
+        /// </summary>
+        void OnCreated();
+
     }
 }

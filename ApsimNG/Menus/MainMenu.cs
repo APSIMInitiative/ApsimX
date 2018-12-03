@@ -7,10 +7,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Diagnostics;
-    using System.Reflection;
-    using Models;
     using Models.Core;
-    using global::UserInterface.Forms;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.

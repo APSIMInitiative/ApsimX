@@ -49,7 +49,7 @@ namespace UserInterface.Commands
                 List<Simulation> sims = new List<Models.Core.Simulation>();
                 clonedSimulation = Apsim.Clone(simulation) as Simulation;
                 sims.Add(clonedSimulation);
-                explorerPresenter.ApsimXFile.MakeSubstitutions(clonedSimulation);
+                explorerPresenter.ApsimXFile.MakeSubsAndLoad(clonedSimulation);
 
                 events = explorerPresenter.ApsimXFile.GetEventService(clonedSimulation);
                 events.ConnectEvents();
@@ -77,12 +77,14 @@ namespace UserInterface.Commands
                 }
 
                 // Apply the transform to the reader and write it to a temporary file.
-                string htmlFileName = Path.GetTempFileName() + ".html";
+                string tempFileName = Path.GetTempFileName();
+                File.Delete(tempFileName);
+                string htmlFileName = Path.ChangeExtension(tempFileName, ".html");
                 using (XmlReader reader = XmlReader.Create(new StringReader(rawXML.ToString())))
-                using (XmlWriter htmlWriter = XmlWriter.Create(htmlFileName))
-                {
-                    transform.Transform(reader, htmlWriter);
-                }
+                    using (XmlWriter htmlWriter = XmlWriter.Create(htmlFileName))
+                    {
+                        transform.Transform(reader, htmlWriter);
+                    }
                 Process.Start(htmlFileName);
             }
             finally

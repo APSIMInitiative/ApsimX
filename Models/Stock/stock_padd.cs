@@ -1,7 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="stock_padd.cs" company="CSIRO">
-// CSIRO Agriculture & Food
-// </copyright>
+// GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
 
 namespace Models.GrazPlan
@@ -9,15 +7,13 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
     using Models.Core;
-    using CMPServices;
+    using Models.PMF.Interfaces;
 
     /*
-     GRAZPLAN animal biology model for AusFarm - TPaddockList & TForageList classes                                                                   
+     GRAZPLAN animal biology model for AusFarm - PaddockList & ForageList classes                                                                   
                                                                                
-     * TPaddockList contains information about paddocks within the animal      
+     * PaddockList contains information about paddocks within the animal      
        biology model. Paddocks have the following attributes:                  
        - ID   (integer)                                                        
        - name (text)                                                           
@@ -25,8 +21,8 @@ namespace Models.GrazPlan
        - slope (degrees) - this is converted to a steepness value              
        - amount and composition of forage present in the paddock               
        - amount and composition of supplement present in the paddock           
-       This information is held in TPaddockInfo objects; TPaddockList is a     
-       list of TPaddockInfo.                                                   
+       This information is held in PaddockInfo objects; PaddockList is a     
+       list of PaddockInfo.                                                   
     */
 
     /// <summary>
@@ -38,23 +34,27 @@ namespace Models.GrazPlan
         /// <summary>
         /// Mass in kg/ha 
         /// </summary>
-        public double dMass_KgHa;
+        public double MassKgHa;
+
         /// <summary>
         /// N in kg/ha
         /// </summary>
-        public double dNitrogen_KgHa;
+        public double NitrogenKgHa;
+        
         /// <summary>
         /// P in kg/ha
         /// </summary>
-        public double dPhosphorus_KgHa;
+        public double PhosphorusKgHa;
+        
         /// <summary>
         /// S in kg/ha
         /// </summary>
-        public double dSulphur_KgHa;
+        public double SulphurKgHa;
+        
         /// <summary>
         /// Ash alkalinity mol/ha
         /// </summary>
-        public double dAshAlk_MolHa;
+        public double AshAlkMolHa;
     }
 
     /// <summary>
@@ -64,636 +64,85 @@ namespace Models.GrazPlan
     public class ForageInfo
     {
         /// <summary>
-        /// Chemistry of the forage
+        /// Missing value
         /// </summary>
-        protected enum ForageChemistry
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            fcUnknown,
-            /// <summary>
-            /// Digestible vs indigestible
-            /// </summary>
-            fcDigInDig,       
-            /// <summary>
-            /// Mean digestibility provided - this component to distribute over DMD classes
-            /// </summary>
-            fcMeanDMD,        
-            /// <summary>
-            /// 80%, 70%, ... 30% digestible
-            /// </summary>
-            fcDMDClasses6,    
-            /// <summary>
-            /// 
-            /// </summary>
-            fcVarDMDClasses
-        };
-#pragma warning disable 1591 //missing xml comment
-        protected const double MISSING_POINT = 99999.9;
-        protected const double CLASSWIDTH = 0.10;
-        protected const double HIGHEST_DMD = 0.85;
-        protected const double EPSILON = 1.0E-6;
-        protected const int MAX_CHEM_CLASSES = 24;
-        protected const int MAX_DDM_CLASSES = 12;
-        protected const int NOT_SEED = 0;
-
-        protected const string postfix_LEGUME = "_legume";
-        protected const string postfix_C4GRASS = "_c4grass";
-#pragma warning restore 1591 //missing xml comment
-        string[,] CHEMISTRY_CLASSES = { 
-                            {"",        "",          "",     "",     "",     "",     "",     "",      "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     ""     },
-                            {"ddm",     "idm",       "",     "",     "",     "",     "",     "",      "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     ""     },
-                            {"ddm_mean","idm_mean",  "",     "",     "",     "",     "",     "",      "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     ""     },
-                            {"dmd80",   "dmd70",     "dmd60","dmd50","dmd40","dmd30","",     "",      "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     "",     ""     },
-                            {"ddm01",   "idm01",     "ddm02","idm02","ddm03","idm03","ddm04","idm04", "ddm05","idm05","ddm06","idm06","ddm07","idm07","ddm08","idm08","ddm09","idm09","ddm10","idm10","ddm11","idm11","ddm12","idm12"} };
+        private const double MISSINGPOINT = 99999.9;
 
         /// <summary>
-        /// Chemistry types that could expected in the AvailableToAnimals data
+        /// Width of the digestibility class
         /// </summary>
-        protected int[] CHEM_COUNT = { 0, 2, 2, GrazType.DigClassNo, 2 * MAX_DDM_CLASSES };
-
-        private double getBottom()
-        {
-            if (this.FBottom_MM == MISSING_POINT)
-                return 0.0;
-            else
-                return this.FBottom_MM;
-        }
-        private double getTop()
-        {
-            return this.FTop_MM;
-        }
+        private const double CLASSWIDTH = 0.10;
 
         /// <summary>
-        /// Look for a code appended to the chemistry code, and strip it off if found
+        /// Highest disgestibility value
         /// </summary>
-        /// <param name="sValue">e.g. dig_legume. Returns the chem.</param>
-        /// <param name="sCode">Lowercase code to find</param>
-        /// <returns>True if the code is appended</returns>
-        private bool FindPostFix(ref string sValue, string sCode)
-        {
-            int pos = sValue.ToLower().IndexOf(sCode);
-            if (pos >= 0)
-            {
-                sValue = sValue.Substring(0, pos);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        private const double HIGHESTDMD = 0.85;
 
         /// <summary>
-        /// The total live herbage used as input in GrazingInputs
-        /// Units: the same as the forage object
+        /// Used in CalcDMDDistribution()
         /// </summary>
-        public double TotalLive
-        {
-            get
-            {
-                return this.FForageData.TotalGreen;
-            }
-        }
+        private const double EPSILON = 1.0E-6;
 
         /// <summary>
-        /// The total dead herbage used as input in GrazingInputs
-        /// Units: the same as the forage object
+        /// Maximum number of chemistry classes
         /// </summary>
-        public double TotalDead
-        {
-            get
-            {
-                return this.FForageData.TotalDead;
-            }
-        }
+        private const int MAXCHEMCLASSES = 24;
 
-        // The computed attributes of this "forage", in the form used by AnimalGroup
         /// <summary>
         /// Use the forage data
+        /// The computed attributes of this "forage", in the form used by AnimalGroup
         /// </summary>
-        protected bool FUseForageData;
+        private bool useForageData;
+
         /// <summary>
         /// The grazing forage data
         /// </summary>
-        protected GrazType.GrazingInputs FForageData = new GrazType.GrazingInputs();
-        /// <summary>
-        /// Green mass of the forage
-        /// </summary>
-        public double FGreenMass;
-        /// <summary>
-        /// Bulk density of the green
-        /// </summary>
-        protected double FGreenBulkDensity;
+        private GrazType.GrazingInputs forageData = new GrazType.GrazingInputs();
 
-        // Information calculated from data in an "avalabletoanimal" value
         /// <summary>
-        /// Chemistry type
+        /// The bulk density of the green
         /// </summary>
-        protected ForageChemistry FChemistryType;
-        /// <summary>
-        /// Is this "forage" green or dead?
-        /// </summary>
-        protected bool FIsGreen;  
+        private double greenBulkDensity;
+
         /// <summary>
         /// Mass of the legume
         /// </summary>
-        protected double FLegumeMass;
+        private double legumeMass = 0;
+
         /// <summary>
         /// Mass of the C4 grass
         /// </summary>
-        protected double FC4GrassMass;
+        private double C4GrassMass = 0;
+
         /// <summary>
         /// 0 = non-seed, UNRIPE or RIPE
         /// </summary>
-        protected int FSeedType;   
+        private int seedType = 0;   
+
         /// <summary>
-        /// 
+        /// The herbage bottom
         /// </summary>
-        protected double FBottom_MM;
+        private double bottomMM;
+
         /// <summary>
-        /// 
+        /// The herbage top
         /// </summary>
-        protected double FTop_MM;
+        private double topMM;
+
         /// <summary>
         /// Chemistry details for each chem class
         /// </summary>
-        protected ChemData[] FChemData = new ChemData[MAX_CHEM_CLASSES - 1];
+        private ChemData[] chemData = new ChemData[MAXCHEMCLASSES - 1];
 
         /// <summary>
-        /// 
+        /// Herbage dmd fraction
         /// </summary>
-        protected double[] dHerbageDMDFract = new double[GrazType.DigClassNo + 1]; // [1..DigClassNo]
-        /// <summary>
-        /// 
-        /// </summary>
-        protected double[] dSeedRipeFract = new double[3];  // [1..2]
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void summariseInitHerbage()
-        {
-            double fHR;
-            double dBulkDensity;  // Herbage bulk density in kg/m^3
-            int iClass;
-            int iChem;
-
-            if (FUseForageData)
-            {
-                FGreenMass = FForageData.TotalGreen;
-                FGreenBulkDensity = GrazType.REF_HERBAGE_BD;
-                if ((FForageData.TotalGreen + FForageData.TotalDead) > 0.0)
-                {
-                    fHR = 0.0;
-                    for (iClass = 1; iClass <= GrazType.DigClassNo; iClass++)
-                        fHR = fHR + FForageData.Herbage[iClass].Biomass * FForageData.Herbage[iClass].HeightRatio;
-                    fHR = fHR / (FForageData.TotalGreen + FForageData.TotalDead);
-                    if (fHR > 0.0)
-                        FGreenBulkDensity = GrazType.REF_HERBAGE_BD / fHR;
-                }
-            }
-
-            else
-            {
-                FGreenMass = 0.0;
-                FGreenBulkDensity = 0.0;
-                if (FIsGreen)
-                {
-                    dBulkDensity = this.dHerbageBulkDensity();
-                    for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType] - 1; iChem++)
-                    {
-                        FGreenMass = FGreenMass + this.FChemData[iChem].dMass_KgHa;
-                        FGreenBulkDensity = FGreenBulkDensity + this.FChemData[iChem].dMass_KgHa * dBulkDensity;
-                    }
-                }
-
-                if (FGreenMass > 0.0)
-                    FGreenBulkDensity = FGreenBulkDensity / FGreenMass;
-                else
-                    FGreenBulkDensity = GrazType.REF_HERBAGE_BD;
-            }
-        }
-
-        /// <summary>
-        /// Calculate the bulk density
-        /// </summary>
-        /// <returns></returns>
-        protected double dHerbageBulkDensity()
-        {
-            double dCohortDM;
-            double dMaxHeight_MM;
-            double dMinHeight_MM;
-            int iChem;
-
-            dCohortDM = 0.0;
-            dMaxHeight_MM = 0.0;
-            dMinHeight_MM = 999999.9;
-
-            for (iChem = 0; iChem <= this.CHEM_COUNT[(int)FChemistryType]; iChem++)
-                dCohortDM = dCohortDM + this.FChemData[iChem].dMass_KgHa;
-            dMaxHeight_MM = Math.Max(dMaxHeight_MM, FTop_MM);
-            dMinHeight_MM = Math.Min(dMinHeight_MM, FBottom_MM);
-
-            if (dMinHeight_MM < dMaxHeight_MM)
-                return 10.0 * dCohortDM / (dMaxHeight_MM - dMinHeight_MM);
-            else
-                return GrazType.REF_HERBAGE_BD;
-        }
-
-        /// <summary>
-        /// * The providing forage component is specifying a quantity of forage with
-        ///   a single digestibility, as part of a distribution of digestibilities
-        ///   *provided by the source component*.
-        /// * We therefore calculate the DMD and then place all forage mass in the
-        ///   AnimalGroup DMD class that contains that DMD value
-        /// </summary>
-        /// <param name="dAvailPropn"></param>
-        /// <param name="dBulkDensity"></param>
-        /// <returns></returns>
-        public GrazType.GrazingInputs convertChemistry_DigInDig(double dAvailPropn, double dBulkDensity)
-        {
-            const int DDM = 0;
-            const int IDM = 1;
-
-            double dTotalDM;
-            double dMeanDMD;
-            int iDMD;
-
-            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
-            GrazType.zeroGrazingInputs(ref Result);
-            for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                Result.Herbage[iDMD].HeightRatio = 1.0;
-
-            this.dHerbageDMDFract = new double[GrazType.DigClassNo + 1];
-            this.dSeedRipeFract = new double[3];
-
-            dTotalDM = this.FChemData[DDM].dMass_KgHa + this.FChemData[IDM].dMass_KgHa;
-            // Leaf & stem pools
-            if ((FSeedType == NOT_SEED) && (dTotalDM > 0.0))
-            {
-                dMeanDMD = this.FChemData[DDM].dMass_KgHa / dTotalDM;
-                iDMD = Convert.ToInt32(Math.Min(1, Math.Max(1 + Math.Truncate((HIGHEST_DMD - dMeanDMD) / CLASSWIDTH), GrazType.DigClassNo)));  // TODO: may need testing
-
-                populateIntakeRecord(ref Result.Herbage[iDMD], iDMD, true,
-                                      dTotalDM, dMeanDMD, dAvailPropn,
-                                      this.FChemData[DDM].dNitrogen_KgHa, this.FChemData[IDM].dNitrogen_KgHa,
-                                      this.FChemData[DDM].dPhosphorus_KgHa, this.FChemData[IDM].dPhosphorus_KgHa,
-                                      this.FChemData[DDM].dSulphur_KgHa, this.FChemData[IDM].dSulphur_KgHa,
-                                      this.FChemData[DDM].dAshAlk_MolHa, this.FChemData[IDM].dAshAlk_MolHa,
-                                      dBulkDensity);
-
-                if (FIsGreen)
-                    Result.TotalGreen = Result.Herbage[iDMD].Biomass;
-                else
-                    Result.TotalDead = Result.Herbage[iDMD].Biomass;
-
-                populateHerbageType(ref Result);
-
-                this.dHerbageDMDFract[iDMD] = Result.Herbage[iDMD].Biomass; // for later division by the total for the DMD class
-            }
-
-            // Seed pools
-            else if (((FSeedType == GrazType.UNRIPE) || (FSeedType == GrazType.RIPE)) && (dTotalDM > 0.0))
-            {
-                populateSeedRecord(ref Result, dAvailPropn, DDM, IDM);
-
-                // The relative intake calculations for seed use dmd's from the herbage array. If this is a
-                // seed only forage then the herbage dmd should be set
-                dMeanDMD= Result.Seeds[1, FSeedType].Digestibility;
-                iDMD= Convert.ToInt32(Math.Min(1, Math.Max(1 + Math.Truncate((HIGHEST_DMD - dMeanDMD) / CLASSWIDTH), GrazType.DigClassNo)));
-                Result.SeedClass[1, FSeedType] = iDMD;                          // will then use the [iDMD] digestibility class from the herbage array
-                Result.Herbage[iDMD].Digestibility = dMeanDMD;
-
-                this.dSeedRipeFract[FSeedType] = Result.Seeds[1, FSeedType].Biomass; // for later division by the total for the seed ripeness class
-            }
-            return Result;
-        }
-
-        /// <summary>
-        /// The providing forage component is specifying a quantity of forage with
-        ///   a known average digestibility, and is signalling that *this* component
-        ///   should distribute the forage across the AnimalGroup DMD pools
-        /// </summary>
-        /// <param name="dAvailPropn"></param>
-        /// <param name="dBulkDensity"></param>
-        /// <returns></returns>
-        public GrazType.GrazingInputs convertChemistry_MeanDMD(double dAvailPropn, double dBulkDensity)
-        {
-            const int DDM_MEAN = 0;
-            const int IDM_MEAN = 1;
-
-            double dTotalDM;
-            double dMeanDMD;
-            double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
-            int iDMD;
-
-            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
-
-            for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                Result.Herbage[iDMD].HeightRatio = 1.0;
-
-            this.dHerbageDMDFract = new double[GrazType.DigClassNo + 1];
-            this.dSeedRipeFract = new double[3];
-
-            dTotalDM = FChemData[DDM_MEAN].dMass_KgHa + FChemData[IDM_MEAN].dMass_KgHa;
-
-            // Leaf & stem pools
-            if ((FSeedType == NOT_SEED) && (dTotalDM > 0.0))
-            {
-                dMeanDMD = FChemData[DDM_MEAN].dMass_KgHa / dTotalDM;
-                if (FIsGreen)
-                    dDMDPropns = ForageInfo.calcDMDDistribution(dMeanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
-                else
-                    dDMDPropns = ForageInfo.calcDMDDistribution(dMeanDMD, 0.70, 0.30);
-
-                for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                {
-                    populateIntakeRecord(ref Result.Herbage[iDMD], iDMD, (dDMDPropns[iDMD] == 1.0),
-                                          dTotalDM, dMeanDMD, dAvailPropn * dDMDPropns[iDMD],
-                                          FChemData[DDM_MEAN].dNitrogen_KgHa, FChemData[IDM_MEAN].dNitrogen_KgHa,
-                                          FChemData[DDM_MEAN].dPhosphorus_KgHa, FChemData[IDM_MEAN].dPhosphorus_KgHa,
-                                          FChemData[DDM_MEAN].dSulphur_KgHa, FChemData[IDM_MEAN].dSulphur_KgHa,
-                                          FChemData[DDM_MEAN].dAshAlk_MolHa, FChemData[IDM_MEAN].dAshAlk_MolHa,
-                                          dBulkDensity);
-
-                    if (FIsGreen)
-                        Result.TotalGreen = Result.TotalGreen + Result.Herbage[iDMD].Biomass;
-                    else
-                        Result.TotalDead = Result.TotalDead + Result.Herbage[iDMD].Biomass;
-
-                    this.dHerbageDMDFract[iDMD] = Result.Herbage[iDMD].Biomass; // for later division by the total for the DMD class
-                }  // for iDMD = 1 to DigClassNo
-
-                populateHerbageType(ref Result);
-            }
-
-            // Seed pools
-            else if (((FSeedType == GrazType.UNRIPE) || (FSeedType == GrazType.RIPE)) && (dTotalDM > 0.0))
-            {
-                populateSeedRecord(ref Result, dAvailPropn, DDM_MEAN, DDM_MEAN);
-                this.dSeedRipeFract[FSeedType] = Result.Seeds[1, FSeedType].Biomass; // for later division by the total for the seed ripeness class
-            }
-            return Result;
-        }
-
-        /// <summary>
-        /// The providing forage component is specifying a list of quantities of forage,
-        ///   each of which is assumed to have DMD uniformly distributed across one of
-        ///   the AnimalGroup DMD pools
-        /// </summary>
-        /// <param name="dAvailPropn"></param>
-        /// <param name="dBulkDensity"></param>
-        /// <returns></returns>
-        public GrazType.GrazingInputs convertChemistry_DMDClasses6(double dAvailPropn, double dBulkDensity)
-        {
-            int iChem;
-            int iDMD;
-
-            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
-            for (iDMD = 1; iDMD <= GrazType.DigClassNo; iDMD++)
-                Result.Herbage[iDMD].HeightRatio = 1.0;
-
-            this.dHerbageDMDFract = new double[GrazType.DigClassNo + 1];
-            this.dSeedRipeFract = new double[3];
-
-            // Leaf & stem pools
-            if (FSeedType == NOT_SEED)
-            {
-                for (iChem = 0; iChem <= this.CHEM_COUNT[(int)ForageChemistry.fcDMDClasses6] - 1; iChem++)
-                {
-                    iDMD = iChem + 1;
-
-                    Result.Herbage[iDMD].Biomass = dAvailPropn * FChemData[iChem].dMass_KgHa;
-                    Result.Herbage[iDMD].Digestibility = GrazType.ClassDig[iDMD];
-                    Result.Herbage[iDMD].Degradability = Math.Min(0.90, Result.Herbage[iDMD].Digestibility + 0.10); // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                    if (Result.Herbage[iDMD].Biomass > 0.0)
-                    {
-                        Result.Herbage[iDMD].CrudeProtein = FChemData[iChem].dNitrogen_KgHa / FChemData[iChem].dMass_KgHa * GrazType.N2Protein;
-                        Result.Herbage[iDMD].PhosContent = FChemData[iChem].dPhosphorus_KgHa / FChemData[iChem].dMass_KgHa;
-                        Result.Herbage[iDMD].SulfContent = FChemData[iChem].dSulphur_KgHa / FChemData[iChem].dMass_KgHa;
-                        Result.Herbage[iDMD].AshAlkalinity = FChemData[iChem].dAshAlk_MolHa / FChemData[iChem].dMass_KgHa;
-                    }
-                    Result.Herbage[iDMD].HeightRatio = GrazType.REF_HERBAGE_BD / dBulkDensity;
-                    if (FIsGreen)
-                        Result.TotalGreen = Result.TotalGreen + Result.Herbage[iDMD].Biomass;
-                    else
-                        Result.TotalDead = Result.TotalDead + Result.Herbage[iDMD].Biomass;
-
-                    this.dHerbageDMDFract[iDMD] = Result.Herbage[iDMD].Biomass; // for later division by the total for the DMD class
-                }
-
-                populateHerbageType(ref Result);
-            }
-
-            // Seed pools: not permitted
-            else if ((FSeedType == GrazType.UNRIPE) || (FSeedType == GrazType.RIPE))
-                throw new Exception("Chemistry \"DMDnn\" may not be used when the organ is seeds, heads or ears");
-
-            return Result;
-        }
-
-
-        /// <summary>
-        /// Calculate the proportions in a DMD distribution
-        /// </summary>
-        /// <param name="fDMD">The mean DMD</param>
-        /// <param name="fMaxDMD">Upper range</param>
-        /// <param name="fMinDMD">Lower range</param>
-        /// <returns></returns>
-        static public double[] calcDMDDistribution(double fDMD, double fMaxDMD, double fMinDMD)
-        {
-            int iHighClass;
-            int iLowClass;
-            double fRelDMD;
-
-            double[] Result = new double[GrazType.DigClassNo + 1];
-
-
-            iHighClass = 1 + Convert.ToInt32(Math.Truncate((HIGHEST_DMD - fMaxDMD + EPSILON) / CLASSWIDTH));
-            iLowClass = 1 + Convert.ToInt32(Math.Truncate((HIGHEST_DMD - fMinDMD - EPSILON) / CLASSWIDTH));
-            if (iHighClass != iLowClass)
-                fRelDMD = Math.Max(0.0, Math.Min((fDMD - GrazType.ClassDig[iLowClass])
-                                          / (GrazType.ClassDig[iHighClass] - GrazType.ClassDig[iLowClass]), 1.0));
-            else
-                fRelDMD = 1.0;
-
-            switch (iLowClass - iHighClass + 1)
-            {
-                case 1: Result[iHighClass] = 1.0;
-                    break;
-                case 2:
-                    {
-                        Result[iHighClass + 0] = fRelDMD;
-                        Result[iHighClass + 1] = 1.0 - fRelDMD;
-                    }
-                    break;
-                case 3:
-                    {
-                        Result[iHighClass + 0] = Math.Pow(fRelDMD, 2);
-                        Result[iHighClass + 1] = 2.0 * fRelDMD * (1.0 - fRelDMD);
-                        Result[iHighClass + 2] = Math.Pow(1.0 - fRelDMD, 2);
-                    }
-                    break;
-                case 4:
-                    {
-                        Result[iHighClass + 0] = Math.Pow(fRelDMD, 3);
-                        Result[iHighClass + 1] = 3.0 * Math.Pow(fRelDMD, 2) * (1.0 - fRelDMD);
-                        Result[iHighClass + 2] = 3.0 * fRelDMD * Math.Pow(1.0 - fRelDMD, 2);
-                        Result[iHighClass + 3] = Math.Pow(1.0 - fRelDMD, 3);
-                    }
-                    break;
-                case 5:
-                    {
-                        Result[iHighClass + 0] = Math.Pow(fRelDMD, 4);
-                        Result[iHighClass + 1] = 4.0 * Math.Pow(fRelDMD, 3) * (1.0 - fRelDMD);
-                        Result[iHighClass + 2] = 6.0 * Math.Pow(fRelDMD, 2) * Math.Pow(1.0 - fRelDMD, 2);
-                        Result[iHighClass + 3] = 4.0 * fRelDMD * Math.Pow(1.0 - fRelDMD, 3);
-                        Result[iHighClass + 4] = Math.Pow(1.0 - fRelDMD, 4);
-                    }
-                    break;
-                default:
-                    throw new Exception("Error in DMD distribution calculation");
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="IR"></param>
-        /// <param name="iDMD"></param>
-        /// <param name="bUseMeanDMD"></param>
-        /// <param name="dTotalMass"></param>
-        /// <param name="dMeanDMD"></param>
-        /// <param name="dMassFract"></param>
-        /// <param name="dDDM_N"></param>
-        /// <param name="dIDM_N"></param>
-        /// <param name="dDDM_P"></param>
-        /// <param name="dIDM_P"></param>
-        /// <param name="dDDM_S"></param>
-        /// <param name="dIDM_S"></param>
-        /// <param name="dDDM_AA"></param>
-        /// <param name="dIDM_AA"></param>
-        /// <param name="dBulkDensity"></param>
-        public void populateIntakeRecord(ref GrazType.IntakeRecord IR,
-                                        int iDMD,
-                                        bool bUseMeanDMD,
-                                        double dTotalMass,
-                                        double dMeanDMD,
-                                        double dMassFract,
-                                        double dDDM_N, double dIDM_N,
-                                        double dDDM_P, double dIDM_P,
-                                        double dDDM_S, double dIDM_S,
-                                        double dDDM_AA, double dIDM_AA,
-                                        double dBulkDensity)
-        {
-            double dDDMPropn;
-            double dIDMPropn;
-
-            if (bUseMeanDMD)
-                IR.Digestibility = dMeanDMD;
-            else
-                IR.Digestibility = GrazType.ClassDig[iDMD];
-
-            if (dMassFract > 0.0)
-            {
-                dDDMPropn = dMassFract * (IR.Digestibility / dMeanDMD);
-                if ((1.0 - dMeanDMD) != 0)
-                    dIDMPropn = dMassFract * ((1.0 - IR.Digestibility) / (1.0 - dMeanDMD));
-                else                // trap div/0
-                    dIDMPropn = 0;
-
-                IR.Biomass = dMassFract * dTotalMass;
-                IR.CrudeProtein = GrazType.N2Protein * (dDDMPropn * dDDM_N + dIDMPropn * dIDM_N) / IR.Biomass;
-                IR.Degradability = Math.Min(0.90, IR.Digestibility + 0.10);
-                IR.PhosContent = (dDDMPropn * dDDM_P + dIDMPropn * dIDM_P) / IR.Biomass;
-                IR.SulfContent = (dDDMPropn * dDDM_S + dIDMPropn * dIDM_S) / IR.Biomass;
-                IR.AshAlkalinity = (dDDMPropn * dDDM_AA + dIDMPropn * dIDM_AA) / IR.Biomass;
-                IR.HeightRatio = GrazType.REF_HERBAGE_BD / dBulkDensity;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="GI"></param>
-        /// <param name="dAvailPropn"></param>
-        /// <param name="iDDM"></param>
-        /// <param name="iIDM"></param>
-        public void populateSeedRecord(ref GrazType.GrazingInputs GI, double dAvailPropn, int iDDM, int iIDM)
-        {
-            double dTotalDM;
-            double dMeanDMD;
-
-            dTotalDM = FChemData[iDDM].dMass_KgHa + FChemData[iIDM].dMass_KgHa;
-            dMeanDMD = FChemData[iDDM].dMass_KgHa / dTotalDM;
-
-            GI.Seeds[1, FSeedType].Biomass = dAvailPropn * dTotalDM;
-            GI.Seeds[1, FSeedType].Digestibility = dMeanDMD;
-            GI.Seeds[1, FSeedType].Degradability = Math.Min(0.90, dMeanDMD + 0.10);
-            if (GI.Seeds[1, FSeedType].Biomass > 0.0)
-            {
-                GI.Seeds[1, FSeedType].CrudeProtein = (FChemData[iDDM].dNitrogen_KgHa + FChemData[iIDM].dNitrogen_KgHa) / dTotalDM * GrazType.N2Protein;
-                GI.Seeds[1, FSeedType].PhosContent = (FChemData[iDDM].dPhosphorus_KgHa + FChemData[iIDM].dPhosphorus_KgHa) / dTotalDM;
-                GI.Seeds[1, FSeedType].SulfContent = (FChemData[iDDM].dSulphur_KgHa + FChemData[iIDM].dSulphur_KgHa) / dTotalDM;
-                GI.Seeds[1, FSeedType].AshAlkalinity = (FChemData[iDDM].dAshAlk_MolHa + FChemData[iIDM].dAshAlk_MolHa) / dTotalDM;
-            }
-            GI.Seeds[1, FSeedType].HeightRatio = 0.0;
-        }
-
-        /// <summary>
-        /// Set the LegumePropn, SelectFactor and TropLegume fields of a GrazingInputs
-        /// * Expects that the TotalGreen and TotalDead fields have already been computed
-        /// </summary>
-        /// <param name="GI"></param>
-        public void populateHerbageType(ref GrazType.GrazingInputs GI)
-        {
-            if (GI.TotalGreen + GI.TotalDead > 0.0)
-            {
-                GI.LegumePropn = FLegumeMass / (GI.TotalGreen + GI.TotalDead);
-                GI.SelectFactor = 0.16 * this.FC4GrassMass / (GI.TotalGreen + GI.TotalDead);
-                GI.LegumeTrop = 0.0; // FIX ME
-            }
-            else
-            {
-                GI.LegumePropn = 0.0;
-                GI.SelectFactor = 0.0;
-                GI.LegumeTrop = 0.0;
-            }
-        }
+        private double[] herbageDMDFract = new double[GrazType.DigClassNo + 1]; // [1..DigClassNo]
         
         /// <summary>
-        /// Full identifier for this forage e.g. Crop or pasture component full path name
+        /// See ripe fraction
         /// </summary>
-        public string sName;             
-        /// <summary>
-        /// The cohortID from the incoming AvailableToAnimal forage component
-        /// </summary>
-        public string sCohortID;             
-        /// <summary>
-        /// Forage organ
-        /// </summary>
-        public string sOrgan;
-        /// <summary>
-        /// Forage item age class
-        /// </summary>
-        public string sAgeClass;
-
-        /// <summary>
-        /// The paddock of this forage
-        /// </summary>
-        public PaddockInfo InPaddock;
-        /// <summary>
-        /// The herbage info
-        /// </summary>
-        public GrazType.PopulationHerbageData HerbageData;
-        /// <summary>
-        /// Amount of this forage removed (output)
-        /// </summary>
-        public GrazType.GrazingOutputs RemovalKG;                                       
+        private double[] seedRipeFract = new double[3];  // [1..2]
 
         /// <summary>
         /// Construct a forage info
@@ -702,35 +151,351 @@ namespace Models.GrazPlan
         {
         }
 
+        /// <summary>
+        /// Gets or sets the green mass of the forage
+        /// </summary>
+        public double GreenMass { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets the total live herbage used as input in GrazingInputs
+        /// Units: the same as the forage object
         /// </summary>
-        /// <param name="forageInputs"></param>
-        public void setAvailForage(GrazType.GrazingInputs forageInputs)
+        public double TotalLive
         {
-            FUseForageData = true;
-            FForageData.CopyFrom(forageInputs);
+            get
+            {
+                return this.forageData.TotalGreen;
+            }
+        }
+
+        /// <summary>
+        /// Gets the total dead herbage used as input in GrazingInputs
+        /// Units: the same as the forage object
+        /// </summary>
+        public double TotalDead
+        {
+            get
+            {
+                return this.forageData.TotalDead;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the full identifier for this forage e.g. Crop or pasture component full path name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cohortID from the incoming AvailableToAnimal forage component
+        /// </summary>
+        public string CohortID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the forage organ
+        /// </summary>
+        public string Organ { get; set; }
+
+        /// <summary>
+        /// Gets or sets the forage item age class
+        /// </summary>
+        public string AgeClass { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paddock of this forage
+        /// </summary>
+        public PaddockInfo InPaddock { get; set; }
+
+        /// <summary>
+        /// Gets or sets the herbage info
+        /// </summary>
+        public GrazType.PopulationHerbageData HerbageData { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amount of this forage removed (output)
+        /// </summary>
+        public GrazType.GrazingOutputs RemovalKG { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bottom of forage
+        /// </summary>
+        public double Bottom
+        {
+            get { return this.GetBottom(); }
+            set { this.bottomMM = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the top of forage
+        /// </summary>
+        public double Top
+        {
+            get { return this.GetTop(); }
+            set { this.topMM = value; }
+        }
+
+        /// <summary>
+        /// Gets the bottom position
+        /// </summary>
+        /// <returns>The bottom mm</returns>
+        private double GetBottom()
+        {
+            if (this.bottomMM == MISSINGPOINT)
+                return 0.0;
+            else
+                return this.bottomMM;
+        }
+
+        /// <summary>
+        /// Gets the top postion
+        /// </summary>
+        /// <returns>The top in mm</returns>
+        private double GetTop()
+        {
+            return this.topMM;
+        }
+
+        /// <summary>
+        /// Summarise the initial herbage 
+        /// </summary>
+        public void SummariseInitHerbage()
+        {
+            double fHR;
+            //// double dBulkDensity;  // Herbage bulk density in kg/m^3
+            int classIdx;
+            //// int iChem;
+
+            if (this.useForageData)
+            {
+                this.GreenMass = this.forageData.TotalGreen;
+                this.greenBulkDensity = GrazType.REF_HERBAGE_BD;
+                if ((this.forageData.TotalGreen + this.forageData.TotalDead) > 0.0)
+                {
+                    fHR = 0.0;
+                    for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
+                        fHR = fHR + (this.forageData.Herbage[classIdx].Biomass * this.forageData.Herbage[classIdx].HeightRatio);
+                    fHR = fHR / (this.forageData.TotalGreen + this.forageData.TotalDead);
+                    if (fHR > 0.0)
+                        this.greenBulkDensity = GrazType.REF_HERBAGE_BD / fHR;
+                }
+            }
+            else
+            {
+                this.GreenMass = 0.0;
+                /*FGreenBulkDensity = 0.0;
+                if (FIsGreen)
+                {
+                    dBulkDensity = this.dHerbageBulkDensity();
+                    for (iChem = 0; iChem <= this.CHEMCOUNT[(int)FChemistryType] - 1; iChem++)
+                    {
+                        FGreenMass = FGreenMass + this.FChemData[iChem].MassKgHa;
+                        FGreenBulkDensity = FGreenBulkDensity + this.FChemData[iChem].MassKgHa * dBulkDensity;
+                    }
+                }
+
+                if (FGreenMass > 0.0)
+                    FGreenBulkDensity = FGreenBulkDensity / FGreenMass;
+                else
+                    FGreenBulkDensity = GrazType.REF_HERBAGE_BD;*/
+            }
+        }
+
+        /// <summary>
+        /// Calculate the proportions in a DMD distribution
+        /// </summary>
+        /// <param name="meanDMD">The mean DMD</param>
+        /// <param name="maxDMD">Upper range</param>
+        /// <param name="minDMD">Lower range</param>
+        /// <returns>A digestibility distribution</returns>
+        public static double[] CalcDMDDistribution(double meanDMD, double maxDMD, double minDMD)
+        {
+            int highClass;
+            int lowClass;
+            double relDMD;
+
+            double[] result = new double[GrazType.DigClassNo + 1];
+
+            highClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - maxDMD + EPSILON) / CLASSWIDTH));
+            lowClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - minDMD - EPSILON) / CLASSWIDTH));
+            if (highClass != lowClass)
+                relDMD = Math.Max(0.0, Math.Min((meanDMD - GrazType.ClassDig[lowClass]) / (GrazType.ClassDig[highClass] - GrazType.ClassDig[lowClass]), 1.0));
+            else
+                relDMD = 1.0;
+
+            switch (lowClass - highClass + 1)
+            {
+                case 1: result[highClass] = 1.0;
+                    break;
+                case 2:
+                    {
+                        result[highClass + 0] = relDMD;
+                        result[highClass + 1] = 1.0 - relDMD;
+                    }
+                    break;
+                case 3:
+                    {
+                        result[highClass + 0] = Math.Pow(relDMD, 2);
+                        result[highClass + 1] = 2.0 * relDMD * (1.0 - relDMD);
+                        result[highClass + 2] = Math.Pow(1.0 - relDMD, 2);
+                    }
+                    break;
+                case 4:
+                    {
+                        result[highClass + 0] = Math.Pow(relDMD, 3);
+                        result[highClass + 1] = 3.0 * Math.Pow(relDMD, 2) * (1.0 - relDMD);
+                        result[highClass + 2] = 3.0 * relDMD * Math.Pow(1.0 - relDMD, 2);
+                        result[highClass + 3] = Math.Pow(1.0 - relDMD, 3);
+                    }
+                    break;
+                case 5:
+                    {
+                        result[highClass + 0] = Math.Pow(relDMD, 4);
+                        result[highClass + 1] = 4.0 * Math.Pow(relDMD, 3) * (1.0 - relDMD);
+                        result[highClass + 2] = 6.0 * Math.Pow(relDMD, 2) * Math.Pow(1.0 - relDMD, 2);
+                        result[highClass + 3] = 4.0 * relDMD * Math.Pow(1.0 - relDMD, 3);
+                        result[highClass + 4] = Math.Pow(1.0 - relDMD, 4);
+                    }
+                    break;
+                default:
+                    throw new Exception("Error in DMD distribution calculation");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Populate the intake record
+        /// </summary>
+        /// <param name="intakeRecord">The intake record to return</param>
+        /// <param name="dmdClass">Digestibility class</param>
+        /// <param name="useMeanDMD">Use mean digestibility</param>
+        /// <param name="totalMass">Total herbage mass</param>
+        /// <param name="meanDMD">Mean digestiblity</param>
+        /// <param name="massFract">Mass fraction</param>
+        /// <param name="ddm_N">Digestible N</param>
+        /// <param name="idm_N">Indigestible N</param>
+        /// <param name="ddm_P">Digestible P</param>
+        /// <param name="idm_P">Indigestible P</param>
+        /// <param name="ddm_S">Digestible sulphur</param>
+        /// <param name="idm_S">Indigestible sulphur</param>
+        /// <param name="ddm_AA">Digestible AshAlk</param>
+        /// <param name="idm_AA">Indigestible AshAlk</param>
+        /// <param name="bulkDensity">Bulk density</param>
+        public void PopulateIntakeRecord(
+                                        ref GrazType.IntakeRecord intakeRecord,
+                                        int dmdClass,
+                                        bool useMeanDMD,
+                                        double totalMass,
+                                        double meanDMD,
+                                        double massFract,
+                                        double ddm_N, double idm_N,
+                                        double ddm_P, double idm_P,
+                                        double ddm_S, double idm_S,
+                                        double ddm_AA, double idm_AA,
+                                        double bulkDensity)
+        {
+            double propnDMD;
+            double propnIDM;
+
+            if (useMeanDMD)
+                intakeRecord.Digestibility = meanDMD;
+            else
+                intakeRecord.Digestibility = GrazType.ClassDig[dmdClass];
+
+            if (massFract > 0.0)
+            {
+                propnDMD = massFract * (intakeRecord.Digestibility / meanDMD);
+                if ((1.0 - meanDMD) != 0)
+                    propnIDM = massFract * ((1.0 - intakeRecord.Digestibility) / (1.0 - meanDMD));
+                else                // trap div/0
+                    propnIDM = 0;
+
+                intakeRecord.Biomass = massFract * totalMass;
+                intakeRecord.CrudeProtein = GrazType.N2Protein * ((propnDMD * ddm_N) + (propnIDM * idm_N)) / intakeRecord.Biomass;
+                intakeRecord.Degradability = Math.Min(0.90, intakeRecord.Digestibility + 0.10);
+                intakeRecord.PhosContent = ((propnDMD * ddm_P) + (propnIDM * idm_P)) / intakeRecord.Biomass;
+                intakeRecord.SulfContent = ((propnDMD * ddm_S) + (propnIDM * idm_S)) / intakeRecord.Biomass;
+                intakeRecord.AshAlkalinity = ((propnDMD * ddm_AA) + (propnIDM * idm_AA)) / intakeRecord.Biomass;
+                intakeRecord.HeightRatio = GrazType.REF_HERBAGE_BD / bulkDensity;
+            }
+        }
+
+        /// <summary>
+        /// Populate the seed record
+        /// </summary>
+        /// <param name="grazingInput">The grazing input</param>
+        /// <param name="availPropn">Available proportion</param>
+        /// <param name="idxDDM">Digestible index</param>
+        /// <param name="idxIDM">Indigestible index</param>
+        public void PopulateSeedRecord(ref GrazType.GrazingInputs grazingInput, double availPropn, int idxDDM, int idxIDM)
+        {
+            double totalDM;
+            double meanDMD;
+
+            totalDM = this.chemData[idxDDM].MassKgHa + this.chemData[idxIDM].MassKgHa;
+            meanDMD = this.chemData[idxDDM].MassKgHa / totalDM;
+
+            grazingInput.Seeds[1, this.seedType].Biomass = availPropn * totalDM;
+            grazingInput.Seeds[1, this.seedType].Digestibility = meanDMD;
+            grazingInput.Seeds[1, this.seedType].Degradability = Math.Min(0.90, meanDMD + 0.10);
+            if (grazingInput.Seeds[1, this.seedType].Biomass > 0.0)
+            {
+                grazingInput.Seeds[1, this.seedType].CrudeProtein = (this.chemData[idxDDM].NitrogenKgHa + this.chemData[idxIDM].NitrogenKgHa) / totalDM * GrazType.N2Protein;
+                grazingInput.Seeds[1, this.seedType].PhosContent = (this.chemData[idxDDM].PhosphorusKgHa + this.chemData[idxIDM].PhosphorusKgHa) / totalDM;
+                grazingInput.Seeds[1, this.seedType].SulfContent = (this.chemData[idxDDM].SulphurKgHa + this.chemData[idxIDM].SulphurKgHa) / totalDM;
+                grazingInput.Seeds[1, this.seedType].AshAlkalinity = (this.chemData[idxDDM].AshAlkMolHa + this.chemData[idxIDM].AshAlkMolHa) / totalDM;
+            }
+            grazingInput.Seeds[1, this.seedType].HeightRatio = 0.0;
+        }
+
+        /// <summary>
+        /// Set the LegumePropn, SelectFactor and TropLegume fields of a GrazingInputs
+        /// * Expects that the TotalGreen and TotalDead fields have already been computed
+        /// </summary>
+        /// <param name="grazingInput">The grazing inputs</param>
+        public void PopulateHerbageType(ref GrazType.GrazingInputs grazingInput)
+        {
+            if (grazingInput.TotalGreen + grazingInput.TotalDead > 0.0)
+            {
+                grazingInput.LegumePropn = this.legumeMass / (grazingInput.TotalGreen + grazingInput.TotalDead);
+                grazingInput.SelectFactor = 0.16 * this.C4GrassMass / (grazingInput.TotalGreen + grazingInput.TotalDead);
+                grazingInput.LegumeTrop = 0.0; // FIX ME
+            }
+            else
+            {
+                grazingInput.LegumePropn = 0.0;
+                grazingInput.SelectFactor = 0.0;
+                grazingInput.LegumeTrop = 0.0;
+            }
+        }
+        
+        /// <summary>
+        /// The the forage data
+        /// </summary>
+        /// <param name="forageInputs">Forage inputs</param>
+        public void SetAvailForage(GrazType.GrazingInputs forageInputs)
+        {
+            this.useForageData = true;
+            this.forageData.CopyFrom(forageInputs);
         }
 
         /// <summary>
         /// Calculates the GrazingInputs values from the values stored during addForageData() 
         /// </summary>
-        /// <returns></returns>
-        public GrazType.GrazingInputs availForage()
+        /// <returns>The grazing inputs</returns>
+        public GrazType.GrazingInputs AvailForage()
         {
-            GrazType.GrazingInputs Result = new GrazType.GrazingInputs();
+            GrazType.GrazingInputs result = new GrazType.GrazingInputs();
                         
-            Result.CopyFrom(FForageData);
+            result.CopyFrom(this.forageData);
             
-            return Result;
+            return result;
         }
 
         /// <summary>
         /// Returns True if something has been removed from herbage or seed pool.
         /// </summary>
-        /// <returns></returns>
-        public bool somethingRemoved()
+        /// <returns>True if some forage amount has been removed by the animals</returns>
+        public bool SomethingRemoved()
         {
             int i;
 
@@ -740,7 +505,7 @@ namespace Models.GrazPlan
             i = 1;
             while ((i <= GrazType.DigClassNo) && (!result))
             {
-                if (RemovalKG.Herbage[i] > 0.0)
+                if (this.RemovalKG.Herbage[i] > 0.0)
                     result = true;
                 i++;
             }
@@ -749,141 +514,135 @@ namespace Models.GrazPlan
                 i = 1;
                 while ((i <= GrazType.MaxPlantSpp) && (!result))
                 {
-                    if ((RemovalKG.Seed[i, GrazType.UNRIPE] > 0.0) || (RemovalKG.Seed[i, GrazType.RIPE] > 0.0))
+                    if ((this.RemovalKG.Seed[i, GrazType.UNRIPE] > 0.0) || (this.RemovalKG.Seed[i, GrazType.RIPE] > 0.0))
                         result = true;
                     i++;
                 }
             }
             return result;
         }
-
-        /// <summary>
-        /// Bottom of forage
-        /// </summary>
-        public double dBottom
-        {
-            get { return getBottom(); }
-            set { this.FBottom_MM = value; }
-        }
-        /// <summary>
-        /// Top of forage
-        /// </summary>
-        public double dTop
-        {
-            get { return getTop(); }
-            set { FTop_MM = value; }
-        }
     }
 
     // ============================================================================
+    
     /// <summary>
     /// List of ForageInfo forages 
     /// </summary>
     [Serializable]
     public class ForageList
     {
-        private ForageInfo[] FList;
-        bool FOwnsList;
+        /// <summary>
+        /// The list of forage infos
+        /// </summary>
+        private ForageInfo[] items;
+
+        /// <summary>
+        /// This object manages the lifetime of the item list
+        /// </summary>
+        private bool ownsList;
 
         /// <summary>
         /// Construct the forage list
         /// </summary>
-        /// <param name="ownsForages"></param>
+        /// <param name="ownsForages">The object will manage the lifetime of the forage list</param>
         public ForageList(bool ownsForages)
         {
-            FOwnsList = ownsForages;
-            Array.Resize(ref FList, 0);
+            this.ownsList = ownsForages;
+            Array.Resize(ref this.items, 0);
         }
+
         /// <summary>
         /// Count of forages
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count of forages</returns>
         public int Count()
         {
-            return FList.Length;
+            return this.items.Length;
         }
+
         /// <summary>
         /// Add a forage item
         /// </summary>
-        /// <param name="Info"></param>
-        public void Add(ForageInfo Info)
+        /// <param name="forageInfo">The forage information</param>
+        public void Add(ForageInfo forageInfo)
         {
-            int Idx;
-
-            Idx = FList.Length;
-            Array.Resize(ref FList, Idx + 1);
-            FList[Idx] = Info;
+            int idx = this.items.Length;
+            Array.Resize(ref this.items, idx + 1);
+            this.items[idx] = forageInfo;
         }
+
         /// <summary>
         /// Add a forage by name
         /// </summary>
-        /// <param name="sName"></param>
-        /// <returns></returns>
-        public ForageInfo Add(string sName)
+        /// <param name="forageName">Forage name</param>
+        /// <returns>The new forage item</returns>
+        public ForageInfo Add(string forageName)
         {
-            ForageInfo newInfo;
-
-            newInfo = new ForageInfo();
-            newInfo.sName = sName.ToLower();
+            ForageInfo newInfo = new ForageInfo();
+            newInfo.Name = forageName.ToLower();
             this.Add(newInfo);
             return newInfo;
         }
+
         /// <summary>
         /// Delete a forage by index
         /// </summary>
-        /// <param name="iValue"></param>
-        public void Delete(int iValue)
+        /// <param name="indexValue">Index value</param>
+        public void Delete(int indexValue)
         {
-            int Idx;
+            int idx;
 
-            if (FOwnsList)
-                FList[iValue] = null;
-            for (Idx = iValue + 1; Idx <= FList.Length - 1; Idx++)
-                FList[Idx - 1] = FList[Idx];
-            Array.Resize(ref FList, FList.Length - 1);
+            if (this.ownsList)
+                this.items[indexValue] = null;
+            for (idx = indexValue + 1; idx <= this.items.Length - 1; idx++)
+                this.items[idx - 1] = this.items[idx];
+            Array.Resize(ref this.items, this.items.Length - 1);
         }
+
         /// <summary>
         /// Get a forage by index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public ForageInfo byIndex(int Idx)
+        /// <param name="indexValue">The forage index</param>
+        /// <returns>The forage. If not found then return null</returns>
+        public ForageInfo ByIndex(int indexValue)
         {
             ForageInfo result = null;
-            if ((Idx >= 0) && (Idx < FList.Length))
-                result = FList[Idx];
+            if ((indexValue >= 0) && (indexValue < this.items.Length))
+                result = this.items[indexValue];
 
             return result;
         }
+
         /// <summary>
         /// Get a forage by name
         /// </summary>
-        /// <param name="sName"></param>
-        /// <returns></returns>
-        public ForageInfo byName(string sName)
+        /// <param name="forageName">The forage name</param>
+        /// <returns>The forage info. If not found then null.</returns>
+        public ForageInfo ByName(string forageName)
         {
-            int Idx;
+            int idx;
 
-            Idx = IndexOf(sName);
-            if (Idx >= 0)
-                return this.byIndex(Idx);
+            idx = this.IndexOf(forageName);
+            if (idx >= 0)
+                return this.ByIndex(idx);
             else
                 return null;
         }
+
         /// <summary>
         /// Get the index of a forage by name
         /// </summary>
-        /// <param name="sName"></param>
-        /// <returns></returns>
-        public int IndexOf(string sName)
+        /// <param name="forageName">The forage name</param>
+        /// <returns>Returns the forage index</returns>
+        public int IndexOf(string forageName)
         {
-            int Result = this.Count() - 1;
-            while ((Result >= 0) && (this.byIndex(Result).sName.ToLower() != sName.ToLower()))
+            int result = this.Count() - 1;
+            while ((result >= 0) && (this.ByIndex(result).Name.ToLower() != forageName.ToLower()))
             {
-                Result--;
+                result--;
             }
 
-            return Result;
+            return result;
         }
     }
 
@@ -896,125 +655,147 @@ namespace Models.GrazPlan
     [Serializable]
     public class ForageProvider
     {
-        bool FUseCohorts;                       // uses new cohorts array type
-        private ForageList FForages;
-        private string FForageHostName;         // host crop, pasture component name
-        private int FHostID;                    // plant/pasture comp
-        private string FPaddockOwnerName;       // owning paddock FQN
-        private int FSetterID;                  // setting property ID (or published event ID)
-        private int FDriverID;                  // driving property ID
-        private PaddockInfo FOwningPaddock;     // ptr to the paddock object in the model
+        /// <summary>
+        /// The list of forages
+        /// </summary>
+        private ForageList forages;
+
+        /// <summary>
+        /// host crop, pasture component name
+        /// </summary>
+        private string forageHostName;
+
+        /// <summary>
+        /// plant/pasture comp
+        /// </summary>
+        private int hostID;
+
+        /// <summary>
+        /// owning paddock FQN
+        /// </summary>
+        private string paddockOwnerName;
+
+        /// <summary>
+        /// Ref to the paddock object in the model
+        /// </summary>
+        private PaddockInfo owningPaddock;     
 
         /// <summary>
         /// Construct the forage provider
         /// </summary>
         public ForageProvider()
         {
-            FForages = new ForageList(true);
-            OwningPaddock = null;
-            FUseCohorts = false;
+            this.forages = new ForageList(true);
+            this.OwningPaddock = null;
         }
 
         /// <summary>
-        /// The total calculated green dm for the paddock
+        /// Gets or sets the total calculated green dm for the paddock
         /// </summary>
         public double PastureGreenDM { get; set; }
 
         /// <summary>
-        /// Use forage cohorts
+        /// Gets or sets the owning paddock
         /// </summary>
-        public bool UseCohorts { get { return FUseCohorts; } set { FUseCohorts = value; } }
+        public PaddockInfo OwningPaddock
+        {
+            get { return this.owningPaddock; }
+            set { this.owningPaddock = value; }
+        }
+        
         /// <summary>
-        /// The owning paddock
+        /// Gets or sets the paddock owner name
         /// </summary>
-        public PaddockInfo OwningPaddock { get { return FOwningPaddock; } set { FOwningPaddock = value; } }
+        public string PaddockOwnerName
+        {
+            get { return this.paddockOwnerName; }
+            set { this.paddockOwnerName = value; }
+        }
+        
         /// <summary>
-        /// The paddock owner name
+        /// Gets or sets the forage host name
         /// </summary>
-        public string PaddockOwnerName { get { return FPaddockOwnerName; } set { FPaddockOwnerName = value; } }
+        public string ForageHostName
+        {
+            get { return this.forageHostName; }
+            set { this.forageHostName = value; }
+        }
+        
         /// <summary>
-        /// Forage host name
+        /// Gets or sets the component id of the host
         /// </summary>
-        public string ForageHostName { get { return FForageHostName; } set { FForageHostName = value; } }
+        public int HostID
+        {
+            get { return this.hostID; }
+            set { this.hostID = value; }
+        }
+               
         /// <summary>
-        /// Component id of the host
+        /// Gets or sets the crop, pasture component
         /// </summary>
-        public int HostID { get { return FHostID; } set { FHostID = value; } }
-        /// <summary>
-        /// Driver id
-        /// </summary>
-        public int DriverID { get { return FDriverID; } set { FDriverID = value; } }
-        /// <summary>
-        /// Setter id
-        /// </summary>
-        public int SetterID { get { return FSetterID; } set { FSetterID = value; } }
-        /// <summary>
-        /// The crop, pasture component
-        /// </summary>
-        public Object ForageObj { get; set; }
+        public object ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
         /// </summary>
         /// <param name="forageObj">The crop/pasture object</param>
-        public void UpdateForages(Object forageObj)
+        public void UpdateForages(object forageObj)
         {
-            //ensure this forage is in the list
-            //the forage key in this case is component name
-            ForageInfo forage = FForages.byName(ForageHostName);
-            if (forage == null)  //if this cohort doesn't exist in the forage list then
+            // ensure this forage is in the list
+            // the forage key in this case is component name
+            ForageInfo forage = this.forages.ByName(this.ForageHostName);
+            if (forage == null)  
             {
+                // if this cohort doesn't exist in the forage list
                 forage = new ForageInfo();
-                forage.sName = ForageHostName.ToLower();
-                FOwningPaddock.AssignForage(forage);              //the paddock in the model can access this forage
-                FForages.Add(forage); //create a new forage for this cohort
+                forage.Name = this.ForageHostName.ToLower();
+                this.owningPaddock.AssignForage(forage);               // the paddock in the model can access this forage
+                this.forages.Add(forage);                               // create a new forage for this cohort
             }
             
             // TODO: just assuming one forage cohort in this component (expand here?)
-            passGrazingInputs(forage, Crop2GrazingInputs(forageObj), "g/m^2"); //then update it's value
+            this.PassGrazingInputs(forage, this.Crop2GrazingInputs(forageObj), "g/m^2"); // then update it's value
         }
 
         /// <summary>
         /// The forage name is the name of the cohort.
         /// </summary>
-        /// <param name="forageName"></param>
-        /// <returns></returns>
+        /// <param name="forageName">The forage name</param>
+        /// <returns>The forage object</returns>
         public ForageInfo ForageByName(string forageName)
         {
-            return FForages.byName(forageName);
+            return this.forages.ByName(forageName);
         }
 
         /// <summary>
-        /// 
+        /// Get the forage by index
         /// </summary>
-        /// <param name="idx">idx = 0..n</param>
-        /// <returns></returns>
+        /// <param name="idx">The index. 0..n</param>
+        /// <returns>The forage index</returns>
         public ForageInfo ForageByIndex(int idx)
         {
-            return FForages.byIndex(idx);
+            return this.forages.ByIndex(idx);
         }
 
         /// <summary>
         /// Use the GrazingInputs to initialise the forage object
         /// </summary>
-        /// <param name="forage"></param>
-        /// <param name="Grazing"></param>
-        /// <param name="sUnit"></param>
-        public void passGrazingInputs(ForageInfo forage,
-                                      GrazType.GrazingInputs Grazing,
-                                      string sUnit)
+        /// <param name="forage">The forage object</param>
+        /// <param name="grazingInput">The grazing inputs</param>
+        /// <param name="units">The units</param>
+        public void PassGrazingInputs(ForageInfo forage, GrazType.GrazingInputs grazingInput, string units)
         {
-            double fScale;
+            double scaleInput;
 
-            if (sUnit == "kg/ha")                                                     // Convert to kg/ha                      
-                fScale = 1.0;
-            else if (sUnit == "g/m^2")
-                fScale = 10.0;
+            if (units == "kg/ha")                                                     // Convert to kg/ha                      
+                scaleInput = 1.0;
+            else if (units == "g/m^2")
+                scaleInput = 10.0;
             else
-                throw new Exception("Stock: Unit (" + sUnit + ") not recognised");
+                throw new Exception("Stock: Unit (" + units + ") not recognised");
 
             if (forage != null)
-                forage.setAvailForage(GrazType.scaleGrazingInputs(Grazing, fScale));
+                forage.SetAvailForage(GrazType.scaleGrazingInputs(grazingInput, scaleInput));
             else
                 throw new Exception("Stock: Forage not recognised");
         }
@@ -1025,7 +806,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
-        private GrazType.GrazingInputs Crop2GrazingInputs(Object forageObj)
+        private GrazType.GrazingInputs Crop2GrazingInputs(object forageObj)
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
@@ -1040,10 +821,11 @@ namespace Models.GrazPlan
 
             // calculate the green available based on the total green in this paddock
             double greenPropn = 0;
+            
             // ** should really take into account the height ratio here e.g. Params.HeightRatio
-            if (PastureGreenDM > GrazType.Ungrazeable)
+            if (this.PastureGreenDM > GrazType.Ungrazeable)
             {
-                greenPropn = 1.0 - GrazType.Ungrazeable / PastureGreenDM;
+                greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
             }
 
             // calculate the total live and dead biomass
@@ -1068,23 +850,23 @@ namespace Models.GrazPlan
             double availDM = result.TotalGreen + result.TotalDead;
             if (availDM > 0)
             {
-                meanDMD = totalDMD / (result.TotalGreen + result.TotalDead); //calc the average dmd for the plant
+                meanDMD = totalDMD / (result.TotalGreen + result.TotalDead); // calc the average dmd for the plant
 
-                //get the dmd distribution
-                double[] dDMDPropns = new double[GrazType.DigClassNo + 1];
+                // get the dmd distribution
+                double[] dmdPropns = new double[GrazType.DigClassNo + 1];
 
-                //green 0.85-0.45, dead 0.70-0.30
-                dDMDPropns = ForageInfo.calcDMDDistribution(meanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
+                // green 0.85-0.45, dead 0.70-0.30
+                dmdPropns = ForageInfo.CalcDMDDistribution(meanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
 
                 for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
                 {
-                    result.Herbage[idx].Biomass = dDMDPropns[idx] * availDM;
-                    result.Herbage[idx].CrudeProtein = dDMDPropns[idx] * totalN * GrazType.N2Protein;
+                    result.Herbage[idx].Biomass = dmdPropns[idx] * availDM;
+                    result.Herbage[idx].CrudeProtein = dmdPropns[idx] * totalN * GrazType.N2Protein;
                     result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
                     result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
                     result.Herbage[idx].HeightRatio = 1;
-                    result.Herbage[idx].PhosContent = 0;    //N * 0.05?
-                    result.Herbage[idx].SulfContent = 0;    //N * 0.07?
+                    result.Herbage[idx].PhosContent = 0;    // N * 0.05?
+                    result.Herbage[idx].SulfContent = 0;    // N * 0.07?
                     result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
                 }
 
@@ -1108,7 +890,7 @@ namespace Models.GrazPlan
             ForageInfo forage = this.ForageByIndex(forageIdx);
             while (forage != null)
             {
-                double area = forage.InPaddock.fArea;
+                double area = forage.InPaddock.Area;
                 GrazType.GrazingOutputs removed = forage.RemovalKG;
 
                 // total the amount removed kg/ha
@@ -1148,72 +930,69 @@ namespace Models.GrazPlan
         /// <summary>
         /// Return the removal
         /// </summary>
-        /// <param name="forage"></param>
-        /// <param name="sUnit"></param>
-        /// <returns></returns>
-        public GrazType.GrazingOutputs ReturnRemoval(ForageInfo forage, string sUnit)
+        /// <param name="forage">The forage</param>
+        /// <param name="units">The units</param>
+        /// <returns>The grazing outputs/consumed</returns>
+        public GrazType.GrazingOutputs ReturnRemoval(ForageInfo forage, string units)
         {
-            double fArea;
-            double fScale;
-            int iClass;
-            int iSpecies;
-            int iRipe;
+            double area;
+            double scale;
+            int idxClass;
+            int idxSpecies;
+            int idxRipe;
 
-            GrazType.GrazingOutputs Result = new GrazType.GrazingOutputs();
+            GrazType.GrazingOutputs result = new GrazType.GrazingOutputs();
 
             if (forage != null)
             {
-                Result = forage.RemovalKG;
-                fArea = forage.InPaddock.fArea;
+                result = forage.RemovalKG;
+                area = forage.InPaddock.Area;
             }
             else
             {
-                Result = new GrazType.GrazingOutputs();
-                fArea = 0.0;
+                result = new GrazType.GrazingOutputs();
+                area = 0.0;
             }
 
-            if (fArea > 0.0)
+            if (area > 0.0)
             {
-                if (sUnit == "kg")
-                    fScale = 1.0;
-                else if (sUnit == "g/m^2")
-                    fScale = 0.10 / fArea;
-                else if (sUnit == "kg/ha")
-                    fScale = 1.0 / fArea;
+                if (units == "kg")
+                    scale = 1.0;
+                else if (units == "g/m^2")
+                    scale = 0.10 / area;
+                else if (units == "kg/ha")
+                    scale = 1.0 / area;
                 else
-                    throw new Exception("Stock: Unit (" + sUnit + ") not recognised");
+                    throw new Exception("Stock: Unit (" + units + ") not recognised");
 
-                if (fScale != 1.0)
+                if (scale != 1.0)
                 {
-                    for (iClass = 1; iClass <= GrazType.DigClassNo; iClass++)
-                        Result.Herbage[iClass] = fScale * Result.Herbage[iClass];
-                    for (iSpecies = 1; iSpecies <= GrazType.MaxPlantSpp; iSpecies++)
-                        for (iRipe = GrazType.UNRIPE; iRipe <= GrazType.RIPE; iRipe++)
-                            Result.Seed[iSpecies, iRipe] = fScale * Result.Seed[iSpecies, iRipe];
+                    for (idxClass = 1; idxClass <= GrazType.DigClassNo; idxClass++)
+                        result.Herbage[idxClass] = scale * result.Herbage[idxClass];
+                    for (idxSpecies = 1; idxSpecies <= GrazType.MaxPlantSpp; idxSpecies++)
+                        for (idxRipe = GrazType.UNRIPE; idxRipe <= GrazType.RIPE; idxRipe++)
+                            result.Seed[idxSpecies, idxRipe] = scale * result.Seed[idxSpecies, idxRipe];
                 }
             }
-            return Result;
+            return result;
         }
 
         /// <summary>
         /// Test the Removal to determine if there is any quantity of forage removed.
         /// </summary>
-        /// <returns></returns>
-        public bool somethingRemoved()
+        /// <returns>True if some herbage has been removed</returns>
+        public bool SomethingRemoved()
         {
-            int forageIdx;
-            ForageInfo aForage;
-
             bool result = false;
 
-            //get the removal for each forage
-            forageIdx = 0;
-            aForage = ForageByIndex(forageIdx);
-            while ((aForage != null) && (!result))
+            // get the removal for each forage
+            int forageIdx = 0;
+            ForageInfo forageInf = this.ForageByIndex(forageIdx);
+            while ((forageInf != null) && (!result))
             {
-                result = aForage.somethingRemoved();
+                result = forageInf.SomethingRemoved();
                 forageIdx++;
-                aForage = ForageByIndex(forageIdx);
+                forageInf = this.ForageByIndex(forageIdx);
             }
             return result;
         }
@@ -1226,92 +1005,68 @@ namespace Models.GrazPlan
     [Serializable]
     public class ForageProviders
     {
-        private List<ForageProvider> FForageProviderList;
+        /// <summary>
+        /// The list of forage providers
+        /// </summary>
+        private List<ForageProvider> forageProviderList;
+
         /// <summary>
         /// Construct a forage provider
         /// </summary>
         public ForageProviders()
         {
-            FForageProviderList = new List<ForageProvider>();
+            this.forageProviderList = new List<ForageProvider>();
         }
+
         /// <summary>
         /// Count of forage providers
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count of forage providers</returns>
         public int Count()
         {
-            return FForageProviderList.Count();
+            return this.forageProviderList.Count();
         }
 
         /// <summary>
         /// Add a forage provider component
         /// </summary>
-        /// <param name="paddock"></param>
-        /// <param name="paddName"></param>
-        /// <param name="forageName"></param>
-        /// <param name="hostID"></param>
-        /// <param name="driverID"></param>
-        /// <param name="forageObj"></param>
-        /// <param name="usePlantCohorts"></param>
-        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, Object forageObj, bool usePlantCohorts)
+        /// <param name="paddock">The paddock info</param>
+        /// <param name="paddName">The paddock name</param>
+        /// <param name="forageName">The forage name</param>
+        /// <param name="hostID">Component ID</param>
+        /// <param name="driverID">Driver ID</param>
+        /// <param name="forageObj">The forage object</param>
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, object forageObj)
         {
             ForageProvider forageProvider;
 
-            //this is a forage provider
+            // this is a forage provider
             // this provider can host a number of forages/species
             forageProvider = new ForageProvider();
             forageProvider.PaddockOwnerName = paddName;    // owning paddock
             forageProvider.ForageHostName = forageName;    // host pasture/plant component name
             forageProvider.HostID = hostID;                // plant/pasture comp
-            forageProvider.DriverID = driverID;            // driving property ID
             forageProvider.ForageObj = forageObj;          // setting property ID
             // keep a ptr to the paddock owned by the model so the forages can be assigned there as they become available
             forageProvider.OwningPaddock = paddock;
-            forageProvider.UseCohorts = usePlantCohorts;   // use cohorts array type
 
-            FForageProviderList.Add(forageProvider);
+            this.forageProviderList.Add(forageProvider);
         }
 
         /// <summary>
         /// Find the forage provider for this forage/provider name
         /// </summary>
-        /// <param name="providerName"></param>
-        /// <returns></returns>
+        /// <param name="providerName">The forage provider (component) name</param>
+        /// <returns>The ForageProvider</returns>
         public ForageProvider FindProvider(string providerName)
         {
-            ForageProvider provider;
-            int i;
-
-            provider = null;
-            i = 0;
-            while ((provider == null) && (i <= FForageProviderList.Count - 1))
+            ForageProvider provider = null;
+            int i = 0;
+            while ((provider == null) && (i <= this.forageProviderList.Count - 1))
             {
-                //if the name matches
-                if (FForageProviderList[i].ForageHostName == providerName)
-                    provider = FForageProviderList[i];
-                i++;
-            }
-            return provider;
-        }
-
-        /// <summary>
-        /// Find the forage provider for this component ID. Ensure this is the correct driver also.
-        /// </summary>
-        /// <param name="hostID"></param>
-        /// <param name="driverID"></param>
-        /// <returns></returns>
-        public ForageProvider FindProvider(int hostID, int driverID)
-        {
-            ForageProvider provider;
-            int i;
-
-            provider = null;
-            i = 0;
-            while ((provider == null) || (i <= FForageProviderList.Count - 1))
-            {
-                // if the host and driver match
-                if ((FForageProviderList[i].DriverID == driverID) && (FForageProviderList[i].HostID == hostID))
-                    provider = FForageProviderList[i];
+                // if the name matches
+                if (this.forageProviderList[i].ForageHostName == providerName)
+                    provider = this.forageProviderList[i];
                 i++;
             }
             return provider;
@@ -1320,20 +1075,17 @@ namespace Models.GrazPlan
         /// <summary>
         /// Find the forage provider for this component ID.
         /// </summary>
-        /// <param name="hostID"></param>
-        /// <returns></returns>
+        /// <param name="hostID">The host component ID</param>
+        /// <returns>The forage provider</returns>
         public ForageProvider FindProvider(int hostID)
         {
-            ForageProvider provider;
-            int i;
-
-            provider = null;
-            i = 0;
-            while ((provider == null) && (i <= FForageProviderList.Count - 1))
+            ForageProvider provider = null;
+            int i = 0;
+            while ((provider == null) && (i <= this.forageProviderList.Count - 1))
             {
                 // if the host matches
-                if (FForageProviderList[i].HostID == hostID)
-                    provider = FForageProviderList[i];
+                if (this.forageProviderList[i].HostID == hostID)
+                    provider = this.forageProviderList[i];
                 i++;
             }
             return provider;
@@ -1342,12 +1094,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get a forage provider from the list. idx = 0..n
         /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
+        /// <param name="idx">The index</param>
+        /// <returns>The forage provider</returns>
         public ForageProvider ForageProvider(int idx)
         {
-            if ((idx >= 0) && (idx < FForageProviderList.Count))
-                return FForageProviderList[idx];
+            if ((idx >= 0) && (idx < this.forageProviderList.Count))
+                return this.forageProviderList[idx];
             else
                 return null;
         }
@@ -1367,350 +1119,395 @@ namespace Models.GrazPlan
         /// <summary>
         /// Slope in degrees
         /// </summary>
-        private double FSlope;                                      
+        private double slope;  
+                                            
         /// <summary>
         /// Steepness code (1-2)
         /// </summary>
-        private double FSteepness;                                     
+        private double steepness;   
+                                          
         /// <summary>
         /// CAREFUL - FForages does not own its members
         /// </summary>
-        private ForageList FForages;                                       
-        private SupplementRation FSuppInPadd;
-        private bool feedSupplementFirst = false;                                                
-        private bool FUseHerbageAmt;
-
-        private void SetSlope(double fValue)
-        {
-            FSlope = fValue;
-            FSteepness = 1.0 + Math.Min(1.0, Math.Sqrt(Math.Sin(FSlope * Math.PI / 180) / Math.Cos(FSlope * Math.PI / 180)));
-        }
-#pragma warning disable 1591 //missing xml comment
-        public double FSummedGreenMass;
-        public string sName;
-        public int iPaddID;
-        public Object paddObj;
-        public string sExcretionDest;
-        public int iExcretionID;
-        public string sUrineDest;
-        public int iAddFaecesID;                                    // id of published event
-        public Object AddFaecesObj;
-        public int iAddUrineID;                                     // id of published event
-        public Object AddUrineObj;
-        public double fArea;                                        // Paddock area (ha)                     
-        public double fWaterlog;                                    // Waterlogging index (0-1)              
-
-        public double fSummedPotIntake;                             // total pot. intake                     
-        public double SuppRemovalKG;
-#pragma warning restore 1591 //missing xml comment
+        private ForageList forages;  
+        
         /// <summary>
-        /// Paddock slope
+        /// The supplement placed in the paddock
         /// </summary>
-        public double Slope
-        {
-            get { return FSlope; }
-            set { SetSlope(value); }
-        }
-        /// <summary>
-        /// Steepness code (1-2)
-        /// </summary>
-        public double Steepness
-        {
-            get { return FSteepness; }
-        }
-        /// <summary>
-        /// Supplement that is in the paddock
-        /// </summary>
-        public SupplementRation SuppInPadd
-        {
-            get { return FSuppInPadd; }
-        }
-        /// <summary>
-        /// Get the forage list
-        /// </summary>
-        public ForageList Forages
-        {
-            get { return FForages; }
-        }
+        private SupplementRation suppInPadd;
 
         /// <summary>
-        /// Feed the supplement first. Bail feeding.
+        /// Feed the supplement before eating pasture
         /// </summary>
-        public bool FeedSuppFirst
-        {
-            get { return feedSupplementFirst; }
-        }
+        private bool feedSupplementFirst = false;
 
         /// <summary>
         /// Create the PaddockInfo
         /// </summary>
         public PaddockInfo()
         {
-            FForages = new ForageList(false);
-            FSuppInPadd = new SupplementRation();
-            this.fArea = 1.0;
-            FSlope = 0.0;
-            iExcretionID = NOTTHERE;
-            iAddUrineID = NOTTHERE;
-            iAddFaecesID = NOTTHERE;
+            this.forages = new ForageList(false);
+            this.suppInPadd = new SupplementRation();
+            this.Area = 1.0;
+            this.slope = 0.0;
         }
+
+        /// <summary>
+        /// Gets or sets the summed green mass
+        /// </summary>
+        public double FSummedGreenMass { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paddock name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paddock ID
+        /// </summary>
+        public int PaddID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paddock object
+        /// </summary>
+        public object PaddObj { get; set; }
+
+        /// <summary>
+        /// Gets or sets the excretion destination
+        /// </summary>
+        public string ExcretionDest { get; set; }
+
+        /// <summary>
+        /// Gets or sets the urine destination
+        /// </summary>
+        public string UrineDest { get; set; }
+
+        /// <summary>
+        /// Gets or sets the faeces destination
+        /// </summary>
+        public object AddFaecesObj { get; set; }
+
+        /// <summary>
+        /// Gets or sets the urine destination
+        /// </summary>
+        public object AddUrineObj { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paddock area (ha)
+        /// </summary>
+        public double Area { get; set; }
+
+        /// <summary>
+        /// Gets or sets the waterlogging index (0-1)
+        /// </summary>
+        public double Waterlog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total pot. intake
+        /// </summary>
+        public double SummedPotIntake { get; set; }                                                  
+
+        /// <summary>
+        /// Gets or sets the supplement removal amount
+        /// </summary>
+        public double SuppRemovalKG { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paddock slope
+        /// </summary>
+        public double Slope
+        {
+            get { return this.slope; }
+            set { this.SetSlope(value); }
+        }
+
+        /// <summary>
+        /// Gets the steepness code (1-2)
+        /// </summary>
+        public double Steepness
+        {
+            get { return this.steepness; }
+        }
+
+        /// <summary>
+        /// Gets the supplement that is in the paddock
+        /// </summary>
+        public SupplementRation SuppInPadd
+        {
+            get { return this.suppInPadd; }
+        }
+
+        /// <summary>
+        /// Gets the forage list
+        /// </summary>
+        public ForageList Forages
+        {
+            get { return this.forages; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether feeding the supplement first. Bail feeding.
+        /// </summary>
+        public bool FeedSuppFirst
+        {
+            get { return this.feedSupplementFirst; }
+        }
+
+        /// <summary>
+        /// Set the paddock slope value
+        /// </summary>
+        /// <param name="slopeValue">The value in degrees</param>
+        private void SetSlope(double slopeValue)
+        {
+            this.slope = slopeValue;
+            this.steepness = 1.0 + Math.Min(1.0, Math.Sqrt(Math.Sin(this.slope * Math.PI / 180) / Math.Cos(this.slope * Math.PI / 180)));
+        }
+
         /// <summary>
         /// Assign a forage to this paddock
         /// </summary>
-        /// <param name="Forage"></param>
-        public void AssignForage(ForageInfo Forage)
+        /// <param name="forage">The forage object to assign to this paddock</param>
+        public void AssignForage(ForageInfo forage)
         {
-            FForages.Add(Forage);
-            Forage.InPaddock = this;
-        }
-        /// <summary>
-        /// Set the herbage used
-        /// </summary>
-        /// <param name="bValue"></param>
-        public void setUseHerbageAmount(bool bValue)
-        {
-            FUseHerbageAmt = bValue;
+            this.forages.Add(forage);
+            forage.InPaddock = this;
         }
 
         /// <summary>
-        /// { Aggregates the initial forage availability of each species in the list       
+        /// Aggregates the initial forage availability of each species in the list       
         /// * If FForages.Count=0, then the aggregate forage availability is taken to    
         ///   have been passed at the paddock level using setGrazingInputs()             
         /// </summary>
-        public void computeTotals()
+        public void ComputeTotals()
         {
-
-            int Jdx;
-
-            FSummedGreenMass = 0.0;
-            for (Jdx = 0; Jdx <= Forages.Count() - 1; Jdx++)
+            this.FSummedGreenMass = 0.0;
+            for (int jdx = 0; jdx <= this.Forages.Count() - 1; jdx++)
             {
-                Forages.byIndex(Jdx).summariseInitHerbage();
-                FSummedGreenMass = FSummedGreenMass + Forages.byIndex(Jdx).FGreenMass;
+                this.Forages.ByIndex(jdx).SummariseInitHerbage();
+                this.FSummedGreenMass = this.FSummedGreenMass + this.Forages.ByIndex(jdx).GreenMass;
             }
         }
+
         /// <summary>
         /// Zero the removal amounts
         /// </summary>
-        public void zeroRemoval()
+        public void ZeroRemoval()
         {
-            int Jdx;
-
-            SuppRemovalKG = 0.0;
-            for (Jdx = 0; Jdx <= Forages.Count() - 1; Jdx++)
-                Forages.byIndex(Jdx).RemovalKG = new GrazType.GrazingOutputs();
+            this.SuppRemovalKG = 0.0;
+            for (int jdx = 0; jdx <= this.Forages.Count() - 1; jdx++)
+                this.Forages.ByIndex(jdx).RemovalKG = new GrazType.GrazingOutputs();
         }
+
         /// <summary>
         /// Feed the supplement
         /// </summary>
-        /// <param name="fNewAmount"></param>
-        /// <param name="NewSupp"></param>
-        /// <param name="feedSuppFirst">Bail feeding</param>
-        public void FeedSupplement(double fNewAmount, FoodSupplement NewSupp, bool feedSuppFirst)
+        /// <param name="newAmount">The amount to feed in kg</param>
+        /// <param name="newSupp">The supplement to feed</param>
+        /// <param name="feedSuppFirst">True if bail feeding</param>
+        public void FeedSupplement(double newAmount, FoodSupplement newSupp, bool feedSuppFirst)
         {
-            FoodSupplement aSupp;
-            bool bFound;
-            int Idx;
+            bool found;
+            int idx;
 
             this.feedSupplementFirst = false;
-            if (fNewAmount > 0.0)
+            if (newAmount > 0.0)
             {
                 this.feedSupplementFirst = feedSuppFirst;
-                Idx = 0;
-                bFound = false;
-                while (!bFound && (Idx < SuppInPadd.Count))
+                idx = 0;
+                found = false;
+                while (!found && (idx < this.SuppInPadd.Count))
                 {
-                    bFound = NewSupp.IsSameAs(SuppInPadd[Idx]);
-                    if (!bFound)
-                        Idx++;
+                    found = newSupp.IsSameAs(this.SuppInPadd[idx]);
+                    if (!found)
+                        idx++;
                 }
-                if (bFound)
-                    SuppInPadd[Idx].Amount = SuppInPadd[Idx].Amount + fNewAmount;    
+                if (found)
+                    this.SuppInPadd[idx].Amount = this.SuppInPadd[idx].Amount + newAmount;    
                 else
                 {
-                    aSupp = new FoodSupplement();
-                    aSupp.Assign(NewSupp);
-                    SuppInPadd.Add(aSupp, fNewAmount);
+                    FoodSupplement oneSupp = new FoodSupplement();
+                    oneSupp.Assign(newSupp);
+                    this.SuppInPadd.Add(oneSupp, newAmount);
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Clear the supplement ration that is in the paddock
         /// </summary>
         public void ClearSupplement()
         {
-            SuppInPadd.Clear();
+            this.SuppInPadd.Clear();
         }
     }
 
     /// <summary>
-    /// The TPaddockList class
+    /// The PaddockList class
     /// </summary>
     [Serializable]
-    public class TPaddockList
+    public class PaddockList
     {
-        private PaddockInfo[] FList;
         /// <summary>
-        /// Create the TPaddockList
+        /// List of paddock info objects
         /// </summary>
-        public TPaddockList()
+        private PaddockInfo[] items;
+
+        /// <summary>
+        /// Create the PaddockList
+        /// </summary>
+        public PaddockList()
         {
-            Array.Resize(ref FList, 0);
+            Array.Resize(ref this.items, 0);
         }
+
         /// <summary>
         /// Get the count of paddocks
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count of paddocks</returns>
         public int Count()
         {
-            return FList.Length;
+            return this.items.Length;
         }
+
         /// <summary>
         /// Add a paddock
         /// </summary>
-        /// <param name="Info"></param>
-        public void Add(PaddockInfo Info)
+        /// <param name="paddInfo">The paddock info</param>
+        public void Add(PaddockInfo paddInfo)
         {
-            int Idx;
-
-            Idx = FList.Length;
-            Array.Resize(ref FList, Idx + 1);
-            FList[Idx] = Info;
+            int idx = this.items.Length;
+            Array.Resize(ref this.items, idx + 1);
+            this.items[idx] = paddInfo;
         }
+
         /// <summary>
         /// Add a new paddock using ID and name
         /// </summary>
-        /// <param name="ID"></param>
-        /// <param name="sName"></param>
-        public void Add(int ID, string sName)
+        /// <param name="paddockID">Paddock ID</param>
+        /// <param name="paddName">The name of the paddock</param>
+        public void Add(int paddockID, string paddName)
         {
-            PaddockInfo NewPadd;
+            PaddockInfo newPadd;
 
-            NewPadd = new PaddockInfo();
-            NewPadd.iPaddID = ID;
-            NewPadd.sName = sName.ToLower();
-            this.Add(NewPadd);
+            newPadd = new PaddockInfo();
+            newPadd.PaddID = paddockID;
+            newPadd.Name = paddName.ToLower();
+            this.Add(newPadd);
         }
+
         /// <summary>
         /// Add a new paddock object using reference and name
         /// </summary>
-        /// <param name="paddObj"></param>
-        /// <param name="sName"></param>
-        public void Add(Object paddObj, string sName)
+        /// <param name="paddObj">The paddock object</param>
+        /// <param name="paddName">The name of the paddock</param>
+        public void Add(object paddObj, string paddName)
         {
-            PaddockInfo NewPadd;
+            PaddockInfo newPadd;
 
-            NewPadd = new PaddockInfo();
-            NewPadd.iPaddID = this.Count() + 1; //???????? ID is 1 based here
-            NewPadd.paddObj = paddObj;
-            NewPadd.sName = sName.ToLower();
-            this.Add(NewPadd);
+            newPadd = new PaddockInfo();
+            newPadd.PaddID = this.Count() + 1; // ID is 1 based here
+            newPadd.PaddObj = paddObj;
+            newPadd.Name = paddName.ToLower();
+            this.Add(newPadd);
         }
+
         /// <summary>
         /// Delete the paddock at the index
         /// </summary>
-        /// <param name="iValue"></param>
-        public void Delete(int iValue)
+        /// <param name="indexValue">Paddock index</param>
+        public void Delete(int indexValue)
         {
-            int Idx;
-
-            FList[iValue] = null;
-            for (Idx = iValue + 1; Idx <= FList.Length - 1; Idx++)
-                FList[Idx - 1] = FList[Idx];
-            Array.Resize(ref FList, FList.Length - 1);
+            this.items[indexValue] = null;
+            for (int idx = indexValue + 1; idx <= this.items.Length - 1; idx++)
+                this.items[idx - 1] = this.items[idx];
+            Array.Resize(ref this.items, this.items.Length - 1);
         }
+
         /// <summary>
         /// Get the paddock info at the index
         /// </summary>
-        /// <param name="iValue">0-n</param>
-        /// <returns></returns>
-        public PaddockInfo byIndex(int iValue)
+        /// <param name="indexValue">The paddock index. 0-n</param>
+        /// <returns>The paddock info</returns>
+        public PaddockInfo ByIndex(int indexValue)
         {
-            return FList[iValue];
+            return this.items[indexValue];
         }
-        /// <summary>
-        /// Get the paddock by ID
-        /// </summary>
-        /// <param name="iValue"></param>
-        /// <returns></returns>
-        public PaddockInfo byID(int iValue)
-        {
-            int Idx;
 
-            PaddockInfo Result = null;
-            Idx = 0;
-            while ((Idx < this.Count()) && (Result == null))
+        /// <summary>
+        /// Get the paddock index by ID
+        /// </summary>
+        /// <param name="idValue">The paddock ID</param>
+        /// <returns>The paddock index</returns>
+        public PaddockInfo ByID(int idValue)
+        {
+            PaddockInfo result = null;
+            int idx = 0;
+            while ((idx < this.Count()) && (result == null))
             {
-                if (this.byIndex(Idx).iPaddID == iValue)
-                    Result = this.byIndex(Idx);
+                if (this.ByIndex(idx).PaddID == idValue)
+                    result = this.ByIndex(idx);
                 else
-                    Idx++;
+                    idx++;
             }
-            return Result;
+            return result;
         }
+
         /// <summary>
         /// Get the paddock by object
         /// </summary>
         /// <param name="paddObj">The paddock object</param>
         /// <returns>The paddock info</returns>
-        public PaddockInfo byObj(Object paddObj)
+        public PaddockInfo ByObj(object paddObj)
         {
-            int Idx;
-
-            PaddockInfo Result = null;
-            Idx = 0;
-            while ((Idx < this.Count()) && (Result == null))
+            PaddockInfo result = null;
+            int idx = 0;
+            while ((idx < this.Count()) && (result == null))
             {
-                if (this.byIndex(Idx).paddObj == paddObj)
-                    Result = this.byIndex(Idx);
+                if (this.ByIndex(idx).PaddObj == paddObj)
+                    result = this.ByIndex(idx);
                 else
-                    Idx++;
+                    idx++;
             }
-            return Result;
+            return result;
         }
+
         /// <summary>
         /// Get the paddock by name
         /// </summary>
-        /// <param name="sName"></param>
-        /// <returns></returns>
-        public PaddockInfo byName(string sName)
+        /// <param name="paddName">Paddock name</param>
+        /// <returns>The PaddockInfo object</returns>
+        public PaddockInfo ByName(string paddName)
         {
-            int Idx;
-
-            Idx = IndexOf(sName);
-            if (Idx >= 0)
-                return this.byIndex(Idx);
+            int idx = this.IndexOf(paddName);
+            if (idx >= 0)
+                return this.ByIndex(idx);
             else
                 return null;
         }
 
         /// <summary>
-        /// 
+        /// Get the index of the paddock by name
         /// </summary>
-        /// <param name="sName"></param>
-        /// <returns></returns>
-        public int IndexOf(string sName)
+        /// <param name="paddName">The paddock name. Case insensitive test.</param>
+        /// <returns>The index. 0->n</returns>
+        public int IndexOf(string paddName)
         {
-            int Result = this.Count() - 1;
-            while ((Result >= 0) && (this.byIndex(Result).sName != sName.ToLower()))
-                Result--;
-            return Result;
+            int result = this.Count() - 1;
+            while ((result >= 0) && (this.ByIndex(result).Name != paddName.ToLower()))
+                result--;
+            return result;
         }
 
         /// <summary>
         /// Initialise at the first timestep
         /// </summary>
-        public void beginTimeStep()
+        public void BeginTimeStep()
         {
-            int iPadd;
-
-            for (iPadd = 0; iPadd <= this.Count() - 1; iPadd++)
+            for (int paddIdx = 0; paddIdx <= this.Count() - 1; paddIdx++)
             {
-                this.byIndex(iPadd).ClearSupplement();
-                this.byIndex(iPadd).zeroRemoval();
+                this.ByIndex(paddIdx).ClearSupplement();
+                this.ByIndex(paddIdx).ZeroRemoval();
             }
         }
     }
-    
 }

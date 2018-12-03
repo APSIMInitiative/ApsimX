@@ -90,9 +90,9 @@ namespace Models.PMF
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
                     cultivarNames.Add(cultivar.Name);
-                    if (cultivar.Aliases != null)
+                    if (cultivar.Alias != null)
                     {
-                        foreach (string alias in cultivar.Aliases)
+                        foreach (string alias in cultivar.Alias)
                             cultivarNames.Add(alias);
                     }
                 }
@@ -166,7 +166,9 @@ namespace Models.PMF
         {
             get
             {
-                return Phenology.Emerged;
+                if (Phenology != null)
+                    return Phenology.Emerged;
+                return false;
             }
         }
 
@@ -372,7 +374,7 @@ namespace Models.PMF
         {
             if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the implementation and model parameterisation are provided in the following sections.", indent));
                 // Write Plant Model Table
                 tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
                 DataTable tableData = new DataTable();

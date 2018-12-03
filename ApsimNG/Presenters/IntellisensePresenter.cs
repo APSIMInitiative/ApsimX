@@ -5,12 +5,20 @@
     using System.Linq;
     using System.IO;
     using Views;
+    using Interfaces;
     using Intellisense;
     using EventArguments;
     using ICSharpCode.NRefactory.Editor;
     using ICSharpCode.NRefactory.CSharp;
     using Models.Core;
     using System.Globalization;
+    using System.Drawing;
+    using System.Reflection;
+    using System.Text;
+    using Classes.Intellisense;
+    using System.Xml;
+    using ICSharpCode.NRefactory.TypeSystem;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -22,7 +30,12 @@
         /// <summary>
         /// The view responsible for displaying the intellisense options on the screen.
         /// </summary>
-        private IntellisenseView view = new IntellisenseView();
+        private IntellisenseView view;
+
+        /// <summary>
+        /// Small popup window which displays completion options (arguments) for a method.
+        /// </summary>
+        private IMethodCompletionView methodCompletionView;
 
         /// <summary>
         /// Fired when the we need to generate intellisense suggestions.
@@ -51,6 +64,11 @@
         private string triggerWord = string.Empty;
 
         /// <summary>
+        /// Stores the last used coordinates for the intellisense popup.
+        /// </summary>
+        private Point recentLocation;
+
+        /// <summary>
         /// Constructor. Requires a reference to the view holding the text editor.
         /// </summary>
         /// <param name="textEditor">Reference to the view holding the text editor. Cannot be null.</param>
@@ -58,18 +76,16 @@
         {
             if (textEditor == null)
                 throw new ArgumentException("textEditor cannot be null.");
-            Editor = textEditor; // ?? throw new ArgumentException("textEditor cannot be null.");
+
+            view = new IntellisenseView(textEditor);
+            methodCompletionView = new MethodCompletionView(textEditor);
 
             // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed 
             // a word and needs completion options for it, we can't just insert the selected completion at the caret 
             // - half of the word will be duplicated. Instead, we need to intercept the event, add the trigger word 
             // to the event args, and call the event handler provided to us. The view is then responsible for 
             // inserting the completion option at the appropriate point and removing the half-finished word.
-            view.ItemSelected += (sender, e) =>
-            {
-                e.TriggerWord = triggerWord;
-                onItemSelected?.Invoke(this, e);
-            };
+            view.ItemSelected += ContextItemSelected;
         }
 
         /// <summary>
@@ -133,22 +149,6 @@
         public bool Visible { get { return view.Visible; } }
 
         /// <summary>
-        /// Editor being used. Mainly used so that the view has a reference to the top-level window,
-        /// which it needs in order to do coordinate-related calculations.
-        /// </summary>
-        public ViewBase Editor
-        {
-            get
-            {
-                return view.Editor;
-            }
-            set
-            {
-                view.Editor = value;
-            }
-        }
-
-        /// <summary>
         /// Detaches all handlers from an event.
         /// </summary>
         /// <typeparam name="T">Type of the event.</typeparam>
@@ -187,14 +187,14 @@
             // Ignore everything before most recent model name in square brackets.
             // I'm assuming that model/node names cannot start with a number.
             string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
-            var matches = System.Text.RegularExpressions.Regex.Matches(cellContents, modelNamePattern);
+            var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count > 0)
             {
                 int modelNameIndex = objectName.LastIndexOf(matches[matches.Count - 1].Value);
                 if (modelNameIndex >= 0)
                     objectName = objectName.Substring(modelNameIndex);
             }
-            
+
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
             view.Populate(results);
             return results.Any();
@@ -212,8 +212,6 @@
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
             string fileName = Path.GetTempFileName();
-            if (!File.Exists(fileName))
-                File.Create(fileName).Close();
             File.WriteAllText(fileName, code);
             syntaxTree.FileName = fileName;
             syntaxTree.Freeze();
@@ -240,9 +238,19 @@
             view.Populate(completionList);
             if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
                 view.SelectItem(completionList.IndexOf(completionList.OrderByDescending(x => GetMatchQuality(x.CompletionText, completionResult.TriggerWord)).FirstOrDefault()));
+
+            File.Delete(fileName);
             return completionList.Any();
         }
 
+        /// <summary>
+        /// Generates completion options for a series.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="offset"></param>
+        /// <param name="tableName"></param>
+        /// <param name="storage"></param>
+        /// <returns></returns>
         public bool GenerateSeriesCompletions(string text, int offset, string tableName, IStorageReader storage)
         {
             triggerWord = text?.Substring(0, offset).Split(' ').Last().Replace("[", "").Replace("]", "");
@@ -267,19 +275,138 @@
         }
 
         /// <summary>
-        /// Generates the intellisense options.
-        /// After calling this, call <see cref="Show(int, int, int)"/> to show the intellisense popup.
+        /// Shows completion information for a method call.
         /// </summary>
-        /// <param name="code">Source code.</param>
-        /// <param name="offset">Offset of the cursor/caret in the source code.</param>
-        /// <param name="controlSpace">True iff this intellisense request was generated by the user pressing control + space.</param>
-        /// <returns></returns>
-        public bool GenerateCompletionOptions(string code, int offset, bool controlSpace = false)
+        /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
+        /// <param name="code">Code for which we want to generate completion data.</param>
+        /// <param name="offset">Offset of the cursor/caret in the code.</param>
+        public void ShowScriptMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
-            if (Editor?.Owner is ReportView)
-                return GenerateReportCompletions(code, offset, controlSpace);
-            else
-                return GenerateScriptCompletions(code, offset, controlSpace);
+            CSharpParser parser = new CSharpParser();
+            SyntaxTree syntaxTree = parser.Parse(code);
+            string fileName = Path.GetTempFileName();
+            File.WriteAllText(fileName, code);
+            syntaxTree.FileName = fileName;
+            syntaxTree.Freeze();
+
+            IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
+            CodeCompletionResult result = completion.GetMethodCompletion(document, offset, false);
+            File.Delete(fileName);
+            if (result.OverloadProvider != null)
+            {
+                if (result.OverloadProvider.Count < 1)
+                    return;
+                List<MethodCompletion> completions = new List<MethodCompletion>();
+                foreach (IParameterizedMember method in result.OverloadProvider.Items.Select(x => x.Method))
+                {
+                    // Generate argument signatures - e.g. string foo, int bar
+                    List<string> arguments = new List<string>();
+                    foreach (var parameter in method.Parameters)
+                    {
+                        string parameterString = string.Format("{0} {1}", parameter.Type.Name, parameter.Name);
+                        if (parameter.ConstantValue != null)
+                            parameterString += string.Format(" = {0}", parameter.ConstantValue.ToString());
+                        arguments.Add(parameterString);
+                    }
+
+                    MethodCompletion completion = new MethodCompletion()
+                    {
+                        Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, arguments.Any() ? arguments.Aggregate((x, y) => string.Format("{0}, {1}", x, y)) : string.Empty)
+                    };
+
+                    if (method.Documentation == null)
+                    {
+                        completion.Summary = string.Empty;
+                        completion.ParameterDocumentation = string.Empty;
+                    }
+                    else
+                    {
+                        if (method.Documentation.Xml.Text.Contains("<summary>") && method.Documentation.Xml.Text.Contains("</summary>"))
+                            completion.Summary = method.Documentation.Xml.Text.Substring(0, method.Documentation.Xml.Text.IndexOf("</summary")).Replace("<summary>", string.Empty).Trim(Environment.NewLine.ToCharArray()).Trim();
+                        else
+                            completion.Summary = string.Empty;
+
+                        // NRefactory doesn't do anything more than read the xml documentation file.
+                        // Therefore, we need to parse this XML to get the parameter summaries.
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(string.Format("<documentation>{0}</documentation>", method.Documentation.Xml.Text));
+                        List<string> argumentSummariesList = new List<string>();
+                        foreach (XmlElement parameter in XmlUtilities.ChildNodesRecursively(doc.FirstChild, "param"))
+                            argumentSummariesList.Add(string.Format("{0}: {1}", parameter.GetAttribute("name"), parameter.InnerText));
+
+                        if (argumentSummariesList.Any())
+                            completion.ParameterDocumentation = argumentSummariesList.Aggregate((x, y) => x + Environment.NewLine + y);
+                        else
+                            completion.ParameterDocumentation = string.Empty;
+                    }
+
+                    completions.Add(completion);
+                }
+
+                methodCompletionView.Completions = completions;
+                methodCompletionView.Location = location;
+                methodCompletionView.Visible = true;
+            }
+        }
+
+        /// <summary>
+        /// Shows completion information for a method call.
+        /// </summary>
+        /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
+        /// <param name="code">Code for which we want to generate completion data.</param>
+        /// <param name="offset">Offset of the cursor/caret in the code.</param>
+        public void ShowMethodCompletion(IModel relativeTo, string code, int offset, Point location)
+        {
+            string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
+
+            // Ignore everything before the most recent comma.
+            contentsToCursor = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
+
+            string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
+            // Set the trigger word for later use.
+            triggerWord = GetTriggerWord(currentLine);
+            
+            // Ignore everything before most recent model name in square brackets.
+            // I'm assuming that model/node names cannot start with a number.
+            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
+            string objectName = currentLine;
+            var matches = System.Text.RegularExpressions.Regex.Matches(code, modelNamePattern);
+            if (matches.Count > 0)
+            {
+                int modelNameIndex = currentLine.LastIndexOf(matches[matches.Count - 1].Value);
+                if (modelNameIndex >= 0)
+                {
+                    currentLine = currentLine.Substring(modelNameIndex);
+                    int lastPeriod = currentLine.LastIndexOf('.');
+                    objectName = lastPeriod >= 0 ? currentLine.Substring(0, lastPeriod) : currentLine;
+                }
+            }
+            string methodName = triggerWord.TrimEnd('(');
+            MethodInfo method = NeedContextItemsArgs.GetMethodInfo(relativeTo as Model, methodName, objectName);
+
+            if (method == null)
+                return;
+            MethodCompletion completion = new MethodCompletion();
+
+            List<string> parameterStrings = new List<string>();
+            StringBuilder parameterDocumentation = new StringBuilder();
+            foreach (ParameterInfo parameter in method.GetParameters())
+            {
+                string parameterString = string.Format("{0} {1}", parameter.ParameterType.Name, parameter.Name);
+                if (parameter.DefaultValue != DBNull.Value)
+                    parameterString += string.Format(" = {0}", parameter.DefaultValue.ToString());
+                parameterStrings.Add(parameterString);
+                parameterDocumentation.AppendLine(string.Format("{0}: {1}", parameter.Name, NeedContextItemsArgs.GetDescription(method, parameter.Name)));
+            }
+            string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
+
+            completion.Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
+            completion.Summary = NeedContextItemsArgs.GetDescription(method);
+            completion.ParameterDocumentation = parameterDocumentation.ToString().Trim(Environment.NewLine.ToCharArray());
+
+            methodCompletionView.Completions = new List<MethodCompletion>() { completion };
+            methodCompletionView.Location = location;
+            methodCompletionView.Visible = true;
         }
 
         /// <summary>
@@ -290,6 +417,8 @@
         /// <param name="lineHeight">Line height (in px?).</param>
         public void Show(int x, int y, int lineHeight = 17)
         {
+            if (methodCompletionView.Visible)
+                methodCompletionView.Visible = false;
             view.SmartShowAtCoordinates(x, y, lineHeight);
             if (completionResult != null && completionResult.SuggestedCompletionDataItem != null)
             {
@@ -297,6 +426,7 @@
                 if (index >= 0)
                     view.SelectItem(index);
             }
+            recentLocation = new Point(x, y);
         }
 
         /// <summary>
@@ -304,7 +434,9 @@
         /// </summary>
         public void Cleanup()
         {
+            view.ItemSelected -= ContextItemSelected;
             view?.Cleanup();
+            methodCompletionView.Visible = false;
         }
 
         /// <summary>
@@ -400,23 +532,21 @@
         }
 
         /// <summary>
-        /// Generates completion options for a report. This should also work for the property presenter.
+        /// Invoked when the user selects a completion option.
+        /// Removes the intellisense popup, and displays the method completion popup
+        /// if the selected item is a method.
         /// </summary>
-        /// <param name="code">Source code.</param>
-        /// <param name="offset">Offset of the cursor/caret in the source code.</param>
-        /// <param name="controlSpace">True iff this intellisense request was generated by the user pressing control + space.</param>
-        /// <returns>True if any completion options are found. False otherwise.</returns>
-        private bool GenerateReportCompletions(string code, int offset, bool controlSpace = false)
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event Arguments.</param>
+        private void ContextItemSelected(object sender, NeedContextItemsArgs.ContextItem args)
         {
-            //var completionOptions = NeedContextItemsArgs.ExamineModelForNames(model, e.ObjectName, true, true, false);
-            string currentLine = code.Split(Environment.NewLine.ToCharArray()).Last();
-            ViewBase currentView = Editor;
-            while (!(currentView is ExplorerView))
+            IntellisenseItemSelectedArgs itemSelectedArgs = new IntellisenseItemSelectedArgs()
             {
-                currentView = currentView.Owner;
-            }
-            ExplorerView mainView = currentView as ExplorerView;
-            return false;
+                TriggerWord = triggerWord,
+                ItemSelected = args.Name + (args.IsMethod ? "(" : ""),
+                IsMethod = args.IsMethod
+            };
+            onItemSelected?.Invoke(this, itemSelectedArgs);
         }
     }
 }

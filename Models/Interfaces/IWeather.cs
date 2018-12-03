@@ -28,6 +28,9 @@ namespace Models.Interfaces
         /// <summary>Mean temperature  /// </summary>
         double MeanT { get; }
 
+        /// <summary>Daily mean VPD  /// </summary>
+        double VPD { get; }
+
         /// <summary>Gets or sets the rainfall (mm)</summary>
         double Rain { get; }
 

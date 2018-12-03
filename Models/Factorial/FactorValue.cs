@@ -75,6 +75,17 @@ namespace Models.Factorial
         public List<object> Values { get { return values; } }
 
         /// <summary>
+        /// Gets all paths.
+        /// </summary>
+        public List<string> Paths
+        {
+            get
+            {
+                return paths;
+            }
+        }
+
+        /// <summary>
         /// Apply this FactorValue to the specified simulation
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
@@ -149,10 +160,7 @@ namespace Models.Factorial
             modelToReplace.Parent.Children.Insert(index, newModel as Model);
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
-
-            Events events = new Events(newModel);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newModel, loadedArgs });
+            newModel.OnCreated();
         }
     }
 }

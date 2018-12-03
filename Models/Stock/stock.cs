@@ -395,11 +395,14 @@ namespace Models.GrazPlan
 
             set
             {
-                Array.Resize(ref this.genotypeInits, value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
+                if (value != null)
                 {
-                    this.genotypeInits[idx] = new SingleGenotypeInits();
-                    this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
+                    Array.Resize(ref this.genotypeInits, value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                    {
+                        this.genotypeInits[idx] = new SingleGenotypeInits();
+                        this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
+                    }
                 }
             }
         }
@@ -419,10 +422,13 @@ namespace Models.GrazPlan
 
             set
             {
-                int offset = this.animalInits.Length;
-                Array.Resize(ref this.animalInits, offset + value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
-                    this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                if (value != null)
+                {
+                    int offset = this.animalInits.Length;
+                    Array.Resize(ref this.animalInits, offset + value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                        this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                }
             }
         }
 
@@ -441,10 +447,13 @@ namespace Models.GrazPlan
 
             set
             {
-                int offset = this.animalInits.Length;
-                Array.Resize(ref this.animalInits, offset + value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
-                    this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                if (value != null)
+                {
+                    int offset = this.animalInits.Length;
+                    Array.Resize(ref this.animalInits, offset + value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                        this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                }
             }
         }
 
@@ -476,13 +485,10 @@ namespace Models.GrazPlan
                         // if the paddock object is found then add it to Paddocks
                         this.stockModel.Paddocks.Add(idx, value[idx].Name);
 
-                        paddockInfo = this.stockModel.Paddocks.byIndex(idx);
-                        paddockInfo.sExcretionDest = value[idx].Excretion;
-                        paddockInfo.sUrineDest = value[idx].Urine;
-                        paddockInfo.iExcretionID = UNKNOWN;
-                        paddockInfo.iAddFaecesID = UNKNOWN;
-                        paddockInfo.iAddUrineID = UNKNOWN;
-                        paddockInfo.fArea = value[idx].Area;
+                        paddockInfo = this.stockModel.Paddocks.ByIndex(idx);
+                        paddockInfo.ExcretionDest = value[idx].Excretion;
+                        paddockInfo.UrineDest = value[idx].Urine;
+                        paddockInfo.Area = value[idx].Area;
                         paddockInfo.Slope = value[idx].Slope;
                         for (int jdx = 0; jdx < value[idx].Forages.Length; jdx++)
                         {
@@ -510,7 +516,7 @@ namespace Models.GrazPlan
 
             set
             {
-                if (this.stockModel.Enterprises != null)
+                if (value != null && this.stockModel.Enterprises != null)
                 {
                     while (this.stockModel.Enterprises.Count > 0)
                         this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
@@ -536,7 +542,7 @@ namespace Models.GrazPlan
 
             set
             {
-                if (this.stockModel.GrazingPeriods != null)
+                if (value != null && this.stockModel.GrazingPeriods != null)
                 {
                     while (this.stockModel.GrazingPeriods.Count() > 0)
                     {
@@ -4222,14 +4228,14 @@ namespace Models.GrazPlan
                 foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
-                    this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
+                    this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
 
-                    PaddockInfo thePadd = this.stockModel.Paddocks.byObj(zone);
+                    PaddockInfo thePadd = this.stockModel.Paddocks.ByObj(zone);
 
                     // find all the child crop, pasture components that have removable biomass
                     foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
                     {
-                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop, true);
+                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
                     }
 
                     // locate surfaceOM and soil nutrient model
@@ -4305,13 +4311,13 @@ namespace Models.GrazPlan
                 // update the paddock area as this can change during the simulation
                 foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
                 {
-                    this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
-                    this.stockModel.Paddocks.byObj(zone).Slope = zone.Slope;
+                    this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
+                    this.stockModel.Paddocks.ByObj(zone).Slope = zone.Slope;
                 }
             }
             this.RequestAvailableToAnimal();  // accesses each forage provider (crop)
 
-            this.stockModel.Paddocks.beginTimeStep();
+            this.stockModel.Paddocks.BeginTimeStep();
 
             if (this.suppFeed != null)
             {
@@ -4343,7 +4349,7 @@ namespace Models.GrazPlan
                 if (forageProvider.ForageObj != null)
                 {
                     // if there is forage removed from this forage object/crop/pasture
-                    if (forageProvider.somethingRemoved())
+                    if (forageProvider.SomethingRemoved())
                     {
                         forageProvider.RemoveHerbageFromPlant();
                     }
@@ -4356,12 +4362,12 @@ namespace Models.GrazPlan
             // send the values to the components
             for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
             {
-                PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
+                PaddockInfo paddInfo = this.stockModel.Paddocks.ByIndex(idx);
 
                 if (paddInfo.AddFaecesObj != null)
                 {
                     Surface.AddFaecesType faeces = new Surface.AddFaecesType();
-                    if (this.PopulateFaeces(paddInfo.iPaddID, faeces))
+                    if (this.PopulateFaeces(paddInfo.PaddID, faeces))
                     {
                         ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
                     }
@@ -4369,7 +4375,7 @@ namespace Models.GrazPlan
                 if (paddInfo.AddUrineObj != null)
                 {
                     AddUrineType urine = new AddUrineType();
-                    if (this.PopulateUrine(paddInfo.iPaddID, urine))
+                    if (this.PopulateUrine(paddInfo.PaddID, urine))
                     {
                         ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
                     }
@@ -4661,11 +4667,11 @@ namespace Models.GrazPlan
             for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
             {
                 double pastureGreen = 0;
-                PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
+                PaddockInfo paddInfo = this.stockModel.Paddocks.ByIndex(idx);
                 for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
                 {
                     forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
-                    if (string.Compare(forageProvider.OwningPaddock.sName, paddInfo.sName, true) == 0)
+                    if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
                     {
                         if (forageProvider.ForageObj != null)
                         {
@@ -4686,7 +4692,7 @@ namespace Models.GrazPlan
                 for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
                 {
                     forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
-                    if (string.Compare(forageProvider.OwningPaddock.sName, paddInfo.sName, true) == 0)
+                    if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
                     {
                         forageProvider.PastureGreenDM = pastureGreen;
                     }

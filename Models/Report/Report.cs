@@ -112,10 +112,13 @@ namespace Models.Report
             this.FindVariableMembers();
 
             // Subscribe to events.
-            foreach (string eventName in EventNames)
+            if (EventNames != null)
             {
-                if (eventName != string.Empty)
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
+                foreach (string eventName in EventNames)
+                {
+                    if (eventName != string.Empty)
+                        events.Subscribe(eventName.Trim(), DoOutputEvent);
+                }
             }
         }
 

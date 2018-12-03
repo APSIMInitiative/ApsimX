@@ -15,12 +15,6 @@
     public class ExperimentPresenter : IPresenter
     {
         /// <summary>
-        /// The storage writer.
-        /// </summary>
-        [Link]
-        private IStorageWriter storage = null;
-
-        /// <summary>
         /// Command to handle the running of simulations from this view.
         /// </summary>
         private RunCommand runner;
@@ -70,7 +64,7 @@
             view = viewObject as ExperimentView;
             presenter = parentPresenter;
 
-            runner = new RunCommand(model, presenter, false, storage);
+            runner = new RunCommand(model, presenter, false);
             // Once the simulation is finished, we will need to reset the disabled simulation names.
             runner.Finished += OnSimulationsCompleted;
 
@@ -115,7 +109,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnEnable(object sender, EventArgs args)
         {
-            ToggleSims(view.SelectedItems, true);
+            try
+            {
+                ToggleSims(view.SelectedItems, true);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -125,7 +126,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnDisable(object sender, EventArgs args)
         {
-            ToggleSims(view.SelectedItems, false);
+            try
+            {
+                ToggleSims(view.SelectedItems, false);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -277,7 +285,7 @@
             {
                 List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
                 int i = 0;
-                foreach (List<FactorValue> factors in model.AllCombinations())
+                foreach (List<FactorValue> factors in allSims)
                 {
                     if (!getAllData && i > maxSimsToDisplay)
                         break;
@@ -286,7 +294,8 @@
                     Experiment.GetFactorNamesAndValues(factors, names, values);
                     // Pack all factor levels for the current simulation into a list.
                     string name = model.Name + GetName(factors);
-                    bool flag = !model.DisabledSimNames.Contains(name);
+                    bool flag = model.DisabledSimNames == null || 
+                                !model.DisabledSimNames.Contains(name);
                     sims.Add(new Tuple<string, List<string>, bool>(name, values, flag));
                     i++;
                 }

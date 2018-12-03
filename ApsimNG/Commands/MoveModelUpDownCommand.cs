@@ -34,6 +34,8 @@ namespace UserInterface.Commands
         /// <param name="up">if set to <c>true</c> [up].</param>
         public MoveModelUpDownCommand(IModel modelToMove, bool up, IExplorerView explorerView)
         {
+            if (modelToMove.ReadOnly)
+                throw new ApsimXException(modelToMove, string.Format("Unable to move {0} - it is read-only.", modelToMove.Name));
             this.modelToMove = modelToMove;
             this.moveUp = up;
             this.explorerView = explorerView;            

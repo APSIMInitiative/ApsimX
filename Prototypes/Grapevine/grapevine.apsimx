@@ -88,7 +88,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Enabled>true</Enabled>
           </SubtractFunction>
           <AirTemperatureFunction>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <Graph>
@@ -157,10 +157,10 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           <Start>Endodormancy</Start>
           <End>Ecodormancy</End>
         </GenericPhase>
-        <BuddingPhase>
+        <GenericPhase>
           <Name>Budding</Name>
           <WangEngelTempFunction>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <MinTemp>0</MinTemp>
@@ -191,233 +191,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
               <B>0.936</B>
               <C>-0.3</C>
             </ExponentialFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Enabled>true</Enabled>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>FractionOfBudBurst</Name>
-            <SigmoidFunction>
-              <Name>BudNumberEffect</Name>
-              <VariableReference>
-                <Name>XValue</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <VariableName>[Structure].PrimaryBudNo</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>Ymax</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <FixedValue>1.4</FixedValue>
-              </Constant>
-              <Constant>
-                <Name>Xo</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <FixedValue>100</FixedValue>
-              </Constant>
-              <Constant>
-                <Name>b</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <FixedValue>-54.8977</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-            </SigmoidFunction>
-            <LinearInterpolationFunction>
-              <Name>CordonDiameterEffect</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Enabled>true</Enabled>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <Checkpoint>Current</Checkpoint>
-                    <XFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Grapevine.Phenology.Budding.FractionOfBudBurst.CordonDiameterEffect.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Enabled>true</Enabled>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Enabled>true</Enabled>
-                <X>
-                  <double>0</double>
-                  <double>12</double>
-                  <double>15</double>
-                </X>
-                <Y>
-                  <double>0.1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Enabled>true</Enabled>
-              <XProperty>[Grapevine].Cordon.CordonDiameter.Value()</XProperty>
-            </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
           </MultiplyFunction>
@@ -472,7 +245,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           <Enabled>true</Enabled>
           <Start>Ecodormancy</Start>
           <End>BudBurst</End>
-        </BuddingPhase>
+        </GenericPhase>
         <GenericPhase>
           <Name>Flowering</Name>
           <Constant>
@@ -482,7 +255,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <FixedValue>29</FixedValue>
           </Constant>
           <VariableReference>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -502,7 +275,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Units>d</Units>
           </Constant>
           <VariableReference>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -553,7 +326,7 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
             <Enabled>true</Enabled>
           </MultiplyFunction>
           <VariableReference>
-            <Name>ThermalTime</Name>
+            <Name>Progression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Enabled>true</Enabled>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -575,7 +348,6 @@ Paradormancy, which is the suspension of growth caused by factors outside the me
           <Enabled>true</Enabled>
           <Start>Veraison</Start>
           <End>LeafFall</End>
-          <TTForTimeStep>0</TTForTimeStep>
         </LeafDeathPhase>
         <GotoPhase>
           <Name>GotoPhase</Name>
@@ -1008,6 +780,67 @@ A function is used to capture the year of the current season as in the south hem
           <Enabled>true</Enabled>
           <WhenToHold>FruitSet</WhenToHold>
         </HoldFunction>
+        <BudNumberFunction>
+          <Name>BudNumber</Name>
+          <MultiplyFunction>
+            <Name>FractionOfBudBurst</Name>
+            <SigmoidFunction>
+              <Name>BudNumberEffect</Name>
+              <VariableReference>
+                <Name>XValue</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <VariableName>[Structure].PrimaryBudNo</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Ymax</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>1.4</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Xo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>100</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>b</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <FixedValue>-54.8977</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+            </SigmoidFunction>
+            <LinearInterpolationFunction>
+              <Name>CordonDiameterEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>15</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <XProperty>[Grapevine].Cordon.CordonDiameter.Value()</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <SetStage>BudBurst</SetStage>
+        </BudNumberFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <CohortInitialisationStage>Ecodormancy</CohortInitialisationStage>

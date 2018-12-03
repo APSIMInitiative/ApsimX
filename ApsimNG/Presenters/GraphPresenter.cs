@@ -110,7 +110,7 @@ namespace UserInterface.Presenters
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis a in graph.Axes)
+                foreach (Models.Graph.Axis a in graph.Axis)
                 {
                     FormatAxis(a);
                 }
@@ -133,6 +133,8 @@ namespace UserInterface.Presenters
 
                 // Remove series titles out of the graph disabled series list when
                 // they are no longer valid i.e. not on the graph.
+                if (graph.DisabledSeries == null)
+                    graph.DisabledSeries = new List<string>();
                 IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.title);
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
@@ -172,7 +174,8 @@ namespace UserInterface.Presenters
         /// <param name="definition">The definition.</param>
         private void DrawOnView(SeriesDefinition definition)
         {
-            if (!graph.DisabledSeries.Contains(definition.title))
+            if (graph.DisabledSeries == null ||
+                !graph.DisabledSeries.Contains(definition.title))
             {
                 try
                 {
@@ -229,7 +232,7 @@ namespace UserInterface.Presenters
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(List<Annotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
+            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
@@ -377,7 +380,7 @@ namespace UserInterface.Presenters
         /// <exception cref="System.Exception">Cannot find axis with type:  + axisType.ToString()</exception>
         private object GetAxis(Axis.AxisType axisType)
         {
-            foreach (Axis a in graph.Axes)
+            foreach (Axis a in graph.Axis)
             {
                 if (a.Type.ToString() == axisType.ToString())
                 {

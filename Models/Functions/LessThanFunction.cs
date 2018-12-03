@@ -57,6 +57,9 @@ namespace Models.Functions
                 if (ChildFunctions == null)
                     ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
+                if (ChildFunctions == null || ChildFunctions.Count < 1)
+                    return;
+
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 

@@ -141,7 +141,7 @@
         /// <param name="imageName">Name of the image (without the path).</param>
         /// <param name="imageDirectory">Directory which the image should be copied to.</param>
         /// <returns>Full path to the image.</returns>
-        private static string GetImagePath(string imageName, string imageDirectory)
+        public static string GetImagePath(string imageName, string imageDirectory)
         {
             string path = Path.Combine(imageDirectory, imageName);
             using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))

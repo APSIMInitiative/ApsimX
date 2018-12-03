@@ -82,7 +82,11 @@
         /// <returns>The chosen file.</returns>
         public string GetFile()
         {
-            return GetFiles(false).FirstOrDefault();
+            string[] files = GetFiles(false);
+            if (files == null || !files.Any())
+                return null;
+            else
+                return files.FirstOrDefault();
         }
 
         /// <summary>
@@ -123,26 +127,31 @@
         private string[] WindowsFileDialog(bool selectMultiple)
         {
             System.Windows.Forms.FileDialog dialog = null;
-            if ((Action & FileActionType.Open) == FileActionType.Open)
+            if (Action == FileActionType.Open)
             {
                 dialog = new System.Windows.Forms.OpenFileDialog();
                 (dialog as System.Windows.Forms.OpenFileDialog).Multiselect = selectMultiple;
             }
-            else if ((Action & FileActionType.Save) == FileActionType.Save)
+            else if (Action == FileActionType.Save)
                 dialog = new System.Windows.Forms.SaveFileDialog();
-            else if ((Action & FileActionType.SelectFolder) == FileActionType.SelectFolder)
+            else if (Action == FileActionType.SelectFolder)
                 return WindowsDirectoryDialog(selectMultiple);
 
             dialog.Title = Prompt;
-            if (!String.IsNullOrEmpty(FileType))
-                dialog.Filter = FileType + "|All files (*.*)|*.*";
+
+            if (string.IsNullOrEmpty(FileType))
+                dialog.Filter = "All files (*.*)|*.*";
+            else if (FileType.Contains("|"))
+                dialog.Filter = FileType;
+            else
+                dialog.Filter = FileType + "|" + FileType;
 
             // This almost works, but Windows is buggy.
             // If the file name is long, it doesn't display in a sensible way. ¯\_(ツ)_/¯
             dialog.InitialDirectory = InitialDirectory;
             dialog.FileName = null;
 
-            string[] fileNames = null;
+            string[] fileNames = new string[0];
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 fileNames = dialog.FileNames;
             dialog = null;
@@ -160,16 +169,16 @@
         {
             int result = 0;
             NSSavePanel panel = null;
-            if ((Action & FileActionType.Open) == FileActionType.Open)
+            if (Action  == FileActionType.Open)
             {
                 panel = new NSOpenPanel();
                 (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
                 (panel as NSOpenPanel).CanChooseDirectories = false;
                 (panel as NSOpenPanel).CanChooseFiles = true;
             }
-            else if ((Action & FileActionType.Save) == FileActionType.Save)
+            else if (Action == FileActionType.Save)
                 panel = new NSSavePanel();
-            else if ((Action & FileActionType.SelectFolder) == FileActionType.SelectFolder)
+            else if (Action == FileActionType.SelectFolder)
             {
                 panel = new NSOpenPanel();
                 (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
@@ -206,7 +215,7 @@
             panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(InitialDirectory);
             
             result = panel.RunModal();
-            string[] fileNames = null;
+            string[] fileNames = new string[0];
             if (result == 1 /*NSFileHandlingPanelOKButton*/)
                 fileNames = panel is NSOpenPanel ? (panel as NSOpenPanel).Urls.Select(u => u.Path).ToArray() : new string[] { panel.Url.Path };
             panel.Dispose();
@@ -222,17 +231,17 @@
         {
             string buttonText = string.Empty;
             FileChooserAction gtkActionType;
-            if ((Action & FileActionType.Open) == FileActionType.Open)
+            if (Action == FileActionType.Open)
             {
                 buttonText = "Open";
                 gtkActionType = FileChooserAction.Open;
             }
-            else if ((Action & FileActionType.Save) == FileActionType.Save)
+            else if (Action == FileActionType.Save)
             {
                 buttonText = "Save";
                 gtkActionType = FileChooserAction.Save;
             }
-            else if ((Action & FileActionType.SelectFolder) == FileActionType.SelectFolder)
+            else if (Action == FileActionType.SelectFolder)
             {
                 buttonText = "Select Folder";
                 gtkActionType = FileChooserAction.SelectFolder;
@@ -264,7 +273,7 @@
             
             fileChooser.SetCurrentFolder(InitialDirectory);
 
-            string[] fileNames = null;
+            string[] fileNames = new string[0];
             if (fileChooser.Run() == (int)ResponseType.Accept)
                 fileNames = fileChooser.Filenames;
             fileChooser.Destroy();
@@ -298,7 +307,7 @@
                 SelectedPath = InitialDirectory
             };
             
-            string fileName = null;
+            string fileName = string.Empty;
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 fileName = dialog.SelectedPath;
             dialog.Dispose();

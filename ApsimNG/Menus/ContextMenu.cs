@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using Models.Report;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -26,9 +27,6 @@ namespace UserInterface.Presenters
     {
         [Link(IsOptional = true)]
         IStorageReader storage = null;
-
-        [Link(IsOptional = true)]
-        IStorageWriter storageWriter = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -93,7 +91,9 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
-                                              typeof(Folder) },
+                                              typeof(Folder),
+                                              typeof(Morris),
+                                              typeof(Sobol)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
@@ -109,7 +109,8 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
                                               typeof(Experiment),
-                                              typeof(Folder) },
+                                              typeof(Folder),
+                                              typeof(Morris)},
                      ShortcutKey = "F6")]
         public void RunAPSIMMultiProcess(object sender, EventArgs e)
         {
@@ -186,9 +187,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                string xml = Apsim.Serialise(model);
-                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
-                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
+                string st = FileFormat.WriteToString(model);
+                this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
             }
         }
 
@@ -206,23 +207,7 @@ namespace UserInterface.Presenters
             if (externalCBText == null || externalCBText == "")
                 this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
             else
-            {
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                try
-                {
-                    doc.LoadXml(externalCBText);
-                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
-                }
-                catch (System.Xml.XmlException)
-                {
-                    // External clipboard does not contain valid xml
-                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
-                }
-                catch (Exception ex)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(ex);
-                }
-            }
+                this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -292,7 +277,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    this.command = new Commands.RunCommand(model, this.explorerPresenter, multiProcessRunner, storageWriter);
+                    this.command = new RunCommand(model, this.explorerPresenter, multiProcessRunner);
                     this.command.Do(null);
                 }
             }
@@ -399,6 +384,10 @@ namespace UserInterface.Presenters
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             finally
             {
@@ -524,6 +513,34 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.CheckpointsPresenter");
+        }
+
+        /// <summary>
+        /// Event handler for 'Show Model Structure' menu item.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        [ContextMenu(MenuName = "Show Model Structure",
+                     IsToggle = true,
+                     AppliesTo = new Type[] { typeof(ModelCollectionFromResource) })]
+        public void ShowModelStructure(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null)
+            {
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.IsHidden = !child.IsHidden;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
+        }
+
+        public bool ShowModelStructureChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model.Children.Count < 1)
+                return true;
+            return !model.Children[0].IsHidden;
         }
 
         /// <summary>

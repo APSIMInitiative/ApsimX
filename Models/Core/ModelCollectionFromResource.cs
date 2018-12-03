@@ -1,87 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Schema;
-using System.Xml;
-using System.Xml.Serialization;
-using System.IO;
-using APSIM.Shared.Utilities;
-using System.Reflection;
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using Models.Core.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
-    public class ModelCollectionFromResource : Model
+    public class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
     {
         /// <summary>Gets or sets the name of the resource.</summary>
-        /// <value>The name of the resource.</value>
         public string ResourceName { get; set; }
 
-        /// <summary>All models</summary>
-        private List<Model> allModels;
-
-        /// <summary>
-        /// We're about to be serialised. Remove our 'ModelFromResource' model from the list
-        /// of all models so that is isn't serialised.
-        /// </summary>
-        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
-        [EventSubscribe("Serialising")]
-        protected void OnSerialising(bool xmlSerialisation)
-        {
-            if (xmlSerialisation && ResourceName != null)
-            {
-                allModels = new List<Model>();
-                allModels.AddRange(Children);
-
-                List<Model> visibleModels = new List<Model>();
-                foreach (Model child in Children)
-                {
-                    if (!child.IsHidden)
-                    {
-                        visibleModels.Add(child);
-                    }
-                }
-
-                Children = visibleModels;
-            }
-        }
-
-        /// <summary>Serialisation has completed. Reinstate 'ModelFromResource' if necessary.</summary>
-        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
-        [EventSubscribe("Serialised")]
-        protected void OnSerialised(bool xmlSerialisation)
-        {
-            if (xmlSerialisation && allModels != null)
-            {
-                Children = allModels;
-            }
-        }
+        /// <summary>Allow children to be serialised?</summary>
+        [System.Xml.Serialization.XmlIgnore]
+        public bool DoSerialiseChildren { get; private set; } = true;
 
         /// <summary>
         /// We have just been deserialised. If from XML then load our model
         /// from resource.
         /// </summary>
-        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
-        [EventSubscribe("Deserialised")]
-        protected void OnDeserialised(bool xmlSerialisation)
+        public override void OnCreated()
         {
-            if (xmlSerialisation)
+            // lookup the resource get the xml and then deserialise to a model.
+            if (ResourceName != null && ResourceName != "")
             {
-                // lookup the resource get the xml and then deserialise to a model.
-                if (ResourceName != null && ResourceName != "")
+                string contents = Properties.Resources.ResourceManager.GetString(ResourceName);
+                if (contents != null)
                 {
-                    string xml = Properties.Resources.ResourceManager.GetString(ResourceName);
-                    if (xml != null)
-                    {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(xml);
-                        Model ModelFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Model;
-                        Children.AddRange(ModelFromResource.Children);
-                        CopyPropertiesFrom(ModelFromResource);
-                        SetNotVisible(ModelFromResource);
-                    }
+                    List<Exception> creationExceptions;
+                    Model ModelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
+                    Children.Clear();
+                    Children.AddRange(ModelFromResource.Children);
+                    CopyPropertiesFrom(ModelFromResource);
+                    SetNotVisible(ModelFromResource);
+                    Apsim.ParentAllChildren(this);
+                    DoSerialiseChildren = false;
                 }
             }
         }
@@ -96,6 +50,7 @@ namespace Models.Core
             {
                 if (property.CanWrite &&
                     property.Name != "Name" &&
+                    property.Name != "Parent" &&
                     property.Name != "Children" &&
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")
@@ -120,6 +75,7 @@ namespace Models.Core
             foreach (Model child in ModelFromResource.Children)
             {
                 child.IsHidden = true;
+                child.ReadOnly = true;
                 SetNotVisible(child);
             }
         }

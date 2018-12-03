@@ -61,10 +61,10 @@ namespace Models.Functions
         public static void DocumentMathFunction(IModel function, char op,
                                                 List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         { 
-            // add a heading.
+            // add a heading
             tags.Add(new AutoDocumentation.Heading(function.Name, headingLevel));
 
-            // write memos.
+            // write memos
             foreach (IModel memo in Apsim.Children(function, typeof(Memo)))
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
@@ -82,11 +82,11 @@ namespace Models.Functions
 
             tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
 
+            // write children
             if (childrenToDocument.Count > 0)
             {
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
 
-                // write children.
                 foreach (IModel child in childrenToDocument)
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
@@ -126,6 +126,5 @@ namespace Models.Functions
             msg += child.Name;
             return false;
         }
-
     }
 }

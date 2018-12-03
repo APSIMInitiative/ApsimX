@@ -1,15 +1,24 @@
 @echo off
+setlocal enabledelayedexpansion
+if "%apsimx%"=="" (
+	pushd %~dp0..\..>nul
+	set "apsimx=!cd!"
+	popd>nul
+)
+
+rem Delete all files from Windows' DeploymentSupport directory from Bin
+for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
+	if exist %apsimx%\Bin\%%~nD%%~xD (
+		echo Deleting %apsimx%\Bin\%%~nD%%~xD...
+		del %apsimx%\Bin\%%~nD%%~xD
+	)
+)
+
+pushd %~dp0
 set "PATH=%PATH%;C:\tools\cygwin\bin;C:\Utilities"
 if Exist ApsimSetup.dmg Del ApsimSetup.dmg
 if Exist Version.tmp Del Version.tmp
 if not exist %apsimx%\Bin\Models.exe exit /B 1
-
-rem Microsoft, in their infinite wisdom, decided that it would be a good idea for
-rem sysinternals such as sigcheck to spawn a popup window the first time you run them,
-rem which asks you to agree to their eula. To get around this, we just need to set a few
-rem registry entries...
-reg.exe ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
-reg.exe ADD HKU\.DEFAULT\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f
 
 sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
@@ -23,22 +32,21 @@ mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 
-dos2unix .\Template\Contents\MacOS\ApsimNG
-copy .\Template\Contents\MacOS\ApsimNG .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS\ApsimNG
-copy .\Template\Contents\Resources\ApsimNG.icns .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\ApsimNG.icns
-xcopy /S /I /Y /Q %apsimx%\Examples .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Examples
-xcopy /I /Y /Q %apsimx%\Bin\*.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\MonoMac.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %apsimx%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
+dos2unix .\Template\Contents\MacOS\ApsimNG>nul 2>&1
+copy .\Template\Contents\MacOS\ApsimNG .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS\ApsimNG>nul
+copy .\Template\Contents\Resources\ApsimNG.icns .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\ApsimNG.icns>nul
+xcopy /S /I /Y /Q %apsimx%\Examples .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Examples>nul
+xcopy /I /Y /Q %apsimx%\Bin\*.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
+xcopy /I /Y /Q %apsimx%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
+xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
+xcopy /I /Y /Q %apsimx%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources>nul
 
 set PLIST_FILE=.\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Info.plist
 (
 echo ^<?xml version="1.0" encoding="UTF-8"?^>
-echo ^<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"^>
+echo ^<^^!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"^>
 echo ^<plist version="1.0"^>
 echo ^<dict^>
 echo    ^<key^>CFBundleDevelopmentRegion^</key^>
@@ -66,7 +74,7 @@ echo    ^<key^>CFBundleShortVersionString^</key^>>>%PLIST_FILE%
 echo    ^<string^>%SHORT_VERSION%^</string^>>>%PLIST_FILE%
 echo ^</dict^>>>%PLIST_FILE%
 echo ^</plist^>>>%PLIST_FILE%
-@echo on
-genisoimage -V APSIM%APSIM_VERSION% -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup%issuenumber%.dmg MacBundle
+genisoimage -quiet -V APSIM%APSIM_VERSION% -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup%issuenumber%.dmg MacBundle
 rmdir /S /Q .\MacBundle
+popd
 exit /B 0

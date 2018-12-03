@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Apsim.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +7,6 @@ namespace Models.Core
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
-    using System.Xml;
     using APSIM.Shared.Utilities;
     using Functions;
     using Factorial;
@@ -95,6 +89,23 @@ namespace Models.Core
             }
 
             return obj;
+        }
+
+        /// <summary>
+        /// Returns the closest ancestor to a node of the specified type.
+        /// Returns null if not found.
+        /// </summary>
+        /// <typeparam name="T">Type of model to search for.</typeparam>
+        /// <param name="model">The reference model.</param>
+        /// <returns></returns>
+        public static T Ancestor<T>(IModel model)
+        {
+            IModel obj = model == null ? null : model.Parent;
+            while (obj != null && !(obj is T))
+                obj = obj.Parent;
+            if (obj == null)
+                return default(T);
+            return (T)obj;
         }
 
         /// <summary>
@@ -247,44 +258,7 @@ namespace Models.Core
             return model;
         }
 
-        /// <summary>Adds a new model (as specified by the xml node) to the specified parent.</summary>
-        /// <param name="parent">The parent to add the model to</param>
-        /// <param name="node">The XML representing the new model</param>
-        /// <returns>The newly created model.</returns>
-        public static IModel Add(IModel parent, XmlNode node)
-        {
-            IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
-            // Call deserialised
-            Events events = new Events(modelToAdd);
-            object[] args = new object[] { true };
-            events.Publish("Deserialised", args);
-
-            // Correctly parent all models.
-            Add(parent, modelToAdd);
-
-            // Ensure the model name is valid.
-            Apsim.EnsureNameIsUnique(modelToAdd);
-
-            // Call OnLoaded
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { modelToAdd, loadedArgs });
-
-            Locator(parent).Clear();
-
-            return modelToAdd;
-        }
-
-        /// <summary>Add the specified model to the parent.</summary>
-        /// <param name="parent">The parent model</param>
-        /// <param name="modelToAdd">The child model.</param>
-        public static void Add(IModel parent, IModel modelToAdd)
-        {
-            modelToAdd.Parent = parent;
-            Apsim.ParentAllChildren(modelToAdd);
-            parent.Children.Add(modelToAdd as Model);
-            Apsim.ClearCaches(modelToAdd);
-        }
 
         /// <summary>Deletes the specified model.</summary>
         /// <param name="model">The model.</param>
@@ -299,30 +273,6 @@ namespace Models.Core
         public static void ClearCache(IModel model)
         {
             Locator(model as Model).Clear();
-        }
-
-        /// <summary>
-        /// Serialize the model to a string and return the string.
-        /// </summary>
-        /// <param name="model">The model to serialize</param>
-        /// <returns>The string version of the model</returns>
-        public static string Serialise(IModel model)
-        {
-            Events events = new Events(model);
-
-            // Let all models know that we're about to serialise.
-            object[] args = new object[] { true };
-            events.Publish("Serialising", args);
-
-            // Do the serialisation
-            StringWriter writer = new StringWriter();
-            writer.Write(XmlUtilities.Serialise(model, false));
-
-            // Let all models know that we have completed serialisation.
-            events.Publish("Serialised", args);
-
-            // Set the clipboard text.
-            return writer.ToString();
         }
 
         /// <summary>
@@ -402,32 +352,7 @@ namespace Models.Core
             return ChildrenRecursively(model).FindAll(m => !m.IsHidden);
         }
 
-        /// <summary>
-        /// Give the specified model a unique name
-        /// </summary>
-        /// <param name="modelToCheck">The model to check the name of</param>
-        public static void EnsureNameIsUnique(IModel modelToCheck)
-        {
-            string originalName = modelToCheck.Name;
-            string newName = originalName;
-            int counter = 0;
-            List<IModel> siblings = Apsim.Siblings(modelToCheck);
-            IModel child = siblings.Find(m => m.Name == newName);
-            while (child != null && child != modelToCheck && counter < 10000)
-            {
-                counter++;
-                newName = originalName + counter.ToString();
-                child = siblings.Find(m => m.Name == newName);
-            }
 
-            if (counter == 1000)
-            {
-                throw new Exception("Cannot create a unique name for model: " + originalName);
-            }
-
-            modelToCheck.Name = newName;
-            Locator(modelToCheck).Clear();
-        }
 
         /// <summary>
         /// Return all siblings of the specified model.

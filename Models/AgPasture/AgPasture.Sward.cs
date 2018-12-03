@@ -290,7 +290,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double BelowGroundWt
         {
-            get { return mySpecies.Sum(species => species.RootWt); }
+            get { return mySpecies.Sum(species => species.BelowGroundWt); }
         }
 
         /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>
@@ -1126,9 +1126,8 @@ namespace Models.AgPasture
 
         #region Initialisation methods  ------------------------------------------------------------------------------------
 
-        /// <summary>Called when the simulation is loaded.</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             // get the number and reference to the mySpecies in the sward
             numSpecies = Apsim.Children(this, typeof(PastureSpecies)).Count;
@@ -1147,7 +1146,6 @@ namespace Models.AgPasture
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-
             // check whether uptake is controlled by the sward or by species
             myWaterUptakeSource = "species";
             myNUptakeSource = "species";
@@ -1206,23 +1204,32 @@ namespace Models.AgPasture
             {
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    // Evaluate tissue turnover and get remobilisation (C and N)
-                    species.EvaluateTissueTurnoverRates();
+                    if (species.Stage == 0)
+                    {
+                        // plant has not emerged yet, check germination progress
+                        if (species.DailyGerminationProgress() >= 1.0)
+                        {
+                            // germination completed
+                            species.SetEmergenceState();
+                        }
+                    }
+                    else
+                    {
+                        // Evaluate tissue turnover and get remobilisation (C and N)
+                        species.EvaluateTissueTurnoverRates();
 
-                    // Get the potential gross growth
-                    species.CalcDailyPotentialGrowth();
+                        // Get the potential gross growth
+                        species.CalcDailyPotentialGrowth();
 
-                    // Evaluate potential allocation of today's growth
-                    species.GetAllocationFractions();
-                }
+                        // Evaluate potential allocation of today's growth
+                        species.GetAllocationFractions();
 
-                foreach (PastureSpecies species in mySpecies)
-                {
-                    // Get the potential growth after water limitations
-                    species.CalcGrowthAfterWaterLimitations();
+                        // Get the potential growth after water limitations
+                        species.CalcGrowthAfterWaterLimitations();
 
-                    // Get the N amount demanded for optimum growth and luxury uptake
-                    species.EvaluateNitrogenDemand();
+                        // Get the N amount demanded for optimum growth and luxury uptake
+                        species.EvaluateNitrogenDemand();
+                    }
                 }
             }
         }

@@ -18,6 +18,8 @@ namespace UserInterface.Presenters
     using Models.Surface;
     using Utility;
     using Views;
+    using Commands;
+    using System.Drawing;
 
     /// <summary>
     /// <para>
@@ -71,7 +73,7 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(grid as ViewBase);
 
             // The grid does not have control-space intellisense (for now).
-            intellisense.ItemSelected += (sender, e) => grid.InsertText(e.ItemSelected);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
             // if the model is Testable, run the test method.
             ITestable testModel = model as ITestable;
             if (testModel != null)
@@ -112,12 +114,18 @@ namespace UserInterface.Presenters
         /// </summary>
         public override void Detach()
         {
-            base.Detach();
-            grid.EndEdit();
-            grid.CellsChanged -= OnCellValueChanged;
-            grid.ButtonClick -= OnFileBrowseClick;
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-            intellisense.Cleanup();
+            try
+            {
+                base.Detach();
+                grid.CellsChanged -= OnCellValueChanged;
+                grid.ButtonClick -= OnFileBrowseClick;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                intellisense.Cleanup();
+            }
+            catch (NullReferenceException)
+            {
+            }
         }
 
         /// <summary>
@@ -134,6 +142,7 @@ namespace UserInterface.Presenters
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
 
             FillTable(table);
+            grid.DataSource = table;
             FormatGrid();
             if (selectedCell != null)
             {
@@ -161,7 +170,20 @@ namespace UserInterface.Presenters
 
             PopulateGrid(model);
         }
-        
+
+        /// <summary>
+        /// Gets all public instance members of a given type,
+        /// sorted by the line number of the member's declaration.
+        /// </summary>
+        /// <param name="o">Object whose members will be retrieved.</param>
+        public static List<MemberInfo> GetMembers(object o)
+        {
+            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+            members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
+            var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber).ToList();
+            return orderedMembers;
+        }
+
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
@@ -172,9 +194,7 @@ namespace UserInterface.Presenters
             properties.Clear();
             if (this.model != null)
             {
-                var members = model.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
-                members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
-                var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber);
+                var orderedMembers = GetMembers(model);
 
                 foreach (MemberInfo member in orderedMembers)
                 {
@@ -242,10 +262,11 @@ namespace UserInterface.Presenters
                     else if (properties[i].Display != null &&
                              properties[i].Display.Type == DisplayType.FieldName)
                     {
-                        string[] fieldNames = GetFieldNames();
+                        List<string> fieldNames = GetFieldNames();
                         if (fieldNames != null)
                         {
-                            cell.DropDownStrings = fieldNames;
+                            fieldNames.Insert(0, string.Empty);
+                            cell.DropDownStrings = fieldNames.ToArray();
                         }
                     }
                 }
@@ -256,21 +277,22 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(model, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
                 presenter.MainPresenter.ShowError(err);
             }
-            
         }
 
         /// <summary>
         /// Fill the specified table with columns and rows based on this.Properties
         /// </summary>
         /// <param name="table">The table that needs to be filled</param>
-        private void FillTable(DataTable table)
+        public void FillTable(DataTable table)
         {
             foreach (IVariable property in properties)
             {
@@ -281,8 +303,6 @@ namespace UserInterface.Presenters
                 else
                     table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
             }
-
-            grid.DataSource = table;
         }
 
         /// <summary>
@@ -338,10 +358,11 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    string[] fieldNames = GetFieldNames();
+                    List<string> fieldNames = GetFieldNames();
                     if (fieldNames != null)
                     {
-                        cell.DropDownStrings = fieldNames;
+                        fieldNames.Insert(0, string.Empty);
+                        cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }
                 else if (properties[i].Display != null && 
@@ -450,12 +471,12 @@ namespace UserInterface.Presenters
         /// Returns the names associated with the first table name in the property list
         /// </summary>
         /// <returns>A list of fieldnames.</returns>
-        private string[] GetFieldNames()
+        private List<string> GetFieldNames()
         {
-            string[] fieldNames = null;
+            List<string> fieldNames = null;
             for (int i = 0; i < properties.Count; i++)
             {
-                if (properties[i].Display.Type == DisplayType.TableName)
+                if (properties[i].Display != null && properties[i].Display.Type == DisplayType.TableName)
                 {
                     IGridCell cell = grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
@@ -465,11 +486,14 @@ namespace UserInterface.Presenters
                         if (storage.TableNames.Contains(tableName))
                             data = storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
+                        {
+                            fieldNames = DataTableUtilities.GetColumnNames(data).ToList();
+                            if (fieldNames.Contains("SimulationID"))
+                                fieldNames.Add("SimulationName");
+                        }
                     }
                 }
             }
-
             return fieldNames;
         }
 
@@ -551,11 +575,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Set the value of the specified property
+        /// This method takes a value from the grid and formats it appropriately,
+        /// based on the data type of the property to which the value is going to
+        /// be assigned.
         /// </summary>
-        /// <param name="property">The property to set the value of</param>
-        /// <param name="value">The value to set the property to</param>
-        private void SetPropertyValue(IVariable property, object value)
+        /// <param name="property">Property to which the value will be assigned.</param>
+        /// <param name="value">Value which is going to be assigned to property.</param>
+        public static object FormatValueForProperty(IVariable property, object value)
         {
             if (property.DataType.IsArray && value != null)
             {
@@ -574,12 +600,12 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    throw new ApsimXException(model, "Invalid property type: " + property.DataType.ToString());
+                    throw new ApsimXException(property.Object as IModel, "Invalid property type: " + property.DataType.ToString());
                 }
             }
             else if (typeof(IPlant).IsAssignableFrom(property.DataType))
             {
-                value = Apsim.Find(model, value.ToString()) as IPlant;
+                value = Apsim.Find(property.Object as IModel, value.ToString()) as IPlant;
             }
             else if (property.DataType == typeof(DateTime))
             {
@@ -592,11 +618,28 @@ namespace UserInterface.Presenters
             else if (property.Display != null &&
                      property.Display.Type == DisplayType.Model)
             {
-                value = Apsim.Get(model, value.ToString());
+                value = Apsim.Get(property.Object as IModel, value.ToString());
             }
+            return value;
+        }
 
-            Commands.ChangeProperty cmd = new Commands.ChangeProperty(model, property.Name, value);
-            presenter.CommandHistory.Add(cmd, true);
+        /// <summary>
+        /// Set the value of the specified property
+        /// </summary>
+        /// <param name="property">The property to set the value of</param>
+        /// <param name="value">The value to set the property to</param>
+        private void SetPropertyValue(IVariable property, object value)
+        {
+            try
+            {
+                value = FormatValueForProperty(property, value);
+                ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
+                presenter.CommandHistory.Add(cmd);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -634,6 +677,17 @@ namespace UserInterface.Presenters
                 OnCellValueChanged(sender, e);
                 PopulateGrid(model);
             }
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            grid.InsertText(args.ItemSelected);
         }
     }
 }

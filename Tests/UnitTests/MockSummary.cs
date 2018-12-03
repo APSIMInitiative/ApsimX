@@ -30,5 +30,9 @@ namespace UnitTests
         {
             messages.Add("WARNING: " + message);
         }
+        public void WriteError(IModel model, string message)
+        {
+            messages.Add("WARNING: " + message);
+        }
     }
 }
