@@ -24052,7 +24052,7 @@ namespace Models
         [Description("Sowing Date")]
         public DateTime SowingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type=DisplayType.CultivarName)]
+        [Display(Type=DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
 
         

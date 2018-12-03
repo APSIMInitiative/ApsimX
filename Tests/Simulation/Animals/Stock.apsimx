@@ -604,7 +604,7 @@ namespace Models
         public double no_to_buy { get; set;}
 
         [Description("Model name")]
-        [Display(Type=DisplayType.Model/*,
+        [Display(Type=DisplayTypeEnum.Model/*,
                  ModelType=typeof(Weather)*/)]
         public IModel w {get; set; }
 
