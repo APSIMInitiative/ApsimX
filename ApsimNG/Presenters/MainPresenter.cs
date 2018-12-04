@@ -144,9 +144,9 @@
         /// </summary>
         /// <param name="code">The script code</param>
         /// <returns>Any exception message or null</returns>
-        public string ProcessStartupScript(string code)
+        public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
+            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, Path.GetTempFileName());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -167,16 +167,7 @@
 
             // Call Execute on our newly created script instance.
             object[] arguments = new object[] { this };
-            try
-            {
-                executeMethod.Invoke(script, arguments);
-            }
-            catch (TargetInvocationException except)
-            {
-                return except.InnerException.ToString();
-            }
-
-            return null;
+            executeMethod.Invoke(script, arguments);
         }
 
         /// <summary>
@@ -747,17 +738,9 @@
             foreach (string argument in commandLineArguments)
             {
                 if (Path.GetExtension(argument) == ".cs")
-                {
-                    string result = this.ProcessStartupScript(File.ReadAllText(argument));
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        throw new Exception(result);
-                    }
-                }
+                    ProcessStartupScript(File.ReadAllText(argument));
                 else if (Path.GetExtension(argument) == ".apsimx")
-                {
-                    this.OpenApsimXFileInTab(argument, onLeftTabControl: true);
-                }
+                    OpenApsimXFileInTab(argument, onLeftTabControl: true);
             }
         }
 

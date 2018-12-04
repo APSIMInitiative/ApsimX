@@ -28,20 +28,7 @@ if "%1"=="%unitsyntax%" (
 )
 
 if "%1"=="%uisyntax%" (
-	rem Run UI Tests
-    set uitests=%apsimx%\Tests\UserInterfaceTests
-	if not exist "!uitests!" (
-		echo "!uitests!" does not exist. Aborting...
-		exit 1
-	)
-	if not exist "%bin%\ApsimNG.exe" (
-		echo "%bin%\ApsimNG.exe" does not exist. Aborting...
-		exit 1
-	)
-	
-	echo Running UI Tests...
-	start /wait %bin%\ApsimNG.exe !uitests!\CheckStandardToolBox.cs
-	exit /b
+	goto :uitests
 )
 
 if "%1"=="%prototypesyntax%" (
@@ -67,6 +54,30 @@ echo     %prototypesyntax%
 echo     %examplessyntax%
 echo     %validationsyntax%
 
+exit /b 1
+
+:uitests
+rem Run UI Tests
+set "uitests=%apsimx%\Tests\UserInterfaceTests"
+if not exist "%uitests%" (
+	echo "%uitests%" does not exist. Aborting...
+	exit /b 1
+)
+if not exist "%bin%\ApsimNG.exe" (
+	echo "%bin%\ApsimNG.exe" does not exist. Aborting...
+	exit /b 1
+)
+for /r "%uitests%" %%f in (*.cs) do (
+	echo Running %%~nxf...
+	start /wait %bin%\ApsimNG.exe "%%f"
+	if errorlevel 1 (
+		type errors.txt
+		exit /b 1
+	)
+)
+echo Successfully finished UI Tests.
+exit /b 0
+	
 :tests
 if not exist "%testdir%" (
 	echo %testdir% does not exist. Aborting...
