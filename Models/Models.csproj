@@ -163,9 +163,6 @@
     <Compile Include="CLEM\Groupings\AnimalPriceGroup.cs" />
     <Compile Include="CLEM\Groupings\RuminantFeedGroupMonthly.cs" />
     <Compile Include="CLEM\IPastureManager.cs" />
-    <Compile Include="CLEM\Old\ILabourFilterGroup.cs" />
-    <Compile Include="CLEM\Old\LabourFilterGroupDefine.cs" />
-    <Compile Include="CLEM\Old\LabourFilterGroupUnit.cs" />
     <Compile Include="CLEM\Reporting\ReportLabourRequirements.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceLedger.cs" />
     <Compile Include="CLEM\Resources\CLEMResourceTypeBase.cs" />
@@ -184,8 +181,6 @@
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
     <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
     <Compile Include="CLEM\IFileGRASP.cs" />
-    <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingOrig.cs" />
-    <Compile Include="CLEM\Old\RuminantActivityPredictiveStockingENSOOrig.cs" />
     <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
     <Compile Include="CLEM\Reporting\ReportPasturePoolDetails.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
@@ -563,13 +558,9 @@
     <Compile Include="CLEM\Activities\CropActivityManageCrop.cs" />
     <Compile Include="CLEM\Activities\CropActivityManageProduct.cs" />
     <Compile Include="CLEM\Activities\CropActivityTask.cs" />
-    <Compile Include="CLEM\Old\IATCropLand.cs" />
-    <Compile Include="CLEM\Old\IATGrowCropCost.cs" />
     <Compile Include="CLEM\Activities\ActivityFolder.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityPayExpense.cs" />
     <Compile Include="CLEM\Activities\GrazeBreedPoolLimit.cs" />
-    <Compile Include="CLEM\Old\IATGrowCrop.cs" />
-    <Compile Include="CLEM\Old\IATGrowCropCostAndLabour.cs" />
     <Compile Include="CLEM\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="CLEM\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="CLEM\Activities\PastureActivityBurn.cs" />
@@ -579,7 +570,6 @@
     <Compile Include="CLEM\Activities\RuminantActivityGrazePasture.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazePastureHerd.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityHerdCost.cs" />
-    <Compile Include="CLEM\Old\IATGrowCropLabour.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMilking.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityWean.cs" />
@@ -633,7 +623,6 @@
     <Compile Include="CLEM\Activities\RuminantActivityBreed.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityBuySell.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityFeed.cs" />
-    <Compile Include="CLEM\Old\RuminantActivityGraze.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrow.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityManage.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMuster.cs" />
