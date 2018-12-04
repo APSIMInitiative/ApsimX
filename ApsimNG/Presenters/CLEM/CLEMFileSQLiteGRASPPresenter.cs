@@ -1,8 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InputPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
@@ -31,7 +26,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-
         /// <summary>
         /// Starting Year for the grid.
         /// For speed purposes the grid will only display a few years worth of 
@@ -45,9 +39,6 @@ namespace UserInterface.Presenters
         /// </summary
         private int NumberOfYearsToDisplayInGrid = 4;
 
-
-
-
         /// <summary>
         /// First year in the SQLite database file
         /// Needed for setting bounds on StartYearForGrid
@@ -60,7 +51,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private int LastYearInFile;
 
-
         private void InitialiseStartYear()
         {
             //set the start year using SQLite file's data
@@ -70,8 +60,6 @@ namespace UserInterface.Presenters
 
             SetStartYear(FirstYearInFile);
         }
-
-
 
         private void SetStartYear(int Year)
         {
@@ -87,7 +75,6 @@ namespace UserInterface.Presenters
             if (EndYearForGrid > LastYearInFile)
                 EndYearForGrid = LastYearInFile;
         }
-
 
         /// <summary>
         /// Attaches an Input model to an Input View.
@@ -110,8 +97,6 @@ namespace UserInterface.Presenters
 
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
-
-
 
         /// <summary>
         /// Detaches an Input model from an Input View.

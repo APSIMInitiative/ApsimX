@@ -1,8 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿
 namespace UserInterface.Interfaces
 {
     using System;
@@ -26,21 +22,14 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler<NodeSelectedArgs> SelectedNodeChanged;
 
-
-
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
         void Refresh(TreeViewNode nodeDescriptions);
-
-
 
         /// <summary>Gets or sets the currently selected node.</summary>
         /// <value>The selected node.</value>
         string SelectedNode { get; set; }
 
-
-
-        
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>

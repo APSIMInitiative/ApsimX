@@ -1,8 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ExplorerPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿
 namespace UserInterface.Presenters
 {
     using System;
@@ -22,71 +18,6 @@ namespace UserInterface.Presenters
     using Views;
 
 
-
-    // Below Category Item and Category Tree classes are already declared in PropertyTreePresenter.cs
-
-    ///// <summary>
-    ///// Class used to create the heirachy of the the categories and subcategories from the 
-    ///// [Category] attribute added to the properties of a model.
-    ///// </summary>
-    //public class CategoryItem
-    //{
-    //    public string Name;
-
-    //    /// <summary>
-    //    /// Subcategories of this category
-    //    /// </summary>
-    //    public List<string> SubcategoryNames;
-
-    //    /// <summary>
-    //    /// Constructor 
-    //    /// </summary>
-    //    public  CategoryItem(string name)
-    //    {
-    //        this.Name = name;
-    //        this.SubcategoryNames = new List<string>();
-    //    }
-
-
-    //    public void AddSubcategoryName(string name)
-    //    {
-    //        //is subcategory name already in the list
-    //        bool subcatExists = this.SubcategoryNames.Exists(subcatname => subcatname == name);
-    //        // if it isn't then add it.
-    //        if (!subcatExists)
-    //            this.SubcategoryNames.Add(name);
-
-    //    }
-    //}
-
-    //public class CategoryTree
-    //{
-    //    public List<CategoryItem> CategoryItems;
-
-
-    //    public CategoryTree()
-    //    {
-    //        this.CategoryItems = new List<CategoryItem>();
-    //    }
-
-    //    public CategoryItem FindCategoryInTree(string catName)
-    //    {
-    //        return this.CategoryItems.Find(item => item.Name == catName);
-    //    }
-
-    //    public void AddCategoryToTree(String catName)
-    //    {
-    //        bool catExists = this.CategoryItems.Exists(item => item.Name == catName);
-    //        if (!catExists)
-    //            this.CategoryItems.Add(new CategoryItem(catName));
-    //    }
-    //}
-
-
-
-
-
-
     /// <summary>
     /// This presenter class is responsible for populating the view
     /// passed into the constructor and handling all user interaction of
@@ -96,17 +27,16 @@ namespace UserInterface.Presenters
     {
         /// <summary>The visual instance</summary>
         private IPropertyTreeView treeview;
+
         private IGridView gridview;
 
         /// <summary>Presenter for the component</summary>
         private PropertyTablePresenter tablePresenter;
 
-
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
         private Model model;
-
 
         /// <summary>
         /// A list of all the children that have the same type so that they will all have the same properties
@@ -116,21 +46,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<IModel> childrenWithSameType = new List<IModel>();
 
-
         /// <summary>Initializes a new instance of the <see cref="PropertyTreeTablePresenter" /> class</summary>
         public PropertyTreeTablePresenter()
         {
         }
-
-
-        ///// <summary>Initializes a new instance of the <see cref="PropertyCategoryPresenter" /> class</summary>
-        ///// <param name="mainPresenter">The presenter for the main window</param>
-        //public PropertyCategoryPresenter(MainPresenter mainPresenter)
-        //{
-        //    this.MainPresenter = mainPresenter;
-        //}
-
-
 
         /// <summary>Gets or sets the width of the explorer tree panel</summary>
         /// <value>The width of the tree.</value>
@@ -140,15 +59,10 @@ namespace UserInterface.Presenters
             set { this.treeview.TreeWidth = value; }
         }
 
-        ///// <summary>Gets the presenter for the main window</summary>
-        ///// To be revised if we want to replicate the Windows.Forms version
-        //public MainPresenter MainPresenter { get; private set; }
-
         /// <summary>
         /// The parent ExplorerPresenter.
         /// </summary>
         private ExplorerPresenter explorerPresenter;
-
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
@@ -192,16 +106,7 @@ namespace UserInterface.Presenters
             //Initialise the Right Hand View
             this.tablePresenter = new PropertyTablePresenter();
             this.ShowRightHandView();
-
-            //this.SelectNode("." + this.model.Name + ".Unspecified");
-            //this.treeview.SelectedNode = "." + this.model.Name + ".Unspecified" ;  //select the root of the Property Tree
-            //this.propertyPresenter.Attach(this.model, this.gridview, this.explorerPresenter);
-            //this.ShowRightHandView();
-
         }
-
-
-
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
@@ -215,9 +120,6 @@ namespace UserInterface.Presenters
             }
         }
 
-
-
-
         /// <summary>
         /// Refresh the treeview.
         /// </summary>
@@ -227,7 +129,6 @@ namespace UserInterface.Presenters
             this.treeview.Refresh(this.GetNodeDescription(categoryTree));
         }
 
-
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
@@ -236,12 +137,6 @@ namespace UserInterface.Presenters
             this.HideRightHandView();
             this.ShowRightHandView();
         }
-
-
-    
-
-
-
 
         /// <summary>Hide the right hand panel.</summary>
         public void HideRightHandView()
@@ -256,7 +151,6 @@ namespace UserInterface.Presenters
                 catch (Exception err)
                 {
                     throw new Exception(err.Message);
-                    //MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
                 }
             }
 
@@ -322,16 +216,6 @@ namespace UserInterface.Presenters
             
         }
 
-
-
-
-
-
-
-        #region Events from view
-
-
-
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Node arguments</param>
@@ -339,21 +223,8 @@ namespace UserInterface.Presenters
         {
             this.HideRightHandView();
             this.ShowRightHandView();
-
-            //Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            //CommandHistory.Add(selectCommand, false);
         }
-
-
-
-        #endregion
-
-
-
-
-        #region Privates        
-
-
+  
         /// <summary>
         /// Gets all the child models that have the same type as the first child model.
         /// </summary>
@@ -369,10 +240,6 @@ namespace UserInterface.Presenters
             }
             return null;
         }
-
-
-
-
 
         /// <summary>
         /// Returns the Category Tree created from the Category Attributes on the properties in the model.
@@ -434,13 +301,6 @@ namespace UserInterface.Presenters
             return categories;
         }
  
-
-
- 
-
-
-
-
         /// <summary>
         /// A helper function for creating a node description object for the category hierarchy.
         /// </summary>
@@ -448,8 +308,6 @@ namespace UserInterface.Presenters
         /// <returns>The description</returns>
         private TreeViewNode GetNodeDescription(CategoryTree categoryTree)
         {
-
-
             TreeViewNode root = new TreeViewNode();
             root.Name =  model.Name;
 
@@ -479,7 +337,6 @@ namespace UserInterface.Presenters
 
         }
 
-        #endregion
     }
 
 

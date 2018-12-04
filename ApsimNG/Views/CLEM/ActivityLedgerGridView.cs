@@ -1,8 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DataStoreView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+
 namespace UserInterface.Views
 {
     using Interfaces;

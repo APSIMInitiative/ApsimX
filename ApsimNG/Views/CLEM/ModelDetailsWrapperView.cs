@@ -1,8 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="CSIRO">
-//     Copyright (c) CSIRO, CLEM model
-// </copyright>
-// -----------------------------------------------------------------------
+
 namespace UserInterface.Views
 {
     using EventArguments;

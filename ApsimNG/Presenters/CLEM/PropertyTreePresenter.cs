@@ -316,7 +316,7 @@ namespace UserInterface.Presenters
 
 
 
-        #region Events from view
+        
 
 
 
@@ -334,12 +334,12 @@ namespace UserInterface.Presenters
 
 
 
-        #endregion
+   
 
 
 
 
-        #region Privates        
+          
 
 
         /// <summary>
@@ -444,7 +444,7 @@ namespace UserInterface.Presenters
 
         }
 
-        #endregion
+    
     }
 
 

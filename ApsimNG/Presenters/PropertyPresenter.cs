@@ -60,12 +60,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
-        public string CategoryFilter;
+        public string CategoryFilter { get; set; }
 
         /// <summary>
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
-        public string SubcategoryFilter;
+        public string SubcategoryFilter { get; set; }
 
 
 
@@ -654,8 +654,6 @@ namespace UserInterface.Presenters
             }
             return null;
         }
-
-
 
         /// <summary>
         /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.

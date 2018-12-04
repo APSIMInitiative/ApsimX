@@ -1,8 +1,4 @@
-//-----------------------------------------------------------------------
-// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+
 namespace UserInterface.Presenters
 {
     using System;
@@ -135,8 +131,6 @@ namespace UserInterface.Presenters
 
         }
 
-
-
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
@@ -184,28 +178,6 @@ namespace UserInterface.Presenters
      
         }
 
-        ///// <summary>
-        ///// Remove the specified properties from the grid.
-        ///// </summary>
-        ///// <param name="propertysToRemove">The names of all properties to remove</param>
-        //public void RemoveProperties(IEnumerable<VariableProperty> propertysToRemove)
-        //{
-        //    foreach (VariableProperty property in propertysToRemove)
-        //    {
-        //        // Try and find the description in our list of properties.
-        //        int i = this.properties.FindIndex(p => p.Description == property.Description);
-
-        //        // If found then remove the property.
-        //        if (i != -1)
-        //        {
-        //            this.properties.RemoveAt(i);
-        //        }
-        //    }
-
-        //    this.PopulateGrid(this.model);
-        //}
-
-
        /// <summary>
        /// Gets all the child models that have the same type as the first child model.
        /// </summary>
@@ -222,8 +194,6 @@ namespace UserInterface.Presenters
             return null;
         }
 
-
-
         private void FindAllPropertiesForChildren()
         {
             this.properties.Clear();
@@ -236,8 +206,6 @@ namespace UserInterface.Presenters
                 }
             }
         }
-
-
 
         /// <summary>
         /// Find all properties from the model and fill this.properties.
@@ -330,7 +298,6 @@ namespace UserInterface.Presenters
             return null;
         }
 
-
         /// <summary>
         /// Updates the model (All columns)
         /// </summary>
@@ -351,8 +318,6 @@ namespace UserInterface.Presenters
 
 
         }
-
-
 
         /// <summary>
         /// Updates the model (Just one column)
@@ -453,7 +418,6 @@ namespace UserInterface.Presenters
                 propListIndex++;
             }
         }
-
 
         /// <summary>
         /// Format the grid. (Just one column)
@@ -687,9 +651,6 @@ namespace UserInterface.Presenters
             }
             return result.ToArray();
         }
-
-
-
 
         /// <summary>
         /// User has changed the value of a cell.

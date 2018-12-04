@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.EMMA;
 using Gtk;
 using Models.CLEM;
 using System;
@@ -77,7 +77,7 @@ namespace UserInterface.Views
                 Xpad = 3,
                 Text = "Messages"
             };
-            //nbook.AppendPage(messagesView, messagesLabel);
+
             summaryView = new Viewport()
             {
                 ShadowType = ShadowType.None,
@@ -88,7 +88,7 @@ namespace UserInterface.Views
                 Xpad = 3,
                 Text = "Summary"
             };
-            //nbook.AppendPage(summaryView, summaryLabel);
+
             propertiesView = new Viewport()
             {
                 ShadowType = ShadowType.None,
@@ -99,7 +99,7 @@ namespace UserInterface.Views
                 Xpad = 3,
                 Text = "Properties"
             };
-           // nbook.AppendPage(propertiesView, propertiesLabel);
+
             versionsView = new Viewport()
             {
                 ShadowType = ShadowType.None,
@@ -110,7 +110,7 @@ namespace UserInterface.Views
                 Xpad = 3,
                 Text = "Versions"
             };
-            //nbook.AppendPage(versionsView, versionsLabel);
+
             _mainWidget = nbook;
             setupComplete = true;
         }

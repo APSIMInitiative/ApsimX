@@ -15,12 +15,12 @@ namespace UserInterface.Presenters
 {
     public class CLEMPresenter : IPresenter
     {
-        private ICLEMView View;
+        private ICLEMView view;
 
         /// <summary>
         /// The explorer
         /// </summary>
-        private ExplorerPresenter ExplorerPresenter;
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// The HTML summary presenter
@@ -35,9 +35,8 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The explorer</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-//            this.ApsimXFile = model as Simulations;
-            this.ExplorerPresenter = explorerPresenter;
-            this.View = view as ICLEMView;
+            this.explorerPresenter = explorerPresenter;
+            this.view = view as ICLEMView;
             if (model != null)
             {
                 //Messages
@@ -45,12 +44,12 @@ namespace UserInterface.Presenters
                 {
                     if (model is ZoneCLEM)
                     {
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.View }, null, null);
+                        object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(typeof(MessagePresenter).FullName) as IPresenter;
                         if (newView != null && ip != null)
                         {
-                            this.View.AddTabView("Messages", newView);
-                            ip.Attach(model, newView, ExplorerPresenter);
+                            this.view.AddTabView("Messages", newView);
+                            ip.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }
@@ -60,18 +59,18 @@ namespace UserInterface.Presenters
                         err = (err as System.Reflection.TargetInvocationException).InnerException;
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
-                    ExplorerPresenter.MainPresenter.ShowError(err);
+                    this.explorerPresenter.MainPresenter.ShowError(err);
                 }
                 //HTML Summary
                 try
                 {
-                    object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.View }, null, null);
+                    object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                     summaryPresenter = Assembly.GetExecutingAssembly().CreateInstance(typeof(CLEMSummaryPresenter).FullName) as IPresenter;
                     if (newView != null && summaryPresenter != null)
                     {
-                        this.View.AddTabView("Summary", newView);
-                        summaryPresenter.Attach(model, newView, ExplorerPresenter);
-                        this.View.SummaryTabSelected += OnSummaryTabSelected; 
+                        this.view.AddTabView("Summary", newView);
+                        summaryPresenter.Attach(model, newView, this.explorerPresenter);
+                        this.view.SummaryTabSelected += OnSummaryTabSelected; 
                     }
                 }
                 catch (Exception err)
@@ -80,7 +79,7 @@ namespace UserInterface.Presenters
                         err = (err as System.Reflection.TargetInvocationException).InnerException;
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
-                    ExplorerPresenter.MainPresenter.ShowError(err);
+                    this.explorerPresenter.MainPresenter.ShowError(err);
                 }
                 //Properties
                 try
@@ -102,12 +101,12 @@ namespace UserInterface.Presenters
                     {
                         ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                         //PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.View }, null, null);
+                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
                         if (newView != null && ip != null)
                         {
-                            this.View.AddTabView("Properties", newView);
-                            ip.Attach(model, newView, ExplorerPresenter);
+                            this.view.AddTabView("Properties", newView);
+                            ip.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }
@@ -117,7 +116,7 @@ namespace UserInterface.Presenters
                         err = (err as System.Reflection.TargetInvocationException).InnerException;
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
-                    ExplorerPresenter.MainPresenter.ShowError(err);
+                    this.explorerPresenter.MainPresenter.ShowError(err);
                 }
                 //Versions
                 try
@@ -125,12 +124,12 @@ namespace UserInterface.Presenters
                     var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                     if (versions.Count() > 0)
                     {
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.View }, null, null);
+                        object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(typeof(VersionsPresenter).FullName) as IPresenter;
                         if (newView != null && ip != null)
                         {
-                            this.View.AddTabView("Version", newView);
-                            ip.Attach(model, newView, ExplorerPresenter);
+                            this.view.AddTabView("Version", newView);
+                            ip.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }
@@ -140,7 +139,7 @@ namespace UserInterface.Presenters
                         err = (err as System.Reflection.TargetInvocationException).InnerException;
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
-                    ExplorerPresenter.MainPresenter.ShowError(err);
+                    this.explorerPresenter.MainPresenter.ShowError(err);
                 }
 
 
@@ -160,7 +159,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.View.SummaryTabSelected -= OnSummaryTabSelected;
+            this.view.SummaryTabSelected -= OnSummaryTabSelected;
         }
 
     }

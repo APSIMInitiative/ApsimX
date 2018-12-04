@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Gtk;
 using UserInterface.Interfaces;
 
@@ -110,7 +110,6 @@ namespace UserInterface.Views
         {
             get
             {
-                // FileNameLabel.Text = Path.GetFullPath(FileNameLabel.Text);
                 return label1.Text;
             }
             set
@@ -179,13 +178,4 @@ namespace UserInterface.Views
 
     }
 
-    //Because this is a duplicate of InputView we don't need to declare what is below again.
-
-    ///// <summary>
-    ///// A class for holding info about a begin drag event.
-    ///// </summary>
-    //public class OpenDialogArgs : EventArgs
-    //{
-    //    public string FileName;
-    //}
 }

@@ -1,8 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+
 namespace UserInterface.Presenters
 {
     using APSIM.Shared.Utilities;
@@ -39,7 +35,6 @@ namespace UserInterface.Presenters
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
                 dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
-            /// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();
             activityGridPresenter = new ActivityLedgerGridPresenter();
@@ -81,7 +76,6 @@ namespace UserInterface.Presenters
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
             explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-//            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "VariableNames", view.VariableList.Lines));
             explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
         }
 
@@ -89,7 +83,6 @@ namespace UserInterface.Presenters
         void OnEventNamesChanged(object sender, EventArgs e)
         {
             explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-//            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "EventNames", view.EventList.Lines));
             explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
         }
 
@@ -98,8 +91,6 @@ namespace UserInterface.Presenters
         {
             if (changedModel == report)
             {
-//                view.VariableList.Lines = report.VariableNames;
-//                view.EventList.Lines = report.EventNames;
             }
         }
 

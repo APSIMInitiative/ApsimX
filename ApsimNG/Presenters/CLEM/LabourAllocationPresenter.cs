@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
@@ -70,31 +70,23 @@ namespace UserInterface.Presenters
                 "li {margin-bottom:10px;}" +
                 "table.blank td {border: 0px none Black; }" +
                 "table.blank {border: 0px none #009999; border-collapse: collapse; }" +
-                //"th {background-color: #009999;color: white;}" +
-                //"table,th,td {border: 1px solid #009999; }" +
-                //"td.fill {background-color: #009999;color: white;}" +
-                //"table {border-collapse: collapse; font-size:0.8em; }" +
                 "table th:first-child {text-align:left; }" +
                 "table th:nth-child(n+2) { /* Safari */ - webkit - transform: rotate(-90deg); /* Firefox */ -moz - transform: rotate(-90deg); /* IE */ -ms - transform: rotate(-90deg); /* Opera */ -o - transform: rotate(-90deg); /* Internet Explorer */ filter: progid: DXImageTransform.Microsoft.BasicImage(rotation = 3);  }" +
                 "table td:nth-child(n+2) { text-align:center; }" +
-                //".clearfix { overflow: auto; }" +
-                //".defaultbanner {background-color:black; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                //".defaultcontent {background-color:#FAFAFA; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:black; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
-                //".holdersub {margin: 5px 0px 5px}" +
                 "\n</style>\n</head>\n<body>";
 
             // Start building table
 
             // get CLEM Zone
-            IModel CLEM = model as IModel;
-            while(!(CLEM is ZoneCLEM))
+            IModel clem = model as IModel;
+            while(!(clem is ZoneCLEM))
             {
-                CLEM = CLEM.Parent;
+                clem = clem.Parent;
             }
 
             // Get Labour resources
-            labour = Apsim.ChildrenRecursively(CLEM, typeof(Labour)).FirstOrDefault() as Labour;
+            labour = Apsim.ChildrenRecursively(clem, typeof(Labour)).FirstOrDefault() as Labour;
             if(labour is null)
             {
                 htmlString += "No Labour supplied in resources";
@@ -132,7 +124,7 @@ namespace UserInterface.Presenters
 
             // walk through all activities
             // check if LabourRequirement can be added
-            ActivitiesHolder activities = Apsim.ChildrenRecursively(CLEM, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
+            ActivitiesHolder activities = Apsim.ChildrenRecursively(clem, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
             if (activities is null)
             {
                 htmlString += "Could not find an Activities Holder";
@@ -259,7 +251,6 @@ namespace UserInterface.Presenters
             }
             return row;
         }
-
 
         /// <summary>
         /// Detach the view

@@ -108,19 +108,14 @@ namespace UserInterface.Presenters
                     if(data != null)
                     {
                         // need to filter by current simulation
-                        string SimulationName = explorerPresenter.CurrentNodePath.Split('.')[2];
+                        string simulationName = explorerPresenter.CurrentNodePath.Split('.')[2];
 
-                        //var filteredData = data.AsEnumerable()
-                        //    .Where(row => row.Field<String>("SimulationName") == "PastureCutCarry");
                         var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == SimulationName);
+                            .Where(row => row.Field<String>("SimulationName") == simulationName);
                         if(filteredData.Any())
                         {
                             data = filteredData.CopyToDataTable();
                         }
-                        //data = data.AsEnumerable()
-                        //    .Where(row => row.Field<String>("SimulationName") == "PastureCutCarry")
-                        //    .CopyToDataTable();
                     }
 
                 }

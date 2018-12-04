@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -75,11 +75,6 @@ namespace UserInterface.Presenters
             htmlString += "\n</body>\n</html>";
             return htmlString;
         }
-
-        //private DataTable GetMessages(IStorageReader dataStorage)
-        //{
-
-        //}
 
         /// <summary>
         /// Detach the view

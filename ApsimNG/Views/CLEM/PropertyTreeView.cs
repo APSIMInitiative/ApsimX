@@ -1,8 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ExplorerReadOnlyView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 
 // The basics are all here, but there are still a few things to be implemented:
 // Drag and drop is pinning an object so we can pass its address around as data. Is there a better way?
@@ -22,6 +17,7 @@ namespace UserInterface.Views
     using System.Runtime.Serialization;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
+
     /// <summary>
     /// A cut down version of the ExplorerView.
     /// Does not allow for adding, deleting or moving of nodes in the tree.
@@ -74,7 +70,6 @@ namespace UserInterface.Views
             column.PackStart(textRender, true);
             column.SetAttributes(iconRender, "pixbuf", 1);
             column.SetAttributes(textRender, "text", 0);
-            // column.SetCellDataFunc(textRender, treecelldatafunc);
             treeview1.AppendColumn(column);
             treeview1.TooltipColumn = 2;
 
@@ -109,13 +104,11 @@ namespace UserInterface.Views
             _owner = null;
         }
 
-
         /// <summary>
         /// This event will be invoked when a node is selected not by the user
         /// but by an Undo command.
         /// </summary>
         public event EventHandler<NodeSelectedArgs> SelectedNodeChanged;
-
 
         /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
         /// <param name="nodeDescriptions">The nodes descriptions.</param>
@@ -127,9 +120,6 @@ namespace UserInterface.Views
             treeview1.ShowAll();
             treeview1.ExpandRow(new TreePath("0"), false);
         }
-
-     
-
 
         /// <summary>Gets or sets the currently selected node.</summary>
         /// <value>The selected node.</value>
@@ -156,8 +146,6 @@ namespace UserInterface.Views
                 }
             }
         }
-
-
 
         /// <summary>
         /// Add a user control (aka GUI) to the right hand panel. If Control is null then right hand panel will be cleared.
@@ -194,7 +182,6 @@ namespace UserInterface.Views
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             return bitmap;
         }
-
 
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>

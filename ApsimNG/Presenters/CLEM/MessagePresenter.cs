@@ -1,4 +1,4 @@
-﻿using Models;
+using Models;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -183,12 +183,6 @@ namespace UserInterface.Presenters
             htmlString += "\n</body>\n</html>";
             return htmlString;
         }
-
-
-        //private DataTable GetMessages(IStorageReader dataStorage)
-        //{
-
-        //}
 
         /// <summary>
         /// Detach the view
