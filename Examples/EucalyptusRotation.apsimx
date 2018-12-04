@@ -18,7 +18,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This example grows three eucalypt plantations, with harvesting at 7 years of age and replanting and fertilising on the 1st August after each harvest. \n\n",
+          "Text": "This example grows a eucalypt rotation, with harvesting at 7 years of age and replanting and fertilising on the 1st August after each harvest. \n\n",
           "Name": "Memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -27,7 +27,7 @@
         },
         {
           "$type": "Models.Weather, Models",
-          "FileName": "WeatherFiles\\Curvelo.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Curvelo.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
