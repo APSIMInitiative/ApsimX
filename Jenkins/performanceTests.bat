@@ -12,10 +12,29 @@ curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDe
 for /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
 del temp.txt
 for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
-rem Temporary workaround to get performance tests running again.
-copy /y "%apsimx%\Jenkins\APSIM.PerformanceTests.Collector.exe.config" "%apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe.config"
+
+pushd %apsimx%\..
+if not exist APSIM.PerformanceTests (
+	echo Cloning APSIM.PerformanceTests...
+	git clone https://github.com/APSIMInitiative/APSIM.PerformanceTests
+)
+
+rem Cleanup any modified files.
+cd APSIM.PerformanceTests\APSIM.PerformanceTests.Collector
+git checkout .
+git clean -fdxq
+git checkout master
+git pull
+
+echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
+nuget restore -verbosity quiet
+
+echo Compiling APSIM.PerformanceTests.Collector...
+msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
+
 echo Running performance tests collector...
-%apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
+bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
+
 set err=%errorlevel%
 if errorlevel 1 (
 	echo APSIM.PerformanceTests.Collector did not run succecssfully!
@@ -23,9 +42,10 @@ if errorlevel 1 (
 	echo DateTime stamp: 	"%DATETIMESTAMP%"
 	echo Commit author:		"%COMMIT_AUTHOR%"
 	echo Log file:
-	type %apsimx%\Docker\runtests\APSIM.PerformanceTests.Collector\PerformanceCollector.txt
+	type PerformanceCollector.txt
 ) else (
 	echo Done.
 )
+popd
 endlocal
 exit /b %err%

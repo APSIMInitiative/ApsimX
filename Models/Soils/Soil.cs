@@ -1061,6 +1061,42 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the plant available nitrate N for each layer (kg/ha)</summary>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] PlantAvailableNO3N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("PlantAvailableNO3");
+            }
+            set
+            {
+                SoluteManager.SetSolute("PlantAvailableNO3", SoluteManager.SoluteSetterType.Soil, value);
+            }
+        }
+
+        /// <summary>Gets or sets the plant available ammonia N for each layer (kg/ha)</summary>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] PlantAvailableNH4N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("PlantAvailableNH4");
+            }
+            set
+            {
+                SoluteManager.SetSolute("PlantAvailableNH4", SoluteManager.SoluteSetterType.Soil, value);
+            }
+        }
+
         /// <summary>Gets the or sets urea N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
