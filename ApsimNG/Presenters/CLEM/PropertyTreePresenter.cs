@@ -111,13 +111,6 @@ namespace UserInterface.Presenters
         }
 
 
-        ///// <summary>Initializes a new instance of the <see cref="PropertyCategoryPresenter" /> class</summary>
-        ///// <param name="mainPresenter">The presenter for the main window</param>
-        //public PropertyCategoryPresenter(MainPresenter mainPresenter)
-        //{
-        //    this.MainPresenter = mainPresenter;
-        //}
-
 
 
         /// <summary>Gets or sets the width of the explorer tree panel</summary>
@@ -180,11 +173,6 @@ namespace UserInterface.Presenters
             //Initialise the Right Hand View
             this.propertyPresenter = new PropertyPresenter();
             this.ShowRightHandView();
-
-            //this.SelectNode("." + this.model.Name + ".Unspecified");
-            //this.treeview.SelectedNode = "." + this.model.Name + ".Unspecified" ;  //select the root of the Property Tree
-            //this.propertyPresenter.Attach(this.model, this.gridview, this.explorerPresenter);
-            //this.ShowRightHandView();
 
         }
 
@@ -327,9 +315,6 @@ namespace UserInterface.Presenters
         {
             this.HideRightHandView();
             this.ShowRightHandView();
-
-            //Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            //CommandHistory.Add(selectCommand, false);
         }
 
 

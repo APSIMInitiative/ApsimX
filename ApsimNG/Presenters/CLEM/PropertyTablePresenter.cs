@@ -469,14 +469,13 @@ namespace UserInterface.Presenters
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
 
-                    //                    string[] fieldNames = this.GetCLEMResourceNames(this.properties[i].CLEMResourceNameResourceGroups);
                     List<string> fieldNames = new List<string>();
-                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[propListIndex][i].CLEMResourceNameResourceGroups) );
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[propListIndex][i].Display.CLEMResourceNameResourceGroups) );
 
                     // add any extras elements provided to the list.
-                    if(this.properties[propListIndex][i].CLEMExtraEntries != null)
+                    if(this.properties[propListIndex][i].Display.CLEMExtraEntries != null)
                     {
-                        fieldNames.AddRange(this.properties[propListIndex][i].CLEMExtraEntries);
+                        fieldNames.AddRange(this.properties[propListIndex][i].Display.CLEMExtraEntries);
                     }
 
                     if (fieldNames.Count != 0)
