@@ -48,7 +48,7 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public PropertyTreeView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
             RightHandView = (Viewport)builder.GetObject("RightHandView");
