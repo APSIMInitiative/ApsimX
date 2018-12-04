@@ -30,9 +30,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>Our data store</summary>
-        [Link]
-        private IStorageReader dataStore = null;
 
         /// <summary>
         /// Attach the view

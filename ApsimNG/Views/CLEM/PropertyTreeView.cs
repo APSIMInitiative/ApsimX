@@ -29,11 +29,6 @@ namespace UserInterface.Views
         /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
 
-        /// <summary>The source path of item being dragged.</summary>
-        private string sourcePathOfItemBeingDragged;
-
-        /// <summary>The node path before rename.</summary>
-        private string nodePathBeforeRename;
 
         private VBox vbox1 = null;
         private Gtk.TreeView treeview1 = null;

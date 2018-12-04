@@ -111,7 +111,6 @@ namespace UserInterface.Presenters
                 this.grid.ReadOnly = true;
             }
 
-            string[] split;
 
             this.grid.NumericFormat = "G6";
             this.childrenWithSameType = this.GetChildModelsWithSameType(this.model);
