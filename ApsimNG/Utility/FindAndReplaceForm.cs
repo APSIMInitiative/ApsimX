@@ -27,7 +27,7 @@ namespace Utility
 
         public FindAndReplaceForm()
         {
-            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.FindAndReplace.glade");
             window1 = (Window)builder.GetObject("window1");
             chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
             chkMatchWholeWord = (CheckButton)builder.GetObject("chkMatchWholeWord");

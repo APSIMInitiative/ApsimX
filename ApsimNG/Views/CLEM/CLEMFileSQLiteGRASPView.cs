@@ -74,7 +74,7 @@ namespace UserInterface.Views
         /// </summary>
         public CLEMFileSQLiteGRASPView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.InputNextBackView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InputNextBackView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");

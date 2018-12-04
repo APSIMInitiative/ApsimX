@@ -29,7 +29,7 @@ namespace UserInterface.Views
             Grid1 = new GridView(owner);
             Grid2 = new GridView(owner);
 
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
             VPaned vpaned1 = (VPaned)builder.GetObject("vpaned1");
             VPaned vpaned2 = (VPaned)builder.GetObject("vpaned2");
             VBox vbox1 = (VBox)builder.GetObject("vbox1");

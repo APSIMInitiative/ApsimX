@@ -24,7 +24,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportActivityLedgerView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.ReportActivityLedgerView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportActivityLedgerView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             alignment2 = (Alignment)builder.GetObject("alignment2");
