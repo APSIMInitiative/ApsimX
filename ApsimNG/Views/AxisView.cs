@@ -60,9 +60,9 @@ namespace UserInterface.Views
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             _mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.Changed += OnMinimumChanged;
-            entryMax.Changed += OnMaximumChanged;
-            entryInterval.Changed += OnIntervalChanged;
+            entryMin.FocusOutEvent += OnMinimumChanged;
+            entryMax.FocusOutEvent += OnMaximumChanged;
+            entryInterval.FocusOutEvent += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -245,9 +245,9 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entryTitle.Changed -= TitleTextBox_TextChanged;
-            entryMin.Changed -= OnMinimumChanged;
-            entryMax.Changed -= OnMaximumChanged;
-            entryInterval.Changed -= OnIntervalChanged;
+            entryMin.FocusOutEvent -= OnMinimumChanged;
+            entryMax.FocusOutEvent -= OnMaximumChanged;
+            entryInterval.FocusOutEvent -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
