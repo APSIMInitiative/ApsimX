@@ -1,8 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ExplorerPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿
 namespace UserInterface.Presenters
 {
     using System;
@@ -98,20 +94,15 @@ namespace UserInterface.Presenters
         /// <summary>Presenter for the component</summary>
         private PropertyPresenter propertyPresenter;
 
-
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
         private Model model;
 
-
         /// <summary>Initializes a new instance of the <see cref="PropertyTreePresenter" /> class</summary>
         public PropertyTreePresenter()
         {
         }
-
-
-
 
         /// <summary>Gets or sets the width of the explorer tree panel</summary>
         /// <value>The width of the tree.</value>
@@ -129,7 +120,6 @@ namespace UserInterface.Presenters
         /// The parent ExplorerPresenter.
         /// </summary>
         private ExplorerPresenter explorerPresenter;
-
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
@@ -159,8 +149,6 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The presenter for this object</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-
-
             this.model = model as Model;
             this.treeview = view as IPropertyTreeView;
             this.TreeWidth = explorerPresenter.TreeWidth;  //set the width of the PropertyTreeView to the same as the Explorer Tree.
@@ -176,9 +164,6 @@ namespace UserInterface.Presenters
 
         }
 
-
-
-
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
@@ -191,9 +176,6 @@ namespace UserInterface.Presenters
             }
         }
 
-
-
-
         /// <summary>
         /// Refresh the treeview.
         /// </summary>
@@ -203,7 +185,6 @@ namespace UserInterface.Presenters
             this.treeview.Refresh(this.GetNodeDescription(categoryTree));
         }
 
-
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
@@ -212,12 +193,6 @@ namespace UserInterface.Presenters
             this.HideRightHandView();
             this.ShowRightHandView();
         }
-
-
-    
-
-
-
 
         /// <summary>Hide the right hand panel.</summary>
         public void HideRightHandView()
@@ -298,16 +273,6 @@ namespace UserInterface.Presenters
             
         }
 
-
-
-
-
-
-
-        
-
-
-
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Node arguments</param>
@@ -316,16 +281,6 @@ namespace UserInterface.Presenters
             this.HideRightHandView();
             this.ShowRightHandView();
         }
-
-
-
-   
-
-
-
-
-          
-
 
         /// <summary>
         /// Returns the Category Tree created from the Category Attributes on the properties in the model.
@@ -384,13 +339,6 @@ namespace UserInterface.Presenters
             return categories;
         }
  
-
-
- 
-
-
-
-
         /// <summary>
         /// A helper function for creating a node description object for the category hierarchy.
         /// </summary>

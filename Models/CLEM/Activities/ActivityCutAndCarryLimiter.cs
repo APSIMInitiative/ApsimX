@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         [Units("kg/day")]
         public double[] WeightLimitPerDay { get; set; }
 
-        private double AmountUsedThisMonth = 0;
+        private double amountUsedThisMonth = 0;
 
         /// <summary>
         /// Get the amount of cut and carry available.
@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
         /// <param name="Weight"></param>
         public void AddWeightCarried(double Weight)
         {
-            AmountUsedThisMonth += Weight;
+            amountUsedThisMonth += Weight;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public double GetAmountAvailable(int month)
         {
-            return (WeightLimitPerDay[month - 1] * 30.4) - AmountUsedThisMonth;
+            return (WeightLimitPerDay[month - 1] * 30.4) - amountUsedThisMonth;
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -55,7 +55,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            AmountUsedThisMonth = 0;
+            amountUsedThisMonth = 0;
         }
 
         /// <summary>

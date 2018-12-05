@@ -27,7 +27,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-
         /// <summary>
         /// Attach the view
         /// </summary>

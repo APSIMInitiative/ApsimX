@@ -72,12 +72,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
-        public string CategoryFilter;
+        public string CategoryFilter { get; set; }
 
         /// <summary>
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
-        public string SubcategoryFilter;
+        public string SubcategoryFilter { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the grid is empty (i.e. no rows).
@@ -314,36 +314,34 @@ namespace UserInterface.Presenters
         /// <param name="model">The new model</param>
         private void UpdateModel(int propListIndex)
         {
-            //this.model = model;
-            //if (this.model != null)
-            //{
-                IGridCell curCell = this.grid.GetCurrentCell;
-                for (int i = 0; i < this.properties[propListIndex].Count; i++)
-                {
-                    IGridCell cell = this.grid.GetCell(propListIndex+1, i); //add 1 because of Description column
-                    if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
-                    {
-                        continue;
-                    }
 
-                    if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.CultivarName)
+            IGridCell curCell = this.grid.GetCurrentCell;
+            for (int i = 0; i < this.properties[propListIndex].Count; i++)
+            {
+                IGridCell cell = this.grid.GetCell(propListIndex+1, i); //add 1 because of Description column
+                if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
+                {
+                    continue;
+                }
+
+                if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.CultivarName)
+                {
+                    IPlant crop = this.GetCrop(this.properties[propListIndex]);
+                    if (crop != null)
                     {
-                        IPlant crop = this.GetCrop(this.properties[propListIndex]);
-                        if (crop != null)
-                        {
-                            cell.DropDownStrings = this.GetCultivarNames(crop);
-                        }
-                    }
-                    else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.FieldName)
-                    {
-                        string[] fieldNames = this.GetFieldNames(propListIndex);
-                        if (fieldNames != null)
-                        {
-                            cell.DropDownStrings = fieldNames;
-                        }
+                        cell.DropDownStrings = this.GetCultivarNames(crop);
                     }
                 }
-           // }
+                else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.FieldName)
+                {
+                    string[] fieldNames = this.GetFieldNames(propListIndex);
+                    if (fieldNames != null)
+                    {
+                        cell.DropDownStrings = fieldNames;
+                    }
+                }
+            }
+
         }
 
         private void GetContextItems(object o, NeedContextItemsArgs e)

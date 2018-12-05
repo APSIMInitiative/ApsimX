@@ -25,6 +25,7 @@ namespace Models.CLEM.Activities
     {
         [Link]
         Clock Clock = null;
+
         [Link]
         Simulation Simulation = null;
 

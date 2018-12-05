@@ -31,49 +31,49 @@ namespace UserInterface.Presenters
         /// For speed purposes the grid will only display a few years worth of 
         /// GRASP data at a time instead of all of it.
         /// </summary>
-        private int StartYearForGrid;
-        private int EndYearForGrid;
+        private int startYearForGrid;
+        private int endYearForGrid;
 
         /// <summary>
         /// Number or years to display in the grid.
         /// </summary
-        private int NumberOfYearsToDisplayInGrid = 4;
+        private int numberOfYearsToDisplayInGrid = 4;
 
         /// <summary>
         /// First year in the SQLite database file
         /// Needed for setting bounds on StartYearForGrid
         /// </summary>
-        private int FirstYearInFile;
+        private int firstYearInFile;
 
         /// <summary>
         /// Last year in the SQLite database file
         /// Needed for setting bounds on EndYearForGrid
         /// </summary>
-        private int LastYearInFile;
+        private int lastYearInFile;
 
         private void InitialiseStartYear()
         {
             //set the start year using SQLite file's data
             double[] yearsInFile = this.model.GetYearsInFile();
-            FirstYearInFile = (int)yearsInFile[0];
-            LastYearInFile = (int)yearsInFile[yearsInFile.Length - 1];
+            firstYearInFile = (int)yearsInFile[0];
+            lastYearInFile = (int)yearsInFile[yearsInFile.Length - 1];
 
-            SetStartYear(FirstYearInFile);
+            SetStartYear(firstYearInFile);
         }
 
         private void SetStartYear(int Year)
         {
-            StartYearForGrid = Year;
-            if (StartYearForGrid >= LastYearInFile)
-                StartYearForGrid = LastYearInFile - NumberOfYearsToDisplayInGrid;
+            startYearForGrid = Year;
+            if (startYearForGrid >= lastYearInFile)
+                startYearForGrid = lastYearInFile - numberOfYearsToDisplayInGrid;
 
-            if (StartYearForGrid < FirstYearInFile)
-                StartYearForGrid = FirstYearInFile;
+            if (startYearForGrid < firstYearInFile)
+                startYearForGrid = firstYearInFile;
 
-            EndYearForGrid = StartYearForGrid + NumberOfYearsToDisplayInGrid;
+            endYearForGrid = startYearForGrid + numberOfYearsToDisplayInGrid;
 
-            if (EndYearForGrid > LastYearInFile)
-                EndYearForGrid = LastYearInFile;
+            if (endYearForGrid > lastYearInFile)
+                endYearForGrid = lastYearInFile;
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                SetStartYear(StartYearForGrid + NumberOfYearsToDisplayInGrid);
+                SetStartYear(startYearForGrid + numberOfYearsToDisplayInGrid);
                 this.OnModelChanged(model);
             }
             catch (Exception err)
@@ -156,7 +156,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                SetStartYear(StartYearForGrid - NumberOfYearsToDisplayInGrid);
+                SetStartYear(startYearForGrid - numberOfYearsToDisplayInGrid);
                 this.OnModelChanged(model);
             }
             catch (Exception err)
@@ -174,7 +174,7 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             this.view.FileName = this.model.FullFileName;
-            this.view.GridView.DataSource = this.model.GetTable(StartYearForGrid, EndYearForGrid);
+            this.view.GridView.DataSource = this.model.GetTable(startYearForGrid, endYearForGrid);
             if (this.view.GridView.DataSource == null)
             {
                 this.view.WarningText = this.model.ErrorMessage;

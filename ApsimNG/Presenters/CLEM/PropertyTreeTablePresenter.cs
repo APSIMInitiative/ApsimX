@@ -92,8 +92,6 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The presenter for this object</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-
-
             this.model = model as Model;
             this.treeview = view as IPropertyTreeView;
             this.TreeWidth = explorerPresenter.TreeWidth;  //set the width of the PropertyTreeView to the same as the Explorer Tree.

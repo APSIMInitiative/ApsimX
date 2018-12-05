@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
-        private ActivityFolder TimeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
+        private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
 
         /// <summary>
         /// List of the all the Activities.
@@ -73,6 +73,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+
             return results;
         }
 
@@ -227,9 +228,9 @@ namespace Models.CLEM.Activities
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
             {
-                Activity = TimeStep
+                Activity = timeStep
             };
-            LastActivityPerformed = TimeStep;
+            LastActivityPerformed = timeStep;
             OnActivityPerformed(ea);
         }
 
