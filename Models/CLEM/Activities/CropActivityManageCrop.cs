@@ -315,11 +315,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
         {
             string html = "";
-//            bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
-//            if(rotation)
-//            {
-                html += "\n</div>";
-//            }
+            html += "\n</div>";
             return html;
         }
 

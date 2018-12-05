@@ -18,8 +18,6 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    //[ViewName("UserInterface.Views.CLEMView")]
-    //[PresenterName("UserInterface.Presenters.CLEMPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
@@ -79,7 +77,6 @@ namespace Models.CLEM
         [XmlIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
-
         // ignore zone base class properties
 
         /// <summary>Area of the zone.</summary>
@@ -90,14 +87,6 @@ namespace Models.CLEM
         /// <value>The slope.</value>
         [XmlIgnore]
         public new double Slope { get; set; }
-
-        ///// <summary>
-        ///// Constructor
-        ///// </summary>
-        //public ZoneCLEM()
-        //{
-        //    this.SetDefaults();
-        //}
 
         /// <summary>
         /// Validate object
@@ -113,24 +102,24 @@ namespace Models.CLEM
                 results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
             }
             // check that one resources and on activities are present.
-            int HolderCnt = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
-            if (HolderCnt == 0)
+            int holderCount = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
+            if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
             }
-            if (HolderCnt > 1)
+            if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            HolderCnt = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
-            if (HolderCnt == 0)
+            holderCount = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
+            if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
             }
-            if (HolderCnt > 1)
+            if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
@@ -347,103 +336,6 @@ namespace Models.CLEM
                 this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
             }
         }
-
-
-        ///// <summary>
-        ///// Provides the description of the model settings for summary (GetFullSummary)
-        ///// </summary>
-        ///// <param name="FormatForParentControl">Use full verbose description</param>
-        ///// <returns></returns>
-        //public override string ModelSummary(bool FormatForParentControl)
-        //{
-        //    string html = "";
-        //    html += "\n<div class=\"holdermain\">";
-        //    html += "\n<div class=\"clearfix defaultbanner\">" + this.ModelSummaryNameTypeHeader() + "</div>";
-        //    html += "\n<div class=\"defaultcontent\">";
-        //    html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
-        //    if(RandomSeed==0)
-        //    {
-        //        html += "Every run of this simulation will be different.";
-        //    }
-        //    else
-        //    {
-        //        html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
-        //    }
-        //    html += "\n</div>";
-        //    html += "\n</div>";
-
-        //    // get clock
-        //    IModel parentSim = Apsim.Parent(this, typeof(Simulation));
-        //    Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
-
-        //    html += "\n<div class=\"clearfix defaultbanner\">";
-        //    html += "<div class=\"namediv\">" + clk.Name + "</div>";
-        //    html += "<div class=\"typediv\">Clock</div>";
-        //    html += "</div>";
-        //    html += "\n<div class=\"defaultcontent\">";
-        //    html += "\n<div class=\"activityentry\">This simulation runs from ";
-        //    if (clk.StartDate == null)
-        //    {
-        //        html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
-        //    }
-        //    else
-        //    {
-        //        html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
-        //    }
-        //    html += " to ";
-        //    if (clk.EndDate == null)
-        //    {
-        //        html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
-        //    }
-        //    else
-        //    {
-        //        html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
-        //    }
-        //    html += "\n</div>";
-        //    html += "\n</div>";
-
-        //    html += "\n</div>";
-        //    return html;
-        //}
-
-        ///// <summary>
-        ///// Provides the closing html tags for object
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
-        //{
-        //    string html = "";
-        //    return html;
-        //}
-
-        ///// <summary>
-        ///// Provides the closing html tags for object
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
-        //{
-        //    string html = "";
-        //    return html;
-        //}
-
-        ///// <summary>
-        ///// Provides the closing html tags for object
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ModelSummaryClosingTags(bool FormatForParentControl)
-        //{
-        //    return "";
-        //}
-
-        ///// <summary>
-        ///// Provides the closing html tags for object
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ModelSummaryOpeningTags(bool FormatForParentControl)
-        //{
-        //    return "";
-        //}
-
 
     }
 }

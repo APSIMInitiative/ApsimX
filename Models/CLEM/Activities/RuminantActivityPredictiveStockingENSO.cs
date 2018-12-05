@@ -220,20 +220,20 @@ namespace Models.CLEM.Activities
             if (Clock.Today.Month == AssessmentMonth)
             {
                 // Get ENSO forcase for current time
-                ENSOState ForecastEnsoState = GetENSOMeasure();
+                ENSOState forecastEnsoState = GetENSOMeasure();
 
                 // calculate dry season pasture available for each managed paddock holding stock
                 RuminantHerd ruminantHerd = Resources.RuminantHerd();
                 foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
                 {
                     // total adult equivalents of all breeds on pasture for utilisation
-                    double AETotal = newgroup.Sum(a => a.AdultEquivalent);
+                    double totalAE = newgroup.Sum(a => a.AdultEquivalent);
                     // determine AE marked for sale and purchase of managed herd
-                    double AEmarkedForSale = newgroup.Where(a => a.ReadyForSale & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
-                    double AEPurchase = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+                    double markedForSaleAE = newgroup.Where(a => a.ReadyForSale & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
 
                     double herdChange = 1.0;
-                    switch (ForecastEnsoState)
+                    switch (forecastEnsoState)
                     {
                         case ENSOState.Neutral:
                             break;
@@ -252,61 +252,14 @@ namespace Models.CLEM.Activities
                     }
                     if(herdChange> 1.0)
                     {
-                        double AEtoBuy = Math.Max(0, (AETotal*herdChange) - AEPurchase);
-                        HandleRestocking(AEtoBuy, newgroup.Key, newgroup.FirstOrDefault());
+                        double toBuyAE = Math.Max(0, (totalAE*herdChange) - purchaseAE);
+                        HandleRestocking(toBuyAE, newgroup.Key, newgroup.FirstOrDefault());
                     }
                     else if(herdChange < 1.0)
                     {
-                        double AEtoSell = Math.Max(0, (AETotal*(1-herdChange)) - AEmarkedForSale);
-                        HandleDestocking(AEtoSell, newgroup.Key);
+                        double toSellAE = Math.Max(0, (totalAE*(1-herdChange)) - markedForSaleAE);
+                        HandleDestocking(toSellAE, newgroup.Key);
                     }
-
-                    //switch (ForecastEnsoState)
-                    //{
-                    //    case ENSOState.Neutral:
-                    //        break;
-                    //    case ENSOState.LaNina:
-                    //        double AEtoBuy = 0;
-                    //        GrazeFoodStoreType pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
-                    //        double kgha = pasture.TonnesPerHectare * 1000;
-                    //        if (kgha > 3000)
-                    //        {
-                    //            AEtoBuy = AETotal * 0.2; //Buy 20% of Total Animal Equivalents
-                    //        }
-                    //        else if (kgha < 1000)
-                    //        {
-                    //            AEtoBuy = 0; //Don't buy any nore
-                    //        }
-                    //        else
-                    //        {
-                    //            AEtoBuy = AETotal * 0.1; //Buy 10 % of Total Animal Equivalents
-                    //        }
-                    //        // adjust for the AE already marked for purchase if any
-                    //        AEtoBuy = Math.Max(0, AEtoBuy - AEPurchase);
-                    //        HandleRestocking(AEtoBuy, newgroup.Key, newgroup.FirstOrDefault());
-                    //        break;
-                    //    case ENSOState.ElNino:
-                    //        pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
-                    //        kgha = pasture.TonnesPerHectare * 1000;
-                    //        if (kgha > 3000)
-                    //        {
-                    //            ShortfallAE = AETotal * 0.1; //Sell 10% of Total Animal Equivalents
-                    //        }
-                    //        else if (kgha < 1000)
-                    //        {
-                    //            ShortfallAE = AETotal * 0.3; //Sell 30% of Total Animal Equivalents
-                    //        }
-                    //        else
-                    //        {
-                    //            ShortfallAE = AETotal * 0.2; //Sell 20 % of Total Animal Equivalents
-                    //        }
-                    //        // Adjust for AE already flagged for sale if any
-                    //        ShortfallAE = Math.Max(0, ShortfallAE - AEmarkedForSale);
-                    //        HandleDestocking(ShortfallAE, newgroup.Key);
-                    //        break;
-                    //    default:
-                    //        break;
-                    //}
                 }
             }
         }

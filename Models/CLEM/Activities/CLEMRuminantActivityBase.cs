@@ -211,50 +211,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public override void DoActivity()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public override List<ResourceRequest> GetResourcesNeededForActivity()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        ///// </summary>
-        //public override void AdjustResourcesNeededForActivity()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="Requirement"></param>
-        ///// <returns></returns>
-        //public protected double GetDaysLabourRequired(LabourRequirement Requirement)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

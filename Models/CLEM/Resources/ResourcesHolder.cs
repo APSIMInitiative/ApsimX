@@ -20,8 +20,6 @@ namespace Models.CLEM.Resources
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    //[ViewName("UserInterface.Views.HTMLView")]
-    //[PresenterName("UserInterface.Presenters.CLEMSummaryPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
@@ -122,7 +120,6 @@ namespace Models.CLEM.Resources
                 if (Request.ResourceType == null)
                 {
                     string errorMsg = String.Format("Resource type must be supplied in resource request from [a={0}]", Request.ActivityModel.Name);
-                    //Summary.WriteWarning(Request.ActivityModel, String.Format("Resource type must be supplied in resource request from [a={0}]",Request.ActivityModel.Name));
                     throw new Exception(errorMsg);
                 }
 
@@ -256,7 +253,6 @@ namespace Models.CLEM.Resources
             {
                 string errorMsg = String.Format("@error:Invalid resource group and type string for [{0}], expecting 'Resourcename.ResourceTypeName'. Value provided [{1}] ", RequestingModel.Name, ResourceGroupAndItem);
                 throw new Exception(errorMsg);
-                //Summary.WriteWarning(RequestingModel, errorMsg);
             }
 
             Model resourceGroup = this.GetResourceGroupByName(names[0]) as Model;

@@ -38,7 +38,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 parameter = value;
-                UpdateName();
             }
         }
         private RuminantFilterParameters parameter;
@@ -58,7 +57,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 operatr = value;
-                UpdateName();
             }
         }
         private FilterOperators operatr;
@@ -77,7 +75,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 _value = value;
-                UpdateName();
             }
         }
         private string _value;
@@ -124,11 +121,6 @@ namespace Models.CLEM.Groupings
                 str += Value;
             }
             return str;
-        }
-
-        private void UpdateName()
-        {
-           // this.Name = String.Format("Filter {0} {2}", Parameter.ToString(), Operator.ToSymbol(), Value);
         }
 
         /// <summary>

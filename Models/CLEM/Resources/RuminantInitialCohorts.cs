@@ -31,12 +31,12 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public List<Ruminant> CreateIndividuals()
         {
-            List<Ruminant> Individuals = new List<Ruminant>();
+            List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in Apsim.Children(this, typeof(RuminantTypeCohort)))
             {
-                Individuals.AddRange(cohort.CreateIndividuals());
+                individuals.AddRange(cohort.CreateIndividuals());
             }
-            return Individuals;
+            return individuals;
         }
 
         /// <summary>

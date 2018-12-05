@@ -65,8 +65,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        //private List<string> activityNames;
-
         /// <summary>
         /// Validate model
         /// </summary>
@@ -75,54 +73,8 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            //string[] memberNames = new string[] { "Collect product activity" };
-            //// check all activity names are unique.
-            //activityNames = new List<string>();
-            //foreach (Model model in this.Children)
-            //{
-            //    GetActivityNames(model, "");
-            //}
-
-            //foreach (var item in activityNames.GroupBy(a => a.Split('.').Last(), (key, group) =>  new { name = key, Items = group.ToList() }))
-            //{
-            //    if(item.Items.Count()> 1)
-            //    {
-            //        string res = "Activity names must be unique! Rename one of the following activities";
-            //        foreach (var match in item.Items)
-            //        {
-            //            res += string.Format("\n[{0}]", match);
-            //        }
-            //        results.Add(new ValidationResult(res));
-            //    }
-            //}
             return results;
         }
-
-        //private void GetActivityNames(Model model, string name)
-        //{
-        //    name += "." + model.Name;
-        //    switch (model.GetType().Name)
-        //    {
-        //        case "LabourRequirement":
-        //        case "LabourFilter":
-        //        case "LabourFilterGroup":
-        //        case "RuminantFilterGroup":
-        //        case "RuminantFilter":
-        //        case "RuminantFeedGroup":
-        //        case "RuminantDestockGroup":
-        //        case "OtherAnimalsFilterGroup":
-        //        case "OtherAnimalsFilter":
-        //        case "Memo":
-        //            break;
-        //        default:
-        //            activityNames.Add(name);
-        //            break;
-        //    }
-        //    foreach (Model m in model.Children)
-        //    {
-        //        GetActivityNames(m, name);
-        //    }
-        //}
 
         /// <summary>
         /// Last resource request that was in defecit

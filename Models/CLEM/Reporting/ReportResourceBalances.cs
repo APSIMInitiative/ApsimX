@@ -116,29 +116,6 @@ namespace Models.CLEM.Reporting
                                     variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
                                 }
                             }
-
-                            //// get all children
-                            //foreach (CLEMModel item in  model.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMModel)))) // Apsim.Children(this, typeof(CLEMModel))) //
-                            //{
-                            //    string amountStr = "Amount";
-                            //    switch (item.GetType().Name)
-                            //    {
-                            //        case "FinanceType":
-                            //            amountStr = "Balance";
-                            //            break;
-                            //        case "LabourType":
-                            //            amountStr = "AvailableDays";
-                            //            break;
-                            //        default:
-                            //            break;
-                            //    }
-                            //    //if (item.GetType() == typeof(FinanceType))
-                            //    //{
-                            //    //    amountStr = "Balance";
-                            //    //}
-                            //    //variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
-                            //    variableNames.Add("[Resources]."+this.VariableNames[i]+".Items[0]." + amountStr + " as " + item.Name);
-                            //}
                         }
                     }
                 }

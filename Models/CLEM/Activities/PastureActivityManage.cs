@@ -183,7 +183,6 @@ namespace Models.CLEM.Activities
             if (UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-//                Area = LinkedLandItem.AreaAvailable;
             }
             if (Area == 0 & AreaRequested > 0)
             {

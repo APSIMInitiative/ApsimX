@@ -237,7 +237,6 @@ namespace Models.CLEM.Activities
             // Convert to percentage before calculation
             
             double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
-//            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
             greenlimit = Math.Max(0.0, greenlimit);
             if (propgreen > 90)
             {
@@ -261,15 +260,8 @@ namespace Models.CLEM.Activities
                     //Get total amount
                     // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
                     // hours grazed is not adjusted for this reduced feeding.
-                    //                    double totalDesired = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8));
-                    //                    double totalEaten = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
                     double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
-
-                    //foreach (var a in herd)
-                    //{
-                    //    double dd = a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                    //}
 
                     totalEaten *= GrazingCompetitionLimiter;
 
@@ -302,7 +294,6 @@ namespace Models.CLEM.Activities
                             ind.AddIntake(food);
                         }
                         Status = ActivityStatus.Success;
-                        //SetStatusSuccess();
 
                         // if insufficent provided or no pasture (nothing eaten) use totalNeededifPasturePresent
                         if (GrazingCompetitionLimiter < 1)

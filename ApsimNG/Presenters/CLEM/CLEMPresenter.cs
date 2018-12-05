@@ -100,7 +100,6 @@ namespace UserInterface.Presenters
                       
                     {
                         ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                        //PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
                         if (newView != null && ip != null)

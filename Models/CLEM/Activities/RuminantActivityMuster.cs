@@ -46,8 +46,6 @@ namespace Models.CLEM.Activities
         [Required]
         public bool MoveSucklings { get; set; }
 
-        //private GrazeFoodStoreType Pasture { get; set; }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -123,7 +121,7 @@ namespace Models.CLEM.Activities
             double numberUnits = 0;
             List<Ruminant> herd = this.CurrentHerd(false);
             int head = herd.Count();
-            double AE = herd.Sum(a => a.AdultEquivalent);
+            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             switch (Requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -135,7 +133,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
-                    numberUnits = AE / Requirement.UnitSize;
+                    numberUnits = adultEquivalents / Requirement.UnitSize;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;

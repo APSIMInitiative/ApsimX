@@ -57,8 +57,6 @@ namespace Models.CLEM.Resources
                     default:
                         break;
                 }
-//                if(childModel.GetType() == typeof(GrazeFoodStore))
-                //cast the generic IModel to a specfic model.
             }
         }
 

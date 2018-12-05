@@ -24,29 +24,6 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class LabourActivityTask : CLEMActivityBase, IValidatableObject
     {
-        ///// <summary>
-        ///// Amount payable
-        ///// </summary>
-        //[Description("Amount payable")]
-        //[Required, GreaterThanEqualValue(0)]
-        //public double Amount { get; set; }
-
-        ///// <summary>
-        ///// Payment style
-        ///// </summary>
-        //[System.ComponentModel.DefaultValueAttribute(LabourUnitType.perHead)]
-        //[Description("Payment style")]
-        //[Required]
-        //public LabourUnitType PaymentStyle { get; set; }
-
-        ///// <summary>
-        ///// Bank account to use
-        ///// </summary>
-        //[Description("Bank account to use")]
-        //[Models.Core.Display(DisplayType = Models.Core.DisplayAttribute.DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
-        //public string AccountName { get; set; }
-
         /// <summary>
         /// Validate object
         /// </summary>
@@ -55,16 +32,6 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            //switch (PaymentStyle)
-            //{
-            //    case LabourUnitType.Fixed:
-            //    case LabourUnitType.perHead:
-            //        break;
-            //    default:
-            //        string[] memberNames = new string[] { "PaymentStyle" };
-            //        results.Add(new ValidationResult("Payment style " + PaymentStyle.ToString() + " is not supported", memberNames));
-            //        break;
-            //}
             return results;
         }
 

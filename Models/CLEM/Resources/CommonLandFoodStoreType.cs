@@ -156,7 +156,6 @@ namespace Models.CLEM.Resources
                     {
                         string[] memberNames = new string[] { item };
                         results.Add(new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames));
-//                        results.Add(new ValidationResult("The common land [r=" + this.Name + "] requires the following parameters to be supplied [o=" + String.Join("][o=", missing) + "] as it is not linked to an on-farm pasture", memberNames));
                     }
                 }
             }
@@ -258,6 +257,8 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
+                // need to check the follwoing code is no longer needed.
+
                 // allow decaying or no pools currently available
                 //if (PastureDecays | Pools.Count() == 0)
                 //{

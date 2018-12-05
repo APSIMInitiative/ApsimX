@@ -36,7 +36,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 parameter = value;
-                //UpdateName();
             }
         }
         private LabourFilterParameters parameter;
@@ -55,7 +54,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 operatr = value;
-                //UpdateName();
             }
         }
         private FilterOperators operatr;
@@ -74,7 +72,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 _value = value;
-                //UpdateName();
             }
         }
         private string _value;
@@ -155,8 +152,6 @@ namespace Models.CLEM.Groupings
         {
             return "";
         }
-
-
     }
 
     /// <summary>

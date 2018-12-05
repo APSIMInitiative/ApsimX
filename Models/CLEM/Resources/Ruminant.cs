@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         /// The adult equivalent of this individual
         /// </summary>
         public double AdultEquivalent { get { return Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75); } }
-//        public double AdultEquivalent { get { return this.Number * Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75); } }
+        // Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
         /// Highest previous weight

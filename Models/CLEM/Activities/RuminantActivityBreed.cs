@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                                     {
                                         if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                         {
-                                            //female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate, i);
+                                            female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate, i);
                                         }
                                         numberServiced++;
                                     }
@@ -379,10 +379,10 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                double IPIcurrent = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
+                double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
                 // calculate inter-parturition interval
-                IPIcurrent = Math.Max(IPIcurrent, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
-                double ageNextConception = female.AgeAtLastConception + (IPIcurrent / 30.4);
+                currentIPI = Math.Max(currentIPI, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
+                double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
                 isConceptionReady = (female.Age >= ageNextConception);
             }
 
@@ -458,7 +458,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &
                             a.Age >= a.BreedParams.MinimumAge1stMating & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
             int head = herd.Count();
-            double AE = herd.Sum(a => a.AdultEquivalent);
+            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
             if (head == 0) return null;
 
@@ -476,7 +476,7 @@ namespace Models.CLEM.Activities
                         sumneeded = head * item.Amount;
                         break;
                     case AnimalPaymentStyleType.perAE:
-                        sumneeded = AE * item.Amount;
+                        sumneeded = adultEquivalents * item.Amount;
                         break;
                     default:
                         throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
@@ -507,7 +507,7 @@ namespace Models.CLEM.Activities
                         daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
                         break;
                     case LabourUnitType.perAE:
-                        daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
+                        daysNeeded = Math.Ceiling(adultEquivalents / item.UnitSize) * item.LabourPerUnit;
                         break;
                     default:
                         throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));

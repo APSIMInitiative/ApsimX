@@ -710,6 +710,8 @@ namespace Models.CLEM.Resources
 
         #region other
 
+        // add again if next methane equation requires an intercept value
+
         ///// <summary>
         ///// Methane production from intake intercept
         ///// </summary>

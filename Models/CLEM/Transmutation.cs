@@ -189,10 +189,6 @@ namespace Models.CLEM
         {
             // determine resource type from name
             object result = Resources.GetResourceGroupByName(ResourceName);
-            //if(result==null)
-            //{
-            //    throw new Exception("Could not find resource " + this.ResourceName + " in transmutation " + this.Name);
-            //}
             ResourceType = result.GetType();
         }
 

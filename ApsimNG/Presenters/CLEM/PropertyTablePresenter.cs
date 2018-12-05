@@ -214,7 +214,6 @@ namespace UserInterface.Presenters
         {
             List<VariableProperty> result = new List<VariableProperty>();
             this.model = model;
-            //this.properties.Clear();
             bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
             bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
 
@@ -265,7 +264,6 @@ namespace UserInterface.Presenters
                             {
                                 includeProperty = false;
                             }
-                                
                         }
                         else
                         {
@@ -283,14 +281,6 @@ namespace UserInterface.Presenters
                     {
                         result.Add(new VariableProperty(this.model, property));
                     }
-
-                    
-                    //if (property.PropertyType == typeof(DataTable))
-                    //{
-                    //    VariableProperty vp = new VariableProperty(this.model, property);
-                    //    DataTable dt = vp.Value as DataTable;
-                    //    this.grid.DataSource = dt;
-                    //}
                 }
                 return result;
             }
@@ -313,9 +303,6 @@ namespace UserInterface.Presenters
                     propListIndex++;
                 }
             }
-
-
-
         }
 
         /// <summary>

@@ -69,35 +69,32 @@ namespace Models.CLEM.Activities
                     daysNeeded = Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
-                    CropActivityManageCrop CropParent = Parent.Parent as CropActivityManageCrop;
-                    CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-                    numberUnits = CropParent.Area * ProductParent.UnitsToHaConverter / Requirement.UnitSize;
+                    CropActivityManageCrop cropParent = Parent.Parent as CropActivityManageCrop;
+                    CropActivityManageProduct productParent = Parent as CropActivityManageProduct;
+                    numberUnits = cropParent.Area * productParent.UnitsToHaConverter / Requirement.UnitSize;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perTree:
-                    CropParent = Parent.Parent as CropActivityManageCrop;
-                    ProductParent = Parent as CropActivityManageProduct;
-                    numberUnits = ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter / Requirement.UnitSize;
+                    cropParent = Parent.Parent as CropActivityManageCrop;
+                    productParent = Parent as CropActivityManageProduct;
+                    numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / Requirement.UnitSize;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
-                    //daysNeeded = Math.Ceiling(ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter / Requirement.UnitSize) * Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    CropParent = Parent.Parent as CropActivityManageCrop;
-                    ProductParent = Parent as CropActivityManageProduct;
-                    numberUnits = ProductParent.AmountHarvested;
+                    cropParent = Parent.Parent as CropActivityManageCrop;
+                    productParent = Parent as CropActivityManageProduct;
+                    numberUnits = productParent.AmountHarvested;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
-                    //daysNeeded = Math.Ceiling(ProductParent.AmountHarvested) * Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    CropParent = Parent.Parent as CropActivityManageCrop;
-                    ProductParent = Parent as CropActivityManageProduct;
-                    numberUnits = ProductParent.AmountHarvested / Requirement.UnitSize;
+                    cropParent = Parent.Parent as CropActivityManageCrop;
+                    productParent = Parent as CropActivityManageProduct;
+                    numberUnits = productParent.AmountHarvested / Requirement.UnitSize;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
-//                    daysNeeded = Math.Ceiling(ProductParent.AmountHarvested / Requirement.UnitSize) * Requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));

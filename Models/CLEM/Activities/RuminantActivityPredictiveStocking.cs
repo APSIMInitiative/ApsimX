@@ -115,12 +115,12 @@ namespace Models.CLEM.Activities
                     }
 
                     // total adult equivalents not marked for sale of all breeds on pasture for utilisation
-                    double AETotal = paddockGroup.Where(a => a.SaleFlag == HerdChangeReason.None).Sum(a => a.AdultEquivalent);
+                    double totalAE = paddockGroup.Where(a => a.SaleFlag == HerdChangeReason.None).Sum(a => a.AdultEquivalent);
 
-                    double ShortfallAE = 0;
+                    double shortfallAE = 0;
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
-                    ShortfallAE = 0;
+                    shortfallAE = 0;
                     GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     double pastureBiomass = pasture.Amount;
 
@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
                     for (int i = 0; i < this.DrySeasonLength; i++)
                     {
                         pastureBiomass *= (1.0 - pasture.DetachRate);
-                        pastureBiomass -= feedRequiredAE * AETotal;
+                        pastureBiomass -= feedRequiredAE * totalAE;
                     }
 
                     // Shortfall in Fodder in kg per hectare
@@ -143,10 +143,10 @@ namespace Models.CLEM.Activities
                     if (pastureShortFallKg == 0) return;
 
                     // number of AE to sell to balance shortfall_kg
-                    ShortfallAE = pastureShortFallKg / feedRequiredAE;
+                    shortfallAE = pastureShortFallKg / feedRequiredAE;
 
                     // get prediction
-                    HandleDestocking(ShortfallAE, paddockGroup.Key);
+                    HandleDestocking(shortfallAE, paddockGroup.Key);
                 }
             }
         }

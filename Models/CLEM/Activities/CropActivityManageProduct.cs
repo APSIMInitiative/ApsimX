@@ -543,23 +543,6 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += base.ModelSummaryClosingTags(FormatForParentControl);
-
-            //if (this.Parent.GetType() == typeof(CropActivityManageCrop))
-            //{
-            //    bool mixed = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() >= 1;
-            //    if (mixed)
-            //    {
-            //    }
-            //    else
-            //    {
-            //        html += base.ModelSummaryClosingTags(bool FormatForParentControl);
-            //    }
-            //}
-            //bool mixed = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() >= 1;
-            //if (mixed)
-            //{
-            //    html += "\n</div>";
-            //}
             return html;
         }
 

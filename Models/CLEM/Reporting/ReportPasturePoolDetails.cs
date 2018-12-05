@@ -28,8 +28,6 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private ResourcesHolder Resources = null;
-//        [Link]
-//        ISummary Summary = null;
 
         /// <summary>The columns to write to the data store.</summary>
         private List<IReportColumn> columns = null;

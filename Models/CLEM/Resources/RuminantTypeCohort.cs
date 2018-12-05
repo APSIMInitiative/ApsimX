@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public List<Ruminant> CreateIndividuals()
         {
-            List<Ruminant> Individuals = new List<Ruminant>();
+            List<Ruminant> individuals = new List<Ruminant>();
 
             RuminantType parent = this.Parent.Parent as RuminantType;
 
@@ -149,11 +149,11 @@ namespace Models.CLEM.Resources
                         ruminantFemale.NumberOfBirths = 0;
                     }
 
-                    Individuals.Add(ruminantBase as Ruminant);
+                    individuals.Add(ruminantBase as Ruminant);
                 }
             }
 
-            return Individuals;
+            return individuals;
         }
 
         /// <summary>

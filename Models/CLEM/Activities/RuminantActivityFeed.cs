@@ -98,7 +98,6 @@ namespace Models.CLEM.Activities
             feedRequired = 0;
 
             // get list from filters
-            // foreach (RuminantFeedGroupMonthly child in Apsim.Children(this, typeof(RuminantFeedGroupMonthly)))
             foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
                 double value = 0;
@@ -171,13 +170,12 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
-            double AE = 0;
-            //            foreach (RuminantFeedGroupMonthly child in Apsim.Children(this, typeof(RuminantFeedGroupMonthly)))
+            double adultEquivalents = 0;
             foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
                 var subherd = herd.Filter(child).ToList();
                 head += subherd.Count();
-                AE += subherd.Sum(a => a.AdultEquivalent);
+                adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
             }
 
             double daysNeeded = 0;
@@ -193,7 +191,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
-                    numberUnits = AE / Requirement.UnitSize;
+                    numberUnits = adultEquivalents / Requirement.UnitSize;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;

@@ -24,34 +24,6 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
-        ///// <summary>
-        ///// Name of herd to trade
-        ///// </summary>
-        //[Description("Name of herd to trade")]
-        //      [Required]
-        //      public string HerdName { get; set; }
-
-  //      /// <summary>
-  //      /// Weight of inividuals to buy
-  //      /// </summary>
-  //      [Description("Weight of inividuals to buy")]
-  //      [Required]
-  //      public double BuyWeight { get; set; }
-
-        ///// <summary>
-        ///// Animal age at purchase (months)
-        ///// </summary>
-        //[Description("Animal age at purchase (months)")]
-  //      [Required]
-  //      public int BuyAge { get; set; }
-
-        ///// <summary>
-        ///// Trade price (purchase/sell price /kg LWT)
-        ///// </summary>
-        //[Description("Trade price (purchase/sell price /kg LWT)")]
-  //      [Required]
-  //      public double TradePrice { get; set; }
-
         /// <summary>
         /// Months kept before sale
         /// </summary>
@@ -65,14 +37,6 @@ namespace Models.CLEM.Activities
         [Description("Weight to achieve before sale")]
         [Required, GreaterThanEqualValue(0)]
         public double TradeWeight { get; set; }
-
-        ///// <summary>
-        ///// Purchase month
-        ///// </summary>
-        //[System.ComponentModel.DefaultValueAttribute(11)]
-        //[Description("Purchase month")]
-  //      [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-  //      public int PurchaseMonth { get; set; }
 
         private RuminantType herdToUse;
 

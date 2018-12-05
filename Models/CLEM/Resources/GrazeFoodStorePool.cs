@@ -152,13 +152,6 @@ namespace Models.CLEM.Resources
         /// <param name="RemoveRequest"></param>
         public void Remove(object RemoveRequest)
         {
-//            RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
-            // limit by available
-//            removeRequest.Amount = Math.Min(removeRequest.Amount, amount);
-            // add to intake and update %N and %DMD values
-//            removeRequest.Requestor.AddIntake(removeRequest);
-            // Remove from resource
-//            Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
         }
 
         /// <summary>

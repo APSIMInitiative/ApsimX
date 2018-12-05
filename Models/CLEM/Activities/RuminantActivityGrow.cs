@@ -268,7 +268,7 @@ namespace Models.CLEM.Activities
 
                         // Calculate diet dry matter digestibilty from the %N of the current diet intake.
                         // Reference: Ash and McIvor
-                        //ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
+                        // ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
                         // Now tracked via incoming food DMD values
 
                         // TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
@@ -362,9 +362,9 @@ namespace Models.CLEM.Activities
 
             // Sme 1 for females and castrates
             // TODO: castrates not implemented
-            double Sme = 1;
+            double sme = 1;
             // Sme 1.15 for all males.
-            if (ind.Gender == Sex.Male) Sme = 1.15;
+            if (ind.Gender == Sex.Male) sme = 1.15;
 
             double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
             // Reference: Nutrient Requirements of domesticated ruminants (p7)
@@ -466,7 +466,7 @@ namespace Models.CLEM.Activities
                 // Reference: SCA p.24
                 // Regference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
                 // 0.000082 is -0.03 Age in Years/365 for days 
-                energyMaintenance = ind.BreedParams.Kme * Sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
+                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
                 ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
 
                 // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
@@ -511,9 +511,6 @@ namespace Models.CLEM.Activities
             // Function based on Freer spreadsheet
             //methaneProduced = 0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
             //methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
-
-            // grams per day, Hunter 2007 (35.16 & -34.8)
-            //methaneProduced = (ind.BreedParams.MethaneProductionCoefficient * intakeDaily + ind.BreedParams.MethaneProductionIntercept) / 47.62;
             
             // Charmely et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;

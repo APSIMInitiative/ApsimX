@@ -90,7 +90,6 @@ namespace Models.CLEM.Resources
             {
                 html += "</table></div>";
             }
-//            html += "\n</div>";
             return html;
         }
 

@@ -461,13 +461,13 @@ namespace Models.CLEM
 
             int startYear = EcolCalculationDate.Year;
             int startMonth = EcolCalculationDate.Month;
-            DateTime EndDate = EcolCalculationDate.AddMonths(EcolCalculationInterval+1);
-            if(EndDate > clock.EndDate)
+            DateTime endDate = EcolCalculationDate.AddMonths(EcolCalculationInterval+1);
+            if(endDate > clock.EndDate)
             {
-                EndDate = clock.EndDate;
+                endDate = clock.EndDate;
             }
-            int endYear = EndDate.Year;
-            int endMonth = EndDate.Month;
+            int endYear = endDate.Year;
+            int endMonth = endDate.Month;
 
             double stkRateCategory = FindClosestStkRateCategory(StkRate);
 
@@ -501,7 +501,7 @@ namespace Models.CLEM
 
             filtered.Sort((r, s) => DateTime.Compare(r.CutDate, s.CutDate));
 
-            CheckAllMonthsWereRetrieved(filtered, EcolCalculationDate, EndDate,
+            CheckAllMonthsWereRetrieved(filtered, EcolCalculationDate, endDate,
                 Region, Soil, GrassBA, LandCon, StkRate);
 
             return filtered;
