@@ -131,18 +131,18 @@ namespace UserInterface.Presenters
                 EndHTML(htmlString);
             }
 
-            string TableHtml = "";
-            TableHtml += "<table>";
-            TableHtml += "<tr><th>Activity</th>";
+            string tableHtml = "";
+            tableHtml += "<table>";
+            tableHtml += "<tr><th>Activity</th>";
             foreach (LabourType lt in Apsim.Children(labour, typeof(LabourType)))
             {
-                TableHtml += "<th>"+lt.Name+"</th>";
+                tableHtml += "<th>"+lt.Name+"</th>";
             }
-            TableHtml += "</tr>";
-            TableHtml += TableRow(activities);
-            TableHtml += "</table>";
+            tableHtml += "</tr>";
+            tableHtml += TableRow(activities);
+            tableHtml += "</table>";
 
-            htmlString += TableHtml;
+            htmlString += tableHtml;
 
             // add notes
             htmlString += "\n<div class=\"holdermain\">";
@@ -188,23 +188,23 @@ namespace UserInterface.Presenters
             // can row be included?
             if(validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
             {
-                Model LR = Apsim.Children(model, typeof(IModel)).Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                tblstr += "<tr"+((LR is null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
+                Model labourRequirement = Apsim.Children(model, typeof(IModel)).Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
+                tblstr += "<tr"+((labourRequirement is null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
-                if (!(LR is null))
+                if (!(labourRequirement is null))
                 {
                     // for each labour type
                     foreach (LabourType lt in labourList)
                     {
                         tblstr += "<td>";
                         // for each filter group
-                        foreach (Model item in Apsim.Children(LR, typeof(LabourFilterGroup)))
+                        foreach (Model item in Apsim.Children(labourRequirement, typeof(LabourFilterGroup)))
                         {
                             tblstr += "<div>";
                             int level = 0;
                             // while nested 
-                            Model nested = LR as Model;
+                            Model nested = labourRequirement as Model;
 
                             while (Apsim.Children(nested, typeof(LabourFilterGroup)).Count() > 0)
                             {

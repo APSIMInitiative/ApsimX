@@ -157,7 +157,7 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name).ToList();
             int head = herd.Count();
-            double AE = herd.Sum(a => a.AdultEquivalent);
+            double adultEqivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
             switch (Requirement.UnitType)
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
-                    numberUnits = AE / Requirement.UnitSize;
+                    numberUnits = adultEqivalents / Requirement.UnitSize;
                     if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * Requirement.LabourPerUnit;
                     break;
