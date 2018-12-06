@@ -44,8 +44,8 @@ namespace UserInterface.Presenters
                 {
                     if (model is ZoneCLEM)
                     {
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                        IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(typeof(MessagePresenter).FullName) as IPresenter;
+                        object newView = new HTMLView(this.view as ViewBase);
+                        IPresenter ip = new MessagePresenter();
                         if (newView != null && ip != null)
                         {
                             this.view.AddTabView("Messages", newView);
@@ -64,8 +64,8 @@ namespace UserInterface.Presenters
                 //HTML Summary
                 try
                 {
-                    object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                    summaryPresenter = Assembly.GetExecutingAssembly().CreateInstance(typeof(CLEMSummaryPresenter).FullName) as IPresenter;
+                    object newView = new HTMLView(this.view as ViewBase);
+                    summaryPresenter = new CLEMSummaryPresenter();
                     if (newView != null && summaryPresenter != null)
                     {
                         this.view.AddTabView("Summary", newView);
@@ -88,7 +88,6 @@ namespace UserInterface.Presenters
                     string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
                     bool isTablePresenter = childDisplayInParentPresenters.Contains(presenterName.ToString().Split('.').Last());
 
-
                     // check if it has properties
                     if (isTablePresenter || 
                         (model.GetType().GetProperties(
@@ -96,8 +95,6 @@ namespace UserInterface.Presenters
                           BindingFlags.NonPublic |
                           BindingFlags.Instance 
                           ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0)) 
-                          
-                      
                     {
                         ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
@@ -123,8 +120,8 @@ namespace UserInterface.Presenters
                     var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                     if (versions.Count() > 0)
                     {
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(typeof(HTMLView).FullName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                        IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(typeof(VersionsPresenter).FullName) as IPresenter;
+                        object newView = new HTMLView(this.view as ViewBase);
+                        IPresenter ip = new VersionsPresenter();
                         if (newView != null && ip != null)
                         {
                             this.view.AddTabView("Version", newView);
