@@ -8263,7 +8263,7 @@
                               "MinimumLoadBeforeSelling": 0.0,
                               "TruckCO2Emissions": 0.0,
                               "TruckMethaneEmissions": 0.0,
-                              "TruckNOxEmissions": 0.0,
+                              "TruckN2OEmissions": 0.0,
                               "Name": "TruckingSettings",
                               "Children": [],
                               "IncludeInDocumentation": true,

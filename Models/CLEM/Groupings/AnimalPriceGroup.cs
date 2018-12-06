@@ -121,6 +121,10 @@ namespace Models.CLEM.Groupings
             if (FormatForParentControl)
             {
                 html += "<tr><td>" + this.Name + "</td><td>";
+                if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+                {
+                    html += "<div class=\"filter\">All individuals</div>";
+                }
             }
             else
             {

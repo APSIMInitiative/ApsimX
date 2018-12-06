@@ -497,7 +497,7 @@ namespace Models.CLEM.Activities
                 //TreeC
                 //Burnkg
                 //methaneFire
-                //NOxFire
+                //N2OFire
                 //%utilisation
                 LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
 

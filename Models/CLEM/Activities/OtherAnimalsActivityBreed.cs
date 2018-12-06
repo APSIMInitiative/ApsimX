@@ -135,7 +135,6 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             // this activity is performed in CLEMAnimalBreeding event
-            throw new NotImplementedException();
         }
 
         /// <summary>

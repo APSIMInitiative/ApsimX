@@ -45,14 +45,14 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum pasture level
         /// </summary>
-        [Description("Minimum pasture level(t/ha) >=")]
+        [Description("Minimum pasture level (kg/ha) >=")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumPastureLevel { get; set; }
 
         /// <summary>
         /// Maximum pasture level
         /// </summary>
-        [Description("Maximum pasture level(t/ha) <")]
+        [Description("Maximum pasture level (kg/ha) <")]
         [Required, GreaterThan("MinimumPastureLevel", ErrorMessage ="Maximum pasture level must be greater than minimum pasture level")]
         public double MaximumPastureLevel { get; set; }
 

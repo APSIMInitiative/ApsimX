@@ -412,12 +412,12 @@ namespace UserInterface.Presenters
             {
                 IGridCell cell = this.grid.GetCell(propListIndex+1, i); //add one because of the Description column
                         
-                if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.TableName)
+                if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     cell.DropDownStrings = this.storage.TableNames.ToArray();
                 }
-                else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.CultivarName)
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     IPlant crop = this.GetCrop(this.properties[propListIndex]);
@@ -426,11 +426,11 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = this.GetCultivarNames(crop);
                     }
                 }
-                else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.FileName)
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
                 }
-                else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.FieldName)
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     string[] fieldNames = this.GetFieldNames(propListIndex);
@@ -439,7 +439,7 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.ResidueName &&
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.ResidueName &&
                          this.model is SurfaceOrganicMatter)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
@@ -449,7 +449,7 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.CLEMResourceName)
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayTypeEnum.CLEMResourceName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
 

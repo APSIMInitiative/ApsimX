@@ -73,15 +73,15 @@ namespace Models.CLEM.Activities
         public double TruckMethaneEmissions { get; set; }
 
         /// <summary>
-        /// Truck NOx emissions per km
+        /// Truck N2O emissions per km
         /// </summary>
-        [Description("Truck NOx emissions per km")]
+        [Description("Truck Nitrous oxide emissions per km")]
         [Required, GreaterThanEqualValue(0)]
-        public double TruckNOxEmissions { get; set; }
+        public double TruckN2OEmissions { get; set; }
 
         private GreenhouseGasesType CO2Store;
         private GreenhouseGasesType MethaneStore;
-        private GreenhouseGasesType NOxStore;
+        private GreenhouseGasesType N2OStore;
 
         /// <summary>
         /// Constructor
@@ -109,9 +109,9 @@ namespace Models.CLEM.Activities
                 {
                     CO2Store = Resources.GetResourceItem(this, typeof(GreenhouseGases), "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
-                if (TruckNOxEmissions > 0)
+                if (TruckN2OEmissions > 0)
                 {
-                    NOxStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "NOx", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    N2OStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "NOx", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
             }
         }
@@ -125,7 +125,7 @@ namespace Models.CLEM.Activities
         {
             if(NumberOfTrucks > 0)
             {
-                List<string> gases = new List<string>() { "Methane", "CO2", "NOx" };
+                List<string> gases = new List<string>() { "Methane", "CO2", "N2O" };
                 double emissions = 0;
                 foreach (string gas in gases)
                 {
@@ -140,9 +140,9 @@ namespace Models.CLEM.Activities
                             gasstore = CO2Store;
                             emissions = TruckCO2Emissions;
                             break;
-                        case "NOx":
-                            gasstore = NOxStore;
-                            emissions = TruckNOxEmissions;
+                        case "N2O":
+                            gasstore = N2OStore;
+                            emissions = TruckN2OEmissions;
                             break;
                         default:
                             gasstore = null;
@@ -194,7 +194,7 @@ namespace Models.CLEM.Activities
                 html += "</div>";
             }
 
-            if (TruckMethaneEmissions > 0 | TruckNOxEmissions > 0)
+            if (TruckMethaneEmissions > 0 | TruckN2OEmissions > 0)
             {
                 html += "\n<div class=\"activityentry\">Each truck will emmit <span class=\"setvalue\">";
                 if (TruckMethaneEmissions > 0)
@@ -208,7 +208,7 @@ namespace Models.CLEM.Activities
                         html += " and ";
                     }
                     else
-                    html += "<span class=\"setvalue\">" + TruckNOxEmissions.ToString("0.###") + "</span> kg NO<sub>x</sub> per km";
+                    html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg N<sub>2</sub>O per km";
                 }
                 html += "</div>";
             }

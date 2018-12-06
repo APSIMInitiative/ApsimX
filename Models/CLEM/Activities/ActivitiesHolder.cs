@@ -11,7 +11,7 @@ using Models.Core.Attributes;
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// Manger for all activities available to the model
+    /// Manager for all activities available to the model
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
                 }
                 UnBindEvents(item.Children.Cast<IModel>().ToList());
             }
-            // add link to all timers as children so they can fire activity performed
+            // remove link to all timers as children
             foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
             {
                 (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;

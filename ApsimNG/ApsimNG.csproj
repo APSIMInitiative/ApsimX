@@ -478,7 +478,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerMonthRange.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalFoodStore.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalFoodStoreType.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPriceEntry.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPriceGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageCrop.png" />
