@@ -20,14 +20,14 @@ namespace Models.Functions
         private IEvent events = null;
 
         /// <summary>The accumulated value</summary>
-        private double AccumulatedValue = 0;
+        private double accumulatedValue = 0;
 
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private List<IModel> childFunctions;
 
         /// <summary>The phenology</summary>
         [Link]
-        Phenology Phenology = null;
+        Phenology phenology = null;
 
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
@@ -47,7 +47,7 @@ namespace Models.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;
+            accumulatedValue = 0;
 
             events.Subscribe(AccumulateEventName, OnCalcEvent);
         }
@@ -69,18 +69,18 @@ namespace Models.Functions
         /// <param name="e">Event arguments</param>
         private void OnCalcEvent(object sender, EventArgs e)
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+            if (childFunctions == null)
+                childFunctions = Apsim.Children(this, typeof(IFunction));
 
-            if (Phenology.Between(StartStageName, EndStageName))
+            if (phenology.Between(StartStageName, EndStageName))
             {
                 double DailyIncrement = 0.0;
-                foreach (IFunction function in ChildFunctions)
+                foreach (IFunction function in childFunctions)
                 {
                     DailyIncrement += function.Value();
                 }
 
-                AccumulatedValue += DailyIncrement;
+                accumulatedValue += DailyIncrement;
             }
         }
 
@@ -88,7 +88,7 @@ namespace Models.Functions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            return AccumulatedValue;
+            return accumulatedValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
