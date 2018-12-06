@@ -2703,7 +2703,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.SimpleLeaf, Models",
+              "$type": "Models.PMF.Organs.SorghumLeaf, Models",
               "ApicalCohortNo": 0,
               "InitialisedCohortNo": 0,
               "CohortsInitialised": false,

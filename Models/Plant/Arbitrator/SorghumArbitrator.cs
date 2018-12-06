@@ -37,7 +37,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SorghumArbitrator: OrganArbitrator, IUptake, ICustomDocumentation
+    public class SorghumArbitrator: BaseArbitrator
     {
         #region Links and Input parameters
 
@@ -71,80 +71,6 @@ namespace Models.PMF
 
         #region Plant interface methods
        
-        /// <summary>Determines Nutrient limitations to DM allocations</summary>
-        /// <param name="Organs">The organs.</param>
-        override public void CalculatedNutrientConstrainedDMAllocation(IArbitration[] Organs)
-        {
-            return;
-            //double PreNStressDMAllocation = DM.Allocated;
-            //for (int i = 0; i < Organs.Length; i++)
-            //    N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.StorageAllocation[i];
-
-            //N.Allocated = MathUtilities.Sum(N.TotalAllocation);
-
-            ////To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
-            //// Calculate posible growth based on Minimum N requirement of organs
-            //for (int i = 0; i < Organs.Length; i++)
-            //{
-            //    double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.StorageDemand[i];
-            //    if (N.TotalAllocation[i] >= TotalNDemand)
-            //        N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
-            //    else
-            //        if (N.TotalAllocation[i] == 0 | Organs[i].MinNconc == 0)
-            //        N.ConstrainedGrowth[i] = 100000000;
-            //    else
-            //        N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNconc;
-            //}
-
-            //// Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
-            //for (int i = 0; i < Organs.Length; i++)
-            //    if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
-            //    {
-            //        double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
-            //        double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
-            //        double StorageProportion = DM.StorageAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
-            //        DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * MetabolicProportion);
-            //        DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-            //        DM.StorageAllocation[i] = Math.Min(DM.StorageAllocation[i], N.ConstrainedGrowth[i] * StorageProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-
-            //        //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
-            //    }
-            ////Recalculated DM Allocation totals
-            //DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
-            //DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
-        }
-
-        /// <summary>Does the fixation.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        /// <param name="arbitrator">The option.</param>
-        /// <exception cref="System.Exception">Crop is trying to Fix excessive amounts of BAT.  Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic</exception>
-        override public void AllocateFixation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
-        {
-            double BiomassFixed = 0;
-            if (BAT.TotalFixationSupply > 0.00000000001)
-            {
-                arbitrator.DoAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
-
-                //Set the sink limitation variable.  BAT.NotAllocated changes after each allocation step so it must be caught here and assigned as sink limitation
-                BAT.SinkLimitation = BAT.NotAllocated;
-
-                // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
-                if (BiomassFixed > 0)
-                    for (int i = 0; i < Organs.Length; i++)
-                    {
-                        if (BAT.FixationSupply[i] > 0.00000000001)
-                        {
-                            double RelativeSupply = BAT.FixationSupply[i] / BAT.TotalFixationSupply;
-                            BAT.Fixation[i] = BiomassFixed * RelativeSupply;
-                            double Respiration = BiomassFixed * RelativeSupply * Organs[i].NFixationCost;  //Calculalte how much respirtion is associated with fixation
-                            DM.Respiration[i] = Respiration; // allocate it to the organ
-                        }
-                        DM.TotalRespiration = MathUtilities.Sum(DM.Respiration);
-                    }
-            }
-        }
-
         /// <summary>Does the retranslocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
