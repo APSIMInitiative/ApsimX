@@ -157,7 +157,7 @@
         /// <param name="owner">The owning view.</param>
         public GridView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hboxContainer = (HBox)builder.GetObject("hbox1");
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
