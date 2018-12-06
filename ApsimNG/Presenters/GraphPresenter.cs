@@ -303,6 +303,9 @@ namespace UserInterface.Presenters
                 {
                     if (definition.x != null && definition.xAxis == axis.Type && definition.xFieldName != null)
                     {
+                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        if (enumerator.MoveNext())
+                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string xName = definition.xFieldName;
                         if (definition.xFieldUnits != null)
                         {
@@ -314,6 +317,9 @@ namespace UserInterface.Presenters
 
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
                     {
+                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        if (enumerator.MoveNext())
+                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.yFieldName;
                         if (definition.yFieldUnits != null)
                         {

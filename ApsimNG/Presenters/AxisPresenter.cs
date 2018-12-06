@@ -80,9 +80,9 @@ namespace UserInterface.Presenters
         {
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
-            view.Minimum = axis.Minimum;
-            view.Maximum = axis.Maximum;
-            view.Interval = axis.Interval;
+            view.SetMinimum(axis.Minimum, axis.DateTimeAxis);
+            view.SetMaximum(axis.Maximum, axis.DateTimeAxis);
+            view.SetInterval(axis.Interval, axis.DateTimeAxis);
         }
         
         /// <summary>
