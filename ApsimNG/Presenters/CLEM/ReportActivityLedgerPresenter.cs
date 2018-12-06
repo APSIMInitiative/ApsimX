@@ -49,6 +49,7 @@ namespace UserInterface.Presenters
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             activityGridPresenter.ModelName = this.report.Name;
+            activityGridPresenter.SimulationName = simulation.Name;
             activityGridPresenter.Attach(dataStore, this.view.DisplayView, explorerPresenter);
             this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
         }

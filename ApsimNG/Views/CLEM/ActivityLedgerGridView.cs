@@ -265,7 +265,7 @@ namespace UserInterface.Views
                 }
 
                 textRender.FixedHeightFromFont = 1; // 1 line high
-                pixbufRender.Height = 23;
+                pixbufRender.Height = 19; //23
                 textRender.Editable = !isReadOnly;
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 

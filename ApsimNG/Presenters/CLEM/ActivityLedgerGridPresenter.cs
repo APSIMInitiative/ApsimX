@@ -29,6 +29,11 @@ namespace UserInterface.Presenters
 
         public string ModelName { get; set; }
 
+        /// <summary>
+        /// The name of the simulation to display
+        /// </summary>
+        public string SimulationName { get; set; }
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
         /// <param name="view">Data store view to work with.</param>
@@ -106,11 +111,9 @@ namespace UserInterface.Presenters
                     if(data != null)
                     {
                         // need to filter by current simulation
-                        string simulationName = explorerPresenter.CurrentNodePath.Split('.')[2];
-
                         var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == simulationName);
-                        if(filteredData.Any())
+                            .Where(row => row.Field<String>("SimulationName") == this.SimulationName);
+                        if (filteredData.Any())
                         {
                             data = filteredData.CopyToDataTable();
                         }
