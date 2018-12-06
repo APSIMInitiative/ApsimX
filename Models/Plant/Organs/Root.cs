@@ -557,6 +557,7 @@ namespace Models.PMF.Organs
         {
             if(NitrogenRootCalcSwitch != null && nDemands != null && NitrogenRootCalcSwitch.Value() > 0.9)
             {
+                //use interface NDemand functions - used for sorghum model
                 CalculateNDemandsUsingSimpleFunctions();
                 return;
             }
