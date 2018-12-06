@@ -40,7 +40,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             table1 = (Table)builder.GetObject("table1");
             label4 = (Label)builder.GetObject("label4");

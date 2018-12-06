@@ -31,7 +31,7 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             _mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
 

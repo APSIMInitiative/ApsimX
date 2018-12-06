@@ -41,7 +41,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
