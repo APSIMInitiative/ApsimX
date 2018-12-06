@@ -55,7 +55,6 @@ namespace Models.PMF
         ///// <summary>The list of organs</summary>
         //private List<IArbitration> Organs = new List<IArbitration>();
 
-
         #endregion
 
         #region Main outputs
@@ -70,7 +69,7 @@ namespace Models.PMF
         #endregion
 
         #region Plant interface methods
-       
+
         /// <summary>Does the retranslocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>

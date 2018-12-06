@@ -357,7 +357,6 @@ namespace Models.PMF
             SetDMSupply?.Invoke(this, new EventArgs());
             BiomassSupplyType[] supplies = Organs.Select(organ => organ.DMSupply).ToArray();
 
-
             double totalWt = Organs.Sum(o => o.Total.Wt);
             DM.GetSupplies(supplies, totalWt);
 

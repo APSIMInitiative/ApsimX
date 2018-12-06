@@ -60,7 +60,7 @@ namespace Models.Functions
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            //events.Unsubscribe(AccumulateEventName, OnCalcEvent);
+            events.Unsubscribe(AccumulateEventName, OnCalcEvent);
         }
 
 
