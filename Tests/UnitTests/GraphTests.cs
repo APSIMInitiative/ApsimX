@@ -70,7 +70,7 @@ namespace UnitTests
 
             IStorageReader storage = new DataStore();
 
-            Simulations testFile = Simulations.Create(new List<IModel>() { baseSimulation, faultyGraph, storage as IModel }); // FileFormat.ReadFromFile<Simulations>(@"C:\Users\hol430\Documents\Experiments\bork.apsimx", out List<Exception> creationExceptions);
+            Simulations testFile = Simulations.Create(new List<IModel>() { baseSimulation, faultyGraph, storage as IModel });
             testFile.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
 
             IJobManager jobManager = Runner.ForSimulations(testFile, testFile, false);
