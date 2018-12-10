@@ -207,7 +207,6 @@ namespace UserInterface.Presenters
                 catch (Exception err)
                 {
                     throw new Exception(err.Message);
-                    //MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
                 }
             }
 
