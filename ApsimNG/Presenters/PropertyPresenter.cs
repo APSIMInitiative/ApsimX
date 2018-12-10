@@ -636,7 +636,6 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
-        /// Se
         /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
         /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// 
