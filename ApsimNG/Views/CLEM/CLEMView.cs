@@ -36,9 +36,9 @@ namespace UserInterface.Views
         /// <summary>
         /// Adds a new tab view to the display
         /// </summary>
-        /// <param name="TabName"></param>
-        /// <param name="Control"></param>
-        void AddTabView(string TabName, object Control);
+        /// <param name="tabName"></param>
+        /// <param name="control"></param>
+        void AddTabView(string tabName, object control);
 
         /// <summary>Invoked when summary tab is selected</summary>
         event EventHandler<EventArgs> SummaryTabSelected;
@@ -65,7 +65,7 @@ namespace UserInterface.Views
         {
             nbook = new Notebook();
 
-            nbook.SwitchPage += Nbook_SwitchPage;
+            nbook.SwitchPage += NbookSwitchPage;
 
             messagesView = new Viewport()
             {
@@ -115,7 +115,7 @@ namespace UserInterface.Views
             setupComplete = true;
         }
 
-        private void Nbook_SwitchPage(object o, SwitchPageArgs args)
+        private void NbookSwitchPage(object o, SwitchPageArgs args)
         {
             if (setupComplete)
             {
@@ -156,13 +156,14 @@ namespace UserInterface.Views
         /// </summary>
         public void Detach()
         {
+            nbook.SwitchPage -= NbookSwitchPage;
         }
 
-        public void AddTabView(string TabName, object Control)
+        public void AddTabView(string tabName, object control)
         {
             Viewport tab = null;
             Label tablab = null;
-            switch (TabName)
+            switch (tabName)
             {
                 case "Summary":
                     tab = summaryView;
@@ -181,7 +182,7 @@ namespace UserInterface.Views
                     tablab = versionsLabel;
                     break;
                 default:
-                    throw new Exception(String.Format("Invalid tab name [{0}] used in CLEMView", TabName));
+                    throw new Exception(String.Format("Invalid tab name [{0}] used in CLEMView", tabName));
             }
 
             // check if tab has been added
@@ -196,7 +197,7 @@ namespace UserInterface.Views
                 tab.Remove(child);
                 child.Destroy();
             }
-            if (Control is ViewBase view)
+            if (control is ViewBase view)
             {
                 tab.Add(view.MainWidget);
                 tab.ShowAll();

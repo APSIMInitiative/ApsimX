@@ -236,10 +236,10 @@ namespace UserInterface.Presenters
             return tblstr;
         }
 
-        private void EndHTML(string HTMLString)
+        private void EndHTML(string htmlString)
         {
-            HTMLString += "\n</body>\n</html>";
-            this.genericView.SetContents(HTMLString, false, false);
+            htmlString += "\n</body>\n</html>";
+            this.genericView.SetContents(htmlString, false, false);
         }
 
         private string CreateRow(string text, int columns)

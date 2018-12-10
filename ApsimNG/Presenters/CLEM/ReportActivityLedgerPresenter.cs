@@ -24,11 +24,11 @@ namespace UserInterface.Presenters
         private ActivityLedgerGridPresenter activityGridPresenter;
 
         /// <summary>Attach the model (report) and the view (IReportView)</summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.report = Model as Report;
+            this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
-            this.view = View as IReportActivityLedgerView;
+            this.view = view as IReportActivityLedgerView;
 
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
@@ -62,13 +62,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>The view is asking for variable names.</summary>
-        void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
+        void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
             e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(report, e.ObjectName, true, true, false));
         }
 
         /// <summary>The view is asking for event names.</summary>
-        void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
+        void OnNeedEventNames(object sender, NeedContextItemsArgs e)
         {
             e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(report, e.ObjectName, false, false, true));
         }

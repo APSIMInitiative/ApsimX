@@ -169,14 +169,14 @@ namespace UserInterface.Views
             }
         }
 
-        public void AddLowerView(object Control)
+        public void AddLowerView(object control)
         {
             foreach (Widget child in bottomView.Children)
             {
                 bottomView.Remove(child);
                 child.Destroy();
             }
-            ViewBase view = Control as ViewBase;
+            ViewBase view = control as ViewBase;
             if (view != null)
             {
                 bottomView.Add(view.MainWidget);
