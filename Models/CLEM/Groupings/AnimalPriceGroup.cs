@@ -58,7 +58,6 @@ namespace Models.CLEM.Groupings
             foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
             {
                 clone.Children.Add(item.Clone());
-
             }
 
             return clone;
@@ -160,7 +159,5 @@ namespace Models.CLEM.Groupings
             else
                 return "";
         }
-
-
     }
 }
