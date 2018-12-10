@@ -93,10 +93,10 @@ namespace Models.CLEM.Resources
         /// Add to Resource method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="Activity">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual adding resource</param>
-        public void Add(object ResourceAmount, CLEMModel Activity, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             throw new NotImplementedException();
         }
@@ -125,23 +125,23 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="RemoveAmount"></param>
-        /// <param name="Activity"></param>
-        /// <param name="Reason"></param>
-        public double Remove(double RemoveAmount, CLEMModel Activity, string Reason)
+        /// <param name="removeAmount"></param>
+        /// <param name="activity"></param>
+        /// <param name="reason"></param>
+        public double Remove(double removeAmount, CLEMModel activity, string reason)
         {
-            RemoveAmount = Math.Min(this.amount, RemoveAmount);
-            this.Consumed += RemoveAmount;
-            this.amount = this.amount - RemoveAmount;
+            removeAmount = Math.Min(this.amount, removeAmount);
+            this.Consumed += removeAmount;
+            this.amount = this.amount - removeAmount;
 
-            return RemoveAmount;
+            return removeAmount;
         }
 
         /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public void Remove(ResourceRequest request)
         {
             throw new NotImplementedException();
         }
@@ -149,18 +149,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
+        /// <param name="newAmount"></param>
+        public void Set(double newAmount)
         {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
-        {
-            this.amount = NewAmount;
+            this.amount = newAmount;
         }
 
         /// <summary>

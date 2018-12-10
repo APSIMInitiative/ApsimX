@@ -64,27 +64,30 @@ namespace Models.CLEM.Resources
         private bool priceWarningRaised = false;
 
         /// <summary>
-        /// 
+        /// Add resources from various objects
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="Activity"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, CLEMModel Activity, string Reason)
+        /// <param name="resourceAmount"></param>
+        /// <param name="activity"></param>
+        /// <param name="reason"></param>
+        public void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// 
+        /// Remove amount based on a ResourceRequest object
         /// </summary>
-        /// <param name="Request"></param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request"></param>
+        public void Remove(ResourceRequest request)
         {
             throw new NotImplementedException();
         }
 
-        ///
-        public void Set(double NewAmount)
+        /// <summary>
+        /// Set the amount of the resource. Use with caution as resources should be changed by add and remove methods.
+        /// </summary>
+        /// <param name="newAmount"></param>
+        public void Set(double newAmount)
         {
             throw new NotImplementedException();
         }
@@ -92,9 +95,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
             html += "This resource is measured in ";
