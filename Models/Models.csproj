@@ -227,6 +227,7 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Functions\AccumulateAtEvent.cs" />
     <Compile Include="Functions\DailyMeanVPD.cs" />
     <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
@@ -234,6 +235,8 @@
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
+    <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
+    <Compile Include="Plant\Organs\SorghumLeaf.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
@@ -242,6 +245,8 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
+    <Compile Include="Plant\Arbitrator\SorghumArbitrator.cs" />
+    <Compile Include="Plant\Arbitrator\SorghumArbitratorN.cs" />
     <Compile Include="Plant\Biomass\BiomassDemand.cs" />
     <Compile Include="Plant\Phenology\Phases\PhotoperiodPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />

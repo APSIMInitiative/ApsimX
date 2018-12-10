@@ -8,6 +8,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Reflection;
 
     /// <summary>
@@ -202,6 +203,22 @@ namespace Models.Core
             internal void DisconnectAll()
             {
                 FieldInfo eventAsField = Model.GetType().GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                if (eventAsField == null)
+                {
+                    //GetField will not find the EventHandler on a DerivedClass as the delegate is private
+                    Type searchType = Model.GetType().BaseType;
+                    while(eventAsField == null)
+                    {
+                        eventAsField = searchType?.GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                        searchType = searchType.BaseType;
+                        if(searchType == null)
+                        {
+                            //not sure it's even possible to get to here, but it will make it easier to find itf it does
+                            throw new Exception("Could not find " + Name + " in " + Model.GetType().Name + " using GetField");
+                        }
+
+                    }
+                }
                 eventAsField.SetValue(Model, null);
             }
 

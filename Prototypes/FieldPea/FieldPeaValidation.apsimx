@@ -2780,7 +2780,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -6665,7 +6665,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -9436,7 +9436,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -13067,7 +13067,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
