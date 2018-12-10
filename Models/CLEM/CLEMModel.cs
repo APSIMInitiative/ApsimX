@@ -79,9 +79,6 @@ namespace Models.CLEM
             }
         }
 
-
-
-
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -265,7 +262,5 @@ namespace Models.CLEM
             html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
             return html;
         }
-
-
     }
 }
