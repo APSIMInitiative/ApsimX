@@ -84,7 +84,8 @@ namespace Models.CLEM.Activities
             get
             {
                 // use timing to not perform activity based on Enabled state
-                if (!ActivityEnabled) return false;
+                if (!ActivityEnabled)
+                    return false;
 
                 // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
@@ -105,7 +106,8 @@ namespace Models.CLEM.Activities
         public bool TimingCheck(DateTime date)
         {
             // use timing to not perform activity based on Enabled state
-            if (!ActivityEnabled) return false;
+            if (!ActivityEnabled)
+                return false;
 
             // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
             int result = 0;

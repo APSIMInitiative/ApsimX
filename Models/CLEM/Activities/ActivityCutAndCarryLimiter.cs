@@ -33,10 +33,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Get the amount of cut and carry available.
         /// </summary>
-        /// <param name="Weight"></param>
-        public void AddWeightCarried(double Weight)
+        /// <param name="weight"></param>
+        public void AddWeightCarried(double weight)
         {
-            amountUsedThisMonth += Weight;
+            amountUsedThisMonth += weight;
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
@@ -80,7 +80,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "";
         }
@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
         }
