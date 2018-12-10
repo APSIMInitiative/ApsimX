@@ -127,13 +127,6 @@ namespace UserInterface.Interfaces
         bool HasResource(string name);
 
         /// <summary>
-        /// Loads a Gtk builder object from a resource.
-        /// </summary>
-        /// <param name="resourceName">Name of the resource.</param>
-        /// <returns>Gtk builder object.</returns>
-        Builder BuilderFromResource(string resourceName);
-
-        /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent"></param>

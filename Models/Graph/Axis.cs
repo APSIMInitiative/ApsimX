@@ -78,5 +78,11 @@ namespace Models.Graph
         /// Gets or sets the interval axis scale
         /// </summary>
         public double Interval { get; set; }
+
+        /// <summary>
+        /// Keeps track of whether date/time information is displayed on this
+        /// axis.
+        /// </summary>
+        public bool DateTimeAxis { get; set; }
     }
 }

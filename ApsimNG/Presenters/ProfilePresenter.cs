@@ -294,9 +294,16 @@
                 }
 
                 // colour the column headers of total columns.
-                if (!double.IsNaN(property.Total))
+                try
                 {
-                    gridColumn.HeaderForegroundColour = Color.Red;
+                    if (!double.IsNaN(property.Total))
+                    {
+                        gridColumn.HeaderForegroundColour = Color.Red;
+                    }
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
             }
 
@@ -361,7 +368,16 @@
                 }
 
                 // add a total to the column header if necessary.
-                double total = property.Total;
+                double total;
+                try
+                {
+                    total = property.Total;
+                }
+                catch (Exception err)
+                {
+                    total = double.NaN;
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
                 if (!double.IsNaN(total))
                 {
                     columnName = columnName + "\r\n" + total.ToString("N1");
@@ -373,8 +389,9 @@
                 {
                     values = property.Value as Array;
                 }
-                catch (Exception)
+                catch (Exception err)
                 {
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
 
                 if (table.Columns.IndexOf(columnName) == -1)

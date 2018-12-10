@@ -21,11 +21,19 @@ namespace Models.Soils.Arbitrator
         /// <summary>Amount of water (mm)</summary>
         public double[] Water;
 
-        /// <summary>Amount of N (kg/ha)</summary>
+        /// <summary>Amount of NO3 (kg/ha)</summary>
         public double[] NO3N;
 
         /// <summary>Amount of NH4 (kg/ha)</summary>
         public double[] NH4N;
+
+        /// <summary>Amount of plant-avilable NO3 (kg/ha)</summary>
+        public double[] PlantAvailableNO3N;
+
+        /// <summary>Amount of plant-available NH4 (kg/ha)</summary>
+        public double[] PlantAvailableNH4N;
+
+        
 
         /// <summary>Gets the sum of 'Water' (mm)</summary>
         public double TotalWater { get { return MathUtilities.Sum(Water); } }
@@ -52,6 +60,8 @@ namespace Models.Soils.Arbitrator
             NewZ.Water = MathUtilities.Multiply_Value(zone.Water, value);
             NewZ.NO3N = MathUtilities.Multiply_Value(zone.NO3N, value);
             NewZ.NH4N = MathUtilities.Multiply_Value(zone.NH4N, value);
+            NewZ.PlantAvailableNO3N = MathUtilities.Multiply_Value(zone.PlantAvailableNO3N, value);  
+            NewZ.PlantAvailableNH4N = MathUtilities.Multiply_Value(zone.PlantAvailableNH4N, value);
             return NewZ;
         }
 
@@ -68,6 +78,8 @@ namespace Models.Soils.Arbitrator
             NewZ.Water = MathUtilities.Add(ZWN1.Water, ZWN2.Water);
             NewZ.NO3N = MathUtilities.Add(ZWN1.NO3N, ZWN2.NO3N);
             NewZ.NH4N = MathUtilities.Add(ZWN1.NH4N, ZWN2.NH4N);
+            NewZ.PlantAvailableNO3N = MathUtilities.Add(ZWN1.PlantAvailableNO3N, ZWN2.PlantAvailableNO3N);
+            NewZ.PlantAvailableNH4N = MathUtilities.Add(ZWN1.PlantAvailableNH4N, ZWN2.PlantAvailableNH4N);
             return NewZ;
         }
 
@@ -84,6 +96,8 @@ namespace Models.Soils.Arbitrator
             NewZ.Water = MathUtilities.Subtract(ZWN1.Water, ZWN2.Water);
             NewZ.NO3N = MathUtilities.Subtract(ZWN1.NO3N, ZWN2.NO3N);
             NewZ.NH4N = MathUtilities.Subtract(ZWN1.NH4N, ZWN2.NH4N);
+            NewZ.PlantAvailableNO3N = MathUtilities.Subtract(ZWN1.PlantAvailableNO3N, ZWN2.PlantAvailableNO3N);
+            NewZ.PlantAvailableNH4N = MathUtilities.Subtract(ZWN1.PlantAvailableNH4N, ZWN2.PlantAvailableNH4N);
             return NewZ;
         }
     }
