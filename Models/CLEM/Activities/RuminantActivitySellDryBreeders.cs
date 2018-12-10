@@ -93,7 +93,6 @@ namespace Models.CLEM.Activities
                             Status = ActivityStatus.Success;
                         }
                     }
-
                 }
             }
         }
@@ -219,7 +218,5 @@ namespace Models.CLEM.Activities
             html += "</div>";
             return html;
         }
-
-
     }
 }
