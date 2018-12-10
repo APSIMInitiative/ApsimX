@@ -352,14 +352,7 @@ namespace Models.Core
                     return ProcessPropertyOfArrayElement();
 
                 object obj = null;
-                try
-                {
-                    obj = this.property.GetValue(this.Object, null);
-                }
-                catch (Exception err)
-                {
-                    throw err.InnerException;
-                }
+                obj = this.property.GetValue(this.Object, null);
                 if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
                 {
                     IList array = obj as IList;
@@ -603,29 +596,21 @@ namespace Models.Core
         {
             get
             {
-                try
+                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
+                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                 {
-                    DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                    bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                    if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
+                    double sum = 0.0;
+                    foreach (double doubleValue in this.Value as IEnumerable<double>)
                     {
-                        double sum = 0.0;
-                        foreach (double doubleValue in this.Value as IEnumerable<double>)
+                        if (doubleValue != MathUtilities.MissingValue)
                         {
-                            if (doubleValue != MathUtilities.MissingValue)
-                            {
-                                sum += doubleValue;
-                            }
+                            sum += doubleValue;
                         }
-
-                        return sum;
                     }
-                }
-                catch (Exception)
-                {
-                    return Double.NaN;
-                }
 
+                    return sum;
+                }
                 return double.NaN;
             }
         }
