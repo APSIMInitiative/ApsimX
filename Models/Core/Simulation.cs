@@ -204,6 +204,7 @@ namespace Models.Core
             factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
                                                        new string[] { Name, Name },
                                                        "Simulation", Name));
+            factors[0].AddFactor("Zone", Name);
             foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
             {
                 var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
