@@ -65,7 +65,7 @@ namespace UserInterface.Views
         {
             nbook = new Notebook();
 
-            nbook.SwitchPage += NbookSwitchPage;
+            nbook.SwitchPage += NotebookSwitchPage;
 
             messagesView = new Viewport()
             {
@@ -115,20 +115,17 @@ namespace UserInterface.Views
             setupComplete = true;
         }
 
-        private void NbookSwitchPage(object o, SwitchPageArgs args)
+        private void NotebookSwitchPage(object o, SwitchPageArgs args)
         {
-            if (setupComplete)
+            if (setupComplete && nbook.CurrentPage >= 0)
             {
-                if (nbook.CurrentPage >= 0)
+                string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
+                if (selectedLabel != null && selectedLabel.Contains("Summary"))
                 {
-                    string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
-                    if (selectedLabel != null && selectedLabel.Contains("Summary"))
+                    EventArgs eargs = new EventArgs();
+                    if (SummaryTabSelected != null)
                     {
-                        EventArgs eargs = new EventArgs();
-                        if (SummaryTabSelected != null)
-                        {
-                            SummaryTabSelected.Invoke(this, eargs);
-                        }
+                        SummaryTabSelected.Invoke(this, eargs);
                     }
                 }
             }
@@ -156,7 +153,7 @@ namespace UserInterface.Views
         /// </summary>
         public void Detach()
         {
-            nbook.SwitchPage -= NbookSwitchPage;
+            nbook.SwitchPage -= NotebookSwitchPage;
         }
 
         public void AddTabView(string tabName, object control)
@@ -186,8 +183,7 @@ namespace UserInterface.Views
             }
 
             // check if tab has been added
-            string aa = nbook.GetTabLabelText(tab);
-            if(aa is null)
+            if(nbook.GetTabLabelText(tab) is null)
             {
                 nbook.AppendPage(tab, tablab);
             }
@@ -203,6 +199,5 @@ namespace UserInterface.Views
                 tab.ShowAll();
             }
         }
-
     }
 }

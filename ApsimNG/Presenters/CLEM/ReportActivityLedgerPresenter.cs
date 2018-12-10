@@ -91,6 +91,5 @@ namespace UserInterface.Presenters
         void OnModelChanged(object changedModel)
         {
         }
-
     }
 }
