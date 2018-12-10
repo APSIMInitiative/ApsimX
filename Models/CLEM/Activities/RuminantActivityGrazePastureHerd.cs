@@ -425,8 +425,5 @@ namespace Models.CLEM.Activities
             html += "</div>";
             return html;
         }
-
-
     }
-
 }

@@ -98,10 +98,8 @@ namespace UserInterface.Views
         /// </summary>
         private void Vbox1_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            // modelTypeLabel.WidthRequest = args.Allocation.Width - 8;
             modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
             modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
-            // modelHelpLinkLabel.WidthRequest = args.Allocation.Width - 8;
         }
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)

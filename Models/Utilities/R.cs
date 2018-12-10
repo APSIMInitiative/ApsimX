@@ -135,7 +135,7 @@ namespace Models.Utilities
 
             proc = new ProcessUtilities.ProcessWithRedirectedOutput();
             proc.Exited += OnExited;
-            proc.Start(rScript, scriptName + " " + arguments, workingDirectory, true);
+            proc.Start(rScript, "\"" + scriptName + "\" " + arguments, workingDirectory, true);
         }
 
         /// <summary>

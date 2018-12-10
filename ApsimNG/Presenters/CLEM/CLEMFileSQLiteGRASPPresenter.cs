@@ -36,7 +36,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Number or years to display in the grid.
-        /// </summary
+        /// </summary>
         private int numberOfYearsToDisplayInGrid = 4;
 
         /// <summary>

@@ -42,9 +42,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Use artificial insemination (no bulls required)")]
         [Required]
-        public bool UseAI { get; set; }
-
-        
+        public bool UseAI { get; set; }       
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -160,16 +158,10 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
-
                     }
-
-
                 }
             }
-
-
         }
-
 
         /// <summary>An event handler to perform herd breeding </summary>
         /// <param name="sender">The sender.</param>
@@ -192,7 +184,6 @@ namespace Models.CLEM.Activities
                             )
                             group ind by ind.Location into grp
                             select grp;
-
 
             // calculate labour and finance limitations if needed when doing AI
             int breedersCount = breeders.Count();
@@ -358,7 +349,6 @@ namespace Models.CLEM.Activities
                             }
                         }
                     }
-
                 }
             }
         }
@@ -438,7 +428,6 @@ namespace Models.CLEM.Activities
                     // use default values 
                     rate = female.BreedParams.ConceptionRateAsymptote / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept));
                 }
-
             }
             return rate / 100;
         }
@@ -626,7 +615,5 @@ namespace Models.CLEM.Activities
             }
             return html;
         }
-
-
     }
 }

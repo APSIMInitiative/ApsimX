@@ -76,7 +76,6 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-
         }
 
         /// <summary>An event handler to call for animal purchases</summary>
@@ -221,7 +220,6 @@ namespace Models.CLEM.Activities
                     bankAccount.Add(saleValue, this, this.PredictedHerdName+" sales");
                 }
             }
-
         }
 
         private void BuyWithoutTrucking()
@@ -483,9 +481,7 @@ namespace Models.CLEM.Activities
             }
             return daysNeeded;
         }
-
-
-
+        
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
@@ -563,7 +559,5 @@ namespace Models.CLEM.Activities
 
             return html;
         }
-
-
     }
 }

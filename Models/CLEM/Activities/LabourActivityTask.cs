@@ -135,7 +135,5 @@ namespace Models.CLEM.Activities
             string html = "";
             return html;
         }
-
-
     }
 }

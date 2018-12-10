@@ -135,7 +135,6 @@ namespace Models.CLEM.Activities
                 }
                 return false;
             }
-
         }
 
         /// <summary>
@@ -224,7 +223,5 @@ namespace Models.CLEM.Activities
         {
             return "";
         }
-
-
     }
 }

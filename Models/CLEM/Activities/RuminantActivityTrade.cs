@@ -79,8 +79,6 @@ namespace Models.CLEM.Activities
                     results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
                 }
             }
-
-
             return results;
         }
 
@@ -263,7 +261,5 @@ namespace Models.CLEM.Activities
             html += "</div>";
             return html;
         }
-
-
     }
 }

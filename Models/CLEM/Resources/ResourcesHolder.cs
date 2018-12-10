@@ -13,7 +13,6 @@ using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
-
     ///<summary>
     /// Manger for all resources available to the model
     ///</summary> 
@@ -25,7 +24,6 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
-
         // Scoping rules of Linking in Apsim means that you can only link to 
         // Models beneath or above or siblings of the ones above.
         // Can not link to children of siblings that are above.
@@ -58,7 +56,6 @@ namespace Models.CLEM.Resources
         {
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
-
 
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
@@ -293,8 +290,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
-
         /// <summary>
         /// Get the Resource Group for Products
         /// </summary>
@@ -523,6 +518,5 @@ namespace Models.CLEM.Resources
         {
             return "\n</div>";
         }
-
     }
 }

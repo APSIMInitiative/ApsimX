@@ -170,7 +170,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-
         /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
@@ -334,8 +333,5 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"croprotationborder\">";
             return html;
         }
-
-
-
     }
 }

@@ -179,7 +179,6 @@ namespace UserInterface.Presenters
                     properties.RemoveAt(i);
                 }
             }
-
             PopulateGrid(model);
         }
 
@@ -235,8 +234,6 @@ namespace UserInterface.Presenters
                             properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
 
-
-
                         //If the above conditions have been met and,
                         //If a CategoryFilter has been specified. 
                         //filter only those properties with a [Catagory] attribute that matches the filter.
@@ -278,14 +275,7 @@ namespace UserInterface.Presenters
                                     includeProperty = false;
                             }
                         }
-
-
-
-
-
-
-
-
+			
                         if (includeProperty)
                             properties.Add(property);
 
@@ -487,12 +477,6 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }				
-				
-				
-				
-				
-				
-				
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayTypeEnum.Model)
                 {
@@ -652,7 +636,6 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
-        /// Se
         /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
         /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// 
@@ -680,7 +663,6 @@ namespace UserInterface.Presenters
             }
             return result.ToArray();
         }
-
 
         private string[] GetModelNames(Type t)
         {

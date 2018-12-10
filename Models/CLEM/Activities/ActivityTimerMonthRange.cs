@@ -113,7 +113,6 @@ namespace Models.CLEM.Activities
             return due;
         }
 
-
         /// <summary>
         /// Activity has occurred 
         /// </summary>
@@ -123,7 +122,6 @@ namespace Models.CLEM.Activities
             if (ActivityPerformed != null)
                 ActivityPerformed(this, e);
         }
-
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -161,7 +159,5 @@ namespace Models.CLEM.Activities
         {
             return "";
         }
-
-
     }
 }

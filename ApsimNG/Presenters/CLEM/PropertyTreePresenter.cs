@@ -15,7 +15,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
-
+    
     /// <summary>
     /// Class used to create the heirachy of the the categories and subcategories from the 
     /// [Category] attribute added to the properties of a model.
@@ -147,7 +147,6 @@ namespace UserInterface.Presenters
             //Initialise the Right Hand View
             this.propertyPresenter = new PropertyPresenter();
             this.ShowRightHandView();
-
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -188,12 +187,10 @@ namespace UserInterface.Presenters
                 try
                 {
                     this.propertyPresenter.Detach();
-                    //this.propertyPresenter = null;
                 }
                 catch (Exception err)
                 {
                     throw new Exception(err.Message);
-                    //MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
                 }
             }
 
@@ -208,7 +205,6 @@ namespace UserInterface.Presenters
             if (this.treeview.SelectedNode != string.Empty)
             {
                 string[] path = this.treeview.SelectedNode.Split('.');
-
                 string root = "";
                 string category = "";
                 string subcategory = "";
@@ -255,8 +251,7 @@ namespace UserInterface.Presenters
             //nb. the grid view is owned by the tree view not by this presenter.
             this.gridview = new GridView(this.treeview as ViewBase);
             this.treeview.AddRightHandView(this.gridview);
-            this.propertyPresenter.Attach(this.model, this.gridview, this.explorerPresenter);
-            
+            this.propertyPresenter.Attach(this.model, this.gridview, this.explorerPresenter);            
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
@@ -356,6 +351,6 @@ namespace UserInterface.Presenters
                 root.Children.Add(description);
             }
             return root;
-        }
+        }    
     }
 }

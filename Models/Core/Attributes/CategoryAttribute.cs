@@ -17,10 +17,8 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class CategoryAttribute : System.Attribute
     {
-
         private string category;
         private string subcategory;
-
 
         /// <summary>
         /// Constructor with only Category specified
@@ -32,7 +30,6 @@ namespace Models.Core
             this.subcategory = "Unspecified";
         }
 
-
         /// <summary>
         /// Constructor with but Category and Subcategory specified
         /// </summary>
@@ -43,8 +40,6 @@ namespace Models.Core
             this.category = Category;
             this.subcategory = Subcategory;
         }
-
-
 
         /// <summary>
         /// Gets or sets the Category

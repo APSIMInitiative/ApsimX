@@ -17,7 +17,6 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
 
-
     /// <summary>
     /// This presenter class is responsible for populating the view
     /// passed into the constructor and handling all user interaction of
@@ -210,8 +209,7 @@ namespace UserInterface.Presenters
             //nb. the grid view is owned by the tree view not by this presenter.
             this.gridview = new GridView(this.treeview as ViewBase);
             this.treeview.AddRightHandView(this.gridview);
-            this.tablePresenter.Attach(this.model, this.gridview, this.explorerPresenter);
-            
+            this.tablePresenter.Attach(this.model, this.gridview, this.explorerPresenter);            
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
@@ -329,13 +327,7 @@ namespace UserInterface.Presenters
                 }
                 root.Children.Add(description);
             }
-
-
             return root;
-
         }
-
     }
-
-
 }

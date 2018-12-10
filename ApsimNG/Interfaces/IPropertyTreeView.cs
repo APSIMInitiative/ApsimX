@@ -56,4 +56,5 @@ namespace UserInterface.Interfaces
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         void ShowWaitCursor(bool wait);
     }
+
 }
