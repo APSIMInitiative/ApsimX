@@ -510,7 +510,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-
         /// <summary>
         /// From GRASP File get all the Pasture Data from today to the next Ecological Calculation
         /// </summary>
@@ -553,7 +552,6 @@ namespace Models.CLEM.Activities
         {
             Area = LinkedLandItem.AreaAvailable;
         }
-
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -629,7 +627,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -685,7 +682,5 @@ namespace Models.CLEM.Activities
 
             return html;
         }
-
     }
-
 }
