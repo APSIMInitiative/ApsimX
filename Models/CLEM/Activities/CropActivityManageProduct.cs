@@ -201,9 +201,6 @@ namespace Models.CLEM.Activities
             limiter = LocateCutAndCarryLimiter(this);
 
             // set manager of graze food store if linked
-
-
-
         }
 
         /// <summary>
@@ -241,7 +238,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -254,7 +250,6 @@ namespace Models.CLEM.Activities
                 {
                     Status = ActivityStatus.NotNeeded;
                     DoActivity();
-
                 }
             }
         }
@@ -573,6 +568,5 @@ namespace Models.CLEM.Activities
             html += base.ModelSummaryOpeningTags(FormatForParentControl);
             return html;
         }
-
     }
 }
