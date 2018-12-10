@@ -55,10 +55,6 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    if (err is System.Reflection.TargetInvocationException)
-                        err = (err as System.Reflection.TargetInvocationException).InnerException;
-                    string message = err.Message;
-                    message += "\r\n" + err.StackTrace;
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
                 //HTML Summary
@@ -75,10 +71,6 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    if (err is System.Reflection.TargetInvocationException)
-                        err = (err as System.Reflection.TargetInvocationException).InnerException;
-                    string message = err.Message;
-                    message += "\r\n" + err.StackTrace;
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
                 //Properties
@@ -108,10 +100,6 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    if (err is System.Reflection.TargetInvocationException)
-                        err = (err as System.Reflection.TargetInvocationException).InnerException;
-                    string message = err.Message;
-                    message += "\r\n" + err.StackTrace;
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
                 //Versions
@@ -131,10 +119,6 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    if (err is System.Reflection.TargetInvocationException)
-                        err = (err as System.Reflection.TargetInvocationException).InnerException;
-                    string message = err.Message;
-                    message += "\r\n" + err.StackTrace;
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
             }

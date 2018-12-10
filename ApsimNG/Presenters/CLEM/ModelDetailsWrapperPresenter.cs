@@ -120,10 +120,6 @@
             }
             catch (Exception err)
             {
-                if (err is System.Reflection.TargetInvocationException)
-                    err = (err as System.Reflection.TargetInvocationException).InnerException;
-                string message = err.Message;
-                message += "\r\n" + err.StackTrace;
                 ExplorerPresenter.MainPresenter.ShowError(err);
             }
         }
