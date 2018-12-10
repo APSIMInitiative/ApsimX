@@ -117,18 +117,26 @@ namespace UserInterface.Views
 
         private void NotebookSwitchPage(object o, SwitchPageArgs args)
         {
-            if (setupComplete && nbook.CurrentPage >= 0)
+            try
             {
-                string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
-                if (selectedLabel != null && selectedLabel.Contains("Summary"))
+                if (setupComplete && nbook.CurrentPage >= 0)
                 {
-                    EventArgs eargs = new EventArgs();
-                    if (SummaryTabSelected != null)
+                    string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
+                    if (selectedLabel != null && selectedLabel.Contains("Summary"))
                     {
-                        SummaryTabSelected.Invoke(this, eargs);
+                        EventArgs eargs = new EventArgs();
+                        if (SummaryTabSelected != null)
+                        {
+                            SummaryTabSelected.Invoke(this, eargs);
+                        }
                     }
                 }
             }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+
         }
 
         public Viewport SummaryView
