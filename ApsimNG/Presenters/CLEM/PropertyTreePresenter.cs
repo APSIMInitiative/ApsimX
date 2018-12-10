@@ -102,10 +102,6 @@ namespace UserInterface.Presenters
             set { this.treeview.TreeWidth = value; }
         }
 
-        ///// <summary>Gets the presenter for the main window</summary>
-        ///// To be revised if we want to replicate the Windows.Forms version
-        //public MainPresenter MainPresenter { get; private set; }
-
         /// <summary>
         /// The parent ExplorerPresenter.
         /// </summary>
@@ -191,7 +187,6 @@ namespace UserInterface.Presenters
                 try
                 {
                     this.propertyPresenter.Detach();
-                    //this.propertyPresenter = null;
                 }
                 catch (Exception err)
                 {
