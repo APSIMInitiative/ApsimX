@@ -29,7 +29,6 @@ namespace UserInterface.Views
         /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
 
-
         private VBox vbox1 = null;
         private Gtk.TreeView treeview1 = null;
         private Viewport RightHandView = null;
@@ -43,7 +42,6 @@ namespace UserInterface.Views
         private const string modelMime = "application/x-model-component";
 
         System.Timers.Timer timer = new System.Timers.Timer();
-
 
         /// <summary>Default constructor for ExplorerView</summary>
         public PropertyTreeView(ViewBase owner) : base(owner)
@@ -72,7 +70,6 @@ namespace UserInterface.Views
             treeview1.ButtonReleaseEvent += OnButtonUp;
             treeview1.ButtonPressEvent += OnButtonPress;
             treeview1.RowActivated += OnRowActivated;
-
 
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -368,8 +365,6 @@ namespace UserInterface.Views
             }
         }
 
-
-
         private void OnRowActivated(object sender, RowActivatedArgs e)
         {
             timer.Stop();
@@ -379,7 +374,6 @@ namespace UserInterface.Views
                 treeview1.ExpandRow(e.Path, false);
             e.RetVal = true;
         }
-
 
         /// <summary>
         /// Displays the popup menu when the right mouse button is released
@@ -391,7 +385,6 @@ namespace UserInterface.Views
             if (e.Event.Button == 3)
                 Popup.Popup();
         }
-
 
         /// <summary>
         /// Get whatever text is currently on a specific clipboard.
@@ -418,8 +411,6 @@ namespace UserInterface.Views
             cb.Text = text;            
         }
 
-
         #endregion
-
     }
 }
