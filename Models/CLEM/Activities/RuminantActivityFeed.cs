@@ -317,7 +317,6 @@ namespace Models.CLEM.Activities
                 }
                 SetStatusSuccess();
             }
-
         }
 
         /// <summary>
@@ -385,7 +384,5 @@ namespace Models.CLEM.Activities
             }
             return html;
         }
-
     }
-
 }
