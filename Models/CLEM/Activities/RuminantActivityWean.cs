@@ -43,10 +43,9 @@ namespace Models.CLEM.Activities
         [Description("Name of GrazeFoodStore (paddock) to place weaners in")]
         [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreName { get; set; }
-
+        
         private string grazeStore; 
-
-
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -221,7 +220,5 @@ namespace Models.CLEM.Activities
             html += "</div>";
             return html;
         }
-
-
     }
 }
