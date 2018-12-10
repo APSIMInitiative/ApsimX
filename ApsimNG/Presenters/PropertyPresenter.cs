@@ -55,8 +55,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<IVariable> properties = new List<IVariable>();
 
-
-
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
@@ -66,9 +64,6 @@ namespace UserInterface.Presenters
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
         public string SubcategoryFilter { get; set; }
-
-
-
 
         /// <summary>
         /// The completion form.
@@ -184,7 +179,6 @@ namespace UserInterface.Presenters
                     properties.RemoveAt(i);
                 }
             }
-
             PopulateGrid(model);
         }
 
@@ -240,8 +234,6 @@ namespace UserInterface.Presenters
                             properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
 
-
-
                         //If the above conditions have been met and,
                         //If a CategoryFilter has been specified. 
                         //filter only those properties with a [Catagory] attribute that matches the filter.
@@ -283,14 +275,7 @@ namespace UserInterface.Presenters
                                     includeProperty = false;
                             }
                         }
-
-
-
-
-
-
-
-
+			
                         if (includeProperty)
                             properties.Add(property);
 
@@ -492,12 +477,6 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }				
-				
-				
-				
-				
-				
-				
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayTypeEnum.Model)
                 {
@@ -685,7 +664,6 @@ namespace UserInterface.Presenters
             }
             return result.ToArray();
         }
-
 
         private string[] GetModelNames(Type t)
         {
