@@ -20,7 +20,6 @@ using Models.CLEM.Activities;
 //-----------------------------------------------------------------------
 namespace Models.CLEM
 {
-
     ///<summary>
     /// Reads in crop growth data and makes it available to other models.
     ///</summary>
@@ -124,10 +123,6 @@ namespace Models.CLEM
         /// </summary>
         public string ExcelWorkSheetName { get; set; }
 
-
-
-
-
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
@@ -147,8 +142,6 @@ namespace Models.CLEM
             this.monthIndex = 0;
             this.AmtKgIndex = 0;
             this.NpctIndex = 0;
-
-
             this.ForageFileAsTable = GetAllData();
         }
 
@@ -163,10 +156,7 @@ namespace Models.CLEM
                 this.reader.Close();
                 this.reader = null;
             }
-
         }
-
-
 
         /// <summary>
         /// Provides an error message to display if something is wrong.
@@ -204,8 +194,6 @@ namespace Models.CLEM
             }
         }
 
-
-
         /// <summary>
         /// Get the DataTable view of this data
         /// </summary>
@@ -213,7 +201,6 @@ namespace Models.CLEM
         public DataTable GetAllData()
         {
             this.reader = null;
-
 
             if (this.OpenDataFile())
             {
@@ -227,7 +214,6 @@ namespace Models.CLEM
                 //Only try to read it in if it exists in the file.
                 if (NpctIndex != -1)
                     cropProps.Add("Npct");
-
 
                 DataTable table = this.reader.ToTable(cropProps);
 
@@ -248,8 +234,6 @@ namespace Models.CLEM
                 return null;
             }
         }
-
-
 
         /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.
@@ -279,7 +263,6 @@ namespace Models.CLEM
                 + " OR  ( Year = " + endYear + " AND Month <= " + endMonth + ")"
                 +      ")";
 
-
             DataRow[] foundRows = this.ForageFileAsTable.Select(filter);
 
             List<CropDataType> filtered = new List<CropDataType>(); 
@@ -293,8 +276,6 @@ namespace Models.CLEM
 
             return filtered;
         }
-
-
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
@@ -320,9 +301,6 @@ namespace Models.CLEM
             return cropdata;
         }
 
-
-
-
         /// <summary>
         /// Open the forage data file.
         /// </summary>
@@ -342,7 +320,6 @@ namespace Models.CLEM
                     this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Month");
                     this.AmtKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "AmtKg");
                     this.NpctIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Npct");
-
 
                     if (this.soilNumIndex == -1)
                     {
@@ -380,8 +357,6 @@ namespace Models.CLEM
                     //    if (this.reader == null || this.reader.Constant("Npct") == null)
                     //        throw new Exception("Cannot find Npct column in crop file: " + this.FullFileName);
                     //}
-
-
                 }
                 else
                 {
@@ -429,15 +404,12 @@ namespace Models.CLEM
         }
     }
 
-
-
     /// <summary>
     /// A structure containing the commonly used weather data.
     /// </summary>
     [Serializable]
     public class CropDataType
     {
-
         /// <summary>
         /// Soil Number
         /// </summary>
@@ -474,7 +446,4 @@ namespace Models.CLEM
         /// </summary>
         public DateTime HarvestDate;
     }
-
-
-
 }
