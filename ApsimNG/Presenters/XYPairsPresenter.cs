@@ -411,7 +411,16 @@ namespace UserInterface.Presenters
                     }
 
                     // add a total to the column header if necessary.
-                    double total = property.Total;
+                    double total;
+                    try
+                    {
+                        total = property.Total;
+                    }
+                    catch (Exception err)
+                    {
+                        total = double.NaN;
+                        presenter.MainPresenter.ShowError(err);
+                    }
                     if (!double.IsNaN(total))
                     {
                         string columnName = property.Description;
