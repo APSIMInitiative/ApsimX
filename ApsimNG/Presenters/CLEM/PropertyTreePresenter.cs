@@ -16,8 +16,6 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
 
-
-
     /// <summary>
     /// Class used to create the heirachy of the the categories and subcategories from the 
     /// [Category] attribute added to the properties of a model.
@@ -40,7 +38,6 @@ namespace UserInterface.Presenters
             this.SubcategoryNames = new List<string>();
         }
 
-
         public void AddSubcategoryName(string name)
         {
             //is subcategory name already in the list
@@ -48,14 +45,12 @@ namespace UserInterface.Presenters
             // if it isn't then add it.
             if (!subcatExists)
                 this.SubcategoryNames.Add(name);
-
         }
     }
 
     public class CategoryTree
     {
         public List<CategoryItem> CategoryItems;
-
 
         public CategoryTree()
         {
@@ -74,11 +69,6 @@ namespace UserInterface.Presenters
                 this.CategoryItems.Add(new CategoryItem(catName));
         }
     }
-
-
-
-
-
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -111,10 +101,6 @@ namespace UserInterface.Presenters
             get { return this.treeview.TreeWidth; }
             set { this.treeview.TreeWidth = value; }
         }
-
-        ///// <summary>Gets the presenter for the main window</summary>
-        ///// To be revised if we want to replicate the Windows.Forms version
-        //public MainPresenter MainPresenter { get; private set; }
 
         /// <summary>
         /// The parent ExplorerPresenter.
@@ -346,8 +332,6 @@ namespace UserInterface.Presenters
         /// <returns>The description</returns>
         private TreeViewNode GetNodeDescription(CategoryTree categoryTree)
         {
-
-
             TreeViewNode root = new TreeViewNode();
             root.Name =  model.Name;
 
@@ -371,14 +355,7 @@ namespace UserInterface.Presenters
                 }
                 root.Children.Add(description);
             }
-
-
             return root;
-
         }
-
-    
     }
-
-
 }

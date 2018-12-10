@@ -137,8 +137,6 @@ namespace UserInterface.Presenters
                     message += "\r\n" + err.StackTrace;
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
-
-
             }
         }
 

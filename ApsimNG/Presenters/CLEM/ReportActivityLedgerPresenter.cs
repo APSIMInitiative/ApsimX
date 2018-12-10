@@ -90,10 +90,6 @@ namespace UserInterface.Presenters
         /// <summary>The model has changed so update our view.</summary>
         void OnModelChanged(object changedModel)
         {
-            if (changedModel == report)
-            {
-            }
         }
-
     }
 }

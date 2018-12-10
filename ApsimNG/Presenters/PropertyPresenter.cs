@@ -55,8 +55,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<IVariable> properties = new List<IVariable>();
 
-
-
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
@@ -66,9 +64,6 @@ namespace UserInterface.Presenters
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
         public string SubcategoryFilter { get; set; }
-
-
-
 
         /// <summary>
         /// The completion form.

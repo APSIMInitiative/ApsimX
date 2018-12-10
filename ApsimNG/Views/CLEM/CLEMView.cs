@@ -65,7 +65,7 @@ namespace UserInterface.Views
         {
             nbook = new Notebook();
 
-            nbook.SwitchPage += Nbook_SwitchPage;
+            nbook.SwitchPage += NotebookSwitchPage;
 
             messagesView = new Viewport()
             {
@@ -115,20 +115,17 @@ namespace UserInterface.Views
             setupComplete = true;
         }
 
-        private void Nbook_SwitchPage(object o, SwitchPageArgs args)
+        private void NotebookSwitchPage(object o, SwitchPageArgs args)
         {
-            if (setupComplete)
+            if (setupComplete && nbook.CurrentPage >= 0)
             {
-                if (nbook.CurrentPage >= 0)
+                string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
+                if (selectedLabel != null && selectedLabel.Contains("Summary"))
                 {
-                    string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
-                    if (selectedLabel != null && selectedLabel.Contains("Summary"))
+                    EventArgs eargs = new EventArgs();
+                    if (SummaryTabSelected != null)
                     {
-                        EventArgs eargs = new EventArgs();
-                        if (SummaryTabSelected != null)
-                        {
-                            SummaryTabSelected.Invoke(this, eargs);
-                        }
+                        SummaryTabSelected.Invoke(this, eargs);
                     }
                 }
             }
@@ -156,13 +153,14 @@ namespace UserInterface.Views
         /// </summary>
         public void Detach()
         {
+            nbook.SwitchPage -= NotebookSwitchPage;
         }
 
-        public void AddTabView(string TabName, object Control)
+        public void AddTabView(string tabName, object control)
         {
             Viewport tab = null;
             Label tablab = null;
-            switch (TabName)
+            switch (tabName)
             {
                 case "Summary":
                     tab = summaryView;
@@ -181,12 +179,11 @@ namespace UserInterface.Views
                     tablab = versionsLabel;
                     break;
                 default:
-                    throw new Exception(String.Format("Invalid tab name [{0}] used in CLEMView", TabName));
+                    throw new Exception(String.Format("Invalid tab name [{0}] used in CLEMView", tabName));
             }
 
             // check if tab has been added
-            string aa = nbook.GetTabLabelText(tab);
-            if(aa is null)
+            if(nbook.GetTabLabelText(tab) is null)
             {
                 nbook.AppendPage(tab, tablab);
             }
@@ -196,12 +193,11 @@ namespace UserInterface.Views
                 tab.Remove(child);
                 child.Destroy();
             }
-            if (Control is ViewBase view)
+            if (control is ViewBase view)
             {
                 tab.Add(view.MainWidget);
                 tab.ShowAll();
             }
         }
-
     }
 }

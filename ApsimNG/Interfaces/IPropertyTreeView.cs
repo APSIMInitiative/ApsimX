@@ -6,9 +6,6 @@ namespace UserInterface.Interfaces
     using System.Runtime.Serialization;
     using EventArguments;
 
-
-
-
     /// <summary>
     /// The interface for an explorer view.
     /// NB: All node paths are compatible with XmlHelper node paths.
@@ -59,6 +56,4 @@ namespace UserInterface.Interfaces
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         void ShowWaitCursor(bool wait);
     }
-
-
 }
