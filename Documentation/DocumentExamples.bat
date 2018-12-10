@@ -12,7 +12,6 @@ set "documentation=%apsimx%\Documentation"
 set "examples=%apsimx%\Examples"
 
 del "%bin%\errors.txt" >nul 2>nul
-rmdir /S /Q "%documentation%\PDF" >nul 2>nul
 for /R "%examples%\ManagerExamples" %%D in (*.apsimx) do (
 	set "FileToDocument=%%D"
     echo Generating documentation for %%~nxD

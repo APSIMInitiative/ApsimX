@@ -13,7 +13,7 @@
     using System.Reflection;
     using System.Text;
 
-    class HtmlToMigraDoc
+    public class HtmlToMigraDoc
     {
         private static bool foundCode = false;
 
