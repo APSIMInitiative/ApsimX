@@ -44,11 +44,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Get resource by name
         /// </summary>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public object GetByName(string Name)
+        public object GetByName(string name)
         {
-            return this.Children.Where(a => a.Name == Name).FirstOrDefault();
+            return this.Children.Where(a => a.Name == name).FirstOrDefault();
         }
 
         /// <summary>

@@ -370,10 +370,10 @@ namespace Models.CLEM.Activities
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }
 
-        private void SetupStartingPasturePools(double StartingGrowth)
+        private void SetupStartingPasturePools(double startingGrowth)
         {
             // Initial biomass
-            double amountToAdd = Area * StartingGrowth;
+            double amountToAdd = Area * startingGrowth;
             if (amountToAdd <= 0) return;
 
             // Set up pasture pools to start run based on month and user defined pasture properties
@@ -510,7 +510,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-
         /// <summary>
         /// From GRASP File get all the Pasture Data from today to the next Ecological Calculation
         /// </summary>
@@ -553,7 +552,6 @@ namespace Models.CLEM.Activities
         {
             Area = LinkedLandItem.AreaAvailable;
         }
-
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -614,9 +612,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -629,13 +627,12 @@ namespace Models.CLEM.Activities
             return;
         }
 
-
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">";
@@ -685,7 +682,5 @@ namespace Models.CLEM.Activities
 
             return html;
         }
-
     }
-
 }

@@ -55,8 +55,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<IVariable> properties = new List<IVariable>();
 
-
-
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
@@ -66,9 +64,6 @@ namespace UserInterface.Presenters
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
         public string SubcategoryFilter { get; set; }
-
-
-
 
         /// <summary>
         /// The completion form.
@@ -184,7 +179,6 @@ namespace UserInterface.Presenters
                     properties.RemoveAt(i);
                 }
             }
-
             PopulateGrid(model);
         }
 
@@ -240,8 +234,6 @@ namespace UserInterface.Presenters
                             properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
 
-
-
                         //If the above conditions have been met and,
                         //If a CategoryFilter has been specified. 
                         //filter only those properties with a [Catagory] attribute that matches the filter.
@@ -283,14 +275,7 @@ namespace UserInterface.Presenters
                                     includeProperty = false;
                             }
                         }
-
-
-
-
-
-
-
-
+			
                         if (includeProperty)
                             properties.Add(property);
 
@@ -470,9 +455,9 @@ namespace UserInterface.Presenters
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    Simulation CLEMParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
                     // get crop file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(CLEMParent, typeof(FileCrop)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -483,21 +468,15 @@ namespace UserInterface.Presenters
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    Simulation CLEMParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
                     // get GRASP file names
-                    fieldNames.AddRange(Apsim.Children(CLEMParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.Children(CLEMParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }				
-				
-				
-				
-				
-				
-				
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
@@ -657,7 +636,6 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
-        /// Se
         /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
         /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// 
@@ -685,7 +663,6 @@ namespace UserInterface.Presenters
             }
             return result.ToArray();
         }
-
 
         private string[] GetModelNames(Type t)
         {

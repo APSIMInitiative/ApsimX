@@ -151,9 +151,9 @@ namespace Models.CLEM.Activities
             }
         }
 
-        private void HandleDestocking(double AEforSale, string PaddockName)
+        private void HandleDestocking(double animalEquivalentsforSale, string paddockName)
         {
-            if (AEforSale <= 0) return;
+            if (animalEquivalentsforSale <= 0) return;
 
             // move to underutilised paddocks
             // TODO: This can be added later as an activity including spelling
@@ -161,27 +161,27 @@ namespace Models.CLEM.Activities
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == PaddockName);
+            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
             foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == PaddockName & !a.ReadyForSale).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName & !a.ReadyForSale).ToList();
                 herd = herd.Filter(item);
                 int cnt = 0;
-                while (cnt < herd.Count() & AEforSale > 0)
+                while (cnt < herd.Count() & animalEquivalentsforSale > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    AEforSale -= herd[cnt].AdultEquivalent;
+                    animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
                     herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (AEforSale < herd.Min(a => a.AdultEquivalent))
+                    if (animalEquivalentsforSale < herd.Min(a => a.AdultEquivalent))
                     {
-                        AEforSale = 0;
+                        animalEquivalentsforSale = 0;
                     }
                     cnt++;
                 }
-                if (AEforSale <= 0) return;
+                if (animalEquivalentsforSale <= 0) return;
             }
 
             // Possible destock groups
@@ -215,9 +215,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine the labour required for this activity based on LabourRequired items in tree
         /// </summary>
-        /// <param name="Requirement">Labour requirement model</param>
+        /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -272,9 +272,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
@@ -297,7 +297,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
             html += "\n</div>";
@@ -308,7 +308,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"labourgroupsborder\">";

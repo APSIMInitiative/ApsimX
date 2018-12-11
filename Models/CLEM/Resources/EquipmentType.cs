@@ -94,25 +94,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add money to account
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="Activity">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual adding resource</param>
-        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            if (ResourceAmount.GetType().ToString() != "System.Double")
+            if (resourceAmount.GetType().ToString() != "System.Double")
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-            double addAmount = (double)ResourceAmount;
+            double addAmount = (double)resourceAmount;
             if (addAmount > 0)
             {
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction();
                 details.Debit = addAmount;
-                details.Activity = Activity.Name;
-                details.ActivityType = Activity.GetType().Name;
-                details.Reason = Reason;
+                details.Activity = activity.Name;
+                details.ActivityType = activity.GetType().Name;
+                details.Reason = reason;
                 details.ResourceType = this.Name;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -121,33 +121,24 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove money (object) from account
-        /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
+            if (request.Required == 0) return;
             // avoid taking too much
-            double amountRemoved = Request.Required;
+            double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
 
-            Request.Provided = amountRemoved;
+            request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
             details.Credit = amountRemoved;
-            details.Activity = Request.ActivityModel.Name;
-            details.ActivityType = Request.ActivityModel.GetType().Name;
-            details.Reason = Request.Reason;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -156,10 +147,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public new void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
-            amount = NewAmount;
+            amount = newAmount;
         }
 
         #endregion

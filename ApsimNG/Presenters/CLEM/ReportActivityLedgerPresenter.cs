@@ -24,17 +24,19 @@ namespace UserInterface.Presenters
         private ActivityLedgerGridPresenter activityGridPresenter;
 
         /// <summary>Attach the model (report) and the view (IReportView)</summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.report = Model as Report;
+            this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
-            this.view = View as IReportActivityLedgerView;
+            this.view = view as IReportActivityLedgerView;
 
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
+            {
                 dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
+            }
 
             dataStorePresenter = new DataStorePresenter();
             activityGridPresenter = new ActivityLedgerGridPresenter();
@@ -42,9 +44,13 @@ namespace UserInterface.Presenters
             if (simulation != null)
             {
                 if (simulation.Parent is Experiment)
+                {
                     dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
+                }
                 else
+                {
                     dataStorePresenter.SimulationFilter = simulation;
+                }
             }
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
@@ -62,13 +68,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>The view is asking for variable names.</summary>
-        void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
+        void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
             e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(report, e.ObjectName, true, true, false));
         }
 
         /// <summary>The view is asking for event names.</summary>
-        void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
+        void OnNeedEventNames(object sender, NeedContextItemsArgs e)
         {
             e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(report, e.ObjectName, false, false, true));
         }
@@ -90,10 +96,6 @@ namespace UserInterface.Presenters
         /// <summary>The model has changed so update our view.</summary>
         void OnModelChanged(object changedModel)
         {
-            if (changedModel == report)
-            {
-            }
         }
-
     }
 }

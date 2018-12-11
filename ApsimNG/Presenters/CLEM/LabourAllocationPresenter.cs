@@ -35,7 +35,7 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         private List<ValidParentAttribute> validpAtt = new List<ValidParentAttribute>();
-        private int NumberLabourTypes = 0;
+        private int numberLabourTypes = 0;
         private Labour labour;
         private List<LabourType> labourList = new List<LabourType>();
 
@@ -93,8 +93,8 @@ namespace UserInterface.Presenters
                 EndHTML(htmlString);
             }
 
-            NumberLabourTypes = Apsim.Children(labour, typeof(LabourType)).Count();
-            if (NumberLabourTypes == 0)
+            numberLabourTypes = Apsim.Children(labour, typeof(LabourType)).Count();
+            if (numberLabourTypes == 0)
             {
                 htmlString += "No Labour types supplied in Labour resource";
                 EndHTML(htmlString);
@@ -223,7 +223,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    tblstr += CreateRow("", NumberLabourTypes);
+                    tblstr += CreateRow("", numberLabourTypes);
                 }
                 tblstr += "</tr>";
             }
@@ -236,10 +236,10 @@ namespace UserInterface.Presenters
             return tblstr;
         }
 
-        private void EndHTML(string HTMLString)
+        private void EndHTML(string htmlString)
         {
-            HTMLString += "\n</body>\n</html>";
-            this.genericView.SetContents(HTMLString, false, false);
+            htmlString += "\n</body>\n</html>";
+            this.genericView.SetContents(htmlString, false, false);
         }
 
         private string CreateRow(string text, int columns)

@@ -42,9 +42,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Use artificial insemination (no bulls required)")]
         [Required]
-        public bool UseAI { get; set; }
-
-        
+        public bool UseAI { get; set; }       
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -160,16 +158,10 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
-
                     }
-
-
                 }
             }
-
-
         }
-
 
         /// <summary>An event handler to perform herd breeding </summary>
         /// <param name="sender">The sender.</param>
@@ -192,7 +184,6 @@ namespace Models.CLEM.Activities
                             )
                             group ind by ind.Location into grp
                             select grp;
-
 
             // calculate labour and finance limitations if needed when doing AI
             int breedersCount = breeders.Count();
@@ -358,7 +349,6 @@ namespace Models.CLEM.Activities
                             }
                         }
                     }
-
                 }
             }
         }
@@ -438,7 +428,6 @@ namespace Models.CLEM.Activities
                     // use default values 
                     rate = female.BreedParams.ConceptionRateAsymptote / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept));
                 }
-
             }
             return rate / 100;
         }
@@ -589,9 +578,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine the labour required for this activity based on LabourRequired items in tree
         /// </summary>
-        /// <param name="Requirement">Labour requirement model</param>
+        /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -607,9 +596,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             if (UseAI)
@@ -626,7 +615,5 @@ namespace Models.CLEM.Activities
             }
             return html;
         }
-
-
     }
 }

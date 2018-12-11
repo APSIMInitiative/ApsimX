@@ -36,7 +36,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Number or years to display in the grid.
-        /// </summary
+        /// </summary>
         private int numberOfYearsToDisplayInGrid = 4;
 
         /// <summary>
@@ -61,19 +61,25 @@ namespace UserInterface.Presenters
             SetStartYear(firstYearInFile);
         }
 
-        private void SetStartYear(int Year)
+        private void SetStartYear(int year)
         {
-            startYearForGrid = Year;
+            startYearForGrid = year;
             if (startYearForGrid >= lastYearInFile)
+            {
                 startYearForGrid = lastYearInFile - numberOfYearsToDisplayInGrid;
+            }
 
             if (startYearForGrid < firstYearInFile)
+            {
                 startYearForGrid = firstYearInFile;
+            }
 
             endYearForGrid = startYearForGrid + numberOfYearsToDisplayInGrid;
 
             if (endYearForGrid > lastYearInFile)
+            {
                 endYearForGrid = lastYearInFile;
+            }
         }
 
         /// <summary>

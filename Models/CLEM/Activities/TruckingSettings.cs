@@ -119,11 +119,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to report trucking emissions.
         /// </summary>
-        /// <param name="NumberOfTrucks">Number of trucks</param>
-        /// <param name="IsSales">Determines if this is a sales or purchase shipment</param>
-        public void ReportEmissions(int NumberOfTrucks, bool IsSales)
+        /// <param name="numberOfTrucks">Number of trucks</param>
+        /// <param name="isSales">Determines if this is a sales or purchase shipment</param>
+        public void ReportEmissions(int numberOfTrucks, bool isSales)
         {
-            if(NumberOfTrucks > 0)
+            if(numberOfTrucks > 0)
             {
                 List<string> gases = new List<string>() { "Methane", "CO2", "N2O" };
                 double emissions = 0;
@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
 
                     if (gasstore != null & emissions > 0)
                     {
-                        gasstore.Add(NumberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(IsSales?"sales":"purchases"));
+                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(isSales?"sales":"purchases"));
                     }
                 }
             }
@@ -160,9 +160,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("#.###") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.###") + "</span> per km per truck";

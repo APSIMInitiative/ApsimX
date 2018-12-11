@@ -98,17 +98,17 @@ namespace UserInterface.Views
         /// </summary>
         private void Vbox1_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            // modelTypeLabel.WidthRequest = args.Allocation.Width - 8;
             modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
             modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
-            // modelHelpLinkLabel.WidthRequest = args.Allocation.Width - 8;
         }
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)
         {
             //TODO: check internet connection and choose either local or remote help files
             if(ModelHelpURL != "")
+            {
                 System.Diagnostics.Process.Start(ModelHelpURL);
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -171,14 +171,14 @@ namespace UserInterface.Views
             }
         }
 
-        public void AddLowerView(object Control)
+        public void AddLowerView(object control)
         {
             foreach (Widget child in bottomView.Children)
             {
                 bottomView.Remove(child);
                 child.Destroy();
             }
-            ViewBase view = Control as ViewBase;
+            ViewBase view = control as ViewBase;
             if (view != null)
             {
                 bottomView.Add(view.MainWidget);

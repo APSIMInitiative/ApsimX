@@ -493,7 +493,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -502,7 +503,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -555,7 +557,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -564,7 +567,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -617,7 +621,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -626,7 +631,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -635,7 +641,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -778,7 +785,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -787,7 +795,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -1338,7 +1347,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1347,7 +1357,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -1430,7 +1441,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1439,7 +1451,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -1492,7 +1505,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1501,7 +1515,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1510,7 +1525,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -2188,7 +2204,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2197,7 +2214,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -2250,7 +2268,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2259,7 +2278,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -2312,7 +2332,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2321,7 +2342,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2330,7 +2352,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -3039,7 +3062,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -3048,7 +3072,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -3161,7 +3186,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -3170,7 +3196,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -3283,7 +3310,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -3292,7 +3320,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -3345,7 +3374,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -3354,7 +3384,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -3363,7 +3394,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -4190,7 +4222,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -4199,7 +4232,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -4252,7 +4286,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -4261,7 +4296,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -4374,7 +4410,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -4383,7 +4420,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -4392,7 +4430,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -4475,7 +4514,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -4484,7 +4524,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -4493,7 +4534,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -5196,7 +5238,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -5205,7 +5248,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -5408,7 +5452,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -5417,7 +5462,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -5470,7 +5516,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -5479,7 +5526,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -5592,7 +5640,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -5601,7 +5650,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -5610,7 +5660,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -6340,7 +6391,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -6349,7 +6401,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -6522,7 +6575,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -6531,7 +6585,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -6584,7 +6639,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -6593,7 +6649,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -6602,7 +6659,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -7398,7 +7456,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -7407,7 +7466,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -7520,7 +7580,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -7529,7 +7590,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -7582,7 +7644,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -7591,7 +7654,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -7600,7 +7664,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -7743,7 +7808,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -7752,7 +7818,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -7761,7 +7828,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -8514,7 +8582,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8523,7 +8592,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -8636,7 +8706,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8645,7 +8716,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -8698,7 +8770,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8707,7 +8780,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8716,7 +8790,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -8859,7 +8934,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8868,7 +8944,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8877,7 +8954,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -9601,7 +9679,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9610,7 +9689,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -9663,7 +9743,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9672,7 +9753,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9681,7 +9763,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -9824,7 +9907,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9833,7 +9917,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -9976,7 +10061,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9985,7 +10071,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9994,7 +10081,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -10643,7 +10731,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -10652,7 +10741,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -10705,7 +10795,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -10714,7 +10805,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -10723,7 +10815,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -10866,7 +10959,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -10875,7 +10969,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,
@@ -11018,7 +11113,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -11027,7 +11123,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -11036,7 +11133,8 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false
                 }
               ],
               "LegendPosition": 0,

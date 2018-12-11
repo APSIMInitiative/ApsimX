@@ -137,16 +137,16 @@ namespace Models.CLEM.Activities
         /// Function to return an activity from the list of available activities.
         /// </summary>
         /// <param name="activity"></param>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        private IModel SearchForNameInActivity(Model activity, string Name)
+        private IModel SearchForNameInActivity(Model activity, string name)
         {
-            IModel found = activity.Children.Find(x => x.Name == Name);
+            IModel found = activity.Children.Find(x => x.Name == name);
             if (found != null) return found;
 
             foreach (var child in activity.Children)
             {
-                found = SearchForNameInActivity(child, Name);
+                found = SearchForNameInActivity(child, name);
                 if (found != null) return found;
             }
             return null;
@@ -155,16 +155,16 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Function to return an activity from the list of available activities.
         /// </summary>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public IModel SearchForNameInActivities(string Name)
+        public IModel SearchForNameInActivities(string name)
         {
-            IModel found = Children.Find(x => x.Name == Name);
+            IModel found = Children.Find(x => x.Name == name);
             if (found != null) return found;
 
             foreach (var child in Children)
             {
-                found = SearchForNameInActivity(child, Name);
+                found = SearchForNameInActivity(child, name);
                 if (found != null) return found;
             }
             return null;
@@ -250,9 +250,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             return "\n<h1>Activities summary</h1>";
         }
@@ -261,7 +261,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "\n<div class=\"activity\">";
         }
@@ -270,7 +270,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\n</div>";
         }

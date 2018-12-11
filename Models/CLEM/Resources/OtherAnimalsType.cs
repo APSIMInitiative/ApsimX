@@ -96,7 +96,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount
         /// </summary>
-        public double Amount => throw new NotImplementedException();
+        public double Amount { get; set; }
 
         /// <summary>
         /// Override base event
@@ -104,7 +104,10 @@ namespace Models.CLEM.Resources
         protected void OnTransactionOccurred(EventArgs e)
         {
             EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            if (invoker != null)
+            {
+                invoker(this, e);
+            }
         }
 
         /// <summary>
@@ -115,12 +118,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add individuals to type based on cohort
         /// </summary>
-        /// <param name="AddIndividuals"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object AddIndividuals, string ActivityName, string Reason)
+        /// <param name="addIndividuals"></param>
+        /// <param name="activityName"></param>
+        /// <param name="reason"></param>
+        public void Add(object addIndividuals, string activityName, string reason)
         {
-            OtherAnimalsTypeCohort cohortToAdd = AddIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
 
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age & a.Gender == cohortToAdd.Gender).FirstOrDefault();
 
@@ -137,9 +140,9 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction();
             details.Debit = cohortToAdd.Number;
-            details.Activity = ActivityName;
+            details.Activity = activityName;
             details.ActivityType = "Unknown";
-            details.Reason = Reason;
+            details.Reason = reason;
             details.ResourceType = this.Name;
             details.ExtraInformation = cohortToAdd;
             LastTransaction = details;
@@ -151,21 +154,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Remove individuals from type based on cohort
         /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
+        /// <param name="removeIndividuals"></param>
+        /// <param name="activityName"></param>
+        /// <param name="reason"></param>
+        public void Remove(object removeIndividuals, string activityName, string reason)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Remove individuals from type based on cohort
-        /// </summary>
-        /// <param name="RemoveIndividuals"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Remove(object RemoveIndividuals, string ActivityName, string Reason)
-        {
-            OtherAnimalsTypeCohort cohortToRemove = RemoveIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortToRemove = removeIndividuals as OtherAnimalsTypeCohort;
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age & a.Gender == cohortToRemove.Gender).First();
 
             if (cohortexists == null)
@@ -182,9 +176,9 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction();
             details.Credit = cohortToRemove.Number;
-            details.Activity = ActivityName;
+            details.Activity = activityName;
             details.ActivityType = "Unknown";
-            details.Reason = Reason;
+            details.Reason = reason;
             details.ResourceType = this.Name;
             details.ExtraInformation = cohortToRemove;
             LastTransaction = details;
@@ -196,9 +190,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public new void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
+            throw new NotImplementedException();
         }
 
         #endregion

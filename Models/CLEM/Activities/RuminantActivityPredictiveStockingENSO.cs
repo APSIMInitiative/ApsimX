@@ -264,64 +264,64 @@ namespace Models.CLEM.Activities
             }
         }
 
-        private void HandleDestocking(double AEforSale, string PaddockName)
+        private void HandleDestocking(double aEforSale, string paddockName)
         {
-            if (AEforSale <= 0) return;
+            if (aEforSale <= 0) return;
 
             // move to underutilised paddocks
             // TODO: This can be added later as an activity including spelling
 
             // remove potential purchases from list
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            List<Ruminant> purchases = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == PaddockName & a.HerdName == HerdName).ToList();
-            while(purchases.Count()>0 & AEforSale>0)
+            List<Ruminant> purchases = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == paddockName & a.HerdName == HerdName).ToList();
+            while(purchases.Count()>0 & aEforSale>0)
             {
-                AEforSale -= purchases[0].AdultEquivalent;
+                aEforSale -= purchases[0].AdultEquivalent;
                 purchases.RemoveAt(0);
-                if (AEforSale < purchases.Min(a => a.AdultEquivalent))
+                if (aEforSale < purchases.Min(a => a.AdultEquivalent))
                 {
-                    AEforSale = 0;
+                    aEforSale = 0;
                 }
             }
-            if (AEforSale <= 0) return;
+            if (aEforSale <= 0) return;
 
             // adjust remaining herd
             // remove steers
             if (this.SellSteers)
             {
-                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == PaddockName & a.HerdName == HerdName & a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire == false).ToList();
+                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire == false).ToList();
                 int cnt = 0;
-                while (cnt < steers.Count() & AEforSale > 0)
+                while (cnt < steers.Count() & aEforSale > 0)
                 {
-                    AEforSale -= steers[cnt].AdultEquivalent;
+                    aEforSale -= steers[cnt].AdultEquivalent;
                     steers[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (AEforSale < steers.Min(a => a.AdultEquivalent))
+                    if (aEforSale < steers.Min(a => a.AdultEquivalent))
                     {
-                        AEforSale = 0;
+                        aEforSale = 0;
                     }
                     cnt++;
                 }
             }
-            if (AEforSale <= 0) return;
+            if (aEforSale <= 0) return;
 
             // remove additional dry breeders
             if (this.SellDryCows)
             {
                 // find dry cows not already marked for sale
-                List<RuminantFemale> drybreeders = ruminantHerd.Herd.Where(a => a.Location == PaddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.DryBreeder == true).ToList();
+                List<RuminantFemale> drybreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.DryBreeder == true).ToList();
                 int cnt = 0;
-                while (cnt < drybreeders.Count() & AEforSale > 0)
+                while (cnt < drybreeders.Count() & aEforSale > 0)
                 {
-                    AEforSale -= drybreeders[cnt].AdultEquivalent;
+                    aEforSale -= drybreeders[cnt].AdultEquivalent;
                     drybreeders[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (AEforSale < drybreeders.Min(a => a.AdultEquivalent))
+                    if (aEforSale < drybreeders.Min(a => a.AdultEquivalent))
                     {
-                        AEforSale = 0;
+                        aEforSale = 0;
                     }
                     cnt++;
                 }
             }
-            if (AEforSale <= 0) return;
+            if (aEforSale <= 0) return;
 
             // remove wet breeders with no calf
             // currently ignore pregant
@@ -332,15 +332,15 @@ namespace Models.CLEM.Activities
             {
                 // remove wet cows
                 // find wet cows not already marked for sale
-                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == PaddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
                 int cnt = 0;
-                while (cnt < wetbreeders.Count() & AEforSale > 0)
+                while (cnt < wetbreeders.Count() & aEforSale > 0)
                 {
-                    AEforSale -= wetbreeders[cnt].AdultEquivalent;
+                    aEforSale -= wetbreeders[cnt].AdultEquivalent;
                     wetbreeders[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (AEforSale < wetbreeders.Min(a => a.AdultEquivalent))
+                    if (aEforSale < wetbreeders.Min(a => a.AdultEquivalent))
                     {
-                        AEforSale = 0;
+                        aEforSale = 0;
                     }
                     cnt++;
                 }
@@ -349,9 +349,9 @@ namespace Models.CLEM.Activities
             // buy or sell is handled by the buy sell activity
         }
 
-        private void HandleRestocking(double AEtoBuy, string PaddockName, Ruminant exampleRuminant)
+        private void HandleRestocking(double aEtoBuy, string paddockName, Ruminant exampleRuminant)
         {
-            if (AEtoBuy <= 0) return;
+            if (aEtoBuy <= 0) return;
 
             // we won't remove individuals from the sale pool as we can't assume we can keep them in the herd
             // as management has already decided they need to be sold.
@@ -362,7 +362,7 @@ namespace Models.CLEM.Activities
             if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumFeedBeforeRestock))
             {
                 double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(exampleRuminant.BreedParams.AgeGrowthRateCoefficient * (exampleRuminant.Age * 30.4)) / (Math.Pow(exampleRuminant.StandardReferenceWeight, exampleRuminant.BreedParams.SRWGrowthScalar)));
-                double numberToBuy = AEtoBuy * Math.Pow(weight, 0.75) / Math.Pow(exampleRuminant.BreedParams.BaseAnimalEquivalent, 0.75); // convert to AE
+                double numberToBuy = aEtoBuy * Math.Pow(weight, 0.75) / Math.Pow(exampleRuminant.BreedParams.BaseAnimalEquivalent, 0.75); // convert to AE
 
                 for (int i = 0; i < Convert.ToInt32(numberToBuy); i++)
                 {
@@ -378,7 +378,7 @@ namespace Models.CLEM.Activities
                         BreedParams = exampleRuminant.BreedParams,
                         BreedingSire = false,
                         Draught = false,
-                        Location = PaddockName,
+                        Location = paddockName,
                         Weight = weight
                     }
                     );
@@ -445,9 +445,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

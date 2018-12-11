@@ -19,7 +19,6 @@ using Models.CLEM.Activities;
 //-----------------------------------------------------------------------
 namespace Models.CLEM
 {
-
     ///<summary>
     /// Reads in GRASP file data and makes it available to other models.
     ///</summary>
@@ -37,7 +36,6 @@ namespace Models.CLEM
     [Version(1, 0, 1, "Shaun Verrall", "CSIRO", "")]
     public class FileGRASP : CLEMModel, IFileGRASP
     {
-
         /// <summary>
         /// A link to the clock model.
         /// </summary>
@@ -185,22 +183,15 @@ namespace Models.CLEM
         /// </summary>
         private int runoffIndex;
 
-
-
-
-
-
-
         /// <summary>
         /// The entire pasture File read in as a DataTable with Primary Keys assigned.
         /// </summary>
-        private DataTable PastureFileAsTable;
+        private DataTable pastureFileAsTable;
 
         /// <summary>
         /// All the distinct Stocking Rates that were found in the PastureFileAsDataTable
         /// </summary>
         private double[] distinctStkRates;
-
 
         /// <summary>
         /// Constructor
@@ -208,7 +199,6 @@ namespace Models.CLEM
         public FileGRASP()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-
         }
 
         /// <summary>
@@ -248,8 +238,6 @@ namespace Models.CLEM
         /// </summary>
         public string ExcelWorkSheetName { get; set; }
 
-
-
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
@@ -262,7 +250,6 @@ namespace Models.CLEM
                 throw new ApsimXException(this, "Unable to find specified file [" + this.FullFileName + "]");
             }
 
-            //this.doSeek = true;
             this.regionIndex = 0;
             this.soilIndex = 0;
             this.forageNoIndex = 0;
@@ -283,7 +270,7 @@ namespace Models.CLEM
             this.rainfallIndex = 0;
             this.runoffIndex = 0;
 
-            this.PastureFileAsTable = GetAllData();
+            this.pastureFileAsTable = GetAllData();
             this.distinctStkRates = GetStkRateCategories();
         }
 
@@ -299,15 +286,13 @@ namespace Models.CLEM
                 this.reader = null;
             }
 
-            if (this.PastureFileAsTable != null)
+            if (this.pastureFileAsTable != null)
             {
-                this.PastureFileAsTable.Dispose();
-                this.PastureFileAsTable = null;
+                this.pastureFileAsTable.Dispose();
+                this.pastureFileAsTable = null;
             }
 
         }
-
-
 
         /// <summary>
         /// Provides an error message to display if something is wrong.
@@ -335,8 +320,6 @@ namespace Models.CLEM
             }
         }
 
-
-
         /// <summary>
         /// Get the DataTable view of this data
         /// </summary>
@@ -344,7 +327,6 @@ namespace Models.CLEM
         public DataTable GetAllData()
         {
             this.reader = null;
-
 
             if (this.OpenDataFile())
             {
@@ -382,12 +364,7 @@ namespace Models.CLEM
                 primarykeys[7] = table.Columns["Month"];
 
                 table.PrimaryKey = primarykeys;
-
-
-
-
                 CloseDataFile();
-
                 return table;
             }
             else
@@ -396,9 +373,6 @@ namespace Models.CLEM
             }
         }
 
-
-
-
         /// <summary>
         /// Searches the DataTable created from the GRASP File for all the distinct StkRate values.
         /// </summary>
@@ -406,7 +380,7 @@ namespace Models.CLEM
         private double[] GetStkRateCategories()
         {
 
-            DataView dataview = new DataView(this.PastureFileAsTable);
+            DataView dataview = new DataView(this.pastureFileAsTable);
             DataTable distinctStkRates = dataview.ToTable(true, "StkRate");
 
             double[] results = new double[distinctStkRates.Rows.Count];
@@ -428,40 +402,36 @@ namespace Models.CLEM
         ///It will find the category with the next largest value to the actual stocking rate.
         ///So if the stocking rate is 0 the category with the next largest value will normally be 1
         /// </summary>
-        /// <param name="StkRate"></param>
+        /// <param name="stockingRate"></param>
         /// <returns></returns>
-        private double FindClosestStkRateCategory(double StkRate)
+        private double FindClosestStkRateCategory(double stockingRate)
         {
             //https://stackoverflow.com/questions/41277957/get-closest-value-in-an-array
             //https://msdn.microsoft.com/en-us/library/2cy9f6wb(v=vs.110).aspx
             Array.Sort(distinctStkRates);
-            int index = Array.BinarySearch(distinctStkRates, StkRate); 
+            int index = Array.BinarySearch(distinctStkRates, stockingRate); 
             double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
             return category;
         }
-
-
-
 
         /// <summary>
         /// Searches the DataTable created from the GRASP File using the specified parameters.
         /// nb. Ignore ForageNo , it is a legacy column in the GRASP file that is not used anymore.
         /// </summary>
-        /// <param name="Region"></param>
-        /// <param name="Soil"></param>
-        /// <param name="GrassBA"></param>
-        /// <param name="LandCon"></param>
-        /// <param name="StkRate"></param>
-        /// <param name="EcolCalculationDate"></param>
-        /// <param name="EcolCalculationInterval"></param>
+        /// <param name="region"></param>
+        /// <param name="soil"></param>
+        /// <param name="grassBasalArea"></param>
+        /// <param name="landCondition"></param>
+        /// <param name="stockingRate"></param>
+        /// <param name="ecolCalculationDate"></param>
+        /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int Region, int Soil, int GrassBA, int LandCon, int StkRate,
-                                         DateTime EcolCalculationDate, int EcolCalculationInterval)
+        public List<PastureDataType> GetIntervalsPastureData(int region, int soil, int grassBasalArea, int landCondition, int stockingRate,
+                                         DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
-
-            int startYear = EcolCalculationDate.Year;
-            int startMonth = EcolCalculationDate.Month;
-            DateTime endDate = EcolCalculationDate.AddMonths(EcolCalculationInterval+1);
+            int startYear = ecolCalculationDate.Year;
+            int startMonth = ecolCalculationDate.Month;
+            DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
             if(endDate > clock.EndDate)
             {
                 endDate = clock.EndDate;
@@ -469,20 +439,20 @@ namespace Models.CLEM
             int endYear = endDate.Year;
             int endMonth = endDate.Month;
 
-            double stkRateCategory = FindClosestStkRateCategory(StkRate);
+            double stkRateCategory = FindClosestStkRateCategory(stockingRate);
 
             //http://www.csharp-examples.net/dataview-rowfilter/
 
             string filter;
             if (startYear == endYear)
-                filter = "( Region = " + Region + ") AND (Soil = " + Soil + ")"
-                + " AND (GrassBA = " + GrassBA + ") AND (LandCon = " + LandCon + ") AND (StkRate = " + stkRateCategory + ")"
+                filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
+                + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
                 + "( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
                 + ")";
             else
-                filter = "( Region = " + Region + ") AND (Soil = " + Soil + ")"
-                + " AND (GrassBA = " + GrassBA + ") AND (LandCon = " + LandCon + ") AND (StkRate = " + stkRateCategory + ")"
+                filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
+                + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
                 + "( Year = " + startYear + " AND Month >= " + startMonth + ")"
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
@@ -490,7 +460,7 @@ namespace Models.CLEM
                 + ")";
 
 
-            DataRow[] foundRows = this.PastureFileAsTable.Select(filter);
+            DataRow[] foundRows = this.pastureFileAsTable.Select(filter);
 
             List<PastureDataType> filtered = new List<PastureDataType>();
 
@@ -501,44 +471,42 @@ namespace Models.CLEM
 
             filtered.Sort((r, s) => DateTime.Compare(r.CutDate, s.CutDate));
 
-            CheckAllMonthsWereRetrieved(filtered, EcolCalculationDate, endDate,
-                Region, Soil, GrassBA, LandCon, StkRate);
+            CheckAllMonthsWereRetrieved(filtered, ecolCalculationDate, endDate,
+                region, soil, grassBasalArea, landCondition, stockingRate);
 
             return filtered;
-
         }
-
 
         /// <summary>
         /// Do simple error checking to make sure the data retrieved is usable
         /// </summary>
-        /// <param name="Filtered"></param>
-        /// <param name="StartDate"></param>
-        /// <param name="EndDate"></param>
-        /// <param name="Region"></param>
-        /// <param name="Soil"></param>
-        /// <param name="GrassBA"></param>
-        /// <param name="LandCon"></param>
-        /// <param name="StkRate"></param>
-        private void CheckAllMonthsWereRetrieved(List<PastureDataType> Filtered, DateTime StartDate, DateTime EndDate,
-            int Region, int Soil, int GrassBA, int LandCon, int StkRate)
+        /// <param name="filtered"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="region"></param>
+        /// <param name="soil"></param>
+        /// <param name="grassBasalArea"></param>
+        /// <param name="landCondition"></param>
+        /// <param name="stockingRate"></param>
+        private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
+            int region, int soil, int grassBasalArea, int landCondition, int stockingRate)
         {
             string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
-                        + "For Region: " + Region + ", Soil: " + Soil 
-                        + ", GrassBA: " + GrassBA + ", LandCon: " + LandCon + ", StkRate: " + StkRate + System.Environment.NewLine;
+                        + "For Region: " + region + ", Soil: " + soil 
+                        + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
             if (clock.EndDate == clock.Today) return;
 
             //Check if there is any data
-            if ((Filtered == null) || (Filtered.Count == 0))
+            if ((filtered == null) || (filtered.Count == 0))
             {
                 throw new ApsimXException(this, errormessageStart
                     + "Unable to retrieve any data what so ever");
             }
 
             //Check no gaps in the months
-            DateTime tempdate = StartDate;
-            foreach (PastureDataType month in Filtered)
+            DateTime tempdate = startDate;
+            foreach (PastureDataType month in filtered)
             {
                 if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
                 {
@@ -549,55 +517,39 @@ namespace Models.CLEM
             }
 
             //Check months go right up until EndDate
-            if ((tempdate.Month != EndDate.Month)&&(tempdate.Year != EndDate.Year))
+            if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
             {
                 throw new ApsimXException(this, errormessageStart
                         + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
             }
-            
-
         }
-
-
-
-
-
-
-
 
         /// <summary>
         /// Searches the DataTable created from the PastureFile using the specified parameters.
         /// </summary>
-        /// <param name="Region"></param>
-        /// <param name="Soil"></param>
-        /// <param name="ForageNo"></param>
-        /// <param name="GrassBA"></param>
-        /// <param name="LandCon"></param>
-        /// <param name="StkRate"></param>
-        /// <param name="Year"></param>
-        /// <param name="Month"></param>
+        /// <param name="region"></param>
+        /// <param name="soil"></param>
+        /// <param name="forageNo"></param>
+        /// <param name="grassBasalArea"></param>
+        /// <param name="landCondition"></param>
+        /// <param name="stockingRate"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
         /// <returns>CropDataType containg the crop data for this month</returns>
-        public PastureDataType GetMonthsPastureData(int Region, int Soil, int ForageNo, int GrassBA, int LandCon, int StkRate, 
-                                         int Year, int Month)
+        public PastureDataType GetMonthsPastureData(int region, int soil, int forageNo, int grassBasalArea, int landCondition, int stockingRate, 
+                                         int year, int month)
         {
-            //string climRegion = ClimRegion.ToString(); //' Climatic region
-            //string soil = Native_land.ToString();  //' soil
-            //string grassBA = Grass_BA.ToString(); //' Grass Basal area
-            //string landCond = Land_Con.ToString(); //' Land condition
-            //string stkRate = St_Rate.ToString(); //' Stocking rate
-            //string year = Pyr[x].ToString(); //' year
-
             object[] keyVals = new Object[8];
-            keyVals[0] = Region;
-            keyVals[1] = Soil;
-            keyVals[2] = ForageNo;
-            keyVals[3] = GrassBA;
-            keyVals[4] = LandCon;
-            keyVals[5] = StkRate;
-            keyVals[6] = Year;
-            keyVals[7] = Month;
+            keyVals[0] = region;
+            keyVals[1] = soil;
+            keyVals[2] = forageNo;
+            keyVals[3] = grassBasalArea;
+            keyVals[4] = landCondition;
+            keyVals[5] = stockingRate;
+            keyVals[6] = year;
+            keyVals[7] = month;
 
-            DataRow dr = this.PastureFileAsTable.Rows.Find(keyVals);
+            DataRow dr = this.pastureFileAsTable.Rows.Find(keyVals);
 
             if (dr != null)
             {
@@ -608,17 +560,16 @@ namespace Models.CLEM
             else
             {
                 throw new ApsimXException(this, "Unable to find pasture data for : "
-                    + "[Region = " + Region
-                    + ", Soil = " + Soil
-                    + ", ForageNo = " + ForageNo
-                    + ", GrassBA = " + GrassBA
-                    + ", LandCon = " + LandCon
-                    + ", StkRate = " + StkRate
-                    + ", Year = " + Year
-                    + ", Month = " + Month + "]"
+                    + "[Region = " + region
+                    + ", Soil = " + soil
+                    + ", ForageNo = " + forageNo
+                    + ", GrassBA = " + grassBasalArea
+                    + ", LandCon = " + landCondition
+                    + ", StkRate = " + stockingRate
+                    + ", Year = " + year
+                    + ", Month = " + month + "]"
                     );
             }
-
         }
 
         private static PastureDataType DataRow2PastureDataType(DataRow dr)
@@ -647,9 +598,6 @@ namespace Models.CLEM
             pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
             return pasturedata;
         }
-
-
-
 
         /// <summary>
         /// Open the GRASP data file.
@@ -798,11 +746,6 @@ namespace Models.CLEM
                         if (this.reader == null || this.reader.Constant("Runoff") == null)
                             throw new Exception("Cannot find Runoff in pasture file: " + this.FullFileName);
                     }
-
-
-
-
-
                 }
                 else
                 {
@@ -831,9 +774,9 @@ namespace Models.CLEM
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Using ";
@@ -849,7 +792,6 @@ namespace Models.CLEM
             return html;
         }
     }
-
 
     /// <summary>
     /// A structure containing the commonly used weather data.
@@ -954,7 +896,6 @@ namespace Models.CLEM
         /// </summary>
         public double Runoff;
 
-
         /// <summary>
         /// Combine Year and Month to create a DateTime. 
         /// Day is set to the 1st of the month.
@@ -962,5 +903,4 @@ namespace Models.CLEM
         public DateTime CutDate;
 
     }
-
 }

@@ -57,47 +57,47 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             double numberUnits = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
                     CropActivityManageCrop cropParent = Parent.Parent as CropActivityManageCrop;
                     CropActivityManageProduct productParent = Parent as CropActivityManageProduct;
-                    numberUnits = cropParent.Area * productParent.UnitsToHaConverter / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perTree:
                     cropParent = Parent.Parent as CropActivityManageCrop;
                     productParent = Parent as CropActivityManageProduct;
-                    numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
                     cropParent = Parent.Parent as CropActivityManageCrop;
                     productParent = Parent as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
                     cropParent = Parent.Parent as CropActivityManageCrop;
                     productParent = Parent as CropActivityManageProduct;
-                    numberUnits = productParent.AmountHarvested / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = productParent.AmountHarvested / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -160,9 +160,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             if(Apsim.Children(this, typeof(CropActivityFee)).Count() + Apsim.Children(this, typeof(LabourRequirement)).Count() == 0)

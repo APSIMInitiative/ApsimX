@@ -24,9 +24,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() == 0)
@@ -50,7 +50,7 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
             html += "</table>";
@@ -62,7 +62,7 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() > 0)

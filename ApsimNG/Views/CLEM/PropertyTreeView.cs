@@ -29,7 +29,6 @@ namespace UserInterface.Views
         /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
 
-
         private VBox vbox1 = null;
         private Gtk.TreeView treeview1 = null;
         private Viewport RightHandView = null;
@@ -43,7 +42,6 @@ namespace UserInterface.Views
         private const string modelMime = "application/x-model-component";
 
         System.Timers.Timer timer = new System.Timers.Timer();
-
 
         /// <summary>Default constructor for ExplorerView</summary>
         public PropertyTreeView(ViewBase owner) : base(owner)
@@ -72,7 +70,6 @@ namespace UserInterface.Views
             treeview1.ButtonReleaseEvent += OnButtonUp;
             treeview1.ButtonPressEvent += OnButtonPress;
             treeview1.RowActivated += OnRowActivated;
-
 
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -126,9 +123,13 @@ namespace UserInterface.Views
                 TreeViewColumn selCol;
                 treeview1.GetCursor(out selPath, out selCol);
                 if (selPath != null)
+                {
                     return this.FullPath(selPath);
+                }
                 else
+                {
                     return string.Empty;
+                }
             }
 
             set
@@ -137,7 +138,9 @@ namespace UserInterface.Views
                 {
                     TreePath pathToSelect = treemodel.GetPath(FindNode(value));
                     if (pathToSelect != null)
-                       treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                    {
+                        treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                    }
                 }
             }
         }
@@ -204,7 +207,9 @@ namespace UserInterface.Views
         {
             Gdk.Pixbuf pixbuf;
             if (MainView.MasterView.HasResource(description.ResourceNameForImage))
+            {
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
+            }
             else
             {
                 // Search for image based on resource name including model name from namespace
@@ -261,31 +266,41 @@ namespace UserInterface.Views
         private TreeIter FindNode(string namePath)
         {
             if (!namePath.StartsWith(".", StringComparison.CurrentCulture))
+            {
                 throw new Exception("Invalid name path '" + namePath + "'");
+            }
 
             namePath = namePath.Remove(0, 1); // Remove the leading '.'
 
-            string[] NamePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             TreeIter result = TreeIter.Zero;
             TreeIter iter;
             treemodel.GetIterFirst(out iter);
 
-            foreach (string PathBit in NamePathBits)
+            foreach (string pathBit in namePathBits)
             {
                 string nodeName = (string)treemodel.GetValue(iter, 0);
-                while (nodeName != PathBit && treemodel.IterNext(ref iter))
+                while (nodeName != pathBit && treemodel.IterNext(ref iter))
+                {
                     nodeName = (string)treemodel.GetValue(iter, 0);
-                if (nodeName == PathBit)
+                }
+
+                if (nodeName == pathBit)
                 {
                     result = iter;
                     TreePath path = treemodel.GetPath(iter);
                     if (!treeview1.GetRowExpanded(path))
+                    {
                         treeview1.ExpandRow(path, false);
+                    }
+
                     treemodel.IterChildren(out iter, iter);
                 }
                 else
+                {
                     return TreeIter.Zero;
+                }
             }
             return result;         
         }
@@ -307,7 +322,10 @@ namespace UserInterface.Views
                 treeview1.GetCursor(out selPath, out selCol);
                 selectionChangedData.NewNodePath = FullPath(selPath);
                 if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                {
                     SelectedNodeChanged.Invoke(this, selectionChangedData);
+                }
+
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
@@ -368,18 +386,20 @@ namespace UserInterface.Views
             }
         }
 
-
-
         private void OnRowActivated(object sender, RowActivatedArgs e)
         {
             timer.Stop();
             if (treeview1.GetRowExpanded(e.Path))
+            {
                 treeview1.CollapseRow(e.Path);
+            }
             else
+            {
                 treeview1.ExpandRow(e.Path, false);
+            }
+
             e.RetVal = true;
         }
-
 
         /// <summary>
         /// Displays the popup menu when the right mouse button is released
@@ -389,9 +409,10 @@ namespace UserInterface.Views
         private void OnButtonUp(object sender, ButtonReleaseEventArgs e)
         {
             if (e.Event.Button == 3)
+            {
                 Popup.Popup();
+            }
         }
-
 
         /// <summary>
         /// Get whatever text is currently on a specific clipboard.
@@ -418,8 +439,6 @@ namespace UserInterface.Views
             cb.Text = text;            
         }
 
-
         #endregion
-
     }
 }

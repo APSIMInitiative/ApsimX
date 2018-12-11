@@ -29,10 +29,10 @@ namespace Models.CLEM
         /// <summary>
         /// Allows unique id of activity to be set 
         /// </summary>
-        /// <param name="ID"></param>
-        public void SetGuID(string ID)
+        /// <param name="id"></param>
+        public void SetGuID(string id)
         {
-            id = Guid.Parse(ID);
+            this.id = Guid.Parse(id);
         }
 
         /// <summary>
@@ -79,15 +79,12 @@ namespace Models.CLEM
             }
         }
 
-
-
-
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public virtual string ModelSummary(bool FormatForParentControl)
+        public virtual string ModelSummary(bool formatForParentControl)
         {
             return "<div class=\"resourcenote\">No description provided</div>";
         }
@@ -95,31 +92,31 @@ namespace Models.CLEM
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
-        /// <param name="HTMLString"></param>
+        /// <param name="model"></param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <param name="htmlString"></param>
         /// <returns></returns>
-        public virtual string GetFullSummary(object Model, bool FormatForParentControl, string HTMLString)
+        public virtual string GetFullSummary(object model, bool formatForParentControl, string htmlString)
         {
             string html = "";
-            if (Model.GetType().IsSubclassOf(typeof(CLEMModel)))
+            if (model.GetType().IsSubclassOf(typeof(CLEMModel)))
             {
-                CLEMModel cm = Model as CLEMModel;
-                html += cm.ModelSummaryOpeningTags(FormatForParentControl);
+                CLEMModel cm = model as CLEMModel;
+                html += cm.ModelSummaryOpeningTags(formatForParentControl);
 
                 html += cm.ModelSummaryInnerOpeningTagsBeforeSummary();
 
-                html += cm.ModelSummary(FormatForParentControl);
+                html += cm.ModelSummary(formatForParentControl);
 
-                html += cm.ModelSummaryInnerOpeningTags(FormatForParentControl);
+                html += cm.ModelSummaryInnerOpeningTags(formatForParentControl);
 
-                foreach (var item in (Model as IModel).Children)
+                foreach (var item in (model as IModel).Children)
                 {
-                    html += GetFullSummary(item, true, HTMLString);
+                    html += GetFullSummary(item, true, htmlString);
                 }
-                html += cm.ModelSummaryInnerClosingTags(FormatForParentControl);
+                html += cm.ModelSummaryInnerClosingTags(formatForParentControl);
 
-                html += cm.ModelSummaryClosingTags(FormatForParentControl);
+                html += cm.ModelSummaryClosingTags(formatForParentControl);
             }
             return html;
         }
@@ -134,7 +131,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public virtual string ModelSummaryClosingTags(bool FormatForParentControl)
+        public virtual string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\n</div>\n</div>";
         }
@@ -143,7 +140,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public virtual string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public virtual string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string overall = "activity";
             string extra = "";
@@ -212,7 +209,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public virtual string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public virtual string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "";
         }
@@ -221,7 +218,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public virtual string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
         }
@@ -265,7 +262,5 @@ namespace Models.CLEM
             html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
             return html;
         }
-
-
     }
 }

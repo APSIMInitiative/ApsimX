@@ -75,6 +75,5 @@ namespace Models.Core
         /// <param name="attributeType">Type of attribute to find</param>
         /// <returns>The attribute or null if not found</returns>
         public abstract Attribute GetAttribute(Type attributeType);
-
     }
 } 

@@ -60,8 +60,19 @@ namespace Models.PMF.Phen
 
             if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
-                proceedToNextPhase = true;
-                propOfDayToUse = 1;
+                if(phenology.SorghumFlag != null)
+                {
+                    if (phenology.DaysAfterSowing > 1)
+                    {
+                        proceedToNextPhase = true;
+                        propOfDayToUse = 1;
+                    }
+                }
+                else
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
+                }
             }
 
             return proceedToNextPhase;

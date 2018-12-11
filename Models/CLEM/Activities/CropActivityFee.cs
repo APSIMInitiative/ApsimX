@@ -74,8 +74,8 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            CropActivityManageProduct ProductParent = Parent.Parent as CropActivityManageProduct;
-            if (!ProductParent.IsTreeCrop)
+            CropActivityManageProduct productParent = Parent.Parent as CropActivityManageProduct;
+            if (!productParent.IsTreeCrop)
             {
                 if (this.PaymentStyle == CropPaymentStyleType.perTree)
                 {
@@ -89,9 +89,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Requirement"></param>
+        /// <param name="requirement"></param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             return 0;
         }
@@ -113,14 +113,14 @@ namespace Models.CLEM.Activities
                         sumneeded = Amount;
                         break;
                     case CropPaymentStyleType.perHa:
-                        CropActivityManageCrop CropParent = Parent.Parent.Parent as CropActivityManageCrop;
-                        CropActivityManageProduct ProductParent = Parent.Parent as CropActivityManageProduct;
-                        sumneeded = CropParent.Area * ProductParent.UnitsToHaConverter * Amount;
+                        CropActivityManageCrop cropParent = Parent.Parent.Parent as CropActivityManageCrop;
+                        CropActivityManageProduct productParent = Parent.Parent as CropActivityManageProduct;
+                        sumneeded = cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
                     case CropPaymentStyleType.perTree:
-                        CropParent = Parent.Parent.Parent as CropActivityManageCrop;
-                        ProductParent = Parent.Parent as CropActivityManageProduct;
-                        sumneeded = ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter * Amount;
+                        cropParent = Parent.Parent.Parent as CropActivityManageCrop;
+                        productParent = Parent.Parent as CropActivityManageProduct;
+                        sumneeded = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
                     default:
                         throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", PaymentStyle, Name, this.Name));
@@ -199,9 +199,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pay ";

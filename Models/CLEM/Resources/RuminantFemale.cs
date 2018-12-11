@@ -130,17 +130,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(bool Twins, double Rate, int AgeOffsett)
+        public void UpdateConceptionDetails(bool twins, double rate, int ageOffsett)
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
             {
                 SaleFlag = HerdChangeReason.None;
             }
-            PreviousConceptionRate = Rate;
-            CarryingTwins = Twins;
+            PreviousConceptionRate = rate;
+            CarryingTwins = twins;
             WeightAtConception = this.Weight;
-            AgeAtLastConception = this.Age + AgeOffsett;
+            AgeAtLastConception = this.Age + ageOffsett;
             SuccessfulPregnancy = true;
         }
 

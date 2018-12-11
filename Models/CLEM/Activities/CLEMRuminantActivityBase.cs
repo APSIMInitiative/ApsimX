@@ -42,11 +42,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to get the set herd filters
         /// </summary>
-        public void InitialiseHerd(bool AllowMultipleBreeds, bool AllowMultipleHerds)
+        public void InitialiseHerd(bool allowMultipleBreeds, bool allowMultipleHerds)
         {
             GetHerdFilters();
-            allowMultipleBreeds = AllowMultipleBreeds;
-            allowMultipleHerds = AllowMultipleHerds;
+            this.allowMultipleBreeds = allowMultipleBreeds;
+            this.allowMultipleHerds = allowMultipleHerds;
             DetermineHerdName();
         }
 
@@ -75,13 +75,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
-        public List<Ruminant> CurrentHerd(bool IncludeCheckHerdMeetsCriteria)
+        public List<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria)
         {
             if (HerdFilters == null)
             {
                 throw new ApsimXException(this, "@error:Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perfrom InitialiseHerd() in CLEMInitialiseActivity for this activity.");
             }
-            if(IncludeCheckHerdMeetsCriteria)
+            if(includeCheckHerdMeetsCriteria)
             {
                 CheckHerd();
             }

@@ -45,7 +45,7 @@ namespace UserInterface.Presenters
         {
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {font-family: sans-serif, Arial, Helvetica; max-width:1000px; }" +
+                "body {font-family: sans-serif, Arial, Helvetica; max-width:1000px; font-size:10pt;}" +
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
                 "table th {padding:8px; }" +

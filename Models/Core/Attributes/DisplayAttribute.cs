@@ -9,7 +9,6 @@ namespace Models.Core
 {
     using System;
 
-
     /// <summary>
     /// An enumeration for display types.
     /// Used by the Display Attribute.
@@ -65,12 +64,7 @@ namespace Models.Core
         /// A CLEM Grasp file reader editor.
         /// </summary>
         CLEMGraspFileName
-
     }
-
-
-
-
 
     /// <summary>
     /// Specifies various user interface display properties.
@@ -78,8 +72,6 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Property)]
     public class DisplayAttribute : System.Attribute
     {
-
-
         /// <summary>
         /// Gets or sets the display format (e.g. 'N3') that the user interface should
         /// use when showing values in the related property.
@@ -96,8 +88,6 @@ namespace Models.Core
         /// Gets or sets a value denoting the type of model to show in the model drop down.
         /// </summary>
         public Type ModelType { get; set; }
-
-
 
         /// <summary>
         /// Gets or sets the types for the ResourceGroups whose Resource items are valid choices in the Resource name editor.

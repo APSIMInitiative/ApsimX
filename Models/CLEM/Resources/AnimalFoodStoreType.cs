@@ -74,25 +74,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="Activity">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual adding resource</param>
-        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             double addAmount = 0;
             double nAdded = 0;
-            switch (ResourceAmount.GetType().ToString())
+            switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
-                    addAmount = (double)ResourceAmount;
+                    addAmount = (double)resourceAmount;
                     nAdded = Nitrogen;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
-                    nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
+                    addAmount = ((FoodResourcePacket)resourceAmount).Amount;
+                    nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
                     break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
             // update N based on new input added
@@ -102,9 +102,9 @@ namespace Models.CLEM.Resources
 
             ResourceTransaction details = new ResourceTransaction();
             details.Debit = addAmount;
-            details.Activity = Activity.Name;
-            details.ActivityType = Activity.GetType().Name;
-            details.Reason = Reason;
+            details.Activity = activity.Name;
+            details.ActivityType = activity.GetType().Name;
+            details.Reason = reason;
             details.ResourceType = this.Name;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -114,11 +114,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Remove from animal food store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
-            double amountRemoved = Request.Required;
+            if (request.Required == 0) return;
+            double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.amount, amountRemoved);
             this.amount -= amountRemoved;
@@ -126,15 +126,15 @@ namespace Models.CLEM.Resources
             FoodResourcePacket additionalDetails = new FoodResourcePacket();
             additionalDetails.DMD = this.DMD;
             additionalDetails.PercentN = this.CurrentStoreNitrogen;
-            Request.AdditionalDetails = additionalDetails;
+            request.AdditionalDetails = additionalDetails;
 
-            Request.Provided = amountRemoved;
+            request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
             details.Credit = amountRemoved;
-            details.Activity = Request.ActivityModel.Name;
-            details.ActivityType = Request.ActivityModel.GetType().Name;
-            details.Reason = Request.Reason;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -144,10 +144,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set amount of animal food available
         /// </summary>
-        /// <param name="NewValue">New value to set food store to</param>
-        public new void Set(double NewValue)
+        /// <param name="newValue">New value to set food store to</param>
+        public new void Set(double newValue)
         {
-            this.amount = NewValue;
+            this.amount = newValue;
         }
 
         /// <summary>
@@ -176,9 +176,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "<div class=\"activityentry\">";

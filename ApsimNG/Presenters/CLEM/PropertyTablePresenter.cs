@@ -17,7 +17,6 @@ namespace UserInterface.Presenters
     using Utility;
     using Views;
 
-
     /// <summary>
     /// <para>
     /// This presenter displays properties of a Model in an IGridView.
@@ -111,7 +110,6 @@ namespace UserInterface.Presenters
                 this.grid.ReadOnly = true;
             }
 
-
             this.grid.NumericFormat = "G6";
             this.childrenWithSameType = this.GetChildModelsWithSameType(this.model);
             this.FindAllPropertiesForChildren();
@@ -166,15 +164,12 @@ namespace UserInterface.Presenters
                 table.Columns.Add("Value", typeof(string));
             }
 
-
             this.FillTable(table);
             this.FormatGrid();
             if (selectedCell != null)
             {
                 this.grid.GetCurrentCell = selectedCell;
-            }
-
-     
+            }     
         }
 
        /// <summary>
@@ -271,9 +266,13 @@ namespace UserInterface.Presenters
                             // just a Description Attribute on the property in the model.
                             //So we still may need to include it in this case.
                             if (this.CategoryFilter == "Unspecified")
+                            {
                                 includeProperty = true;
+                            }
                             else
+                            {
                                 includeProperty = false;
+                            }
                         }
                     }
 
@@ -314,7 +313,6 @@ namespace UserInterface.Presenters
         /// <param name="model">The new model</param>
         private void UpdateModel(int propListIndex)
         {
-
             IGridCell curCell = this.grid.GetCurrentCell;
             for (int i = 0; i < this.properties[propListIndex].Count; i++)
             {
@@ -341,7 +339,6 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-
         }
 
         private void GetContextItems(object o, NeedContextItemsArgs e)
@@ -558,9 +555,14 @@ namespace UserInterface.Presenters
                         string tableName = cell.Value.ToString();
                         DataTable data = null;
                         if (storage.TableNames.Contains(tableName))
+                        {
                             data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
+                        }
+
                         if (data != null)
+                        {
                             fieldNames = DataTableUtilities.GetColumnNames(data);
+                        }
                     }
                 }
             }

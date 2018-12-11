@@ -58,7 +58,6 @@ namespace Models.CLEM.Groupings
             foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
             {
                 clone.Children.Add(item.Clone());
-
             }
 
             return clone;
@@ -67,12 +66,12 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
             {
                 html += "\n<div class=\"activityentry\">";
                 if (PurchaseValue == SellValue)
@@ -97,10 +96,10 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (FormatForParentControl)
+            if (formatForParentControl)
             {
                 html += "</td><td><span class=\"setvalue\">" + this.PurchaseValue.ToString("#,0.##") + "</span></td><td><span class=\"setvalue\">" + this.SellValue.ToString("#,0.##") + "</span></td></tr>";
             }
@@ -115,10 +114,10 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (FormatForParentControl)
+            if (formatForParentControl)
             {
                 html += "<tr><td>" + this.Name + "</td><td>";
                 if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
@@ -141,9 +140,9 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
                 return base.ModelSummaryClosingTags(true);
             else
                 return "";
@@ -153,14 +152,12 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
                 return base.ModelSummaryOpeningTags(true);
             else
                 return "";
         }
-
-
     }
 }

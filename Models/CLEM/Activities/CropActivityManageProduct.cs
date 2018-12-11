@@ -201,9 +201,6 @@ namespace Models.CLEM.Activities
             limiter = LocateCutAndCarryLimiter(this);
 
             // set manager of graze food store if linked
-
-
-
         }
 
         /// <summary>
@@ -241,7 +238,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -254,7 +250,6 @@ namespace Models.CLEM.Activities
                 {
                     Status = ActivityStatus.NotNeeded;
                     DoActivity();
-
                 }
             }
         }
@@ -304,9 +299,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;
@@ -333,26 +328,26 @@ namespace Models.CLEM.Activities
             }
             double daysNeeded = 0;
             double numberUnits = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    daysNeeded = amount * Requirement.LabourPerUnit;
+                    daysNeeded = amount * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    numberUnits = amount / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = amount / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
-                    numberUnits = parentManagementActivity.Area / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = parentManagementActivity.Area / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -488,9 +483,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             if (TreesPerHa>0)
@@ -540,10 +535,10 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += base.ModelSummaryClosingTags(FormatForParentControl);
+            html += base.ModelSummaryClosingTags(formatForParentControl);
             return html;
         }
 
@@ -551,7 +546,7 @@ namespace Models.CLEM.Activities
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string html = "";
             // if first child of mixed 
@@ -570,9 +565,8 @@ namespace Models.CLEM.Activities
                 html += "\n<div class=\"cropmixedlabel\">Mixed crop</div>";
                 html += "\n<div class=\"cropmixedborder\">";
             }
-            html += base.ModelSummaryOpeningTags(FormatForParentControl);
+            html += base.ModelSummaryOpeningTags(formatForParentControl);
             return html;
         }
-
     }
 }

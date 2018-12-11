@@ -83,7 +83,7 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public double ValueofIndividual(Ruminant ind, bool PurchasePrice)
+        public double ValueofIndividual(Ruminant ind, bool purchasePrice)
         {
             if (PricingAvailable())
             {
@@ -94,7 +94,7 @@ namespace Models.CLEM.Resources
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
-                        if (PurchasePrice)
+                        if (purchasePrice)
                         {
                             return item.PurchaseValue * ((PriceList.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                         }
@@ -113,10 +113,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add resource
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="Activity">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual adding resource</param>
-        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             throw new NotImplementedException();
         }
@@ -124,8 +124,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Remove resource
         /// </summary>
-        /// <param name="Request"></param>
-        public new void Remove(ResourceRequest Request)
+        /// <param name="request"></param>
+        public new void Remove(ResourceRequest request)
         {
             throw new NotImplementedException();
         }
@@ -133,8 +133,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set resource
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public new void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
             throw new NotImplementedException();
         }
@@ -159,13 +159,13 @@ namespace Models.CLEM.Resources
             if (Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList().Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.RuminantConceptionAdvanced" };
-                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [0]", this.Name, memberNames)));
+                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [{0}]", Name), memberNames));
             }
 
             if (Apsim.Children(this, typeof(AnimalPricing)).Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [0]", this.Name, memberNames)));
+                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
             }
             else if (Apsim.Children(this, typeof(AnimalPricing)).Count() == 1)
             {
@@ -174,7 +174,7 @@ namespace Models.CLEM.Resources
                 if (Apsim.Children(price, typeof(AnimalPriceGroup)).Count()==0)
                 {
                     string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [0]", this.Name, memberNames)));
+                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
                 }
             }
             return results;
@@ -732,9 +732,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             return html;

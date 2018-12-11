@@ -20,7 +20,6 @@ using Models.CLEM.Activities;
 //-----------------------------------------------------------------------
 namespace Models.CLEM
 {
-
     ///<summary>
     /// Reads in crop growth data and makes it available to other models.
     ///</summary>
@@ -66,17 +65,17 @@ namespace Models.CLEM
         /// <summary>
         /// The character spacing index for the AmtKg column
         /// </summary>
-        private int AmtKgIndex;
+        private int amountKgIndex;
 
         /// <summary>
         /// The character spacing index for the Npct column
         /// </summary>
-        private int NpctIndex;
+        private int nitrogenPercentIndex;
 
         /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
         /// </summary>
-        private DataTable ForageFileAsTable;
+        private DataTable forageFileAsTable;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -124,10 +123,6 @@ namespace Models.CLEM
         /// </summary>
         public string ExcelWorkSheetName { get; set; }
 
-
-
-
-
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
@@ -145,11 +140,9 @@ namespace Models.CLEM
             this.cropNameIndex = 0;
             this.yearIndex = 0;
             this.monthIndex = 0;
-            this.AmtKgIndex = 0;
-            this.NpctIndex = 0;
-
-
-            this.ForageFileAsTable = GetAllData();
+            this.amountKgIndex = 0;
+            this.nitrogenPercentIndex = 0;
+            this.forageFileAsTable = GetAllData();
         }
 
         /// <summary>
@@ -163,10 +156,7 @@ namespace Models.CLEM
                 this.reader.Close();
                 this.reader = null;
             }
-
         }
-
-
 
         /// <summary>
         /// Provides an error message to display if something is wrong.
@@ -184,7 +174,6 @@ namespace Models.CLEM
         public FileCrop()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-
         }
 
         /// <summary>
@@ -204,8 +193,6 @@ namespace Models.CLEM
             }
         }
 
-
-
         /// <summary>
         /// Get the DataTable view of this data
         /// </summary>
@@ -213,7 +200,6 @@ namespace Models.CLEM
         public DataTable GetAllData()
         {
             this.reader = null;
-
 
             if (this.OpenDataFile())
             {
@@ -225,9 +211,8 @@ namespace Models.CLEM
                 cropProps.Add("AmtKg");
                 //Npct column is optional 
                 //Only try to read it in if it exists in the file.
-                if (NpctIndex != -1)
+                if (nitrogenPercentIndex != -1)
                     cropProps.Add("Npct");
-
 
                 DataTable table = this.reader.ToTable(cropProps);
 
@@ -249,38 +234,35 @@ namespace Models.CLEM
             }
         }
 
-
-
         /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.
         /// <returns></returns>
         /// </summary>
-        /// <param name="SoilNum"></param>
-        /// <param name="CropName"></param>
-        /// <param name="StartDate"></param>
-        /// <param name="EndDate"></param>
+        /// <param name="soilNumber"></param>
+        /// <param name="cropName"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
         /// <returns>A struct called CropDataType containing the crop data for this month.
         /// This struct can be null. 
         /// </returns>
-        public List<CropDataType> GetCropDataForEntireRun(int SoilNum, string CropName,
-                                        DateTime StartDate, DateTime EndDate)
+        public List<CropDataType> GetCropDataForEntireRun(int soilNumber, string cropName,
+                                        DateTime startDate, DateTime endDate)
         {
-            int startYear = StartDate.Year;
-            int startMonth = StartDate.Month;
-            int endYear = EndDate.Year;
-            int endMonth = EndDate.Month;
+            int startYear = startDate.Year;
+            int startMonth = startDate.Month;
+            int endYear = endDate.Year;
+            int endMonth = endDate.Month;
 
             //http://www.csharp-examples.net/dataview-rowfilter/
 
-            string filter = "(SoilNum = " + SoilNum + ") AND (CropName = " +  "'" + CropName + "'" + ")"
+            string filter = "(SoilNum = " + soilNumber + ") AND (CropName = " +  "'" + cropName + "'" + ")"
                 + " AND (" 
                 +      "( Year = " + startYear + " AND Month >= " + startMonth + ")" 
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear +")"
                 + " OR  ( Year = " + endYear + " AND Month <= " + endMonth + ")"
                 +      ")";
 
-
-            DataRow[] foundRows = this.ForageFileAsTable.Select(filter);
+            DataRow[] foundRows = this.forageFileAsTable.Select(filter);
 
             List<CropDataType> filtered = new List<CropDataType>(); 
 
@@ -293,8 +275,6 @@ namespace Models.CLEM
 
             return filtered;
         }
-
-
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
@@ -309,7 +289,7 @@ namespace Models.CLEM
 
             //Npct column is optional 
             //Only try to read it in if it exists in the file.
-            if (NpctIndex != -1)
+            if (nitrogenPercentIndex != -1)
                 cropdata.Npct = double.Parse(dr["Npct"].ToString());
             else
                 cropdata.Npct = double.NaN;
@@ -319,9 +299,6 @@ namespace Models.CLEM
 
             return cropdata;
         }
-
-
-
 
         /// <summary>
         /// Open the forage data file.
@@ -340,9 +317,8 @@ namespace Models.CLEM
                     this.cropNameIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "CropName");
                     this.yearIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Year");
                     this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Month");
-                    this.AmtKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "AmtKg");
-                    this.NpctIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Npct");
-
+                    this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "AmtKg");
+                    this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Npct");
 
                     if (this.soilNumIndex == -1)
                     {
@@ -368,27 +344,17 @@ namespace Models.CLEM
                             throw new Exception("Cannot find [o=Month] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                     }
 
-                    if (this.AmtKgIndex == -1)
+                    if (this.amountKgIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("AmtKg") == null)
                             throw new Exception("Cannot find [o=AmtKg] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                     }
-
-                    //Npct is an optional column. You don't need to provide it. So don't throw an error.
-                    //if (this.NpctIndex == -1)
-                    //{
-                    //    if (this.reader == null || this.reader.Constant("Npct") == null)
-                    //        throw new Exception("Cannot find Npct column in crop file: " + this.FullFileName);
-                    //}
-
-
                 }
                 else
                 {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
                 }
-
                 return true;
             }
             else
@@ -410,9 +376,9 @@ namespace Models.CLEM
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Using ";
@@ -429,15 +395,12 @@ namespace Models.CLEM
         }
     }
 
-
-
     /// <summary>
     /// A structure containing the commonly used weather data.
     /// </summary>
     [Serializable]
     public class CropDataType
     {
-
         /// <summary>
         /// Soil Number
         /// </summary>
@@ -474,7 +437,4 @@ namespace Models.CLEM
         /// </summary>
         public DateTime HarvestDate;
     }
-
-
-
 }
