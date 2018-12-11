@@ -491,6 +491,8 @@ namespace Models.Core
                 return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
             else if (value is Enum)
                 return GetEnumDescription(value as Enum);
+            else if (value is DateTime)
+                return ((DateTime)value).ToShortDateString();
             else
                 return value.ToString();
         }
