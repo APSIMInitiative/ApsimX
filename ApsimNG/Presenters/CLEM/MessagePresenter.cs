@@ -70,112 +70,112 @@ namespace UserInterface.Presenters
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 "\n</style>\n</head>\n<body>";
 
-            if (Apsim.Parent(model as IModel, typeof(Simulation)) is Simulation simulation)
+            // find IStorageReader of simulation
+            IModel simulation = Apsim.Parent(model, typeof(Simulation));
+            IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
+            IStorageReader ds = Apsim.Children(simulations, typeof(IStorageReader)).FirstOrDefault() as IStorageReader;
+            DataRow[] dataRows = ds.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+            foreach (DataRow dr in dataRows)
             {
-                IStorageReader ds = Apsim.Children(model.Parent.Parent, typeof(IStorageReader)).FirstOrDefault() as IStorageReader;
-                DataRow[] dataRows = ds.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+                // convert invalid parameter warnings to errors
+                if(dr[7].ToString().StartsWith("Invalid parameter value in model"))
+                {
+                    dr[8] = "0";
+                }
+            }
+            dataRows = dataRows.OrderBy(a => a[8].ToString()).ToArray();
+
+            if (dataRows.Count() > 0)
+            {
                 foreach (DataRow dr in dataRows)
                 {
-                    // convert invalid parameter warnings to errors
-                    if(dr[7].ToString().StartsWith("Invalid parameter value in model"))
+                    bool ignore = false;
+                    string msgStr = dr[7].ToString();
+                    if (msgStr.Contains("@i:"))
                     {
-                        dr[8] = "0";
+                        ignore = true;
                     }
-                }
-                dataRows = dataRows.OrderBy(a => a[8].ToString()).ToArray();
 
-                if (dataRows.Count() > 0)
-                {
-                    foreach (DataRow dr in dataRows)
+                    if (!ignore)
                     {
-                        bool ignore = false;
-                        string msgStr = dr[7].ToString();
-                        if (msgStr.Contains("@i:"))
+                        string type = "Message";
+                        string title = "Message";
+                        switch (dr[8].ToString())
                         {
-                            ignore = true;
+                            case "0":
+                                type = "Error";
+                                title = "Error";
+                                break;
+                            case "1":
+                                type = "Warning";
+                                title = "Warning";
+                                break;
+                            default:
+                                break;
                         }
-
-                        if (!ignore)
+                        if (type == "Error")
                         {
-                            string type = "Message";
-                            string title = "Message";
-                            switch (dr[8].ToString())
+                            if (!msgStr.StartsWith("Invalid parameter value in model"))
                             {
-                                case "0":
+                                msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
+                                msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
+                            }
+                        }
+                        if (msgStr.IndexOf(':') >= 0 & msgStr.StartsWith("@"))
+                        {
+                            switch (msgStr.Substring(0, msgStr.IndexOf(':')))
+                            {
+                                case "@error":
                                     type = "Error";
                                     title = "Error";
+                                    msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
                                     break;
-                                case "1":
-                                    type = "Warning";
-                                    title = "Warning";
+                                case "@validation":
+                                    type = "Error";
+                                    title = "Validation error";
+                                    msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
+                                    msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
+                                    msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
+                                    msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
                                     break;
-                                default:
-                                    break;
                             }
-                            if (type == "Error")
-                            {
-                                if (!msgStr.StartsWith("Invalid parameter value in model"))
-                                {
-                                    msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                                    msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                                }
-                            }
-                            if (msgStr.IndexOf(':') >= 0 & msgStr.StartsWith("@"))
-                            {
-                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                                {
-                                    case "@error":
-                                        type = "Error";
-                                        title = "Error";
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                    case "@validation":
-                                        type = "Error";
-                                        title = "Validation error";
-                                        msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
-                                        msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
-                                        msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                }
-                            }
-                            if (msgStr.Contains("terminated normally"))
-                            {
-                                type = "Ok";
-                                title = "Success";
-                                DataTable dataRows2 = ds.GetData(simulationName: simulation.Name, tableName: "_InitialConditions");
-                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[2][11].ToString());
-                                msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
-                            }
-
-                            htmlString += "\n<div class=\"holdermain\">";
-                            htmlString += "\n<div class=\"" + type.ToLower() + "banner\">" + title + "</div>";
-                            htmlString += "\n<div class=\"" + type.ToLower() + "content\">";
-                            msgStr = msgStr.Replace("\n", "<br />");
-                            msgStr = msgStr.Replace("]", "</span>");
-                            msgStr = msgStr.Replace("[r=", "<span class=\"resourcelink\">");
-                            msgStr = msgStr.Replace("[a=", "<span class=\"activitylink\">");
-                            msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
-                            msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
-                            msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
-                            msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
-                            htmlString += "\n<div class=\"messageentry\">" + msgStr;
-                            htmlString += "\n</div>";
-                            htmlString += "\n</div>";
-                            htmlString += "\n</div>";
                         }
+                        if (msgStr.Contains("terminated normally"))
+                        {
+                            type = "Ok";
+                            title = "Success";
+                            DataTable dataRows2 = ds.GetData(simulationName: simulation.Name, tableName: "_InitialConditions");
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[2][11].ToString());
+                            msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
+                        }
+
+                        htmlString += "\n<div class=\"holdermain\">";
+                        htmlString += "\n<div class=\"" + type.ToLower() + "banner\">" + title + "</div>";
+                        htmlString += "\n<div class=\"" + type.ToLower() + "content\">";
+                        msgStr = msgStr.Replace("\n", "<br />");
+                        msgStr = msgStr.Replace("]", "</span>");
+                        msgStr = msgStr.Replace("[r=", "<span class=\"resourcelink\">");
+                        msgStr = msgStr.Replace("[a=", "<span class=\"activitylink\">");
+                        msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
+                        msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
+                        msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
+                        msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
+                        htmlString += "\n<div class=\"messageentry\">" + msgStr;
+                        htmlString += "\n</div>";
+                        htmlString += "\n</div>";
+                        htmlString += "\n</div>";
                     }
                 }
-                else
-                {
-                    htmlString += "\n<div class=\"holdermain\">";
-                    htmlString += "\n <div class=\"messagebanner\">Message</div>";
-                    htmlString += "\n <div class=\"messagecontent\">";
-                    htmlString += "\n  <div class=\"activityentry\">This simulation has not been performed";
-                    htmlString += "\n  </div>";
-                    htmlString += "\n </div>";
-                    htmlString += "\n</div>";
-                }
+            }
+            else
+            {
+                htmlString += "\n<div class=\"holdermain\">";
+                htmlString += "\n <div class=\"messagebanner\">Message</div>";
+                htmlString += "\n <div class=\"messagecontent\">";
+                htmlString += "\n  <div class=\"activityentry\">This simulation has not been performed";
+                htmlString += "\n  </div>";
+                htmlString += "\n </div>";
+                htmlString += "\n</div>";
             }
             htmlString += "\n</body>\n</html>";
             return htmlString;
