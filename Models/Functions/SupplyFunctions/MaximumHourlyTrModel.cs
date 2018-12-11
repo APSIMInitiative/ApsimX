@@ -71,7 +71,7 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The stress impact on PgMax</summary>
         [Link]
-        private IFunction PgMaxStress = null;
+        private IFunction LUEStress = null;
 
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
@@ -833,7 +833,7 @@ namespace Models.Functions.SupplyFunctions
             else
                 throw new ApsimXException(this, "Need to be C3 or C4");
 
-            return EffPAR;
+            return EffPAR * LUEStress.Value();
         }
         //------------------------------------------------------------------------------------------------
 
@@ -887,7 +887,7 @@ namespace Models.Functions.SupplyFunctions
 
             //------------------------------------------------------------------------
             //Maximum leaf gross photosynthesis
-            double factor = tempResponse * CO2Func * Fact * PgMaxStress.Value();
+            double factor = tempResponse * CO2Func * Fact;
             PmaxGross = Math.Max(1.0, PgMax * factor);
 
             return PmaxGross;
