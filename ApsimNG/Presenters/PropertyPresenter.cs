@@ -212,7 +212,8 @@ namespace UserInterface.Presenters
                         {
                             includeProperty = property.DataType == typeof(double[]) ||
                                               property.DataType == typeof(int[]) ||
-                                              property.DataType == typeof(string[]);
+                                              property.DataType == typeof(string[]) ||
+                                              property.DataType == typeof(DateTime[]);
                         }
 
                         if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
@@ -597,6 +598,10 @@ namespace UserInterface.Presenters
                 else if (property.DataType == typeof(string[]))
                 {
                     value = stringValues;
+                }
+                else if (property.DataType == typeof(DateTime[]))
+                {
+                    value = stringValues.Select(d => DateTime.Parse(d)).ToArray();
                 }
                 else
                 {
