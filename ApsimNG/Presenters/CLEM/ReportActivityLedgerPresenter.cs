@@ -34,7 +34,9 @@ namespace UserInterface.Presenters
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
+            {
                 dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
+            }
 
             dataStorePresenter = new DataStorePresenter();
             activityGridPresenter = new ActivityLedgerGridPresenter();
@@ -42,9 +44,13 @@ namespace UserInterface.Presenters
             if (simulation != null)
             {
                 if (simulation.Parent is Experiment)
+                {
                     dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
+                }
                 else
+                {
                     dataStorePresenter.SimulationFilter = simulation;
+                }
             }
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);

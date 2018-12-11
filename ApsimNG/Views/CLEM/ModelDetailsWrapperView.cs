@@ -106,7 +106,9 @@ namespace UserInterface.Views
         {
             //TODO: check internet connection and choose either local or remote help files
             if(ModelHelpURL != "")
+            {
                 System.Diagnostics.Process.Start(ModelHelpURL);
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)

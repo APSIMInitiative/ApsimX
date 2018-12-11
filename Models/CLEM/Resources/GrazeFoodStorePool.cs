@@ -77,7 +77,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// pricing
         /// </summary>
-        public ResourcePricing Price => throw new NotImplementedException();
+        public ResourcePricing Price { get; set; }
 
         /// <summary>
         /// Reset timestep stores

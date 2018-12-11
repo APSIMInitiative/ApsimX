@@ -167,12 +167,18 @@ namespace Models.CLEM.Activities
                     break;
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = adultEqivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -206,7 +212,9 @@ namespace Models.CLEM.Activities
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
         {
             if (ActivityPerformed != null)
+            {
                 ActivityPerformed(sender, e);
+            }
         }
 
         /// <summary>
@@ -250,7 +258,9 @@ namespace Models.CLEM.Activities
         protected override void OnShortfallOccurred(EventArgs e)
         {
             if (ResourceShortfallOccurred != null)
+            {
                 ResourceShortfallOccurred(this, e);
+            }
         }
 
         /// <summary>
@@ -265,7 +275,9 @@ namespace Models.CLEM.Activities
         protected override void OnActivityPerformed(EventArgs e)
         {
             if (ActivityPerformed != null)
+            {
                 ActivityPerformed(this, e);
+            }
         }
 
         /// <summary>

@@ -99,7 +99,7 @@ namespace Models.CLEM
             if (Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
+                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
             }
             // check that one resources and on activities are present.
             int holderCount = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();

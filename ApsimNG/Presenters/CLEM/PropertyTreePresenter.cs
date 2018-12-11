@@ -44,7 +44,9 @@ namespace UserInterface.Presenters
             bool subcatExists = this.SubcategoryNames.Exists(subcatname => subcatname == name);
             // if it isn't then add it.
             if (!subcatExists)
+            {
                 this.SubcategoryNames.Add(name);
+            }
         }
     }
 
@@ -66,7 +68,9 @@ namespace UserInterface.Presenters
         {
             bool catExists = this.CategoryItems.Exists(item => item.Name == catName);
             if (!catExists)
+            {
                 this.CategoryItems.Add(new CategoryItem(catName));
+            }
         }
     }
 

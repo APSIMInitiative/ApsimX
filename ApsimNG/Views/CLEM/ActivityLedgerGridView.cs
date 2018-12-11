@@ -122,11 +122,20 @@ namespace UserInterface.Views
             ClearGridColumns();
             gridmodel.Dispose();
             if (imagePixbuf != null)
+            {
                 imagePixbuf.Dispose();
+            }
+
             if (image1 != null)
+            {
                 image1.Dispose();
+            }
+
             if (table != null)
+            {
                 table.Dispose();
+            }
+
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
@@ -159,11 +168,14 @@ namespace UserInterface.Views
             {
                 TreeViewColumn col = fixedcolview.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
+                {
                     if (render is CellRendererText)
                     {
                         CellRendererText textRender = render as CellRendererText;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
+                }
+
                 fixedcolview.RemoveColumn(fixedcolview.GetColumn(0));
             }
         }
@@ -185,7 +197,10 @@ namespace UserInterface.Views
                 TreeSelection gridSel = gridview.Selection;
                 gridSel.UnselectAll();
                 foreach (TreePath path in selPaths)
+                {
                     gridSel.SelectPath(path);
+                }
+
                 selfCursorMove = false;
             }
         }
@@ -207,7 +222,10 @@ namespace UserInterface.Views
                 TreeSelection fixedSel = fixedcolview.Selection;
                 fixedSel.UnselectAll();
                 foreach (TreePath path in selPaths)
+                {
                     fixedSel.SelectPath(path);
+                }
+
                 selfCursorMove = false;
             }
         }
@@ -229,7 +247,10 @@ namespace UserInterface.Views
             // main message loop. 
 
             if (MasterView.MainWindow != null)
+            {
                 MasterView.MainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+            }
+
             ClearGridColumns();
             fixedcolview.Visible = false;
             colLookup.Clear();
@@ -238,7 +259,10 @@ namespace UserInterface.Views
             int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
             Type[] colTypes = new Type[nCols];
             for (int i = 0; i < nCols; i++)
+            {
                 colTypes[i] = typeof(string);
+            }
+
             gridmodel = new ListStore(colTypes);
             gridview.ModifyBase(StateType.Active, fixedcolview.Style.Base(StateType.Selected));
             gridview.ModifyText(StateType.Active, fixedcolview.Style.Text(StateType.Selected));
@@ -293,9 +317,14 @@ namespace UserInterface.Views
                     column.SetCellDataFunc(pixbufRender, RenderActivityStatus);
                 }
                 if (i == 1 && isPropertyMode)
+                {
                     column.Alignment = 0.0f;
+                }
                 else
+                {
                     column.Alignment = 0.5f; // For centered alignment of the column header
+                }
+
                 gridview.AppendColumn(column);
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
@@ -339,7 +368,9 @@ namespace UserInterface.Views
             gridview.Show();
 
             if (MasterView.MainWindow != null)
+            {
                 MasterView.MainWindow.Cursor = null;
+            }
         }
 
         /// <summary>
@@ -421,11 +452,17 @@ namespace UserInterface.Views
                 newLabel.Wrap = true;
                 newLabel.Justify = Justification.Center;
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
+                {
                     (newLabel.Parent as Alignment).LeftPadding = 2;
+                }
+
                 newLabel.UseMarkup = true;
                 newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(gridview.Columns[i].Title) + "</b>";
                 if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
+                {
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
+                }
+
                 newLabel.Show();
             }
         }
@@ -477,7 +514,9 @@ namespace UserInterface.Views
                 if (value > RowCount) // Add new rows
                 {
                     for (int i = RowCount; i < value; i++)
+                    {
                         gridmodel.Append(); // Will this suffice?
+                    }
                 }
                 else if (value < RowCount) // Remove existing rows. But let's check first to be sure they're empty
                 {
@@ -544,9 +583,15 @@ namespace UserInterface.Views
                 if (value != isReadOnly)
                 {
                     foreach (TreeViewColumn col in gridview.Columns)
+                    {
                         foreach (CellRenderer render in col.CellRenderers)
+                        {
                             if (render is CellRendererText)
+                            {
                                 (render as CellRendererText).Editable = !value;
+                            }
+                        }
+                    }
                 }
                 isReadOnly = value;
             }
@@ -563,9 +608,14 @@ namespace UserInterface.Views
         {
             string result;
             if (obj is IPlant)
+            {
                 result = (obj as IModel).Name;
+            }
             else
+            {
                 result = obj.ToString();
+            }
+
             return result;
         }
 
@@ -574,13 +624,21 @@ namespace UserInterface.Views
         public void LockLeftMostColumns(int number)
         {
             if (number == numberLockedCols || !gridview.IsMapped)
+            {
                 return;
+            }
+
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
                 if (fixedcolview.Columns.Length > i)
+                {
                     fixedcolview.Columns[i].Visible = i < number;
+                }
+
                 if (gridview.Columns.Length > i)
+                {
                     gridview.Columns[i].Visible = i >= number;
+                }
             }
             if (number > 0)
             {
@@ -628,14 +686,18 @@ namespace UserInterface.Views
         public void ResizeControls()
         {
             if (gridmodel.NColumns == 0)
+            {
                 return;
+            }
 
             if (gridmodel.IterNChildren() == 0)
             {
                 gridview.Visible = false;
             }
             else
+            {
                 gridview.Visible = true;
+            }
         }
 
         private void GridView_Resize(object sender, EventArgs e)

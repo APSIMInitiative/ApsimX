@@ -65,15 +65,21 @@ namespace UserInterface.Presenters
         {
             startYearForGrid = year;
             if (startYearForGrid >= lastYearInFile)
+            {
                 startYearForGrid = lastYearInFile - numberOfYearsToDisplayInGrid;
+            }
 
             if (startYearForGrid < firstYearInFile)
+            {
                 startYearForGrid = firstYearInFile;
+            }
 
             endYearForGrid = startYearForGrid + numberOfYearsToDisplayInGrid;
 
             if (endYearForGrid > lastYearInFile)
+            {
                 endYearForGrid = lastYearInFile;
+            }
         }
 
         /// <summary>

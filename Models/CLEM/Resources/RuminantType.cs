@@ -159,13 +159,13 @@ namespace Models.CLEM.Resources
             if (Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList().Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.RuminantConceptionAdvanced" };
-                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [0]", this.Name, memberNames)));
+                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [{0}]", Name), memberNames));
             }
 
             if (Apsim.Children(this, typeof(AnimalPricing)).Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [0]", this.Name, memberNames)));
+                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
             }
             else if (Apsim.Children(this, typeof(AnimalPricing)).Count() == 1)
             {
@@ -174,7 +174,7 @@ namespace Models.CLEM.Resources
                 if (Apsim.Children(price, typeof(AnimalPriceGroup)).Count()==0)
                 {
                     string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [0]", this.Name, memberNames)));
+                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
                 }
             }
             return results;

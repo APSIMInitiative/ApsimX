@@ -123,9 +123,13 @@ namespace UserInterface.Views
                 TreeViewColumn selCol;
                 treeview1.GetCursor(out selPath, out selCol);
                 if (selPath != null)
+                {
                     return this.FullPath(selPath);
+                }
                 else
+                {
                     return string.Empty;
+                }
             }
 
             set
@@ -134,7 +138,9 @@ namespace UserInterface.Views
                 {
                     TreePath pathToSelect = treemodel.GetPath(FindNode(value));
                     if (pathToSelect != null)
-                       treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                    {
+                        treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                    }
                 }
             }
         }
@@ -201,7 +207,9 @@ namespace UserInterface.Views
         {
             Gdk.Pixbuf pixbuf;
             if (MainView.MasterView.HasResource(description.ResourceNameForImage))
+            {
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
+            }
             else
             {
                 // Search for image based on resource name including model name from namespace
@@ -258,7 +266,9 @@ namespace UserInterface.Views
         private TreeIter FindNode(string namePath)
         {
             if (!namePath.StartsWith(".", StringComparison.CurrentCulture))
+            {
                 throw new Exception("Invalid name path '" + namePath + "'");
+            }
 
             namePath = namePath.Remove(0, 1); // Remove the leading '.'
 
@@ -272,17 +282,25 @@ namespace UserInterface.Views
             {
                 string nodeName = (string)treemodel.GetValue(iter, 0);
                 while (nodeName != pathBit && treemodel.IterNext(ref iter))
+                {
                     nodeName = (string)treemodel.GetValue(iter, 0);
+                }
+
                 if (nodeName == pathBit)
                 {
                     result = iter;
                     TreePath path = treemodel.GetPath(iter);
                     if (!treeview1.GetRowExpanded(path))
+                    {
                         treeview1.ExpandRow(path, false);
+                    }
+
                     treemodel.IterChildren(out iter, iter);
                 }
                 else
+                {
                     return TreeIter.Zero;
+                }
             }
             return result;         
         }
@@ -304,7 +322,10 @@ namespace UserInterface.Views
                 treeview1.GetCursor(out selPath, out selCol);
                 selectionChangedData.NewNodePath = FullPath(selPath);
                 if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                {
                     SelectedNodeChanged.Invoke(this, selectionChangedData);
+                }
+
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
@@ -369,9 +390,14 @@ namespace UserInterface.Views
         {
             timer.Stop();
             if (treeview1.GetRowExpanded(e.Path))
+            {
                 treeview1.CollapseRow(e.Path);
+            }
             else
+            {
                 treeview1.ExpandRow(e.Path, false);
+            }
+
             e.RetVal = true;
         }
 
@@ -383,7 +409,9 @@ namespace UserInterface.Views
         private void OnButtonUp(object sender, ButtonReleaseEventArgs e)
         {
             if (e.Event.Button == 3)
+            {
                 Popup.Popup();
+            }
         }
 
         /// <summary>

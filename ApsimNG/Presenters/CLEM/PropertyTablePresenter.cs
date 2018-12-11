@@ -266,9 +266,13 @@ namespace UserInterface.Presenters
                             // just a Description Attribute on the property in the model.
                             //So we still may need to include it in this case.
                             if (this.CategoryFilter == "Unspecified")
+                            {
                                 includeProperty = true;
+                            }
                             else
+                            {
                                 includeProperty = false;
+                            }
                         }
                     }
 
@@ -551,9 +555,14 @@ namespace UserInterface.Presenters
                         string tableName = cell.Value.ToString();
                         DataTable data = null;
                         if (storage.TableNames.Contains(tableName))
+                        {
                             data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
+                        }
+
                         if (data != null)
+                        {
                             fieldNames = DataTableUtilities.GetColumnNames(data);
+                        }
                     }
                 }
             }

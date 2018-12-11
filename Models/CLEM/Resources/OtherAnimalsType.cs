@@ -96,7 +96,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount
         /// </summary>
-        public double Amount => throw new NotImplementedException();
+        public double Amount { get; set; }
 
         /// <summary>
         /// Override base event
@@ -104,7 +104,10 @@ namespace Models.CLEM.Resources
         protected void OnTransactionOccurred(EventArgs e)
         {
             EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            if (invoker != null)
+            {
+                invoker(this, e);
+            }
         }
 
         /// <summary>
