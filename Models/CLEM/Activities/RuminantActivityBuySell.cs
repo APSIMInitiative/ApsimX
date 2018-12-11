@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
             double saleValue = 0;
             double saleWeight = 0;
             int head = 0;
-            double AESum = 0;
+            double aESum = 0;
 
             // get current untrucked list of animals flagged for sale
             List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
@@ -127,7 +127,7 @@ namespace Models.CLEM.Activities
                 }
                 foreach (var ind in herd)
                 {
-                    AESum += ind.AdultEquivalent;
+                    aESum += ind.AdultEquivalent;
                     saleValue += ind.BreedParams.ValueofIndividual(ind, false);
                     saleWeight += ind.Weight;
                     ruminantHerd.RemoveRuminant(ind);
@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
                             {
                                 nonloaded = false;
                                 head++;
-                                AESum += ind.AdultEquivalent;
+                                aESum += ind.AdultEquivalent;
                                 load450kgs += ind.Weight / 450.0;
                                 saleValue += ind.BreedParams.ValueofIndividual(ind, false);
                                 saleWeight += ind.Weight;
@@ -202,7 +202,7 @@ namespace Models.CLEM.Activities
                             expenseRequest.Required = head * item.Amount;
                             break;
                         case AnimalPaymentStyleType.perAE:
-                            expenseRequest.Required = AESum * item.Amount;
+                            expenseRequest.Required = aESum * item.Amount;
                             break;
                         case AnimalPaymentStyleType.ProportionOfTotalSales:
                             expenseRequest.Required = saleValue * item.Amount;
@@ -308,7 +308,7 @@ namespace Models.CLEM.Activities
 
             int trucks = 0;
             int head = 0;
-            double AESum = 0;
+            double aESum = 0;
             double fundsAvailable = 0;
             if (bankAccount != null)
             {
@@ -338,7 +338,7 @@ namespace Models.CLEM.Activities
                         {
                             nonloaded = false;
                             head++;
-                            AESum += ind.AdultEquivalent;
+                            aESum += ind.AdultEquivalent;
                             load450kgs += ind.Weight / 450.0;
 
                             if (bankAccount != null)  // perform with purchasing
@@ -452,32 +452,32 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine the labour required for this activity based on LabourRequired items in tree
         /// </summary>
-        /// <param name="Requirement">Labour requirement model</param>
+        /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") | a.SaleFlag.ToString().Contains("Sale")) & a.Breed == this.PredictedHerdBreed).ToList();
             int head = herd.Count();
-            double AE = herd.Sum(a => a.AdultEquivalent);
+            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = head / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
-                    numberUnits = AE / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = animalEquivalents / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -541,9 +541,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Purchases and sales will use ";

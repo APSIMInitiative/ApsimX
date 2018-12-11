@@ -58,13 +58,13 @@ namespace Models.CLEM.Activities
         /// Resource to process
         /// </summary>
         [XmlIgnore]
-        private IResourceType ResourceTypeProcessModel { get; set; }
+        private IResourceType resourceTypeProcessModel { get; set; }
 
         /// <summary>
         /// Resource created
         /// </summary>
         [XmlIgnore]
-        private IResourceType ResourceTypeCreatedModel { get; set; }
+        private IResourceType resourceTypeCreatedModel { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -72,8 +72,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            ResourceTypeProcessModel = Resources.GetResourceItem(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
-            ResourceTypeCreatedModel = Resources.GetResourceItem(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            resourceTypeProcessModel = Resources.GetResourceItem(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            resourceTypeCreatedModel = Resources.GetResourceItem(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
             if(limit<1)
             {
                 // find process resource entry in resource list
-                ResourceRequest rr = ResourceRequestList.Where(a => a.ResourceType == ResourceTypeProcessModel.GetType()).FirstOrDefault();
+                ResourceRequest rr = ResourceRequestList.Where(a => a.ResourceType == resourceTypeProcessModel.GetType()).FirstOrDefault();
                 if (rr != null)
                 {
                     // reduce amount required
@@ -109,10 +109,10 @@ namespace Models.CLEM.Activities
             // processed resource should already be taken
             Status = ActivityStatus.NotNeeded;
             // add created resources
-            ResourceRequest rr = ResourceRequestList.Where(a => a.Resource.GetType() == ResourceTypeProcessModel.GetType()).FirstOrDefault();
+            ResourceRequest rr = ResourceRequestList.Where(a => a.Resource.GetType() == resourceTypeProcessModel.GetType()).FirstOrDefault();
             if (rr != null)
             {
-                ResourceTypeCreatedModel.Add(rr.Provided * ConversionRate, this, "Created " + (ResourceTypeCreatedModel as Model).Name);
+                resourceTypeCreatedModel.Add(rr.Provided * ConversionRate, this, "Created " + (resourceTypeCreatedModel as Model).Name);
                 if(rr.Provided > 0)
                 {
                     Status = ActivityStatus.Success;
@@ -123,22 +123,21 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Work out the amount of labour required for this activity
         /// </summary>
-        /// <param name="Requirement"></param>
+        /// <param name="requirement"></param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-//                    double units = 
-                    daysNeeded = Requirement.UnitSize * Requirement.LabourPerUnit;
+                    daysNeeded = requirement.UnitSize * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -151,7 +150,7 @@ namespace Models.CLEM.Activities
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
 
-            double amountToProcess = ResourceTypeProcessModel.Amount;
+            double amountToProcess = resourceTypeProcessModel.Amount;
             if (Reserve > 0)
             {
                 amountToProcess = Math.Min(amountToProcess, Reserve);
@@ -171,7 +170,7 @@ namespace Models.CLEM.Activities
                         sumneeded = amountToProcess*item.Amount;
                         break;
                     case ResourcePaymentStyleType.perBlock:
-                        ResourcePricing price = ResourceTypeProcessModel.Price;
+                        ResourcePricing price = resourceTypeProcessModel.Price;
                         double blocks = amountToProcess / price.PacketSize;
                         if(price.UseWholePackets)
                         {
@@ -203,10 +202,10 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = amountToProcess,
-                        ResourceType = (ResourceTypeProcessModel as Model).Parent.GetType(),
-                        ResourceTypeName = (ResourceTypeProcessModel as Model).Name,
+                        ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
+                        ResourceTypeName = (resourceTypeProcessModel as Model).Name,
                         ActivityModel = this,
-                        Reason = "Process "+ (ResourceTypeProcessModel as Model).Name
+                        Reason = "Process "+ (resourceTypeProcessModel as Model).Name
                     }
                 );
             }
@@ -255,9 +254,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Process ";

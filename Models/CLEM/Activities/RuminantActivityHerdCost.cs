@@ -114,11 +114,11 @@ namespace Models.CLEM.Activities
             if (amountNeeded > 0)
             {
                 // determine breed
-                string BreedName = "Multiple breeds";
+                string breedName = "Multiple breeds";
                 List<string> breeds = herd.Select(a => a.Breed).Distinct().ToList();
                 if (breeds.Count == 1)
                 {
-                    BreedName = breeds[0];
+                    breedName = breeds[0];
                 }
 
                 resourcesNeeded = new List<ResourceRequest>()
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(Finance),
                         ResourceTypeName = this.AccountName.Split('.').Last(),
                         ActivityModel = this,
-                        Reason = BreedName
+                        Reason = breedName
                     }
                 };
             }
@@ -148,33 +148,33 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine the labour required for this activity based on LabourRequired items in tree
         /// </summary>
-        /// <param name="Requirement">Labour requirement model</param>
+        /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all potential dry breeders
             List<Ruminant> herd = this.CurrentHerd(false);
             int head = herd.Count();
-            double AE = herd.Sum(a => a.AdultEquivalent);
+            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = head / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
-                    numberUnits = AE / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = animalEquivalents / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -229,9 +229,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pay ";

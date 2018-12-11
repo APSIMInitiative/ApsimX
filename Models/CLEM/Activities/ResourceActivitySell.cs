@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the number of units available for sale
         /// </summary>
-        private double UnitsAvailableForSale
+        private double unitsAvailableForSale
         {
             get
             {
@@ -97,28 +97,28 @@ namespace Models.CLEM.Activities
         {
             // get pricing
             price = resourceToSell.Price;
-            unitsAvailable = UnitsAvailableForSale;
+            unitsAvailable = unitsAvailableForSale;
             return null;
         }
 
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    daysNeeded = unitsAvailable * Requirement.LabourPerUnit;
+                    daysNeeded = unitsAvailable * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -143,7 +143,7 @@ namespace Models.CLEM.Activities
             double units = 0;
             if (labourlimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
             {
-                units = UnitsAvailableForSale * labourlimit;
+                units = unitsAvailableForSale * labourlimit;
                 if (price.UseWholePackets)
                 {
                     units = Math.Truncate(units);
@@ -208,9 +208,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Sell ";

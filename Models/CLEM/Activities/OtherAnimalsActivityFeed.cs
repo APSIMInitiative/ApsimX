@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
         [Required]
         public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
-        private IResourceType FoodSource { get; set; }
+        private IResourceType foodSource { get; set; }
         /// <summary>
         /// Feed type
         /// </summary>
@@ -66,7 +66,7 @@ namespace Models.CLEM.Activities
         {
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            FoodSource = FeedType;
+            foodSource = FeedType;
         }
 
         /// <summary>
@@ -170,9 +170,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
             foreach (OtherAnimalsFilterGroup filtergroup in Apsim.Children(this, typeof(OtherAnimalsFilterGroup)))
@@ -186,16 +186,16 @@ namespace Models.CLEM.Activities
             }
 
             double daysNeeded = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    daysNeeded = Math.Ceiling(allIndividuals / Requirement.UnitSize) * Requirement.LabourPerUnit;
+                    daysNeeded = Math.Ceiling(allIndividuals / requirement.UnitSize) * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }

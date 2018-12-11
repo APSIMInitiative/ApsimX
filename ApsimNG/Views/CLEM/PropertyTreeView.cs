@@ -262,18 +262,18 @@ namespace UserInterface.Views
 
             namePath = namePath.Remove(0, 1); // Remove the leading '.'
 
-            string[] NamePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             TreeIter result = TreeIter.Zero;
             TreeIter iter;
             treemodel.GetIterFirst(out iter);
 
-            foreach (string PathBit in NamePathBits)
+            foreach (string pathBit in namePathBits)
             {
                 string nodeName = (string)treemodel.GetValue(iter, 0);
-                while (nodeName != PathBit && treemodel.IterNext(ref iter))
+                while (nodeName != pathBit && treemodel.IterNext(ref iter))
                     nodeName = (string)treemodel.GetValue(iter, 0);
-                if (nodeName == PathBit)
+                if (nodeName == pathBit)
                 {
                     result = iter;
                     TreePath path = treemodel.GetPath(iter);

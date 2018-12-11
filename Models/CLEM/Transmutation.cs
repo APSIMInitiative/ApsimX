@@ -58,9 +58,9 @@ namespace Models.CLEM
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "<div class=\"activityentry\">";
             if (AmountPerUnitPurchase > 0)
@@ -85,7 +85,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
             html += "\n</div>";
@@ -96,7 +96,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activitycontent clearfix\">";
@@ -195,9 +195,9 @@ namespace Models.CLEM
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             if (CostPerUnit > 0)
@@ -221,7 +221,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "";
         }
@@ -230,7 +230,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
         }

@@ -59,7 +59,7 @@ namespace Models.CLEM.Resources
         [Required, Percentage]
         public double Nitrogen { get; set; }
 
-        private double DMD { get; set; }
+        private double dryMatterDigestibility { get; set; }
 
         /// <summary>
         /// Minimum Nitrogen %
@@ -172,8 +172,8 @@ namespace Models.CLEM.Resources
 
             if(pasture==null)
             {
-                DMD = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
-                DMD = Math.Max(MinimumDMD, DMD);
+                dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
+                dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
             }
         }
 
@@ -209,16 +209,16 @@ namespace Models.CLEM.Resources
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
-                        DMD = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
-                        DMD = Math.Max(MinimumDMD, DMD);
+                        dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
+                        dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
                     case "GrazeFoodStoreType":
                         Nitrogen = (pasture as GrazeFoodStoreType).Nitrogen;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
-                        DMD = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
-                        DMD = Math.Max(MinimumDMD, DMD);
+                        dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
+                        dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
                     default:
                         break;
@@ -230,26 +230,26 @@ namespace Models.CLEM.Resources
         /// Graze food add method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="Activity">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual adding resource</param>
-        public new void Add(object ResourceAmount, CLEMModel Activity, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
-            if (!(ResourceAmount.GetType() == typeof(GrazeFoodStorePool) | ResourceAmount.GetType() != typeof(FoodResourcePacket)))
+            if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) | resourceAmount.GetType() != typeof(FoodResourcePacket)))
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
             GrazeFoodStorePool pool;
-            if (ResourceAmount.GetType() == typeof(GrazeFoodStorePool))
+            if (resourceAmount.GetType() == typeof(GrazeFoodStorePool))
             {
-                pool = ResourceAmount as GrazeFoodStorePool;
+                pool = resourceAmount as GrazeFoodStorePool;
             }
             else
             {
                 pool = new GrazeFoodStorePool();
-                FoodResourcePacket packet = ResourceAmount as FoodResourcePacket;
+                FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                 pool.Set(packet.Amount);
                 pool.Nitrogen = packet.PercentN;
                 pool.DMD = packet.DMD;
@@ -273,9 +273,9 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction();
                 details.Debit = pool.Amount;
-                details.Activity = Activity.Name;
-                details.ActivityType = Activity.GetType().Name;
-                details.Reason = Reason;
+                details.Activity = activity.Name;
+                details.ActivityType = activity.GetType().Name;
+                details.Reason = reason;
                 details.ResourceType = this.Name;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -286,10 +286,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="RemoveAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public double Remove(double RemoveAmount, string ActivityName, string Reason)
+        /// <param name="removeAmount"></param>
+        /// <param name="activityName"></param>
+        /// <param name="reason"></param>
+        public double Remove(double removeAmount, string activityName, string reason)
         {
             throw new NotImplementedException();
         }
@@ -297,8 +297,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Request"></param>
-        public new void Remove(ResourceRequest Request)
+        /// <param name="request"></param>
+        public new void Remove(ResourceRequest request)
         {
             // grazing or feeding from store treated the same way
             // grazing does not access pools by breed by gets all it needs of this quality common pasture
@@ -306,20 +306,20 @@ namespace Models.CLEM.Resources
 
             FoodResourcePacket additionalDetails = new FoodResourcePacket();
             additionalDetails.PercentN = this.Nitrogen;
-            additionalDetails.DMD = this.DMD;
-            additionalDetails.Amount = Request.Required;
-            Request.AdditionalDetails = additionalDetails;
+            additionalDetails.DMD = this.dryMatterDigestibility;
+            additionalDetails.Amount = request.Required;
+            request.AdditionalDetails = additionalDetails;
 
             // other non grazing activities requesting common land pasture
-            Request.Provided = Request.Required;
+            request.Provided = request.Required;
 
             // report 
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Credit = Request.Provided;
-            details.Activity = Request.ActivityModel.Name;
-            details.ActivityType = Request.ActivityModel.GetType().Name;
-            details.Reason = Request.Reason;
+            details.Credit = request.Provided;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -328,8 +328,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public new void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
             throw new NotImplementedException();
         }
@@ -381,9 +381,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "<div class=\"activityentry\">";

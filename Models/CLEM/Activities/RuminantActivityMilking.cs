@@ -76,25 +76,25 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine the labour required for this activity based on LabourRequired items in tree
         /// </summary>
-        /// <param name="Requirement">Labour requirement model</param>
+        /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    double numberUnits = head / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    double numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }

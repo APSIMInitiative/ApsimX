@@ -437,15 +437,15 @@ namespace Models.CLEM.Activities
         /// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
         /// </summary>
         /// <returns></returns>
-        public double LimitProportion(Type ResourceType)
+        public double LimitProportion(Type resourceType)
         {
             double proportion = 1.0;
             if (ResourceRequestList == null) return proportion;
-            double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == ResourceType).Sum(a => a.Required);
+            double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
 
-            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == ResourceType).ToList())
+            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType).ToList())
             {
-                if (ResourceType == typeof(LabourType))
+                if (resourceType == typeof(LabourType))
                 {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
                     {
@@ -483,9 +483,9 @@ namespace Models.CLEM.Activities
         /// Method to determine available labour based on filters and take it if requested.
         /// </summary>
         /// <param name="request">Resource request details</param>
-        /// <param name="RemoveFromResource">Determines if only calculating available labour or labour removed</param>
+        /// <param name="removeFromResource">Determines if only calculating available labour or labour removed</param>
         /// <returns></returns>
-        private double TakeLabour(ResourceRequest request, bool RemoveFromResource)
+        private double TakeLabour(ResourceRequest request, bool removeFromResource)
         {
             double amountProvided = 0;
             double amountNeeded = request.Required;
@@ -551,7 +551,7 @@ namespace Models.CLEM.Activities
 
                     amountProvided += amount;
                     removeRequest.Required = amount;
-                    if (RemoveFromResource)
+                    if (removeFromResource)
                     {
                         lt.LastActivityRequestID = request.ActivityID;
                         lt.LastActivityRequestAmount = amount;
@@ -579,7 +579,7 @@ namespace Models.CLEM.Activities
                             {
                                 amountProvided += amount;
                                 removeRequest.Required = amount;
-                                if (RemoveFromResource)
+                                if (removeFromResource)
                                 {
                                     if(item.LastActivityRequestID != request.ActivityID)
                                     {
@@ -615,9 +615,9 @@ namespace Models.CLEM.Activities
         /// Method to determine available non-labour resources and take if requested.
         /// </summary>
         /// <param name="request">Resource request details</param>
-        /// <param name="RemoveFromResource">Determines if only calculating available labour or labour removed</param>
+        /// <param name="removeFromResource">Determines if only calculating available labour or labour removed</param>
         /// <returns></returns>
-        private double TakeNonLabour(ResourceRequest request, bool RemoveFromResource)
+        private double TakeNonLabour(ResourceRequest request, bool removeFromResource)
         {
             // get available resource
             if (request.Resource == null)
@@ -631,7 +631,7 @@ namespace Models.CLEM.Activities
                 request.Available = Math.Min(request.Resource.Amount, request.Required);
             }
 
-            if(RemoveFromResource & request.Resource != null)
+            if(removeFromResource & request.Resource != null)
             {
                 request.Resource.Remove(request);
             }
@@ -642,16 +642,16 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine resources available and perform transmutation if needed.
         /// </summary>
-        /// <param name="ResourceRequestList">List of requests</param>
+        /// <param name="resourceRequestList">List of requests</param>
         /// <param name="uniqueActivityID">Unique id for the activity</param>
-        public void CheckResources(List<ResourceRequest> ResourceRequestList, Guid uniqueActivityID)
+        public void CheckResources(List<ResourceRequest> resourceRequestList, Guid uniqueActivityID)
         {
-            if ((ResourceRequestList == null) || (ResourceRequestList.Count() == 0))
+            if ((resourceRequestList == null) || (resourceRequestList.Count() == 0))
             {
                 this.Status = ActivityStatus.Success;
                 return;
             }
-            foreach (ResourceRequest request in ResourceRequestList)
+            foreach (ResourceRequest request in resourceRequestList)
             {
                 request.ActivityID = uniqueActivityID;
                 request.Available = 0;
@@ -678,7 +678,7 @@ namespace Models.CLEM.Activities
             }
 
             // are all resources available
-            List<ResourceRequest> shortfallRequests = ResourceRequestList.Where(a => a.Required > a.Available).ToList();
+            List<ResourceRequest> shortfallRequests = resourceRequestList.Where(a => a.Required > a.Available).ToList();
             int countShortfallRequests = shortfallRequests.Count();
             if (countShortfallRequests > 0)
             {
@@ -697,7 +697,7 @@ namespace Models.CLEM.Activities
                 Resources.TransmutateShortfall(shortfallRequests, false);
 
                 // recheck resource amounts now that resources have been topped up
-                foreach (ResourceRequest request in ResourceRequestList)
+                foreach (ResourceRequest request in resourceRequestList)
                 {
                     // get resource
                     request.Available = 0;
@@ -711,7 +711,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+            foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
                 OnShortfallOccurred(rrEventArgs);
@@ -730,21 +730,21 @@ namespace Models.CLEM.Activities
         /// Returns true if it was able to take the resources it needed.
         /// Returns false if it was unable to take the resources it needed.
         /// </summary>
-        /// <param name="ResourceRequestList"></param>
-        /// <param name="TriggerActivityPerformed"></param>
-        public bool TakeResources(List<ResourceRequest> ResourceRequestList, bool TriggerActivityPerformed)
+        /// <param name="resourceRequestList"></param>
+        /// <param name="triggerActivityPerformed"></param>
+        public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
         {
             // no resources required or this is an Activity folder.
-            if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
+            if ((resourceRequestList == null)||(resourceRequestList.Count() ==0)) return false;
 
             // remove activity resources 
             // check if deficit and performWithPartial
-            if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
+            if ((resourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
             {
                 if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {
                     string resourcelist = "";
-                    foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+                    foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
                     {
                         Summary.WriteWarning(this, String.Format("@error:Insufficient [r={0}] resource of type [r={1}] for activity [a={2}]", item.ResourceType, item.ResourceTypeName, this.Name));
                         resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
@@ -757,7 +757,7 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                foreach (ResourceRequest request in ResourceRequestList)
+                foreach (ResourceRequest request in resourceRequestList)
                 {
                     // get resource
                     request.Provided = 0;
@@ -818,7 +818,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Abstract method to determine the number of days labour required based on Activity requirements and labour settings.
         /// </summary>
-        public abstract double GetDaysLabourRequired(LabourRequirement Requirement);
+        public abstract double GetDaysLabourRequired(LabourRequirement requirement);
 
         /// <summary>
         /// Abstract method to determine list of resources and amounts needed. 

@@ -50,12 +50,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
             {
                 html += "\n<div class=\"activityentry\">";
                 if (Value <= 0)
@@ -75,10 +75,10 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (FormatForParentControl)
+            if (formatForParentControl)
             {
                 string classstr = "setvalue";
                 if(Value==0)
@@ -105,10 +105,10 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (FormatForParentControl)
+            if (formatForParentControl)
             {
                 html += "<tr><td>";
                 if ((Apsim.Children(this, typeof(LabourFilter)).Count() == 0))
@@ -131,9 +131,9 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
                 return base.ModelSummaryClosingTags(true);
             else
                 return "";
@@ -143,9 +143,9 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
                 return base.ModelSummaryOpeningTags(true);
             else
                 return "";

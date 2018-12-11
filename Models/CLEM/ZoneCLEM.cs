@@ -184,9 +184,9 @@ namespace Models.CLEM
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="ModelPath">Pass blank string. Used for tracking model path</param>
+        /// <param name="modelPath">Pass blank string. Used for tracking model path</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        private bool Validate(Model model, string ModelPath)
+        private bool Validate(Model model, string modelPath)
         {
             string starter = "[";
             if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
@@ -210,8 +210,8 @@ namespace Models.CLEM
                 starter = "[a=";
             }
 
-            ModelPath += starter+model.Name+"]";
-            ModelPath = ModelPath.Replace("][", "]&shy;[");
+            modelPath += starter+model.Name+"]";
+            modelPath = modelPath.Replace("][", "]&shy;[");
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
@@ -231,7 +231,7 @@ namespace Models.CLEM
                         var description = (DescriptionAttribute)attribute;
                         text = description.ToString();
                     }
-                    string error = String.Format("@validation:Invalid parameter value in " + ModelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
+                    string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
                     {
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text );
@@ -242,7 +242,7 @@ namespace Models.CLEM
             }
             foreach (var child in model.Children)
             {
-                bool result = Validate(child, ModelPath);
+                bool result = Validate(child, modelPath);
                 if (valid & !result)
                 {
                     valid = false;
@@ -254,11 +254,11 @@ namespace Models.CLEM
             /// <summary>
         /// 
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="UseFullDescription">Use full verbose description</param>
-        /// <param name="HTMLString"></param>
+        /// <param name="model"></param>
+        /// <param name="useFullDescription">Use full verbose description</param>
+        /// <param name="htmlString"></param>
         /// <returns></returns>
-        public string GetFullSummary(object Model, bool UseFullDescription, string HTMLString)
+        public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
             string html = "";
             html += "\n<div class=\"holdermain\">";

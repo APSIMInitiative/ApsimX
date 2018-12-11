@@ -61,9 +61,9 @@ namespace UserInterface.Presenters
             SetStartYear(firstYearInFile);
         }
 
-        private void SetStartYear(int Year)
+        private void SetStartYear(int year)
         {
-            startYearForGrid = Year;
+            startYearForGrid = year;
             if (startYearForGrid >= lastYearInFile)
                 startYearForGrid = lastYearInFile - numberOfYearsToDisplayInGrid;
 

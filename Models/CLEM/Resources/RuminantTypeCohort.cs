@@ -159,12 +159,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
             {
                 html += "\n<div class=\"activityentry\">";
                 if (Number <= 0)
@@ -207,10 +207,10 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (FormatForParentControl)
+            if (formatForParentControl)
             {
                 html += "\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>";
             }
@@ -225,7 +225,7 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
             return html;
@@ -235,9 +235,9 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool FormatForParentControl)
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
                 return base.ModelSummaryClosingTags(true);
             else
                 return "";
@@ -247,9 +247,9 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool FormatForParentControl)
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            if (!FormatForParentControl)
+            if (!formatForParentControl)
                 return base.ModelSummaryOpeningTags(true);
             else
                 return "";

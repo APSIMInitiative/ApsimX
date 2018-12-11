@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
 
-        private IResourceType FoodSource { get; set; }
+        private IResourceType foodSource { get; set; }
 
         /// <summary>
         /// Feed type
@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
 
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            FoodSource = FeedType;
+            foodSource = FeedType;
         }
 
         /// <summary>
@@ -164,9 +164,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
-        /// <param name="Requirement">The details of how labour are to be provided</param>
+        /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement Requirement)
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
@@ -180,31 +180,31 @@ namespace Models.CLEM.Activities
 
             double daysNeeded = 0;
             double numberUnits = 0;
-            switch (Requirement.UnitType)
+            switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    daysNeeded = Requirement.LabourPerUnit;
+                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = head / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
-                    numberUnits = adultEquivalents / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = adultEquivalents / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    daysNeeded = feedRequired * Requirement.LabourPerUnit;
+                    daysNeeded = feedRequired * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    numberUnits = feedRequired / Requirement.UnitSize;
-                    if (Requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
-                    daysNeeded = numberUnits * Requirement.LabourPerUnit;
+                    numberUnits = feedRequired / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", Requirement.UnitType, Requirement.Name, this.Name));
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return daysNeeded;
         }
@@ -361,9 +361,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="FormatForParentControl">Use full verbose description</param>
+        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
-        public override string ModelSummary(bool FormatForParentControl)
+        public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Feed ruminants ";
