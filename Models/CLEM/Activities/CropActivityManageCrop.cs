@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// Land type where crop is to be grown
         /// </summary>
         [Description("Land type where crop is to be grown")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 

@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Land type where pasture is located")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Pasture to manage")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string FeedTypeName { get; set; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of model for GRASP pasture growth file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of GRASP pasture growth file model required")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMGraspFileName)]
+        [Models.Core.Display(Type = DisplayType.CLEMGraspFileName)]
         public string ModelNameFileGRASP { get; set; }
 
         /// <summary>

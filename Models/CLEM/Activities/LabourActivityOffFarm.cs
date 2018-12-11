@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// Bank account name to pay to
         /// </summary>
         [Description("Bank account to pay to")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
         public string BankAccountName { get; set; }
 
         private FinanceType bankType { get; set; }

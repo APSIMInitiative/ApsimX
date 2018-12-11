@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// Resource type to store milk in
         /// </summary>
         [Description("Store to place milk")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
         public string ResourceTypeName { get; set; }
 

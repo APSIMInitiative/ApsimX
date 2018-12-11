@@ -31,7 +31,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Graze food store/paddock")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze food store where pasture is located required")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string PaddockName { get; set; }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Animal food store to receive pasture")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Animal food store to receive pasture is required")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
         public string AnimalFoodStoreName { get; set; }
 
         /// <summary>

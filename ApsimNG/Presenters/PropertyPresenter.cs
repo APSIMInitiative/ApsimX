@@ -322,7 +322,7 @@ namespace UserInterface.Presenters
                     }
 
                     if (properties[i].Display != null &&
-                        properties[i].Display.Type == DisplayTypeEnum.CultivarName)
+                        properties[i].Display.Type == DisplayType.CultivarName)
                     {
                         IPlant crop = GetCrop(properties);
                         if (crop != null)
@@ -331,7 +331,7 @@ namespace UserInterface.Presenters
                         }
                     }
                     else if (properties[i].Display != null &&
-                             properties[i].Display.Type == DisplayTypeEnum.FieldName)
+                             properties[i].Display.Type == DisplayType.FieldName)
                     {
                         List<string> fieldNames = GetFieldNames();
                         if (fieldNames != null)
@@ -405,13 +405,13 @@ namespace UserInterface.Presenters
                     grid.SetRowAsSeparator(i, true);
                 }
                 else if (properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayTypeEnum.TableName)
+                         properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     cell.DropDownStrings = storage.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayTypeEnum.CultivarName)
+                         properties[i].Display.Type == DisplayType.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     IPlant crop = GetCrop(properties);
@@ -421,12 +421,12 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayTypeEnum.FileName)
+                         properties[i].Display.Type == DisplayType.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
                 }
                 else if (properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayTypeEnum.FieldName)
+                         properties[i].Display.Type == DisplayType.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = GetFieldNames();
@@ -437,7 +437,7 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayTypeEnum.ResidueName &&
+                         properties[i].Display.Type == DisplayType.ResidueName &&
                          model is SurfaceOrganicMatter)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
@@ -448,7 +448,7 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayTypeEnum.CLEMResourceName))
+					(properties[i].Display.Type == DisplayType.CLEMResourceName))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
@@ -466,7 +466,7 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null && 
-					(properties[i].Display.Type == DisplayTypeEnum.CLEMCropFileName))
+					(properties[i].Display.Type == DisplayType.CLEMCropFileName))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
@@ -479,7 +479,7 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayTypeEnum.CLEMGraspFileName))
+					(properties[i].Display.Type == DisplayType.CLEMGraspFileName))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
@@ -499,7 +499,7 @@ namespace UserInterface.Presenters
 				
 				
                 else if (properties[i].Display != null && 
-                         properties[i].Display.Type == DisplayTypeEnum.Model)
+                         properties[i].Display.Type == DisplayType.Model)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
 
@@ -598,7 +598,7 @@ namespace UserInterface.Presenters
             List<string> fieldNames = null;
             for (int i = 0; i < properties.Count; i++)
             {
-                if (properties[i].Display != null && properties[i].Display.Type == DisplayTypeEnum.TableName)
+                if (properties[i].Display != null && properties[i].Display.Type == DisplayType.TableName)
                 {
                     IGridCell cell = grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
@@ -770,7 +770,7 @@ namespace UserInterface.Presenters
                 value = VariableProperty.ParseEnum(property.DataType, value.ToString());
             }
             else if (property.Display != null &&
-                     property.Display.Type == DisplayTypeEnum.Model)
+                     property.Display.Type == DisplayType.Model)
             {
                 value = Apsim.Get(property.Object as IModel, value.ToString());
             }

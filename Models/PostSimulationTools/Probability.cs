@@ -28,7 +28,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
         [Description("Table name")]
-        [Display(Type = DisplayTypeEnum.TableName)]
+        [Display(Type = DisplayType.TableName)]
         public string TableName { get; set; }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Models.PostSimulationTools
         /// The field name the probability function should split series on.
         /// </summary>
         [Description("Field name to split series on")]
-        [Display(Type = DisplayTypeEnum.FieldName)]
+        [Display(Type = DisplayType.FieldName)]
         public string FieldToSplitOn { get; set; } = "SimulationName";
 
         /// <summary>

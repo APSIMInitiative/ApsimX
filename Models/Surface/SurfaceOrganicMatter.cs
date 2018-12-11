@@ -144,7 +144,7 @@
         /// <summary>Gets or sets the type of initial residue pool</summary>
         [Summary]
         [Description("Type of initial residue pool")]
-        [Display(Type = DisplayTypeEnum.ResidueName)]
+        [Display(Type = DisplayType.ResidueName)]
         [Units("")]
         public string InitialResidueType { get; set; }
 
