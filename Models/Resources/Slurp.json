@@ -714,6 +714,16 @@
       "Children": [
         {
           "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 1.0,
+          "Units": "",
+          "Name": "StomatalConductanceCO2Modifier",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
           "Units": "/d",
           "Name": "DetachmentRateFunction",

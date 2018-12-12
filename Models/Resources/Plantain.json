@@ -354,6 +354,16 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 1.0,
+          "Units": "",
+          "Name": "StomatalConductanceCO2Modifier",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "InitialWtFunction",
           "Children": [

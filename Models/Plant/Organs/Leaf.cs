@@ -108,7 +108,7 @@ namespace Models.PMF.Organs
         public double Gsmax {
             get
             {
-                return Gsmax350*FRGR;
+                return Gsmax350*FRGR*StomatalConductanceCO2Modifier.Value();
             }
         }
 
@@ -424,6 +424,10 @@ namespace Models.PMF.Organs
         /// <summary>The Fractional Growth Rate</summary>
         [Link]
         IFunction FRGRFunction = null;
+        /// <summary>The effect of CO2 on stomatal conductance</summary>
+        [Link]
+        IFunction StomatalConductanceCO2Modifier = null;
+
         /// <summary>The thermal time</summary>
         [Link]
         public IFunction ThermalTime = null;

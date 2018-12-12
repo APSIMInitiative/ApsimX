@@ -1742,6 +1742,16 @@
       "Name": "Leaf",
       "Children": [
         {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 1.0,
+          "Units": "",
+          "Name": "StomatalConductanceCO2Modifier",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.VariableReference, Models",
           "VariableName": "[Phenology].ThermalTime.Value()",
           "Name": "ThermalTime",
