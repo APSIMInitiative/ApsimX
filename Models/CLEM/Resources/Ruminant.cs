@@ -103,8 +103,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (HighWeight == 0) return 1;
-                return Weight / HighWeight;
+                return HighWeight == 0 ? 1 : Weight / HighWeight;
             }
         }
 

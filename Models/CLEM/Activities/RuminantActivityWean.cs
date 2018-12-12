@@ -96,7 +96,10 @@ namespace Models.CLEM.Activities
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
-                    if (weanedCount > Convert.ToInt32(count * labourlimit)) break;
+                    if (weanedCount > Convert.ToInt32(count * labourlimit))
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -122,7 +125,11 @@ namespace Models.CLEM.Activities
                     break;
                 case LabourUnitType.perUnit:
                     double numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -177,8 +184,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -192,8 +198,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

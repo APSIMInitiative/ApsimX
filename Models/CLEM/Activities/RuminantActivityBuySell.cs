@@ -320,7 +320,10 @@ namespace Models.CLEM.Activities
 
             // get current untrucked list of animal purchases
             List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
-            if (herd.Count() == 0) return;
+            if (herd.Count() == 0)
+            {
+                return;
+            }
 
             // if purchase herd > min loads before allowing trucking
             if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeSelling)
@@ -379,7 +382,11 @@ namespace Models.CLEM.Activities
                         Summary.WriteWarning(this, String.Format("There was a problem loading the purchase truck as purchase individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed));
                         break;
                     }
-                    if (shortfall > 0) break;
+                    if (shortfall > 0)
+                    {
+                        break;
+                    }
+
                     herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
                 }
 
@@ -468,12 +475,20 @@ namespace Models.CLEM.Activities
                     break;
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = animalEquivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -519,8 +534,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -534,8 +548,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

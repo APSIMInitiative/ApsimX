@@ -131,8 +131,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

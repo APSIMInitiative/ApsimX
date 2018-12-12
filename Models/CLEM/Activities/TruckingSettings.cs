@@ -208,7 +208,9 @@ namespace Models.CLEM.Activities
                         html += " and ";
                     }
                     else
-                    html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg N<sub>2</sub>O per km";
+                    {
+                        html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg N<sub>2</sub>O per km";
+                    }
                 }
                 html += "</div>";
             }

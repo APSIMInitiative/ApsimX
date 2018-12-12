@@ -111,7 +111,10 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
 
             // if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
-            if (GrazingCompetitionLimiter == 0) GrazingCompetitionLimiter = 1.0;
+            if (GrazingCompetitionLimiter == 0)
+            {
+                GrazingCompetitionLimiter = 1.0;
+            }
 
             GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
@@ -365,8 +368,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -380,8 +382,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

@@ -374,7 +374,10 @@ namespace Models.CLEM.Activities
         {
             // Initial biomass
             double amountToAdd = Area * startingGrowth;
-            if (amountToAdd <= 0) return;
+            if (amountToAdd <= 0)
+            {
+                return;
+            }
 
             // Set up pasture pools to start run based on month and user defined pasture properties
             // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
@@ -394,7 +397,11 @@ namespace Models.CLEM.Activities
 
             while (includedMonthCount < 5)
             {
-                if (month == 0) month = 12;
+                if (month == 0)
+                {
+                    month = 12;
+                }
+
                 if (month <= 3 | month >= 11)
                 {
                     // add new pool
@@ -456,9 +463,13 @@ namespace Models.CLEM.Activities
         private double CalculateStockingRateRightNow()
         {
             if (Resources.RuminantHerd() != null)
+            {
                 return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+            }
             else
+            {
                 return 0;
+            }
         }
 
         /// <summary>
@@ -590,8 +601,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -605,8 +615,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

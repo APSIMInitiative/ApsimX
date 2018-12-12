@@ -133,10 +133,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            if (!formatForParentControl)
-                return base.ModelSummaryClosingTags(true);
-            else
-                return "";
+            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
         }
 
         /// <summary>
@@ -145,10 +142,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            if (!formatForParentControl)
-                return base.ModelSummaryOpeningTags(true);
-            else
-                return "";
+            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
         }
 
 

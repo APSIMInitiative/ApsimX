@@ -85,7 +85,9 @@ namespace Models.CLEM.Activities
             {
                 // use timing to not perform activity based on Enabled state
                 if (!ActivityEnabled)
+                {
                     return false;
+                }
 
                 // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
@@ -107,7 +109,9 @@ namespace Models.CLEM.Activities
         {
             // use timing to not perform activity based on Enabled state
             if (!ActivityEnabled)
+            {
                 return false;
+            }
 
             // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
             int result = 0;
@@ -418,7 +422,11 @@ namespace Models.CLEM.Activities
             get
             {
                 double proportion = 1.0;
-                if (ResourceRequestList == null) return proportion;
+                if (ResourceRequestList == null)
+                {
+                    return proportion;
+                }
+
                 double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
 
                 foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).ToList())
@@ -440,7 +448,11 @@ namespace Models.CLEM.Activities
         public double LimitProportion(Type resourceType)
         {
             double proportion = 1.0;
-            if (ResourceRequestList == null) return proportion;
+            if (ResourceRequestList == null)
+            {
+                return proportion;
+            }
+
             double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
 
             foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType).ToList())
@@ -567,7 +579,10 @@ namespace Models.CLEM.Activities
                         // then search for those that meet criteria and can do part of task
                         foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson))) 
                         {
-                            if (amountProvided >= amountNeeded) break;
+                            if (amountProvided >= amountNeeded)
+                            {
+                                break;
+                            }
 
                             double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
 
@@ -735,7 +750,10 @@ namespace Models.CLEM.Activities
         public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
         {
             // no resources required or this is an Activity folder.
-            if ((resourceRequestList == null)||(resourceRequestList.Count() ==0)) return false;
+            if ((resourceRequestList == null)||(resourceRequestList.Count() ==0))
+            {
+                return false;
+            }
 
             // remove activity resources 
             // check if deficit and performWithPartial
@@ -851,8 +869,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -866,8 +883,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
     }

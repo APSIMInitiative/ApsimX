@@ -127,8 +127,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -150,8 +149,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected void OnAllocationReported(EventArgs e)
         {
-            EventHandler invoker = AllocationReported;
-            if (invoker != null) invoker(this, e);
+            AllocationReported?.Invoke(this, e);
         }
 
         /// <summary>

@@ -270,8 +270,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>

@@ -43,8 +43,7 @@ namespace Models.CLEM.Reporting
         /// <param name="e"></param>
         protected virtual void ReportItemGenerated(RuminantReportItemEventArgs e)
         {
-            if (OnReportItemGenerated != null)
-                OnReportItemGenerated(this, e);
+            OnReportItemGenerated?.Invoke(this, e);
         }
 
         /// <summary>

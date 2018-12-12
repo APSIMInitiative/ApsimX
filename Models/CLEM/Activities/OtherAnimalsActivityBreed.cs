@@ -166,8 +166,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -181,8 +180,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -193,7 +191,10 @@ namespace Models.CLEM.Activities
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
-            if (breeders == 0) return 0;
+            if (breeders == 0)
+            {
+                return 0;
+            }
 
             double daysNeeded = 0;
             switch (requirement.UnitType)

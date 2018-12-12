@@ -284,7 +284,10 @@ namespace Models.CLEM.Activities
                         // This was proteinconcentration * 0.9
 
                         // prevent future divide by zero issues.
-                        if (crudeProteinSupply == 0.0) crudeProteinSupply = 0.001;
+                        if (crudeProteinSupply == 0.0)
+                        {
+                            crudeProteinSupply = 0.001;
+                        }
 
                         if (crudeProteinSupply < crudeProteinRequired)
                         {
@@ -364,7 +367,10 @@ namespace Models.CLEM.Activities
             // TODO: castrates not implemented
             double sme = 1;
             // Sme 1.15 for all males.
-            if (ind.Gender == Sex.Male) sme = 1.15;
+            if (ind.Gender == Sex.Male)
+            {
+                sme = 1.15;
+            }
 
             double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
             // Reference: Nutrient Requirements of domesticated ruminants (p7)
@@ -659,8 +665,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -674,8 +679,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

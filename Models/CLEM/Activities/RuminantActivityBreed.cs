@@ -55,10 +55,13 @@ namespace Models.CLEM.Activities
 
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourRequirement)).Cast<LabourRequirement>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour.Count() == 0) labour = new List<LabourRequirement>();
+            if (labour.Count() == 0)
+            {
+                labour = new List<LabourRequirement>();
+            }
 
             // check that timer exists for AI
-            if(UseAI)
+            if (UseAI)
             {
                 if(!this.TimingExists)
                 {
@@ -207,18 +210,12 @@ namespace Models.CLEM.Activities
                     double cashlimit = 1;
                     if (amountCashNeeded > 0)
                     {
-                        if (amountCashProvided == 0)
-                            cashlimit = 0;
-                        else
-                            cashlimit = amountCashNeeded / amountCashProvided;
+                        cashlimit = amountCashProvided == 0 ? 0 : amountCashNeeded / amountCashProvided;
                     }
                     double labourlimit = 1;
                     if (amountLabourNeeded > 0)
                     {
-                        if (amountLabourProvided == 0)
-                            labourlimit = 0;
-                        else
-                            labourlimit = amountLabourNeeded / amountLabourProvided;
+                        labourlimit = amountLabourProvided == 0 ? 0 : amountLabourNeeded / amountLabourProvided;
                     }
                     limiter = Math.Min(cashlimit, labourlimit);
 
@@ -449,12 +446,19 @@ namespace Models.CLEM.Activities
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
-            if (head == 0) return null;
+            if (head == 0)
+            {
+                return null;
+            }
 
             // get all fees for breeding
             foreach (RuminantActivityFee item in Apsim.Children(this, typeof(RuminantActivityFee)))
             {
-                if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                if (ResourceRequestList == null)
+                {
+                    ResourceRequestList = new List<ResourceRequest>();
+                }
+
                 double sumneeded = 0;
                 switch (item.PaymentStyle)
                 {
@@ -503,7 +507,11 @@ namespace Models.CLEM.Activities
                 }
                 if (daysNeeded > 0)
                 {
-                    if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                    if (ResourceRequestList == null)
+                    {
+                        ResourceRequestList = new List<ResourceRequest>();
+                    }
+
                     ResourceRequestList.Add(new ResourceRequest()
                     {
                         AllowTransmutation = false,
@@ -556,8 +564,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -571,8 +578,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

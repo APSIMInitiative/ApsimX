@@ -145,9 +145,13 @@ namespace Models.CLEM.Activities
 
             Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
             if (simulation != null)
+            {
                 fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySIOFile, simulation.FileName);
+            }
             else
+            {
                 fullFilename = this.MonthlySIOFile;
+            }
 
             //check file exists
             if (!File.Exists(fullFilename))
@@ -176,7 +180,11 @@ namespace Models.CLEM.Activities
             }
 
             // check GrazeFoodStoreExists
-            if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
+            if (GrazeFoodStoreName == null)
+            {
+                GrazeFoodStoreName = "";
+            }
+
             if (GrazeFoodStoreName != "")
             {
                 foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
@@ -266,7 +274,10 @@ namespace Models.CLEM.Activities
 
         private void HandleDestocking(double aEforSale, string paddockName)
         {
-            if (aEforSale <= 0) return;
+            if (aEforSale <= 0)
+            {
+                return;
+            }
 
             // move to underutilised paddocks
             // TODO: This can be added later as an activity including spelling
@@ -283,7 +294,10 @@ namespace Models.CLEM.Activities
                     aEforSale = 0;
                 }
             }
-            if (aEforSale <= 0) return;
+            if (aEforSale <= 0)
+            {
+                return;
+            }
 
             // adjust remaining herd
             // remove steers
@@ -302,7 +316,10 @@ namespace Models.CLEM.Activities
                     cnt++;
                 }
             }
-            if (aEforSale <= 0) return;
+            if (aEforSale <= 0)
+            {
+                return;
+            }
 
             // remove additional dry breeders
             if (this.SellDryCows)
@@ -321,7 +338,10 @@ namespace Models.CLEM.Activities
                     cnt++;
                 }
             }
-            if (aEforSale <= 0) return;
+            if (aEforSale <= 0)
+            {
+                return;
+            }
 
             // remove wet breeders with no calf
             // currently ignore pregant
@@ -351,7 +371,10 @@ namespace Models.CLEM.Activities
 
         private void HandleRestocking(double aEtoBuy, string paddockName, Ruminant exampleRuminant)
         {
-            if (aEtoBuy <= 0) return;
+            if (aEtoBuy <= 0)
+            {
+                return;
+            }
 
             // we won't remove individuals from the sale pool as we can't assume we can keep them in the herd
             // as management has already decided they need to be sold.
@@ -423,8 +446,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -438,8 +460,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

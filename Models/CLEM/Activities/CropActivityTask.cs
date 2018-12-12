@@ -72,28 +72,44 @@ namespace Models.CLEM.Activities
                     CropActivityManageCrop cropParent = Parent.Parent as CropActivityManageCrop;
                     CropActivityManageProduct productParent = Parent as CropActivityManageProduct;
                     numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perTree:
                     cropParent = Parent.Parent as CropActivityManageCrop;
                     productParent = Parent as CropActivityManageProduct;
                     numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
                     cropParent = Parent.Parent as CropActivityManageCrop;
                     productParent = Parent as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
                     cropParent = Parent.Parent as CropActivityManageCrop;
                     productParent = Parent as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -130,8 +146,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -145,8 +160,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

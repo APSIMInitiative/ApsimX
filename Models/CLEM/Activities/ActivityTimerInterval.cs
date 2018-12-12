@@ -109,7 +109,11 @@ namespace Models.CLEM.Activities
             {
                 while(dd2c<=dd)
                 {
-                    if (dd2c == dd) return true;
+                    if (dd2c == dd)
+                    {
+                        return true;
+                    }
+
                     dd = dd.AddMonths(Interval*-1);
                 }
                 return false;
@@ -118,7 +122,11 @@ namespace Models.CLEM.Activities
             {
                 while (dd2c >= dd)
                 {
-                    if (dd2c == dd) return true;
+                    if (dd2c == dd)
+                    {
+                        return true;
+                    }
+
                     dd = dd.AddMonths(Interval);
                 }
                 return false;
@@ -164,8 +172,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

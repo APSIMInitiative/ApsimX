@@ -314,9 +314,13 @@ namespace Models.CLEM.Activities
                     if (this.TimingOK)
                     {
                         if (IsTreeCrop)
+                        {
                             amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                        }
                         else
+                        {
                             amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                        }
 
                         if (limiter != null)
                         {
@@ -338,12 +342,20 @@ namespace Models.CLEM.Activities
                     break;
                 case LabourUnitType.perUnit:
                     numberUnits = amount / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
                     numberUnits = parentManagementActivity.Area / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -370,9 +382,13 @@ namespace Models.CLEM.Activities
                     if (this.TimingOK)
                     {
                         if (IsTreeCrop)
+                        {
                             AmountHarvested = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                        }
                         else
+                        {
                             AmountHarvested = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                        }
 
                         AmountAvailableForHarvest = AmountHarvested;
                         // reduce amount by limiter if present.
@@ -453,8 +469,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -468,8 +483,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

@@ -345,8 +345,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            if (TransactionOccurred != null)
-                TransactionOccurred(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -366,8 +365,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
-            if (EcologicalIndicatorsCalculated != null)
-                EcologicalIndicatorsCalculated(this, e);
+            EcologicalIndicatorsCalculated?.Invoke(this, e);
         }
 
 
