@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]

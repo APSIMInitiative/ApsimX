@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages weaning of suckling ruminant individuals.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         /// <summary>

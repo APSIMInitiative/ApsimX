@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalPricing))]
     [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class AnimalPriceGroup: CLEMModel
     {
         /// <summary>

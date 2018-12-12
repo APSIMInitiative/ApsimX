@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all equipment store types (e.g. tractors, bores, harvester) for the simulation.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class Equipment : ResourceBaseWithTransactions
     {
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

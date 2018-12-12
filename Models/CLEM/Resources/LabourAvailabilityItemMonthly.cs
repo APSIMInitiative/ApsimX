@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
     [Description("An individual labour availability item with monthly days available")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class LabourAvailabilityItemMonthly : LabourSpecificationItem
     {
         /// <summary>

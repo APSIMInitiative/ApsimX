@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("Defines the labour required for an activity where unit size as provided by the parent activity")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class LabourRequirementNoUnitSize: LabourRequirement
     {
         /// <summary>

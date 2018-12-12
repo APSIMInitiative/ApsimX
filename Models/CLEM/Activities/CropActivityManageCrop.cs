@@ -20,8 +20,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "Beta build")]
-    [Version(1, 0, 2, "Adam Liedloff", "CSIRO", "Rotational cropping implemented")]
+    [Version(1, 0, 1, "Beta build")]
+    [Version(1, 0, 2, "Rotational cropping implemented")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         /// <summary>

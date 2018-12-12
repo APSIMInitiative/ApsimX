@@ -17,7 +17,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class OtherAnimalsFilterGroup: CLEMModel
     {
         [Link]

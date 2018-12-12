@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class RuminantInitialCohorts : CLEMModel
     {
         /// <summary>

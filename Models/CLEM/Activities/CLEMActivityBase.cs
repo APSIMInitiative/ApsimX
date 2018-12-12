@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public abstract class CLEMActivityBase: CLEMModel
     {
         /// <summary>

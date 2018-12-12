@@ -22,7 +22,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
     [HelpUri("http://www.csiro.au")]
-    [Version(1,0,1,"","CSIRO","")]
+    [Version(1,0,1,"")]
     public class ZoneCLEM: Zone, IValidatableObject
     {
         [Link]

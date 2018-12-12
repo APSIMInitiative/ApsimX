@@ -17,7 +17,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This report presents a summary of labour required for all activities.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class ReportLabourRequirements: Model
     {
     }

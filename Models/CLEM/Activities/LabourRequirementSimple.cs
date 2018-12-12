@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
     [Description("Defines the labour required for an Activity where details are provided by the Activity")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class LabourRequirementSimple: LabourRequirement
     {
         /// <summary>

@@ -19,7 +19,7 @@ namespace Models.CLEM.Groupings
     [Description("Individual filter term for to identify individuals. Multiple filters are additive and will further refine the criteria")]
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(LabourSpecificationItem))]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class LabourFilter: CLEMModel
     {
         /// <summary>

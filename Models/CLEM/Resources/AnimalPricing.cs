@@ -19,8 +19,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "Beta build")]
-    [Version(1, 0, 2, "Adam Liedloff", "CSIRO", "Custom grouping with filtering")]
+    [Version(1, 0, 1, "Beta build")]
+    [Version(1, 0, 2, "Custom grouping with filtering")]
     public class AnimalPricing: CLEMModel
     {
         /// <summary>

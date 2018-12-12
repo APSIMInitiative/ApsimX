@@ -24,7 +24,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This report automatically generates an activity performed ledger and provides a table of activity success.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class ReportActivitiesPerformed: Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>

@@ -21,8 +21,8 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
     [Description("This resource represents a common land food store.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "Beta build")]
-    [Version(1, 0, 2, "Adam Liedloff", "CSIRO", "Link to GrazeFoodStore implemented")]
+    [Version(1, 0, 1, "Beta build")]
+    [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
         /// <summary>

@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [ValidParent(ParentType = typeof(RuminantActivityBreed))]
     [Description("This activity defines a specific herd expense for buying and selling ruminants or breeding and is based upon the current herd filtering for the parent activity.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityFee: CLEMModel
     {
         /// <summary>

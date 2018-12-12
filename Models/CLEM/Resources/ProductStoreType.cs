@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a product store type (e.g. Cotton).")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
         /// <summary>

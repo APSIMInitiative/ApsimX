@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(WaterStore))]
     [Description("This resource represents a water store type (e.g. dam, bore, tank).")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class WaterType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

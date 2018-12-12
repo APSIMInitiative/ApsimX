@@ -33,7 +33,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
-    [Version(1, 0, 1, "Shaun Verrall", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class FileCrop : CLEMModel
     {
         /// <summary>

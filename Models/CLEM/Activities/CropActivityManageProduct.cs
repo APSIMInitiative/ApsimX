@@ -19,8 +19,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "Beta build")]
-    [Version(1, 0, 2, "Adam Liedloff", "CSIRO", "Mixed cropping/multiple products implemented")]
+    [Version(1, 0, 1, "Beta build")]
+    [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]

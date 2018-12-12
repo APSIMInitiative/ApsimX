@@ -17,7 +17,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
     [Description("This other animal filter filter rule is used to define specific individuals from the other animals. Multiple filters are additive.")]
-    [Version(1, 0, 1, "Adam Liedloff", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class OtherAnimalsFilter: CLEMModel
     {
         /// <summary>

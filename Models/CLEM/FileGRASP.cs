@@ -33,7 +33,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
-    [Version(1, 0, 1, "Shaun Verrall", "CSIRO", "")]
+    [Version(1, 0, 1, "")]
     public class FileGRASP : CLEMModel, IFileGRASP
     {
         /// <summary>
