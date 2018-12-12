@@ -20,9 +20,8 @@ namespace UnitTests
     [Serializable]
     class ModelWithIFunctions
     {
-        [Link]
+        [Link(ByName = true)]
         public IFunction model2 = null;
-
     }
 
     [Serializable]
@@ -46,7 +45,7 @@ namespace UnitTests
     [Serializable]
     class ModelWithScopedLinkByName
     {
-        [ScopedLinkByName]
+        [Link(Type = LinkType.Scoped, ByName = true)]
         public Zone zone2 = null;
 
     }
@@ -54,42 +53,41 @@ namespace UnitTests
     [Serializable]
     class ModelWithScopedLink
     {
-        [ScopedLink]
+        [Link(Type = LinkType.Scoped)]
         public Zone zone2 = null;
     }
-
 
     [Serializable]
     class ModelWithChildLink
     {
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithChildLinkByName
     {
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithParentLink : Model
     {
-        [ParentLink]
+        [Link(Type = LinkType.Parent)]
         public Zone zone = null;
 
-        [ParentLink]
+        [Link(Type = LinkType.Parent)]
         public Simulation sim = null;
     }
 
     [Serializable]
     class ModelWithLinkByPath : Model
     {
-        [LinkByPath(Path = "[zone2].irrig1")]
+        [Link(Type = LinkType.Path, Path = "[zone2].irrig1")]
         public IIrrigation irrigation1 = null;
 
-        [LinkByPath(Path = ".Simulations.Simulation.zone2.irrig2")]
+        [Link(Type = LinkType.Path, Path = ".Simulations.Simulation.zone2.irrig2")]
         public IIrrigation irrigation2 = null;
     }
 
@@ -222,7 +220,7 @@ namespace UnitTests
             Assert.AreEqual(modelWithScopedLink.zone2.Name, "zone1");
         }
 
-        /// <summary>Ensure a [ChildLink] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Descendant)] finds works</summary>
         [Test]
         public void Links_EnsureChildLinkWorks()
         {
@@ -246,11 +244,11 @@ namespace UnitTests
             Assert.Throws<Exception>(() => linksAlgorithm.Resolve(simulation) );
         }
 
-        /// <summary>Ensure a [ChildLinkByName] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Descendant, ByName = true)] works</summary>
         [Test]
         public void Links_EnsureChildLinkByNameWorks()
         {
-            ModelWithChildLinkByName modelWithChildLinkByName = new UnitTests.ModelWithChildLinkByName();
+            ModelWithChildLinkByName modelWithChildLinkByName = new ModelWithChildLinkByName();
 
             // Create a simulation
             ModelWrapper simulation = new ModelWrapper(new Simulation());

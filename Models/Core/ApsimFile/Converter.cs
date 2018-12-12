@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Xml;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -14,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 47; } }
+        public static int LatestVersion { get { return 48; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -138,7 +139,7 @@
         {
             string json = XmlToJson.Convert(st);
             JObject j = JObject.Parse(json);
-            j["Version"] = LatestVersion;
+            j["Version"] = 47;
             return j.ToString();
         }
 
@@ -147,7 +148,17 @@
             // Nothing to do as conversion to JSON has already happened.
         }
 
-
+        /// <summary>
+        /// Upgrades to version 48. Iterates through all manager scripts, and replaces
+        /// all instances of the text "DisplayTypeEnum" with "DisplayType".
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion48(JObject root, string fileName)
+        {
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+                JsonUtilities.ReplaceManagerCode(manager, "DisplayTypeEnum", "DisplayType");
+        }
     }
 }
 
