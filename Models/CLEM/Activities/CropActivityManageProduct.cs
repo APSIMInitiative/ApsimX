@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Crop file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of crop file required")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMCropFileName)]
+        [Models.Core.Display(Type = DisplayType.CLEMCropFileName)]
         public string ModelNameFileCrop { get; set; }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         /// Store to put crop growth into
         /// </summary>
         [Description("Store for crop product")]
-        [Models.Core.Display(Type = DisplayTypeEnum.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
         [Required]
         public string StoreItemName { get; set; }
 

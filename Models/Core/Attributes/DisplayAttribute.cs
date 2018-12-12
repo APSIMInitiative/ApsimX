@@ -13,7 +13,7 @@ namespace Models.Core
     /// An enumeration for display types.
     /// Used by the Display Attribute.
     /// </summary>
-    public enum DisplayTypeEnum
+    public enum DisplayType
     {
         /// <summary>
         /// No specific display editor.
@@ -106,6 +106,6 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets the display type. 
         /// </summary>
-        public DisplayTypeEnum Type { get; set; }
+        public DisplayType Type { get; set; }
     }
 }
