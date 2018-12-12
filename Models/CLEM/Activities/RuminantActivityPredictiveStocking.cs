@@ -73,7 +73,10 @@ namespace Models.CLEM.Activities
                     destockGroupFound = true;
                     break;
                 }
-                if (destockGroupFound) break;
+                if (destockGroupFound)
+                {
+                    break;
+                }
             }
 
             if (!destockGroupFound)
@@ -140,7 +143,10 @@ namespace Models.CLEM.Activities
                     // Shortfall in Fodder in kg for paddock
                     double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
 
-                    if (pastureShortFallKg == 0) return;
+                    if (pastureShortFallKg == 0)
+                    {
+                        return;
+                    }
 
                     // number of AE to sell to balance shortfall_kg
                     shortfallAE = pastureShortFallKg / feedRequiredAE;
@@ -153,7 +159,10 @@ namespace Models.CLEM.Activities
 
         private void HandleDestocking(double animalEquivalentsforSale, string paddockName)
         {
-            if (animalEquivalentsforSale <= 0) return;
+            if (animalEquivalentsforSale <= 0)
+            {
+                return;
+            }
 
             // move to underutilised paddocks
             // TODO: This can be added later as an activity including spelling
@@ -181,7 +190,10 @@ namespace Models.CLEM.Activities
                     }
                     cnt++;
                 }
-                if (animalEquivalentsforSale <= 0) return;
+                if (animalEquivalentsforSale <= 0)
+                {
+                    return;
+                }
             }
 
             // Possible destock groups
@@ -250,8 +262,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -265,8 +276,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

@@ -75,8 +75,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            if (TransactionOccurred != null)
-                TransactionOccurred(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -121,7 +120,10 @@ namespace Models.CLEM.Resources
         /// <param name="request">Resource request class with details.</param>
         public new void Remove(ResourceRequest request)
         {
-            if (request.Required == 0) return;
+            if (request.Required == 0)
+            {
+                return;
+            }
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);

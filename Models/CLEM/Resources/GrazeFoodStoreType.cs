@@ -170,8 +170,7 @@ namespace Models.CLEM.Resources
                         return 100;
                     }
                 }
-                if (biomassConsumed == 0) return 0;
-                return biomassConsumed / biomassAddedThisYear * 100;
+                return biomassConsumed == 0 ? 0 : biomassConsumed / biomassAddedThisYear * 100;
             }
         }
 
@@ -465,7 +464,10 @@ namespace Models.CLEM.Resources
                     {
                         // if we've already given second chance to get food so finish without full satisfying individual
                         // or strict feeding limits are enforced
-                        if (secondTakeFromPools) break;
+                        if (secondTakeFromPools)
+                        {
+                            break;
+                        }
                         // if not strict limits allow a second request for food from previously limited pools.
                         secondTakeFromPools = true;
                         index = 0;
@@ -556,8 +558,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            if (TransactionOccurred != null)
-                TransactionOccurred(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -577,8 +578,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
-            if (EcologicalIndicatorsCalculated != null)
-                EcologicalIndicatorsCalculated(this, e);
+            EcologicalIndicatorsCalculated?.Invoke(this, e);
         }
 
         /// <summary>

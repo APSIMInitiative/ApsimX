@@ -101,8 +101,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -129,8 +128,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -142,12 +140,18 @@ namespace Models.CLEM.Activities
         private IModel SearchForNameInActivity(Model activity, string name)
         {
             IModel found = activity.Children.Find(x => x.Name == name);
-            if (found != null) return found;
+            if (found != null)
+            {
+                return found;
+            }
 
             foreach (var child in activity.Children)
             {
                 found = SearchForNameInActivity(child, name);
-                if (found != null) return found;
+                if (found != null)
+                {
+                    return found;
+                }
             }
             return null;
         }
@@ -160,12 +164,18 @@ namespace Models.CLEM.Activities
         public IModel SearchForNameInActivities(string name)
         {
             IModel found = Children.Find(x => x.Name == name);
-            if (found != null) return found;
+            if (found != null)
+            {
+                return found;
+            }
 
             foreach (var child in Children)
             {
                 found = SearchForNameInActivity(child, name);
-                if (found != null) return found;
+                if (found != null)
+                {
+                    return found;
+                }
             }
             return null;
         }

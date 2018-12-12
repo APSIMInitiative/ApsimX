@@ -103,18 +103,26 @@ namespace Models.CLEM
                 {
                     Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                     if (simulation != null)
+                    {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    }
                     else
+                    {
                         return this.FileName;
+                    }
                 }
             }
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null)
+                {
                     this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                }
                 else
+                {
                     this.FileName = value;
+                }
             }
         }
 
@@ -212,7 +220,9 @@ namespace Models.CLEM
                 //Npct column is optional 
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
+                {
                     cropProps.Add("Npct");
+                }
 
                 DataTable table = this.reader.ToTable(cropProps);
 
@@ -290,10 +300,13 @@ namespace Models.CLEM
             //Npct column is optional 
             //Only try to read it in if it exists in the file.
             if (nitrogenPercentIndex != -1)
+            {
                 cropdata.Npct = double.Parse(dr["Npct"].ToString());
+            }
             else
+            {
                 cropdata.Npct = double.NaN;
-
+            }
 
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
@@ -323,37 +336,49 @@ namespace Models.CLEM
                     if (this.soilNumIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("SoilNum") == null)
+                        {
                             throw new Exception("Cannot find [o=SoilNum] column in crop file [x=" + this.FullFileName.Replace("\\","\\&shy;")+"]");
+                        }
                     }
 
                     if (this.cropNameIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("CropName") == null)
+                        {
                             throw new Exception("Cannot find [o=CropName] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                        }
                     }
 
                     if (this.yearIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Year") == null)
+                        {
                             throw new Exception("Cannot find [o=Year] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                        }
                     }
 
                     if (this.monthIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Month") == null)
+                        {
                             throw new Exception("Cannot find [o=Month] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                        }
                     }
 
                     if (this.amountKgIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("AmtKg") == null)
+                        {
                             throw new Exception("Cannot find [o=AmtKg] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                        }
                     }
                 }
                 else
                 {
                     if (this.reader.IsExcelFile != true)
+                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
+                    }
                 }
                 return true;
             }

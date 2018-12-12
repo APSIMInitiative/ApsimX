@@ -74,7 +74,8 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            CropActivityManageProduct productParent = Parent.Parent as CropActivityManageProduct;
+            CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+
             if (!productParent.IsTreeCrop)
             {
                 if (this.PaymentStyle == CropPaymentStyleType.perTree)
@@ -113,13 +114,13 @@ namespace Models.CLEM.Activities
                         sumneeded = Amount;
                         break;
                     case CropPaymentStyleType.perHa:
-                        CropActivityManageCrop cropParent = Parent.Parent.Parent as CropActivityManageCrop;
-                        CropActivityManageProduct productParent = Parent.Parent as CropActivityManageProduct;
+                        CropActivityManageCrop cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                        CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                         sumneeded = cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
                     case CropPaymentStyleType.perTree:
-                        cropParent = Parent.Parent.Parent as CropActivityManageCrop;
-                        productParent = Parent.Parent as CropActivityManageProduct;
+                        cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                        productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                         sumneeded = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
                     default:
@@ -177,8 +178,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -192,8 +192,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

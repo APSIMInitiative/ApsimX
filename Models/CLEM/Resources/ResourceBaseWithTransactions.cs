@@ -36,9 +36,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler handler = TransactionOccurred;
-            if (handler != null)
-                handler(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>

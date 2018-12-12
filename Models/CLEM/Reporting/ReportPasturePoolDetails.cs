@@ -121,7 +121,9 @@ namespace Models.CLEM.Reporting
                 foreach (string eventName in EventNames)
                 {
                     if (eventName != string.Empty)
+                    {
                         events.Subscribe(eventName.Trim(), DoOutputEvent);
+                    }
                 }
             }
         }
@@ -178,16 +180,22 @@ namespace Models.CLEM.Reporting
             table.Columns.CopyTo(columnArray, 0);
             var ordinal = -1;
             foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
+            {
                 orderedColumn.SetOrdinal(++ordinal);
+            }
 
             ordinal = -1;
             int i = table.Columns.IndexOf("SimulationName");
             if (i != -1)
+            {
                 table.Columns[i].SetOrdinal(++ordinal);
+            }
 
             i = table.Columns.IndexOf("SimulationID");
             if (i != -1)
+            {
                 table.Columns[i].SetOrdinal(++ordinal);
+            }
         }
 
 
@@ -209,7 +217,9 @@ namespace Models.CLEM.Reporting
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
+                {
                     this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
+                }
             }
             columnNames = columns.Select(c => c.Name);
             columnUnits = columns.Select(c => c.Units);
@@ -221,7 +231,9 @@ namespace Models.CLEM.Reporting
             if (ExperimentFactorValues != null)
             {
                 for (int i = 0; i < ExperimentFactorNames.Count; i++)
+                {
                     this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                }
             }
         }
 

@@ -213,17 +213,25 @@ namespace Models.CLEM
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                 if (simulation != null & this.FileName != null)
+                {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                }
                 else
+                {
                     return this.FileName;
+                }
             }
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null)
+                {
                     this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                }
                 else
+                {
                     this.FileName = value;
+                }
             }
         }
 
@@ -400,7 +408,10 @@ namespace Models.CLEM
                         + "For Region: " + region + ", Soil: " + soil 
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
-            if (clock.EndDate == clock.Today) return;
+            if (clock.EndDate == clock.Today)
+            {
+                return;
+            }
 
             //Check if there is any data
             if ((filtered == null) || (filtered.Count == 0))

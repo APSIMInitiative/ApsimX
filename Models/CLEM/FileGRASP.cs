@@ -219,17 +219,25 @@ namespace Models.CLEM
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                 if (simulation != null & this.FileName != null)
+                {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                }
                 else
+                {
                     return this.FileName;
+                }
             }
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null)
+                {
                     this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                }
                 else
+                {
                     this.FileName = value;
+                }
             }
         }
 
@@ -445,12 +453,15 @@ namespace Models.CLEM
 
             string filter;
             if (startYear == endYear)
+            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
                 + "( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
                 + ")";
+            }
             else
+            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
@@ -458,7 +469,7 @@ namespace Models.CLEM
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
                 + " OR  ( Year = " + endYear + " AND Month < " + endMonth + ")"
                 + ")";
-
+            }
 
             DataRow[] foundRows = this.pastureFileAsTable.Select(filter);
 
@@ -495,7 +506,10 @@ namespace Models.CLEM
                         + "For Region: " + region + ", Soil: " + soil 
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
-            if (clock.EndDate == clock.Today) return;
+            if (clock.EndDate == clock.Today)
+            {
+                return;
+            }
 
             //Check if there is any data
             if ((filtered == null) || (filtered.Count == 0))
@@ -605,7 +619,11 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (this.FullFileName == null || this.FullFileName == "") return false;
+            if (this.FullFileName == null || this.FullFileName == "")
+            {
+                return false;
+            }
+
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)
@@ -636,121 +654,161 @@ namespace Models.CLEM
                     if (this.regionIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Region") == null)
+                        {
                             throw new Exception("Cannot find Region in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.soilIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Soil") == null)
+                        {
                             throw new Exception("Cannot find Soil in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.forageNoIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("ForageNo") == null)
+                        {
                             throw new Exception("Cannot find ForageNo in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.grassBAIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("GrassBA") == null)
+                        {
                             throw new Exception("Cannot find GrassBA in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.landConIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("LandCon") == null)
+                        {
                             throw new Exception("Cannot find LandCon in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.stkRateIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("StkRate") == null)
+                        {
                             throw new Exception("Cannot find StkRate in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.yearNumIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("YearNum") == null)
+                        {
                             throw new Exception("Cannot find YearNum in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.yearIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Year") == null)
+                        {
                             throw new Exception("Cannot find Year in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.cutNumIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("CutNum") == null)
+                        {
                             throw new Exception("Cannot find CutNum in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.monthIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Month") == null)
+                        {
                             throw new Exception("Cannot find Month in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.growthIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Growth") == null)
+                        {
                             throw new Exception("Cannot find Growth in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.bp1Index == -1)
                     {
                         if (this.reader == null || this.reader.Constant("BP1") == null)
+                        {
                             throw new Exception("Cannot find BP1 in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.bp2Index == -1)
                     {
                         if (this.reader == null || this.reader.Constant("BP2") == null)
+                        {
                             throw new Exception("Cannot find BP2 in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.utilisnIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Utilisn") == null)
+                        {
                             throw new Exception("Cannot find Utilisn in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.soillossIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("SoilLoss") == null)
+                        {
                             throw new Exception("Cannot find SoilLoss in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.coverIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Cover") == null)
+                        {
                             throw new Exception("Cannot find Cover in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.treeBAIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("TreeBA") == null)
+                        {
                             throw new Exception("Cannot find TreeBA in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.rainfallIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Rainfall") == null)
+                        {
                             throw new Exception("Cannot find RainFall in pasture file: " + this.FullFileName);
+                        }
                     }
 
                     if (this.runoffIndex == -1)
                     {
                         if (this.reader == null || this.reader.Constant("Runoff") == null)
+                        {
                             throw new Exception("Cannot find Runoff in pasture file: " + this.FullFileName);
+                        }
                     }
                 }
                 else
                 {
                     if (this.reader.IsExcelFile != true)
+                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
+                    }
                 }
 
                 return true;

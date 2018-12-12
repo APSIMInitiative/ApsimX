@@ -289,7 +289,10 @@ namespace Models.CLEM.Activities
                         {
                             male.SaleFlag = HerdChangeReason.ExcessBullSale;
                             numberToRemove--;
-                            if (numberToRemove == 0) break;
+                            if (numberToRemove == 0)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -305,7 +308,10 @@ namespace Models.CLEM.Activities
                                 male.SaleFlag = HerdChangeReason.None;
                                 male.BreedingSire = true;
                                 numberMaleSiresInHerd++;
-                                if (numberMaleSiresInHerd >= MaximumSiresKept) break;
+                                if (numberMaleSiresInHerd >= MaximumSiresKept)
+                                {
+                                    break;
+                                }
                             }
                             // if still insufficent, look into current herd for replacement
                             // remaining males assumed to be too small, so await next time-step
@@ -384,7 +390,10 @@ namespace Models.CLEM.Activities
                             female.SaleFlag = HerdChangeReason.ExcessHeiferSale;
                         }
                         excessHeifers--;
-                        if (excessHeifers == 0) break;
+                        if (excessHeifers == 0)
+                        {
+                            break;
+                        }
                     }
                 }
                 else if (excessHeifers < 0)
@@ -399,7 +408,10 @@ namespace Models.CLEM.Activities
                             {
                                 female.Tags.Remove("GrowHeifer");
                                 excessHeifers--;
-                                if (excessHeifers == 0) break;
+                                if (excessHeifers == 0)
+                                {
+                                    break;
+                                }
                             }
                         }
 
@@ -408,7 +420,10 @@ namespace Models.CLEM.Activities
                         {
                             female.SaleFlag = HerdChangeReason.None;
                             excessHeifers--;
-                            if (excessHeifers == 0) break;
+                            if (excessHeifers == 0)
+                            {
+                                break;
+                            }
                         }
 
                         // if still insufficient buy breeders.
@@ -525,8 +540,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -540,8 +554,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>

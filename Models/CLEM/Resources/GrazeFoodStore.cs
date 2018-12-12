@@ -95,8 +95,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
-            EventHandler invoker = EcologicalIndicatorsCalculated;
-            if (invoker != null) invoker(this, e);
+            EcologicalIndicatorsCalculated?.Invoke(this, e);
         }
 
         /// <summary>
@@ -121,8 +120,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>

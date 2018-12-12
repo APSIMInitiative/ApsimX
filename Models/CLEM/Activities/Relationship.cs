@@ -71,9 +71,14 @@ namespace Models.CLEM.Activities
         public double SolveY(double xValue, bool linearInterpolation)
         {
             if (xValue <= XValues[0])
+            {
                 return YValues[0];
+            }
+
             if (xValue >= XValues[XValues.Length-1])
+            {
                 return YValues[YValues.Length - 1];
+            }
 
             int k = 0;
             for (int i = 0; i < XValues.Length; i++)

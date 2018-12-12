@@ -154,7 +154,11 @@ namespace Models.CLEM.Activities
                     break;
                 case LabourUnitType.perHa:
                     numberUnits = (pasture.Manager.Area * (Resources.GetResourceGroupByType(typeof(Land)) as Land).UnitsOfAreaToHaConversion ) / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks) numberUnits = Math.Ceiling(numberUnits);
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:

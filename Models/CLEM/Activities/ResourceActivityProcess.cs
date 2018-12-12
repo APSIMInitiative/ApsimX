@@ -159,7 +159,11 @@ namespace Models.CLEM.Activities
             // get finances required.
             foreach (ResourceActivityFee item in Apsim.Children(this, typeof(ResourceActivityFee)))
             {
-                if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                if (ResourceRequestList == null)
+                {
+                    ResourceRequestList = new List<ResourceRequest>();
+                }
+
                 double sumneeded = 0;
                 switch (item.PaymentStyle)
                 {
@@ -232,8 +236,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -247,8 +250,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>
