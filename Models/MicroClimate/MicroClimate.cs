@@ -197,7 +197,7 @@ namespace Models
 
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
-                    MCZone.Canopies[j].Gc[i] = CanopyConductance(MCZone.Canopies[j].Canopy.Gsmax, MCZone.Canopies[j].Canopy.R50, MCZone.Canopies[j].Canopy.FRGR, MCZone.Canopies[j].Fgreen[i], MCZone.layerKtot[i], MCZone.LAItotsum[i], Rflux);
+                    MCZone.Canopies[j].Gc[i] = CanopyConductance(MCZone.Canopies[j].Canopy.Gsmax, MCZone.Canopies[j].Canopy.R50, MCZone.Canopies[j].Fgreen[i], MCZone.layerKtot[i], MCZone.LAItotsum[i], Rflux);
                     Rint += MCZone.Canopies[j].Rs[i];
                 }
                 // Calculate Rin for the next layer down

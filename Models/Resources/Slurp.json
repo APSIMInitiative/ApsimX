@@ -693,7 +693,7 @@
       "AppearedCohortNo": 0,
       "PlantAppearedLeafNo": 0.0,
       "Albedo": 0.018,
-      "Gsmax": 0.01,
+      "Gsmax350": 0.01,
       "R50": 200.0,
       "LAI": 0.0,
       "Height": 0.0,

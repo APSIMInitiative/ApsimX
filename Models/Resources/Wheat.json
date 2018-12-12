@@ -2938,7 +2938,7 @@
       "NDemand": null,
       "potentialDMAllocation": null,
       "Albedo": 0.25,
-      "Gsmax": 0.011,
+      "Gsmax350": 0.011,
       "R50": 150.0,
       "FRGR": 0.0,
       "PotentialEP": 0.0,

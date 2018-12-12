@@ -26,18 +26,17 @@ namespace Models
         /// Calculate the crop canopy conductance
         /// <param name="cropGsMax">crop-specific maximum stomatal conductance (m/s)</param>
         /// <param name="cropR50">crop-specific SolRad at which stomatal conductance decreases to 50% (W/m2)</param>
-        /// <param name="cropRGfac">crop-specific relative growth stress factor (0-1)</param>
         /// <param name="cropLAIfac">crop-specific LAI fraction of total LAI in current layer (0-1)</param>
         /// <param name="layerK">layer-averaged light extinction coeficient (-)</param>
         /// <param name="layerLAI">LAI within the current layer (m2/m2)</param>
         /// <param name="layerSolRad">solar radiation arriving at the top of the current layer(W/m2)</param>
         /// </summary>
-        private double CanopyConductance(double cropGsMax, double cropR50, double cropRGfac, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
+        private double CanopyConductance(double cropGsMax, double cropR50, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
         {
             double numerator = layerSolRad + cropR50;
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
             double hyperbolic = Math.Max(1.0, MathUtilities.Divide(numerator, denominator, 0.0));
-            return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropRGfac * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
+            return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
         }
 
         /// <summary>
