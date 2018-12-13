@@ -171,17 +171,17 @@
             // Might need to add in other models that implement ICanopy 
             // e.g. OilPalm, AgPastureSpecies, SimpleTree, Sugarcane
 
-            var models = new List<JToken>();
-            models.AddRange(ConverterUtilities.FindAllModelsOfType(root, "Leaf"));
-            models.AddRange(ConverterUtilities.FindAllModelsOfType(root, "SimpleLeaf"));
-            models.AddRange(ConverterUtilities.FindAllModelsOfType(root, "PerennialLeaf"));
-            models.AddRange(ConverterUtilities.FindAllModelsOfType(root, "SorghumLeaf"));
+            var models = new List<JObject>();
+            models.AddRange(JsonUtilities.ChildrenOfType(root, "Leaf"));
+            models.AddRange(JsonUtilities.ChildrenOfType(root, "SimpleLeaf"));
+            models.AddRange(JsonUtilities.ChildrenOfType(root, "PerennialLeaf"));
+            models.AddRange(JsonUtilities.ChildrenOfType(root, "SorghumLeaf"));
 
             // Loop through all models and rename Gsmax to Gsmax350.
             foreach (var model in models)
             {
-                ConverterUtilities.RenameProperty(model, "Gsmax", "Gsmax350");
-                ConverterUtilities.AddConstantFuntionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
+                JsonUtilities.RenameProperty(model, "Gsmax", "Gsmax350");
+                JsonUtilities.AddConstantFunctionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
             }
         }
 
