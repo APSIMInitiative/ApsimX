@@ -98,18 +98,8 @@ namespace Models.PMF.Organs
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("Daily maximum stomatal conductance(m/s)")]
-        public double Gsmax
-        {
-            get
-            {
-                return Gsmax350*FRGR * StomatalConductanceCO2Modifier.Value();
-            }
-        }
-
-        /// <summary>Gets or sets the gsmax.</summary>
-        [Description("Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s)")]
-        public double Gsmax350 { get; set; }
+        [Description("GSMAX")]
+        public double Gsmax { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
         [Description("R50")]
@@ -191,11 +181,6 @@ namespace Models.PMF.Organs
         /// <summary>The FRGR function</summary>
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
-
-        /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link]
-        IFunction StomatalConductanceCO2Modifier = null;
-
 
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
@@ -357,18 +342,15 @@ namespace Models.PMF.Organs
             DMDemand.Clear();
             NDemand.Clear();
             potentialDMAllocation.Clear();
-            Height = 0;
-            LAI = 0;
-            LeafInitialised = false;
-        }
-
-        /// <summary>Clears the transferring biomass amounts.</summary>
-        private void ClearBiomassFlows()
-        {
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
+            Height = 0;
+            LAI = 0;
+            LeafInitialised = false;
+            laiEqlbLightTodayQ = new Queue<double>(10);
+            laiEqlbLightTodayQ.Clear();
         }
         #endregion
 
@@ -399,6 +381,153 @@ namespace Models.PMF.Organs
 
                 LAIDead = LaiDeadFunction.Value();
             }
+        }
+
+        /// <summary>sen_radn_crit.</summary>
+        public double senRadnCrit { get; set; } = 2;
+        /// <summary>sen_light_time_const.</summary>
+        public double senLightTimeConst { get; set; } = 10;
+        /// <summary>temperature threshold for leaf death.</summary>
+        public double frostKill { get; set; } = 10;
+        
+        /// <summary>Only water stress at this stage.</summary>
+        /// Diff between potentialLAI and stressedLAI
+        public double LossFromExpansionStress { get; set; }
+
+        /// <summary>Total LAII as a result of senescence.</summary>
+        public double SenescedLai { get; set; }
+
+        /// <summary>Delta of LAI removed due to Senescence.</summary>
+        public double DltSenescedLai { get; set; }
+        /// <summary>Delta of LAI removed due to Light Senescence.</summary>
+        public double DltSenescedLaiLight { get; set; }
+        /// <summary>Delta of LAI removed due to Water Senescence.</summary>
+        public double DltSenescedLaiWater { get; set; }
+        /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
+        public double DltSenescedLaiFrost { get; set; }
+
+        private double totalLaiEqlbLight;
+        private double avgLaiEquilibLight;
+        private Queue<double> laiEqlbLightTodayQ;
+        private double updateAvLaiEquilibLight(double laiEqlbLightToday, int days)
+        {
+            totalLaiEqlbLight += laiEqlbLightToday;
+            laiEqlbLightTodayQ.Enqueue(laiEqlbLightToday);
+            if (laiEqlbLightTodayQ.Count > days)
+            {
+                totalLaiEqlbLight -= laiEqlbLightTodayQ.Dequeue();
+            }
+            return MathUtilities.Divide(totalLaiEqlbLight, laiEqlbLightTodayQ.Count, 0);
+        }
+
+        /// <summary>Senesce the LEaf Area.</summary>
+        private void senesceArea()
+        {
+            DltSenescedLai = 0.0;
+            //sLai - is the running total of dltSLai
+            var maxLaiPossible = LAI + SenescedLai;
+            maxLaiPossible += LossFromExpansionStress;
+
+            DltSenescedLaiLight = calcLaiSenescenceLight();
+            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiLight);
+
+            DltSenescedLaiWater = calcLaiSenescenceWater();
+            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiWater);
+
+            DltSenescedLaiFrost = calcLaiSenescenceFrost();
+            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
+        }
+
+        private double calcLaiSenescenceFrost()
+        {
+            //  calculate senecence due to frost
+            double dltSlaiFrost = 0.0;
+            if (MetData.MinT < frostKill)
+                dltSlaiFrost = LAI;
+
+            return dltSlaiFrost;
+        }
+
+        private double calcLaiSenescenceWater()
+        {
+            /* TODO : Direct translation sort of. needs work */
+            //double dlt_dm_transp = plant->biomass->getDltDMPotTE();
+
+            //double effectiveRue = plant->biomass->getEffectiveRue();
+
+            //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
+
+            //double sen_radn_crit = divide(dlt_dm_transp, effectiveRue, radnCanopy);
+            //double intc_crit = divide(sen_radn_crit, radnCanopy, 1.0);
+
+            ////            ! needs rework for row spacing
+            //double laiEquilibWaterToday;
+            //if (intc_crit < 1.0)
+            //    laiEquilibWaterToday = -log(1.0 - intc_crit) / extinctionCoef;
+            //else
+            //    laiEquilibWaterToday = lai;
+
+            //// average of the last 10 days of laiEquilibWater
+            //laiEquilibWater.push_back(laiEquilibWaterToday);
+            //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
+
+            //// calculate a 5 day moving average of the supply demand ratio
+            //avSD.push_back(plant->water->getSdRatio());
+
+            //double dltSlaiWater = 0.0;
+            //if (movingAvgVector(avSD, 5) < senThreshold)
+            //    dltSlaiWater = Max(0.0, divide((lai - avLaiEquilibWater), senWaterTimeConst, 0.0));
+
+            //dltSlaiWater = Min(lai, dltSlaiWater);
+
+            //return dltSlaiWater;
+            return 0.0;
+        }
+
+        private double calcLaiSenescenceLight()
+        {
+            double critTransmission = MathUtilities.Divide(senRadnCrit, MetData.Radn, 1);
+            /* TODO : Direct translation - needs cleanup */
+            //            ! needs rework for row spacing
+            double laiEqlbLightToday;
+            if (critTransmission > 0.0)
+            {
+                laiEqlbLightToday = -Math.Log(critTransmission) / ExtinctionCoefficientFunction.Value();
+            }
+            else
+            {
+                laiEqlbLightToday = LAI;
+            }
+            // average of the last 10 days of laiEquilibLight
+            avgLaiEquilibLight = updateAvLaiEquilibLight(laiEqlbLightToday, 10);//senLightTimeConst?
+
+            double radnTransmitted = MetData.Radn;// - Plant->getRadnInt();
+            double dltSlaiLight = 0.0;
+            if (radnTransmitted < senRadnCrit)
+                dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(LAI - avgLaiEquilibLight, senLightTimeConst, 0.0));
+            dltSlaiLight = Math.Min(dltSlaiLight, LAI);
+            return dltSlaiLight;
+        }
+
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            if (parentPlant.IsAlive) return;
+            if (!Plant.IsAlive) return;
+            if (!LeafInitialised) return;   
+
+            // Do senescence
+            double senescedFrac = senescenceRate.Value();
+            if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                senescedFrac = 1.0;  // remaining amount too small, senesce all
+            Biomass Loss = Live * senescedFrac;
+            Live.Subtract(Loss);
+            Dead.Add(Loss);
+            Senesced.Add(Loss);
+
         }
 
         #endregion
@@ -725,21 +854,19 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
-            Dead = new Biomass();
-            startLive = new Biomass();
-            DMDemand = new BiomassPoolType();
             NDemand = new BiomassPoolType();
-            DMSupply = new BiomassSupplyType();
+            DMDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
+            DMSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
+            startLive = new Biomass();
             Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            Height = 0.0;
-            LAI = 0.0;
-            LeafInitialised = false;
+            Live = new Biomass();
+            Dead = new Biomass();
+            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -748,8 +875,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
-                ClearBiomassFlows();
+            if (parentPlant.IsAlive)
+            {
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
+            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -761,7 +893,6 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 Clear();
-                ClearBiomassFlows();
                 MicroClimatePresent = false;
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;
@@ -770,30 +901,11 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
-        {
-            if (parentPlant.IsAlive)
-            {
-                // Do senescence
-                double senescedFrac = senescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
-            }
-        }
-
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void OnPlantEnding(object sender, EventArgs e)
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {

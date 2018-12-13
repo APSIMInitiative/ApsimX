@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 283,
   "Version": 47,
   "Name": "Simulations",
   "Children": [
@@ -2736,6 +2736,13 @@
               "LeafInitialisationStage": "Emergence",
               "KDead": 0.03,
               "LAIDead": 0.0,
+              "senRadnCrit": 0.0,
+              "LossFromExpansionStress": 0.0,
+              "SenescedLai": 0.0,
+              "DltSenescedLai": 0.0,
+              "DltSenescedLaiLight": 0.0,
+              "DltSenescedLaiWater": 0.0,
+              "DltSenescedLaiFrost": 0.0,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
