@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This grouping is not currently used.")]
+    [Version(1, 0, 1, "")]
     public class FodderLimitsFilterGroup: CLEMModel
     {
         /// <summary>

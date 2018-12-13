@@ -82,7 +82,7 @@ namespace UnitTests
                 "        [Link] " + Environment.NewLine +
                 "        [Units(0-1)] " + Environment.NewLine +
                 "        Fertiliser  fert;" + Environment.NewLine +
-                "        [ChildLinkByName] " + Environment.NewLine +
+                "        [Link(Type = LinkType.Descendant, ByName = true)] " + Environment.NewLine +
                 "        Soil mySoil;" + Environment.NewLine +
                 "    }" + Environment.NewLine +
                 "}" + Environment.NewLine;
@@ -106,7 +106,7 @@ namespace UnitTests
             Assert.AreEqual(declaration3.LineIndex, 10);
             Assert.AreEqual(declaration3.InstanceName, "mySoil");
             Assert.AreEqual(declaration3.TypeName, "Soil");
-            Assert.AreEqual(declaration3.Attributes[0], "[ChildLinkByName]");
+            Assert.AreEqual(declaration3.Attributes[0], "[Link(Type = LinkType.Descendant, ByName = true)]");
         }
 
         /// <summary>Ensure we can find method calls</summary>

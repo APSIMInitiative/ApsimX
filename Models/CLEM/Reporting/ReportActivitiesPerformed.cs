@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Reporting
 {
@@ -23,10 +24,10 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This report automatically generates an activity performed ledger and provides a table of activity success.")]
+    [Version(1, 0, 1, "")]
     public class ReportActivitiesPerformed: Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
         private List<IReportColumn> columns = null;
 
         /// <summary>An array of column names to write to storage.</summary>
@@ -67,6 +68,7 @@ namespace Models.CLEM.Reporting
             variableNames.Add("[Clock].Today as Date");
             variableNames.Add("[Activities].LastActivityPerformed.Name as Name");
             variableNames.Add("[Activities].LastActivityPerformed.Status as Status");
+            variableNames.Add("[Activities].LastActivityPerformed.UniqueID as UniqueID");
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
 
@@ -77,7 +79,9 @@ namespace Models.CLEM.Reporting
             foreach (string eventName in EventNames)
             {
                 if (eventName != string.Empty)
+                {
                     events.Subscribe(eventName.Trim(), DoOutputEvent);
+                }
             }
         }
 
@@ -86,7 +90,10 @@ namespace Models.CLEM.Reporting
         {
             object[] valuesToWrite = new object[columns.Count];
             for (int i = 0; i < columns.Count; i++)
+            {
                 valuesToWrite[i] = columns[i].GetValue();
+            }
+
             storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
         }
 
@@ -117,16 +124,22 @@ namespace Models.CLEM.Reporting
             table.Columns.CopyTo(columnArray, 0);
             var ordinal = -1;
             foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
+            {
                 orderedColumn.SetOrdinal(++ordinal);
+            }
 
             ordinal = -1;
             int i = table.Columns.IndexOf("SimulationName");
             if (i != -1)
+            {
                 table.Columns[i].SetOrdinal(++ordinal);
+            }
 
             i = table.Columns.IndexOf("SimulationID");
             if (i != -1)
+            {
                 table.Columns[i].SetOrdinal(++ordinal);
+            }
         }
 
 
@@ -148,7 +161,9 @@ namespace Models.CLEM.Reporting
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
+                {
                     this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
+                }
             }
             columnNames = columns.Select(c => c.Name);
             columnUnits = columns.Select(c => c.Units);
@@ -160,7 +175,9 @@ namespace Models.CLEM.Reporting
             if (ExperimentFactorValues != null)
             {
                 for (int i = 0; i < ExperimentFactorNames.Count; i++)
+                {
                     this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                }
             }
         }
 

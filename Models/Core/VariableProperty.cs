@@ -617,9 +617,7 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
         /// Gets the associated display type for the related property.
-        /// </summary>
         public override DisplayAttribute Display
         {
             get
