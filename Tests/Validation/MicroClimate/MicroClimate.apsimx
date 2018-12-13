@@ -5447,7 +5447,7 @@ namespace Models
         [Description("Duration of rainfall accumulation (d)")]
         public int RainDays { get; set;}
         [Description("Cultivar to be sown")]
-        [Display(Type=DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string CultivarName { get; set;}
         [Description("Sowing depth (mm)")]
         public double SowingDepth { get; set;}        
@@ -6933,7 +6933,7 @@ namespace Models
         [Description("Duration of rainfall accumulation (d)")]
         public int RainDays { get; set;}
         [Description("Cultivar to be sown")]
-        [Display(Type=DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string CultivarName { get; set;}
         [Description("Sowing depth (mm)")]
         public double SowingDepth { get; set;}        

@@ -1471,7 +1471,7 @@ namespace Models
 
 
         [Description("Cultivar")]
-        [Display(Type=DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]
@@ -3134,7 +3134,7 @@ namespace Models
 
 
         [Description("Cultivar")]
-        [Display(Type=DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]
@@ -4976,7 +4976,7 @@ namespace Models
 
 
         [Description("Cultivar")]
-        [Display(Type=DisplayTypeEnum.CultivarName)]
+        [Display(Type=DisplayType.CultivarName)]
         public string cultivar {get; set;}
 
         [Description("Sowing depth (mm)")]

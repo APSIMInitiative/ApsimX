@@ -960,7 +960,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -2678,7 +2678,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -3951,7 +3951,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -5421,7 +5421,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -6516,7 +6516,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -7781,7 +7781,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -10352,7 +10352,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
@@ -12335,7 +12335,7 @@ namespace Models
         [Description("Planting Date")]
         public DateTime PlantingDate { get; set; }
         [Description("Cultivar")]
-        [Display(Type = DisplayTypeEnum.CultivarName)]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
         public string CultivarName { get; set; }
         [Description("Spacing (mm) between plants within rows")]
         public double RowSpace { get; set; }
