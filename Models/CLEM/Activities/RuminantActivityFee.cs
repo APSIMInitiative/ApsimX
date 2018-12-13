@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +17,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [ValidParent(ParentType = typeof(RuminantActivityBreed))]
     [Description("This activity defines a specific herd expense for buying and selling ruminants or breeding and is based upon the current herd filtering for the parent activity.")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityFee: CLEMModel
     {
         /// <summary>
@@ -39,6 +41,21 @@ namespace Models.CLEM.Activities
         public RuminantActivityFee()
         {
             this.SetDefaults();
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Pay ";
+            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
+            html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ";
+            html += "</div>";
+            return html;
         }
 
     }

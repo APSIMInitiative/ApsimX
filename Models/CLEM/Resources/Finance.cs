@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,15 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all finance types (bank accounts) for the simulation.")]
+    [Version(1, 0, 1, "")]
     public class Finance : ResourceBaseWithTransactions
     {
+        /// <summary>
+        /// Currency used
+        /// </summary>
+        [Description("Name of currency")]
+        public string CurrencyName { get; set; }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -53,8 +61,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -69,6 +76,21 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            if(CurrencyName!=null && CurrencyName!="")
+            {
+                html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName+"</span></div>";
+            }
+            return html;
+        }
 
     }
 }

@@ -20,6 +20,11 @@ namespace UserInterface.Interfaces
         string ModelDescriptionText { get; set; }
 
         /// <summary>
+        /// Property to provide access to the model version text label.
+        /// </summary>
+        string ModelVersionText { get; set; }
+
+        /// <summary>
         /// Property to provide the text color for model type label.
         /// </summary>
         string ModelTypeTextColour { get; set; }

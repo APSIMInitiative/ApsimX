@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
+    [Version(1, 0, 1, "")]
     public class Relationship: Model, IValidatableObject
     {
         /// <summary>
@@ -63,29 +65,34 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Solve equation for y given x
         /// </summary>
-        /// <param name="X">x value to solve y</param>
-        /// <param name="LinearInterpolation">Use linear interpolation between the nearest point before and after x</param>
+        /// <param name="xValue">x value to solve y</param>
+        /// <param name="linearInterpolation">Use linear interpolation between the nearest point before and after x</param>
         /// <returns>y value for given x</returns>
-        public double SolveY(double X, bool LinearInterpolation)
+        public double SolveY(double xValue, bool linearInterpolation)
         {
-            if (X <= XValues[0])
+            if (xValue <= XValues[0])
+            {
                 return YValues[0];
-            if (X >= XValues[XValues.Length-1])
+            }
+
+            if (xValue >= XValues[XValues.Length-1])
+            {
                 return YValues[YValues.Length - 1];
+            }
 
             int k = 0;
             for (int i = 0; i < XValues.Length; i++)
             {
-                if (X <= XValues[i + 1])
+                if (xValue <= XValues[i + 1])
                 {
                     k = i;
                     break;
                 }
             }
 
-            if(LinearInterpolation)
+            if(linearInterpolation)
             {
-                return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (X - YValues[k]);
+                return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (xValue - YValues[k]);
             }
             else
             {
