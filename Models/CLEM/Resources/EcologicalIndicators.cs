@@ -36,7 +36,7 @@ namespace Models.CLEM.Resources
         //TreeC
         //Burnkg
         //methaneFire
-        //NOxFire
+        //N2OOFire
 
         /// <summary>
         /// Average monthly stocking rate (Adult Equivalents/square km)

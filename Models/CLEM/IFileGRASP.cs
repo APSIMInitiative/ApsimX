@@ -15,16 +15,16 @@ namespace Models.CLEM
         /// Queries the the GRASP SQLite database using the specified parameters.
         /// nb. Ignore ForageNo , it is a legacy column in the GRASP file that is not used anymore.
         /// </summary>
-        /// <param name="Region"></param>
-        /// <param name="Soil"></param>
-        /// <param name="GrassBA"></param>
-        /// <param name="LandCon"></param>
-        /// <param name="StkRate"></param>
-        /// <param name="EcolCalculationDate"></param>
-        /// <param name="EcolCalculationInterval"></param>
+        /// <param name="region"></param>
+        /// <param name="soil"></param>
+        /// <param name="grassBasalArea"></param>
+        /// <param name="landCondition"></param>
+        /// <param name="stockingRate"></param>
+        /// <param name="ecolCalculationDate"></param>
+        /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        List<PastureDataType> GetIntervalsPastureData(int Region, int Soil, int GrassBA, int LandCon, int StkRate,
-                                         DateTime EcolCalculationDate, int EcolCalculationInterval);
+        List<PastureDataType> GetIntervalsPastureData(int region, int soil, int grassBasalArea, int landCondition, int stockingRate,
+                                         DateTime ecolCalculationDate, int ecolCalculationInterval);
 
     }
 }

@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Groupings
 {
-    /// <summary>
+    ///<summary>
     /// Contains a group of filters to identify individual ruminants
-    /// </summary> 
+    ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -20,8 +21,63 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. Multiple filters will select groups of individuals required.")]
+    [Version(1, 0, 1, "")]
     public class RuminantFilterGroup : CLEMModel
     {
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\">";
+            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            {
+                html += "<div class=\"filter\">All individuals</div>";
+            }
+            return html;
+        }
 
     }
 }

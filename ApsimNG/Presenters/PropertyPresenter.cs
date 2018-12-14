@@ -14,12 +14,14 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models;
+    using Models.CLEM;
     using Models.Core;
     using Models.Surface;
     using Utility;
     using Views;
     using Commands;
     using System.Drawing;
+    using Models.CLEM.Resources;
 
     /// <summary>
     /// <para>
@@ -52,6 +54,16 @@ namespace UserInterface.Presenters
         /// A list of all properties found in the Model.
         /// </summary>
         private List<IVariable> properties = new List<IVariable>();
+
+        /// <summary>
+        /// The category name to filter for on the Category Attribute for the properties
+        /// </summary>
+        public string CategoryFilter { get; set; }
+
+        /// <summary>
+        /// The subcategory name to filter for on the Category Attribute for the properties
+        /// </summary>
+        public string SubcategoryFilter { get; set; }
 
         /// <summary>
         /// The completion form.
@@ -167,7 +179,6 @@ namespace UserInterface.Presenters
                     properties.RemoveAt(i);
                 }
             }
-
             PopulateGrid(model);
         }
 
@@ -192,6 +203,8 @@ namespace UserInterface.Presenters
         {
             this.model = model;
             properties.Clear();
+            bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
+            bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
             if (this.model != null)
             {
                 var orderedMembers = GetMembers(model);
@@ -221,6 +234,49 @@ namespace UserInterface.Presenters
                             SeparatorAttribute separator = Attribute.GetCustomAttribute(member, typeof(SeparatorAttribute)) as SeparatorAttribute;
                             properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
+
+                        //If the above conditions have been met and,
+                        //If a CategoryFilter has been specified. 
+                        //filter only those properties with a [Catagory] attribute that matches the filter.
+
+                        if (includeProperty && filterByCategory)
+                        {
+                            bool hasCategory = Attribute.IsDefined(member,typeof(CategoryAttribute), false);
+                            if (hasCategory)
+                            {
+                                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(member,typeof(CategoryAttribute));
+                                if (catAtt.Category == this.CategoryFilter)
+                                {
+                                    if (filterBySubcategory)
+                                    {
+                                        //the catAtt.Subcategory is by default given a value of 
+                                        //"Unspecified" if the Subcategory is not assigned in the Category Attribute.
+                                        //so this line below will also handle "Unspecified" subcategories.
+                                        includeProperty = (catAtt.Subcategory == this.SubcategoryFilter);
+                                    }
+                                    else
+                                    {
+                                        includeProperty = true;
+                                    }
+                                } 
+                                else
+                                {
+                                    includeProperty = false;
+                                }
+                                
+                            }
+                            else
+                            {
+                                //if we are filtering on "Unspecified" category then there is no Category Attribute
+                                // just a Description Attribute on the property in the model.
+                                //So we still may need to include it in this case.
+                                if (this.CategoryFilter == "Unspecified")
+                                    includeProperty = true;
+                                else
+                                    includeProperty = false;
+                            }
+                        }
+			
                         if (includeProperty)
                             properties.Add(property);
 
@@ -377,6 +433,51 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
+                else if (properties[i].Display != null &&  
+					(properties[i].Display.Type == DisplayType.CLEMResourceName))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceNameResourceGroups));
+
+                    // add any extras elements provided to the list.
+                    if (this.properties[i].Display.CLEMExtraEntries != null)
+                    {
+                        fieldNames.AddRange(this.properties[i].Display.CLEMExtraEntries);
+                    }
+
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }
+                else if (properties[i].Display != null && 
+					(properties[i].Display.Type == DisplayType.CLEMCropFileName))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    // get crop file names
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }
+                else if (properties[i].Display != null &&  
+					(properties[i].Display.Type == DisplayType.CLEMGraspFileName))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    // get GRASP file names
+                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }				
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
@@ -532,6 +633,36 @@ namespace UserInterface.Presenters
                 return names.ToArray();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
+        /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
+        /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// 
+        /// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
+        /// </summary>
+        /// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
+        private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
+        {
+            List<string> result = new List<string>();
+            ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
+            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            foreach (Type resGroupType in resourceNameResourceGroups)
+            {
+                IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                if (resGroup != null)  //see if this group type is included in this particular simulation.
+                {
+                    foreach (IModel item in resGroup.Children)
+                    {
+                        result.Add(resGroup.Name + "." + item.Name);
+                    }
+                }
+            }
+            return result.ToArray();
         }
 
         private string[] GetModelNames(Type t)

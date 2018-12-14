@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,35 +21,24 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
-    public class ResourceActivitySell: CLEMActivityBase, IValidatableObject
+    [Version(1, 0, 1, "")]
+    public class ResourceActivitySell: CLEMActivityBase
     {
         /// <summary>
-        /// Name of account to use
+        /// Bank account to use
         /// </summary>
-        [Description("Name of bank account to use")]
+        [Description("Bank account to use")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; }
 
         /// <summary>
-        /// Name of resource group containing resource
+        /// Resource type to sell
         /// </summary>
-        [Description("Name of resource group containing resource")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource group required")]
-        public string ResourceGroupName { get; set; }
-
-        /// <summary>
-        /// Name of resource type to sell
-        /// </summary>
-         [Description("Name of resource type to sell")]
+        [Description("Resource to sell")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
-
-        /// <summary>
-        /// Determines whether sales are restricted to whole units
-        /// </summary>
-         [Description("Restrict sales to whole units")]
-        [Required]
-        public bool SellWholeUnitsOnly { get; set; }
 
         /// <summary>
         /// Amount reserved from sale
@@ -56,20 +46,6 @@ namespace Models.CLEM.Activities
          [Description("Amount reserved from sale")]
         [Required, GreaterThanEqualValue(0)]
         public double AmountReserved { get; set; }
-
-        /// <summary>
-        /// Unit size (amount of the resource per sale unit)
-        /// </summary>
-         [Description("Unit size (amount of the resource per sale unit)")]
-        [Required, GreaterThanEqualValue(1)]
-        public double UnitSize { get; set; }
-
-        /// <summary>
-        /// Unit price (value of each sale unit)
-        /// </summary>
-         [Description("Unit price (value of each sale unit)")]
-        [Required, GreaterThanEqualValue(1)]
-        public double UnitPrice { get; set; }
 
         /// <summary>
         /// Store finance type to use
@@ -81,10 +57,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         private IResourceType resourceToSell;
 
-        /// <summary>
-        /// Labour settings
-        /// </summary>
-        private List<LabourFilterGroupUnit> Labour { get; set; }
+        private ResourcePricing price;
+        private double unitsAvailable;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -93,72 +67,25 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get bank account object to use
-            bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
             // get resource type to sell
-            var resourceGroup = Resources.GetResourceByName(ResourceGroupName);
-            resourceToSell = Resources.GetResourceItem(this, resourceGroup.GetType(), ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
-            // get labour required for sale
-            Labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (Labour == null) Labour = new List<LabourFilterGroupUnit>();
-        }
-
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            var resourceGroup = Resources.GetResourceByName(ResourceGroupName);
-            if (resourceGroup == null)
-            {
-                results.Add(new ValidationResult("Unable to find resource group named " + ResourceGroupName));
-            }
-            else
-            {
-                switch (resourceGroup.GetType().ToString())
-                {
-                    case "Resources.Labour":
-                    case "Resources.Ruminant":
-                        string[] memberNames = new string[] { "ResourceGroupName" };
-                        results.Add(new ValidationResult("Sales of resource type "+ resourceGroup.GetType().ToString() + " are not supported", memberNames));
-                        break;
-                }
-            }
-
-            Labour = Apsim.Children(this, typeof(LabourFilterGroupUnit)).Cast<LabourFilterGroupUnit>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (Labour == null) Labour = new List<LabourFilterGroupUnit>();
-            foreach (var item in Labour)
-            {
-                switch (item.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                    case LabourUnitType.perUnit:
-                        break;
-                    default:
-                        string[] memberNames = new string[] { item.Name };
-                        results.Add(new ValidationResult("Labour unit type " + item.UnitType.ToString() + " is not supported for item "+item.Name, memberNames));
-                        break;
-                }
-            }
-            return results;
+            resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
         }
 
         /// <summary>
         /// Gets the number of units available for sale
         /// </summary>
-        public double UnitsAvailableForSale
+        private double unitsAvailableForSale
         {
             get
             {
                 double amountForSale = resourceToSell.Amount - AmountReserved;
-                double unitsAvailable = amountForSale / UnitSize;
-                if(SellWholeUnitsOnly)
+                double units = amountForSale / price.PacketSize;
+                if(price.UseWholePackets)
                 {
-                    unitsAvailable = Math.Truncate(unitsAvailable);
+                    units = Math.Truncate(units);
                 }
-                return unitsAvailable;
+                return units;
             }
         }
 
@@ -168,93 +95,74 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
-            if (this.TimingOK)
-            {
-                double units = UnitsAvailableForSale;
-                if (units > 0)
-                {
-                    // for each labour item specified
-                    foreach (var item in Labour)
-                    {
-                        double daysNeeded = 0;
-                        switch (item.UnitType)
-                        {
-                            case LabourUnitType.Fixed:
-                                daysNeeded = item.LabourPerUnit;
-                                break;
-                            case LabourUnitType.perUnit:
-                                daysNeeded = units * item.LabourPerUnit;
-                                break;
-                            default:
-                                break;
-                        }
-                        if (daysNeeded > 0)
-                        {
-                            if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                            ResourceRequestList.Add(new ResourceRequest()
-                            {
-                                AllowTransmutation = false,
-                                Required = daysNeeded,
-                                ResourceType = typeof(Labour),
-                                ResourceTypeName = "",
-                                ActivityModel = this,
-                                Reason = "Sales",
-                                FilterDetails = new List<object>() { item }
-                            }
-                            );
-                        }
-                    }
-                }
-            }
-            return ResourceRequestList;
+            // get pricing
+            price = resourceToSell.Price;
+            unitsAvailable = unitsAvailableForSale;
+            return null;
         }
+
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perUnit:
+                    daysNeeded = unitsAvailable * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            // adjust resources sold based on labour shortfall
+            return;
+        }
+
 
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
         {
-            if (this.TimingOK)
+            Status = ActivityStatus.NotNeeded;
+            double labourlimit = this.LabourLimitProportion;
+            double units = 0;
+            if (labourlimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
             {
-                // reduce if labour limiting
-                double labourlimit = 1;
-                if(ResourceRequestList != null && ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Count() > 0)
+                units = unitsAvailableForSale * labourlimit;
+                if (price.UseWholePackets)
                 {
-                    double amountLabourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-                    double amountLabourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-                    if (amountLabourNeeded > 0)
-                    {
-                        if (amountLabourProvided == 0)
-                            labourlimit = 0;
-                        else
-                            labourlimit = amountLabourNeeded / amountLabourProvided;
-                    }
+                    units = Math.Truncate(units);
                 }
-                double units = 0;
-                if (labourlimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
-                {
-                    units = UnitsAvailableForSale * labourlimit;
-                    if (SellWholeUnitsOnly)
-                    {
-                        units = Math.Truncate(units);
-                    }
-                }
+            }
 
-                if(units>0)
-                {
-                    // remove resource
-                    ResourceRequest purchaseRequest = new ResourceRequest();
-                    purchaseRequest.ActivityModel = this;
-                    purchaseRequest.Required = units*UnitSize;
-                    purchaseRequest.AllowTransmutation = false;
-                    purchaseRequest.Reason = "Sales";
-                    resourceToSell.Remove(purchaseRequest);
+            if(units>0)
+            {
+                // remove resource
+                ResourceRequest purchaseRequest = new ResourceRequest();
+                purchaseRequest.ActivityModel = this;
+                purchaseRequest.Required = units*price.PacketSize;
+                purchaseRequest.AllowTransmutation = false;
+                purchaseRequest.Reason = "Sell "+(resourceToSell as Model).Name;
+                resourceToSell.Remove(purchaseRequest);
 
-                    // transfer money earned
-                    bankAccount.Add(units * UnitPrice, this.Name, "Sales");
-                    SetStatusSuccess();
-                }
+                // transfer money earned
+                bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                SetStatusSuccess();
             }
         }
 
@@ -278,8 +186,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -293,8 +200,41 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Sell ";
+            if (ResourceTypeName == null || ResourceTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
+            }
+            if(AmountReserved > 0)
+            {
+                html += " with <span class=\"resourcelink\">" + AmountReserved.ToString("#,##0") + "</span> reserved in the store";
+            }
+            if (AccountName == null || AccountName == "")
+            {
+                html += " with sales placed in <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+            }
+            else
+            {
+                html += " with sales placed in <span class=\"resourcelink\">" + AccountName + "</span>";
+            }
+            html += "</div>";
+
+            return html;
         }
 
     }

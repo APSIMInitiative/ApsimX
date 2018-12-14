@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -19,7 +20,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity folder can ve used to arrange and group activities.")]
+    [Description("This activity folder holds groups of activities and is used to arrange activities and apply timers to groups")]
+    [Version(1, 0, 1, "")]
     public class ActivityFolder : CLEMActivityBase
     {
         /// <summary>
@@ -65,8 +67,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -80,8 +81,53 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            return "\n<div class=folder>"+this.Name+" folder</div>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "\n</div>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "\n<div class=\"activityborder\">";
         }
 
     }

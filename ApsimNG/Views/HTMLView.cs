@@ -364,7 +364,7 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("about:blank"));
+            wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("file://"));
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
@@ -467,7 +467,7 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            wb.LoadHtmlString(html, "about:blank");
+            wb.LoadHtmlString(html, "file://");
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 

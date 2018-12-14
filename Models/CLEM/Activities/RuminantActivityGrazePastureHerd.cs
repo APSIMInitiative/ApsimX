@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Models.CLEM.Resources;
 using System.Xml.Serialization;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of a specified herd and pasture (paddock) in the simulation.")]
+    [Version(1, 0, 1, "")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -35,14 +38,15 @@ namespace Models.CLEM.Activities
         /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
-        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
         /// <summary>
-        /// Name of paddock or pasture to graze
+        /// Paddock or pasture to graze
         /// </summary>
-        [Description("Name of GrazeFoodStoreType to graze")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Graze Food Store required")]
+        [Description("GrazeFoodStore/pasture to graze")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -52,10 +56,11 @@ namespace Models.CLEM.Activities
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
-        /// Name of ruminant group to graze
+        /// Ruminant group to graze
         /// </summary>
-        [Description("Name of ruminant type to graze")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Ruminant Type required")]
+        [Description("Ruminant type to graze")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(RuminantHerd) })]
         public string RuminantTypeName { get; set; }
 
         /// <summary>
@@ -106,11 +111,14 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
 
             // if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
-            if (GrazingCompetitionLimiter == 0) GrazingCompetitionLimiter = 1.0;
+            if (GrazingCompetitionLimiter == 0)
+            {
+                GrazingCompetitionLimiter = 1.0;
+            }
 
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
-            RuminantTypeModel = Resources.GetResourceItem(this, typeof(RuminantHerd), RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            RuminantTypeModel = Resources.GetResourceItem(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
         }
 
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>
@@ -168,11 +176,13 @@ namespace Models.CLEM.Activities
                         // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                         // calculate intake from potential modified by pasture availability and hours grazed
                         indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
+                        // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
+                        // hours grazed is not adjusted for this reduced feeding.
+                        indAmount = Math.Min(ind.PotentialIntake * 1.2 - ind.Intake, indAmount);
                         amount += indAmount;
                     }
-                    // report even if zero so shortfalls can be reported.
-                    //if (amount > 0)
-                    //{
+                    if (amount > 0)
+                    {
                         ResourceRequestList.Add(new ResourceRequest()
                         {
                             AllowTransmutation = true,
@@ -183,7 +193,7 @@ namespace Models.CLEM.Activities
                             AdditionalDetails = this
                         }
                         );
-                    //}
+                    }
 
                     if ( GrazeFoodStoreTypeName != null & GrazeFoodStoreModel != null)
                     {
@@ -203,7 +213,7 @@ namespace Models.CLEM.Activities
         {
             this.GrazingCompetitionLimiter = limit;
             // store kg/ha available for consumption calculation
-            this.BiomassPerHectare = GrazeFoodStoreModel.kgPerHa;
+            this.BiomassPerHectare = GrazeFoodStoreModel.KilogramsPerHa;
 
             // calculate breed feed limits
             if (this.PoolFeedLimits == null)
@@ -220,17 +230,16 @@ namespace Models.CLEM.Activities
                 this.PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit = 1.0, Pool = pool });
             }
 
-            // if Jan-March then user first three months otherwise use 2
+            // if Jan-March then use first three months otherwise use 2
             int greenage = (Clock.Today.Month <= 3) ? 3 : 2;
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;
             
-            // All valuesa re now proportions.
+            // All values are now proportions.
             // Convert to percentage before calculation
             
             double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
-//            double greenlimit = this.RuminantTypeModel.GreenDietMax * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100.0) - this.RuminantTypeModel.GreenDietZero)));
             greenlimit = Math.Max(0.0, greenlimit);
             if (propgreen > 90)
             {
@@ -252,56 +261,91 @@ namespace Models.CLEM.Activities
                 if (herd.Count() > 0)
                 {
                     //Get total amount
-                    double totalDesired = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8));
-                    double totalEaten = herd.Sum(a => a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                    // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
+                    // hours grazed is not adjusted for this reduced feeding.
+                    double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
+                    double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
+
                     totalEaten *= GrazingCompetitionLimiter;
 
                     // take resource
-                    ResourceRequest request = new ResourceRequest()
+                    if (totalEaten > 0)
                     {
-                        ActivityModel = this,
-                        AdditionalDetails = this,
-                        Reason = RuminantTypeModel.Name+" grazing",
-                        Required = totalEaten,
-                        Resource = GrazeFoodStoreModel
-                    };
-                    GrazeFoodStoreModel.Remove(request);
-
-                    FoodResourcePacket food = new FoodResourcePacket()
-                    {
-                        DMD = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).DMD,
-                        PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
-                    };
-
-                    double shortfall = request.Provided / request.Required;
-
-                    // allocate to individuals
-                    foreach (Ruminant ind in herd)
-                    {
-                        double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
-                        food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
-                        ind.AddIntake(food);
-                    }
-                    SetStatusSuccess();
-
-                    // if insufficent provided or no pasture (nothing eaten) use totalNeededifPasturePresent
-                    if (GrazingCompetitionLimiter < 1)
-                    {
-                        request.Available = request.Provided; // display all that was given
-                        request.Required = totalDesired;
-                        request.ResourceType = typeof(GrazeFoodStore);
-                        request.ResourceTypeName = GrazeFoodStoreModel.Name;
-                        ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = request };
-                        OnShortfallOccurred(rre);
-
-                        if(this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                        ResourceRequest request = new ResourceRequest()
                         {
-                            throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock ("+GrazeFoodStoreModel.Name+") in "+Clock.Today.Month.ToString()+"\\"+Clock.Today.Year.ToString());
+                            ActivityModel = this,
+                            AdditionalDetails = this,
+                            Reason = RuminantTypeModel.Name + " grazing",
+                            Required = totalEaten,
+                            Resource = GrazeFoodStoreModel as IResourceType
+                        };
+                        GrazeFoodStoreModel.Remove(request);
+
+                        FoodResourcePacket food = new FoodResourcePacket()
+                        {
+                            DMD = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).DMD,
+                            PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
+                        };
+
+                        double shortfall = request.Provided / request.Required;
+
+                        // allocate to individuals
+                        foreach (Ruminant ind in herd)
+                        {
+                            double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
+                            food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
+                            ind.AddIntake(food);
                         }
-                        this.Status = ActivityStatus.Partial;
+                        Status = ActivityStatus.Success;
+
+                        // if insufficent provided or no pasture (nothing eaten) use totalNeededifPasturePresent
+                        if (GrazingCompetitionLimiter < 1)
+                        {
+                            request.Available = request.Provided; // display all that was given
+                            request.Required = totalDesired;
+                            request.ResourceType = typeof(GrazeFoodStore);
+                            request.ResourceTypeName = GrazeFoodStoreModel.Name;
+                            ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = request };
+                            OnShortfallOccurred(rre);
+
+                            if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                            {
+                                throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock (" + GrazeFoodStoreModel.Name + ") in " + Clock.Today.Month.ToString() + "\\" + Clock.Today.Year.ToString());
+                            }
+                            this.Status = ActivityStatus.Partial;
+                        }
+                    }
+                    else
+                    {
+                        Status = ActivityStatus.NotNeeded;
                     }
                 }
             }
+            else
+            {
+                if (Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+                {
+                    Status = ActivityStatus.NotNeeded;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>
@@ -324,8 +368,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -339,10 +382,49 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
-    }
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">All individuals of ";
+            if (RuminantTypeName == null || RuminantTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[HERD NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + RuminantTypeName + "</span>";
+            }
+            html += " in ";
+            if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>";
+            }
+            html += " will graze for ";
+            html += "\n<div class=\"activityentry\">All individuals in managed pastures will graze for ";
+            if (HoursGrazed <= 0)
+            {
+                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
+            }
+            else
+            {
+                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+            }
 
+            html += "the maximum 8 hours each day</span>";
+            html += "</div>";
+            return html;
+        }
+    }
 }

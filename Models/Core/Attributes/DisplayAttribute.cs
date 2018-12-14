@@ -1,4 +1,6 @@
-﻿// -----------------------------------------------------------------------
+﻿using System.Collections.Generic;
+
+// -----------------------------------------------------------------------
 // <copyright file="DisplayAttribute.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
@@ -9,6 +11,7 @@ namespace Models.Core
 
     /// <summary>
     /// An enumeration for display types.
+    /// Used by the Display Attribute.
     /// </summary>
     public enum DisplayType
     {
@@ -45,7 +48,22 @@ namespace Models.Core
         /// <summary>
         /// A model drop down.
         /// </summary>
-        Model
+        Model,
+
+        /// <summary>
+        /// A CLEM Resource name editor.
+        /// </summary>
+        CLEMResourceName,
+
+        /// <summary>
+        /// A CLEM Crop file reader editor.
+        /// </summary>
+        CLEMCropFileName,
+
+        /// <summary>
+        /// A CLEM Grasp file reader editor.
+        /// </summary>
+        CLEMGraspFileName
     }
 
     /// <summary>
@@ -70,6 +88,20 @@ namespace Models.Core
         /// Gets or sets a value denoting the type of model to show in the model drop down.
         /// </summary>
         public Type ModelType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the types for the ResourceGroups whose Resource items are valid choices in the Resource name editor.
+        /// eg. [Display(CLEMResourceNameResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
+        /// Will create a dropdown list with all the Resource items from only the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// </summary>
+        public Type[] CLEMResourceNameResourceGroups { get; set; }
+
+        /// <summary>
+        /// Gets or sets strings that are manually added to the Resource name editor.
+        /// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
+        /// Will add these strings to the dropdown list created by CLEMResourceNameResourceGroups. 
+        /// </summary>
+        public string[] CLEMExtraEntries { get; set; }
 
         /// <summary>
         /// Gets or sets the display type. 
