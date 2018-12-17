@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -19,33 +20,36 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject
+    [Version(1, 0, 1, "Beta build")]
+    [Version(1, 0, 2, "Rotational cropping implemented")]
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         /// <summary>
-        /// Name of land type where crop is located
+        /// Land type where crop is to be grown
         /// </summary>
         [Description("Land type where crop is to be grown")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of land resource type required")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 
         /// <summary>
         /// Area of land requested
         /// </summary>
         [Description("Area of crop")]
-        [Required, GreaterThanValue(0)]
+        [Required, GreaterThanEqualValue(0)]
         public double AreaRequested { get; set; }
 
         /// <summary>
-        /// Use entire area available
+        /// Use unallocated available
         /// </summary>
-        [Description("Use entire area available")]
+        [Description("Use unallocated land")]
         public bool UseAreaAvailable { get; set; }
         
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
         [XmlIgnore]
-        public double Area;
+        public double Area { get; set; }
 
         /// <summary>
         /// Land item
@@ -54,6 +58,16 @@ namespace Models.CLEM.Activities
         public LandType LinkedLandItem { get; set; }
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
+
+        private int CurrentCropIndex = 0;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public CropActivityManageCrop()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
+        }
 
         /// <summary>
         /// Validate model
@@ -64,10 +78,10 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that this activity contains at least one CollectProduct activity
-            if(this.Children.Where(a => a.GetType() == typeof(CropActivityManageProduct)).Count() == 0)
+            if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one CropActivityCollectProduct activity must be present under this manage crop activity", memberNames));
+                results.Add(new ValidationResult("At least one [a=CropActivityCollectProduct] activity must be present under this manage crop activity", memberNames));
             }
             return results;
         }
@@ -79,33 +93,101 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate Land Type resource for this forage.
-            LinkedLandItem = Resources.GetResourceItem(this, typeof(Land), LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
 
-            // used to check for Area = 0 and AreaRequested > 0. these are now validated and Area cannot be set before now.
-            ResourceRequestList = new List<ResourceRequest>
+            if (UseAreaAvailable)
             {
-                new ResourceRequest()
+                LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
+                Area = LinkedLandItem.AreaAvailable;
+            }
+            else
+            {
+                ResourceRequestList = new List<ResourceRequest>
                 {
-                    AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                    ResourceType = typeof(Land),
-                    ResourceTypeName = LandItemNameToUse,
-                    ActivityModel = this,
-                    Reason = "Assign",
-                    FilterDetails = null
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                        ResourceType = typeof(Land),
+                        ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                        ActivityModel = this,
+                        Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                        FilterDetails = null
+                    }
+                };
+
+                CheckResources(ResourceRequestList, Guid.NewGuid());
+                gotLandRequested = TakeResources(ResourceRequestList, false);
+
+                //Now the Land has been allocated we have an Area 
+                if (gotLandRequested)
+                {
+                    //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                    Area = ResourceRequestList.FirstOrDefault().Provided;
                 }
-            };
+            }
 
-            gotLandRequested = TakeResources(ResourceRequestList, false);
-
-            //Now the Land has been allocated we have an Area 
-            if (gotLandRequested)
+            // set and enable first crop in the list for rotational cropping.
+            int i = 0;
+            foreach (var item in this.Children.OfType<CropActivityManageProduct>())
             {
-                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                Area = ResourceRequestList.FirstOrDefault().Provided;
+                item.ActivityEnabled = i == CurrentCropIndex;
+                i++;
             }
         }
 
+        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
+        private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
+        {
+            if (Area == 0 & UseAreaAvailable)
+            {
+                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
+            }
+        }
+
+        /// <summary>
+        /// Method to rotate to the next crop in the list
+        /// </summary>
+        public void RotateCrop()
+        {
+            int numberCrops = this.Children.OfType<CropActivityManageProduct>().Count();
+            if (numberCrops>1)
+            {
+                CurrentCropIndex++;
+                if (CurrentCropIndex >= numberCrops)
+                {
+                    CurrentCropIndex = 0;
+                }
+                int i = 0;
+                foreach (var item in this.Children.OfType<CropActivityManageProduct>())
+                {
+                    item.ActivityEnabled = i == CurrentCropIndex;
+                    i++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            if (LinkedLandItem != null & UseAreaAvailable)
+            {
+                LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
+            }
+        }
+
+        // Method to listen for land use transactions 
+        // This allows this activity to dynamically respond when use available area is selected
+        private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
+        {
+            Area = LinkedLandItem.AreaAvailable;
+        }
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -121,6 +203,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            Status = ActivityStatus.NoTask;
             return;
         }
 
@@ -144,8 +227,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -159,9 +241,95 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">This crop uses ";
+
+            Land parentLand = null;
+            if(LandItemNameToUse != null && LandItemNameToUse != "")
+            {
+                parentLand = Apsim.Find(this, LandItemNameToUse.Split('.')[0]) as Land;
+            }
+
+            if(UseAreaAvailable)
+            {
+                html += "the unallocated portion of ";
+            }
+            else
+            {
+                if (parentLand == null)
+                {
+                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> " + parentLand.UnitsOfArea + " of ";
+                }
+            }
+            if (LandItemNameToUse == null || LandItemNameToUse == "")
+            {
+                html += "<span class=\"errorlink\">[LAND NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + LandItemNameToUse + "</span>";
+            }
+            html += "</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            string html = "";
+            bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
+            if (rotation)
+            {
+                html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+            }
+            html += "\n<div class=\"croprotationborder\">";
+            return html;
+        }
     }
 }

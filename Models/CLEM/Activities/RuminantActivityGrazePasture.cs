@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -21,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds within a specified pasture (paddock) in the simulation.")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -36,14 +39,15 @@ namespace Models.CLEM.Activities
         /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
-        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
         /// <summary>
-        /// Name of paddock or pasture to graze
+        /// Paddock or pasture to graze
         /// </summary>
-        [Description("Name of GrazeFoodStoreType to graze")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Graze Food Store required")]
+        [Description("GrazeFoodStore/pasture to graze")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -61,7 +65,7 @@ namespace Models.CLEM.Activities
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
             //Create list of children by breed
             foreach (RuminantType herdType in Resources.RuminantHerd().Children)
@@ -72,7 +76,7 @@ namespace Models.CLEM.Activities
                     RuminantTypeModel = herdType,
                     Parent = this,
                     Clock = this.Clock,
-                    Name = "Graze_" + GrazeFoodStoreModel.Name + "_" + herdType.Name
+                    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name
                 };
                 if (ragpb.Resources == null)
                 {
@@ -141,7 +145,46 @@ namespace Models.CLEM.Activities
             {
                 item.SetupPoolsAndLimits(limit);
             }
-            return null;
+            return ResourceRequestList;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name).ToList();
+            int head = herd.Count();
+            double adultEqivalents = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = adultEqivalents / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
         }
 
         /// <summary>
@@ -168,8 +211,7 @@ namespace Models.CLEM.Activities
 
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(sender, e);
+            ActivityPerformed?.Invoke(sender, e);
         }
 
         /// <summary>
@@ -177,6 +219,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            if (Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+            {
+                Status = ActivityStatus.NoTask;
+            }
             return;
         }
 
@@ -190,6 +236,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
         /// Resource shortfall event handler
         /// </summary>
         public override event EventHandler ResourceShortfallOccurred;
@@ -200,8 +254,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -215,10 +268,40 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">All individuals in ";
+            if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>";
+            }
+            html += " will graze for ";
+            if (HoursGrazed <= 0)
+            {
+                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
+            }
+            else
+            {
+                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+            }
+
+            html += "the maximum 8 hours each day</span>";
+            html += "</div>";
+            return html;
+        }
 
     }
 }

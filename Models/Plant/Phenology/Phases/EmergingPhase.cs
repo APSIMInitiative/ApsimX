@@ -94,7 +94,11 @@ namespace Models.PMF.Phen
         public virtual void ResetPhase()
         {
             ProgressThroughPhase = 0;
-            Target = 0;
+            if(phenology.SorghumFlag == null)
+            {
+                Target = 0;
+            }
+            //resetting to 0 affects the old sorghum model
         }
         
         /// <summary>Writes the summary.</summary>

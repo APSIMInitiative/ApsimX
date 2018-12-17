@@ -26,7 +26,7 @@ summary, the Agreement prevails.
 Any individual or organisation (a 3rd party outside of the AI) who wants to use APSIM must be licensed do so by 
 the AI. Key elements of the licence are as follows:
 * The licence is a legally binding agreement between the licensee and the parties of the AI 
-(currently the State of Queensland, the University of Queensland, CSIRO and AgResearch Ltd.).
+(currently the State of Queensland, the University of Queensland, the University of Southern Queensland, CSIRO and AgResearch Ltd.).
 The licence agreement permits the licensee to use APSIM for research and development and for education. 
 All commercial uses are explicitly excluded. Proposals for commercial use will be considered by the AI but 
 this licence will not apply. Separate agreements will be negotiated on a case-by-case basis.

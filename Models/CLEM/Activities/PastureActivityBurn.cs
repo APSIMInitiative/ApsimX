@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -19,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity applies controlled burning to a specified graze food store (i.e. native pasture paddock).")]
+    [Version(1, 0, 1, "")]
     public class PastureActivityBurn: CLEMActivityBase
     {
         /// <summary>
@@ -26,18 +28,19 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0.5)]
         [Description("Minimum proportion green for fire to carry")]
-        [Required, Proportion]
+        [Required(AllowEmptyStrings = false), Proportion]
         public double MinimumProportionGreen { get; set; }
 
         /// <summary>
         /// Name of graze food store/paddock to burn
         /// </summary>
         [Description("Name of graze food store/paddock to burn")]
-        [Required]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Required(AllowEmptyStrings = false)]
         public string PaddockName { get; set; }
 
         private GrazeFoodStoreType pasture { get; set; }
-        private List<LabourFilterGroupSpecified> labour { get; set; }
+        private List<LabourRequirement> labour { get; set; }
         private GreenhouseGasesType methane { get; set; }
         private GreenhouseGasesType nox { get; set; }
 
@@ -56,14 +59,10 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get pasture
-            pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            pasture = Resources.GetResourceItem(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
             methane = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-            nox = Resources.GetResourceItem(this, typeof(GreenhouseGases), "NOx", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+            nox = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
         }
 
         /// <summary>
@@ -72,35 +71,8 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
-            // for each labour item specified
-            foreach (var item in labour)
-            {
-                double daysNeeded = 0;
-                switch (item.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = item.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                }
-                if (daysNeeded > 0)
-                {
-                    if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = daysNeeded,
-                        ResourceType = typeof(Labour),
-                        ResourceTypeName = "",
-                        ActivityModel = this,
-                        FilterDetails = new List<object>() { item }
-                    }
-                    );
-                }
-            }
-            return ResourceRequestList;
+            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
+            return resourcesNeeded;
         }
 
         /// <summary>
@@ -110,15 +82,6 @@ namespace Models.CLEM.Activities
         {
             // labour is consumed and shortfall has no impact at present
             // could lead to other paddocks burning in future.
-
-            // calculate labour limit
-//            double labourLimit = 1;
-//            double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-//            double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-//            if (labourNeeded > 0)
-//            {
-//                labourLimit = labourProvided / labourNeeded;
-//            }
 
             if(Status != ActivityStatus.Partial)
             {
@@ -152,11 +115,11 @@ namespace Models.CLEM.Activities
                     if (methane != null)
                     {
                         //TODO change emissions for green material
-                        methane.Add(burnkg * 1.333 * 0.0035, "Burn", PaddockName); // * 21; // methane emissions from fire (CO2 eq)
+                        methane.Add(burnkg * 1.333 * 0.0035, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
                     }
                     if (nox != null)
                     {
-                        nox.Add(burnkg * 1.571 * 0.0076 * 0.12, "Burn", PaddockName); // * 21; // methane emissions from fire (CO2 eq)
+                        nox.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
                     }
 
                     // TODO: add fertilisation to pasture for given period.
@@ -175,5 +138,41 @@ namespace Models.CLEM.Activities
             return null;
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHa:
+                    numberUnits = (pasture.Manager.Area * (Resources.GetResourceGroupByType(typeof(Land)) as Land).UnitsOfAreaToHaConversion ) / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
     }
 }

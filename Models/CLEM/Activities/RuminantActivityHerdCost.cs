@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Models.CLEM;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -38,10 +40,11 @@ namespace Models.CLEM.Activities
         public AnimalPaymentStyleType PaymentStyle { get; set; }
 
         /// <summary>
-        /// name of account to use
+        /// Bank account to use
         /// </summary>
-        [Description("Name of account to use")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
+        [Description("Bank account to use")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
 
         /// <summary>
@@ -89,55 +92,105 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = new List<ResourceRequest>();
+            List<ResourceRequest> resourcesNeeded = null;
 
-            if (this.TimingOK)
+            double amountNeeded = 0;
+            List<Ruminant> herd = this.CurrentHerd(false);
+            switch (PaymentStyle)
             {
-                double amountNeeded = 0;
-                List<Ruminant> herd = this.CurrentHerd(false);
-                switch (PaymentStyle)
-                {
-                    case AnimalPaymentStyleType.Fixed:
-                        amountNeeded = Amount;
-                        break;
-                    case AnimalPaymentStyleType.perHead:
-                        amountNeeded = Amount*herd.Count();
-                        break;
-                    case AnimalPaymentStyleType.perAE:
-                        amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
-                        break;
-                    default:
-                        break;
-                }
-
-                if (amountNeeded == 0) return ResourceRequestList;
-
-                // determine breed
-                string BreedName = "Multiple breeds";
-                List<string> breeds = herd.Select(a => a.Breed).Distinct().ToList();
-                if(breeds.Count==1)
-                {
-                    BreedName = breeds[0];
-                }
-
-                ResourceRequestList.Add(new ResourceRequest()
-                {
-                    AllowTransmutation = false,
-                    Required = amountNeeded,
-                    ResourceType = typeof(Finance),
-                    ResourceTypeName = this.AccountName,
-                    ActivityModel = this,
-                    Reason = BreedName
-                }
-                );
+                case AnimalPaymentStyleType.Fixed:
+                    amountNeeded = Amount;
+                    break;
+                case AnimalPaymentStyleType.perHead:
+                    amountNeeded = Amount*herd.Count();
+                    break;
+                case AnimalPaymentStyleType.perAE:
+                    amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
+                    break;
+                default:
+                    break;
             }
-            return ResourceRequestList;
+
+            if (amountNeeded > 0)
+            {
+                // determine breed
+                string breedName = "Multiple breeds";
+                List<string> breeds = herd.Select(a => a.Breed).Distinct().ToList();
+                if (breeds.Count == 1)
+                {
+                    breedName = breeds[0];
+                }
+
+                resourcesNeeded = new List<ResourceRequest>()
+                {
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = amountNeeded,
+                        ResourceType = typeof(Finance),
+                        ResourceTypeName = this.AccountName.Split('.').Last(),
+                        ActivityModel = this,
+                        Reason = breedName
+                    }
+                };
+            }
+            return resourcesNeeded;
         }
 
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            // get all potential dry breeders
+            List<Ruminant> herd = this.CurrentHerd(false);
+            int head = herd.Count();
+            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = animalEquivalents / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
@@ -162,8 +215,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -177,8 +229,30 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Pay ";
+            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
+            html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ";
+            if (AccountName == null || AccountName == "")
+            {
+                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
+            }
+            html += "</div>";
+            return html;
         }
 
     }
