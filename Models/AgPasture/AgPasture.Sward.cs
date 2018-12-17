@@ -290,7 +290,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double BelowGroundWt
         {
-            get { return mySpecies.Sum(species => species.RootWt); }
+            get { return mySpecies.Sum(species => species.BelowGroundWt); }
         }
 
         /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>

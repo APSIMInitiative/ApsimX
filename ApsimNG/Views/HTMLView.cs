@@ -392,7 +392,7 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("about:blank"));
+            wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("file://"));
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
@@ -495,7 +495,7 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            wb.LoadHtmlString(html, "about:blank");
+            wb.LoadHtmlString(html, "file://");
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
@@ -646,7 +646,7 @@ namespace UserInterface.Views
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.HTMLView.glade");
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             frame1 = (Frame)builder.GetObject("frame1");

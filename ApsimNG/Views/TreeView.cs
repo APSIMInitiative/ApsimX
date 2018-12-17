@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="TreeView.cs"  company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
@@ -63,7 +63,6 @@ namespace UserInterface.Views
             column.SetAttributes(iconRender, "pixbuf", 1);
             column.SetAttributes(textRender, "text", 0);
             column.SetAttributes(tickCell, "text", 3);
-            // column.SetCellDataFunc(textRender, treecelldatafunc);
             treeview1.AppendColumn(column);
             treeview1.TooltipColumn = 2;
 
@@ -79,8 +78,6 @@ namespace UserInterface.Views
             };
 
             Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
-            // treeview1.EnableModelDragDest(target_table, actions);
-            // treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.SourceSet(treeview1, Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.DestSet(treeview1, 0, target_table, actions);
             treeview1.DragMotion += OnDragOver;

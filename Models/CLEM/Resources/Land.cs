@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -18,18 +19,13 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all land types for the simulation.")]
+    [Version(1, 0, 1, "")]
     public class Land: ResourceBaseWithTransactions
     {
-        ///// <summary>
-        ///// Current state of this resource.
-        ///// </summary>
-//        [XmlIgnore]
-//        public List<LandType> Items;
-
         /// <summary>
         /// Unit of area to be used in this simulation
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute("Hectares")]
+        [System.ComponentModel.DefaultValueAttribute("hectares")]
         [Description("Unit of area to be used in this simulation")]
         [Required]
         public string UnitsOfArea { get; set; }
@@ -47,9 +43,18 @@ namespace Models.CLEM.Resources
         /// </summary>
         public Land()
         {
+            ReportedLandAllocation = new LandActivityAllocation();
             this.SetDefaults();
         }
 
+        /// <summary>
+        /// Land allocation details for reporting
+        /// </summary>
+        [XmlIgnore]
+        public LandActivityAllocation ReportedLandAllocation { get; set; }
+
+        private bool ChangeOccurred = false;
+        
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -77,6 +82,41 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Report allocatios at start of timestep
+        /// </summary>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            foreach (LandType childModel in Apsim.Children(this, typeof(LandType)))
+            {
+                double total = 0;
+                if (childModel.AllocatedActivitiesList != null)
+                {
+                    foreach (LandActivityAllocation item in childModel.AllocatedActivitiesList)
+                    {
+                        ReportedLandAllocation = item;
+                        if (ChangeOccurred)
+                        {
+                            OnAllocationReported(new EventArgs());
+                        }
+                    }
+                    total = childModel.AllocatedActivitiesList.Sum(a => a.LandAllocated);
+                }
+                if (ChangeOccurred & childModel.LandArea - total > 0)
+                {
+                    ReportedLandAllocation = new LandActivityAllocation()
+                    {
+                        ActivityName = "Unallocated",
+                        LandName = childModel.Name,
+                        LandAllocated = childModel.LandArea - total
+                    };
+                    OnAllocationReported(new EventArgs());
+                }
+            }
+            ChangeOccurred = false;
+        }
+
 
         #region Transactions
 
@@ -87,8 +127,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -100,9 +139,41 @@ namespace Models.CLEM.Resources
         {
             LastTransaction = (e as TransactionEventArgs).Transaction;
             OnTransactionOccurred(e);
+            ChangeOccurred = true;
         }
 
         #endregion
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        protected void OnAllocationReported(EventArgs e)
+        {
+            AllocationReported?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public event EventHandler AllocationReported;
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">";
+            html += "Reported in <span class=\"setvalue\">" + UnitsOfArea +"</span>";
+            if(UnitsOfAreaToHaConversion != 1)
+            {
+                html += " (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)";
+            }
+            html += "</div>";
+            return html;
+        }
     }
 
 

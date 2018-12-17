@@ -77,7 +77,26 @@ namespace Models.Core.Runners
             server.AddCommand("EndJob", OnEndJob);
 
             // Tell server to start listening.
-            Task t = Task.Run(() => server.StartListening(2222));
+            Task t = Task.Run(() =>
+            {
+                server.StartListening(2222);
+                try
+                {
+                    jobs.Completed();
+                }
+                catch (Exception err)
+                {
+                    errors += Environment.NewLine + err.ToString();
+                }
+
+                if (AllJobsCompleted != null)
+                {
+                    AllCompletedArgs args = new AllCompletedArgs();
+                    if (errors != null)
+                        args.exceptionThrown = new Exception(errors);
+                    AllJobsCompleted.Invoke(this, args);
+                }
+            });
 
             DeleteRunners();
             CreateRunners(numberOfProcessors);
@@ -101,23 +120,6 @@ namespace Models.Core.Runners
                     server = null;
                     DeleteRunners();
                     runningJobs.Clear();
-
-                    try
-                    {
-                        jobs.Completed();
-                    }
-                    catch (Exception err)
-                    {
-                        errors += Environment.NewLine + err.ToString();
-                    }
-
-                    if (AllJobsCompleted != null)
-                    {
-                        AllCompletedArgs args = new AllCompletedArgs();
-                        if (errors != null)
-                            args.exceptionThrown = new Exception(errors);
-                        AllJobsCompleted.Invoke(this, args);
-                    }
                 }
             }
         }
@@ -235,8 +237,8 @@ namespace Models.Core.Runners
                 EndJobArguments arguments = args.obj as EndJobArguments;
                 JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
                 jobCompleteArguments.job = runningJobs[arguments.key];
-                if (arguments.errorMessage != null)
-                    jobCompleteArguments.exceptionThrowByJob = new Exception(arguments.errorMessage);
+                if (arguments.Error != null)
+                    jobCompleteArguments.exceptionThrowByJob = arguments.Error;
                 lock (this)
                 {
                     if (JobCompleted != null)
@@ -270,7 +272,7 @@ namespace Models.Core.Runners
             public Guid key;
 
             /// <summary>Error message</summary>
-            public string errorMessage;
+            public Exception Error;
 
             /// <summary>Simulation name of job completed</summary>
             public string simulationName;

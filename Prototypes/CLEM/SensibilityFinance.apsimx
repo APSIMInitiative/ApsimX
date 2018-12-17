@@ -1,258 +1,443 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
-  <Name>Simulations</Name>
-  <DataStore>
-    <Name>DataStore</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </DataStore>
-  <Simulation>
-    <Name>BankTest</Name>
-    <Clock>
-      <Name>clock</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <StartDate>1995-01-01T00:00:00</StartDate>
-      <EndDate>2009-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Summary>
-    <ZoneCLEM>
-      <Name>CLEM</Name>
-      <ResourcesHolder>
-        <Name>Resources</Name>
-        <Finance>
-          <Name>Finances</Name>
-          <FinanceType>
-            <Name>General account</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OpeningBalance>10000000</OpeningBalance>
-            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
-            <WithdrawalLimit>0</WithdrawalLimit>
-            <InterestRateCharged>7.5</InterestRateCharged>
-            <InterestRatePaid>2</InterestRatePaid>
-          </FinanceType>
-          <FinanceType>
-            <Name>Overheads account</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OpeningBalance>900000</OpeningBalance>
-            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
-            <WithdrawalLimit>0</WithdrawalLimit>
-            <InterestRateCharged>7.5</InterestRateCharged>
-            <InterestRatePaid>2</InterestRatePaid>
-          </FinanceType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Finance>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </ResourcesHolder>
-      <ActivitiesHolder>
-        <Name>Activities</Name>
-        <FinanceActivityCalculateInterest>
-          <Name>Bank interest</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        </FinanceActivityCalculateInterest>
-        <ActivityFolder>
-          <Name>Pay January expenses</Name>
-          <ActivityTimerInterval>
-            <Name>Perform every January</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </ActivityTimerInterval>
-          <FinanceActivityPayExpense>
-            <Name>Pay electricity</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <Amount>150</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay internet</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <Amount>1200</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        </ActivityFolder>
-        <FinanceActivityPayExpense>
-          <Name>Pay mechanic</Name>
-          <ActivityTimerDateRange>
-            <Name>Between98and04</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartDate>1998-01-01T00:00:00</StartDate>
-            <EndDate>2004-01-01T00:00:00</EndDate>
-            <Invert>false</Invert>
-          </ActivityTimerDateRange>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          <Amount>999</Amount>
-          <AccountName>Overheads account</AccountName>
-          <IsOverhead>true</IsOverhead>
-        </FinanceActivityPayExpense>
-        <ActivityFolder>
-          <Name>Cash flow</Name>
-          <FinanceActivityPayExpense>
-            <Name>Pay general farm maintenance</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>3333.33</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay fuel costs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>2500</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay pest control</Name>
-            <ActivityTimerMonthRange>
-              <Name>BetweenAprAndSept</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <StartMonth>4</StartMonth>
-              <EndMonth>9</EndMonth>
-            </ActivityTimerMonthRange>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>5000</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay contractors</Name>
-            <ActivityTimerInterval>
-              <Name>ActivityTimerInterval</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>10</MonthDue>
-            </ActivityTimerInterval>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>30000</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay administration</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>1666.67</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay rates and fees</Name>
-            <ActivityTimerInterval>
-              <Name>ActivityTimerInterval</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>6</MonthDue>
-            </ActivityTimerInterval>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>15000</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay insurance</Name>
-            <ActivityTimerInterval>
-              <Name>ActivityTimerInterval</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthDue>12</MonthDue>
-            </ActivityTimerInterval>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>20000</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay electricity</Name>
-            <ActivityTimerInterval>
-              <Name>ActivityTimerInterval</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Interval>3</Interval>
-            </ActivityTimerInterval>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>2000</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <FinanceActivityPayExpense>
-            <Name>Pay living costs</Name>
-            <ActivityTimerInterval>
-              <Name>ActivityTimerInterval</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Interval>6</Interval>
-              <MonthDue>6</MonthDue>
-            </ActivityTimerInterval>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Amount>1000</Amount>
-            <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
-          </FinanceActivityPayExpense>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-        </ActivityFolder>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </ActivitiesHolder>
-      <Folder>
-        <Name>Reports</Name>
-        <Report>
-          <Name>FinancesLedger</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
-            <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
-            <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
-            <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Resources].Finances.TransactionOccurred</string>
-          </EventNames>
-        </Report>
-        <Report>
-          <Name>ActivityLedger</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Activities].LastActivityPerformed.Name as Name</string>
-            <string>[Activities].LastActivityPerformed.Status as Status</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Activities].ActivityPerformed</string>
-          </EventNames>
-        </Report>
-        <ReportActivitiesPerformed>
-          <Name>ReportActivitiesPerformed</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-        </ReportActivitiesPerformed>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ShowPageOfGraphs>true</ShowPageOfGraphs>
-      </Folder>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
-      <Slope>0</Slope>
-      <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
-    </ZoneCLEM>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Simulation>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>281</ExplorerWidth>
-</Simulations>
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 281,
+  "Version": 47,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "BankTest",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "StartDate": "1995-01-01T00:00:00",
+          "EndDate": "2009-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.ZoneCLEM, Models",
+          "RandomSeed": 0,
+          "ClimateRegion": 0,
+          "EcologicalIndicatorsCalculationMonth": 9,
+          "Area": 0.0,
+          "Slope": 0.0,
+          "Name": "CLEM",
+          "Children": [
+            {
+              "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "Name": "Resources",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Resources.Finance, Models",
+                  "CurrencyName": null,
+                  "Name": "Finances",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.FinanceType, Models",
+                      "OpeningBalance": 10000000.0,
+                      "EnforceWithdrawalLimit": false,
+                      "WithdrawalLimit": 0.0,
+                      "InterestRateCharged": 7.5,
+                      "InterestRatePaid": 2.0,
+                      "Units": null,
+                      "Name": "General account",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.FinanceType, Models",
+                      "OpeningBalance": 900000.0,
+                      "EnforceWithdrawalLimit": false,
+                      "WithdrawalLimit": 0.0,
+                      "InterestRateCharged": 7.5,
+                      "InterestRatePaid": 2.0,
+                      "Units": null,
+                      "Name": "Overheads account",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "LastShortfallResourceRequest": null,
+              "LastActivityPerformed": null,
+              "Name": "Activities",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Activities.FinanceActivityCalculateInterest, Models",
+                  "OnPartialResourcesAvailableAction": 0,
+                  "Name": "Bank interest",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                  "OnPartialResourcesAvailableAction": 0,
+                  "Name": "Pay January expenses",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                      "Interval": 12,
+                      "MonthDue": 1,
+                      "Name": "Perform every January",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 150.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 2,
+                      "Name": "Pay electricity",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 1200.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 2,
+                      "Name": "Pay internet",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                  "Amount": 999.0,
+                  "AccountName": "Finances.Overheads account",
+                  "IsOverhead": true,
+                  "OnPartialResourcesAvailableAction": 2,
+                  "Name": "Pay mechanic",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Activities.ActivityTimerDateRange, Models",
+                      "StartDate": "1998-01-01T00:00:00",
+                      "EndDate": "2004-01-01T00:00:00",
+                      "Invert": false,
+                      "Name": "Between98and04",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                  "OnPartialResourcesAvailableAction": 0,
+                  "Name": "Cash flow",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 3333.33,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay general farm maintenance",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 2500.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay fuel costs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 5000.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay pest control",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ActivityTimerMonthRange, Models",
+                          "StartMonth": 4,
+                          "EndMonth": 9,
+                          "Name": "BetweenAprAndSept",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 30000.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay contractors",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                          "Interval": 12,
+                          "MonthDue": 10,
+                          "Name": "ActivityTimerInterval",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 1666.67,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay administration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 15000.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay rates and fees",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                          "Interval": 12,
+                          "MonthDue": 6,
+                          "Name": "ActivityTimerInterval",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 20000.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay insurance",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                          "Interval": 12,
+                          "MonthDue": 12,
+                          "Name": "ActivityTimerInterval",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 2000.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay electricity",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                          "Interval": 3,
+                          "MonthDue": 1,
+                          "Name": "ActivityTimerInterval",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.FinanceActivityPayExpense, Models",
+                      "Amount": 1000.0,
+                      "AccountName": "Finances.General account",
+                      "IsOverhead": false,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Pay living costs",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                          "Interval": 6,
+                          "MonthDue": 6,
+                          "Name": "ActivityTimerInterval",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Reports",
+              "Children": [
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": [
+                    "[Clock].Today as Date",
+                    "[Resources].Finances.LastTransaction.Credit as Credit",
+                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.ResourceType as Resource",
+                    "[Resources].Finances.LastTransaction.Activity as Activity",
+                    "[Resources].Finances.LastTransaction.Reason as Reason"
+                  ],
+                  "EventNames": [
+                    "[Resources].Finances.TransactionOccurred"
+                  ],
+                  "Name": "FinancesLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": [
+                    "[Clock].Today as Date",
+                    "[Activities].LastActivityPerformed.Name as Name",
+                    "[Activities].LastActivityPerformed.Status as Status"
+                  ],
+                  "EventNames": [
+                    "[Activities].ActivityPerformed"
+                  ],
+                  "Name": "ActivityLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "Name": "ReportActivitiesPerformed",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

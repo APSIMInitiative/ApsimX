@@ -953,8 +953,19 @@
             if (model is ModelCollectionFromResource)
                 description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
             else
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
+            {
+                string modelNamespace = model.GetType().FullName.Split('.')[1] + ".";
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + model.GetType().Name + ".png";
 
+                if (!MainView.MasterView.HasResource(description.ResourceNameForImage))
+                {
+                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
+                }
+
+            }
+           
+
+            //Check to see if you can find the image in the resource for this project.
             ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
             if (info == null)
             {

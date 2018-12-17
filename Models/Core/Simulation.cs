@@ -22,6 +22,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
+    [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
     public class Simulation : Model, ISimulationGenerator
@@ -203,6 +204,7 @@ namespace Models.Core
             factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
                                                        new string[] { Name, Name },
                                                        "Simulation", Name));
+            factors[0].AddFactor("Zone", Name);
             foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
             {
                 var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },

@@ -1,0 +1,76 @@
+﻿using Models.CLEM.Groupings;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Models.CLEM.Resources
+{
+    /// <summary>
+    /// Holds a list of labour availability items
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Labour))]
+    [Description("This represents a list of labour availability settings")]
+    [Version(1, 0, 1, "")]
+    public class LabourAvailabilityList: LabourSpecifications
+    {
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            if (this.Children.OfType<LabourAvailabilityItem>().Count() == 0)
+            {
+                html += "\n<div class=\"errorlink\">";
+                html += "No labour availability has been defined";
+                html += "</div>";
+            }
+            return html;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourAvailabilityList()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "</table>";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            string html = "";
+            if (this.Children.OfType<LabourAvailabilityItem>().Count() > 0)
+            {
+                html += "<table><tr><th>Filter</th><th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th><th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th></tr>";
+            }
+            return html;
+        }
+
+    }
+}
