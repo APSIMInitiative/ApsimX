@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 47,
+  "Version": 48,
   "Name": "Simulations",
   "Children": [
     {
@@ -965,7 +965,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
-                  "Name": "SorghumFlag2",
+                  "Name": "SorghumFlag",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2737,6 +2737,8 @@
               "KDead": 0.03,
               "LAIDead": 0.0,
               "senRadnCrit": 0.0,
+              "senLightTimeConst": 10.0,
+              "frostKill": 10.0,
               "LossFromExpansionStress": 0.0,
               "SenescedLai": 0.0,
               "DltSenescedLai": 0.0,

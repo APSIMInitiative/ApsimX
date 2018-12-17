@@ -290,6 +290,38 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Potential biomass production due to water (transpiration).</summary>
+        [Description("This is the daily Potential Biomass Production due to Transpiration")]
+        public double dltDMPotentialTE
+        {
+            // referred to as both dlt_dm_transp and dltDMPotTE in old sorghum code
+            get
+            {
+                return 0.0;
+            }
+        }
+
+        /// <summary>Potential biomass production due to light (limited by water and N).</summary>
+        [Description("This is the daily Potential Biomass Production due to light")]
+        public double dltDMPotentialRUE
+        {
+            // referred to as both dlt_dm_transp and dltDMPotTE in old sorghum code
+            get
+            {
+                return 0.0;
+            }
+        }
+        /// <summary>Potential biomass production due to light (limited by water and N).</summary>
+        [Description("This is the daily Potential Biomass Production due to light")]
+        public double RUE
+        {
+            // referred to as both dlt_dm_transp and dltDMPotTE in old sorghum code
+            get
+            {
+                return 0.0;
+            }
+        }
+
         private bool LeafInitialised = false;
         #endregion
 
@@ -452,7 +484,8 @@ namespace Models.PMF.Organs
         {
             /* TODO : Direct translation sort of. needs work */
             //double dlt_dm_transp = plant->biomass->getDltDMPotTE();
-
+            //var dlt_dm_transp = dltDMPotTE
+            //dltDMPotentialTE
             //double effectiveRue = plant->biomass->getEffectiveRue();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
