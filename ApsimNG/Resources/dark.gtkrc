@@ -85,7 +85,7 @@ GtkCheckButton::indicator-spacing = 4
 	GtkScrollbar::has-secondary-backward-stepper = 0
 	GtkScrollbar::has-secondary-forward-stepper = 0
 	GtkScrollbar::min-slider-length = 80
-	GtkScrollbar::slider-width = 12
+	GtkScrollbar::slider-width = 18
 	GtkScrollbar::trough-border = 0
 
 	GtkScrolledWindow::scrollbar-spacing = 0
