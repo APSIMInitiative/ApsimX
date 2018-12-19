@@ -238,7 +238,6 @@ namespace UserInterface.Presenters
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
-            
             for (int i = 0; i < annotations.Count; i++)
             {
                 if (annotations[i] is TextAnnotation)
@@ -256,8 +255,8 @@ namespace UserInterface.Presenters
                                             textAnnotation.leftAlign, 
                                             textAnnotation.textRotation,
                                             Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left, 
-                                            textAnnotation.colour);
+                                            Axis.AxisType.Left,
+                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                     else
                     {
@@ -268,8 +267,8 @@ namespace UserInterface.Presenters
                                             textAnnotation.leftAlign, 
                                             textAnnotation.textRotation,
                                             Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left, 
-                                            textAnnotation.colour);
+                                            Axis.AxisType.Left,
+                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                 }
                 else
@@ -282,8 +281,8 @@ namespace UserInterface.Presenters
                                         lineAnnotation.x2, 
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
-                                        lineAnnotation.thickness, 
-                                        lineAnnotation.colour);
+                                        lineAnnotation.thickness,
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour);
                 }
             }
         }

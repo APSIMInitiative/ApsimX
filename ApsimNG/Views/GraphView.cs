@@ -318,6 +318,8 @@ namespace UserInterface.Views
                     series.Title = title;
                 else
                     series.ToolTip = title;
+                if (colour == Color.Empty)
+                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();

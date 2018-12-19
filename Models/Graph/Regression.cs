@@ -86,8 +86,8 @@ namespace Models.Graph
             else
             {
                 // Display a single regression line for all data.
-                PutRegressionLineOnGraph(definitions, x, y, Color.Black, "Regression line");
-                equationColours.Add(Color.Black);
+                PutRegressionLineOnGraph(definitions, x, y, Color.Empty, "Regression line");
+                equationColours.Add(Color.Empty);
             }
 
             if (showOneToOne)
@@ -144,7 +144,7 @@ namespace Models.Graph
 
             SeriesDefinition oneToOne = new SeriesDefinition();
             oneToOne.title = "1:1 line";
-            oneToOne.colour = Color.Black;
+            oneToOne.colour = Color.Empty;
             oneToOne.line = LineType.Dot;
             oneToOne.marker = MarkerType.None;
             oneToOne.showInLegend = true;
