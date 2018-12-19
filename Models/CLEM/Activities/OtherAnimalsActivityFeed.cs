@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the feeding of a specified type of other animal based on a feeding style.")]
+    [Version(1, 0, 1, "")]
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]
@@ -28,8 +30,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of Feed to use
         /// </summary>
-        [Description("Feed type name in Animal Food Store")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type name to use required")]
+        [Description("Feed store to use")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type to use required")]
         public string FeedTypeName { get; set; }
 
         /// <summary>
@@ -40,18 +43,12 @@ namespace Models.CLEM.Activities
         [Required]
         public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
-        /// <summary>
-        /// Labour settings
-        /// </summary>
-        private List<LabourFilterGroupSpecified> labour { get; set; }
-
-        private IResourceType FoodSource { get; set; }
+        private IResourceType foodSource { get; set; }
         /// <summary>
         /// Feed type
         /// </summary>
         [XmlIgnore]
         public IFeedType FeedType { get; set; }
-
 
         /// <summary>
         /// Constructor
@@ -68,12 +65,8 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate FeedType resource
-            FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            FoodSource = FeedType;
-
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            foodSource = FeedType;
         }
 
         /// <summary>
@@ -82,7 +75,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
+            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
 
             // get feed required
             // zero based month index for array
@@ -111,55 +104,20 @@ namespace Models.CLEM.Activities
 
                 if (amount > 0)
                 {
-                    if(ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                    ResourceRequestList.Add(new ResourceRequest()
+                    resourcesNeeded.Add(new ResourceRequest()
                     {
                         AllowTransmutation = true,
                         Required = amount,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
-//                        ActivityName = "Feed " + (child as OtherAnimalsFilterGroup).AnimalType,
-                        Reason = "oops",
+                        Reason = "Feed",
                         FilterDetails = null
                     }
                     );
                 }
             }
-
-            if (amount == 0) return ResourceRequestList;
-
-            // for each labour item specified
-            foreach (var item in labour)
-            {
-                double daysNeeded = 0;
-                switch (item.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = item.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        daysNeeded = Math.Ceiling(allIndividuals / item.UnitSize) * item.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                }
-                if (daysNeeded > 0)
-                {
-                    if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = daysNeeded,
-                        ResourceType = typeof(Labour),
-                        ResourceTypeName = "",
-                        ActivityModel = this,
-                        FilterDetails = new List<object>() { item }
-                    }
-                    );
-                }
-            }
-            return ResourceRequestList;
+            return resourcesNeeded;
         }
 
         /// <summary>
@@ -190,8 +148,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -205,10 +162,49 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            double allIndividuals = 0;
+            foreach (OtherAnimalsFilterGroup filtergroup in Apsim.Children(this, typeof(OtherAnimalsFilterGroup)))
+            {
+                double total = 0;
+                foreach (OtherAnimalsTypeCohort item in (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(filtergroup as OtherAnimalsFilterGroup))
+                {
+                    total += item.Number * ((item.Age < (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
+                }
+                allIndividuals += total;
+            }
+
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    daysNeeded = Math.Ceiling(allIndividuals / requirement.UnitSize) * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
     }
 
     /// <summary>

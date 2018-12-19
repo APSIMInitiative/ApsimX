@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="46">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </DataStore>
   <Simulation>
     <Name>GrowCrop</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <StartDate>1995-01-01T00:00:00</StartDate>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <StartDate>2001-09-01T00:00:00</StartDate>
       <EndDate>2009-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <CaptureErrors>true</CaptureErrors>
+      <CaptureWarnings>true</CaptureWarnings>
+      <CaptureSummaryText>true</CaptureSummaryText>
     </Summary>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -26,32 +49,42 @@
           <LandType>
             <Name>Field</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <LandArea>100</LandArea>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <LandArea>1</LandArea>
             <SoilType>3</SoilType>
           </LandType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Land>
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>51</DMD>
+            <Nitrogen>1.5</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize stover</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>46</DMD>
+            <Nitrogen>1</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </AnimalFoodStore>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
@@ -59,75 +92,49 @@
           <Name>Manage maize</Name>
           <CropActivityManageProduct>
             <Name>Manage grain</Name>
+            <CropActivityManageProduct>
+              <Name>Manage residue</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+              <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+              <CropName>Maize_local_Stover</CropName>
+              <StoreItemName>AnimalFoodStore.Maize stover</StoreItemName>
+              <ProportionKept>1</ProportionKept>
+              <TreesPerHa>0</TreesPerHa>
+              <UnitsToHaConverter>0</UnitsToHaConverter>
+            </CropActivityManageProduct>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Maize_local</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize</StoreItemName>
-            <PercentKept>100</PercentKept>
-            <TreesPerHa>0</TreesPerHa>
-            <UnitsToHaConverter>0</UnitsToHaConverter>
-          </CropActivityManageProduct>
-          <CropActivityManageProduct>
-            <Name>Manage residue</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
-            <CropName>Maize_local_Stover</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize stover</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>1</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandItemNameToUse>Field</LandItemNameToUse>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
           <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>
         <Report>
-          <Name>ResourceShortfallLedger</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
-            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
-            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
-            <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Activities].ResourceShortfallOccurred</string>
-          </EventNames>
-        </Report>
-        <Report>
-          <Name>AnimalFoodStoreLedger</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
-          </EventNames>
-        </Report>
-        <Report>
           <Name>LandLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -142,95 +149,168 @@
             <string>[Resources].Land.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
         <Report>
-          <Name>ActivityLedger</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Name>AnimalFoodLedger</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Activities].LastActivityPerformed.Name as Name</string>
-            <string>[Activities].LastActivityPerformed.Status as Status</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
           </VariableNames>
           <EventNames>
-            <string>[Activities].ActivityPerformed</string>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <ReportResourceBalances>
+          <Name>ReportResourceBalances</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>Land</string>
+            <string>AnimalFoodStore</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].CLEMEndOfTimeStep</string>
+          </EventNames>
+        </ReportResourceBalances>
+        <Graph>
+          <Name>Graph_AnimalFoodStore</Name>
+          <Series>
+            <Name>Maize_grain</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <Marker>FilledTriangle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>AnimalFoodLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Credit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>Resource = "Maize"</Filter>
+          </Series>
+          <Series>
+            <Name>Maize_residue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>AnimalFoodLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Credit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>Resource = "Maize stover"</Filter>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileCrop>
-      <Name>FileCrop</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
-    </FileCrop>
-    <FileCrop>
-      <Name>FileCropResidue</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
-    </FileCrop>
-    <Graph>
-      <Name>Graph</Name>
-      <Series>
-        <Name>Series</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnimalFoodStoreLedger</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Credit</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </Simulation>
   <Simulation>
     <Name>GrowCropWithSales</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <StartDate>1995-01-01T00:00:00</StartDate>
       <EndDate>2009-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <CaptureErrors>true</CaptureErrors>
+      <CaptureWarnings>true</CaptureWarnings>
+      <CaptureSummaryText>true</CaptureSummaryText>
     </Summary>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -240,16 +320,22 @@
           <LandType>
             <Name>Field</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <LandArea>100</LandArea>
             <SoilType>3</SoilType>
           </LandType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Land>
         <Finance>
           <Name>Finances</Name>
           <FinanceType>
             <Name>General account</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OpeningBalance>10000000</OpeningBalance>
             <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <WithdrawalLimit>0</WithdrawalLimit>
@@ -257,28 +343,49 @@
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Finance>
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>51</DMD>
+            <Nitrogen>1.5</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize stover</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>46</DMD>
+            <Nitrogen>1</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </AnimalFoodStore>
+        <ProductStore>
+          <Name>ProductStore</Name>
+          <ProductStoreType>
+            <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <StartingAmount>0</StartingAmount>
+          </ProductStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </ProductStore>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
@@ -286,59 +393,59 @@
           <Name>Manage maize</Name>
           <CropActivityManageProduct>
             <Name>Manage grain</Name>
+            <CropActivityManageProduct>
+              <Name>Manage residue</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+              <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+              <CropName>Maize_local_Stover</CropName>
+              <StoreItemName>AnimalFoodStore.Maize stover</StoreItemName>
+              <ProportionKept>0.85</ProportionKept>
+              <TreesPerHa>0</TreesPerHa>
+              <UnitsToHaConverter>0</UnitsToHaConverter>
+            </CropActivityManageProduct>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Maize_local</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize</StoreItemName>
-            <PercentKept>100</PercentKept>
-            <TreesPerHa>0</TreesPerHa>
-            <UnitsToHaConverter>0</UnitsToHaConverter>
-          </CropActivityManageProduct>
-          <CropActivityManageProduct>
-            <Name>Manage residue</Name>
-            <ActivityTimerCropHarvest>
-              <Name>Perfrom at harvest</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
-              <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
-            </ActivityTimerCropHarvest>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
-            <CropName>Maize_local_Stover</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize stover</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>1</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandItemNameToUse>Field</LandItemNameToUse>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
           <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <ResourceActivitySell>
           <Name>Sell maize</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <AccountName>General account</AccountName>
-          <ResourceGroupName>AnimalFoodStore</ResourceGroupName>
-          <ResourceTypeName>Maize</ResourceTypeName>
-          <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
+          <AccountName>Finances.General account</AccountName>
+          <ResourceTypeName>AnimalFoodStore.Maize</ResourceTypeName>
           <AmountReserved>0</AmountReserved>
-          <UnitSize>1000</UnitSize>
-          <UnitPrice>800</UnitPrice>
         </ResourceActivitySell>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>
         <Report>
           <Name>FinancesLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -356,6 +463,8 @@
         <Report>
           <Name>ResourceShortfallLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -373,6 +482,8 @@
         <Report>
           <Name>AnimalFoodStoreLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -390,6 +501,8 @@
         <Report>
           <Name>LandLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -407,6 +520,8 @@
         <Report>
           <Name>ActivityLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -418,50 +533,99 @@
             <string>[Activities].ActivityPerformed</string>
           </EventNames>
         </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileCrop>
-      <Name>FileCrop</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
-    </FileCrop>
-    <FileCrop>
-      <Name>FileCropResidue</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
-    </FileCrop>
     <Graph>
-      <Name>Graph</Name>
+      <Name>Graph_AnimalFoodStore</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Credit</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
         <YFieldName>Credit</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Debit</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Bar</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>AnimalFoodStoreLedger</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Debit</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ReasonRuminantChange</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <Marker>Star</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Thin</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>AnimalFoodStoreLedger</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Activity</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -476,23 +640,53 @@
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </Simulation>
   <Simulation>
     <Name>GrowCropWithTasks</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <StartDate>1995-01-01T00:00:00</StartDate>
       <EndDate>2009-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <CaptureErrors>true</CaptureErrors>
+      <CaptureWarnings>true</CaptureWarnings>
+      <CaptureSummaryText>true</CaptureSummaryText>
     </Summary>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -502,71 +696,89 @@
           <LandType>
             <Name>Field</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <LandArea>100</LandArea>
             <SoilType>3</SoilType>
           </LandType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Land>
         <Finance>
           <Name>Finances</Name>
           <FinanceType>
             <Name>General account</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OpeningBalance>10000000</OpeningBalance>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <OpeningBalance>1000000</OpeningBalance>
             <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <WithdrawalLimit>0</WithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <CurrencyName>Dollars</CurrencyName>
         </Finance>
-        <AnimalFoodStore>
-          <Name>AnimalFoodStore</Name>
-          <AnimalFoodStoreType>
-            <Name>Maize</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
-            <StartingAmount>0</StartingAmount>
-          </AnimalFoodStoreType>
-          <AnimalFoodStoreType>
-            <Name>Maize stover</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
-            <StartingAmount>0</StartingAmount>
-          </AnimalFoodStoreType>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </AnimalFoodStore>
         <Labour>
           <Name>Labour</Name>
           <LabourType>
             <Name>Joe B</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <InitialAge>42</InitialAge>
             <Gender>Male</Gender>
-            <MaxLabourSupply>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-            </MaxLabourSupply>
             <Individuals>1</Individuals>
           </LabourType>
+          <LabourAvailabilityList>
+            <Name>LabourAvailabilityList</Name>
+            <LabourAvailabilityItem>
+              <Name>Male</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Value>10</Value>
+            </LabourAvailabilityItem>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </LabourAvailabilityList>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <AllowAging>true</AllowAging>
         </Labour>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>51</DMD>
+            <Nitrogen>1.5</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Maize stover</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>46</DMD>
+            <Nitrogen>1</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+        </AnimalFoodStore>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
@@ -579,24 +791,14 @@
               <ActivityTimerCropHarvest>
                 <Name>7 mths before harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>7</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>7</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>1</LabourPerUnit>
-                <UnitSize>0</UnitSize>
-                <UnitType>Fixed</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <CropActivityTask>
@@ -604,29 +806,23 @@
               <ActivityTimerCropHarvest>
                 <Name>6 mths before harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>6</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>6</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
               <CropActivityFee>
                 <Name>Purchase seeds</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Amount>100</Amount>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <AccountName>Finances.General account</AccountName>
+                <Amount>10</Amount>
               </CropActivityFee>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <CropActivityTask>
@@ -634,24 +830,14 @@
               <ActivityTimerCropHarvest>
                 <Name>From plant to harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>5</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>1</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>-6</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <CropActivityTask>
@@ -659,33 +845,24 @@
               <ActivityTimerCropHarvest>
                 <Name>At harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Maize_local</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>0</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
@@ -694,77 +871,58 @@
             <CropActivityTask>
               <Name>Cut and carry</Name>
               <ActivityTimerCropHarvest>
-                <Name>At harvest</Name>
+                <Name>At harvest residue</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
             <CropName>Maize_local_Stover</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize stover</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize stover</StoreItemName>
+            <ProportionKept>0</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandItemNameToUse>Field</LandItemNameToUse>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
           <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <ResourceActivitySell>
           <Name>Sell maize</Name>
-          <LabourFilterGroupSpecified>
-            <Name>Define labour</Name>
-            <LabourFilter>
-              <Name>Filter[Name=Joe B]</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Parameter>Name</Parameter>
-              <Operator>Equal</Operator>
-              <Value>Joe B</Value>
-            </LabourFilter>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <LabourPerUnit>1</LabourPerUnit>
-            <UnitSize>1</UnitSize>
-            <UnitType>perUnit</UnitType>
-          </LabourFilterGroupSpecified>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          <AccountName>General account</AccountName>
-          <ResourceGroupName>AnimalFoodStore</ResourceGroupName>
-          <ResourceTypeName>Maize</ResourceTypeName>
-          <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
-          <AmountReserved>0</AmountReserved>
-          <UnitSize>1000</UnitSize>
-          <UnitPrice>800</UnitPrice>
+          <AccountName>Finances.General account</AccountName>
+          <ResourceTypeName>AnimalFoodStore.Maize</ResourceTypeName>
+          <AmountReserved>400</AmountReserved>
         </ResourceActivitySell>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>
         <Report>
           <Name>FinancesLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -782,6 +940,8 @@
         <Report>
           <Name>ResourceShortfallLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -796,9 +956,19 @@
             <string>[Activities].ResourceShortfallOccurred</string>
           </EventNames>
         </Report>
+        <ReportResourceShortfalls>
+          <Name>ReportResourceShortfalls</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportResourceShortfalls>
         <Report>
           <Name>AnimalFoodStoreLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -816,6 +986,8 @@
         <Report>
           <Name>LandLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -833,6 +1005,8 @@
         <Report>
           <Name>ActivityLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -847,6 +1021,8 @@
         <Report>
           <Name>ExcessLabour</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -857,50 +1033,99 @@
             <string>[Clock].EndOfMonth</string>
           </EventNames>
         </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileCrop>
-      <Name>FileCrop</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
-    </FileCrop>
-    <FileCrop>
-      <Name>FileCropResidue</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
-    </FileCrop>
     <Graph>
-      <Name>Graph</Name>
+      <Name>Graph_AnimalFoodStore</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Credit</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Bar</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
         <YFieldName>Credit</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Debit</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Bar</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>AnimalFoodStoreLedger</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Debit</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>ReasonRuminantChange</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <Marker>Star</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Thin</LineThickness>
+        <Checkpoint>Current</Checkpoint>
+        <TableName>AnimalFoodStoreLedger</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Activity</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -915,22 +1140,38 @@
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </Simulation>
   <Simulation>
     <Name>GrowCropWithDateLimited</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <StartDate>1995-01-01T00:00:00</StartDate>
       <EndDate>2009-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <CaptureErrors>true</CaptureErrors>
+      <CaptureWarnings>true</CaptureWarnings>
+      <CaptureSummaryText>true</CaptureSummaryText>
     </Summary>
     <ZoneCLEM>
       <Name>CLEM</Name>
@@ -941,16 +1182,22 @@
           <LandType>
             <Name>Field</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <LandArea>100</LandArea>
             <SoilType>3</SoilType>
           </LandType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Land>
         <Finance>
           <Name>Finances</Name>
           <FinanceType>
             <Name>General account</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OpeningBalance>10000000</OpeningBalance>
             <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <WithdrawalLimit>0</WithdrawalLimit>
@@ -958,57 +1205,77 @@
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Finance>
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>51</DMD>
+            <Nitrogen>1.5</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize stover</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>46</DMD>
+            <Nitrogen>1</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </AnimalFoodStore>
         <Labour>
           <Name>Labour</Name>
           <LabourType>
             <Name>Joe B</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <InitialAge>42</InitialAge>
             <Gender>Male</Gender>
-            <MaxLabourSupply>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-              <double>24</double>
-            </MaxLabourSupply>
             <Individuals>1</Individuals>
           </LabourType>
+          <LabourAvailabilityList>
+            <Name>LabourAvailabilityList</Name>
+            <LabourAvailabilityItem>
+              <Name>Male</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <Value>10</Value>
+            </LabourAvailabilityItem>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+          </LabourAvailabilityList>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <AllowAging>true</AllowAging>
         </Labour>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
+        <ActivityTimerDateRange>
+          <Name>ActivityTimerDateRange</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
+          <StartDate>2007-01-01T00:00:00</StartDate>
+          <EndDate>2100-01-01T00:00:00</EndDate>
+          <Invert>false</Invert>
+        </ActivityTimerDateRange>
         <CropActivityManageCrop>
           <Name>Manage maize</Name>
           <CropActivityManageProduct>
@@ -1018,24 +1285,14 @@
               <ActivityTimerCropHarvest>
                 <Name>7 mths before harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>7</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>7</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>1</LabourPerUnit>
-                <UnitSize>0</UnitSize>
-                <UnitType>Fixed</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <CropActivityTask>
@@ -1043,29 +1300,23 @@
               <ActivityTimerCropHarvest>
                 <Name>6 mths before harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>6</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>6</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
               <CropActivityFee>
                 <Name>Purchase seeds</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <AccountName>Finances.General account</AccountName>
                 <Amount>100</Amount>
               </CropActivityFee>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <CropActivityTask>
@@ -1073,24 +1324,14 @@
               <ActivityTimerCropHarvest>
                 <Name>From plant to harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>5</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>1</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
             <CropActivityTask>
@@ -1098,119 +1339,84 @@
               <ActivityTimerCropHarvest>
                 <Name>At harvest</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
               </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
               <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             </CropActivityTask>
+            <CropActivityManageProduct>
+              <Name>Manage residue</Name>
+              <CropActivityTask>
+                <Name>Cut and carry</Name>
+                <ActivityTimerCropHarvest>
+                  <Name>At harvest</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Enabled>true</Enabled>
+                  <ReadOnly>false</ReadOnly>
+                  <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                  <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
+                </ActivityTimerCropHarvest>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Enabled>true</Enabled>
+                <ReadOnly>false</ReadOnly>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              </CropActivityTask>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Enabled>true</Enabled>
+              <ReadOnly>false</ReadOnly>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+              <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+              <CropName>Maize_local_Stover</CropName>
+              <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+              <ProportionKept>1</ProportionKept>
+              <TreesPerHa>0</TreesPerHa>
+              <UnitsToHaConverter>0</UnitsToHaConverter>
+            </CropActivityManageProduct>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Maize_local</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize</StoreItemName>
-            <PercentKept>100</PercentKept>
-            <TreesPerHa>0</TreesPerHa>
-            <UnitsToHaConverter>0</UnitsToHaConverter>
-          </CropActivityManageProduct>
-          <CropActivityManageProduct>
-            <Name>Manage residue</Name>
-            <CropActivityTask>
-              <Name>Cut and carry</Name>
-              <ActivityTimerCropHarvest>
-                <Name>At harvest</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MonthsBeforeHarvestStart>0</MonthsBeforeHarvestStart>
-                <MonthsBeforeHarvestStop>0</MonthsBeforeHarvestStop>
-              </ActivityTimerCropHarvest>
-              <LabourFilterGroupSpecified>
-                <Name>Define labour</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LabourPerUnit>0.1</LabourPerUnit>
-                <UnitSize>1</UnitSize>
-                <UnitType>perHa</UnitType>
-              </LabourFilterGroupSpecified>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            </CropActivityTask>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
-            <CropName>Maize_local_Stover</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize stover</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>1</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandItemNameToUse>Field</LandItemNameToUse>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
           <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <ResourceActivitySell>
           <Name>Sell maize</Name>
-          <LabourFilterGroupSpecified>
-            <Name>Define labour</Name>
-            <LabourFilter>
-              <Name>Filter[Name=Joe B]</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Parameter>Name</Parameter>
-              <Operator>Equal</Operator>
-              <Value>Joe B</Value>
-            </LabourFilter>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <LabourPerUnit>1</LabourPerUnit>
-            <UnitSize>1</UnitSize>
-            <UnitType>perUnit</UnitType>
-          </LabourFilterGroupSpecified>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          <AccountName>General account</AccountName>
-          <ResourceGroupName>AnimalFoodStore</ResourceGroupName>
-          <ResourceTypeName>Maize</ResourceTypeName>
-          <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
+          <AccountName>Finances.General account</AccountName>
+          <ResourceTypeName>AnimalFoodStore.Maize</ResourceTypeName>
           <AmountReserved>0</AmountReserved>
-          <UnitSize>1000</UnitSize>
-          <UnitPrice>800</UnitPrice>
         </ResourceActivitySell>
-        <ActivityTimerDateRange>
-          <Name>ActivityTimerDateRange</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartDate>2007-01-01T00:00:00</StartDate>
-          <EndDate>2100-01-01T00:00:00</EndDate>
-          <Invert>false</Invert>
-        </ActivityTimerDateRange>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>
         <Report>
           <Name>FinancesLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1228,6 +1434,8 @@
         <Report>
           <Name>ResourceShortfallLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1245,6 +1453,8 @@
         <Report>
           <Name>AnimalFoodStoreLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1262,6 +1472,8 @@
         <Report>
           <Name>LandLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1279,6 +1491,8 @@
         <Report>
           <Name>ActivityLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1291,22 +1505,31 @@
           </EventNames>
         </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
       <Name>FileCrop</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
     </FileCrop>
     <FileCrop>
       <Name>FileCropResidue</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
     </FileCrop>
     <Graph>
@@ -1314,17 +1537,17 @@
       <Series>
         <Name>Series</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
+        <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
         <YFieldName>Credit</YFieldName>
@@ -1334,6 +1557,8 @@
         <CumulativeX>false</CumulativeX>
       </Series>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1352,18 +1577,27 @@
       <DisabledSeries />
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </Simulation>
   <Simulation>
     <Name>NewReports</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <StartDate>1995-01-01T00:00:00</StartDate>
       <EndDate>2009-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <CaptureErrors>true</CaptureErrors>
+      <CaptureWarnings>true</CaptureWarnings>
+      <CaptureSummaryText>true</CaptureSummaryText>
     </Summary>
     <ZoneCLEM>
       <Name>CLEM</Name>
@@ -1374,32 +1608,42 @@
           <LandType>
             <Name>Field</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <LandArea>100</LandArea>
             <SoilType>3</SoilType>
           </LandType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </Land>
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>51</DMD>
+            <Nitrogen>1.5</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize stover</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
+            <DMD>46</DMD>
+            <Nitrogen>1</Nitrogen>
             <StartingAmount>0</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
         </AnimalFoodStore>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
@@ -1408,40 +1652,48 @@
           <CropActivityManageProduct>
             <Name>Manage grain</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Maize_local</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>0</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
           <CropActivityManageProduct>
             <Name>Manage residue</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Enabled>true</Enabled>
+            <ReadOnly>false</ReadOnly>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
             <CropName>Maize_local_Stover</CropName>
-            <Store>AnimalFoodStore</Store>
-            <StoreItemName>Maize stover</StoreItemName>
-            <PercentKept>100</PercentKept>
+            <StoreItemName>AnimalFoodStore.Maize stover</StoreItemName>
+            <ProportionKept>0</ProportionKept>
             <TreesPerHa>0</TreesPerHa>
             <UnitsToHaConverter>0</UnitsToHaConverter>
           </CropActivityManageProduct>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandItemNameToUse>Field</LandItemNameToUse>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
           <AreaRequested>1</AreaRequested>
           <UseAreaAvailable>true</UseAreaAvailable>
         </CropActivityManageCrop>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>
         <Report>
           <Name>ResourceShortfallLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1459,6 +1711,8 @@
         <Report>
           <Name>AnimalFoodStoreLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1476,6 +1730,8 @@
         <Report>
           <Name>LandLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1493,12 +1749,16 @@
         <ReportActivitiesPerformed>
           <Name>ReportActivitiesPerformed</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
         </ReportActivitiesPerformed>
         <ReportResourceBalances>
           <Name>ReportResourceBalances</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -1513,30 +1773,45 @@
         <ReportResourceShortfalls>
           <Name>ReportResourceShortfalls</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Enabled>true</Enabled>
+          <ReadOnly>false</ReadOnly>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
         </ReportResourceShortfalls>
         <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Enabled>true</Enabled>
+        <ReadOnly>false</ReadOnly>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
+      <Area>0</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <FileCrop>
       <Name>FileCrop</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
     </FileCrop>
     <FileCrop>
       <Name>FileCropResidue</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Enabled>true</Enabled>
+      <ReadOnly>false</ReadOnly>
       <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
     </FileCrop>
     <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Enabled>true</Enabled>
+    <ReadOnly>false</ReadOnly>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>
+  <Enabled>true</Enabled>
+  <ReadOnly>false</ReadOnly>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
+  <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </DataStore>
+  <Simulation>
+    <Name>1 person no labour shortfall</Name>
+    <Clock>
+      <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <StartDate>2000-01-01T00:00:00</StartDate>
+      <EndDate>2009-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Summary>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>FileCrop_Naibonat.prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>FileCropResidue_Naibonat.prn</FileName>
+    </FileCrop>
+    <ZoneCLEM>
+      <Name>CLEM</Name>
+      <ResourcesHolder>
+        <Name>Resources</Name>
+        <Land>
+          <Name>Land</Name>
+          <LandType>
+            <Name>Field</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LandArea>100</LandArea>
+            <SoilType>3</SoilType>
+          </LandType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Land>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DMD>40</DMD>
+            <Nitrogen>2</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Maize stover</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DMD>40</DMD>
+            <Nitrogen>2</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </AnimalFoodStore>
+        <Labour>
+          <Name>Labour</Name>
+          <LabourType>
+            <Name>MaleAdult</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <InitialAge>42</InitialAge>
+            <Gender>Male</Gender>
+            <Individuals>1</Individuals>
+          </LabourType>
+          <LabourAvailabilityList>
+            <Name>LabourAvailabilityList</Name>
+            <LabourAvailabilityItem>
+              <Name>Male</Name>
+              <LabourFilter>
+                <Name>LabourFilter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Parameter>Gender</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Male</Value>
+              </LabourFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Value>15</Value>
+            </LabourAvailabilityItem>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </LabourAvailabilityList>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <AllowAging>true</AllowAging>
+        </Labour>
+        <Finance>
+          <Name>Finances</Name>
+          <FinanceType>
+            <Name>General account</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OpeningBalance>10000000</OpeningBalance>
+            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
+            <WithdrawalLimit>0</WithdrawalLimit>
+            <InterestRateCharged>7.5</InterestRateCharged>
+            <InterestRatePaid>2</InterestRatePaid>
+          </FinanceType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Finance>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ResourcesHolder>
+      <ActivitiesHolder>
+        <Name>Activities</Name>
+        <CropActivityManageCrop>
+          <Name>Manage maize</Name>
+          <CropActivityManageProduct>
+            <Name>Manage grain</Name>
+            <CropActivityTask>
+              <Name>Prepare field</Name>
+              <ActivityTimerCropHarvest>
+                <Name>Plough 7 months before harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>-7</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>-7</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <LabourFilter>
+                    <Name>LabourFilter</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Parameter>Gender</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Male</Value>
+                  </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>3</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <CropActivityFee>
+                <Name>CropActivityFee</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <AccountName>Finances.General account</AccountName>
+                <Amount>10</Amount>
+              </CropActivityFee>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Sow seeds</Name>
+              <ActivityTimerCropHarvest>
+                <Name>Sow 6 mths before harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>-6</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>-6</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <LabourFilter>
+                    <Name>LabourFilter</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Parameter>Gender</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Male</Value>
+                  </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>2</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <CropActivityFee>
+                <Name>CropActivityFee</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <AccountName>Finances.General account</AccountName>
+                <Amount>10</Amount>
+              </CropActivityFee>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Perform irrigation</Name>
+              <ActivityTimerCropHarvest>
+                <Name>Irrigate plant to harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>-5</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>-2</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <LabourFilter>
+                    <Name>LabourFilter</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Parameter>Gender</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Male</Value>
+                  </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>3</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <CropActivityFee>
+                <Name>CropActivityFee</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <AccountName>Finances.General account</AccountName>
+                <Amount>10</Amount>
+              </CropActivityFee>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Harvest</Name>
+              <ActivityTimerCropHarvest>
+                <Name>At harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <LabourFilter>
+                    <Name>LabourFilter</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Parameter>Gender</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Male</Value>
+                  </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>4</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
+            <CropName>Maize_sole_unfert</CropName>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>1</ProportionKept>
+            <TreesPerHa>0</TreesPerHa>
+            <UnitsToHaConverter>0</UnitsToHaConverter>
+          </CropActivityManageProduct>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
+          <AreaRequested>1</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
+        </CropActivityManageCrop>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ActivitiesHolder>
+      <Folder>
+        <Name>Reports</Name>
+        <Report>
+          <Name>AnimalFoodStoreLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>LabourLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Labour.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Labour.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Labour.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Labour.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Labour.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Labour.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
+        <ReportResourceBalances>
+          <Name>ReportResourceBalances</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>Labour</string>
+            <string>Finances</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].CLEMEndOfTimeStep</string>
+          </EventNames>
+        </ReportResourceBalances>
+        <ReportResourceShortfalls>
+          <Name>ReportResourceShortfalls</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
+            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
+            <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ResourceShortfallOccurred</string>
+          </EventNames>
+        </ReportResourceShortfalls>
+        <Report>
+          <Name>FinancesLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Finances.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Graph>
+        <Name>Labour used</Name>
+        <Series>
+          <Name>Labour</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>LabourLedger</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Debit</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Activity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>LabourLedger</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Activity</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Labour (days)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Area>1</Area>
+      <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
+      <ClimateRegion>0</ClimateRegion>
+      <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
+    </ZoneCLEM>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Simulation>
+  <Simulation>
+    <Name>2 people no labour shortfall</Name>
+    <Clock>
+      <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <StartDate>2000-01-01T00:00:00</StartDate>
+      <EndDate>2009-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Summary>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>FileCrop_Naibonat.prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>FileCropResidue_Naibonat.prn</FileName>
+    </FileCrop>
+    <ZoneCLEM>
+      <Name>CLEM</Name>
+      <ResourcesHolder>
+        <Name>Resources</Name>
+        <Land>
+          <Name>Land</Name>
+          <LandType>
+            <Name>Field</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LandArea>10</LandArea>
+            <SoilType>3</SoilType>
+          </LandType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Land>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DMD>40</DMD>
+            <Nitrogen>2</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Maize stover</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DMD>40</DMD>
+            <Nitrogen>2</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </AnimalFoodStore>
+        <Labour>
+          <Name>Labour</Name>
+          <LabourType>
+            <Name>MaleAdult</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <InitialAge>42</InitialAge>
+            <Gender>Male</Gender>
+            <Individuals>1</Individuals>
+          </LabourType>
+          <LabourType>
+            <Name>FemaleAdult</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <InitialAge>42</InitialAge>
+            <Gender>Female</Gender>
+            <Individuals>1</Individuals>
+          </LabourType>
+          <LabourAvailabilityList>
+            <Name>LabourAvailabilityList</Name>
+            <LabourAvailabilityItem>
+              <Name>Male</Name>
+              <LabourFilter>
+                <Name>LabourFilter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Parameter>Gender</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Male</Value>
+              </LabourFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Value>28</Value>
+            </LabourAvailabilityItem>
+            <LabourAvailabilityItem>
+              <Name>Female</Name>
+              <LabourFilter>
+                <Name>LabourFilter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Parameter>Gender</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Female</Value>
+              </LabourFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Value>25</Value>
+            </LabourAvailabilityItem>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </LabourAvailabilityList>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <AllowAging>true</AllowAging>
+        </Labour>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ResourcesHolder>
+      <ActivitiesHolder>
+        <Name>Activities</Name>
+        <CropActivityManageCrop>
+          <Name>Manage maize</Name>
+          <CropActivityManageProduct>
+            <Name>Manage grain</Name>
+            <CropActivityTask>
+              <Name>Prepare field</Name>
+              <ActivityTimerCropHarvest>
+                <Name>Plough 7 months before harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>-7</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>-7</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>1</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Sow seeds</Name>
+              <ActivityTimerCropHarvest>
+                <Name>Sow 6 mths before harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>-6</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>-6</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>2</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Perform irrigation</Name>
+              <ActivityTimerCropHarvest>
+                <Name>Irrigate plant to harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>-5</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>-2</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>4</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <CropActivityTask>
+              <Name>Harvest</Name>
+              <ActivityTimerCropHarvest>
+                <Name>At harvest</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OffsetMonthHarvestStart>0</OffsetMonthHarvestStart>
+                <OffsetMonthHarvestStop>0</OffsetMonthHarvestStop>
+              </ActivityTimerCropHarvest>
+              <LabourRequirement>
+                <Name>LabourRequirement</Name>
+                <LabourFilterGroup>
+                  <Name>LabourFilterGroup</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </LabourFilterGroup>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LabourPerUnit>4</LabourPerUnit>
+                <UnitSize>1</UnitSize>
+                <WholeUnitBlocks>false</WholeUnitBlocks>
+                <UnitType>perHa</UnitType>
+                <MinimumPerPerson>1</MinimumPerPerson>
+                <MaximumPerPerson>100</MaximumPerPerson>
+                <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+                <ApplyToAll>false</ApplyToAll>
+              </LabourRequirement>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            </CropActivityTask>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
+            <CropName>Maize_sole_unfert</CropName>
+            <StoreItemName>AnimalFoodStore.Maize</StoreItemName>
+            <ProportionKept>1</ProportionKept>
+            <TreesPerHa>0</TreesPerHa>
+            <UnitsToHaConverter>0</UnitsToHaConverter>
+          </CropActivityManageProduct>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          <LandItemNameToUse>Land.Field</LandItemNameToUse>
+          <AreaRequested>10</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
+        </CropActivityManageCrop>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ActivitiesHolder>
+      <Folder>
+        <Name>Reports</Name>
+        <Report>
+          <Name>AnimalFoodStoreLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>LabourLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Labour.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Labour.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Labour.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Labour.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Labour.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Labour.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
+        <ReportResourceBalances>
+          <Name>ReportResourceBalances</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>Labour</string>
+            <string>AnimalFoodStore</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].CLEMEndOfTimeStep</string>
+          </EventNames>
+        </ReportResourceBalances>
+        <ReportResourceShortfalls>
+          <Name>ReportResourceShortfalls</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
+            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
+            <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ResourceShortfallOccurred</string>
+          </EventNames>
+        </ReportResourceShortfalls>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Graph>
+        <Name>Labour used</Name>
+        <Series>
+          <Name>Labour</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>LabourLedger</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Debit</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Activity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>LabourLedger</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Activity</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Labour (days)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Area>1</Area>
+      <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
+      <ClimateRegion>0</ClimateRegion>
+      <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
+    </ZoneCLEM>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Simulation>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>300</ExplorerWidth>
+</Simulations>

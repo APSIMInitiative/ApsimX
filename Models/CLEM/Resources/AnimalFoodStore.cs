@@ -6,6 +6,7 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -17,25 +18,22 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all animal food store types for the simulation.")]
+    [Version(1, 0, 1, "")]
     public class AnimalFoodStore: ResourceBaseWithTransactions
     {
-        /// <summary>
-        /// List of all the Food Types in this Resource Group.
-        /// </summary>
-        [XmlIgnore]
-        public List<AnimalFoodStoreType> Items;
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<AnimalFoodStoreType>();
             foreach (AnimalFoodStoreType childModel in Apsim.Children(this, typeof(AnimalFoodStoreType)))
             {
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
-                Items.Add(childModel);
+            }
+            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
+            {
+                childModel.TransactionOccurred += Resource_TransactionOccurred;
             }
         }
 
@@ -49,13 +47,11 @@ namespace Models.CLEM.Resources
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
-            if(Items!=null)
+            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
             {
-                Items.Clear();
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
-            Items = null;
         }
-
 
         #region Transactions
 
@@ -66,8 +62,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -82,6 +77,17 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
 
     }
 
