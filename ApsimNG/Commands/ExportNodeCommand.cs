@@ -396,6 +396,7 @@ namespace UserInterface.Commands
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
+            graph.ForegroundColour = OxyPlot.OxyColors.Black;
             graph.BackColor = OxyPlot.OxyColors.White;
             graph.FontSize = 10;
             graph.Refresh();
@@ -455,6 +456,7 @@ namespace UserInterface.Commands
                 ExplorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 GraphView graphView = new GraphView();
                 graphView.BackColor = OxyPlot.OxyColors.White;
+                graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
                 graphView.MarkerSize = 8;
                 graphView.Width = image.Width / numColumns;
@@ -629,6 +631,7 @@ namespace UserInterface.Commands
                     ExplorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     GraphView graphView = new GraphView();
                     graphView.BackColor = OxyPlot.OxyColors.White;
+                    graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                     graphView.FontSize = 12;
                     graphView.Width = 500;
                     graphView.Height = 500;
