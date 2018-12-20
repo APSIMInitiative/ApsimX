@@ -533,8 +533,8 @@
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
             startPage.AddButton(
-                                "Toggle dark theme",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                "Toggle Theme",
+                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
                                         OnToggleTheme);
 
             startPage.AddButton(

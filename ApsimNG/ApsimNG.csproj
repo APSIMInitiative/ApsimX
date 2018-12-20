@@ -655,6 +655,8 @@
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
     <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
     <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Moon.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Sun.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
