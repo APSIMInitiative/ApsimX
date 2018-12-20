@@ -469,8 +469,8 @@ namespace Models.Functions.SupplyFunctions
 
             // It's assumed that total extractable water is evenly distributed over the day time.
             // Maximum hourly transpiration cannot exceed the maximum hourly supply.
-            double maxUptake = rootWaterSupp / DayLength();
-            for (int i = 0; i < 24; i++) hourlyActTr[i] = Math.Min(maxUptake, hourlyActTr[i]);
+            // double maxUptake = rootWaterSupp / DayLength();
+            // for (int i = 0; i < 24; i++) hourlyActTr[i] = Math.Min(maxUptake, hourlyActTr[i]);
 
             if (hourlyActTr.Sum() - rootWaterSupp > 1e-5)
             {
