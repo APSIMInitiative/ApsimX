@@ -893,6 +893,7 @@
             MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
                 msgType, buttonType, message);
             md.Title = title;
+            md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
             md.Destroy();
             return result;
