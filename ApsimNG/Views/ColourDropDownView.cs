@@ -73,10 +73,7 @@ namespace UserInterface.Views
                         if (typeEnum == ColourDropTypeEnum.Text)
                             result[i++] = (string)comboModel.GetValue(iter, 0);
                         else
-                        {
-                            Gdk.Color color = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            result[i++] = Color.FromArgb(color.Red * 255 / 65535, color.Green * 255 / 65535, color.Blue * 255 / 65535);
-                        }
+                            result[i++] = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                     }
                     while (comboModel.IterNext(ref iter) && i < nVals);
                 return result;
@@ -124,10 +121,7 @@ namespace UserInterface.Views
                     if (typeEnum == ColourDropTypeEnum.Text)
                         return (string)comboModel.GetValue(iter, 0);
                     else
-                    {
-                        Gdk.Color color = (Gdk.Color)comboModel.GetValue(iter, 1);
-                        return Color.FromArgb(color.Red * 255 / 65535, color.Green * 255 / 65535, color.Blue * 255 / 65535);
-                    }
+                        return Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                 }
                 else
                     return null;
@@ -152,8 +146,7 @@ namespace UserInterface.Views
                         }
                         else if (value.GetType() == typeof(Color))
                         {
-                            Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            Color rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
+                            Color rgb = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                             if (rgb.Equals((Color)value))
                             {
                                 combobox1.SetActiveIter(iter);

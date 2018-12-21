@@ -853,6 +853,8 @@ namespace UserInterface.Views
                 keyPressObject = ieBrowser.wb.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+                ieBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+                ieBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }

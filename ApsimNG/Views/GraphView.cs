@@ -98,8 +98,8 @@ namespace UserInterface.Views
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-            Gdk.Color foreground = MainWidget.Style.Foreground(StateType.Selected);
-            ForegroundColour = OxyColor.FromRgb((byte)(foreground.Red / 65535 * 255), (byte)(foreground.Green / 65535 * 255), (byte)(foreground.Blue / 65535 * 255));
+            Color foreground = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Selected));
+            ForegroundColour = OxyColor.FromRgb(foreground.R, foreground.G, foreground.B);
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
