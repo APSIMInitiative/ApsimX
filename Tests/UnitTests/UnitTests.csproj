@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonUtilitiesTests.cs" />
+    <Compile Include="MorrisTests.cs" />
     <Compile Include="StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="WeatherFileTests.cs" />
@@ -190,6 +191,7 @@
     <EmbeddedResource Include="Resources\JsonUtilitiesTests\ReplaceManagerText.json" />
     <EmbeddedResource Include="Resources\WeatherFile.xlsx" />
     <EmbeddedResource Include="Resources\JsonUtilitiesTests\ReplaceManagerTextRegex.json" />
+    <EmbeddedResource Include="Resources\MorrisBroken.apsimx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
