@@ -25,7 +25,7 @@ namespace UnitTests
         [Test]
         public void EnsureParameterRenameWorks()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureNameWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.MorrisBroken.apsimx");
             List<Exception> exceptions;
             Simulations simulations = FileFormat.ReadFromString<Simulations>(json, out exceptions);
             if (exceptions != null && exceptions.Count > 0)
