@@ -80,17 +80,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (ShowCaption)
-                {
-                    if (newText != "Double click to add a caption")
-                    {
-                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graph, "Caption", newText));
-                    }
-                }
-                else
-                {
-                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graph, "Title", newText));
-                }
+                if (ShowCaption && newText != "Double click to add a caption")
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graph, "Caption", newText));
             }
             catch (Exception err)
             {

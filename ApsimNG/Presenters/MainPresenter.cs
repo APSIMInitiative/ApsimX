@@ -17,6 +17,7 @@
     using System.Text.RegularExpressions;
     using EventArguments;
     using Utility;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -143,9 +144,9 @@
         /// </summary>
         /// <param name="code">The script code</param>
         /// <returns>Any exception message or null</returns>
-        public string ProcessStartupScript(string code)
+        public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
+            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, Path.GetTempFileName());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -166,16 +167,7 @@
 
             // Call Execute on our newly created script instance.
             object[] arguments = new object[] { this };
-            try
-            {
-                executeMethod.Invoke(script, arguments);
-            }
-            catch (TargetInvocationException except)
-            {
-                return except.InnerException.ToString();
-            }
-
-            return null;
+            executeMethod.Invoke(script, arguments);
         }
 
         /// <summary>
@@ -422,11 +414,12 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = Simulations.Read(fileName);
+                    List<Exception> creationExceptions;
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (simulations.LoadErrors.Count > 0)
+                    if (creationExceptions.Count > 0)
                     {
-                        ShowError(simulations.LoadErrors);
+                        ShowError(creationExceptions);
                     }
 
                     // Add to MRU list and update display
@@ -745,17 +738,9 @@
             foreach (string argument in commandLineArguments)
             {
                 if (Path.GetExtension(argument) == ".cs")
-                {
-                    string result = this.ProcessStartupScript(File.ReadAllText(argument));
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        throw new Exception(result);
-                    }
-                }
+                    ProcessStartupScript(File.ReadAllText(argument));
                 else if (Path.GetExtension(argument) == ".apsimx")
-                {
-                    this.OpenApsimXFileInTab(argument, onLeftTabControl: true);
-                }
+                    OpenApsimXFileInTab(argument, onLeftTabControl: true);
             }
         }
 
@@ -786,9 +771,8 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(contents);
-            Simulations simulations = Simulations.Read(doc.DocumentElement);
+            List<Exception> creationExceptions;
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -1096,13 +1080,10 @@
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(file, version))
-                    {
-                        using (FileStream fileWriter = File.Open(file, FileMode.Create))
-                        {
-                            inStream.CopyTo(fileWriter);
-                        }
-                    }
+                    string contents = File.ReadAllText(file);
+                    var converter = Converter.DoConvert(contents, version, file);
+                    if (converter.DidConvert)
+                        File.WriteAllText(file, converter.Root.ToString());
                     view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
                 }
                 view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);

@@ -211,7 +211,30 @@
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
+    <Compile Include="Interfaces\IPropertyTreeView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
+    <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMFileGRASPPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
+    <Compile Include="Presenters\CLEM\LabourAllocationPresenter.cs" />
+    <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
+    <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
+    <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
+    <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
+    <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
+    <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
+    <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
+    <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
+    <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
+    <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
+    <Compile Include="Views\CLEM\CLEMView.cs" />
+    <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
+    <Compile Include="Views\CLEM\PropertyTreeView.cs" />
+    <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
@@ -246,11 +269,8 @@
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
-    <Compile Include="Presenters\CLEMFileGRASPPresenter.cs" />
-    <Compile Include="Presenters\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
-    <Compile Include="Presenters\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\ExperimentPresenter.cs" />
@@ -261,7 +281,6 @@
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\INewCloudJobPresenter.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
-    <Compile Include="Presenters\CLEMFileCropPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IntellisensePresenter.cs" />
     <Compile Include="Presenters\IPresenter.cs" />
@@ -278,7 +297,6 @@
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
-    <Compile Include="Presenters\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\StockPresenter.cs" />
@@ -287,7 +305,6 @@
     <Compile Include="Presenters\DirectedGraphPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
-    <Compile Include="Presenters\ModelDetailsWrapperPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -307,11 +324,8 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CLEMFileSQLiteGRASPView.cs" />
-    <Compile Include="Views\CLEMFileGRASPView.cs" />
     <Compile Include="Views\CloudJobDisplayView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\ActivityLedgerGridView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
@@ -331,7 +345,6 @@
     <Compile Include="Views\GridView.cs" />
     <Compile Include="Views\HTMLView.cs" />
     <Compile Include="Views\InitialWaterView.cs" />
-    <Compile Include="Views\CLEMFileCropView.cs" />
     <Compile Include="Views\InputView.cs" />
     <Compile Include="Views\IntellisenseView.cs" />
     <Compile Include="Views\LegendView.cs" />
@@ -341,10 +354,8 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\NewAzureJobView.cs" />
     <Compile Include="Views\ProfileView.cs" />
-    <Compile Include="Views\ReportActivityLedgerView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
     <Compile Include="Views\StockView.cs" />
@@ -435,6 +446,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Fodderbeet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
@@ -464,7 +478,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerMonthRange.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalFoodStore.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalFoodStoreType.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPriceEntry.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPriceGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\AnimalPricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageCrop.png" />
@@ -638,6 +652,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
+    <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -797,7 +813,6 @@
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -880,14 +895,14 @@
       <HintPath>..\packages\Microsoft.Azure.Management.Compute.17.5.0\lib\net452\Microsoft.Azure.Management.Compute.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.8.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.8.3\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.3\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.10\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
@@ -942,6 +957,7 @@
       <HintPath>Assemblies\MonoMac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
@@ -985,10 +1001,9 @@
     </Reference>
     <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Spatial, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.8.3\lib\net40\System.Spatial.dll</HintPath>
+    <Reference Include="System.Spatial, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.4\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />

@@ -22,6 +22,12 @@
         /// <summary>Search recursively for files?</summary>
         private bool recurse;
 
+        /// <summary>Should the child process' output be redirected?</summary>
+        private bool verbose;
+
+        /// <summary>Should the child processes be run in multi-process mode?</summary>
+        private bool multiProcess;
+
         /// <summary>List of files found that need running</summary>
         private List<string> files;
 
@@ -29,11 +35,15 @@
         /// <param name="fileSpec">The filespec to search for simulations.</param>
         /// <param name="recurse">True if need to recurse through folder structure.</param>
         /// <param name="runTests">Run the test nodes?</param>
-        public RunDirectoryOfApsimFiles(string fileSpec, bool recurse, bool runTests)
+        /// <param name="verbose">Should the child process' output be redirected?</param>
+        /// <param name="multiProcess">Should the child processes be run in multi-process mode?</param>
+        public RunDirectoryOfApsimFiles(string fileSpec, bool recurse, bool runTests, bool verbose, bool multiProcess)
         {
             this.fileSpec = fileSpec;
             this.recurse = recurse;
             this.runTests = runTests;
+            this.verbose = verbose;
+            this.multiProcess = multiProcess;
         }
 
         /// <summary>Return the index of next job to run or -1 if nothing to run.</summary>
@@ -69,9 +79,13 @@
 
             string arguments = StringUtilities.DQuote(files[0]);
             files.RemoveAt(0);
+            if (multiProcess)
+                arguments += " /m";
             if (runTests)
                 arguments += " /RunTests";
-            return new RunExternal(apsimExe, arguments, workingDirectory);
+            if (verbose)
+                arguments += " /Verbose";
+            return new RunExternal(apsimExe, arguments, workingDirectory, verbose);
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>

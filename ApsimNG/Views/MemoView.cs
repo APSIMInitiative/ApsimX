@@ -52,7 +52,7 @@ namespace UserInterface.Views
         
         public MemoView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             textView = (TextView)builder.GetObject("textView");
             label1 = (Label)builder.GetObject("label1");
@@ -163,11 +163,18 @@ namespace UserInterface.Views
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            if (MemoChange != null)
+            try
             {
-                EditorArgs args = new EditorArgs();
-                args.TextString = textView.Buffer.Text;
-                MemoChange(this, args);
+                if (MemoChange != null)
+                {
+                    EditorArgs args = new EditorArgs();
+                    args.TextString = textView.Buffer.Text;
+                    MemoChange(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

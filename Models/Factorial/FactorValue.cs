@@ -160,10 +160,7 @@ namespace Models.Factorial
             modelToReplace.Parent.Children.Insert(index, newModel as Model);
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
-
-            Events events = new Events(newModel);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newModel, loadedArgs });
+            newModel.OnCreated();
         }
     }
 }

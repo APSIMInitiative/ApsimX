@@ -173,10 +173,9 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
 
                 string st = string.Empty;
-                foreach (string PropertyName in Propertys)
-                {
-                    st = st + Environment.NewLine + "* " + PropertyName;
-                }
+                if (Propertys != null)
+                    foreach (string PropertyName in Propertys)
+                        st += Environment.NewLine + "* " + PropertyName;
                 tags.Add(new AutoDocumentation.Paragraph(st, indent));
             }
         }

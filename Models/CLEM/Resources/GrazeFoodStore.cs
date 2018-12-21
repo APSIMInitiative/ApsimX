@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.CLEM.Reporting;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -20,6 +21,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all graze food store types (pastures) for the simulation.")]
+    [Version(1, 0, 1, "")]
     public class GrazeFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -40,11 +42,21 @@ namespace Models.CLEM.Resources
 
             foreach (IModel childModel in childNodes)
             {
-                //cast the generic IModel to a specfic model.
-                GrazeFoodStoreType grazefood = childModel as GrazeFoodStoreType;
-                grazefood.TransactionOccurred += Resource_TransactionOccurred;
-                grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
-                Items.Add(grazefood);
+                switch (childModel.GetType().ToString())
+                {
+                    case "Models.CLEM.Resources.GrazeFoodStoreType":
+                        GrazeFoodStoreType grazefood = childModel as GrazeFoodStoreType;
+                        grazefood.TransactionOccurred += Resource_TransactionOccurred;
+                        grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
+                        Items.Add(grazefood);
+                        break;
+                    case "Models.CLEM.Resources.CommonLandFoodStoreType":
+                        CommonLandFoodStoreType commonfood = childModel as CommonLandFoodStoreType;
+                        commonfood.TransactionOccurred += Resource_TransactionOccurred;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -59,13 +71,16 @@ namespace Models.CLEM.Resources
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
             }
+            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
+            {
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
             if (Items != null)
             {
                 Items.Clear();
             }
             Items = null;
         }
-
 
         #region Ecological Indicators calculated
 
@@ -80,8 +95,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
-            EventHandler invoker = EcologicalIndicatorsCalculated;
-            if (invoker != null) invoker(this, e);
+            EcologicalIndicatorsCalculated?.Invoke(this, e);
         }
 
         /// <summary>
@@ -106,8 +120,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -122,6 +135,17 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
 
     }
 

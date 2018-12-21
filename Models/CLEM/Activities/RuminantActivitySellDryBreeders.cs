@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -21,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivitySellDryBreeders : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -44,8 +46,6 @@ namespace Models.CLEM.Activities
         [Required, Proportion]
         public double ProportionToRemove { get; set; }
 
-        private List<LabourFilterGroupSpecified> labour { get; set; }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -54,9 +54,6 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(false, false);
 
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
         }
 
         /// <summary>An event handler to perform herd dry breeder cull</summary>
@@ -93,9 +90,9 @@ namespace Models.CLEM.Activities
                         {
                             // flag female ready to transport.
                             female.SaleFlag = HerdChangeReason.DryBreederSale;
+                            Status = ActivityStatus.Success;
                         }
                     }
-
                 }
             }
         }
@@ -106,51 +103,7 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
-            if (this.TimingOK)
-            {
-                // get all potential dry breeders
-                List<RuminantFemale> herd = this.CurrentHerd(false).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth & a.PreviousConceptionRate >= MinimumConceptionBeforeSell & a.AgeAtLastBirth > 0).ToList();
-                int head = herd.Count();
-                double AE = herd.Sum(a => a.AdultEquivalent);
-
-                if (head == 0) return null;
-
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
-                    {
-                        case LabourUnitType.Fixed:
-                            daysNeeded = item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perHead:
-                            daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perAE:
-                            daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                    }
-                    if (daysNeeded > 0)
-                    {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
-                    }
-                }
-            }
-            return ResourceRequestList;
+            return null;
         }
 
         /// <summary>
@@ -158,7 +111,58 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            return; ;
+            Status = ActivityStatus.NotNeeded;
+            return;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            // get all potential dry breeders
+            List<RuminantFemale> herd = this.CurrentHerd(false).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth & a.PreviousConceptionRate >= MinimumConceptionBeforeSell & a.AgeAtLastBirth > 0).ToList();
+            int head = herd.Count();
+            double adultEquivalent = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = adultEquivalent / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
         }
 
         /// <summary>
@@ -181,8 +185,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -196,11 +199,30 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
-
-
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            if (ProportionToRemove == 0)
+            {
+                html += "No dry breeders will be sold";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + ProportionToRemove.ToString("0.##%") + "</span> of ";
+                html += "dry breeders with a minumum conception rate of ";
+                html += "<span class=\"setvalue\">" + MinimumConceptionBeforeSell.ToString("0.###") + "</span> and at least ";
+                html += "<span class=\"setvalue\">" + MonthsSinceBirth.ToString() + "</span> months since last birth will be sold";
+            }
+            html += "</div>";
+            return html;
+        }
     }
 }

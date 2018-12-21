@@ -141,7 +141,7 @@ namespace UserInterface.Views
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TabbedMetDataView.glade");
             labelFileName = (Label)builder.GetObject("labelFileName");
             vbox1 = (VBox)builder.GetObject("vbox1");
             notebook1 = (Notebook)builder.GetObject("notebook1");
@@ -194,13 +194,20 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            button1.Clicked -= OnButton1Click;
-            spinStartYear.ValueChanged -= OnGraphStartYearValueChanged;
-            spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
-            notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
-            worksheetCombo.Changed -= WorksheetCombo_Changed;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                button1.Clicked -= OnButton1Click;
+                spinStartYear.ValueChanged -= OnGraphStartYearValueChanged;
+                spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
+                notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
+                worksheetCombo.Changed -= WorksheetCombo_Changed;
+                _mainWidget.Destroyed -= _mainWidget_Destroyed;
+                _owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets the filename.</summary>
@@ -351,15 +358,22 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", labelFileName.Text);
-            if (!String.IsNullOrEmpty(fileName))
+            try
             {
-                Filename = fileName;
-                if (BrowseClicked != null)
+                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", labelFileName.Text);
+                if (!String.IsNullOrEmpty(fileName))
                 {
-                    BrowseClicked.Invoke(Filename);    //reload the grid with data
-                    notebook1.CurrentPage = 0;
+                    Filename = fileName;
+                    if (BrowseClicked != null)
+                    {
+                        BrowseClicked.Invoke(Filename);    //reload the grid with data
+                        notebook1.CurrentPage = 0;
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -368,8 +382,15 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnGraphStartYearValueChanged(object sender, EventArgs e)
         {
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            try
+            {
+                if (GraphRefreshClicked != null)
+                    GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
@@ -377,8 +398,15 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnGraphShowYearsValueChanged(object sender, EventArgs e)
         {
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            try
+            {
+                if (GraphRefreshClicked != null)
+                    GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -389,54 +417,61 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void TabControl1_SelectedIndexChanged(object sender, SwitchPageArgs e)
         {
-            bool moved = false;
-            switch (e.PageNum)
+            try
             {
-                case 2:
-                    if (hboxOptions.Parent != alignRainChart)
-                    {
-                        hboxOptions.Reparent(alignRainChart);
-                        moved = true;
-                    }
-                    break;
-                case 3:
-                    if (hboxOptions.Parent != alignRainMonthly)
-                    {
-                        hboxOptions.Reparent(alignRainMonthly);
-                        moved = true;
-                    }
-                    break;
-                case 4:
-                    if (hboxOptions.Parent != alignTemp)
-                    {
-                        hboxOptions.Reparent(alignTemp);
-                        moved = true;
-                    }
-                    break;
-                case 5:
-                    if (hboxOptions.Parent != alignRadn)
-                    {
-                        hboxOptions.Reparent(alignRadn);
-                        moved = true;
-                    }
-                    break;
-                default: break;
-            }
+                bool moved = false;
+                switch (e.PageNum)
+                {
+                    case 2:
+                        if (hboxOptions.Parent != alignRainChart)
+                        {
+                            hboxOptions.Reparent(alignRainChart);
+                            moved = true;
+                        }
+                        break;
+                    case 3:
+                        if (hboxOptions.Parent != alignRainMonthly)
+                        {
+                            hboxOptions.Reparent(alignRainMonthly);
+                            moved = true;
+                        }
+                        break;
+                    case 4:
+                        if (hboxOptions.Parent != alignTemp)
+                        {
+                            hboxOptions.Reparent(alignTemp);
+                            moved = true;
+                        }
+                        break;
+                    case 5:
+                        if (hboxOptions.Parent != alignRadn)
+                        {
+                            hboxOptions.Reparent(alignRadn);
+                            moved = true;
+                        }
+                        break;
+                    default: break;
+                }
 
-            if (moved)
-            {
-                // On Windows, at least, these controls don't move correctly with the reparented HBox.
-                // They think they're parented correctly, but are drawn at 0,0 of the main window.
-                // We can hack around this by reparenting them somewhere else, then moving them back.
-                Widget pa = spinStartYear.Parent;
-                spinStartYear.Reparent(MainWidget);
-                spinStartYear.Reparent(pa);
-                pa = spinNYears.Parent;
-                spinNYears.Reparent(MainWidget);
-                spinNYears.Reparent(pa);
+                if (moved)
+                {
+                    // On Windows, at least, these controls don't move correctly with the reparented HBox.
+                    // They think they're parented correctly, but are drawn at 0,0 of the main window.
+                    // We can hack around this by reparenting them somewhere else, then moving them back.
+                    Widget pa = spinStartYear.Parent;
+                    spinStartYear.Reparent(MainWidget);
+                    spinStartYear.Reparent(pa);
+                    pa = spinNYears.Parent;
+                    spinNYears.Reparent(MainWidget);
+                    spinNYears.Reparent(pa);
+                }
+                if (GraphRefreshClicked != null)
+                    GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
             }
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -446,9 +481,16 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void WorksheetCombo_Changed(object sender, EventArgs e)
         {
-            if (ExcelSheetChangeClicked != null)
-               ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
-            notebook1.CurrentPage = 0;
+            try
+            {
+                if (ExcelSheetChangeClicked != null)
+                    ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
+                notebook1.CurrentPage = 0;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

@@ -19,11 +19,14 @@ namespace Models.Core.Runners
     public class JobRunnerMultiProcess : IJobRunner
     {
         private SocketServer server;
-        private IStorageWriter storageWriter;
+        private IStorageWriter storageWriter = null;
         private IJobManager jobs;
 
         /// <summary>A token for cancelling running of jobs</summary>
         private CancellationTokenSource cancelToken;
+
+        /// <summary>Write child process' output to standard output?</summary>
+        private bool verbose;
 
         /// <summary>Non simulation errors thrown by runners or this class on socket threads</summary>
         private string errors;
@@ -37,10 +40,10 @@ namespace Models.Core.Runners
         public event EventHandler<JobCompleteArgs> JobCompleted;
 
         /// <summary>Constructor</summary>
-        /// <param name="writer">The writer where all data should be stored</param>
-        public JobRunnerMultiProcess(IStorageWriter writer)
+        /// <param name="verbose">Write child process' output to standard output?</param>
+        public JobRunnerMultiProcess(bool verbose)
         {
-            storageWriter = writer;
+            this.verbose = verbose;
         }
 
         /// <summary>Run the specified jobs</summary>
@@ -50,6 +53,11 @@ namespace Models.Core.Runners
         public void Run(IJobManager jobManager, bool wait = false, int numberOfProcessors = -1)
         {
             jobs = jobManager;
+
+            // If the job manager is a RunExternal, then we don't need to worry about storage - 
+            // each ApsimRunner will launch its own Models.exe which will manage storage itself.
+            if (jobs is RunOrganiser)
+                storageWriter = (jobs as RunOrganiser).Storage;
 
             // Determine number of threads to use
             if (numberOfProcessors == -1)
@@ -62,11 +70,6 @@ namespace Models.Core.Runners
 
             cancelToken = new CancellationTokenSource();
 
-            DeleteRunners();
-            CreateRunners(numberOfProcessors);
-
-            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
-
             // Spin up a job manager server.
             server = new SocketServer();
             server.AddCommand("GetJob", OnGetJob);
@@ -74,7 +77,31 @@ namespace Models.Core.Runners
             server.AddCommand("EndJob", OnEndJob);
 
             // Tell server to start listening.
-            Task t = Task.Run(() => server.StartListening(2222));
+            Task t = Task.Run(() =>
+            {
+                server.StartListening(2222);
+                try
+                {
+                    jobs.Completed();
+                }
+                catch (Exception err)
+                {
+                    errors += Environment.NewLine + err.ToString();
+                }
+
+                if (AllJobsCompleted != null)
+                {
+                    AllCompletedArgs args = new AllCompletedArgs();
+                    if (errors != null)
+                        args.exceptionThrown = new Exception(errors);
+                    AllJobsCompleted.Invoke(this, args);
+                }
+            });
+
+            DeleteRunners();
+            CreateRunners(numberOfProcessors);
+
+            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
             if (wait)
                 while (!t.IsCompleted)
@@ -93,15 +120,6 @@ namespace Models.Core.Runners
                     server = null;
                     DeleteRunners();
                     runningJobs.Clear();
-
-                    jobs.Completed();
-                    if (AllJobsCompleted != null)
-                    {
-                        AllCompletedArgs args = new AllCompletedArgs();
-                        if (errors != null)
-                            args.exceptionThrown = new Exception(errors);
-                        AllJobsCompleted.Invoke(this, args);
-                    }
                 }
             }
         }
@@ -117,7 +135,7 @@ namespace Models.Core.Runners
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, workingDirectory, false);
+                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), verbose, verbose);
             }
         }
 
@@ -161,13 +179,25 @@ namespace Models.Core.Runners
                     server.Send(args.socket, "NULL");
                 else
                 {
-                    RunSimulation runner = jobToRun as RunSimulation;
-                    IModel savedParent = runner.SetParentOfSimulation(null);
-                    GetJobReturnData returnData = new GetJobReturnData();
-                    returnData.key = jobKey;
-                    returnData.job = runner;
-                    server.Send(args.socket, returnData);
-                    runner.SetParentOfSimulation(savedParent);
+                    if (jobToRun is RunSimulation)
+                    {
+                        RunSimulation runner = jobToRun as RunSimulation;
+                        IModel savedParent = runner.SetParentOfSimulation(null);
+                        GetJobReturnData returnData = new GetJobReturnData();
+                        returnData.key = jobKey;
+                        returnData.job = runner;
+                        server.Send(args.socket, returnData);
+                        runner.SetParentOfSimulation(savedParent);
+                    }
+                    else
+                    {
+                        GetJobReturnData returnData = new GetJobReturnData()
+                        {
+                            key = jobKey,
+                            job = jobToRun
+                        };
+                        server.Send(args.socket, returnData);
+                    }
                 }
             }
             catch (Exception err)
@@ -207,8 +237,8 @@ namespace Models.Core.Runners
                 EndJobArguments arguments = args.obj as EndJobArguments;
                 JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
                 jobCompleteArguments.job = runningJobs[arguments.key];
-                if (arguments.errorMessage != null)
-                    jobCompleteArguments.exceptionThrowByJob = new Exception(arguments.errorMessage);
+                if (arguments.Error != null)
+                    jobCompleteArguments.exceptionThrowByJob = arguments.Error;
                 lock (this)
                 {
                     if (JobCompleted != null)
@@ -242,7 +272,7 @@ namespace Models.Core.Runners
             public Guid key;
 
             /// <summary>Error message</summary>
-            public string errorMessage;
+            public Exception Error;
 
             /// <summary>Simulation name of job completed</summary>
             public string simulationName;

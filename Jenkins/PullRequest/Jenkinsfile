@@ -1,0 +1,121 @@
+pipeline {
+	agent none
+    stages {
+		stage('RunTests') {
+			parallel {
+				stage('Prototypes') {
+					agent {
+						label "windows && midweight"
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build
+							call runTests Prototypes
+						'''
+					}
+				}
+				stage('Validation') {
+					agent {
+						label "windows && heavyweight"
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build
+							call runTests Validation
+							if errorlevel 1 exit /b 1
+							call performanceTests
+						'''
+					}
+				}
+				stage('Run Examples') {
+					agent {
+						label "windows"
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build
+							call runTests Examples
+						'''
+					}
+				}
+				stage('UI') {
+					agent {
+						label "windows"
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build
+							call runTests UI
+						'''
+					}
+				}
+				stage('Unit Tests') {
+					agent {
+						label "windows"
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build
+							call runTests Unit
+						'''
+					}
+				}
+			}
+		}
+    }
+}

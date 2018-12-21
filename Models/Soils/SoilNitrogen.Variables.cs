@@ -2514,6 +2514,7 @@ namespace Models.Soils
                 return result;
             }
         }
+
         /// <summary>Setter for NH4</summary>
         /// <remarks>
         /// This is necessary to allow the use of the SoilCNPatch capability
@@ -2588,6 +2589,7 @@ namespace Models.Soils
                 return null;
             }
         }
+
         /// <summary>Setter for NO3</summary>
         /// <remarks>
         /// This is necessary to allow the use of the SoilCNPatch capability
@@ -2643,7 +2645,9 @@ namespace Models.Soils
         /// Soil ammonium nitrogen amount available to plants, limited per patch (kgN/ha)
         /// </summary>
         [Units("kg/ha")]
-        public double[] nh4_PlantAvailable
+        [XmlIgnore]
+        [Solute]
+        public double[] PlantAvailableNH4
         {
             get
             {
@@ -2662,11 +2666,25 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Setter for Plant Available NH4</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// </remarks>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="value">New values</param>
+        public void SetPlantAvailableNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
+        {
+            // this variable should not actually be set but needed for SoluteManager to find it
+            throw new ApsimXException(this, "should not be trying to set plant available nh4");
+        }
+
         /// <summary>
         /// Soil nitrate nitrogen amount available to plants, limited per patch (kgN/ha)
         /// </summary>
         [Units("kg/ha")]
-        public double[] no3_PlantAvailable
+        [XmlIgnore]
+        [Solute]
+        public double[] PlantAvailableNO3
         {
             get
             {
@@ -2684,6 +2702,19 @@ namespace Models.Soils
                 return result;
             }
         }
+
+        /// <summary>Setter for Plant Available NO3</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// </remarks>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="value">New values</param>
+        public void SetPlantAvailableNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
+        {
+            // this variable should not actually be set but needed for SoluteManager to find it
+            throw new ApsimXException(this, "should not be trying to set plant available no3");
+        }
+
 
         #endregion
 

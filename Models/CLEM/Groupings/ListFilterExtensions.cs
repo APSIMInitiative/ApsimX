@@ -53,6 +53,7 @@ namespace Models.CLEM.Groupings
                         break;
                     case RuminantFilterParameters.IsPregnant:
                     case RuminantFilterParameters.IsLactating:
+                    case RuminantFilterParameters.IsHeifer:
                         femaleProperties = true;
                         gender = "Female";
                         break;
@@ -81,12 +82,12 @@ namespace Models.CLEM.Groupings
                 if (femaleProperties)
                 {
                     var compiledRulesList = CompileRule(new List<RuminantFemale>(), rules);
-                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Cast<RuminantFemale>(), compiledRulesList).ToList<Ruminant>();
+                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), compiledRulesList).ToList<Ruminant>();
                 }
-                else if (femaleProperties)
+                else if (maleProperties)
                 {
                     var compiledRulesList = CompileRule(new List<RuminantMale>(), rules);
-                    return GetItemsThatMatchAll<RuminantMale>(individuals.Cast<RuminantMale>(), compiledRulesList).ToList<Ruminant>();
+                    return GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), compiledRulesList).ToList<Ruminant>();
                 }
                 else
                 {

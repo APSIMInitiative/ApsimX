@@ -38,7 +38,7 @@ namespace Models.PMF
                 foreach (Cultivar cultivar in Apsim.Children(this, typeof(Cultivar)))
                 {
                     cultivarNames.Add(cultivar.Name);
-                    cultivarNames.AddRange(cultivar.Aliases);
+                    cultivarNames.AddRange(cultivar.Alias);
                 }
                 cultivarNames.Sort();
 

@@ -128,6 +128,10 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>A temporary flag for sorghum to reset the thermal time at change of phase.</summary>
+        [Link(IsOptional = true)]
+        public IFunction SorghumFlag  = null;
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -279,9 +283,8 @@ namespace Models.PMF.Phen
         ///7. Private methods
         /// -----------------------------------------------------------------------------------------------------------
 
-        /// <summary>Initialize the phase list of phenology.</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
                 foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
@@ -336,6 +339,13 @@ namespace Models.PMF.Phen
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+
+                    if (SorghumFlag != null)
+                    {
+                        //old sorghum model adjustment
+                        //excess thermal time was lost at change of phase
+                        CurrentPhase.ResetPhase();
+                    }
                 }
 
                 AccumulatedTT += thermalTime.Value();
@@ -347,6 +357,8 @@ namespace Models.PMF.Phen
                if (plant != null)
                     if (plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
+
+                
             }
         }
 
