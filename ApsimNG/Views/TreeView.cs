@@ -400,7 +400,7 @@ namespace UserInterface.Views
 
                 // This is a bit of a hack which we use to convert a System.Drawing.Color
                 // to its hex string equivalent (e.g. #FF0000).
-                string hex = ColorTranslator.ToHtml(Color.FromArgb(colour.ToArgb()));
+                string hex = Utility.Colour.ToHex(colour);
 
                 string text = (string)model.GetValue(iter, 0);
                 (cell as CellRendererText).Markup = "<span foreground=\"" + hex + "\">" + text + "</span>";
