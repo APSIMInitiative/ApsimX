@@ -10,6 +10,18 @@ namespace UnitTests
 
     public class Utilities
     {
+        /// <summary>
+        /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
+        /// Asserts that the job ran successfully.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        public static void EnsureJobRanGreen(object sender, JobCompleteArgs args)
+        {
+            if (args.exceptionThrowByJob != null)
+                throw new Exception(string.Format("Exception was thrown when running via {0}, when we expected no error to be thrown.", sender.GetType().Name), args.exceptionThrowByJob);
+        }
+
         /// <summary>Call an event in a model</summary>
         public static void CallEvent(object model, string eventName, object[] arguments = null)
         {

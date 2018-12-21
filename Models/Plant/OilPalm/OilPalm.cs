@@ -153,9 +153,9 @@ namespace Models.PMF.OilPalm
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
                     cultivarNames.Add(cultivar.Name);
-                    if (cultivar.Aliases != null)
+                    if (cultivar.Alias != null)
                     {
-                        foreach (string alias in cultivar.Aliases)
+                        foreach (string alias in cultivar.Alias)
                             cultivarNames.Add(alias);
                     }
                 }

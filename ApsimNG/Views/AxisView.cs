@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using Gtk;
     using Interfaces;
+    using OxyPlot.Axes;
 
     /// <summary>
     /// A Windows forms implementation of an AxisView
@@ -50,7 +51,7 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view</param>
         public AxisView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
             table1 = (Table)builder.GetObject("table1");
             entryMin = (Entry)builder.GetObject("entryMin");
             entryMax = (Entry)builder.GetObject("entryMax");
@@ -59,9 +60,9 @@ namespace UserInterface.Views
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             _mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.Changed += OnMinimumChanged;
-            entryMax.Changed += OnMaximumChanged;
-            entryInterval.Changed += OnIntervalChanged;
+            entryMin.FocusOutEvent += OnMinimumChanged;
+            entryMax.FocusOutEvent += OnMaximumChanged;
+            entryInterval.FocusOutEvent += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -130,20 +131,15 @@ namespace UserInterface.Views
         { 
             get
             {
+                DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
+                else if (DateTime.TryParse(entryMin.Text, out date))
+                    return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
-                                            entryMin.Text, 
+                                            entryMin.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
-            }
-            
-            set
-            {
-                if (double.IsNaN(value))
-                    entryMin.Text = string.Empty;
-                else
-                    entryMin.Text = value.ToString();
             }
         }
 
@@ -154,11 +150,14 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
+                else if (DateTime.TryParse(entryMax.Text, out date))
+                    return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
-                                            entryMax.Text, 
+                                            entryMax.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
             }
             
@@ -178,20 +177,63 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTimeIntervalType intervalType;
                 if (string.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
+                else if (Enum.TryParse(entryInterval.Text, out intervalType))
+                    return (double)intervalType;
                 else
                     return Convert.ToDouble(
-                                            entryInterval.Text, 
+                                            entryInterval.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
             }
+        }
 
-            set
+        /// <summary>
+        /// Sets the text in the minimum textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMinimum(double value, bool isDate)
+        {
+            if (!entryMin.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryMin.Text = string.Empty;
+                else
+                    entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the minimum textbox based on a DateTime stored as a double.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMaximum(double value, bool isDate)
+        {
+            if (!entryMax.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryMax.Text = string.Empty;
+                else
+                    entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the interval textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime interval.</param>
+        public void SetInterval(double value, bool isDate)
+        {
+            if (!entryInterval.HasFocus)
             {
                 if (double.IsNaN(value))
                     entryInterval.Text = string.Empty;
                 else
-                    entryInterval.Text = value.ToString();
+                    entryInterval.Text = isDate ? ((DateTimeIntervalType)((int)value)).ToString() : value.ToString();
             }
         }
 
@@ -203,9 +245,9 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entryTitle.Changed -= TitleTextBox_TextChanged;
-            entryMin.Changed -= OnMinimumChanged;
-            entryMax.Changed -= OnMaximumChanged;
-            entryInterval.Changed -= OnIntervalChanged;
+            entryMin.FocusOutEvent -= OnMinimumChanged;
+            entryMax.FocusOutEvent -= OnMaximumChanged;
+            entryInterval.FocusOutEvent -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;

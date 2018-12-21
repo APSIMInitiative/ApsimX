@@ -17,6 +17,6 @@ for /r %apsimx%\Documentation\PDF %%D in (*.pdf) do (
 	rename "%%D" "!NEW_NAME!"
 	set "FILE=%%~dpD!NEW_NAME!"
 	echo  Uploading "!FILE!"
-	@curl -u !APSIM_SITE_CREDS! -T !FILE! ftp://www.apsim.info/APSIM/ApsimXFiles/
+	@curl -s -u !APSIM_SITE_CREDS! -T !FILE! ftp://www.apsim.info/APSIM/ApsimXFiles/
 )
 endlocal

@@ -15,12 +15,6 @@
     public class ExperimentPresenter : IPresenter
     {
         /// <summary>
-        /// The storage writer.
-        /// </summary>
-        [Link]
-        private IStorageWriter storage = null;
-
-        /// <summary>
         /// Command to handle the running of simulations from this view.
         /// </summary>
         private RunCommand runner;
@@ -70,7 +64,7 @@
             view = viewObject as ExperimentView;
             presenter = parentPresenter;
 
-            runner = new RunCommand(model, presenter, false, storage);
+            runner = new RunCommand(model, presenter, false);
             // Once the simulation is finished, we will need to reset the disabled simulation names.
             runner.Finished += OnSimulationsCompleted;
 
@@ -300,7 +294,8 @@
                     Experiment.GetFactorNamesAndValues(factors, names, values);
                     // Pack all factor levels for the current simulation into a list.
                     string name = model.Name + GetName(factors);
-                    bool flag = !model.DisabledSimNames.Contains(name);
+                    bool flag = model.DisabledSimNames == null || 
+                                !model.DisabledSimNames.Contains(name);
                     sims.Add(new Tuple<string, List<string>, bool>(name, values, flag));
                     i++;
                 }

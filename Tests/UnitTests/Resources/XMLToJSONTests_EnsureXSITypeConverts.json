@@ -1,0 +1,21 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Functions.SupplyFunctions.CanopyPhotosynthesis, Models",
+      "Name": "Photosynthesis",
+      "Children": [
+        {
+          "$type": "Models.Functions.SupplyFunctions.CanopyGrossPhotosynthesisHourly, Models",
+          "Name": "CanopyGrossPhotosynthesisHourly",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false,
+          "KDIF": 0.7
+        }
+      ]
+    }
+  ]
+}

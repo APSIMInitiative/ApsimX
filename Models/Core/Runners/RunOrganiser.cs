@@ -42,6 +42,17 @@
             }
         }
 
+        /// <summary>
+        /// The object used to write data for the simulations.
+        /// </summary>
+        public IStorageWriter Storage
+        {
+            get
+            {
+                return Apsim.Find(simulations, typeof(IStorageWriter)) as IStorageWriter;
+            }
+        }
+
         /// <summary>Constructor</summary>
         /// <param name="model">The model to run.</param>
         /// <param name="simulations">simulations object.</param>
@@ -99,8 +110,22 @@
             // Optionally run the tests
             if (runTests)
             {
-                foreach (Tests test in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
-                    test.Test();
+                foreach (ITest test in Apsim.ChildrenRecursively(simulations, typeof(ITest)))
+                {
+                    // If we run into problems, we will want to include the name of the test in the 
+                    // exception's message. However, tests may be manager scripts, which always have
+                    // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
+                    // manager's name instead.
+                    string testName = test.Parent is Manager ? test.Parent.Name : test.Name;
+                    try
+                    {
+                        test.Run();
+                    }
+                    catch (Exception err)
+                    {
+                        throw new Exception("Encountered an error while running test " + testName, err);
+                    }
+                }
             }
         }
     }

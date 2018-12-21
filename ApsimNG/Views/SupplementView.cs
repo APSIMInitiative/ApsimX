@@ -70,7 +70,7 @@ namespace UserInterface.Views
 
         public SupplementView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.SupplementView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SupplementView.glade");
             table1 = (Table)builder.GetObject("table1");
             tbSulph = (Entry)builder.GetObject("tbSulph");
             tbPhos = (Entry)builder.GetObject("tbPhos");
