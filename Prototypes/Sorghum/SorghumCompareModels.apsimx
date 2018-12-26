@@ -4054,7 +4054,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].PotentialBiomTE.Value()",
+                      "VariableName": "[Leaf].BiomTE.Value()",
                       "Name": "BiomTE",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4077,7 +4077,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "PotentialBiomTE",
+                  "Name": "BiomTE",
                   "Children": [
                     {
                       "$type": "Models.Functions.DivideFunction, Models",
@@ -13078,3 +13078,44 @@
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 1,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Stage",
+                  "YFieldName": "Leaf.DMSupplyFixation.Value()",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "TotalFixationSupplyPMF",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}
