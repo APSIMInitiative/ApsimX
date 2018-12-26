@@ -238,6 +238,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
 
+        /// <summary>Potential Biomass limited by Transpiration Efficiency</summary>
+        [Link(IsOptional = true)]
+        IFunction PotentialBiomTEFunction = null;   
+
         /// <summary>Gets the fw.</summary>
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
@@ -383,6 +387,9 @@ namespace Models.PMF.Organs
             LeafInitialised = false;
             laiEqlbLightTodayQ = new Queue<double>(10);
             laiEqlbLightTodayQ.Clear();
+
+            laiEquilibWaterQ = new Queue<double>(10);
+            sdRatioQ = new Queue<double>(5);
         }
         #endregion
 
@@ -421,7 +428,13 @@ namespace Models.PMF.Organs
         public double senLightTimeConst { get; set; } = 10;
         /// <summary>temperature threshold for leaf death.</summary>
         public double frostKill { get; set; } = 10;
-        
+
+        /// <summary>supply:demand ratio for onset of water senescence.</summary>
+        public double senThreshold { get; set; } = 0.25;
+        /// <summary>delay factor for water senescence.</summary>
+        public double senWaterTimeConst { get; set; } = 10;
+
+
         /// <summary>Only water stress at this stage.</summary>
         /// Diff between potentialLAI and stressedLAI
         public double LossFromExpansionStress { get; set; }
@@ -450,6 +463,34 @@ namespace Models.PMF.Organs
                 totalLaiEqlbLight -= laiEqlbLightTodayQ.Dequeue();
             }
             return MathUtilities.Divide(totalLaiEqlbLight, laiEqlbLightTodayQ.Count, 0);
+        }
+
+        private double totalLaiEquilibWater;
+        private double avLaiEquilibWater;
+        private Queue<double> laiEquilibWaterQ;
+        private double updateAvLaiEquilibWater(double valToday, int days)
+        {
+            totalLaiEquilibWater += valToday;
+            laiEquilibWaterQ.Enqueue(valToday);
+            if (laiEquilibWaterQ.Count > days)
+            {
+                totalLaiEquilibWater -= laiEquilibWaterQ.Dequeue();
+            }
+            return MathUtilities.Divide(totalLaiEquilibWater, laiEquilibWaterQ.Count, 0);
+        }
+
+        private double totalSDRatio;
+        private double avSDRatio;
+        private Queue<double> sdRatioQ;
+        private double updateAvSDRatio(double valToday, int days)
+        {
+            totalSDRatio += valToday;
+            sdRatioQ.Enqueue(valToday);
+            if (sdRatioQ.Count > days)
+            {
+                totalSDRatio -= sdRatioQ.Dequeue();
+            }
+            return MathUtilities.Divide(totalSDRatio, sdRatioQ.Count, 0);
         }
 
         /// <summary>Senesce the LEaf Area.</summary>
@@ -483,38 +524,42 @@ namespace Models.PMF.Organs
         private double calcLaiSenescenceWater()
         {
             /* TODO : Direct translation sort of. needs work */
-            //double dlt_dm_transp = plant->biomass->getDltDMPotTE();
-            //var dlt_dm_transp = dltDMPotTE
-            //dltDMPotentialTE
-            //double effectiveRue = plant->biomass->getEffectiveRue();
+            double dlt_dm_transp = PotentialBiomTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
+            double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadIntTot, 0);
 
-            //double sen_radn_crit = divide(dlt_dm_transp, effectiveRue, radnCanopy);
-            //double intc_crit = divide(sen_radn_crit, radnCanopy, 1.0);
+            double radnCanopy = MathUtilities.Divide(RadIntTot, CoverGreen, MetData.Radn);
 
-            ////            ! needs rework for row spacing
-            //double laiEquilibWaterToday;
-            //if (intc_crit < 1.0)
-            //    laiEquilibWaterToday = -log(1.0 - intc_crit) / extinctionCoef;
-            //else
-            //    laiEquilibWaterToday = lai;
+            double sen_radn_crit = MathUtilities.Divide(dlt_dm_transp, effectiveRue, radnCanopy);
+            double intc_crit = MathUtilities.Divide(sen_radn_crit, radnCanopy, 1.0);
 
-            //// average of the last 10 days of laiEquilibWater
+            //            ! needs rework for row spacing
+            double laiEquilibWaterToday;
+            if (intc_crit < 1.0)
+                laiEquilibWaterToday = -Math.Log(1.0 - intc_crit) / ExtinctionCoefficientFunction.Value();
+            else
+                laiEquilibWaterToday = LAI;
+
+            avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
+            var sdRatio = 0.0;
+            avSDRatio = updateAvSDRatio(sdRatio, 5);
+            //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
             //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
 
             //// calculate a 5 day moving average of the supply demand ratio
             //avSD.push_back(plant->water->getSdRatio());
 
-            //double dltSlaiWater = 0.0;
-            //if (movingAvgVector(avSD, 5) < senThreshold)
-            //    dltSlaiWater = Max(0.0, divide((lai - avLaiEquilibWater), senWaterTimeConst, 0.0));
+            double dltSlaiWater = 0.0;
+            if (avSDRatio < senThreshold)
+            {
+                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst, 0.0));
+            }
+            dltSlaiWater = Math.Min(LAI, dltSlaiWater);
 
-            //dltSlaiWater = Min(lai, dltSlaiWater);
-
-            //return dltSlaiWater;
-            return 0.0;
+            return dltSlaiWater;
+            //return 0.0;
         }
 
         private double calcLaiSenescenceLight()
