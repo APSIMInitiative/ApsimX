@@ -2954,7 +2954,7 @@
       "Children": [
     {
       "$type": "Models.Functions.ExpressionFunction, Models",
-      "Expression": "(163 - [Weather].MeanT)/(5 - 0.1*[Weather].MeanT)",
+      "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
       "Name": "CO2internal",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -2976,7 +2976,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
-          "Expression": "([Weather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+          "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
           "Name": "RelativeCO2Gradient",
           "Children": [],
           "IncludeInDocumentation": true,

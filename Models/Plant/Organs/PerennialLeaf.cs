@@ -466,6 +466,9 @@ namespace Models.PMF.Organs
             NDemand.Clear();
             NSupply.Clear();
             Detached.Clear();
+            Leaves.Clear();
+            if (Structure != null)
+                Structure.LeafTipsAppeared = 0;
 
         }
         #endregion
