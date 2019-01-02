@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 48; } }
+        public static int LatestVersion { get { return 49; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -158,6 +158,18 @@
         {
             foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
                 JsonUtilities.ReplaceManagerCode(manager, "DisplayTypeEnum", "DisplayType");
+        }
+
+        /// <summary>
+        /// Upgrades to version 49. Renames Models.Morris+Parameter to Models.Sensitivity.Parameter.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion49(JObject root, string fileName)
+        {
+            foreach (JObject morris in JsonUtilities.ChildrenRecursively(root, "Models.Morris"))
+                foreach (var parameter in morris["Parameters"])
+                    parameter["$type"] = parameter["$type"].ToString().Replace("Models.Morris+Parameter", "Models.Sensitivity.Parameter");
         }
     }
 }
