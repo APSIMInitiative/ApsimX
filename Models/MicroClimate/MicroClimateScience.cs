@@ -185,20 +185,28 @@ namespace Models
         {
             return (2501.0 - 2.38 * temperature) * 1000.0;  // J/kg
         }
+
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
-        private void CalculateShortWaveRadiation(ZoneMicroClimate MCZone)
+        private void CalculateIncomingShortWaveRadiation(ZoneMicroClimate ZoneMC)
+        {
+            ZoneMC.IncomingRs = weather.Radn;
+        }
+        /// <summary>
+        /// Calculates interception of short wave by canopy compartments
+        /// </summary>
+        private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
         {
             // Perform Top-Down Light Balance
             // ==============================
-            double Rin = weather.Radn;
+            double Rin = ZoneMC.IncomingRs;
             double Rint = 0;
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
             {
-                Rint = Rin * (1.0 - Math.Exp(-MCZone.layerKtot[i] * MCZone.LAItotsum[i]));
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MCZone.Canopies[j].Ftot[i] * MCZone.Canopies[j].Ktot, MCZone.layerKtot[i], 0.0);
+                Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                    ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
                 Rin -= Rint;
             }
         }
@@ -206,39 +214,39 @@ namespace Models
         /// <summary>
         /// Calculate the overall system energy terms
         /// </summary>
-        private void CalculateEnergyTerms(ZoneMicroClimate MCZone)
+        private void CalculateEnergyTerms(ZoneMicroClimate ZoneMC)
         {
-            MCZone.sumRs = 0.0;
-            MCZone.Albedo = 0.0;
-            MCZone.Emissivity = 0.0;
+            ZoneMC.sumRs = 0.0;
+            ZoneMC.Albedo = 0.0;
+            ZoneMC.Emissivity = 0.0;
 
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                 {
-                    MCZone.Albedo += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.Canopies[j].Canopy.Albedo;
-                    MCZone.Emissivity += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * CanopyEmissivity;
-                    MCZone.sumRs += MCZone.Canopies[j].Rs[i];
+                    ZoneMC.Albedo += MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.Canopies[j].Canopy.Albedo;
+                    ZoneMC.Emissivity += MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * CanopyEmissivity;
+                    ZoneMC.sumRs += ZoneMC.Canopies[j].Rs[i];
                 }
 
-            MCZone.Albedo += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * soil_albedo;
-            MCZone.Emissivity += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * SoilEmissivity;
+            ZoneMC.Albedo += (1.0 - MathUtilities.Divide(ZoneMC.sumRs, weather.Radn, 0.0)) * soil_albedo;
+            ZoneMC.Emissivity += (1.0 - MathUtilities.Divide(ZoneMC.sumRs, weather.Radn, 0.0)) * SoilEmissivity;
         }
 
         /// <summary>
         /// Calculate Net Long Wave Radiation Balance
         /// </summary>
-        private void CalculateLongWaveRadiation(ZoneMicroClimate MCZone)
+        private void CalculateLongWaveRadiation(ZoneMicroClimate ZoneMC)
         {
             double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
             double averageT = CalcAverageT(weather.MinT, weather.MaxT);
-            MCZone.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, MCZone.Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
+            ZoneMC.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, ZoneMC.Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
 
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rl[i] = MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.NetLongWaveRadiation;
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                    ZoneMC.Canopies[j].Rl[i] = MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.NetLongWaveRadiation;
         }
 
         /// <summary>
@@ -260,16 +268,16 @@ namespace Models
         /// <summary>
         /// Calculate Radiation loss to soil heating
         /// </summary>
-        private void CalculateSoilHeatRadiation(ZoneMicroClimate MCZone)
+        private void CalculateSoilHeatRadiation(ZoneMicroClimate ZoneMC)
         {
-            double radnint = MCZone.sumRs;   // Intercepted SW radiation
-            MCZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
+            double radnint = ZoneMC.sumRs;   // Intercepted SW radiation
+            ZoneMC.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rsoil[i] = MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.soil_heat;
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                    ZoneMC.Canopies[j].Rsoil[i] = MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.soil_heat;
         }
 
         /// <summary>

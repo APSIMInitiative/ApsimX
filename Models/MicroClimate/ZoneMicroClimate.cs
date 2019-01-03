@@ -60,7 +60,7 @@ namespace Models
             {
                 DefineLayers();
                 DivideComponents();
-                LightExtinction();
+                CalculateLightExtinctionVariables();
             }
 
             /// <summary>Break the combined Canopy into layers</summary>
@@ -151,7 +151,7 @@ namespace Models
                 }
             }
             /// <summary>Calculate light extinction parameters</summary>
-            private void LightExtinction()
+            private void CalculateLightExtinctionVariables()
             {
                 // Calculate effective K from LAI and cover
                 // =========================================
