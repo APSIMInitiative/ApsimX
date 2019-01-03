@@ -191,7 +191,7 @@
                 {
                     if (initialWater["RelativeTo"].ToString().Contains("ll15"))
                         initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString().Replace("ll15", "LL15");
-                    else if (!initialWater["RelativeTo"].ToString().EndsWith("Soil"))
+                    else if (!string.IsNullOrEmpty(initialWater["RelativeTo"].ToString()) && !initialWater["RelativeTo"].ToString().EndsWith("Soil"))
                         initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString() + "Soil";
                 }
             }
