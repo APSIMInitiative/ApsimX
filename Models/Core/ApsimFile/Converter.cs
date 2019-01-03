@@ -161,19 +161,27 @@
         }
 
         /// <summary>
-        /// Upgrades to version 49. Fixes soils copied from Apsim Classic.
+        /// Upgrades to version 49. Fixes the RelativeTo property of 
+        /// InitialWater components of soils copied from Apsim Classic.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         /// <remarks>
-        /// TODO
+        /// ll15 must be renamed to LL15.
+        /// Wheat must be renamed to WheatSoil.
+        /// Maize must be renamed to MaizeSoil.
         /// </remarks>
         private static void UpgradeToVersion49(JObject root, string fileName)
         {
             foreach (JObject initialWater in JsonUtilities.ChildrenRecursively(root, "InitialWater"))
             {
                 if (initialWater["RelativeTo"] != null)
-                    initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString().Replace("ll15", "LL15");
+                {
+                    if (initialWater["RelativeTo"].ToString().Contains("ll15"))
+                        initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString().Replace("ll15", "LL15");
+                    else if (!initialWater["RelativeTo"].ToString().EndsWith("Soil"))
+                        initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString() + "Soil";
+                }
             }
         }
     }
