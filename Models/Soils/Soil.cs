@@ -154,7 +154,7 @@ namespace Models.Soils
                 Children.Add(temperature);
                 temperature.Parent = this;
             }
-            if (Apsim.Children(this, typeof(SoilNitrogen)).Count < 1)
+            if (Apsim.Children(this, typeof(INutrient)).Count < 1)
             {
                 SoilNitrogen nitrogen = new SoilNitrogen();
                 Children.Add(nitrogen);
