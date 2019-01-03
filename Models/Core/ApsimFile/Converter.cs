@@ -173,7 +173,7 @@
         }
 
         /// <summary>
-        /// Upgrades to version 49. Fixes the RelativeTo property of 
+        /// Upgrades to version 50. Fixes the RelativeTo property of 
         /// InitialWater components of soils copied from Apsim Classic.
         /// </summary>
         /// <param name="root"></param>
