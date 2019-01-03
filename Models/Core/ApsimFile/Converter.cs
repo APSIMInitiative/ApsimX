@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 49; } }
+        public static int LatestVersion { get { return 50; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -161,6 +161,18 @@
         }
 
         /// <summary>
+        /// Upgrades to version 49. Renames Models.Morris+Parameter to Models.Sensitivity.Parameter.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion49(JObject root, string fileName)
+        {
+            foreach (JObject morris in JsonUtilities.ChildrenRecursively(root, "Models.Morris"))
+                foreach (var parameter in morris["Parameters"])
+                    parameter["$type"] = parameter["$type"].ToString().Replace("Models.Morris+Parameter", "Models.Sensitivity.Parameter");
+        }
+
+        /// <summary>
         /// Upgrades to version 49. Fixes the RelativeTo property of 
         /// InitialWater components of soils copied from Apsim Classic.
         /// </summary>
@@ -171,7 +183,7 @@
         /// Wheat must be renamed to WheatSoil.
         /// Maize must be renamed to MaizeSoil.
         /// </remarks>
-        private static void UpgradeToVersion49(JObject root, string fileName)
+        private static void UpgradeToVersion50(JObject root, string fileName)
         {
             foreach (JObject initialWater in JsonUtilities.ChildrenRecursively(root, "InitialWater"))
             {
