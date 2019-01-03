@@ -12,7 +12,7 @@ namespace Models
         /// MicroClimateZone
         /// </summary>
         [Serializable]
-        private class MicroClimateZone
+        private class ZoneMicroClimate
         {
             public Zone zone = null;
             /// <summary>The weather</summary>

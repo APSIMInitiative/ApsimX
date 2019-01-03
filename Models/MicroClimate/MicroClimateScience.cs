@@ -188,7 +188,7 @@ namespace Models
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
-        private void CalculateShortWaveRadiation(MicroClimateZone MCZone)
+        private void CalculateShortWaveRadiation(ZoneMicroClimate MCZone)
         {
             // Perform Top-Down Light Balance
             // ==============================
@@ -206,7 +206,7 @@ namespace Models
         /// <summary>
         /// Calculate the overall system energy terms
         /// </summary>
-        private void CalculateEnergyTerms(MicroClimateZone MCZone)
+        private void CalculateEnergyTerms(ZoneMicroClimate MCZone)
         {
             MCZone.sumRs = 0.0;
             MCZone.Albedo = 0.0;
@@ -227,7 +227,7 @@ namespace Models
         /// <summary>
         /// Calculate Net Long Wave Radiation Balance
         /// </summary>
-        private void CalculateLongWaveRadiation(MicroClimateZone MCZone)
+        private void CalculateLongWaveRadiation(ZoneMicroClimate MCZone)
         {
             double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
@@ -260,7 +260,7 @@ namespace Models
         /// <summary>
         /// Calculate Radiation loss to soil heating
         /// </summary>
-        private void CalculateSoilHeatRadiation(MicroClimateZone MCZone)
+        private void CalculateSoilHeatRadiation(ZoneMicroClimate MCZone)
         {
             double radnint = MCZone.sumRs;   // Intercepted SW radiation
             MCZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
