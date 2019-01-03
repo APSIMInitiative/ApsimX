@@ -34,6 +34,10 @@ namespace Models
             /// <summary>The sum rs</summary>
             public double sumRs;
 
+            /// <summary>The incoming rs</summary>
+            public double IncomingRs;
+
+
             /// <summary>The delta z</summary>
             public double[] DeltaZ = new double[-1 + 1];
 
@@ -184,6 +188,7 @@ namespace Models
                 Albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
+                IncomingRs = 0;
                 numLayers = 0;
                 DeltaZ = new double[-1 + 1];
                 layerKtot = new double[-1 + 1];

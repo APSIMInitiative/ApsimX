@@ -172,6 +172,7 @@ namespace Models
             foreach (ZoneMicroClimate ZoneMC in zoneMicroClimates)
             {
                 ZoneMC.DoCanopyCompartments();
+                CalculateIncomingShortwaveRadiation(ZoneMC);
                 CalculateLayeredShortWaveRadiation(ZoneMC);
                 CalculateEnergyTerms(ZoneMC);
                 CalculateLongWaveRadiation(ZoneMC);

@@ -187,7 +187,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Calculates interception of short wave by canopy compartments
+        /// Calculates incoming short wave radiation for each zone's microclimate
         /// </summary>
         private void CalculateIncomingShortWaveRadiation(ZoneMicroClimate ZoneMC)
         {
