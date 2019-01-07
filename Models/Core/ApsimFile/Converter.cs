@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 48; } }
+        public static int LatestVersion { get { return 50; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -34,7 +34,7 @@
 
             if (firstNonBlankChar == '<')
             {
-                bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, 46), fileName);
+                bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, XmlConverters.LastVersion), fileName);
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(st);
                 int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"));
@@ -158,6 +158,43 @@
         {
             foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
                 JsonUtilities.ReplaceManagerCode(manager, "DisplayTypeEnum", "DisplayType");
+        }
+
+        /// <summary>
+        /// Upgrades to version 49. Renames Models.Morris+Parameter to Models.Sensitivity.Parameter.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion49(JObject root, string fileName)
+        {
+            foreach (JObject morris in JsonUtilities.ChildrenRecursively(root, "Models.Morris"))
+                foreach (var parameter in morris["Parameters"])
+                    parameter["$type"] = parameter["$type"].ToString().Replace("Models.Morris+Parameter", "Models.Sensitivity.Parameter");
+        }
+
+        /// <summary>
+        /// Upgrades to version 50. Fixes the RelativeTo property of 
+        /// InitialWater components of soils copied from Apsim Classic.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        /// <remarks>
+        /// ll15 must be renamed to LL15.
+        /// Wheat must be renamed to WheatSoil.
+        /// Maize must be renamed to MaizeSoil.
+        /// </remarks>
+        private static void UpgradeToVersion50(JObject root, string fileName)
+        {
+            foreach (JObject initialWater in JsonUtilities.ChildrenRecursively(root, "InitialWater"))
+            {
+                if (initialWater["RelativeTo"] != null)
+                {
+                    if (initialWater["RelativeTo"].ToString().ToUpper().Contains("LL15"))
+                        initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString().Replace("ll15", "LL15");
+                    else if (!string.IsNullOrEmpty(initialWater["RelativeTo"].ToString()) && !initialWater["RelativeTo"].ToString().EndsWith("Soil"))
+                        initialWater["RelativeTo"] = initialWater["RelativeTo"].ToString() + "Soil";
+                }
+            }
         }
     }
 }
