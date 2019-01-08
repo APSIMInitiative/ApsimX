@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="JsonUtilitiesTests.cs" />
     <Compile Include="MorrisTests.cs" />
+    <Compile Include="RegressionTests.cs" />
     <Compile Include="StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="WeatherFileTests.cs" />
