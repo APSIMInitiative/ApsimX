@@ -283,7 +283,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-        public void CalcEos_EoReducedDueToShading(CanopyData Canopy, SurfaceCoverData SurfaceCover)
+        public void CalcEos_EoReducedDueToShading(CanopyData Canopy, SurfaceCoverData SurfaceCover, MetData Met, double Rs)
             {
 
             //private void soilwat2_pot_soil_evaporation()
@@ -311,6 +311,7 @@ namespace Models.Soils.SoilWaterBackend
             //!              ...minimum reduction (at cover =0.0) is 1.0
             //!              ...maximum reduction (at cover =1.0) is 0.183.
 
+            double CoverTotSum = MathUtilities.Divide(Rs, Met.radn,0.0);
 
             eos_canopy_fract = Math.Exp(-1 * cons.canopy_eos_coef * Canopy.cover_tot_sum);
 

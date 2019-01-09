@@ -318,6 +318,9 @@ namespace Models
                     MCZone.Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     MCZone.Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     MCZone.Canopies[j].Canopy.LightProfile = lightProfile;
+
+                    ISoilWater SoilWater = Apsim.Find(MCZone.zone, typeof(ISoilWater)) as ISoilWater;
+                    SoilWater.SurfaceRs = MCZone.SurfaceRs;
                 }
         }
     }

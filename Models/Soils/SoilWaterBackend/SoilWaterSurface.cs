@@ -50,6 +50,12 @@ namespace Models.Soils.SoilWaterBackend
         /// The eo.
         /// </value>
         public double Eo {get; set;}  //external modules might set this value. 
+
+        /// <summary>
+        /// Rs
+        /// </summary>
+        public double Rs;
+
         /// <summary>
         /// The eos
         /// </summary>
@@ -320,7 +326,7 @@ namespace Models.Soils.SoilWaterBackend
             evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
             Eo = evap.Eo;
 
-            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover);
+            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover, base.Met, base.Rs);
             Eos = evap.Eos;
 
             evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
@@ -482,7 +488,7 @@ namespace Models.Soils.SoilWaterBackend
             evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
             Eo = evap.Eo;
 
-            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover);
+            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover,base.Met, Rs);
             Eos = evap.Eos;
 
 

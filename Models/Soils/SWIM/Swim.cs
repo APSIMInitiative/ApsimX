@@ -766,6 +766,11 @@ namespace Models.Soils
             }
         }
 
+        ///<summary>Surface Short Wave Radiation</summary>
+        [XmlIgnore]
+        [Units("MJ/m2")]
+        public double SurfaceRs { get; set; }
+
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         [XmlIgnore]
         [Units("mm")]

@@ -201,6 +201,7 @@ namespace Models
                     MCZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MCZone.Canopies[j].Ftot[i] * MCZone.Canopies[j].Ktot, MCZone.layerKtot[i], 0.0);
                 Rin -= Rint;
             }
+            MCZone.SurfaceRs = Rin;
         }
 
         /// <summary>

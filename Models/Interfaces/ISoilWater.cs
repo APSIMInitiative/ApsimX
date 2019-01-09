@@ -30,6 +30,9 @@ namespace Models.Interfaces
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         double[] ESW { get; }
 
+        ///<summary>Gets/Sets the shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)</summary>
+        double SurfaceRs { get; set;}
+
         ///<summary>Gets potential evaporation from soil surface (mm)</summary>
         double Eos { get; }
 

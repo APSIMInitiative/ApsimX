@@ -76,6 +76,9 @@ namespace Models.Soils
         public double Eo { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
+        public double SurfaceRs { get; set; }
+        ///<summary> Who knows</summary>
+        [XmlIgnore]
         public double Eos { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]

@@ -52,6 +52,10 @@ namespace Models
             /// <summary>The dryleaffraction</summary>
             public double dryleaffraction = 0;
 
+            /// <summary>The shortwave radiation reaching the surface</summary>
+            public double SurfaceRs = 0;
+
+
             /// <summary>Gets or sets the component data.</summary>
             public List<CanopyType> Canopies = new List<CanopyType>();
 
@@ -181,6 +185,7 @@ namespace Models
             {
                 soil_heat = 0.0;
                 dryleaffraction = 0.0;
+                SurfaceRs = 0.0;
                 Albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;

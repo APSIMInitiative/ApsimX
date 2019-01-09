@@ -667,6 +667,30 @@ namespace Models.Soils
         public double Eos { get{return surface != null ? surface.Eos : Double.NaN;} }
 
         /// <summary>
+        /// Short wave radiation reaching the surface (ie above residue layer) (MJ/m2))
+        /// </summary>
+        /// <value>
+        /// The SurfaceRs.
+        /// </value>
+        [XmlIgnore]
+        [Units("mm")]
+        public double SurfaceRs
+        {
+            get
+            {
+                if (surface != null)
+                    return surface.Rs;
+                else
+                    return Double.NaN;
+            }
+            set
+            {
+                if (surface != null)
+                    surface.Rs = value;
+            }
+        }
+
+        /// <summary>
         /// Actual (realised) soil water evaporation
         /// </summary>
         /// <value>
