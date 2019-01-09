@@ -84,7 +84,7 @@
             Structure.Add(soilXml, simulation);
             Assert.AreEqual(simulation.Children.Count, 1);
             Soil soil = simulation.Children[0] as Soil;
-            Assert.AreEqual(soil.Children.Count, 6);
+            Assert.AreEqual(soil.Children.Count, 8);
             Assert.IsTrue(soil.Children[4] is InitialWater);
             Assert.IsTrue(soil.Children[5] is Sample);
         }

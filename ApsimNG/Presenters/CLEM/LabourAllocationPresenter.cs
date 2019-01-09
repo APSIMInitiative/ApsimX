@@ -87,7 +87,7 @@ namespace UserInterface.Presenters
 
             // Get Labour resources
             labour = Apsim.ChildrenRecursively(clem, typeof(Labour)).FirstOrDefault() as Labour;
-            if(labour is null)
+            if(labour == null)
             {
                 htmlString += "No Labour supplied in resources";
                 EndHTML(htmlString);
@@ -125,7 +125,7 @@ namespace UserInterface.Presenters
             // walk through all activities
             // check if LabourRequirement can be added
             ActivitiesHolder activities = Apsim.ChildrenRecursively(clem, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
-            if (activities is null)
+            if (activities == null)
             {
                 htmlString += "Could not find an Activities Holder";
                 EndHTML(htmlString);
@@ -189,10 +189,10 @@ namespace UserInterface.Presenters
             if(validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
             {
                 Model labourRequirement = Apsim.Children(model, typeof(IModel)).Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                tblstr += "<tr"+((labourRequirement is null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
+                tblstr += "<tr"+((labourRequirement == null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
-                if (!(labourRequirement is null))
+                if (!(labourRequirement == null))
                 {
                     // for each labour type
                     foreach (LabourType lt in labourList)
