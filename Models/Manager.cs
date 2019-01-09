@@ -11,6 +11,7 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The manager model
@@ -29,7 +30,7 @@
         private string CompiledCode;
 
         /// <summary>Has the manager model been fully created yet?</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private bool isCreated = false;
         
         /// <summary>The code to compile.</summary>
