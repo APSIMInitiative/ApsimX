@@ -128,6 +128,10 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>A temporary flag for sorghum to reset the thermal time at change of phase.</summary>
+        [Link(IsOptional = true)]
+        public IFunction SorghumFlag  = null;
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -335,6 +339,13 @@ namespace Models.PMF.Phen
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+
+                    if (SorghumFlag != null)
+                    {
+                        //old sorghum model adjustment
+                        //excess thermal time was lost at change of phase
+                        CurrentPhase.ResetPhase();
+                    }
                 }
 
                 AccumulatedTT += thermalTime.Value();
@@ -346,6 +357,8 @@ namespace Models.PMF.Phen
                if (plant != null)
                     if (plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
+
+                
             }
         }
 

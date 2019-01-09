@@ -52,7 +52,7 @@
             this.jobName = model.Name;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
-            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
+            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, true);
 
             if (multiProcess)
                 jobRunner = new JobRunnerMultiProcess(false);
@@ -162,7 +162,7 @@
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             int numSimulations = 0;
-            if (jobManager.SimulationNamesBeingRun != null)
+            if (jobManager?.SimulationNamesBeingRun != null)
                 numSimulations = jobManager.SimulationNamesBeingRun.Count;
 
             double numberComplete = 0.0;

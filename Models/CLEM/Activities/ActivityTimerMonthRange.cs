@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
+    [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [XmlIgnore]
@@ -62,21 +65,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                bool due = false;
-                if (StartMonth < EndMonth)
-                {
-                    if ((Clock.Today.Month >= StartMonth) && (Clock.Today.Month <= EndMonth))
-                    {
-                        due = true;
-                    }
-                }
-                else
-                {
-                    if ((Clock.Today.Month >= EndMonth) | (Clock.Today.Month <= StartMonth))
-                    {
-                        due = true;
-                    }
-                }
+                bool due = IsMonthInRange(Clock.Today);
                 if (due)
                 {
                     // report activity performed.
@@ -88,10 +77,40 @@ namespace Models.CLEM.Activities
                             Name = this.Name
                         }
                     };
+                    activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                 }
                 return due;
             }
+        }
+
+        /// <summary>
+        /// Method to determine whether the activity is due based on a specified date
+        /// </summary>
+        /// <returns>Whether the activity is due based on the specified date</returns>
+        public bool Check(DateTime dateToCheck)
+        {
+            return IsMonthInRange(dateToCheck);
+        }
+
+        private bool IsMonthInRange(DateTime date)
+        {
+            bool due = false;
+            if (StartMonth <= EndMonth)
+            {
+                if ((date.Month >= StartMonth) && (date.Month <= EndMonth))
+                {
+                    due = true;
+                }
+            }
+            else
+            {
+                if ((date.Month >= EndMonth) | (date.Month <= StartMonth))
+                {
+                    due = true;
+                }
+            }
+            return due;
         }
 
         /// <summary>
@@ -100,8 +119,44 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filter\">";
+            html += "Perform between <span class=\"setvalueextra\">";
+            html += new DateTime(2000, StartMonth, 1).ToString("MMMM");
+            html += "</span> and <span class=\"setvalueextra\">";
+            html += new DateTime(2000, EndMonth, 1).ToString("MMMM");
+            html += "</span></div>";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
         }
     }
 }

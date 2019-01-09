@@ -16,5 +16,12 @@ namespace Models.CLEM
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>
         bool ActivityDue { get; }
+
+        /// <summary>
+        /// Method to determine whether the activity is due based on a specified date
+        /// </summary>
+        /// <returns>Whether the activity is due based on the specified date</returns>
+        bool Check(DateTime dateToCheck);
+
     }
 }

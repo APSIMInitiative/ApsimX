@@ -1,0 +1,219 @@
+﻿using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
+
+namespace UnitTests
+{
+    /// <summary>
+    /// A collection of tests for the json utilities.
+    /// </summary>
+    class JsonUtilitiesTests
+    {
+        /// <summary>
+        /// Ensure the Name method works correctly.
+        /// </summary>
+        [Test]
+        public void NameTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureNameWorks.json");
+            JObject rootNode = JObject.Parse(json);
+
+            // Ensure name is correct for a model.
+            Assert.AreEqual(JsonUtilities.Name(rootNode), "Simulations");
+
+            // Ensure name is correct for a property.
+            Assert.AreEqual(JsonUtilities.Name(rootNode.Property("Version")), "Version");
+
+            // Ensure property value has a name of "" (empty string).
+            Assert.AreEqual(JsonUtilities.Name(rootNode.Property("Version").Value), string.Empty);
+
+            // Ensure that the name of null is null.
+            Assert.Null(JsonUtilities.Name(null));
+        }
+
+        /// <summary>
+        /// Ensure the Type() method works correctly.
+        /// </summary>
+        [Test]
+        public void TypeTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureTypeWorks.json");
+            JObject rootNode = JObject.Parse(json);
+            List<JObject> children = JsonUtilities.Children(rootNode);
+
+            // Ensure typename with namespace is correct.
+            Assert.AreEqual("Models.Core.Simulations", JsonUtilities.Type(rootNode));
+
+            // Ensure typename without namespace is correct.
+            Assert.AreEqual("Simulations", JsonUtilities.Type(rootNode, false));
+
+            // Ensure that typename of null is null.
+            Assert.Null(JsonUtilities.Type(null));
+
+            // Ensure that typename of node with no $type property is null.
+            Assert.Null(JsonUtilities.Type(children[0]));
+        }
+
+        /// <summary>
+        /// Ensures the Children() method works correctly.
+        /// </summary>
+        [Test]
+        public void ChildrenTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureChildrenWorks.json");
+            JObject rootNode = JObject.Parse(json);
+            List<JObject> children = JsonUtilities.Children(rootNode);
+            List<JObject> emptyList = new List<JObject>();
+
+            // Ensure children is not null.
+            Assert.NotNull(children);
+
+            // Ensure number of children is correct.
+            Assert.AreEqual(4, children.Count);
+
+            // Ensure children of null is an empty list.
+            Assert.AreEqual(emptyList, JsonUtilities.Children(null));
+
+            // Ensure children of a node with empty children property is empty list.
+            Assert.AreEqual(emptyList, JsonUtilities.Children(children[0] as JObject));
+
+            // Ensure children of a node with no children property is an empty list.
+            Assert.AreEqual(emptyList, JsonUtilities.Children(children[1] as JObject));
+        }
+
+        /// <summary>
+        /// Ensures the ChildrenRecursively() method works correctly.
+        /// </summary>
+        [Test]
+        public void ChildrenRecursivelyTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureChildrenRecursivelyWorks.json");
+            JObject rootNode = JObject.Parse(json);
+            List<JObject> children = JsonUtilities.Children(rootNode);
+            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode);
+            List<JObject> emptyList = new List<JObject>();
+
+            // Ensure descendants is not null.
+            Assert.NotNull(descendants);
+
+            // Ensure number of descendants is correct.
+            Assert.AreEqual(6, descendants.Count);
+
+            // Ensure descendants of null is an empty list (not null).
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null));
+
+            // Ensure descendants of a node with an empty children property is an empty list.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[0] as JObject));
+
+            // Ensure descendants of a node with no children property is an empty list.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1] as JObject));
+        }
+
+        /// <summary>
+        /// Ensures the ChildrenRecursively method works correctly when
+        /// provided with a type filter.
+        /// </summary>
+        [Test]
+        public void DescendantsByTypeTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.DescendantsByType.json");
+            JObject rootNode = JObject.Parse(json);
+            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+            List<JObject> descendatnsWithoutNamespace = JsonUtilities.ChildrenRecursively(rootNode, "Axis");
+            List<JObject> children = JsonUtilities.Children(rootNode).Cast<JObject>().ToList();
+            List<JObject> emptyList = new List<JObject>();
+
+            // Ensure descendants is not null.
+            Assert.NotNull(descendants);
+
+            // Ensure number of descendants of type Models.Core.Axis is correct.
+            Assert.AreEqual(2, descendants.Count);
+
+            // Ensure number of descendatns of type Axis is correct.
+            Assert.AreEqual(2, descendatnsWithoutNamespace.Count);
+
+            // Ensure descendants of null is an empty list when filtering by type with namespace.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Models.Graph.Axis"));
+
+            // Ensure descendants of null is an empty list when filtering by type without namespace.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Axis"));
+
+            // Ensure descendants of a node with an empty children property
+            // is an empty list when filtering by type with namespace.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1], "Models.Graph.Axis"));
+
+            // Ensure descendants of a node with an empty children property
+            // is an empty list when filtering by type without namespace.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1], "Axis"));
+
+            // Ensure descendants of a node with no children property
+            // is an empty list when filtering by type with namespace.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[2], "Models.Graph.Axis"));
+
+            // Ensure descendants of a node with no children property
+            // is an empty list when filtering by type without namespace.
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[2], "Axis"));
+        }
+
+        /// <summary>
+        /// Ensures the SearchReplaceManagerText method works correctly.
+        /// </summary>
+        [Test]
+        public void ReplaceManagerTextTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.ReplaceManagerText.json");
+            JObject rootNode = JObject.Parse(json);
+
+            string newText = "new text";
+            JsonUtilities.ReplaceManagerCode(rootNode, "original text", newText);
+
+            // Ensure the code was modified correctly.
+            Assert.AreEqual(newText, rootNode["Code"].ToString());
+
+            // Ensure that passing in a null search string causes no changes.
+            JsonUtilities.ReplaceManagerCode(rootNode, null, "test");
+            Assert.AreEqual(newText, rootNode["Code"].ToString());
+
+            // Attempt to replace code of a node which doesn't have a code
+            // property. Ensure that no code property is created (and that
+            // no exception is thrown).
+            JObject childWithNoCode = JsonUtilities.Children(rootNode).First();
+            JsonUtilities.ReplaceManagerCode(childWithNoCode, "test1", "test2");
+            Assert.Null(childWithNoCode["Code"]);
+        }
+
+        /// <summary>
+        /// Ensures the ReplaceManagerCodeUsingRegex method works correctly.
+        /// </summary>
+        [Test]
+        public void ReplaceManagerCodeRegexTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.ReplaceManagerTextRegex.json");
+            JObject rootNode = JObject.Parse(json);
+
+            // The manager's code is "original text".
+            // This regular expression will effectively remove the first space.
+            // There are simpler ways to achieve this but this method tests
+            // backreferencing.
+            string newText = "originaltext";
+            JsonUtilities.ReplaceManagerCodeUsingRegex(rootNode, @"([^\s]*)\s", @"$1");
+            Assert.AreEqual(newText, rootNode["Code"].ToString());
+
+            // Ensure that passing in a null search string causes no changes.
+            JsonUtilities.ReplaceManagerCodeUsingRegex(rootNode, null, "test");
+            Assert.AreEqual(newText, rootNode["Code"].ToString());
+
+            // Attempt to replace code of a node which doesn't have a code
+            // property. Ensure that no code property is created (and that
+            // no exception is thrown).
+            JObject childWithNoCode = JsonUtilities.Children(rootNode).First();
+            JsonUtilities.ReplaceManagerCodeUsingRegex(childWithNoCode, "test1", "test2");
+            Assert.Null(childWithNoCode["Code"]);
+        }
+    }
+}

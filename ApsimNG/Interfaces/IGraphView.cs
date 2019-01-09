@@ -198,6 +198,7 @@ namespace UserInterface.Interfaces
         /// <param name="minimum">Minimum axis scale</param>
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
+        /// /// <param name="isDateTimeAxis">True iff data displayed on this axis is date/time.</param>
         void FormatAxis(
             Models.Graph.Axis.AxisType axisType, 
             string title,

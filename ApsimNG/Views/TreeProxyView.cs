@@ -44,7 +44,7 @@ namespace UserInterface.Views
         /// </summary>
         public TreeProxyView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
             ScrolledWindow temporalDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             ScrolledWindow spatialDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow2");
             VPaned mainPanel = (VPaned)builder.GetObject("vpaned1");
