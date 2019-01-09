@@ -201,7 +201,7 @@ namespace UserInterface.Views
                 tab.Remove(child);
                 child.Destroy();
             }
-            if (control.GetType() == typeof(ViewBase))
+            if (typeof(ViewBase).IsInstanceOfType(control))
             {
                 ViewBase view = (ViewBase)control;
                 tab.Add(view.MainWidget);
