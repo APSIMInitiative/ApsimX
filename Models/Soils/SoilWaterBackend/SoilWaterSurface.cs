@@ -326,7 +326,7 @@ namespace Models.Soils.SoilWaterBackend
             evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
             Eo = evap.Eo;
 
-            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover, base.Met, base.Rs);
+            evap.CalcEos_EoReducedDueToShading(base.SurfaceCover, base.Met, base.Rs);
             Eos = evap.Eos;
 
             evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
@@ -488,7 +488,7 @@ namespace Models.Soils.SoilWaterBackend
             evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
             Eo = evap.Eo;
 
-            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover,base.Met, Rs);
+            evap.CalcEos_EoReducedDueToShading(base.SurfaceCover,base.Met, Rs);
             Eos = evap.Eos;
 
 

@@ -719,9 +719,9 @@ namespace Models.Soils
             double CropCover = 0;
             if(Plant != null)
                 if (Plant.Canopy != null)
-                    CropCover = Plant.Canopy.CoverTotal;
+                    CropCover = Plant.Canopy.CoverTotal;            
             TotalCover = Math.Min(1, SurfaceOM.Cover + CropCover);
-            double SoilRadn = Met.Radn * (1-TotalCover);
+            double SoilRadn = SurfaceRs;  //Met.Radn * (1-TotalCover);
             double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
             Eos = ET.PenmanEO(SoilRadn, Met.MeanT, WindRun, Met.VP, Salb, Met.Latitude, Clock.Today.DayOfYear);
             Array.Clear(Hourly.Irrigation, 0, 24);

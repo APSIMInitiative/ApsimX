@@ -4989,7 +4989,8 @@ namespace Models.Soils
             //              ...minimum reduction (at cover =0.0) is 1.0
             //              ...maximum reduction (at cover =1.0) is 0.183.
 
-            double eos_canopy_fract = Math.Exp(-canopy_eos_coef * crop_cover);
+            double cropcover = 1.0 - MathUtilities.Divide(SurfaceRs, MetFile.Radn, 0.0);
+            double eos_canopy_fract = Math.Exp(-canopy_eos_coef * cropcover);
 
             //-----------------------------------------------+
             // reduce Eo under canopy to that under mulch            <DMS June 95>
