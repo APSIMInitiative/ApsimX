@@ -191,7 +191,7 @@ namespace UserInterface.Views
             }
 
             // check if tab has been added
-            if(nbook.GetTabLabelText(tab) is null)
+            if(nbook.GetTabLabelText(tab) == null)
             {
                 nbook.AppendPage(tab, tablab);
             }
@@ -201,8 +201,9 @@ namespace UserInterface.Views
                 tab.Remove(child);
                 child.Destroy();
             }
-            if (control is ViewBase view)
+            if (typeof(ViewBase).IsInstanceOfType(control))
             {
+                ViewBase view = (ViewBase)control;
                 tab.Add(view.MainWidget);
                 tab.ShowAll();
             }

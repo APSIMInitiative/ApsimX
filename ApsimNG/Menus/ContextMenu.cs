@@ -311,10 +311,10 @@ namespace UserInterface.Presenters
             if (currentSoil != null)
             {
                 string errorMessages = currentSoil.Check(false);
-                if (errorMessages != string.Empty)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(errorMessages);
-                }
+                if (!string.IsNullOrEmpty(errorMessages))
+                    explorerPresenter.MainPresenter.ShowError(errorMessages);
+                else
+                    explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
             }
         }
 

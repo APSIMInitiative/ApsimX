@@ -7612,11 +7612,11 @@ namespace Models
                 Pasture.Add(species);
             }
             
-            Pasture[0].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000, specificRootLength: 100);
-            Pasture[0].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500, specificRootLength: 100);
+            Pasture[0].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000);
+            Pasture[0].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500);
 
-            Pasture[1].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000, specificRootLength: 100);
-            Pasture[1].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500, specificRootLength: 100);
+            Pasture[1].AddZone(zoneName: "Zone1", rootDepth: 100, rootDM: 1000);
+            Pasture[1].AddZone(zoneName: "Zone2", rootDepth: 50, rootDM: 500);
 
             // reset variables
             DaysAfterCut = 0;
