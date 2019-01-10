@@ -526,4 +526,4 @@ dimensions of an image; if this is important to you, you can simply
 use regular HTML `<img>` tags.
 
 
-Note that for now, all images must be added as embedded resources in the ApsimNG assembly.
+Note that for now, all images must be added as embedded resources to the ApsimNG assembly.
