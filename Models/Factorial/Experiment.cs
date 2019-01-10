@@ -42,11 +42,11 @@
         /// <summary>Gets the next job to run</summary>
         public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
-            if (allCombinations == null || allCombinations.Count == 0)
-                return null;
-
             if (serialisedBase == null)
                 Initialise(fullFactorial);
+
+            if (allCombinations == null || allCombinations.Count == 0)
+                return null;
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
