@@ -181,6 +181,14 @@ namespace UserInterface.Interfaces
         void SetClipboardText(string text, string clipboardName);
 
         /// <summary>
+        /// Invoked when theme is toggled.
+        /// Toggles the icon displayed on the "toggle theme" button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        void ToggleTheme(object sender, EventArgs args);
+
+        /// <summary>
         /// Invoked when application tries to close
         /// </summary>
         event EventHandler<AllowCloseArgs> AllowClose;

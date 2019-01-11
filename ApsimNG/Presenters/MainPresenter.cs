@@ -1001,6 +1001,7 @@
         private void OnToggleTheme(object sender, EventArgs e)
         {
             Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
+            view.ToggleTheme(sender, e);
             // Might be better to restart automatically (after asking the user),
             // but I haven't been able to figure out a reliable cross-platform 
             // way of attaching the debugger to the new process. I leave this

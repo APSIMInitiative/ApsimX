@@ -119,6 +119,16 @@
         private Pango.FontDescription baseFont;
 
         /// <summary>
+        /// Dark theme icon.
+        /// </summary>
+        private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
+
+        /// <summary>
+        /// Default theme Icon.
+        /// </summary>
+        private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
@@ -726,6 +736,22 @@
         private void ShowDetailedErrorMessage(object sender, EventArgs args)
         {
             ShowDetailedError?.Invoke(sender, args);
+        }
+
+        /// <summary>
+        /// Invoked when theme is toggled.
+        /// Toggles the icon displayed on the "toggle theme" button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        public void ToggleTheme(object sender, EventArgs args)
+        {
+            if (sender is ToolButton)
+            {
+                ToolButton button = sender as ToolButton;
+                button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
+                button.IconWidget.ShowAll();
+            }
         }
 
         /// <summary>
