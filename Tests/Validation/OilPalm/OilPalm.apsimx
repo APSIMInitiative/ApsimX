@@ -3793,10 +3793,6 @@ namespace Models
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <DisabledSimNames>
-        <string>HargyN1</string>
-        <string>HargyN2</string>
-      </DisabledSimNames>
     </Experiment>
     <Experiment>
       <Name>Sagarai</Name>
