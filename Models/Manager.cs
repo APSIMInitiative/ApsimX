@@ -11,6 +11,7 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The manager model
@@ -29,7 +30,7 @@
         private string CompiledCode;
 
         /// <summary>Has the manager model been fully created yet?</summary>
-        [NonSerialized]
+        [JsonIgnore]
         private bool isCreated = false;
         
         /// <summary>The code to compile.</summary>
@@ -87,6 +88,7 @@
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             RebuildScriptModel();
+            SetParametersInObject(Apsim.Child(this, "Script") as Model);
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -174,7 +176,7 @@
                         if (property != null)
                         {
                             object value;
-                            if (parameter.Value.StartsWith(".Simulations."))
+                            if (parameter.Value.StartsWith("."))
                                 value = Apsim.Get(this, parameter.Value);
                             else if (property.PropertyType == typeof(IPlant))
                                 value = Apsim.Find(this, parameter.Value);
