@@ -718,12 +718,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Detached = new Biomass();
-            NDemand = new BiomassPoolType();
             DMDemand = new BiomassPoolType();
-            NSupply = new BiomassSupplyType();
+            NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
+            Detached = new Biomass();
             Clear();
         }
 
