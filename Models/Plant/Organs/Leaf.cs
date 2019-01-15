@@ -1328,15 +1328,15 @@ namespace Models.PMF.Organs
         /// remove biomass from the leaf.
         /// </summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="value">The frations of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        /// <param name="amountToRemove">The frations of biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
                 {
-                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
                     //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);

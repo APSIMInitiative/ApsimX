@@ -820,10 +820,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="removal">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
+        /// <param name="amountToRemove">The fractions of biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
-            biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
+            biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, amountToRemove, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
 
         /// <summary>Initialise all zones.</summary>

@@ -827,12 +827,12 @@ namespace Models.PMF.Organs
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        /// <param name="amountToRemove">The fractions of biomass to remove</param>
+        virtual public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             Biomass liveAfterRemoval = Live;
             Biomass deadAfterRemoval = Dead;
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
 
             double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
             double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0);
