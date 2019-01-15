@@ -24,7 +24,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        protected Plant parentPlant = null;
 
         /// <summary>The summary</summary>
         [Link]
@@ -233,7 +233,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 Number = NumberFunction.Value();
                 MaximumSize = MaximumPotentialGrainSize.Value();
@@ -259,7 +259,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 Allocated.Clear();
                 Senesced.Clear();
@@ -275,7 +275,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name);
 
                 Live.Clear();
                 Dead.Clear();
@@ -293,7 +293,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
             }
 
             Clear();

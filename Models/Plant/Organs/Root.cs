@@ -70,7 +70,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        protected Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -534,7 +534,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            if (Plant.SowingData?.Depth < PlantZone.Depth)
+            if (parentPlant.SowingData?.Depth < PlantZone.Depth)
             {
                 if (dmConversionEfficiency.Value() > 0.0)
                 {
@@ -801,8 +801,8 @@ namespace Models.PMF.Organs
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
-                double[] kl = myZone.soil.KL(Plant.Name);
-                double[] ll = myZone.soil.LL(Plant.Name);
+                double[] kl = myZone.soil.KL(parentPlant.Name);
+                double[] ll = myZone.soil.LL(parentPlant.Name);
 
                 double[] supply = new double[myZone.soil.Thickness.Length];
                 LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
@@ -843,9 +843,9 @@ namespace Models.PMF.Organs
                     Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    if (soil.Crop(Plant.Name) == null)
-                        throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
-                    ZoneState newZone = new ZoneState(Plant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, maximumNConc.Value(),
+                    if (soil.Crop(parentPlant.Name) == null)
+                        throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
+                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
                                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
                 }
@@ -890,8 +890,8 @@ namespace Models.PMF.Organs
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-            double[] LL = PlantZone.soil.LL(Plant.Name);
-            double[] KL = PlantZone.soil.KL(Plant.Name);
+            double[] LL = PlantZone.soil.LL(parentPlant.Name);
+            double[] KL = PlantZone.soil.KL(parentPlant.Name);
             double[] SWmm = PlantZone.soil.Water;
             double[] DZ = PlantZone.soil.Thickness;
 
@@ -1001,10 +1001,10 @@ namespace Models.PMF.Organs
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Crop(Plant.Name) == null && soil.Weirdo == null)
-                throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
+            if (soil.Crop(parentPlant.Name) == null && soil.Weirdo == null)
+                throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
-            PlantZone = new ZoneState(Plant, this, soil, 0, initialDM.Value(), Plant.Population, maximumNConc.Value(),
+            PlantZone = new ZoneState(parentPlant, this, soil, 0, initialDM.Value(), parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
             Zones = new List<ZoneState>();
             Allocated = new PMF.Biomass();
@@ -1024,7 +1024,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 Allocated = new PMF.Biomass();
                 Senesced = new Biomass();
@@ -1039,7 +1039,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            PlantZone.Initialise(Plant.SowingData.Depth, initialDM.Value(), Plant.Population, maximumNConc.Value());
+            PlantZone.Initialise(parentPlant.SowingData.Depth, initialDM.Value(), parentPlant.Population, maximumNConc.Value());
             InitialiseZones();
             needToRecalculateLiveDead = true;
         }
@@ -1051,7 +1051,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsEmerged)
+            if (parentPlant.IsEmerged)
             {
                 DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
             }
@@ -1063,7 +1063,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
@@ -1092,7 +1092,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
             }
 
             Clear();

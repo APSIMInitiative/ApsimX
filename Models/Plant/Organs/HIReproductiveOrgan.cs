@@ -21,7 +21,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        protected Plant parentPlant = null;
 
         /// <summary>Gets or sets the above ground.</summary>
         [Link]
@@ -135,7 +135,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 Allocated.Clear();
                 Senesced.Clear();
@@ -180,7 +180,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
             }
 
             Clear();

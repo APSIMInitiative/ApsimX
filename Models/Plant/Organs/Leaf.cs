@@ -41,7 +41,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        protected Plant parentPlant = null;
 
         /// <summary>The summary</summary>
         [Link]
@@ -97,7 +97,7 @@ namespace Models.PMF.Organs
 
         #region Canopy interface
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.CropType; } }
+        public string CanopyType { get { return parentPlant.CropType; } }
 
         /// <summary>Albedo.</summary>
         [Description("Canopy Albedo")]
@@ -134,7 +134,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant != null && Plant.IsAlive)
+                if (parentPlant != null && parentPlant.IsAlive)
                     return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value() * LAI / MaxCover)), 0.999999999);
                 return 0;
             }
@@ -146,7 +146,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant != null && Plant.IsAlive)
+                if (parentPlant != null && parentPlant.IsAlive)
                     return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
                 return 0;
             }
@@ -597,7 +597,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation) / Plant.Population;
+                return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation) / parentPlant.Population;
             }
         }
 
@@ -608,7 +608,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves.Where(l => l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / Plant.Population;
+                return Leaves.Where(l => l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / parentPlant.Population;
             }
         }
 
@@ -625,7 +625,7 @@ namespace Models.PMF.Organs
         [Description("Number of leaves per plant that have senesced")]
         public double PlantsenescedLeafNo
         {
-            get { return PlantAppearedLeafNo / Plant.Population - PlantAppearedGreenLeafNo; }
+            get { return PlantAppearedLeafNo / parentPlant.Population - PlantAppearedGreenLeafNo; }
         }
 
         /// <summary>Gets the lai dead.</summary>
@@ -710,7 +710,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant.IsEmerged)
+                if (parentPlant.IsEmerged)
                     if (ExpandedCohortNo < InitialisedCohortNo)
                         if (Leaves[(int)ExpandedCohortNo].Age > 0)
                             if (AppearedCohortNo < InitialisedCohortNo)
@@ -1177,7 +1177,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (!Plant.IsEmerged)
+            if (!parentPlant.IsEmerged)
                 return;
 
             if (MicroClimatePresent == false)
@@ -1282,7 +1282,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 foreach (LeafCohort L in Leaves)
                 {
@@ -1940,7 +1940,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
             }
 
             Reset();
@@ -1962,7 +1962,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
          protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 Allocated.Clear();
                 Senesced.Clear();
