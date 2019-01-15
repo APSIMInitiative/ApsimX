@@ -1026,10 +1026,10 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                Allocated = new PMF.Biomass();
-                Senesced = new Biomass();
-                Detached = new Biomass();
-                Removed = new Biomass();
+                Allocated.Clear();
+                Senesced.Clear();
+                Detached.Clear();
+                Removed.Clear();
             }
         }
 
