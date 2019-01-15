@@ -136,13 +136,7 @@ namespace Models.PMF.Organs
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-
-            }
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -170,7 +164,10 @@ namespace Models.PMF.Organs
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == parentPlant)
+            {
                 Clear();
+                ClearBiomassFlows();
+            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -273,6 +270,15 @@ namespace Models.PMF.Organs
             Dead.Clear();
             DMDemand.Clear();
             NDemand.Clear();
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
         }
     }
 }

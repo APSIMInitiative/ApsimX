@@ -247,7 +247,10 @@ namespace Models.PMF.Organs
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == parentPlant)
+            {
                 Clear();
+                ClearBiomassFlows();
+            }
         }
 
         #endregion
@@ -261,13 +264,7 @@ namespace Models.PMF.Organs
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-
-            }
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is being cut.</summary>
@@ -455,6 +452,15 @@ namespace Models.PMF.Organs
         {
             Live = new Biomass();
             Dead = new Biomass();
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
         }
     }
 }

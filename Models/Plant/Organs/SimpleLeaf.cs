@@ -329,13 +329,18 @@ namespace Models.PMF.Organs
             DMDemand.Clear();
             NDemand.Clear();
             potentialDMAllocation.Clear();
+            Height = 0;
+            LAI = 0;
+            LeafInitialised = false;
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
-            Height = 0;
-            LAI = 0;
-            LeafInitialised = false;
         }
         #endregion
 
@@ -508,7 +513,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total biomass</summary>
         [XmlIgnore]
         public Biomass Total { get { return Live + Dead; } }
-
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
@@ -766,12 +770,7 @@ namespace Models.PMF.Organs
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-            }
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -783,6 +782,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 Clear();
+                ClearBiomassFlows();
                 MicroClimatePresent = false;
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;

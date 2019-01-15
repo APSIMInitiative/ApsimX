@@ -863,6 +863,15 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
         }
 
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+        }
+
         /// <summary>Recalculate live and dead biomass if necessary</summary>
         private void RecalculateLiveDead()
         {
@@ -1025,12 +1034,7 @@ namespace Models.PMF.Organs
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-            }
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is sown</summary>

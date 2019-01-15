@@ -1967,15 +1967,20 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
+                ClearBiomassFlows();
                 foreach (LeafCohort leaf in Leaves)
                     leaf.DoDailyCleanup();
             }
         }
 
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+        }
         #endregion
 
     }
