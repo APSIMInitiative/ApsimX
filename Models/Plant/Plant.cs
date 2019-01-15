@@ -181,6 +181,10 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Returns true if the crop is being ended.</summary>
+        /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
+        public bool IsEnding { get; set; }
+
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
 
@@ -221,7 +225,7 @@ namespace Models.PMF
                 organs.Add(organ);
 
             Organs = organs.ToArray();
-
+            IsEnding = false;
             Clear();
         }
 
@@ -254,6 +258,17 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
                 Population -= Population * MortalityRate.Value();
+        }
+
+        /// <summary>Called at the end of the day.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfDay")]
+        private void EndOfDay(object sender, EventArgs e)
+        {
+            // Check whether the plant was terminated (yesterday), complete termination
+            if (IsEnding)
+                IsEnding = false;
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
@@ -352,6 +367,7 @@ namespace Models.PMF
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
+            IsEnding = true;
             if (cultivarDefinition != null)
                 cultivarDefinition.Unapply();
         }

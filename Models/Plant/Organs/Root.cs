@@ -1033,7 +1033,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
+            if (parentPlant.IsAlive || parentPlant.IsEnding)
                 ClearBiomassFlows();
         }
 
