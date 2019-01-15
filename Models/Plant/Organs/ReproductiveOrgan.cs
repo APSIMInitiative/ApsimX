@@ -246,7 +246,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            Clear();
+            if (data.Plant == parentPlant)
+                Clear();
         }
 
         #endregion
