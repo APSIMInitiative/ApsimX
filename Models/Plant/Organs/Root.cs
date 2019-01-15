@@ -991,15 +991,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("PlantEnding")]
-        private void DoPlantEnding(object sender, EventArgs e)
-        {
-            //Send all root biomass to soil FOM
-            RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
-            Clear();
-        }
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1097,16 +1088,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            Biomass total = Live + Dead;
-
-            if (total.Wt > 0.0)
+            if (Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
             Clear();
         }
-
     }
 }
