@@ -450,6 +450,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CustomQuery.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Fodderbeet.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
