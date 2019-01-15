@@ -1342,6 +1342,8 @@ namespace Models.PMF.Organs
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
+
+                needToRecalculateLiveDead = true;
             }
         }
 

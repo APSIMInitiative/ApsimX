@@ -824,6 +824,7 @@ namespace Models.PMF.Organs
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, amountToRemove, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
+            needToRecalculateLiveDead = true;
         }
 
         /// <summary>Initialise all zones.</summary>
