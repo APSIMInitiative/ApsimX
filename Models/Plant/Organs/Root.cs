@@ -1094,6 +1094,7 @@ namespace Models.PMF.Organs
                 Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
+
             Clear();
         }
     }

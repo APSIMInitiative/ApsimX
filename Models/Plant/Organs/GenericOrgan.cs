@@ -517,7 +517,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
+        protected void OnPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {

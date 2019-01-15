@@ -1936,12 +1936,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            Biomass total = Live + Dead;
-            if (total.Wt > 0.0)
+            if (Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 
             Reset();
