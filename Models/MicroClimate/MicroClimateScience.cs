@@ -198,17 +198,30 @@ namespace Models
         /// </summary>
         private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
         {
-            // Perform Top-Down Light Balance
-            // ==============================
-            double Rin = ZoneMC.IncomingRs;
-            double Rint = 0;
-            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+            if (ZoneMC.zone is Zones.StripCropZone)
             {
-                Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
-                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
-                    ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
-                Rin -= Rint;
+                
             }
+            else if (ZoneMC.zone is Zones.RectangularZone && ZoneMC.zone.Parent is Zones.StripCropZone)
+            // Do nothing as the above loop would have done this
+            { }
+            else
+            {
+                // This is a regular zone
+
+                // Perform Top-Down Light Balance
+                // ==============================
+                double Rin = ZoneMC.IncomingRs;
+                double Rint = 0;
+                for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                {
+                    Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
+                    for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                        ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
+                    Rin -= Rint;
+                }
+            }
+
         }
 
         /// <summary>
