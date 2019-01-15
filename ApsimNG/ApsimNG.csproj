@@ -118,6 +118,7 @@
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CustomQueryView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -219,6 +220,7 @@
     <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CustomQueryPresenter.cs" />
     <Compile Include="Presenters\CLEM\LabourAllocationPresenter.cs" />
     <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
     <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMView.cs" />
+    <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
@@ -446,6 +449,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CustomQuery.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Fodderbeet.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
