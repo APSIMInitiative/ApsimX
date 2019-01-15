@@ -182,8 +182,12 @@ namespace Models.PMF
         }
 
         /// <summary>Returns true if the crop is being ended.</summary>
-        /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
+        /// <remarks>Used to clean up data the day after an EndCrop, enabling some reporting.</remarks>
         public bool IsEnding { get; set; }
+
+        /// <summary>Counter for the number of days after corp being ended.</summary>
+        /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
+        public int DaysAfterEnding { get; set; }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -226,6 +230,7 @@ namespace Models.PMF
 
             Organs = organs.ToArray();
             IsEnding = false;
+            DaysAfterEnding = 0;
             Clear();
         }
 
@@ -268,7 +273,10 @@ namespace Models.PMF
         {
             // Check whether the plant was terminated (yesterday), complete termination
             if (IsEnding)
-                IsEnding = false;
+                if (DaysAfterEnding > 0)
+                    IsEnding = false;
+                else
+                    DaysAfterEnding += 1;
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
