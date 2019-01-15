@@ -87,7 +87,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo"></param>
         /// <returns></returns>
-        private static bool IsScopedModel(IModel relativeTo)
+        public static bool IsScopedModel(IModel relativeTo)
         {
             return relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
         }
