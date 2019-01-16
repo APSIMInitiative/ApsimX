@@ -1,4 +1,10 @@
-﻿using ApsimNG.Views.CLEM;
+﻿// -----------------------------------------------------------------------
+// <copyright file="CustomQueryPresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+
+using ApsimNG.Views.CLEM;
 using Models.Core;
 using Models.CLEM.Reporting;
 using System;
@@ -9,16 +15,27 @@ namespace ApsimNG.Presenters.CLEM
 {
     class CustomQueryPresenter : IPresenter
     {
+        /// <summary>
+        /// The CustomQuery object
+        /// </summary>
         private CustomQuery query = null;
+
+        /// <summary>
+        /// The CustomQueryView used
+        /// </summary>
         private CustomQueryView view = null;
+
+        /// <summary>
+        /// The ExplorerPresenter
+        /// </summary>
         private ExplorerPresenter explorer = null;
 
         /// <summary>
-        /// 
+        /// Attach the model and view to the presenter
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="view"></param>
-        /// <param name="explorerPresenter"></param>
+        /// <param name="model">The model to attach</param>
+        /// <param name="view">The view to attach</param>
+        /// <param name="explorerPresenter">The presenter to attach to</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.query = model as CustomQuery;
@@ -28,7 +45,7 @@ namespace ApsimNG.Presenters.CLEM
             this.view.OnRunQuery += RunQuery;
             this.view.OnLoadFile += LoadFile;
 
-            // If the model contains sql, update the view to match it
+            // If the model contains sql, update the view to display it
             if (!string.IsNullOrEmpty(query.Sql))
             {
                 this.view.Sql = query.Sql;
@@ -36,16 +53,15 @@ namespace ApsimNG.Presenters.CLEM
                 RunQuery(this, EventArgs.Empty);
             }
 
-            // If the model contains a filenme, update the view to match it
+            // If the model contains a filenme, update the view to display it
             if (!string.IsNullOrEmpty(query.Filename))
             {
                 this.view.Filename = query.Filename;
-
             }
         }        
 
         /// <summary>
-        /// 
+        /// Detach the model from the view
         /// </summary>
         public void Detach()
         {
@@ -56,6 +72,9 @@ namespace ApsimNG.Presenters.CLEM
             SaveData();
         }
 
+        /// <summary>
+        /// Track changes made to the view
+        /// </summary>
         private void SaveData()
         {
             ChangeProperty sqlcom = new ChangeProperty(this.query, "Sql", view.Sql);
@@ -66,7 +85,7 @@ namespace ApsimNG.Presenters.CLEM
         }
 
         /// <summary>
-        /// 
+        /// Applies the SQL to the DataSource
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -79,7 +98,7 @@ namespace ApsimNG.Presenters.CLEM
         }
 
         /// <summary>
-        /// 
+        /// Tracks changes when a new file is loaded
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

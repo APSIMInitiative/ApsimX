@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="CustomQueryView.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.IO;
 using Gtk;
 using UserInterface.Interfaces;
@@ -22,7 +28,7 @@ namespace ApsimNG.Views.CLEM
         private Button runbtn = null;
         private TextView textview1 = null;
 
-        // Custom gridview added after reading the glade file
+        // Custom gridview added post-reading the glade file
         public GridView gridview1 { get; set; } = null;
 
         // Raw text containing the SQL query
@@ -40,7 +46,7 @@ namespace ApsimNG.Views.CLEM
             }
         }
         
-        // File containing SQL in raw text
+        // Name of the file containing raw SQL
         public string Filename
         {
             get
@@ -50,7 +56,7 @@ namespace ApsimNG.Views.CLEM
             }
             set
             {
-                // Assign the filename to the entry box text
+                // Write the filename in the entry box
                 entry1.Text = value;
             }
         }
@@ -79,7 +85,7 @@ namespace ApsimNG.Views.CLEM
             Label data = new Label("Data");
             notebook1.AppendPage(gridview1.MainWidget, data);
 
-            // Assign methods to the event handlers for the buttons
+            // Assign methods to button click events
             loadbtn.Clicked += OnLoadClicked;
             savebtn.Clicked += OnSaveClicked;
             saveasbtn.Clicked += OnSaveAsClicked;
@@ -89,10 +95,14 @@ namespace ApsimNG.Views.CLEM
             _mainWidget = notebook1;
         }
 
-        // Handler for executing the SQL query
+        /// <summary>
+        /// New query execution event
+        /// </summary>
         public event EventHandler OnRunQuery;
-
-        // Handler for loading SQL from a file
+       
+        /// <summary>
+        /// New file load event
+        /// </summary>
         public event EventHandler OnLoadFile;
 
         /// <summary>
@@ -104,6 +114,7 @@ namespace ApsimNG.Views.CLEM
         {
             try
             {
+                // Open a file
                 IFileDialog fileDialog = new FileDialog()
                 {
                     Prompt = "Select query file.",
@@ -111,11 +122,12 @@ namespace ApsimNG.Views.CLEM
                     FileType = "SQL files (*.sql)|*.sql"
                 };
 
+                // Write filename to the entrybox
                 string filename = fileDialog.GetFile();
                 entry1.Text = filename;
 
+                // Write file contents to the textview buffer
                 string sql = File.ReadAllText(filename);
-
                 textview1.Buffer.Text = sql;
                 
             }
@@ -124,6 +136,7 @@ namespace ApsimNG.Views.CLEM
                 ShowError(error);
             }
 
+            // Invoke the loadfile event if it has subscribers
             if (OnLoadFile != null)
             {
                 OnLoadFile.Invoke(this, EventArgs.Empty);
@@ -131,10 +144,10 @@ namespace ApsimNG.Views.CLEM
         }
 
         /// <summary>
-        /// Select an SQL query file
+        /// Open an SQL query file
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         private void OnSaveAsClicked(object sender, EventArgs e)
         {
             try
@@ -158,15 +171,14 @@ namespace ApsimNG.Views.CLEM
         }
 
         /// <summary>
-        /// 
+        /// Overwrites the file stored in the entry box with the displayed SQL
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         private void OnSaveClicked(object sender, EventArgs e)
         {
             try
             {    
-                // Save the SQL to file described in entry box
                 if (entry1.Text != null)
                 {
                     File.WriteAllText(entry1.Text, textview1.Buffer.Text);
@@ -179,10 +191,10 @@ namespace ApsimNG.Views.CLEM
         }
 
         /// <summary>
-        /// 
+        /// Invokes the RunQuery event if it has subscribers
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument parameters</param>
         private void OnRunClicked(object sender, EventArgs e)
         {
             if (OnRunQuery != null)
@@ -192,7 +204,7 @@ namespace ApsimNG.Views.CLEM
         }
 
         /// <summary>
-        /// 
+        /// Detach the view
         /// </summary>
         public void Detach()
         {
