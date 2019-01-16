@@ -8,6 +8,7 @@ using ApsimNG.Views.CLEM;
 using Models.Core;
 using Models.CLEM.Reporting;
 using System;
+using System.Data;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 
@@ -44,19 +45,15 @@ namespace ApsimNG.Presenters.CLEM
 
             this.view.OnRunQuery += RunQuery;
             this.view.OnLoadFile += LoadFile;
+            this.view.OnWriteTable += WriteTable;
 
             // If the model contains sql, update the view to display it
             if (!string.IsNullOrEmpty(query.Sql))
             {
                 this.view.Sql = query.Sql;
                 this.view.Filename = query.Filename;
+                this.view.Tablename = query.Tablename;
                 RunQuery(this, EventArgs.Empty);
-            }
-
-            // If the model contains a filenme, update the view to display it
-            if (!string.IsNullOrEmpty(query.Filename))
-            {
-                this.view.Filename = query.Filename;
             }
         }        
 
@@ -67,6 +64,7 @@ namespace ApsimNG.Presenters.CLEM
         {
             view.OnRunQuery -= RunQuery;
             view.OnLoadFile -= LoadFile;
+            view.OnWriteTable -= WriteTable;
             view.gridview1.Dispose();
             view.Detach();
             SaveData();
@@ -82,6 +80,9 @@ namespace ApsimNG.Presenters.CLEM
 
             ChangeProperty filecom = new ChangeProperty(this.query, "Filename", view.Filename);
             explorer.CommandHistory.Add(filecom);
+
+            ChangeProperty tablecom = new ChangeProperty(this.query, "Tablename", view.Tablename);
+            explorer.CommandHistory.Add(tablecom);
         }
 
         /// <summary>
@@ -93,6 +94,23 @@ namespace ApsimNG.Presenters.CLEM
         {
             IStorageReader reader = Apsim.Find(query, typeof(IStorageReader)) as IStorageReader;
             view.gridview1.DataSource = reader.RunQuery(view.Sql);
+
+            SaveData();
+        }
+
+        /// <summary>
+        /// Overwrites a table in the data store
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void WriteTable(object sender, CustomQueryView.WriteTableEventArgs args)
+        {
+            DataTable data = view.gridview1.DataSource;
+            data.TableName = args.tablename;
+
+            IStorageReader reader = Apsim.Find(query, typeof(IStorageReader)) as IStorageReader;
+            reader.DeleteDataInTable(args.tablename);
+            reader.WriteTable(data);
 
             SaveData();
         }
