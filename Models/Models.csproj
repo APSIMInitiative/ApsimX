@@ -286,7 +286,7 @@
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MicroClimate\CanopyType.cs" />
-    <Compile Include="MicroClimate\MicroClimateZone.cs" />
+    <Compile Include="MicroClimate\ZoneMicroClimate.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />

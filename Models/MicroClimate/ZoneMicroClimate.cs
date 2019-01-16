@@ -12,7 +12,7 @@ namespace Models
         /// MicroClimateZone
         /// </summary>
         [Serializable]
-        private class MicroClimateZone
+        private class ZoneMicroClimate
         {
             public Zone zone = null;
             /// <summary>The weather</summary>
@@ -33,6 +33,10 @@ namespace Models
 
             /// <summary>The sum rs</summary>
             public double sumRs;
+
+            /// <summary>The incoming rs</summary>
+            public double IncomingRs;
+
 
             /// <summary>The delta z</summary>
             public double[] DeltaZ = new double[-1 + 1];
@@ -60,7 +64,7 @@ namespace Models
             {
                 DefineLayers();
                 DivideComponents();
-                LightExtinction();
+                CalculateLightExtinctionVariables();
             }
 
             /// <summary>Break the combined Canopy into layers</summary>
@@ -151,7 +155,7 @@ namespace Models
                 }
             }
             /// <summary>Calculate light extinction parameters</summary>
-            private void LightExtinction()
+            private void CalculateLightExtinctionVariables()
             {
                 // Calculate effective K from LAI and cover
                 // =========================================
@@ -184,6 +188,7 @@ namespace Models
                 Albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
+                IncomingRs = 0;
                 numLayers = 0;
                 DeltaZ = new double[-1 + 1];
                 layerKtot = new double[-1 + 1];
