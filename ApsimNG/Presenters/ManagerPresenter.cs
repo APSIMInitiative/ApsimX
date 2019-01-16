@@ -179,12 +179,18 @@ namespace UserInterface.Presenters
                 }
 
                 explorerPresenter.MainPresenter.ShowMessage("\"" + manager.Name + "\" compiled successfully", Simulation.MessageType.Information);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
 
+            try
+            {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
-                scriptModel = manager.Children.FirstOrDefault();
+                scriptModel = Apsim.Child(manager, "Script") as Model;
                 if (scriptModel != null)
                     propertyPresenter.Attach(scriptModel, managerView.GridView, explorerPresenter);
-
             }
             catch (Exception err)
             {

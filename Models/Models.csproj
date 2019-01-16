@@ -143,7 +143,7 @@
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
-	<Compile Include="Core\ApsimFile\JsonUtilities.cs" />
+    <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
     <Compile Include="Core\ApsimFile\XmlConverters.cs" />
     <Compile Include="Core\ApsimFile\XmlToJson.cs" />
@@ -286,7 +286,7 @@
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MicroClimate\CanopyType.cs" />
-    <Compile Include="MicroClimate\MicroClimateZone.cs" />
+    <Compile Include="MicroClimate\ZoneMicroClimate.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
@@ -539,6 +539,7 @@
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
     <Compile Include="Utilities\R.cs" />
+    <Compile Include="Utilities\RegressionUtilities.cs" />
     <Compile Include="WaterModel\CNReductionForCover.cs" />
     <Compile Include="WaterModel\CNReductionForTillage.cs" />
     <Compile Include="WaterModel\Conversions.cs" />
