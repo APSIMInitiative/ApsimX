@@ -446,6 +446,26 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityCutAndCarryLimiter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerPastureLevel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerResourceLevel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CLEMFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityOffFarm.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityTask.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourRequirement.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourRequirementNoUnitSize.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourRequirementSimple.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ManureActivityCollectAll.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ManureActivityCollectPaddock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureActivityBurn.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureActivityCutAndCarry.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportLabourRequirements.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceLedger.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityBuy.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityProcess.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantDestockGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroupMonthly.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Fodderbeet.png" />

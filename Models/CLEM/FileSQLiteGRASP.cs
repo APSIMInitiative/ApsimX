@@ -78,6 +78,14 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Does file exist
+        /// </summary>
+        public bool FileExists
+        {
+            get { return File.Exists(this.FullFileName); }
+        }
+
+        /// <summary>
         /// Opens the SQLite database if necessary
         /// </summary>
         /// <returns>true if open suceeded, false if the opening failed </returns>
@@ -102,13 +110,13 @@ namespace Models.CLEM
                     }
                     catch (Exception ex)
                     {
-                        ErrorMessage = "There was a problem opening the SQLite database (" + FullFileName + ")\n" + ex.Message;
+                        ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name +"]\n" + ex.Message;
                         return false;
                     }
                 }
                 else
                 {
-                    ErrorMessage = "This SQLite database (" + FullFileName + ") cound not be found";
+                    ErrorMessage = "@error:The SQLite database [o=" + FullFileName + "] could not be found for [x="+this.Name+"]";
                     return false;
                 }
             }
@@ -130,17 +138,19 @@ namespace Models.CLEM
             {
                 throw new Exception(ErrorMessage);
             }
-
-            DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT " + columnName + " FROM Native_Inputs ORDER BY " + columnName + " ASC");
-
-            double[] results = new double[res.Rows.Count];
-            int i = 0;
-            foreach (DataRow row in res.Rows)
+            else
             {
-                results[i] = Convert.ToDouble(row[0]);
-                i++;
+                DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT " + columnName + " FROM Native_Inputs ORDER BY " + columnName + " ASC");
+
+                double[] results = new double[res.Rows.Count];
+                int i = 0;
+                foreach (DataRow row in res.Rows)
+                {
+                    results[i] = Convert.ToDouble(row[0]);
+                    i++;
+                }
+                return results;
             }
-            return results;
         }
 
         /// <summary>
@@ -153,10 +163,10 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // check for file
-            if(!File.Exists(FullFileName))
+            if(!this.FileExists)
             {
                 string[] memberNames = new string[] { "FileName" };
-                results.Add(new ValidationResult("This SQLite database ("+FullFileName+") cound not be found", memberNames));
+                results.Add(new ValidationResult("The SQLite database [x="+FullFileName+"] could not be found for [o="+this.Name+"]", memberNames));
             }
             else
             {
@@ -464,14 +474,18 @@ namespace Models.CLEM
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Using ";
+            html += "\n<div class=\"activityentry\">";
             if (FileName == null || FileName == "")
             {
-                html += "<span class=\"errorlink\">[FILE NOT SET]</span>";
+                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else if(!this.FileExists)
+            {
+                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
             }
             else
             {
-                html += "<span class=\"filelink\">" + FileName + "</span>";
+                html += "Using <span class=\"filelink\">" + FileName + "</span>";
             }
             html += "\n</div>";
             return html;
