@@ -165,11 +165,13 @@ namespace Models.Core.ApsimFile
             else
             {
                 Type modelType = GetModelTypeName(name);
-
                 if (modelType == null || modelType.GetInterface("IModel") == null)
                 {
+                    modelType = GetModelTypeName(JsonUtilities.Type(newRoot));
+                    var property = modelType?.GetProperty(name);
                     var newObject = CreateObject(obj);
-                    if (arrayVariableNames.Contains(name))
+                    // If the new obejct is NOT a JArray, and this object is supposed to be an array...
+                    if (!(newObject is JArray) && (arrayVariableNames.Contains(name) || (property != null && property.PropertyType.IsArray)))
                     {
                         // Should be an array of objects.
                         if (newObject.First.First is JArray)
@@ -339,6 +341,9 @@ namespace Models.Core.ApsimFile
 
         private static Type GetModelTypeName(string modelNameToFind)
         {
+            if (modelNameToFind == null)
+                return null;
+
             string[] modelWords = modelNameToFind.Split(".".ToCharArray());
             string m = modelWords[modelWords.Length - 1];
 

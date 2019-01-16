@@ -68,6 +68,7 @@ namespace Models.CLEM.Reporting
         {
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
+            variableNames.Add("Parent.Name as Zone");
             if (VariableNames != null)
             {
                 for (int i = 0; i < this.VariableNames.Length; i++)

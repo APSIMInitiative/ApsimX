@@ -477,7 +477,7 @@
       "PlantAppearedLeafNo": 0.0,
       "InitialisedCohortNo": 0,
       "Albedo": 0.15,
-      "Gsmax": 0.005,
+      "Gsmax350": 0.005,
       "R50": 200.0,
       "Height": 0.0,
       "FRGR": 0.0,
@@ -488,6 +488,16 @@
       "potentialDMAllocation": null,
       "Name": "Leaf",
       "Children": [
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 1.0,
+          "Units": "",
+          "Name": "StomatalConductanceCO2Modifier",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "InitialWtFunction",

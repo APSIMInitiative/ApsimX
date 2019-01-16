@@ -83,6 +83,10 @@ namespace Models.CLEM.Groupings
         public override string ToString()
         {
             string str = "";
+            if (Value == null)
+            {
+                return str;
+            }
 
             if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
             {
@@ -132,7 +136,14 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "<div class=\"filter\">" + this.ToString() + "</div>";
+            if(this.Value == null)
+            {
+                return "<div class=\"filtererror\">No value provided</div>";
+            }
+            else
+            {
+                return "<div class=\"filter\">" + this.ToString() + "</div>";
+            }
         }
 
         /// <summary>
