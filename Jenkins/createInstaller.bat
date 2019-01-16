@@ -55,7 +55,7 @@ set "file_name=ApsimSetup%ISSUE_NUMBER%.exe"
 rename "%setup%\Output\ApsimSetup.exe" "!file_name!"
 set "file_name=%output%\%file_name%"
 goto :upload
-	
+
 :debian
 call :getIssueNumber
 echo Generating installer...
@@ -64,14 +64,14 @@ set "file_name=ApsimSetup%ISSUE_NUMBER%.deb"
 rename "%setup%\Output\ApsimSetup.deb" "!file_name!"
 set "file_name=%output%\%file_name%"
 goto :upload
-	
+
 :macos
 call :getIssueNumber
 echo Generating installer...
 call %setup%\osx\BuildMacDist.bat
 set "file_name=%setup%\osx\ApsimSetup%ISSUE_NUMBER%.dmg"
 goto :upload
-	
+
 :upload
 if errorlevel 1 (
 	echo Encountered an error while generating installer!

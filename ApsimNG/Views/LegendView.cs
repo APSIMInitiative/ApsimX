@@ -47,7 +47,7 @@ namespace UserInterface.Views
         /// </summary>
         public LegendView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
             listview = (Gtk.TreeView)builder.GetObject("listview");

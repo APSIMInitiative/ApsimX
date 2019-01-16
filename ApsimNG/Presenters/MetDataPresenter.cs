@@ -87,7 +87,7 @@ namespace UserInterface.Presenters
             this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
         }
 
-        /// <summary>Called when [browse].</summary>
+        /// <summary>Called after the user has selected a new met file.</summary>
         /// <param name="fileName">Name of the file.</param>
         public void OnBrowse(string fileName)
         {

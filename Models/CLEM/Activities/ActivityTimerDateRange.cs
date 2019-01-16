@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -19,7 +20,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a date range to perfrom activities.")]
+    [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [XmlIgnore]
@@ -83,11 +86,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                bool inrange = ((Clock.Today >= startDate) && (Clock.Today <= endDate));
-                if (Invert)
-                {
-                    inrange = !inrange;
-                }
+                bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {
                     // report activity performed.
@@ -99,10 +98,30 @@ namespace Models.CLEM.Activities
                             Name = this.Name
                         }
                     };
+                    activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                 }
                 return inrange;
             }
+        }
+
+        /// <summary>
+        /// Method to determine whether the activity is due based on a specified date
+        /// </summary>
+        /// <returns>Whether the activity is due based on the specified date</returns>
+        public bool Check(DateTime dateToCheck)
+        {
+            return IsMonthInRange(dateToCheck);
+        }
+
+        private bool IsMonthInRange(DateTime date)
+        {
+            bool inrange = ((date >= startDate) && (date <= endDate));
+            if (Invert)
+            {
+                inrange = !inrange;
+            }
+            return inrange;
         }
 
         /// <summary>
@@ -111,8 +130,45 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filter\">";
+            html += "Perform between <span class=\"setvalueextra\">";
+            html += StartDate.ToString("dd MMM yyyy");
+            html += "</span> and <span class=\"setvalueextra\">";
+            html += EndDate.ToString("dd MMM yyyy");
+            html += "</span></div>";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
     }
 }

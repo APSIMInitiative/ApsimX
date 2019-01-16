@@ -77,7 +77,7 @@ namespace UserInterface.Views
 
         public StockView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.StockView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.StockView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             notebook1.SwitchPage += TabControl1_SelectedIndexChanged;
 

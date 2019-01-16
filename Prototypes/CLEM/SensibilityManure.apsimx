@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -26,7 +26,7 @@
           <FinanceType>
             <Name>General account</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OpeningBalance>10000000</OpeningBalance>
+            <OpeningBalance>100</OpeningBalance>
             <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <WithdrawalLimit>0</WithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
@@ -51,7 +51,6 @@
               <AmountPerUnitPurchase>10000</AmountPerUnitPurchase>
             </Transmutation>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>89.5</DryMatter>
             <DMD>45</DMD>
             <Nitrogen>0.75</Nitrogen>
             <StartingAmount>10000</StartingAmount>
@@ -177,27 +176,14 @@
             <RuminantFeedGroup>
               <Name>Feed Bos indicus</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <MonthlyValues>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </MonthlyValues>
+              <Value>1</Value>
             </RuminantFeedGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <HerdFilters />
-            <FeedTypeName>RiceStraw</FeedTypeName>
+            <FeedTypeName>AnimalFoodStore.RiceStraw</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
-            <FeedStyle>ProportionOfWeight</FeedStyle>
+            <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
             <Name>Grow all ruminants</Name>
@@ -209,18 +195,17 @@
         </ActivityFolder>
         <ActivityFolder>
           <Name>Manage manure</Name>
-          <RuminantActivityCollectManureAll>
-            <Name>Collect all manure</Name>
+          <ManureActivityCollectAll>
+            <Name>ManureActivityCollectAll</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          </RuminantActivityCollectManureAll>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          </ManureActivityCollectAll>
           <ResourceActivitySell>
             <Name>Sell manure</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <AccountName>General account</AccountName>
-            <ResourceGroupName>Products</ResourceGroupName>
-            <ResourceTypeName>Manure</ResourceTypeName>
+            <AccountName>Finances.General account</AccountName>
+            <ResourceTypeName>Products.Manure</ResourceTypeName>
             <SellWholeUnitsOnly>true</SellWholeUnitsOnly>
             <AmountReserved>0</AmountReserved>
             <UnitSize>10</UnitSize>
@@ -251,23 +236,6 @@
           </EventNames>
         </Report>
         <Report>
-          <Name>ResourceShortfallLedger</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
-            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
-            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
-            <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Activities].ResourceShortfallOccurred</string>
-          </EventNames>
-        </Report>
-        <Report>
           <Name>ProductsLedger</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
@@ -284,19 +252,259 @@
             <string>[Resources].Products.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>HerdLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.GenderAsString as Sex</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlagAsString as Reason</string>
+            <string>[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Ruminants.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>AnimalFoodStoreLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
         <ReportActivitiesPerformed>
           <Name>ReportActivitiesPerformed</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
         </ReportActivitiesPerformed>
+        <ReportResourceBalances>
+          <Name>ReportResourceBalances</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>Finances</string>
+            <string>AnimalFoodStore</string>
+            <string>Ruminants</string>
+            <string>Products</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].CLEMEndOfTimeStep</string>
+          </EventNames>
+        </ReportResourceBalances>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Folder>
+        <Name>Graphs</Name>
+        <Graph>
+          <Name>Finance</Name>
+          <Series>
+            <Name>Sell manure</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>FinancesLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Credit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter>Activity = "Sell manure"</Filter>
+          </Series>
+          <Series>
+            <Name>Purchase rice straw</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>FinancesLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Debit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Year</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Income and expenses ($)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Manure </Name>
+          <Series>
+            <Name>Collected</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>ProductsLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Credit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Sold</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-2793984</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>ProductsLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Debit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Year</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Manure (kg)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Fodder consumption</Name>
+          <Series>
+            <Name>Fodder</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <Checkpoint>Current</Checkpoint>
+            <TableName>AnimalFoodStoreLedger</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Debit</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>0</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
+      <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>

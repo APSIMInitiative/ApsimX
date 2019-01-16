@@ -11,6 +11,7 @@ using Models.Factorial;
 using System.ComponentModel;
 using Models.Core.Runners;
 using System.Linq;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -21,6 +22,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
+    [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
     public class Simulation : Model, ISimulationGenerator
@@ -202,7 +204,8 @@ namespace Models.Core
             factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
                                                        new string[] { Name, Name },
                                                        "Simulation", Name));
-            foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+            factors[0].AddFactor("Zone", Name);
+            foreach (IModel zone in Apsim.ChildrenRecursively(this).Where(c => ScopingRules.IsScopedModel(c)))
             {
                 var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
                                                             new string[] { Name, zone.Name }, 
@@ -219,8 +222,9 @@ namespace Models.Core
         /// <param name="path">Directory to write the file to.</param>
         public void GenerateApsimXFile(string path)
         {
-            string xml = Apsim.Serialise(Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() }));
-            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), xml);
+            IModel obj = Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() });
+            string st = FileFormat.WriteToString(obj);
+            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), st);
         }
     }
 }

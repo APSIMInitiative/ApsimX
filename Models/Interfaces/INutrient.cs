@@ -24,5 +24,10 @@ namespace Models.Interfaces
         /// Incorporate FOM
         /// </summary>
         void DoIncorpFOM(FOMLayerType FOMdata);
+        /// <summary>
+        /// Reset all Pools
+        /// </summary>
+        void Reset();
+
     }
 }

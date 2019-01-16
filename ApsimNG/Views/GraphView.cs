@@ -70,7 +70,7 @@ namespace UserInterface.Views
         /// </summary>
         public GraphView(ViewBase owner = null) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (VBox)builder.GetObject("vbox2");
@@ -594,7 +594,15 @@ namespace UserInterface.Views
                     oxyAxis.Minimum = minimum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
-                if (!double.IsNaN(interval) && interval > 0)
+                
+                if (oxyAxis is DateTimeAxis)
+                {
+                    DateTimeIntervalType intervalType = double.IsNaN(interval) ? DateTimeIntervalType.Auto : (DateTimeIntervalType)interval;
+                    (oxyAxis as DateTimeAxis).IntervalType = intervalType;
+                    (oxyAxis as DateTimeAxis).MinorIntervalType = intervalType - 1;
+                    (oxyAxis as DateTimeAxis).StringFormat = "dd/MM/yyyy";
+                }
+                else if(!double.IsNaN(interval) && interval > 0)
                     oxyAxis.MajorStep = interval;
             }
         }
@@ -790,7 +798,7 @@ namespace UserInterface.Views
         {
             // axis.IntervalLength = 100;
 
-            if (axis is DateTimeAxis)
+            if (axis is DateTimeAxis && (axis as DateTimeAxis).IntervalType == DateTimeIntervalType.Auto)
             {
                 DateTimeAxis dateAxis = axis as DateTimeAxis;
 

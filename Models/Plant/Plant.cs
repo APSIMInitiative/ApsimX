@@ -90,9 +90,9 @@ namespace Models.PMF
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
                     cultivarNames.Add(cultivar.Name);
-                    if (cultivar.Aliases != null)
+                    if (cultivar.Alias != null)
                     {
-                        foreach (string alias in cultivar.Aliases)
+                        foreach (string alias in cultivar.Alias)
                             cultivarNames.Add(alias);
                     }
                 }
@@ -166,7 +166,9 @@ namespace Models.PMF
         {
             get
             {
-                return Phenology.Emerged;
+                if (Phenology != null)
+                    return Phenology.Emerged;
+                return false;
             }
         }
 
@@ -178,6 +180,14 @@ namespace Models.PMF
                 return Phenology.CurrentPhaseName == "ReadyForHarvesting";
             }
         }
+
+        /// <summary>Returns true if the crop is being ended.</summary>
+        /// <remarks>Used to clean up data the day after an EndCrop, enabling some reporting.</remarks>
+        public bool IsEnding { get; set; }
+
+        /// <summary>Counter for the number of days after corp being ended.</summary>
+        /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
+        public int DaysAfterEnding { get; set; }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -219,7 +229,8 @@ namespace Models.PMF
                 organs.Add(organ);
 
             Organs = organs.ToArray();
-
+            IsEnding = false;
+            DaysAfterEnding = 0;
             Clear();
         }
 
@@ -252,6 +263,20 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
                 Population -= Population * MortalityRate.Value();
+        }
+
+        /// <summary>Called at the end of the day.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfDay")]
+        private void EndOfDay(object sender, EventArgs e)
+        {
+            // Check whether the plant was terminated (yesterday), complete termination
+            if (IsEnding)
+                if (DaysAfterEnding > 0)
+                    IsEnding = false;
+                else
+                    DaysAfterEnding += 1;
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
@@ -350,6 +375,7 @@ namespace Models.PMF
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
+            IsEnding = true;
             if (cultivarDefinition != null)
                 cultivarDefinition.Unapply();
         }

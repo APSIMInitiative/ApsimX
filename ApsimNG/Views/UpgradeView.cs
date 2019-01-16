@@ -33,6 +33,11 @@ namespace UserInterface.Views
         /// </summary>
         private Upgrade[] upgrades = new Upgrade[0];
 
+        /// <summary>
+        /// A list of all possible upgrades and downgrades.
+        /// </summary>
+        private Upgrade[] allUpgrades = new Upgrade[0];
+
         private bool loadFailure = false;
 
         /// <summary>
@@ -65,7 +70,7 @@ namespace UserInterface.Views
         private Alignment alignment5 = null;
         private Alignment alignment6 = null;
         private Alignment alignment7 = null;
-
+        private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
         private HTMLView HTMLview;
 
@@ -74,7 +79,7 @@ namespace UserInterface.Views
         /// </summary>
         public UpgradeView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.UpgradeView.glade");
             window1 = (Window)builder.GetObject("window1");
             button1 = (Button)builder.GetObject("button1");
             button2 = (Button)builder.GetObject("button2");
@@ -99,7 +104,7 @@ namespace UserInterface.Views
             alignment5 = (Alignment)builder.GetObject("alignment5");
             alignment6 = (Alignment)builder.GetObject("alignment6");
             alignment7 = (Alignment)builder.GetObject("alignment7");
-
+            oldVersions = (CheckButton)builder.GetObject("checkbutton2");
             listview1.Model = listmodel;
 
             CellRendererText textRender = new Gtk.CellRendererText();
@@ -124,6 +129,7 @@ namespace UserInterface.Views
             HTMLalign.Add(HTMLview.MainWidget);
             tabbedExplorerView = owner as IMainView;
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
+            oldVersions.Toggled += OnShowOldVersionsToggled;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
             window1.Destroyed += OnFormClosing;
@@ -219,8 +225,11 @@ namespace UserInterface.Views
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             // version = new Version(0, 0, 0, 652);  
-            upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
-            foreach (Upgrade upgrade in upgrades)
+            if (oldVersions.Active && allUpgrades.Length < 1)
+                allUpgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+            else if (!oldVersions.Active && upgrades.Length < 1)
+                upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
+            foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
                 string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
@@ -252,6 +261,12 @@ namespace UserInterface.Views
         Gtk.MessageDialog waitDlg = null;
         string tempSetupFileName = null;
         string versionNumber = null;
+
+        private void OnShowOldVersionsToggled(object sender, EventArgs args)
+        {
+            listmodel.Clear();
+            PopulateUpgradeList();
+        }
 
         /// <summary>
         /// User has requested an upgrade.

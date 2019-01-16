@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="22">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="28">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -17,6 +17,11 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
+    <FileSQLiteGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+    </FileSQLiteGRASP>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -96,12 +101,14 @@
             </YValues>
           </Relationship>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandTypeNameToUse>Field</LandTypeNameToUse>
-          <FeedTypeName>NativePasture</FeedTypeName>
+          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
           <StartingAmount>1000</StartingAmount>
           <StartingStockingRate>0</StartingStockingRate>
           <AreaRequested>100</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
         </PastureActivityManage>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
@@ -179,6 +186,19 @@
             <string>NativePasture.Nitrogen</string>
           </VariableNames>
         </ReportPasturePoolDetails>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -198,9 +218,10 @@
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ReportResourceBalances</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NativePasture</YFieldName>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -227,14 +248,10 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileSQLiteGRASP>
-      <Name>FileGRASP</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
-    </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -249,6 +266,12 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
+    <FileGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ErrorMessage />
+      <FileName>Nth Qld_Base_xx_WoodyThck_NABSAdb.csv</FileName>
+    </FileGRASP>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -328,12 +351,14 @@
             </YValues>
           </Relationship>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandTypeNameToUse>Field</LandTypeNameToUse>
-          <FeedTypeName>NativePasture</FeedTypeName>
+          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
           <StartingAmount>1000</StartingAmount>
           <StartingStockingRate>0</StartingStockingRate>
           <AreaRequested>100</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
         </PastureActivityManage>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
@@ -409,6 +434,19 @@
             <string>NativePasture.Amount</string>
           </VariableNames>
         </ReportPasturePoolDetails>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -428,9 +466,10 @@
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ReportResourceBalances</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NativePasture</YFieldName>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -457,15 +496,10 @@
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileGRASP>
-      <Name>FileGRASP</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage />
-      <FileName>Nth Qld_Base_xx_WoodyThck_NABSAdb.csv</FileName>
-    </FileGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -480,6 +514,11 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
+    <FileSQLiteGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+    </FileSQLiteGRASP>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -655,11 +694,13 @@
           </Relationship>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandTypeNameToUse>Field</LandTypeNameToUse>
-          <FeedTypeName>NativePasture</FeedTypeName>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
           <StartingAmount>1000</StartingAmount>
           <StartingStockingRate>0</StartingStockingRate>
           <AreaRequested>100</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
         </PastureActivityManage>
         <ActivityFolder>
           <Name>Manage herd</Name>
@@ -673,7 +714,7 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
-            <ManagedPastureName>NativePasture</ManagedPastureName>
+            <ManagedPastureName>GrazeFoodStore.NativePasture</ManagedPastureName>
             <PerformAtStartOfSimulation>true</PerformAtStartOfSimulation>
             <MoveSucklings>false</MoveSucklings>
           </RuminantActivityMuster>
@@ -681,6 +722,7 @@
             <Name>RuminantActivityGrazeAll</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <HoursGrazed>8</HoursGrazed>
           </Model>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -815,6 +857,19 @@
             <string>[Resources].Ruminants.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -834,9 +889,10 @@
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ReportResourceBalances</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NativePasture</YFieldName>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -860,17 +916,57 @@
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>GraphAnimalLiveWt</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=1</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileSQLiteGRASP>
-      <Name>FileGRASP</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
-    </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -885,6 +981,11 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
+    <FileSQLiteGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+    </FileSQLiteGRASP>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -1060,11 +1161,13 @@
           </Relationship>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandTypeNameToUse>Field</LandTypeNameToUse>
-          <FeedTypeName>NativePasture</FeedTypeName>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
           <StartingAmount>3000</StartingAmount>
           <StartingStockingRate>0</StartingStockingRate>
           <AreaRequested>10000</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
         </PastureActivityManage>
         <ActivityFolder>
           <Name>Manage herd</Name>
@@ -1078,7 +1181,7 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
-            <ManagedPastureName>NativePasture</ManagedPastureName>
+            <ManagedPastureName>GrazeFoodStore.NativePasture</ManagedPastureName>
             <PerformAtStartOfSimulation>true</PerformAtStartOfSimulation>
             <MoveSucklings>false</MoveSucklings>
           </RuminantActivityMuster>
@@ -1086,6 +1189,7 @@
             <Name>RuminantActivityGrazeAll</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <HoursGrazed>8</HoursGrazed>
           </Model>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1238,6 +1342,19 @@
             <string>[Activities].ResourceShortfallOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -1257,9 +1374,10 @@
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ReportResourceBalances</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NativePasture</YFieldName>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1283,17 +1401,352 @@
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>GraphAnimalLiveWt</Name>
+        <Series>
+          <Name>Animal1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=1</Filter>
+        </Series>
+        <Series>
+          <Name>Animal2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=2</Filter>
+        </Series>
+        <Series>
+          <Name>Animal3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=3</Filter>
+        </Series>
+        <Series>
+          <Name>Animal4</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=4</Filter>
+        </Series>
+        <Series>
+          <Name>Animal5</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=5</Filter>
+        </Series>
+        <Series>
+          <Name>Animal6</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=6</Filter>
+        </Series>
+        <Series>
+          <Name>Animal7</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=7</Filter>
+        </Series>
+        <Series>
+          <Name>Animal8</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-990142</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=8</Filter>
+        </Series>
+        <Series>
+          <Name>Animal9</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=9</Filter>
+        </Series>
+        <Series>
+          <Name>Animal10</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=10</Filter>
+        </Series>
+        <Memo>
+          <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <MemoText><![CDATA[All the animal weights look the same because these is no variability between individuals and they all eat the same amount and grow the same. You can add weight variability by supplying a standard deviation in Initial cohorts.  However, the model is doing what it should. You should see that animals of different sizes have different weight gain, but all the individuals of a given cohort will act the same as was the case in IAT/NABSA.]]></MemoText>
+        </Memo>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>GraphAnimalNumbers</Name>
+        <Series>
+          <Name>Animals</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Change</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Series>
+          <Name>ReasonForChange</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Reason</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileSQLiteGRASP>
-      <Name>FileGRASP</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
-    </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -1308,6 +1761,11 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
+    <FileSQLiteGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+    </FileSQLiteGRASP>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -1444,7 +1902,7 @@
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>8</Age>
-                <Number>1</Number>
+                <Number>10</Number>
                 <Weight>180</Weight>
                 <WeightSD>0</WeightSD>
                 <Suckling>false</Suckling>
@@ -1574,11 +2032,13 @@
           </Relationship>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandTypeNameToUse>Field</LandTypeNameToUse>
-          <FeedTypeName>NativePasture</FeedTypeName>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
           <StartingAmount>1000</StartingAmount>
           <StartingStockingRate>0</StartingStockingRate>
           <AreaRequested>100</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
         </PastureActivityManage>
         <ActivityFolder>
           <Name>Manage herd</Name>
@@ -1592,7 +2052,7 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
-            <ManagedPastureName>NativePasture</ManagedPastureName>
+            <ManagedPastureName>GrazeFoodStore.NativePasture</ManagedPastureName>
             <PerformAtStartOfSimulation>true</PerformAtStartOfSimulation>
             <MoveSucklings>false</MoveSucklings>
           </RuminantActivityMuster>
@@ -1600,6 +2060,7 @@
             <Name>RuminantActivityGrazeAll</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <HoursGrazed>8</HoursGrazed>
           </Model>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1734,6 +2195,19 @@
             <string>[Resources].Ruminants.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -1753,9 +2227,10 @@
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ReportResourceBalances</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NativePasture</YFieldName>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1779,17 +2254,180 @@
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>GraphAnimalLiveWt</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UID=1</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>GraphAnimalNumbers</Name>
+        <Series>
+          <Name>Herd_BosIndicus</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Change</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>Herd='Bos indicus'</Filter>
+        </Series>
+        <Series>
+          <Name>ReasonForChange_HerdBosIndicus</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Reason</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>Herd='Bos indicus'</Filter>
+        </Series>
+        <Series>
+          <Name>Herd_BosIndicus1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Change</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>Herd='Bos indicus1'</Filter>
+        </Series>
+        <Series>
+          <Name>ReasonForChange_HerdBosIndicus1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Reason</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>Herd='Bos indicus1'</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileSQLiteGRASP>
-      <Name>FileGRASP</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
-    </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
@@ -1804,6 +2442,11 @@
       <Name>summaryfile</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
+    <FileSQLiteGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+    </FileSQLiteGRASP>
     <ZoneCLEM>
       <Name>CLEM</Name>
       <ResourcesHolder>
@@ -2035,73 +2678,15 @@
             </RuminantInitialCohorts>
             <AnimalPricing>
               <Name>Prices</Name>
-              <AnimalPriceEntry>
-                <Name>Female calves</Name>
+              <Model xsi:type="AnimalPriceGroup">
+                <Name>AnimalPriceGroup</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Female</Gender>
-                <Age>0</Age>
-                <PurchaseValue>2</PurchaseValue>
-                <SellValue>2</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Female weaners</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Female</Gender>
-                <Age>9</Age>
-                <PurchaseValue>1.8</PurchaseValue>
-                <SellValue>1.8</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Female 1-3y</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Female</Gender>
-                <Age>12</Age>
-                <PurchaseValue>1.6</PurchaseValue>
-                <SellValue>1.6</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Female 3+y</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Female</Gender>
-                <Age>36</Age>
-                <PurchaseValue>1.2</PurchaseValue>
-                <SellValue>1.2</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Male calves</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Male</Gender>
-                <Age>0</Age>
-                <PurchaseValue>2</PurchaseValue>
-                <SellValue>2</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Male weaners</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Male</Gender>
-                <Age>9</Age>
-                <PurchaseValue>1.8</PurchaseValue>
-                <SellValue>1.8</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Male 1-3y</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Male</Gender>
-                <Age>12</Age>
-                <PurchaseValue>1.6</PurchaseValue>
-                <SellValue>1.6</SellValue>
-              </AnimalPriceEntry>
-              <AnimalPriceEntry>
-                <Name>Male 3+y</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Gender>Male</Gender>
-                <Age>36</Age>
-                <PurchaseValue>1.5</PurchaseValue>
-                <SellValue>1.5</SellValue>
-              </AnimalPriceEntry>
+                <PurchaseValue>250</PurchaseValue>
+                <SellValue>500</SellValue>
+              </Model>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <PricingStyle>perKg</PricingStyle>
-              <BreedingSirePrice>0</BreedingSirePrice>
+              <PricingStyle>perHead</PricingStyle>
+              <BreedingSirePrice>6000</BreedingSirePrice>
             </AnimalPricing>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
@@ -2225,11 +2810,13 @@
           </Relationship>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <LandTypeNameToUse>Field</LandTypeNameToUse>
-          <FeedTypeName>NativePasture</FeedTypeName>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
           <StartingAmount>3000</StartingAmount>
           <StartingStockingRate>0</StartingStockingRate>
           <AreaRequested>29700</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
         </PastureActivityManage>
         <ActivityFolder>
           <Name>Manage herd</Name>
@@ -2243,7 +2830,7 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdFilters />
-            <ManagedPastureName>NativePasture</ManagedPastureName>
+            <ManagedPastureName>GrazeFoodStore.NativePasture</ManagedPastureName>
             <PerformAtStartOfSimulation>true</PerformAtStartOfSimulation>
             <MoveSucklings>false</MoveSucklings>
           </RuminantActivityMuster>
@@ -2251,6 +2838,7 @@
             <Name>RuminantActivityGrazeAll</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <HerdFilters />
             <HoursGrazed>8</HoursGrazed>
           </Model>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2279,6 +2867,7 @@
             <string>[Clock].Today</string>
             <string>Land</string>
             <string>GrazeFoodStore</string>
+            <string>Ruminants</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].CLEMEndOfTimeStep</string>
@@ -2367,6 +2956,19 @@
             <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -2386,9 +2988,471 @@
           <MarkerSize>Small</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ReportResourceBalances</TableName>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>GraphAnimalLiveWt_SelectedAnimals</Name>
+        <Series>
+          <Name>Animal2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NativePasture</YFieldName>
+          <YFieldName>Weight</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>UId=2</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>GraphAnimalNumbers</Name>
+        <Series>
+          <Name>Herd_BosIndicus</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Change</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>Herd='Bos indicus'</Filter>
+        </Series>
+        <Series>
+          <Name>ReasonForChange_HerdBosIndicus</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>HerdLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Reason</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>Herd='Bos indicus'</Filter>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Area>1</Area>
+      <Slope>0</Slope>
+      <RandomSeed>0</RandomSeed>
+      <ClimateRegion>0</ClimateRegion>
+      <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
+    </ZoneCLEM>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Simulation>
+  <Simulation>
+    <Name>PastureCutCarry</Name>
+    <Clock>
+      <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <StartDate>1995-01-01T00:00:00</StartDate>
+      <EndDate>2009-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Summary>
+    <FileSQLiteGRASP>
+      <Name>FileGRASP</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
+    </FileSQLiteGRASP>
+    <ZoneCLEM>
+      <Name>CLEM</Name>
+      <ResourcesHolder>
+        <Name>Resources</Name>
+        <Land>
+          <Name>Land</Name>
+          <LandType>
+            <Name>Field</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LandArea>100</LandArea>
+            <SoilType>0</SoilType>
+          </LandType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Land>
+        <GrazeFoodStore>
+          <Name>GrazeFoodStore</Name>
+          <GrazeFoodStoreType>
+            <Name>NativePasture</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <NToDMDCoefficient>11.03</NToDMDCoefficient>
+            <NToDMDIntercept>41.4</NToDMDIntercept>
+            <NToDMDCrudeProteinDenominator>0</NToDMDCrudeProteinDenominator>
+            <GreenNitrogen>2</GreenNitrogen>
+            <DecayNitrogen>0.35</DecayNitrogen>
+            <MinimumNitrogen>0.4</MinimumNitrogen>
+            <DecayDMD>0.1</DecayDMD>
+            <MinimumDMD>43</MinimumDMD>
+            <DetachRate>0.03</DetachRate>
+            <CarryoverDetachRate>0.12</CarryoverDetachRate>
+            <IntakeTropicalQualityCoefficient>0.16</IntakeTropicalQualityCoefficient>
+            <IntakeQualityCoefficient>1.7</IntakeQualityCoefficient>
+          </GrazeFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GrazeFoodStore>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>Pasture</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <DMD>40</DMD>
+            <Nitrogen>5</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+          </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </AnimalFoodStore>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ResourcesHolder>
+      <ActivitiesHolder>
+        <Name>Activities</Name>
+        <PastureActivityManage>
+          <Name>PastureActivityManage</Name>
+          <Relationship>
+            <Name>LandConditionIndex</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingValue>2</StartingValue>
+            <Minimum>1</Minimum>
+            <Maximum>11</Maximum>
+            <XValues>
+              <double>0</double>
+              <double>20</double>
+              <double>30</double>
+              <double>100</double>
+            </XValues>
+            <YValues>
+              <double>-0.625</double>
+              <double>-0.125</double>
+              <double>0</double>
+              <double>0.75</double>
+            </YValues>
+          </Relationship>
+          <Relationship>
+            <Name>GrassBasalArea</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingValue>2</StartingValue>
+            <Minimum>1</Minimum>
+            <Maximum>5</Maximum>
+            <XValues>
+              <double>0</double>
+              <double>20</double>
+              <double>30</double>
+              <double>100</double>
+            </XValues>
+            <YValues>
+              <double>-0.95</double>
+              <double>-0.15</double>
+              <double>0</double>
+              <double>1.05</double>
+            </YValues>
+          </Relationship>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          <LandTypeNameToUse>Land.Field</LandTypeNameToUse>
+          <FeedTypeName>GrazeFoodStore.NativePasture</FeedTypeName>
+          <ModelNameFileGRASP>FileGRASP</ModelNameFileGRASP>
+          <StartingAmount>1000</StartingAmount>
+          <StartingStockingRate>0</StartingStockingRate>
+          <AreaRequested>100</AreaRequested>
+          <UseAreaAvailable>false</UseAreaAvailable>
+        </PastureActivityManage>
+        <PastureActivityCutAndCarry>
+          <Name>PastureActivityCutAndCarry</Name>
+          <LabourRequirement>
+            <Name>LabourRequirement</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LabourPerUnit>0.5</LabourPerUnit>
+            <UnitSize>100</UnitSize>
+            <WholeUnitBlocks>true</WholeUnitBlocks>
+            <UnitType>perUnit</UnitType>
+            <MinimumPerPerson>0</MinimumPerPerson>
+            <MaximumPerPerson>30</MaximumPerPerson>
+            <LabourShortfallAffectsActivity>false</LabourShortfallAffectsActivity>
+            <ApplyToAll>false</ApplyToAll>
+          </LabourRequirement>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          <HerdFilters />
+          <PaddockName>GrazeFoodStore.NativePasture</PaddockName>
+          <AnimalFoodStoreName>AnimalFoodStore.Pasture</AnimalFoodStoreName>
+          <Supply>1000</Supply>
+        </PastureActivityCutAndCarry>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </ActivitiesHolder>
+      <Folder>
+        <Name>Reports</Name>
+        <Report>
+          <Name>GrazeFoodStoreLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].GrazeFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].GrazeFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].GrazeFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].GrazeFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].GrazeFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>LandLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
+            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].Land.LastTransaction.Activity as Activity</string>
+            <string>[Resources].Land.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].Land.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <ReportActivitiesPerformed>
+          <Name>ReportActivitiesPerformed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportActivitiesPerformed>
+        <ReportResourceBalances>
+          <Name>ReportResourceBalances</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>Land</string>
+            <string>GrazeFoodStore</string>
+            <string>AnimalFoodStore</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].CLEMEndOfTimeStep</string>
+          </EventNames>
+        </ReportResourceBalances>
+        <ReportResourceShortfalls>
+          <Name>ReportResourceShortfalls</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+        </ReportResourceShortfalls>
+        <ReportPasturePoolDetails>
+          <Name>ReportPasturePoolDetails</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>NativePasture.Amount</string>
+            <string>NativePasture.DMD</string>
+            <string>NativePasture.Nitrogen</string>
+          </VariableNames>
+        </ReportPasturePoolDetails>
+        <Report>
+          <Name>AnimalFoodStoreLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>GrazeFoodStoreLedger1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.NativePasture.Amount/[Resources].GrazeFoodStore.NativePasture.Manager.Area as kgperha</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
+      </Folder>
+      <Graph>
+        <Name>Graph pasture</Name>
+        <Series>
+          <Name>NativePasture</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>GrazeFoodStoreLedger1</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>kgperha</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>CutAndCarryAmount</Name>
+        <Series>
+          <Name>Series</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <Checkpoint>Current</Checkpoint>
+          <TableName>AnimalFoodStoreLedger</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Credit</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2419,11 +3483,6 @@
       <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationMonth>12</EcologicalIndicatorsCalculationMonth>
     </ZoneCLEM>
-    <FileSQLiteGRASP>
-      <Name>FileGRASP</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>NABSA_GRASP_NthQld_WdThck_Base.db</FileName>
-    </FileSQLiteGRASP>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <IncludeInDocumentation>true</IncludeInDocumentation>

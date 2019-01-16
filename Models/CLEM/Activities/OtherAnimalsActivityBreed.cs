@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,13 +21,15 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of a specified type of other animal.")]
-    public class OtherAnimalsActivityBreed : CLEMActivityBase, IValidatableObject
+    [Version(1, 0, 1, "")]
+    public class OtherAnimalsActivityBreed : CLEMActivityBase
     {
         /// <summary>
         /// name of other animal type
         /// </summary>
-        [Description("Name of other animal type")]
+        [Description("Other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(OtherAnimals) })]
         public string AnimalType { get; set; }
 
         /// <summary>
@@ -69,33 +72,11 @@ namespace Models.CLEM.Activities
         public DateTime NextDueDate { get; set; }
 
         /// <summary>
-        /// Labour settings
-        /// </summary>
-        private List<LabourFilterGroupSpecified> labour { get; set; }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public OtherAnimalsActivityBreed()
         {
             this.SetDefaults();
-        }
-
-        /// <summary>
-        /// Object validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-            if (SelectedOtherAnimalsType == null)
-            {
-                string[] memberNames = new string[] { "AnimalType" };
-                results.Add(new ValidationResult("Unknown other animal type: " + AnimalType, memberNames));
-            }
-            return results;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -104,9 +85,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            // get other animal type model
+            SelectedOtherAnimalsType = Resources.GetResourceItem(this, AnimalType, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as OtherAnimalsType;
         }
 
         /// <summary>An event handler to perform herd breeding </summary>
@@ -155,7 +135,6 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             // this activity is performed in CLEMAnimalBreeding event
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -164,44 +143,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
-            if (this.TimingOK)
-            {
-                double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
-                if (breeders == 0) return null;
-
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
-                    {
-                        case LabourUnitType.Fixed:
-                            daysNeeded = item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perHead:
-                            daysNeeded = Math.Ceiling(breeders / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                    }
-                    if (daysNeeded > 0)
-                    {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
-                    }
-                }
-            }
-            return ResourceRequestList;
+            return null;
         }
 
         /// <summary>
@@ -224,8 +166,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -239,9 +180,43 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
+            if (breeders == 0)
+            {
+                return 0;
+            }
+
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    daysNeeded = Math.Ceiling(breeders / requirement.UnitSize) * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
     }
 }

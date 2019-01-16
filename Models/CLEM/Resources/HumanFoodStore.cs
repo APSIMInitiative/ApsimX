@@ -6,6 +6,7 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -18,6 +19,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all human food store types for the simulation.")]
+    [Version(1, 0, 1, "")]
     public class HumanFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -67,8 +69,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
