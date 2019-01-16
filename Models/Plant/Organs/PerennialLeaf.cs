@@ -143,8 +143,18 @@ namespace Models.PMF.Organs
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX")]
-        public double Gsmax { get; set; }
+        [Description("Daily maximum stomatal conductance(m/s)")]
+        public double Gsmax
+        {
+            get
+            {
+                return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value();
+            }
+        }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s)")]
+        public double Gsmax350 { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
         [Description("R50")]
@@ -233,7 +243,13 @@ namespace Models.PMF.Organs
         #region Parameters
         /// <summary>The FRGR function</summary>
         [Link]
-        IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
+        IFunction FRGRFunction = null;   
+        /// <summary>The effect of CO2 on stomatal conductance</summary>
+        [Link]
+        IFunction StomatalConductanceCO2Modifier = null;
+
+
+
         /// <summary>The DM demand function</summary>
         [ChildLinkByName]
         [Units("g/m2/d")]

@@ -53,7 +53,7 @@ namespace Models.Core.ApsimFile
         /// If true, the namespace will be included in the returned type name.
         /// e.g. Models.Core.Simulations
         /// </param>
-        public static string Type(JToken node, bool withNamespace = true)
+        public static string Type(JToken node, bool withNamespace = false)
         {
             // If the node is not a JObject, it is not an apsim model.
             if ( !(node is JObject) )
@@ -103,6 +103,28 @@ namespace Models.Core.ApsimFile
                 return new List<JObject>();
 
             return children.Cast<JObject>().ToList();
+        }
+
+        /// <summary>
+        /// Returns the child models of a given node that have the specified type.
+        /// Will never return null.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="typeName">The type of children to return.</param>
+        public static List<JObject> ChildrenOfType(JObject node, string typeName)
+        {
+            return ChildrenRecursively(node).Where(child => Type(child) == typeName).ToList();
+        }
+
+        /// <summary>
+        /// Returns the first child model of a given node that has the specified name.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="name">The type of children to return.</param>
+        /// <returns>The found child or null if not found.</returns>
+        public static JObject ChildWithName(JObject node, string name)
+        {
+            return Children(node).Find(child => Name(child) == name);
         }
 
         /// <summary>
@@ -161,6 +183,67 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Return the parent APSIM model token for the specified model token.
+        /// </summary>
+        /// <param name="modelToken">The model token to find the parent for.</param>
+        /// <returns>The parent or null if not found.</returns>
+        public static JToken Parent(JToken modelToken)
+        {
+            var obj = modelToken.Parent;
+            while (obj != null)
+            {
+                if (Type(obj) != null)
+                    return obj;
+
+                obj = obj.Parent;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Rename a child property if it exists.
+        /// </summary>
+        /// <param name="modelToken">The APSIM model token.</param>
+        /// <param name="propertyName">The name of the property to rename.</param>
+        /// <param name="newPropertyName">The new name of the property.</param>
+        public static void RenameProperty(JToken modelToken, string propertyName, string newPropertyName)
+        {
+            var valueToken = modelToken[propertyName];
+            if (valueToken != null && valueToken.Parent is JProperty)
+            {
+                var propertyToken = valueToken.Parent as JProperty;
+                propertyToken.Remove(); // remove from parent.
+                modelToken[newPropertyName] = valueToken;
+            }
+        }
+
+        /// <summary>
+        /// Add a constant function to the specified JSON model token.
+        /// </summary>
+        /// <param name="modelToken">The APSIM model token.</param>
+        /// <param name="name">The name of the constant function</param>
+        /// <param name="fixedValue">The fixed value of the constant function</param>
+        public static void AddConstantFunctionIfNotExists(JObject modelToken, string name, string fixedValue)
+        {
+            if (ChildWithName(modelToken, name) == null)
+            {
+                JArray children = modelToken["Children"] as JArray;
+                if (children == null)
+                {
+                    children = new JArray();
+                    modelToken["Children"] = children;
+                }
+
+                JObject constantModel = new JObject();
+                constantModel["$type"] = "Models.Functions.Constant, Models";
+                constantModel["Name"] = name;
+                constantModel["FixedValue"] = fixedValue;
+                children.Add(constantModel);
+            }
+        }
+
+        /// <summary>
         /// Helper method for <see cref="ChildrenRecursively(JObject)"/>.
         /// Will never return null.
         /// </summary>
@@ -186,5 +269,6 @@ namespace Models.Core.ApsimFile
                 Descendants(child, ref descendants, typeFilter);
             }
         }
+
     }
 }

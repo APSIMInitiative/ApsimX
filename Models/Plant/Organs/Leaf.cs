@@ -104,8 +104,17 @@ namespace Models.PMF.Organs
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX: maximum canopy conductance(m/s)")]
-        public double Gsmax { get; set; }
+        [Description("Daily maximum stomatal conductance(m/s)")]
+        public double Gsmax {
+            get
+            {
+                return Gsmax350*FRGR*StomatalConductanceCO2Modifier.Value();
+            }
+        }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s)")]
+        public double Gsmax350 { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
         [Description("R50: solar radiation at which stomatal conductance decreases to 50% (W/m^2)")]
@@ -415,6 +424,10 @@ namespace Models.PMF.Organs
         /// <summary>The Fractional Growth Rate</summary>
         [Link]
         IFunction FRGRFunction = null;
+        /// <summary>The effect of CO2 on stomatal conductance</summary>
+        [Link]
+        IFunction StomatalConductanceCO2Modifier = null;
+
         /// <summary>The thermal time</summary>
         [Link]
         public IFunction ThermalTime = null;
