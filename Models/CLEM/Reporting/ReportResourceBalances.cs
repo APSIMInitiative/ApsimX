@@ -28,8 +28,6 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private ResourcesHolder Resources = null;
-        [Link]
-        ISummary Summary = null;
 
         /// <summary>The columns to write to the data store.</summary>
         private List<IReportColumn> columns = null;
@@ -68,6 +66,13 @@ namespace Models.CLEM.Reporting
         {
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
+            variableNames.Add("Parent.Name as Zone");
+
+            if(VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
+            {
+                variableNames.Add("[Clock].Today as Date");
+            }
+
             if (VariableNames != null)
             {
                 for (int i = 0; i < this.VariableNames.Length; i++)
@@ -86,34 +91,36 @@ namespace Models.CLEM.Reporting
                             CLEMModel model = Resources.GetResourceGroupByName(this.VariableNames[i]) as CLEMModel;
                             if (model == null)
                             {
-                                Summary.WriteWarning(this, String.Format("Invalid resource group [r={0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
-                            }
-                            
-                            if(model.GetType().Name == "Labour")
-                            {
-                                for (int j= 0; j < (model as Labour).Items.Count; j++)
-                                {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".Items["+j.ToString()+"].AvailableDays as " + (model as Labour).Items[j].Name);
-                                }
+                                throw new ApsimXException(this, String.Format("@error:Invalid resource group [r={0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
                             }
                             else
                             {
-                                // get all children
-                                foreach (CLEMModel item in model.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMModel)))) // Apsim.Children(this, typeof(CLEMModel))) //
+                                if (model.GetType().Name == "Labour")
                                 {
-                                    string amountStr = "Amount";
-                                    switch (item.GetType().Name)
+                                    for (int j = 0; j < (model as Labour).Items.Count; j++)
                                     {
-                                        case "FinanceType":
-                                            amountStr = "Balance";
-                                            break;
-                                        case "LabourType":
-                                            amountStr = "AvailableDays";
-                                            break;
-                                        default:
-                                            break;
+                                        variableNames.Add("[Resources]." + this.VariableNames[i] + ".Items[" + j.ToString() + "].AvailableDays as " + (model as Labour).Items[j].Name);
                                     }
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
+                                }
+                                else
+                                {
+                                    // get all children
+                                    foreach (CLEMModel item in model.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMModel)))) // Apsim.Children(this, typeof(CLEMModel))) //
+                                    {
+                                        string amountStr = "Amount";
+                                        switch (item.GetType().Name)
+                                        {
+                                            case "FinanceType":
+                                                amountStr = "Balance";
+                                                break;
+                                            case "LabourType":
+                                                amountStr = "AvailableDays";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
+                                    }
                                 }
                             }
                         }
@@ -123,12 +130,19 @@ namespace Models.CLEM.Reporting
             base.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
 
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
+            if (EventNames is null)
             {
-                if (eventName != string.Empty)
+                events.Subscribe("[Clock].CLEMEndOfTimeStep", DoOutputEvent);
+            }
+            else
+            {
+                // Subscribe to events.
+                foreach (string eventName in EventNames)
                 {
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
+                    if (eventName != string.Empty)
+                    {
+                        events.Subscribe(eventName.Trim(), DoOutputEvent);
+                    }
                 }
             }
         }

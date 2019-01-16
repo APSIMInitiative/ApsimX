@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 47,
+  "Version": 48,
   "Name": "Simulations",
   "Children": [
     {
@@ -454,6 +454,7 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
+                    "Finances",
                     "AnimalFoodStore"
                   ],
                   "EventNames": [
@@ -508,7 +509,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Liveweight_Individual",
               "Children": [
                 {
@@ -646,7 +647,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "AnimalTotalNumbers",
               "Children": [
                 {
@@ -672,7 +673,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": "Sex='M'",
+                  "Filter": "[Sex] = 'M'",
                   "Name": "Male",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -786,7 +787,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false
+                  "DateTimeAxis": true
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -796,11 +797,11 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false
+                  "DateTimeAxis": true
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Graph",
               "Children": [
                 {

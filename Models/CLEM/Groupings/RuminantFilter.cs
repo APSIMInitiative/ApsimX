@@ -10,7 +10,7 @@ using System.Text;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Individual filter term for ruminant group of filters to identify individul ruminants
+    /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
