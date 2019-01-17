@@ -186,31 +186,13 @@ namespace Models
         }
 
         /// <summary>
-        /// Calculates incoming short wave radiation for each zone's microclimate
-        /// </summary>
-        private void CalculateIncomingShortWaveRadiation(ZoneMicroClimate ZoneMC)
-        {
-            ZoneMC.IncomingRs = weather.Radn;
-        }
-        /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
         private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
         {
-            if (ZoneMC.zone is Zones.StripCropZone)
-            {
-                
-            }
-            else if (ZoneMC.zone is Zones.RectangularZone && ZoneMC.zone.Parent is Zones.StripCropZone)
-            // Do nothing as the above loop would have done this
-            { }
-            else
-            {
-                // This is a regular zone
-
                 // Perform Top-Down Light Balance
                 // ==============================
-                double Rin = ZoneMC.IncomingRs;
+                double Rin = weather.Radn;
                 double Rint = 0;
                 for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
                 {
@@ -219,8 +201,6 @@ namespace Models
                         ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
                     Rin -= Rint;
                 }
-            }
-
         }
 
         /// <summary>

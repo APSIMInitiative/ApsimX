@@ -169,11 +169,25 @@ namespace Models
             dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
             dayLengthLight = MathUtilities.DayLength(Clock.Today.DayOfYear, SunSetAngle, weather.Latitude);
 
+            if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone && zoneMicroClimates[1].zone is Zones.RectangularZone)
+            {
+                // We are in a strip crop simulation
+                zoneMicroClimates[0].DoCanopyCompartments();
+                zoneMicroClimates[1].DoCanopyCompartments();
+
+                CalculateLayeredShortWaveRadiation(zoneMicroClimates[0]);
+                CalculateLayeredShortWaveRadiation(zoneMicroClimates[1]);
+            }
+            else // Normal 1D zones are to be used
+                foreach (ZoneMicroClimate ZoneMC in zoneMicroClimates)
+                {
+                    ZoneMC.DoCanopyCompartments();
+                    CalculateLayeredShortWaveRadiation(ZoneMC);
+                }
+
+            // Light distribution is now complete so calculate remaining micromet equations
             foreach (ZoneMicroClimate ZoneMC in zoneMicroClimates)
             {
-                ZoneMC.DoCanopyCompartments();
-                CalculateIncomingShortWaveRadiation(ZoneMC);
-                CalculateLayeredShortWaveRadiation(ZoneMC);
                 CalculateEnergyTerms(ZoneMC);
                 CalculateLongWaveRadiation(ZoneMC);
                 CalculateSoilHeatRadiation(ZoneMC);
