@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 283,
+  "ExplorerWidth": 300,
   "Version": 52,
   "Name": "Simulations",
   "Children": [
@@ -3654,6 +3654,16 @@
                       "Name": "Rate",
                       "Children": [
                         {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0081,
+                          "Units": null,
+                          "Name": "PotentialRate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[TemperatureFactorForMineralisation]",
                           "Name": "TF",
@@ -4179,266 +4189,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Nutrients.NFlow, Models",
-                  "Value": null,
-                  "Natm": null,
-                  "N2Oatm": null,
-                  "sourceName": "NO3",
-                  "destinationName": null,
-                  "Name": "Denitrification",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Denitrification is simulated using the approaches initially used in CERES Maize[jones_ceres-maize:_1986] as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "NLoss",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Rate",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0006,
-                          "Units": null,
-                          "Name": "Constant",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "0.0031 * [TotalCppm] + 24.5",
-                          "Name": "ActiveC",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Denitrification rate is affected by soil carbon content using an approach originally described by [Reddy1980]. ",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "([Humic].C+[Inert].C+[FOMCarbohydrate].C+[FOMCellulose].C+[FOMLignin].C)/[ppm2kgha]",
-                              "Name": "TotalCppm",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.BoundFunction, Models",
-                          "Name": "TF",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Upper",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Lower",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "0.1 * Exp(0.046 * [Soil].Temperature)",
-                              "Name": "Tfactor",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[SoilWaterScale]",
-                          "Name": "WF",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SoilWaterScale, Models",
-                              "Name": "SoilWaterScale",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                1.0,
-                                2.0
-                              ],
-                              "Y": [
-                                0.0,
-                                0.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "1 / ([N2N2ORatio].Value() + 1)",
-                      "Name": "N2OFraction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MinimumFunction, Models",
-                          "Name": "N2N2ORatio",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Zero",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Ratio",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 25.1,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[SoilWaterScale]",
-                                  "Name": "WFPSEffect",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        28.0,
-                                        88.0,
-                                        100.0
-                                      ],
-                                      "Y": [
-                                        0.1,
-                                        0.1,
-                                        1.0,
-                                        1.18
-                                      ],
-                                      "Name": "XYPairs",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.MinimumFunction, Models",
-                                  "Name": "CO2Effect",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.16,
-                                      "Units": null,
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "Math.Exp(-0.8 * [Nutrient].NO3.kgha / [Nutrient].Catm)",
-                                      "Name": "Effect",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4696,7 +4446,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "TOC 0 to 30cm",
               "Children": [
                 {
@@ -20160,7 +19910,8 @@
                             "[Soil].Nutrient.TotalC[3] as TOC30_60cm",
                             "([Soil].Nutrient.TotalC[1]+[Soil].Nutrient.TotalC[2]+[Soil].Nutrient.TotalC[3]) as TOC0_30cm",
                             "([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.NO3[1]+[Soil].Nutrient.NH4[1]) as TON0_10cm",
-                            "([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.TotalN[2]+[Soil].Nutrient.TotalN[3]) as TON0_30cm"
+                            "([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.TotalN[2]+[Soil].Nutrient.TotalN[3]) as TON0_30cm",
+                            "sum([Soil].Nutrient.NO3.kgha)"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -33863,7 +33614,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -33873,11 +33624,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SOC30",
                           "Children": [
                             {
@@ -33939,6 +33690,36 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Treatment",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 3,
+                              "LineThickness": 0,
+                              "Checkpoint": "PriorToMerge",
+                              "TableName": "HarvestReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "TOC0_30cm",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted1",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -33957,7 +33738,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -33967,11 +33748,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SOC60",
                           "Children": [
                             {
@@ -34051,7 +33832,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -34061,11 +33842,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SON30",
                           "Children": [
                             {
@@ -34145,7 +33926,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -34155,11 +33936,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SON60",
                           "Children": [
                             {
@@ -34239,7 +34020,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -34249,11 +34030,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "CNR30",
                           "Children": [
                             {
@@ -34333,7 +34114,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -34343,11 +34124,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "CNR60",
                           "Children": [
                             {
@@ -34441,7 +34222,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SOC30 Pre vs Obs",
                           "Children": [
                             {
@@ -34517,7 +34298,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SOC60 Pre vs Obs",
                           "Children": [
                             {
@@ -34593,7 +34374,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SON30 Pre vs Obs",
                           "Children": [
                             {
@@ -34669,7 +34450,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SON60 Pre vs Obs",
                           "Children": [
                             {
@@ -34755,7 +34536,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Yield",
                           "Children": [
                             {
@@ -34849,7 +34630,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Obs vs Pre Yield",
                           "Children": [
                             {
@@ -34925,7 +34706,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "NExport",
                           "Children": [
                             {
