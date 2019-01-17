@@ -174,9 +174,8 @@ namespace Models
                 // We are in a strip crop simulation
                 zoneMicroClimates[0].DoCanopyCompartments();
                 zoneMicroClimates[1].DoCanopyCompartments();
+                CalculateStripCropShortWaveRadiation();
 
-                CalculateLayeredShortWaveRadiation(zoneMicroClimates[0]);
-                CalculateLayeredShortWaveRadiation(zoneMicroClimates[1]);
             }
             else // Normal 1D zones are to be used
                 foreach (ZoneMicroClimate ZoneMC in zoneMicroClimates)
@@ -198,6 +197,46 @@ namespace Models
                 CalculateOmega(ZoneMC);
                 SetCanopyEnergyTerms(ZoneMC);
             }
+        }
+
+        ///<summary> Calculate the short wave radiation balance for strip crop system</summary>
+        private void CalculateStripCropShortWaveRadiation()
+        {
+            
+            ZoneMicroClimate Tallest;
+            ZoneMicroClimate Shortest;
+            if (MathUtilities.Sum(zoneMicroClimates[0].DeltaZ)> MathUtilities.Sum(zoneMicroClimates[0].DeltaZ))
+            {
+                Tallest = zoneMicroClimates[0];
+                Shortest = zoneMicroClimates[1];
+            }
+            else
+            {
+                Tallest = zoneMicroClimates[1];
+                Shortest = zoneMicroClimates[0];
+            }
+
+            if (MathUtilities.Sum(Tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            {
+                double Ht = MathUtilities.Sum(Tallest.DeltaZ);                // Height of tallest strip
+                double Hs = MathUtilities.Sum(Shortest.DeltaZ);               // Height of shortest strip
+                double Wt = (Tallest.zone as Zones.RectangularZone).Width;    // Width of tallest strip
+                double Ws = (Shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip
+                double Ft = Wt / (Wt + Ws);                                   // Fraction of space in tallest strip
+                double Fs = Ws / (Wt + Ws);                                   // Fraction of space in the shortest strip
+                double LAIt = MathUtilities.Sum(Tallest.LAItotsum);           // LAI of tallest strip
+                double LAIs = MathUtilities.Sum(Shortest.LAItotsum);          // LAI of shortest strip
+                double Httop = Ht - Hs;                                       // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
+                double LAIttop = Httop / Ht * LAIt;                           // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
+                double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
+                double LAIttophomo = Ft * LAIttop;                            // LAI of top layer of tallest strip if spread homogeneously across all of the space
+                double Ftblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Wt, 2)) - Httop) / Wt;  // View factor for top layer of tallest strip
+                double Fsblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Ws, 2)) - Httop) / Ws;  // View factor for top layer of shortest strip
+
+
+            }
+            CalculateLayeredShortWaveRadiation(zoneMicroClimates[0]);
+            CalculateLayeredShortWaveRadiation(zoneMicroClimates[1]);
         }
 
         /// <summary>Calculate the canopy conductance for system compartments</summary>

@@ -4478,7 +4478,7 @@
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Graph",
           "Children": [
             {
