@@ -98,6 +98,18 @@ namespace UserInterface.Presenters
 
                     if (!ignore)
                     {
+                        // trim first two rows of error reporting file and simulation.
+                        List<string> parts = new List<string>( msgStr.Split('\n'));
+                        if(parts[0].Contains("ERROR in file:"))
+                        {
+                            parts.RemoveAt(0);
+                        }
+                        if (parts[0].Contains("Simulation name:"))
+                        {
+                            parts.RemoveAt(0);
+                        }
+                        msgStr = string.Join("\n", parts.ToArray());
+
                         string type = "Message";
                         string title = "Message";
                         switch (dr[8].ToString())

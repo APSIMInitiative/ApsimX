@@ -8,7 +8,7 @@ using System.Text;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individul ruminants
+    /// Contains a group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

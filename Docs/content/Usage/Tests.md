@@ -10,6 +10,7 @@ using System;
 using Models.Core;
 namespace Models
 {
+    [Serializable]
     public class Script : Model, ITest
     {
         public void Run()
