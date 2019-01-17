@@ -365,6 +365,7 @@
             {
                 Widget tab = (ownerView as ExplorerView).MainWidget;
                 Notebook notebook = tab.IsAncestor(notebook1) ? notebook1 : notebook2;
+                
                 // The top level of the "label" is an EventBox
                 EventBox ebox = (EventBox)notebook.GetTabLabel(tab);
                 ebox.TooltipText = tooltip;
@@ -374,6 +375,10 @@
                 // And the HBox has the actual label as its first child
                 Label tabLabel = (Label)hbox.Children[0];
                 tabLabel.Text = newTabName;
+
+                // Update the notebook popup menu with the new tab name                               
+                ImageMenuItem item = new ImageMenuItem(newTabName);
+                notebook.SetMenuLabel(tab, item);
             }
         }
 
