@@ -4,6 +4,8 @@ using Models.Functions;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.Interfaces;
+using Models.PMF.Organs;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Struct
 {
@@ -53,10 +55,10 @@ namespace Models.PMF.Struct
         private Plant plant = null;
 
         [Link]
-        private ILeaf leaf = null;
+        private SorghumLeaf leaf = null;
 
-        [Link]
-        private Phenology phenology = null;
+        //[Link]
+        //private Phenology phenology = null;
 
         /// <summary>The thermal time</summary>
         [Link]
@@ -69,9 +71,204 @@ namespace Models.PMF.Struct
         [Link]
         public IFunction finalLeafNumber = null;
 
+        /// <summary>Number of leaves at emergence</summary>
         [Link]
-        private IFunction heightModel = null;
+        public IFunction LeafNumAtEmergence = null;
 
+        //[Link]
+        //private IFunction heightModel = null;
 
+        [Link]
+        private IFunction verticalAdjustment = null;
+
+        private bool leavesInitialised;
+        private double tillersAdded;
+        private bool dayofEmergence;
+
+        /// <summary>FertileTillerNumber</summary>
+        public double FertileTillerNumber { get; set; }
+        /// <summary>CurrentLeafNo</summary>
+        public double CurrentLeafNo { get; set; }
+        /// <summary>Remaining Leaves</summary>
+        public double remainingLeaves { get { return finalLeafNumber.Value() - CurrentLeafNo; } }
+
+        /// <summary>The Stage that leaves are initialised on</summary>
+        [Description("The Stage that leaves are initialised on")]
+        public string LeafInitialisationStage { get; set; } = "Emergence";
+
+        /// <summary>Called when crop is ending</summary>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type Sow)
+        {
+            if (Sow.Plant == plant)
+            {
+                Clear();
+                if (Sow.MaxCover <= 0.0)
+                    throw new Exception("MaxCover must exceed zero in a Sow event.");
+                FertileTillerNumber = Sow.BudNumber;
+                //TotalStemPopn = MainStemPopn;
+            }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            if (leavesInitialised)
+            {
+                if (dayofEmergence)
+                {
+                    CurrentLeafNo = LeafNumAtEmergence.Value();
+                    dayofEmergence = false;
+                }
+                else
+                {
+                    //finalLeafNo is calculated upon reference to it as a function
+                    //calcLeafAppearance
+                    double dltLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(thermalTime.Value(), phyllochron.Value(), 0), 0.0, remainingLeaves);
+
+                    var newLeafNo = CurrentLeafNo + dltLeafAppeared;
+
+                    var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
+                    if (newLeafAppeared)
+                        calcTillerAppearance((int)Math.Floor(newLeafNo));
+                    CurrentLeafNo = newLeafNo;
+                    //foreach (culm)
+                    //{
+                    //    culm.updateCulmValues(dltLeafNo)
+                    //}
+                }
+            }
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == LeafInitialisationStage)
+            {
+                leavesInitialised = true;
+                dayofEmergence = true;
+            }
+        }
+
+        // 6. Public methods
+        //-------------------------------------------------------------------------------------------
+
+        /// <summary>Clears this instance.</summary>
+        void calcTillerAppearance(int newLeafNo)
+        {
+            //if there are still more tillers to add
+            //and the newleaf is greater than 3
+            if (FertileTillerNumber > tillersAdded)
+            {
+                //tiller emergence is more closely aligned with tip apearance, but we don't track tip, so will use ligule appearance
+                //could also use Thermal Time calcs if needed
+                //Environmental & Genotypic Control of Tillering in Sorghum ppt - Hae Koo Kim
+                //T2=L3, T3=L4, T4=L5, T5=L6
+
+                //logic to add new tillers depends on which tiller, which is defined by FTN (fertileTillerNo)
+                //this should be provided at sowing  //what if fertileTillers == 1?
+                //2 tillers = T3 + T4
+                //3 tillers = T2 + T3 + T4
+                //4 tillers = T2 + T3 + T4 + T5
+                //more than that is too many tillers - but will assume existing pattern for 3 and 4
+                //5 tillers = T2 + T3 + T4 + T5 + T6
+
+                if (newLeafNo >= 3)
+                {
+                    //tiller 2 emergences with leaf 3, and then adds 1 each time
+                    //not sure what I'm supposed to do with tiller 1
+                    //if there are only 2 tillers, then t2 is not present - T3 & T4 are
+                    //if there is a fraction - between 2 and 3, 
+                    //this can be interpreted as a proportion of plants that have 2 and a proportion that have 3. 
+                    //to keep it simple, the fraction will be applied to the 2nd tiller
+                    double leafAppearance = tillersAdded + 3; // Culms.size() + 2; //first culm added will equal 3
+                    double fraction = 1.0;
+                    if (FertileTillerNumber > 2 && FertileTillerNumber < 3 && leafAppearance < 4)
+                    {
+                        fraction = FertileTillerNumber % 1;
+                    }
+                    else
+                    {
+                        if (FertileTillerNumber - tillersAdded < 1)
+                            fraction = FertileTillerNumber - tillersAdded;
+                    }
+
+                    addTiller(leafAppearance, fraction);
+
+                    //bell curve distribution is adjusted horizontally by moving the curve to the left.
+                    //This will cause the first leaf to have the same value as the nth leaf on the main culm.
+                    //T3&T4 were defined during dicussion at initial tillering meeting 27/06/12
+                    //all others are an assumption
+                    //T2 = 3 Leaves
+                    //T3 = 4 Leaves
+                    //T4 = 5 leaves
+                    //T5 = 6 leaves
+                    //T6 = 7 leaves
+                }
+            }
+        }
+        void addTiller(double leafAtAppearance, double fractionToAdd)
+        {
+            // get number if tillers 
+            // add fractionToAdd 
+            // if new tiller is needed add one
+            // fraction goes to proportions
+
+            var nCulms = leaf.Culms.Count;
+            var lastCulm = leaf.Culms[nCulms - 1];
+            double tillerFraction = lastCulm.Proportion;
+            
+            double fraction = (tillerFraction % 1) + fractionToAdd;
+            //a new tiller is created with each new leaf, up the number of fertileTillers
+            if (tillerFraction + fractionToAdd > 1)
+            {
+                leaf.AddCulm(new CulmParameters()
+                {
+                    CulmNumber = nCulms,
+                    Proportion = fraction,
+                    VerticalAdjustment = tillersAdded * verticalAdjustment.Value(), //add aMaxVert in calc
+                    LeafAtAppearance = leafAtAppearance
+                });
+
+                //bell curve distribution is adjusted horizontally by moving the curve to the left.
+                //This will cause the first leaf to have the same value as the nth leaf on the main culm.
+                //T3&T4 were defined during dicussion at initial tillering meeting 27/06/12
+                //all others are an assumption
+                //T2 = 3 Leaves
+                //T3 = 4 Leaves
+                //T4 = 5 leaves
+                //T5 = 6 leaves
+                //T6 = 7 leaves
+            }
+            else
+            {
+                lastCulm.Proportion = fraction;
+            }
+            tillersAdded += fractionToAdd;
+
+        }
+        /// <summary>Clears this instance.</summary>
+        public void Clear()
+        {
+            CurrentLeafNo = 0.0;
+
+            //TotalStemPopn = 0;
+            //PotLeafTipsAppeared = 0;
+            //PlantTotalNodeNo = 0;
+            //ProportionBranchMortality = 0;
+            //ProportionPlantMortality = 0;
+            //DeltaTipNumber = 0;
+            //DeltaHaunStage = 0;
+            //leavesInitialised = false;
+            //cohortsInitialised = false;
+            //firstPass = false;
+            //Height = 0;
+            //LeafTipsAppeared = 0;
+            //BranchNumber = 0;
+            //NextLeafProportion = 0;
+            //DeltaPlantPopulation = 0;
+        }
     }
 }

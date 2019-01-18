@@ -33,8 +33,10 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, ICanopy, ILeaf, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class SorghumLeaf : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
+        //IHasWaterDemand, removing to see if it's necessary
+
         /// <summary>The plant</summary>
         [Link]
         private Plant Plant = null;
@@ -43,67 +45,7 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
-        #region Leaf Interface
-        /// <summary>
-        /// Number of initiated cohorts that have not appeared yet
-        /// </summary>
-        public int ApicalCohortNo { get; set; }  //should this be in the interface
-        /// <summary>
-        /// reset leaf numbers
-        /// </summary>
-        public void Reset() { }
-        /// <summary></summary>
-        public int InitialisedCohortNo { get; set; }  //should this be in the interface
-        /// <summary></summary>
-        public void RemoveHighestLeaf() { } //should this be in the interface
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool CohortsInitialised { get; set; } //should this be in the interface
-        /// <summary>
-        /// 
-        /// </summary>
-        public int TipsAtEmergence { get; set; } 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int CohortsAtInitialisation { get; set; } //should this be in the interface
-        /// <summary>
-        /// 
-        ///</summary>
-        public int AppearedCohortNo { get; set; }  //should this be in the interface
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }  //should this be in the interface
-
-        /// <summary>Apex number by age</summary>
-        /// <param name="age">Threshold age</param>
-        public double ApexNumByAge(double age) { return 0; }  //should this be in the interface
-        #endregion
-
         #region Canopy interface
-
-        /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.CropType; } }
-
-        /// <summary>Albedo.</summary>
-        [Description("Albedo")]
-        public double Albedo { get; set; }
-
-        /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX")]
-        public double Gsmax { get; set; }
-
-        /// <summary>Gets or sets the R50.</summary>
-        [Description("R50")]
-        public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -143,44 +85,17 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the height.</summary>
         [Units("mm")]
         public double Height { get; set; }
-        /// <summary>Gets the depth.</summary>
-        [Units("mm")]
-        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
-
-        /// <summary>Gets or sets the FRGR.</summary>
-        [Units("mm")]
-        public double FRGR { get; set; }
-
-        private double _PotentialEP = 0;
-        /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        [Units("mm")]
-        public double PotentialEP
-        {
-            get { return _PotentialEP; }
-            set
-            {
-                _PotentialEP = value;
-                MicroClimatePresent = true;
-            }
-        }
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
 
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        public bool MicroClimatePresent { get; set; }
-
-        /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
 
         #region Parameters
-        /// <summary>The FRGR function</summary>
-        [Link]
-        IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
+        ///// <summary>The FRGR function</summary>
+        //[Link]
+        //IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
 
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
@@ -203,9 +118,9 @@ namespace Models.PMF.Organs
         [Link]
         IFunction LaiDeadFunction = null;
 
-        /// <summary>The structure</summary>
-        [Link(IsOptional = true)]
-        public Structure Structure = null;
+        ///// <summary>The structure</summary>
+        //[Link(IsOptional = true)]
+        //public Structure Structure = null;
 
         /// <summary>Water Demand Function</summary>
         [Link(IsOptional = true)]
@@ -222,6 +137,9 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States and variables
+
+        /// <summary>The leaves</summary>
+        public List<Culm> Culms = new List<Culm>();
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
@@ -242,31 +160,31 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction PotentialBiomTEFunction = null;   
 
-        /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
+        ///// <summary>Gets the fw.</summary>
+        //public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
-        /// <summary>Gets the function.</summary>
-        public double Fn
-        {
-            get
-            {
-                if (Live != null)
-                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
-                return 0;
-            }
-        }
+        ///// <summary>Gets the function.</summary>
+        //public double Fn
+        //{
+        //    get
+        //    {
+        //        if (Live != null)
+        //            return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+        //        return 0;
+        //    }
+        //}
 
-        /// <summary>Gets the metabolic N concentration factor.</summary>
-        public double FNmetabolic
-        {
-            get
-            {
-                double factor = 0.0;
-                if (Live != null)
-                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
-                return Math.Min(1.0, factor);
-            }
-        }
+        ///// <summary>Gets the metabolic N concentration factor.</summary>
+        //public double FNmetabolic
+        //{
+        //    get
+        //    {
+        //        double factor = 0.0;
+        //        if (Live != null)
+        //            factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+        //        return Math.Min(1.0, factor);
+        //    }
+        //}
 
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
@@ -282,15 +200,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
-                {
-                    double TotalRadn = 0;
-                    for (int i = 0; i < LightProfile.Length; i++)
-                        TotalRadn += LightProfile[i].amount;
-                    return TotalRadn;
-                }
-                else
-                    return CoverGreen * MetData.Radn;
+                return CoverGreen * MetData.Radn;
             }
         }
 
@@ -368,6 +278,20 @@ namespace Models.PMF.Organs
 
         #region Component Process Functions
 
+        /// <summary>Add a culm to the plant.</summary>
+        public void AddCulm(CulmParameters parameters)
+        {
+            var culm = new Culm();
+            culm.CulmNumber = parameters.CulmNumber;
+            culm.Proportion = parameters.Proportion;
+            culm.LeafAtAppearance = parameters.LeafAtAppearance;
+            culm.VerticalAdjustment = parameters.VerticalAdjustment;
+
+
+            Culms.Add(culm);
+
+        }
+
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
@@ -384,6 +308,9 @@ namespace Models.PMF.Organs
             Removed.Clear();
             Height = 0;
             LAI = 0;
+
+            Culms = new List<Culm>();
+
             LeafInitialised = false;
             laiEqlbLightTodayQ = new Queue<double>(10);
             laiEqlbLightTodayQ.Clear();
@@ -405,10 +332,8 @@ namespace Models.PMF.Organs
                 startLive = Live;
             if (LeafInitialised)
             {
-                if (MicroClimatePresent == false)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
-                FRGR = FRGRFunction.Value();
+                //FRGR = FRGRFunction.Value();
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (CoverFunction != null)
@@ -609,6 +534,7 @@ namespace Models.PMF.Organs
         }
 
         #endregion
+        
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001;
 
@@ -971,7 +897,6 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 Clear();
-                MicroClimatePresent = false;
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;
                 Live.StructuralN = Live.StructuralWt * minimumNConc.Value();

@@ -238,6 +238,7 @@
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
+    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
     <Compile Include="Plant\Structure\CulmStructure.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
