@@ -186,28 +186,21 @@ namespace Models
         }
 
         /// <summary>
-        /// Calculates incoming short wave radiation for each zone's microclimate
-        /// </summary>
-        private void CalculateIncomingShortWaveRadiation(ZoneMicroClimate ZoneMC)
-        {
-            ZoneMC.IncomingRs = weather.Radn;
-        }
-        /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
         private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
         {
-            // Perform Top-Down Light Balance
-            // ==============================
-            double Rin = ZoneMC.IncomingRs;
-            double Rint = 0;
-            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
-            {
-                Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
-                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
-                    ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
-                Rin -= Rint;
-            }
+                // Perform Top-Down Light Balance
+                // ==============================
+                double Rin = weather.Radn;
+                double Rint = 0;
+                for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                {
+                    Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
+                    for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                        ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
+                    Rin -= Rint;
+                }
         }
 
         /// <summary>
