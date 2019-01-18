@@ -150,7 +150,7 @@ namespace Models.CLEM.Resources
             // if not assign new value
             if (labour.LabourAvailability == null)
             {
-                foreach (Model availItem in availabilityList.Children.Where(a => a.GetType().IsAssignableFrom(typeof(LabourSpecificationItem))).ToList())
+                foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
                 {
                     if (checkList.Filter(availItem).Count > 0)
                     {
