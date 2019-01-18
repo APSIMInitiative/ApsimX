@@ -4746,7 +4746,7 @@
             {
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 1.0,
-              "Width": 1.0,
+              "Width": 100.0,
               "Slope": 0.0,
               "Name": "MaizeStrip",
               "Children": [
@@ -5362,7 +5362,7 @@
             {
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 1.0,
-              "Width": 1.0,
+              "Width": 100.0,
               "Slope": 0.0,
               "Name": "WheatStrip",
               "Children": [
@@ -9088,7 +9088,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -9098,11 +9098,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Biomass",
           "Children": [
             {
@@ -9362,7 +9362,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -9372,11 +9372,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "LeafAppearance",
           "Children": [
             {
@@ -9666,7 +9666,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -9676,11 +9676,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "LAI",
           "Children": [
             {
@@ -9820,7 +9820,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -9830,11 +9830,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "WaterStress",
           "Children": [
             {
@@ -9914,7 +9914,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -9924,11 +9924,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "SoilWater",
           "Children": [
             {
@@ -9978,7 +9978,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -9988,11 +9988,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Drainage",
           "Children": [
             {
@@ -10042,7 +10042,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -10052,11 +10052,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Transpiration",
           "Children": [
             {
@@ -10136,7 +10136,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -10146,11 +10146,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Height",
           "Children": [
             {
@@ -10290,7 +10290,7 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -10300,11 +10300,11 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": true
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "PAR",
           "Children": [
             {
