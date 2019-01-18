@@ -203,40 +203,40 @@ namespace Models
         private void CalculateStripCropShortWaveRadiation()
         {
             
-            ZoneMicroClimate Tallest;
-            ZoneMicroClimate Shortest;
-            if (MathUtilities.Sum(zoneMicroClimates[0].DeltaZ)> MathUtilities.Sum(zoneMicroClimates[0].DeltaZ))
+            ZoneMicroClimate tallest;
+            ZoneMicroClimate shortest;
+            if (MathUtilities.Sum(zoneMicroClimates[0].DeltaZ)> MathUtilities.Sum(zoneMicroClimates[1].DeltaZ))
             {
-                Tallest = zoneMicroClimates[0];
-                Shortest = zoneMicroClimates[1];
+                tallest = zoneMicroClimates[0];
+                shortest = zoneMicroClimates[1];
             }
             else
             {
-                Tallest = zoneMicroClimates[1];
-                Shortest = zoneMicroClimates[0];
+                tallest = zoneMicroClimates[1];
+                shortest = zoneMicroClimates[0];
             }
 
-            if (Tallest.Canopies.Count>1)
-                throw (new Exception("Strip crop light interception model must only have one canopy in zone called "+Tallest.zone.Name));
-            if (Shortest.Canopies.Count > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy in zone called " + Shortest.zone.Name));
-            if (Tallest.DeltaZ.Length > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + Tallest.zone.Name));
-            if (Shortest.DeltaZ.Length > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + Shortest.zone.Name));
+            if (tallest.Canopies.Count>1)
+                throw (new Exception("Strip crop light interception model must only have one canopy in zone called "+tallest.zone.Name));
+            if (shortest.Canopies.Count > 1)
+                throw (new Exception("Strip crop light interception model must only have one canopy in zone called " + shortest.zone.Name));
+            if (tallest.DeltaZ.Length > 1)
+                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + tallest.zone.Name));
+            if (shortest.DeltaZ.Length > 1)
+                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
 
-            if (MathUtilities.Sum(Tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            if (MathUtilities.Sum(tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
-                double Ht = MathUtilities.Sum(Tallest.DeltaZ);                // Height of tallest strip
-                double Hs = MathUtilities.Sum(Shortest.DeltaZ);               // Height of shortest strip
-                double Wt = (Tallest.zone as Zones.RectangularZone).Width;    // Width of tallest strip
-                double Ws = (Shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip
+                double Ht = MathUtilities.Sum(tallest.DeltaZ);                // Height of tallest strip
+                double Hs = MathUtilities.Sum(shortest.DeltaZ);               // Height of shortest strip
+                double Wt = (tallest.zone as Zones.RectangularZone).Width;    // Width of tallest strip
+                double Ws = (shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip
                 double Ft = Wt / (Wt + Ws);                                   // Fraction of space in tallest strip
                 double Fs = Ws / (Wt + Ws);                                   // Fraction of space in the shortest strip
-                double LAIt = MathUtilities.Sum(Tallest.LAItotsum);           // LAI of tallest strip
-                double LAIs = MathUtilities.Sum(Shortest.LAItotsum);          // LAI of shortest strip
-                double Kt = Tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
-                double Ks = Shortest.Canopies[0].Ktot;                         // Extinction Coefficient of the shortest strip
+                double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of tallest strip
+                double LAIs = MathUtilities.Sum(shortest.LAItotsum);          // LAI of shortest strip
+                double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
+                double Ks = shortest.Canopies[0].Ktot;                         // Extinction Coefficient of the shortest strip
                 double Httop = Ht - Hs;                                       // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
                 double LAIttop = Httop / Ht * LAIt;                           // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
                 double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
@@ -257,12 +257,12 @@ namespace Models
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                Tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot)/Ft;
+                tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot)/Ft;
 
-                if (Shortest.Canopies[0].Rs != null)
-                    if (Shortest.Canopies[0].Rs.Length>0)
-                        Shortest.Canopies[0].Rs[0] = weather.Radn * Ints/Fs;
-
+                if (shortest.Canopies[0].Rs != null)
+                    if (shortest.Canopies[0].Rs.Length>0)
+                        shortest.Canopies[0].Rs[0] = weather.Radn * Ints/Fs;
+               
             }
 
             

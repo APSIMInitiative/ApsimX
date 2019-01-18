@@ -4746,7 +4746,7 @@
             {
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 1.0,
-              "Width": 100.0,
+              "Width": 1.0,
               "Slope": 0.0,
               "Name": "MaizeStrip",
               "Children": [
@@ -4764,7 +4764,8 @@
                     "[Maize].Grain.NumberFunction.Value()",
                     "[Maize].Grain.N",
                     "[Maize].Total.Wt",
-                    "sum([Soil].SoilWater.SWmm) as SWTot"
+                    "sum([Soil].SoilWater.SWmm) as SWTot",
+                    "[Maize].Leaf.Height"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -5362,7 +5363,7 @@
             {
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 1.0,
-              "Width": 100.0,
+              "Width": 1.0,
               "Slope": 0.0,
               "Name": "WheatStrip",
               "Children": [
@@ -5383,7 +5384,8 @@
                     "[Wheat].Grain.Total.Wt",
                     "[Wheat].Grain.Total.N",
                     "[Wheat].Total.Wt",
-                    "sum([Soil].SoilWater.SWmm) as SWTot"
+                    "sum([Soil].SoilWater.SWmm) as SWTot",
+                    "[Wheat].Leaf.Height"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -6062,7 +6064,8 @@
                     "[Maize].Grain.NumberFunction.Value()",
                     "[Maize].Grain.N",
                     "[Maize].Total.Wt",
-                    "sum([Soil].SoilWater.SWmm) as SWTot"
+                    "sum([Soil].SoilWater.SWmm) as SWTot",
+                    "[Maize].Leaf.Height"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -6680,7 +6683,8 @@
                     "[Wheat].Grain.Total.Wt",
                     "[Wheat].Grain.Total.N",
                     "[Wheat].Total.Wt",
-                    "sum([Soil].SoilWater.SWmm) as SWTot"
+                    "sum([Soil].SoilWater.SWmm) as SWTot",
+                    "[Wheat].Leaf.Height"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -7463,6 +7467,100 @@
               "DateTimeAxis": true
             }
           ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "Biomass",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -1663232,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Simulation",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Maize.AboveGround.Wt",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Maize",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Simulation",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Wheat.AboveGround.Wt",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Wheat",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true
+            }
+          ],
           "LegendPosition": 2,
           "DisabledSeries": [],
           "Name": "SoilWater",
@@ -7529,7 +7627,7 @@
           ],
           "LegendPosition": 0,
           "DisabledSeries": [],
-          "Name": "Biomass",
+          "Name": "Height",
           "Children": [
             {
               "$type": "Models.Graph.Series, Models",
@@ -7547,7 +7645,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Maize.AboveGround.Wt",
+              "YFieldName": "Maize.Leaf.Height",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -7577,7 +7675,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Wheat.AboveGround.Wt",
+              "YFieldName": "Wheat.Leaf.Height",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
