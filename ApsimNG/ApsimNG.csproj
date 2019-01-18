@@ -446,6 +446,10 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcePricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItemMonthly.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityList.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityCutAndCarryLimiter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerPastureLevel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerResourceLevel.png" />
