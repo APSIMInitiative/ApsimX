@@ -268,10 +268,13 @@ namespace Models.Core.ApsimFile
         {
             var variableNames = Values(report, "VariableNames");
 
-            for (int i = 0; i < variableNames.Count; i++)
-                variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
+            if (variableNames != null)
+            {
+                for (int i = 0; i < variableNames.Count; i++)
+                    variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
 
-            SetValues(report, "VariableNames", variableNames);
+                SetValues(report, "VariableNames", variableNames);
+            }
         }
 
         /// <summary>

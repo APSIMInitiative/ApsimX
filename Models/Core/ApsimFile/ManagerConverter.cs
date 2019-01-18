@@ -324,11 +324,12 @@ namespace Models.Core.ApsimFile
             for (int i = 0; i < lines.Count; i++)
             {
                 int pos = lines[i].IndexOf(searchPattern);
-                if (pos != -1)
+                while (pos != -1)
                 {
                     lines[i] = lines[i].Remove(pos, searchPattern.Length);
                     lines[i] = lines[i].Insert(pos, replacePattern);
                     replacementDone = true;
+                    pos = lines[i].IndexOf(searchPattern, pos+1);
                 }
             }
             return replacementDone;
