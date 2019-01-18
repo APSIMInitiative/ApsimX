@@ -73,9 +73,6 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-                DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
-
                 bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {
