@@ -1,0 +1,1991 @@
+{
+  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+  "DirectedGraphInfo": {
+	"$type": "Models.Graph.DirectedGraph, Models",
+	"Nodes": [
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "Inert",
+		"Location": "50, 50",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "SurfaceResidue",
+		"Location": "200, 50",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "FOMLignin",
+		"Location": "350, 50",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "FOMCellulose",
+		"Location": "500, 50",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "FOMCarbohydrate",
+		"Location": "50, 200",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "Microbial",
+		"Location": "200, 200",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "Humic",
+		"Location": "350, 200",
+		"Colour": "LightGreen",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "Urea",
+		"Location": "500, 200",
+		"Colour": "LightCoral",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "NO3",
+		"Location": "50, 350",
+		"Colour": "LightCoral",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "NH4",
+		"Location": "200, 350",
+		"Colour": "LightCoral",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "Atmosphere",
+		"Location": "350, 350",
+		"Colour": "White",
+		"OutlineColour": "White"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "PlantAvailableNO3",
+		"Location": "500, 350",
+		"Colour": "LightCoral",
+		"OutlineColour": "Black"
+	  },
+	  {
+		"$type": "Models.Graph.Node, Models",
+		"Name": "PlantAvailableNH4",
+		"Location": "50, 500",
+		"Colour": "LightCoral",
+		"OutlineColour": "Black"
+	  }
+	],
+	"Arcs": [
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "SurfaceResidue",
+		"DestinationName": "Microbial",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "SurfaceResidue",
+		"DestinationName": "Humic",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "FOMLignin",
+		"DestinationName": "Microbial",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "FOMLignin",
+		"DestinationName": "Humic",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "FOMCellulose",
+		"DestinationName": "Microbial",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "FOMCellulose",
+		"DestinationName": "Humic",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "FOMCarbohydrate",
+		"DestinationName": "Microbial",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "FOMCarbohydrate",
+		"DestinationName": "Humic",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "Microbial",
+		"DestinationName": "Microbial",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "Microbial",
+		"DestinationName": "Humic",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "Humic",
+		"DestinationName": "Microbial",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "Urea",
+		"DestinationName": "NH4",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "NO3",
+		"DestinationName": "Atmosphere",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  },
+	  {
+		"$type": "Models.Graph.Arc, Models",
+		"SourceName": "NH4",
+		"DestinationName": "NO3",
+		"Location": "0, 0",
+		"Colour": "Black",
+		"Text": null
+	  }
+	]
+  },
+  "ResourceName": null,
+  "Name": "Nutrient",
+  "Children": [
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "Inert",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]).",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Soil].FInert * [Soil].OC * 100 * [Soil].BD * [Soil].Thickness",
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Inert].C / [Soil].SoilOrganicMatter.SoilCN",
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "SurfaceResidue",
+	  "Children": [
+		{
+		  "$type": "Models.Functions.Constant, Models",
+		  "FixedValue": 0.0,
+		  "Units": null,
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.Constant, Models",
+		  "FixedValue": 0.0,
+		  "Units": null,
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+		  "MineralisedN": null,
+		  "Catm": null,
+		  "destinationNames": [
+			"Microbial",
+			"Humic"
+		  ],
+		  "destinationFraction": [
+			0.9,
+			0.1
+		  ],
+		  "Name": "Decomposition",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 1.0,
+			  "Units": null,
+			  "Name": "Rate",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.4,
+			  "Units": null,
+			  "Name": "CO2Efficiency",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.0,
+			  "Units": null,
+			  "Name": "N2OFraction",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.Solute, Models",
+	  "kgha": null,
+	  "Name": "Urea",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "This pool simulates the urea content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.NFlow, Models",
+		  "Value": null,
+		  "Natm": null,
+		  "N2Oatm": null,
+		  "sourceName": "Urea",
+		  "destinationName": "NH4",
+		  "Name": "Hydrolysis",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.0,
+			  "Units": null,
+			  "Name": "NLoss",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.BoundFunction, Models",
+				  "Name": "PotentialRate",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 1.0,
+					  "Units": null,
+					  "Name": "Upper",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 0.25,
+					  "Units": null,
+					  "Name": "Lower",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.ExpressionFunction, Models",
+					  "Expression": " -1.12 + 1.31 * [Soil].OC + 0.203 * [Soil].PH - 0.155 * [Soil].OC * [Soil].PH",
+					  "Name": "Rate",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.MinimumFunction, Models",
+				  "Name": "RateModifier",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.BoundFunction, Models",
+					  "Name": "WF",
+					  "Children": [
+						{
+						  "$type": "Models.Functions.Constant, Models",
+						  "FixedValue": 1.0,
+						  "Units": null,
+						  "Name": "Upper",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.Constant, Models",
+						  "FixedValue": 0.0,
+						  "Units": null,
+						  "Name": "Lower",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.ExpressionFunction, Models",
+						  "Expression": "[WaterFactorForMineralisation]+0.2",
+						  "Name": "Wfactor",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						}
+					  ],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.BoundFunction, Models",
+					  "Name": "TF",
+					  "Children": [
+						{
+						  "$type": "Models.Functions.Constant, Models",
+						  "FixedValue": 1.0,
+						  "Units": null,
+						  "Name": "Upper",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.Constant, Models",
+						  "FixedValue": 0.0,
+						  "Units": null,
+						  "Name": "Lower",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.ExpressionFunction, Models",
+						  "Expression": "([Soil].Temperature/40)+0.2",
+						  "Name": "Tfactor",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						}
+					  ],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.0,
+			  "Units": null,
+			  "Name": "N2OFraction",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.Solute, Models",
+	  "kgha": null,
+	  "Name": "NO3",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.NFlow, Models",
+		  "Value": null,
+		  "Natm": null,
+		  "N2Oatm": null,
+		  "sourceName": "NO3",
+		  "destinationName": null,
+		  "Name": "Denitrification",
+		  "Children": [
+			{
+			  "$type": "Models.Memo, Models",
+			  "Text": "Denitrification is simulated using the approaches initially used in CERES Maize[jones_ceres-maize:_1986] as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
+			  "Name": "Memo",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 1.0,
+			  "Units": null,
+			  "Name": "NLoss",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.0006,
+				  "Units": null,
+				  "Name": "Constant",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.ExpressionFunction, Models",
+				  "Expression": "0.0031 * [TotalCppm] + 24.5",
+				  "Name": "ActiveC",
+				  "Children": [
+					{
+					  "$type": "Models.Memo, Models",
+					  "Text": "Denitrification rate is affected by soil carbon content using an approach originally described by [Reddy1980]. ",
+					  "Name": "Memo",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.ExpressionFunction, Models",
+					  "Expression": "([Humic].C+[Inert].C+[FOMCarbohydrate].C+[FOMCellulose].C+[FOMLignin].C)/[ppm2kgha]",
+					  "Name": "TotalCppm",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.BoundFunction, Models",
+				  "Name": "TF",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 1.0,
+					  "Units": null,
+					  "Name": "Upper",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 0.0,
+					  "Units": null,
+					  "Name": "Lower",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.ExpressionFunction, Models",
+					  "Expression": "0.1 * Exp(0.046 * [Soil].Temperature)",
+					  "Name": "Tfactor",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+				  "XProperty": "[SoilWaterScale]",
+				  "Name": "WF",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.SoilWaterScale, Models",
+					  "Name": "SoilWaterScale",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.XYPairs, Models",
+					  "X": [
+						0.0,
+						1.0,
+						2.0
+					  ],
+					  "Y": [
+						0.0,
+						0.0,
+						1.0
+					  ],
+					  "Name": "XYPairs",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.ExpressionFunction, Models",
+			  "Expression": "1 / ([N2N2ORatio].Value() + 1)",
+			  "Name": "N2OFraction",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.MinimumFunction, Models",
+				  "Name": "N2N2ORatio",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 1.0,
+					  "Units": null,
+					  "Name": "Zero",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.MultiplyFunction, Models",
+					  "Name": "Ratio",
+					  "Children": [
+						{
+						  "$type": "Models.Functions.Constant, Models",
+						  "FixedValue": 25.1,
+						  "Units": null,
+						  "Name": "Constant",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+						  "XProperty": "[SoilWaterScale]",
+						  "Name": "WFPSEffect",
+						  "Children": [
+							{
+							  "$type": "Models.Functions.XYPairs, Models",
+							  "X": [
+								0.0,
+								28.0,
+								88.0,
+								100.0
+							  ],
+							  "Y": [
+								0.1,
+								0.1,
+								1.0,
+								1.18
+							  ],
+							  "Name": "XYPairs",
+							  "Children": [],
+							  "IncludeInDocumentation": true,
+							  "Enabled": true,
+							  "ReadOnly": false
+							}
+						  ],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.MinimumFunction, Models",
+						  "Name": "CO2Effect",
+						  "Children": [
+							{
+							  "$type": "Models.Functions.Constant, Models",
+							  "FixedValue": 0.16,
+							  "Units": null,
+							  "Name": "Constant",
+							  "Children": [],
+							  "IncludeInDocumentation": true,
+							  "Enabled": true,
+							  "ReadOnly": false
+							},
+							{
+							  "$type": "Models.Functions.ExpressionFunction, Models",
+							  "Expression": "Math.Exp(-0.8 * [Nutrient].NO3.kgha / [Nutrient].Catm)",
+							  "Name": "Effect",
+							  "Children": [],
+							  "IncludeInDocumentation": true,
+							  "Enabled": true,
+							  "ReadOnly": false
+							}
+						  ],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						}
+					  ],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "FOMLignin",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "The FOMLignin pool captures \"lignin-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize[jones_ceres-maize:_1986]. This pool has the slowest decomposition rate of the three FOM pools.",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Soil].InitialRootWt * 0.1 * 0.4",
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[FOMLignin].C / [Soil].SoilOrganicMatter.RootCN",
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+		  "MineralisedN": null,
+		  "Catm": null,
+		  "destinationNames": [
+			"Microbial",
+			"Humic"
+		  ],
+		  "destinationFraction": [
+			0.9,
+			0.1
+		  ],
+		  "Name": "Decomposition",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.0095,
+				  "Units": null,
+				  "Name": "PotentialRate",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[TemperatureFactorForMineralisation]",
+				  "Name": "TF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[WaterFactorForMineralisation]",
+				  "Name": "WF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[CNRatioFactorForMineralisation]",
+				  "Name": "CNRF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.4,
+			  "Units": null,
+			  "Name": "CO2Efficiency",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "FOMCellulose",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "The FOMCellulose pool captures \"cellulose-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize[jones_ceres-maize:_1986]. ",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Soil].InitialRootWt * 0.7 * 0.4",
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[FOMCellulose].C / [Soil].SoilOrganicMatter.RootCN",
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+		  "MineralisedN": null,
+		  "Catm": null,
+		  "destinationNames": [
+			"Microbial",
+			"Humic"
+		  ],
+		  "destinationFraction": [
+			0.9,
+			0.1
+		  ],
+		  "Name": "Decomposition",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.05,
+				  "Units": null,
+				  "Name": "PotentialRate",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[TemperatureFactorForMineralisation]",
+				  "Name": "TF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[WaterFactorForMineralisation]",
+				  "Name": "WF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[CNRatioFactorForMineralisation]",
+				  "Name": "CNRF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.4,
+			  "Units": null,
+			  "Name": "CO2Efficiency",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "FOMCarbohydrate",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "The FOMCarbohydrate pool captures \"carbohydrate-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize[jones_ceres-maize:_1986]. This pool has the fastest decomposition rate of the three FOM pools.",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Soil].InitialRootWt * 0.2 * 0.4",
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[FOMCarbohydrate].C / [Soil].SoilOrganicMatter.RootCN",
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+		  "MineralisedN": null,
+		  "Catm": null,
+		  "destinationNames": [
+			"Microbial",
+			"Humic"
+		  ],
+		  "destinationFraction": [
+			0.9,
+			0.1
+		  ],
+		  "Name": "Decomposition",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.2,
+				  "Units": null,
+				  "Name": "PotentialRate",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[TemperatureFactorForMineralisation]",
+				  "Name": "TF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[WaterFactorForMineralisation]",
+				  "Name": "WF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[CNRatioFactorForMineralisation]",
+				  "Name": "CNRF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.4,
+			  "Units": null,
+			  "Name": "CO2Efficiency",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "Microbial",
+	  "Children": [
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)",
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Microbial].C /  [CNRatio]",
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.Constant, Models",
+		  "FixedValue": 8.0,
+		  "Units": null,
+		  "Name": "CNRatio",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+		  "MineralisedN": null,
+		  "Catm": null,
+		  "destinationNames": [
+			"Microbial",
+			"Humic"
+		  ],
+		  "destinationFraction": [
+			0.6,
+			0.4
+		  ],
+		  "Name": "Decomposition",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[TemperatureFactorForMineralisation]",
+				  "Name": "TF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[WaterFactorForMineralisation]",
+				  "Name": "WF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.4,
+			  "Units": null,
+			  "Name": "CO2Efficiency",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+	  "C": null,
+	  "N": null,
+	  "LayerFraction": null,
+	  "Name": "Humic",
+	  "Children": [
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "(1-[Soil].FInert)*[Soil].OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C",
+		  "Name": "InitialCarbon",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "[Humic].C / [Soil].SoilOrganicMatter.SoilCN",
+		  "Name": "InitialNitrogen",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+		  "MineralisedN": null,
+		  "Catm": null,
+		  "destinationNames": [
+			"Microbial"
+		  ],
+		  "destinationFraction": [
+			1.0
+		  ],
+		  "Name": "Decomposition",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.00015,
+				  "Units": null,
+				  "Name": "PotentialRate",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[TemperatureFactorForMineralisation]",
+				  "Name": "TF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[WaterFactorForMineralisation]",
+				  "Name": "WF",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.4,
+			  "Units": null,
+			  "Name": "CO2Efficiency",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.Solute, Models",
+	  "kgha": null,
+	  "Name": "NH4",
+	  "Children": [
+		{
+		  "$type": "Models.Soils.Nutrients.NFlow, Models",
+		  "Value": null,
+		  "Natm": null,
+		  "N2Oatm": null,
+		  "sourceName": "NH4",
+		  "destinationName": "NO3",
+		  "Name": "Nitrification",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.0,
+			  "Units": null,
+			  "Name": "NLoss",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.ExpressionFunction, Models",
+				  "Expression": "40/([Nutrient].NH4.ppm+90)",
+				  "Name": "MichaelisMenton",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.MinimumFunction, Models",
+				  "Name": "PNI",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+					  "XProperty": "[SoilWaterScale]",
+					  "Name": "WF",
+					  "Children": [
+						{
+						  "$type": "Models.Functions.SoilWaterScale, Models",
+						  "Name": "SoilWaterScale",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.XYPairs, Models",
+						  "X": [
+							0.0,
+							0.25,
+							1.0,
+							2.0
+						  ],
+						  "Y": [
+							0.0,
+							1.0,
+							1.0,
+							0.0
+						  ],
+						  "Name": "XYPairs",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						}
+					  ],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.VariableReference, Models",
+					  "VariableName": "[TemperatureFactorForMineralisation]",
+					  "Name": "TF",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+					  "XProperty": "[Soil].PH",
+					  "Name": "pHF",
+					  "Children": [
+						{
+						  "$type": "Models.Functions.XYPairs, Models",
+						  "X": [
+							4.5,
+							6.0,
+							8.0,
+							9.0
+						  ],
+						  "Y": [
+							0.0,
+							1.0,
+							1.0,
+							0.0
+						  ],
+						  "Name": "XYPairs",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						}
+					  ],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 0.0,
+			  "Units": null,
+			  "Name": "N2OFraction",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Functions.MinimumFunction, Models",
+	  "Name": "TemperatureFactorForMineralisation",
+	  "Children": [
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "([AbsT]^2)/([Topt]^2)",
+		  "Name": "TF",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 32.0,
+			  "Units": null,
+			  "Name": "Topt",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.MaximumFunction, Models",
+			  "Name": "AbsT",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.0,
+				  "Units": null,
+				  "Name": "Zero",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.VariableReference, Models",
+				  "VariableName": "[Soil].Temperature",
+				  "Name": "VariableReference",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.Constant, Models",
+		  "FixedValue": 1.0,
+		  "Units": null,
+		  "Name": "One",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Functions.StringComparisonFunction, Models",
+	  "PropertyName": "[Soil].SoilType",
+	  "StringValue": "Sand",
+	  "Name": "WaterFactorForMineralisation",
+	  "Children": [
+		{
+		  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+		  "XProperty": "[SoilWaterScale]",
+		  "Name": "TrueValue",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.SoilWaterScale, Models",
+			  "Name": "SoilWaterScale",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.XYPairs, Models",
+			  "X": [
+				0.0,
+				0.5,
+				1.0,
+				2.0
+			  ],
+			  "Y": [
+				0.05,
+				1.0,
+				1.0,
+				0.5
+			  ],
+			  "Name": "XYPairs",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+		  "XProperty": "[SoilWaterScale]",
+		  "Name": "FalseValue",
+		  "Children": [
+			{
+			  "$type": "Models.Functions.SoilWaterScale, Models",
+			  "Name": "SoilWaterScale",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.XYPairs, Models",
+			  "X": [
+				0.0,
+				0.5,
+				1.0,
+				2.0
+			  ],
+			  "Y": [
+				0.0,
+				1.0,
+				1.0,
+				0.5
+			  ],
+			  "Name": "XYPairs",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Functions.MinimumFunction, Models",
+	  "Name": "CNRatioFactorForMineralisation",
+	  "Children": [
+		{
+		  "$type": "Models.Functions.Constant, Models",
+		  "FixedValue": 1.0,
+		  "Units": null,
+		  "Name": "One",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Functions.ExpressionFunction, Models",
+		  "Expression": "Exp(-0.693*([Nutrient].FOMCNR-25)/25)",
+		  "Name": "CNRF",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Functions.ExpressionFunction, Models",
+	  "Expression": "([Soil].BD*[Soil].Thickness)/100",
+	  "Name": "ppm2kgha",
+	  "Children": [],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Functions.ExpressionFunction, Models",
+	  "Expression": "[FOMLignin].C+[FOMCellulose].C+[FOMCarbohydrate].C",
+	  "Name": "FOMCx",
+	  "Children": [],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Functions.ExpressionFunction, Models",
+	  "Expression": "[FOMLignin].N+[FOMCellulose].N+[FOMCarbohydrate].N",
+	  "Name": "FOMNx",
+	  "Children": [],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.Solute, Models",
+	  "kgha": null,
+	  "Name": "PlantAvailableNO3",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Soils.Nutrients.Solute, Models",
+	  "kgha": null,
+	  "Name": "PlantAvailableNH4",
+	  "Children": [
+		{
+		  "$type": "Models.Memo, Models",
+		  "Text": "This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].",
+		  "Name": "Memo",
+		  "Children": [],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		},
+		{
+		  "$type": "Models.Soils.Nutrients.NFlow, Models",
+		  "Value": null,
+		  "Natm": null,
+		  "N2Oatm": null,
+		  "sourceName": "NO3",
+		  "destinationName": null,
+		  "Name": "Denitrification",
+		  "Children": [
+			{
+			  "$type": "Models.Memo, Models",
+			  "Text": "Denitrification is simulated using the approaches initially used in CERES Maize[jones_ceres-maize:_1986] as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
+			  "Name": "Memo",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.Constant, Models",
+			  "FixedValue": 1.0,
+			  "Units": null,
+			  "Name": "NLoss",
+			  "Children": [],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.MultiplyFunction, Models",
+			  "Name": "Rate",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.Constant, Models",
+				  "FixedValue": 0.0006,
+				  "Units": null,
+				  "Name": "Constant",
+				  "Children": [],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.ExpressionFunction, Models",
+				  "Expression": "0.0031 * [TotalCppm] + 24.5",
+				  "Name": "ActiveC",
+				  "Children": [
+					{
+					  "$type": "Models.Memo, Models",
+					  "Text": "Denitrification rate is affected by soil carbon content using an approach originally described by [Reddy1980]. ",
+					  "Name": "Memo",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.ExpressionFunction, Models",
+					  "Expression": "([Humic].C+[Inert].C+[FOMCarbohydrate].C+[FOMCellulose].C+[FOMLignin].C)/[ppm2kgha]",
+					  "Name": "TotalCppm",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.BoundFunction, Models",
+				  "Name": "TF",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 1.0,
+					  "Units": null,
+					  "Name": "Upper",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 0.0,
+					  "Units": null,
+					  "Name": "Lower",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.ExpressionFunction, Models",
+					  "Expression": "0.1 * Exp(0.046 * [Soil].Temperature)",
+					  "Name": "Tfactor",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				},
+				{
+				  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+				  "XProperty": "[SoilWaterScale]",
+				  "Name": "WF",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.SoilWaterScale, Models",
+					  "Name": "SoilWaterScale",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.XYPairs, Models",
+					  "X": [
+						0.0,
+						1.0,
+						2.0
+					  ],
+					  "Y": [
+						0.0,
+						0.0,
+						1.0
+					  ],
+					  "Name": "XYPairs",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			},
+			{
+			  "$type": "Models.Functions.ExpressionFunction, Models",
+			  "Expression": "1 / ([N2N2ORatio].Value() + 1)",
+			  "Name": "N2OFraction",
+			  "Children": [
+				{
+				  "$type": "Models.Functions.MinimumFunction, Models",
+				  "Name": "N2N2ORatio",
+				  "Children": [
+					{
+					  "$type": "Models.Functions.Constant, Models",
+					  "FixedValue": 1.0,
+					  "Units": null,
+					  "Name": "Zero",
+					  "Children": [],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					},
+					{
+					  "$type": "Models.Functions.MultiplyFunction, Models",
+					  "Name": "Ratio",
+					  "Children": [
+						{
+						  "$type": "Models.Functions.Constant, Models",
+						  "FixedValue": 25.1,
+						  "Units": null,
+						  "Name": "Constant",
+						  "Children": [],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+						  "XProperty": "[SoilWaterScale]",
+						  "Name": "WFPSEffect",
+						  "Children": [
+							{
+							  "$type": "Models.Functions.XYPairs, Models",
+							  "X": [
+								0.0,
+								28.0,
+								88.0,
+								100.0
+							  ],
+							  "Y": [
+								0.1,
+								0.1,
+								1.0,
+								1.18
+							  ],
+							  "Name": "XYPairs",
+							  "Children": [],
+							  "IncludeInDocumentation": true,
+							  "Enabled": true,
+							  "ReadOnly": false
+							}
+						  ],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						},
+						{
+						  "$type": "Models.Functions.MinimumFunction, Models",
+						  "Name": "CO2Effect",
+						  "Children": [
+							{
+							  "$type": "Models.Functions.Constant, Models",
+							  "FixedValue": 0.16,
+							  "Units": null,
+							  "Name": "Constant",
+							  "Children": [],
+							  "IncludeInDocumentation": true,
+							  "Enabled": true,
+							  "ReadOnly": false
+							},
+							{
+							  "$type": "Models.Functions.ExpressionFunction, Models",
+							  "Expression": "Math.Exp(-0.8 * [Nutrient].NO3.kgha / [Nutrient].Catm)",
+							  "Name": "Effect",
+							  "Children": [],
+							  "IncludeInDocumentation": true,
+							  "Enabled": true,
+							  "ReadOnly": false
+							}
+						  ],
+						  "IncludeInDocumentation": true,
+						  "Enabled": true,
+						  "ReadOnly": false
+						}
+					  ],
+					  "IncludeInDocumentation": true,
+					  "Enabled": true,
+					  "ReadOnly": false
+					}
+				  ],
+				  "IncludeInDocumentation": true,
+				  "Enabled": true,
+				  "ReadOnly": false
+				}
+			  ],
+			  "IncludeInDocumentation": true,
+			  "Enabled": true,
+			  "ReadOnly": false
+			}
+		  ],
+		  "IncludeInDocumentation": true,
+		  "Enabled": true,
+		  "ReadOnly": false
+		}
+	  ],
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	}
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

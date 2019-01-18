@@ -124,6 +124,36 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.Soils.Nutrients.Nutrient, Models&quot;,
+        ///  &quot;DirectedGraphInfo&quot;: {
+        ///	&quot;$type&quot;: &quot;Models.Graph.DirectedGraph, Models&quot;,
+        ///	&quot;Nodes&quot;: [
+        ///	  {
+        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///		&quot;Name&quot;: &quot;Inert&quot;,
+        ///		&quot;Location&quot;: &quot;50, 50&quot;,
+        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
+        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
+        ///	  },
+        ///	  {
+        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///		&quot;Name&quot;: &quot;SurfaceResidue&quot;,
+        ///		&quot;Location&quot;: &quot;200, 50&quot;,
+        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
+        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
+        ///	  },
+        ///	  {
+        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///	 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Nutrient {
+            get {
+                return ResourceManager.GetString("Nutrient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
         ///  &quot;CropType&quot;: &quot;Wheat&quot;,
         ///  &quot;ResourceName&quot;: null,
@@ -138,28 +168,7 @@ namespace Models.Properties {
                 return ResourceManager.GetString("Oats", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
-        ///&lt;Nutrient&gt;
-        ///  &lt;Name&gt;Nutrient&lt;/Name&gt;
-        ///  &lt;Memo&gt;
-        ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;MemoText&gt;
-        ///      &lt;![CDATA[
-        ///# The APSIM Soil Nutrient Model
-        ///
-        ///The APSIM soil nutrient model has been developed to simulate soil organic matter pools and the flows and losses of soil nutrients.  This model captures the functionality previously provided in the APSIM SoilN model ([probert_apsims_1998]).
-        ///
-        ///The model consists o [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Nutrient {
-            get {
-                return ResourceManager.GetString("Nutrient", resourceCulture);
-            }
-        }        
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.PMF.OilPalm.OilPalm, Models&quot;,
