@@ -202,6 +202,14 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Does file exist
+        /// </summary>
+        public bool FileExists
+        {
+            get { return File.Exists(this.FullFileName); }
+        }
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
@@ -253,9 +261,9 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // check filename exists
-            if(!File.Exists(this.FullFileName))
+            if(!this.FileExists)
             {
-                throw new ApsimXException(this, "Unable to find specified file [" + this.FullFileName + "]");
+                throw new ApsimXException(this, "@error:The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
             }
 
             this.regionIndex = 0;
@@ -837,14 +845,18 @@ namespace Models.CLEM
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Using ";
+            html += "\n<div class=\"activityentry\">";
             if (FileName == null || FileName == "")
             {
-                html += "<span class=\"errorlink\">[FILE NOT SET]</span>";
+                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else if (!this.FileExists)
+            {
+                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
             }
             else
             {
-                html += "<span class=\"filelink\">" + FileName + "</span>";
+                html += "Using <span class=\"filelink\">" + FileName + "</span>";
             }
             html += "\n</div>";
             return html;

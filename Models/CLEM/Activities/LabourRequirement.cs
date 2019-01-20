@@ -30,6 +30,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ManureActivityCollectPaddock))]
     [ValidParent(ParentType = typeof(RuminantActivityMuster))]
     [ValidParent(ParentType = typeof(ResourceActivitySell))]
+    [ValidParent(ParentType = typeof(ResourceActivityBuy))]
+    [ValidParent(ParentType = typeof(ResourceActivityProcess))]
     [ValidParent(ParentType = typeof(PastureActivityCutAndCarry))]
     [ValidParent(ParentType = typeof(LabourActivityTask))]
     [Description("Defines the amount and type of labour required for an activity. This model component must have at least one LabourFilterGroup nested below in the UI tree structure")]

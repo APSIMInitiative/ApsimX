@@ -53,12 +53,15 @@ namespace UserInterface.Presenters
 
         private void InitialiseStartYear()
         {
-            //set the start year using SQLite file's data
-            double[] yearsInFile = this.model.GetYearsInFile();
-            firstYearInFile = (int)yearsInFile[0];
-            lastYearInFile = (int)yearsInFile[yearsInFile.Length - 1];
+            if (this.model.FileExists)
+            {
+                //set the start year using SQLite file's data
+                double[] yearsInFile = this.model.GetYearsInFile();
+                firstYearInFile = (int)yearsInFile[0];
+                lastYearInFile = (int)yearsInFile[yearsInFile.Length - 1];
 
-            SetStartYear(firstYearInFile);
+                SetStartYear(firstYearInFile);
+            }
         }
 
         private void SetStartYear(int year)
