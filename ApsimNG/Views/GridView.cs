@@ -157,7 +157,7 @@
         /// <param name="owner">The owning view.</param>
         public GridView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hboxContainer = (HBox)builder.GetObject("hbox1");
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
@@ -212,7 +212,7 @@
         /// <summary>
         /// Invoked when a grid cell header is clicked.
         /// </summary>
-        public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
+        public event EventHandler<GridColumnClickedArgs> GridColumnClicked;
 
         /// <summary>
         /// Occurs when user clicks a button on the cell.
@@ -615,7 +615,9 @@
         /// </summary>
         public void AddContextSeparator()
         {
-            popupMenu.Append(new SeparatorMenuItem());
+            SeparatorMenuItem separator = new SeparatorMenuItem();
+            popupMenu.Append(separator);
+            separator.Show();
         }
 
         /// <summary>
@@ -635,16 +637,18 @@
             item.Active = active;
             item.Activated += onClick;
             popupMenu.Append(item);
-            popupMenu.ShowAll();
+            item.Show();
         }
 
         /// <summary>
         /// Clear all presenter defined context items.
         /// </summary>
-        public void ClearContextActions()
+        public void ClearContextActions(bool showDefaults = true)
         {
             while (popupMenu.Children.Length > 3)
                 popupMenu.Remove(popupMenu.Children[3]);
+            for (int i = 0; i < 3; i++)
+                popupMenu.Children[i].Visible = showDefaults;
         }
 
         /// <summary>
@@ -1571,6 +1575,17 @@
                     }
                     Grid.QueueDraw();
                 }
+                else if (e.Event.Button == 3)
+                {
+                    int columnNumber = GetColNoFromButton(sender as Button);
+                    GridColumnClickedArgs args = new GridColumnClickedArgs();
+                    args.Column = GetColumn(columnNumber);
+                    args.RightClick = true;
+                    args.OnHeader = true;
+                    GridColumnClicked.Invoke(this, args);
+                    if (popupMenu.Children.Length > 4)  // Show only if there is more that the three standard items plus separator
+                       popupMenu.Popup();
+                }
             }
             catch (Exception err)
             {
@@ -2340,9 +2355,9 @@
                 }
                 else if (e.Event.Button == 3)
                 {
-                    if (ColumnHeaderClicked != null)
+                    if (GridColumnClicked != null)
                     {
-                        GridHeaderClickedArgs args = new GridHeaderClickedArgs();
+                        GridColumnClickedArgs args = new GridColumnClickedArgs();
                         if (sender is Gtk.TreeView)
                         {
                             int rowIdx = path.Indices[0];
@@ -2360,7 +2375,8 @@
                             popupCell = new GridCell(this, colIdx, rowIdx);
                         }
                         args.RightClick = true;
-                        ColumnHeaderClicked.Invoke(this, args);
+                        args.OnHeader = false;
+                        GridColumnClicked.Invoke(this, args);
                     }
                     if (AnyCellIsSelected())
                         popupMenu.Popup();

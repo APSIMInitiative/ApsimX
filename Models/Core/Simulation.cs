@@ -204,7 +204,8 @@ namespace Models.Core
             factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
                                                        new string[] { Name, Name },
                                                        "Simulation", Name));
-            foreach (Zone zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+            factors[0].AddFactor("Zone", Name);
+            foreach (IModel zone in Apsim.ChildrenRecursively(this).Where(c => ScopingRules.IsScopedModel(c)))
             {
                 var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
                                                             new string[] { Name, zone.Name }, 

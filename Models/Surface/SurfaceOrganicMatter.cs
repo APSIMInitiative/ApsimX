@@ -438,7 +438,7 @@
             double totN = 0;  // total N in residue;
             double totP = 0;  // total P in residue;
 
-            if (InitialResidueMass > 0.0)
+            if (InitialResidueMass >= 0.0)
             {
                 // Normally the residue shouldn't already exist, and we
                 // will need to add it, and normally this should result in SOMNo == i

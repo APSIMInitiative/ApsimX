@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,8 +19,11 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
     [HelpUri("http://www.csiro.au")]
+    [Version(1,0,1,"")]
+    [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject
     {
         [Link]
@@ -74,7 +78,6 @@ namespace Models.CLEM
         [XmlIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
-
         // ignore zone base class properties
 
         /// <summary>Area of the zone.</summary>
@@ -87,14 +90,6 @@ namespace Models.CLEM
         public new double Slope { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ZoneCLEM()
-        {
-            this.SetDefaults();
-        }
-
-        /// <summary>
         /// Validate object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -105,27 +100,27 @@ namespace Models.CLEM
             if (Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString(), memberNames)));
+                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
             }
             // check that one resources and on activities are present.
-            int HolderCnt = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
-            if (HolderCnt == 0)
+            int holderCount = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
+            if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
             }
-            if (HolderCnt > 1)
+            if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            HolderCnt = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
-            if (HolderCnt == 0)
+            holderCount = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
+            if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
             }
-            if (HolderCnt > 1)
+            if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
@@ -144,7 +139,7 @@ namespace Models.CLEM
             // some values assigned in commencing will not be checked before processing, but will be caught here
             if (!Validate(Simulation, ""))
             {
-                string error = "Invalid parameters in model (see summary for details)";
+                string error = "@i:Invalid parameters in model";
                 throw new ApsimXException(this, error);
             }
 
@@ -190,11 +185,34 @@ namespace Models.CLEM
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="ModelPath">Pass blank string. Used for tracking model path</param>
+        /// <param name="modelPath">Pass blank string. Used for tracking model path</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        private bool Validate(Model model, string ModelPath)
+        private bool Validate(Model model, string modelPath)
         {
-            ModelPath += "["+model.Name+"]";
+            string starter = "[";
+            if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
+            {
+                starter = "[r=";
+            }
+            if(model.GetType() == typeof(ResourcesHolder))
+            {
+                starter = "[r=";
+            }
+            if (model.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                starter = "[r=";
+            }
+            if (model.GetType() == typeof(ActivitiesHolder))
+            {
+                starter = "[a=";
+            }
+            if (model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
+            {
+                starter = "[a=";
+            }
+
+            modelPath += starter+model.Name+"]";
+            modelPath = modelPath.Replace("][", "]&shy;[");
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
@@ -205,13 +223,27 @@ namespace Models.CLEM
                 // report all errors
                 foreach (var validateError in validationResults)
                 {
-                    string error = String.Format("Invalid parameter value in model object " + ModelPath + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault() + Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
+                    // get description
+                    string text = "";
+                    var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
+                    if (property != null)
+                    {
+                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                        var description = (DescriptionAttribute)attribute;
+                        text = description.ToString();
+                    }
+                    string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
+                    if (text != "")
+                    {
+                        error += String.Format(Environment.NewLine + "DESCRIPTION: " + text );
+                    }
+                    error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
                     Summary.WriteWarning(this, error);
                 }
             }
             foreach (var child in model.Children)
             {
-                bool result = Validate(child, ModelPath);
+                bool result = Validate(child, modelPath);
                 if (valid & !result)
                 {
                     valid = false;
@@ -220,39 +252,70 @@ namespace Models.CLEM
             return valid;
         }
 
-        /// <summary>
-        /// Method to set defaults from   
+            /// <summary>
+        /// 
         /// </summary>
-        public void SetDefaults()
+        /// <param name="model"></param>
+        /// <param name="useFullDescription">Use full verbose description</param>
+        /// <param name="htmlString"></param>
+        /// <returns></returns>
+        public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
-            foreach (var property in GetType().GetProperties())
+            string html = "";
+            html += "\n<div class=\"holdermain\">";
+            html += "\n<div class=\"clearfix defaultbanner\">";
+            html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
+            html += "</div>";
+            html += "\n<div class=\"defaultcontent\">";
+            html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
+            if (RandomSeed == 0)
             {
-                foreach (Attribute attr in property.GetCustomAttributes(true))
-                {
-                    if (attr is System.ComponentModel.DefaultValueAttribute)
-                    {
-                        System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
-                        try
-                        {
-                            if (property.PropertyType.IsArray)
-                            {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                            else
-                            {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Summary.WriteWarning(this, ex.Message);
-                            //eat it... Or maybe Debug.Writeline(ex);
-                        }
-                    }
-                }
+                html += "Every run of this simulation will be different.";
             }
-        }
+            else
+            {
+                html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
+            }
+            html += "\n</div>";
+            html += "\n</div>";
 
+            // get clock
+            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+            Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
+
+            html += "\n<div class=\"clearfix defaultbanner\">";
+            html += "<div class=\"namediv\">" + clk.Name + "</div>";
+            html += "<div class=\"typediv\">Clock</div>";
+            html += "</div>";
+            html += "\n<div class=\"defaultcontent\">";
+            html += "\n<div class=\"activityentry\">This simulation runs from ";
+            if (clk.StartDate == null)
+            {
+                html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
+            }
+            html += " to ";
+            if (clk.EndDate == null)
+            {
+                html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
+            }
+            html += "\n</div>";
+            html += "\n</div>";
+            html += "\n</div>";
+
+            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            {
+                html += cm.GetFullSummary(cm, true, "");
+            }
+            return html;
+        }
 
         /// <summary>
         /// Method to determine if this is the month to calculate ecological indicators

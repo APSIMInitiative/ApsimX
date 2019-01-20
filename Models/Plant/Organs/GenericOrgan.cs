@@ -157,7 +157,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total biomass</summary>
         [XmlIgnore]
         public Biomass Total { get { return Live + Dead; } }
-
         
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
@@ -405,6 +404,11 @@ namespace Models.PMF.Organs
             DMDemand.Clear();
             NDemand.Clear();
             potentialDMAllocation.Clear();
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -417,19 +421,18 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NDemand = new BiomassPoolType();
-            DMDemand = new BiomassPoolType();
-            NSupply = new BiomassSupplyType();
-            DMSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
+            Live = new Biomass();
+            Dead = new Biomass();
             startLive = new Biomass();
+            DMDemand = new BiomassPoolType();
+            NDemand = new BiomassPoolType();
+            DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
             Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            Live = new Biomass();
-            Dead = new Biomass();
-            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -438,14 +441,9 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-            }
-                    }
+            if (parentPlant.IsAlive || parentPlant.IsEnding)
+                ClearBiomassFlows();
+        }
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -456,6 +454,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 Clear();
+                ClearBiomassFlows();
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;
                 Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
@@ -517,7 +516,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
+        protected void OnPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {

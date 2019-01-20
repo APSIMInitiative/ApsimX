@@ -20,7 +20,7 @@
 
         public FindInBrowserForm()
         {
-            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.BrowserFind.glade");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.BrowserFind.glade");
             window1 = (Window)builder.GetObject("window1");
             chkMatchCase = (CheckButton)builder.GetObject("chkMatchCase");
             chkHighlightAll = (CheckButton)builder.GetObject("chkHighlightAll");

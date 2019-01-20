@@ -119,6 +119,16 @@
             }
             else
             {
+                // The graph's series contain many variables such as [Soil].LL. We now replace
+                // these relative paths with absolute paths.
+                foreach (Series series in Apsim.Children(graph, typeof(Series)))
+                {
+                    series.XFieldName = series.XFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.YFieldName = series.YFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                }
+
                 this.parentForGraph = this.model.Parent as IModel;
                 if (this.parentForGraph != null)
                 {
@@ -145,8 +155,8 @@
                             cropLLSeries.ShowInLegend = true;
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
-                            cropLLSeries.YFieldName = "[Soil].DepthMidPoints";
-                            cropLLSeries.XFieldName = "[" + (property.Object as Model).Name + "]." + property.Name;
+                            cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
+                            cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
                             this.graph.Children.Add(cropLLSeries);
@@ -163,7 +173,7 @@
 
             // Trap the right click on column header so that we can potentially put
             // units on the context menu.
-            this.view.ProfileGrid.ColumnHeaderClicked += this.OnColumnHeaderClicked;
+            this.view.ProfileGrid.GridColumnClicked += this.OnGridColumnClicked;
 
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
@@ -178,7 +188,7 @@
         {
             this.view.ProfileGrid.EndEdit();
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
-            this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
+            this.view.ProfileGrid.GridColumnClicked -= this.OnGridColumnClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             propertyPresenter.Detach();
@@ -294,9 +304,16 @@
                 }
 
                 // colour the column headers of total columns.
-                if (!double.IsNaN(property.Total))
+                try
                 {
-                    gridColumn.HeaderForegroundColour = Color.Red;
+                    if (!double.IsNaN(property.Total))
+                    {
+                        gridColumn.HeaderForegroundColour = Color.Red;
+                    }
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
             }
 
@@ -361,7 +378,16 @@
                 }
 
                 // add a total to the column header if necessary.
-                double total = property.Total;
+                double total;
+                try
+                {
+                    total = property.Total;
+                }
+                catch (Exception err)
+                {
+                    total = double.NaN;
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
                 if (!double.IsNaN(total))
                 {
                     columnName = columnName + "\r\n" + total.ToString("N1");
@@ -373,8 +399,9 @@
                 {
                     values = property.Value as Array;
                 }
-                catch (Exception)
+                catch (Exception err)
                 {
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
 
                 if (table.Columns.IndexOf(columnName) == -1)
@@ -570,16 +597,17 @@
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnColumnHeaderClicked(object sender, GridHeaderClickedArgs e)
+        private void OnGridColumnClicked(object sender, GridColumnClickedArgs e)
         {
             if (e.RightClick)
             {
-                this.view.ProfileGrid.ClearContextActions();
+                this.view.ProfileGrid.ClearContextActions(!e.OnHeader);
                 this.indexOfClickedVariable = e.Column.ColumnIndex;
                 VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
                 if (property.AllowableUnits.Length > 0)
                 {
-                    this.view.ProfileGrid.AddContextSeparator();
+                    if (!e.OnHeader)
+                        this.view.ProfileGrid.AddContextSeparator();
                     foreach (VariableProperty.NameLabelPair unit in property.AllowableUnits)
                     {
                         this.view.ProfileGrid.AddContextOption(unit.Name, unit.Label, this.OnUnitClick, unit.Name == property.Units);

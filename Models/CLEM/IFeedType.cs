@@ -12,12 +12,6 @@ namespace Models.CLEM
     public interface IFeedType: IResourceType
     {
         /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        [Description("Dry Matter (%)")]
-        double DryMatter { get; set; }
-
-        /// <summary>
         /// Dry Matter Digestibility (%)
         /// </summary>
         [Description("Dry Matter Digestibility (%)")]

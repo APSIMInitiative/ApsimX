@@ -165,11 +165,13 @@ namespace Models.Core.ApsimFile
             else
             {
                 Type modelType = GetModelTypeName(name);
-
                 if (modelType == null || modelType.GetInterface("IModel") == null)
                 {
+                    modelType = GetModelTypeName(JsonUtilities.Type(newRoot));
+                    var property = modelType?.GetProperty(name);
                     var newObject = CreateObject(obj);
-                    if (arrayVariableNames.Contains(name))
+                    // If the new obejct is NOT a JArray, and this object is supposed to be an array...
+                    if (!(newObject is JArray) && (arrayVariableNames.Contains(name) || (property != null && property.PropertyType.IsArray)))
                     {
                         // Should be an array of objects.
                         if (newObject.First.First is JArray)
@@ -327,10 +329,21 @@ namespace Models.Core.ApsimFile
                         toObject[propertyName] = value;
                 }
             }
+            else if (propertyName == "@name") // Name attribute.
+            {
+                // SoilCrops copied from Apsim classic need to be renamed to CropNameSoil e.g. WheatSoil.
+                if (toObject["$type"].ToString() == "Models.Soils.SoilCrop, Models")
+                    toObject["Name"] = property.Value.ToString() + "Soil";
+                else if (toObject["Name"] == null)
+                    toObject["Name"] = property.Value;
+            }
         }
 
         private static Type GetModelTypeName(string modelNameToFind)
         {
+            if (modelNameToFind == null)
+                return null;
+
             string[] modelWords = modelNameToFind.Split(".".ToCharArray());
             string m = modelWords[modelWords.Length - 1];
 
@@ -370,13 +383,16 @@ namespace Models.Core.ApsimFile
                     {
                         if (childXmlName == string.Empty)
                         {
-                            if (GetModelTypeName(childXmlNode.Name) != null)
+                            string nameAttribute = XmlUtilities.NameAttr(childXmlNode);
+                            if (nameAttribute != null)
+                                childXmlName = nameAttribute;
+                            else if (GetModelTypeName(childXmlNode.Name) != null)
                                 childXmlName = childXmlNode.Name;
                         }
                         if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
                         {
                             int i = 1;
-                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName))
+                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == childXmlName + "Soil")))
                             {
                                 bool alreadyAdded = newArray.FirstOrDefault(c => c["Name"].ToString() == childXmlName) != null;
 

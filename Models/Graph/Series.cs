@@ -206,7 +206,7 @@ namespace Models.Graph
                 List<string> factorValues = new List<string>();
                 factors.ForEach(factor => factorValues.Add(factor.GetFactorValue(factorName)));
 
-                if (factorValues.Distinct().Count() == 1)
+                if (factors.Count != 1 && factorValues.Distinct().Count() == 1)
                 {
                     // All factor values are the same so remove the factor.
                     factors.ForEach(factor => factor.RemoveFactor(factorName));

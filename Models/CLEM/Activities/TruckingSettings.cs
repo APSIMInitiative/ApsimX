@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -16,6 +17,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
+    [Version(1, 0, 1, "")]
     public class TruckingSettings : CLEMModel
     {
         [Link]
@@ -71,15 +73,23 @@ namespace Models.CLEM.Activities
         public double TruckMethaneEmissions { get; set; }
 
         /// <summary>
-        /// Truck NOx emissions per km
+        /// Truck N2O emissions per km
         /// </summary>
-        [Description("Truck NOx emissions per km")]
+        [Description("Truck Nitrous oxide emissions per km")]
         [Required, GreaterThanEqualValue(0)]
-        public double TruckNOxEmissions { get; set; }
+        public double TruckN2OEmissions { get; set; }
 
         private GreenhouseGasesType CO2Store;
         private GreenhouseGasesType MethaneStore;
-        private GreenhouseGasesType NOxStore;
+        private GreenhouseGasesType N2OStore;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TruckingSettings()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -99,9 +109,9 @@ namespace Models.CLEM.Activities
                 {
                     CO2Store = Resources.GetResourceItem(this, typeof(GreenhouseGases), "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
-                if (TruckNOxEmissions > 0)
+                if (TruckN2OEmissions > 0)
                 {
-                    NOxStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "NOx", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    N2OStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
             }
         }
@@ -109,13 +119,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to report trucking emissions.
         /// </summary>
-        /// <param name="NumberOfTrucks">Number of trucks</param>
-        /// <param name="IsSales">Determines if this is a sales or purchase shipment</param>
-        public void ReportEmissions(int NumberOfTrucks, bool IsSales)
+        /// <param name="numberOfTrucks">Number of trucks</param>
+        /// <param name="isSales">Determines if this is a sales or purchase shipment</param>
+        public void ReportEmissions(int numberOfTrucks, bool isSales)
         {
-            if(NumberOfTrucks > 0)
+            if(numberOfTrucks > 0)
             {
-                List<string> gases = new List<string>() { "Methane", "CO2", "NOx" };
+                List<string> gases = new List<string>() { "Methane", "CO2", "N2O" };
                 double emissions = 0;
                 foreach (string gas in gases)
                 {
@@ -130,9 +140,9 @@ namespace Models.CLEM.Activities
                             gasstore = CO2Store;
                             emissions = TruckCO2Emissions;
                             break;
-                        case "NOx":
-                            gasstore = NOxStore;
-                            emissions = TruckNOxEmissions;
+                        case "N2O":
+                            gasstore = N2OStore;
+                            emissions = TruckN2OEmissions;
                             break;
                         default:
                             gasstore = null;
@@ -141,10 +151,72 @@ namespace Models.CLEM.Activities
 
                     if (gasstore != null & emissions > 0)
                     {
-                        gasstore.Add(NumberOfTrucks * DistanceToMarket * emissions , this.Parent.Name, "Trucking "+(IsSales?"sales":"purchases"));
+                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(isSales?"sales":"purchases"));
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("#.###") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.###") + "</span> per km per truck";
+            html += "</div>";
+
+            html += "\n<div class=\"activityentry\">Each truck load can carry <span class=\"setvalue\">" + Number450kgPerTruck.ToString("#.###") + "</span> 450 kg individuals ";
+            html += "</div>";
+
+            if(MinimumLoadBeforeSelling>0 | MinimumTrucksBeforeSelling>0)
+            {
+                html += "\n<div class=\"activityentry\">";
+                if(MinimumTrucksBeforeSelling>0)
+                {
+                    html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required";
+                }
+                if (MinimumLoadBeforeSelling > 0)
+                {
+                    if(MinimumTrucksBeforeSelling>0)
+                    {
+                        html += " and each ";
+                    }
+                    else
+                    {
+                        html += "Each ";
+
+                    }
+                    html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full";
+                }
+                html += "</div>";
+            }
+
+            if (TruckMethaneEmissions > 0 | TruckN2OEmissions > 0)
+            {
+                html += "\n<div class=\"activityentry\">Each truck will emmit <span class=\"setvalue\">";
+                if (TruckMethaneEmissions > 0)
+                {
+                    html += TruckMethaneEmissions.ToString("0.###") + "</span> kg methane per km";
+                }
+                if (MinimumLoadBeforeSelling > 0)
+                {
+                    if (MinimumTrucksBeforeSelling > 0)
+                    {
+                        html += " and ";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg N<sub>2</sub>O per km";
+                    }
+                }
+                html += "</div>";
+            }
+
+            return html;
+        }
+
     }
 }

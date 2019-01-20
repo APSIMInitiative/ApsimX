@@ -631,7 +631,7 @@ namespace Models.Soils
             specific_bd = 2.65;
             hydrol_effective_depth = 450;
             mobile_solutes = new string[] { "NO3", "urea", "Chloride", "br", "org_n", "org_c_pool1", "org_c_pool2", "org_c_pool3" };
-            immobile_solutes = new string[] { "NH4" };
+            immobile_solutes = new string[] { "NH4", "PlantAvailableNH4", "PlantAvailableNO3" };
             canopy_fact = new double[] { 1, 1, 0, 0 };
             canopy_fact_height = new double[] { 0, 600, 1800, 30000 };
             canopy_fact_default = 0.5;
