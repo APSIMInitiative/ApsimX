@@ -150,11 +150,11 @@ namespace Models.CLEM.Resources
             // if not assign new value
             if (labour.LabourAvailability == null)
             {
-                foreach (Model availItem in Apsim.Children(availabilityList, typeof(LabourAvailabilityItem)))
+                foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
                 {
                     if (checkList.Filter(availItem).Count > 0)
                     {
-                        labour.LabourAvailability = availItem as LabourAvailabilityItem;
+                        labour.LabourAvailability = availItem as LabourSpecificationItem;
                         break;
                     }
                 }

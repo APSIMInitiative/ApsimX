@@ -89,7 +89,7 @@ namespace UserInterface.Presenters
                         }
                     }
                     this.Grid.DataSource = tbl;
-                    this.Grid.LockLeftMostColumns(3);  // lock activity name.
+                    this.Grid.LockLeftMostColumns(1);  // lock activity name.
                 }
             }
         }

@@ -202,6 +202,15 @@ namespace Models.CLEM
             html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
             html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
 
+            if(this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                //html += "\n<div class=\"activityentry\">This resource is measured in ";
+                //if((this as ResourceBaseWithTransactions).Units != "")
+                //{
+                //    html += "<span class=\"setvalue\">" + (this as ResourceBaseWithTransactions).Units + "</span> ";
+                //}
+                //html += "</div>";
+            }
             return html;
         }
 
