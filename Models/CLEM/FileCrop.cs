@@ -127,6 +127,14 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Does file exist
+        /// </summary>
+        public bool FileExists
+        {
+            get { return File.Exists(this.FullFileName); }
+        }
+
+        /// <summary>
         /// Used to hold the WorkSheet Name if data retrieved from an Excel file
         /// </summary>
         public string ExcelWorkSheetName { get; set; }
@@ -137,9 +145,9 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (!File.Exists(FullFileName))
+            if (!this.FileExists)
             {
-                string errorMsg = String.Format("Could not locate file [x={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
+                string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
 
@@ -337,7 +345,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant("SoilNum") == null)
                         {
-                            throw new Exception("Cannot find [o=SoilNum] column in crop file [x=" + this.FullFileName.Replace("\\","\\&shy;")+"]");
+                            throw new Exception("@error:Cannot find [o=SoilNum] column in crop file [x=" + this.FullFileName.Replace("\\","\\&shy;")+"]");
                         }
                     }
 
@@ -345,7 +353,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant("CropName") == null)
                         {
-                            throw new Exception("Cannot find [o=CropName] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                            throw new Exception("@error:Cannot find [o=CropName] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                         }
                     }
 
@@ -353,7 +361,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant("Year") == null)
                         {
-                            throw new Exception("Cannot find [o=Year] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                            throw new Exception("@error:Cannot find [o=Year] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                         }
                     }
 
@@ -361,7 +369,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant("Month") == null)
                         {
-                            throw new Exception("Cannot find [o=Month] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                            throw new Exception("@error:Cannot find [o=Month] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                         }
                     }
 
@@ -369,7 +377,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant("AmtKg") == null)
                         {
-                            throw new Exception("Cannot find [o=AmtKg] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
+                            throw new Exception("@error:Cannot find [o=AmtKg] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
                         }
                     }
                 }
@@ -406,14 +414,18 @@ namespace Models.CLEM
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Using ";
+            html += "\n<div class=\"activityentry\">";
             if (FileName == null || FileName == "")
             {
-                html += "<span class=\"errorlink\">[FILE NOT SET]</span>";
+                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else if (!this.FileExists)
+            {
+                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
             }
             else
             {
-                html += "<span class=\"setvalue\">" + FileName + "</span>";
+                html += "Using <span class=\"filelink\">" + FileName + "</span>";
             }
             html += "\n</div>";
             return html;

@@ -289,7 +289,7 @@ namespace UserInterface.Views
                 }
 
                 textRender.FixedHeightFromFont = 1; // 1 line high
-                pixbufRender.Height = 19; //23
+                pixbufRender.Height = 19; //TODO change based on zoom rate of UI //previously 23 before smaller UI font
                 textRender.Editable = !isReadOnly;
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
@@ -304,9 +304,8 @@ namespace UserInterface.Views
                 {
                     column.PackStart(pixbufRender, false);  // 3
                 }
-
-                column.Sizing = TreeViewColumnSizing.Autosize;
-                column.Resizable = true;
+//                column.Sizing = TreeViewColumnSizing.Autosize;
+//                column.Resizable = true;
 
                 if (i == 0)
                 {
@@ -331,10 +330,17 @@ namespace UserInterface.Views
                 // the columns we want frozen
                 // For now, these frozen columns will be treated as read-only text
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
-                fixedColumn.Sizing = TreeViewColumnSizing.Autosize;
-                fixedColumn.Resizable = true;
-                fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
-                fixedColumn.Alignment = 0.5f; // For centered alignment of the column header
+                //fixedColumn.Sizing = TreeViewColumnSizing.GrowOnly;
+                fixedColumn.Resizable = false;
+                if (i == 0)
+                {
+                    fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
+                }
+                else
+                {
+                    fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
+                }
+                fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
                 fixedColumn.Visible = false;
                 fixedcolview.AppendColumn(fixedColumn);
             }

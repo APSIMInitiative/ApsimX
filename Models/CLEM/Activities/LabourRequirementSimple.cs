@@ -11,7 +11,7 @@ using Models.Core.Attributes;
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// Defines the labour required for an activity where unit size as provided by the parent activity
+    /// Defines the labour required for an Activity where details are provided by the Activity
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -38,7 +38,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [XmlIgnore]
         public new LabourUnitType UnitType { get; set; }
-
 
     }
 }

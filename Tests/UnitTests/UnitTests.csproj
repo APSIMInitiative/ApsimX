@@ -106,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonUtilitiesTests.cs" />
+    <Compile Include="ManagerTests.cs" />
+    <Compile Include="MorrisTests.cs" />
+    <Compile Include="RegressionTests.cs" />
     <Compile Include="StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="WeatherFileTests.cs" />
@@ -160,6 +163,7 @@
     <EmbeddedResource Include="Resources\FileFormat_ReadFromString.json" />
     <EmbeddedResource Include="Resources\FileFormat_CheckThatModelsCanThrowExceptionsDuringCreation.json" />
     <EmbeddedResource Include="Resources\FileFormat_WriteSingleModel.json" />
+    <EmbeddedResource Include="Resources\FaultyManager.apsimx" />
     <None Include="Resources\Goondiwindi.met" />
     <EmbeddedResource Include="Resources\XMLToJSONTests_EnsureParentChildRelationshipConverts.json" />
     <EmbeddedResource Include="Resources\APITest.xml" />
@@ -190,6 +194,7 @@
     <EmbeddedResource Include="Resources\JsonUtilitiesTests\ReplaceManagerText.json" />
     <EmbeddedResource Include="Resources\WeatherFile.xlsx" />
     <EmbeddedResource Include="Resources\JsonUtilitiesTests\ReplaceManagerTextRegex.json" />
+    <EmbeddedResource Include="Resources\MorrisBroken.apsimx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">

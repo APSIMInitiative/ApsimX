@@ -23,6 +23,7 @@ namespace Models.CLEM
     [Description("This manages all CLEM resources and activities in the simulation.")]
     [HelpUri("http://www.csiro.au")]
     [Version(1,0,1,"")]
+    [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject
     {
         [Link]

@@ -42,11 +42,11 @@
         /// <summary>Gets the next job to run</summary>
         public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
-            if (allCombinations == null || allCombinations.Count == 0)
-                return null;
-
             if (serialisedBase == null)
                 Initialise(fullFactorial);
+
+            if (allCombinations == null || allCombinations.Count == 0)
+                return null;
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -95,7 +95,7 @@
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
             List<string> names = new List<string>();
-            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
+            List<List<FactorValue>> allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;
@@ -111,13 +111,10 @@
         /// <summary>Gets a list of factors</summary>
         public List<ISimulationGeneratorFactors> GetFactors()
         {
-            if (serialisedBase == null || allCombinations.Count == 0)
-                Initialise(true);
-
             List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
 
             List<string> simulationNames = new List<string>();
-            foreach (List<FactorValue> combination in allCombinations)
+            foreach (List<FactorValue> combination in AllCombinations())
             {
                 // Work out a simulation name for this combination
                 string simulationName = Name;

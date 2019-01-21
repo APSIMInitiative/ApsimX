@@ -11,6 +11,7 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The manager model
@@ -29,7 +30,7 @@
         private string CompiledCode;
 
         /// <summary>Has the manager model been fully created yet?</summary>
-        [NonSerialized]
+        [JsonIgnore]
         private bool isCreated = false;
         
         /// <summary>The code to compile.</summary>
@@ -87,6 +88,7 @@
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             RebuildScriptModel();
+            SetParametersInObject(Apsim.Child(this, "Script") as Model);
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -100,6 +102,7 @@
             {
                 try
                 {
+                    Children?.RemoveAll(x => x.GetType().Name == "Script");
                     Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
                     if (compiledAssembly.GetType("Models.Script") == null)
                         throw new ApsimXException(this, "Cannot find a public class called 'Script'");
@@ -112,16 +115,16 @@
                     script.Name = "Script";
                     script.IsHidden = true;
 
-                    SetParametersInObject(script);
-
                     // Add the new script model to our models collection.
-                    Children.RemoveAll(x => x.GetType().Name == "Script");
                     Children.Add(script);
                     script.Parent = this;
+
+                    // Attempt to give the new script's properties the same
+                    // values used by the old script.
+                    SetParametersInObject(script);
                 }
                 catch (Exception err)
                 {
-                    Children.RemoveAll(x => x.GetType().Name == "Script");
                     CompiledCode = null;
                     throw new Exception("Unable to compile \"" + Name + "\"", err);
                 }
@@ -164,20 +167,35 @@
         {
             if (Parameters != null)
             {
+                List<Exception> errors = new List<Exception>();
                 foreach (var parameter in Parameters)
                 {
-                    PropertyInfo property = script.GetType().GetProperty(parameter.Key);
-                    if (property != null)
+                    try
                     {
-                        object value;
-                        if (parameter.Value.StartsWith(".Simulations."))
-                            value = Apsim.Get(this, parameter.Value);
-                        else if (property.PropertyType == typeof(IPlant))
-                            value = Apsim.Find(this, parameter.Value);
-                        else
-                            value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
-                        property.SetValue(script, value, null);
+                        PropertyInfo property = script.GetType().GetProperty(parameter.Key);
+                        if (property != null)
+                        {
+                            object value;
+                            if (parameter.Value.StartsWith("."))
+                                value = Apsim.Get(this, parameter.Value);
+                            else if (property.PropertyType == typeof(IPlant))
+                                value = Apsim.Find(this, parameter.Value);
+                            else
+                                value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
+                            property.SetValue(script, value, null);
+                        }
                     }
+                    catch (Exception err)
+                    {
+                        errors.Add(err);
+                    }
+                }
+                if (errors.Count > 0)
+                {
+                    string message = "";
+                    foreach (Exception error in errors)
+                        message += error.Message;
+                    throw new Exception(message);
                 }
             }
         }

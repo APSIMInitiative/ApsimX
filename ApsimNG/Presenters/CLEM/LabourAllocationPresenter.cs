@@ -87,7 +87,7 @@ namespace UserInterface.Presenters
 
             // Get Labour resources
             labour = Apsim.ChildrenRecursively(clem, typeof(Labour)).FirstOrDefault() as Labour;
-            if(labour is null)
+            if(labour == null)
             {
                 htmlString += "No Labour supplied in resources";
                 EndHTML(htmlString);
@@ -125,7 +125,7 @@ namespace UserInterface.Presenters
             // walk through all activities
             // check if LabourRequirement can be added
             ActivitiesHolder activities = Apsim.ChildrenRecursively(clem, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
-            if (activities is null)
+            if (activities == null)
             {
                 htmlString += "Could not find an Activities Holder";
                 EndHTML(htmlString);
@@ -153,7 +153,7 @@ namespace UserInterface.Presenters
             htmlString += "\n<ul>";
             htmlString += "\n<li>Only activities capable of including a labour requirement are displayed.</li>";
             htmlString += "\n<li>Activities with no labour requirement provided are displayed with grey text.</li>";
-            htmlString += "\n<li>Multiple rows of icons (circles) for a given activity show where more than one individul is required.</li>";
+            htmlString += "\n<li>Multiple rows of icons (circles) for a given activity show where more than one individual is required.</li>";
             htmlString += "\n<li>The preferential allocation of labour is displayed in the following order:" +
                 "<table class=\"blank\">" +
                 "<tr><td><span class=\"dot dot1 \">" + "</span></td><td>1st preference</td></tr>" +
@@ -189,10 +189,10 @@ namespace UserInterface.Presenters
             if(validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
             {
                 Model labourRequirement = Apsim.Children(model, typeof(IModel)).Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                tblstr += "<tr"+((labourRequirement is null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
+                tblstr += "<tr"+((labourRequirement == null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
-                if (!(labourRequirement is null))
+                if (!(labourRequirement == null))
                 {
                     // for each labour type
                     foreach (LabourType lt in labourList)
