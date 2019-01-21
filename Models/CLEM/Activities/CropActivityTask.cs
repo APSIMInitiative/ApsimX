@@ -69,8 +69,8 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
-                    CropActivityManageCrop cropParent = Parent.Parent as CropActivityManageCrop;
-                    CropActivityManageProduct productParent = Parent as CropActivityManageProduct;
+                    CropActivityManageCrop cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -80,8 +80,8 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perTree:
-                    cropParent = Parent.Parent as CropActivityManageCrop;
-                    productParent = Parent as CropActivityManageProduct;
+                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -91,8 +91,8 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    cropParent = Parent.Parent as CropActivityManageCrop;
-                    productParent = Parent as CropActivityManageProduct;
+                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -102,8 +102,8 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    cropParent = Parent.Parent as CropActivityManageCrop;
-                    productParent = Parent as CropActivityManageProduct;
+                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
