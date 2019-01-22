@@ -211,7 +211,8 @@ namespace Models.CLEM.Activities
                             throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
                     }
                     expenseRequest.Reason = item.Name;
-                    bankAccount.Remove(expenseRequest);
+                    // uses bank account specified in the RuminantActivityFee
+                    item.BankAccount.Remove(expenseRequest);
                 }
 
                 // add and remove from bank

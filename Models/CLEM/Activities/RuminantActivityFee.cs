@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,20 @@ namespace Models.CLEM.Activities
     public class RuminantActivityFee: CLEMModel
     {
         /// <summary>
+        /// Link to resources
+        /// </summary>
+        [Link]
+        public ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Bank account to use
+        /// </summary>
+        [Description("Bank account to use")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
+        public string BankAccountName { get; set; }
+
+        /// <summary>
         /// Payment style
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
@@ -34,6 +49,20 @@ namespace Models.CLEM.Activities
         [Description("Amount")]
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
+
+        /// <summary>
+        /// Store finance type to use
+        /// </summary>
+        public FinanceType BankAccount;
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            BankAccount = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+        }
 
         /// <summary>
         /// Constructor
@@ -54,6 +83,15 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">Pay ";
             html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
             html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ";
+            html += " from ";
+            if(BankAccountName!=null)
+            {
+                html += "<span class=\"resourcelink\">" + BankAccountName + "</span> ";
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span> ";
+            }
             html += "</div>";
             return html;
         }
