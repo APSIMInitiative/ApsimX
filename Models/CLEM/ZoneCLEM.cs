@@ -210,6 +210,18 @@ namespace Models.CLEM
             {
                 starter = "[a=";
             }
+            if (model.GetType().Name.Contains("Group"))
+            {
+                starter = "[f=";
+            }
+            if (model.GetType().Name.Contains("Timer"))
+            {
+                starter = "[f=";
+            }
+            if (model.GetType().Name.Contains("Filter"))
+            {
+                starter = "[f=";
+            }
 
             modelPath += starter+model.Name+"]";
             modelPath = modelPath.Replace("][", "]&shy;[");

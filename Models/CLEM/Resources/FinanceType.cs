@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #region transactions
+        #region Transactions
 
         /// <summary>
         /// Back account transaction occured
