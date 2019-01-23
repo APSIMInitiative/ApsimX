@@ -958,7 +958,6 @@
         /// </summary>
         private void UpdateSelectedCell()
         {
-            while (GLib.MainContext.Iteration()) ;
             TreePath path;
             TreeViewColumn column;
             Grid.GetCursor(out path, out column);
