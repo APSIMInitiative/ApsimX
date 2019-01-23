@@ -23,6 +23,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
     [Description("This report automatically generates an activity performed ledger and provides a table of activity success.")]
     [Version(1, 0, 1, "")]
     public class ReportActivitiesPerformed: Models.Report.Report

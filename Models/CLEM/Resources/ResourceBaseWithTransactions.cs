@@ -48,19 +48,5 @@ namespace Models.CLEM.Resources
         {
             return this.Children.Where(a => a.Name == name).FirstOrDefault();
         }
-
-        /// <summary>
-        /// Get main/first account
-        /// </summary>
-        /// <returns></returns>
-        public object GetFirst()
-        {
-            if (this.Children.Count() > 0)
-            {
-                return this.Children.FirstOrDefault();
-            }
-            return null;
-        }
-
     }
 }
