@@ -1070,6 +1070,7 @@
             try
             {
                 string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
+                Gdk.Key key = args.Event.Key;
                 IGridCell cell = GetCurrentCell;
                 if (cell == null)
                     return;
@@ -1079,17 +1080,17 @@
                 if (keyName == "ISO_Left_Tab")
                     keyName = "Tab";
                 bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                if (keyName == "Return" || keyName == "Tab")
+                if (keyName == "Return" || keyName == "Tab" || IsArrowKey(key))
                 {
                     int nextRow = rowIdx;
                     int numCols = DataSource != null ? DataSource.Columns.Count : 0;
                     int nextCol = colIdx;
-                    if (shifted)
+                    if (shifted || key == Gdk.Key.Left || key == Gdk.Key.Up)
                     {
                         // Move backwards
                         do
                         {
-                            if (keyName == "Tab")
+                            if (keyName == "Tab" || key == Gdk.Key.Left)
                             {
                                 // Move horizontally
                                 if (--nextCol < 0)
@@ -1099,7 +1100,7 @@
                                     nextCol = numCols - 1;
                                 }
                             }
-                            else if (keyName == "Return")
+                            else if (keyName == "Return" || key == Gdk.Key.Up)
                             {
                                 // Move vertically
                                 if (--nextRow < 0)
@@ -1116,7 +1117,7 @@
                     {
                         do
                         {
-                            if (keyName == "Tab")
+                            if (keyName == "Tab" || key == Gdk.Key.Right)
                             {
                                 // Move horizontally
                                 if (++nextCol >= numCols)
@@ -1126,7 +1127,7 @@
                                     nextCol = 0;
                                 }
                             }
-                            else if (keyName == "Return")
+                            else if (keyName == "Return" || key == Gdk.Key.Down)
                             {
                                 // Move vertically
                                 if (++nextRow >= RowCount)
@@ -1249,6 +1250,16 @@
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Tests if a <see cref="Gdk.Key"/> is an arrow key.
+        /// </summary>
+        /// <param name="key">Key to be tested.</param>
+        /// <returns>True iff the key is an arrow key.</returns>
+        private bool IsArrowKey(Gdk.Key key)
+        {
+            return key == Gdk.Key.Up || key == Gdk.Key.Down || key == Gdk.Key.Left || key == Gdk.Key.Right;
         }
 
         /// <summary>
