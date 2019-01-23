@@ -316,7 +316,7 @@
 
             // Get a complete list of all models in this file.
             List<IModel> allModels = Apsim.ChildrenRecursivelyVisible(this.ApsimXFile);
-
+            allModels.Insert(0, ApsimXFile);
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
             if (this.view.Tree.SelectedNode == string.Empty)
