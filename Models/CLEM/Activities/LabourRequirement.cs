@@ -50,6 +50,7 @@ namespace Models.CLEM.Activities
         public LabourRequirement()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            this.SetDefaults();
         }
 
         /// <summary>
@@ -98,6 +99,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Allow labour shortfall to affect activity")]
         [Required]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool LabourShortfallAffectsActivity { get; set; }
 
         /// <summary>
@@ -119,13 +121,13 @@ namespace Models.CLEM.Activities
             Labour lab = Resources.GetResourceGroupByType(typeof(Labour)) as Labour;
             if(lab == null)
             {
-                Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][a=" +this.Name+"] No labour resorces in simulation. Labour requirement will be ignored.");
+                Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" +this.Name+"] No labour resorces in simulation. Labour requirement will be ignored.");
             }
             else
             {
                 if(lab.Children.Count <= 0)
                 {
-                    Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][a=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.");
+                    Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.");
                 }
             }
 
