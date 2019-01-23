@@ -201,7 +201,7 @@ namespace Models.Utilities
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.GetPackage.R"))
                 using (StreamReader reader = new StreamReader(s))
                     script = reader.ReadToEnd();
-            string tempFileName = Path.GetTempFileName();
+            string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             File.Delete(tempFileName);
             string rFileName = Path.ChangeExtension(tempFileName, ".R");
             File.WriteAllText(rFileName, script);
