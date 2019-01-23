@@ -641,9 +641,9 @@ namespace UserInterface.Presenters
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
                                                      true);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphSummary.FormatTitle(title);
             this.weatherDataView.GraphSummary.Refresh();
         }
@@ -664,8 +664,8 @@ namespace UserInterface.Presenters
                                                        Color.LightSkyBlue,
                                                        false);
 
-            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphRainfall.FormatTitle(title);
             this.weatherDataView.GraphRainfall.Refresh();
         }
@@ -710,8 +710,8 @@ namespace UserInterface.Presenters
                                                  true);
             }
 
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphMonthlyRainfall.FormatTitle(title);
             this.weatherDataView.GraphMonthlyRainfall.Refresh();
         }
@@ -752,8 +752,8 @@ namespace UserInterface.Presenters
                                                      MarkerSizeType.Normal,
                                                      true);
 
-            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Left, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Left, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphTemperature.FormatTitle(title);
             this.weatherDataView.GraphTemperature.Refresh();
         }
@@ -802,9 +802,9 @@ namespace UserInterface.Presenters
                                                      MarkerSizeType.Normal,
                                                      true);
 
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
         }

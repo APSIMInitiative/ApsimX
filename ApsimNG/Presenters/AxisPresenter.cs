@@ -52,10 +52,12 @@ namespace UserInterface.Presenters
             this.view.MinimumChanged += OnMinimumChanged;
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
+            this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
 
             // Tell the view to populate the axis.
             PopulateView();
         }
+
 
         /// <summary>
         /// Detach the model from the view.
@@ -71,6 +73,7 @@ namespace UserInterface.Presenters
             view.MinimumChanged -= OnMinimumChanged;
             view.MaximumChanged -= OnMaximumChanged;
             view.IntervalChanged -= OnIntervalChanged;
+            view.CrossesAtZeroChanged -= OnCrossesAtZeroChanged;
         }
 
         /// <summary>
@@ -80,6 +83,7 @@ namespace UserInterface.Presenters
         {
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
+            view.CrossesAtZero = axis.CrossesAtZero;
             view.SetMinimum(axis.Minimum, axis.DateTimeAxis);
             view.SetMaximum(axis.Maximum, axis.DateTimeAxis);
             view.SetInterval(axis.Interval, axis.DateTimeAxis);
@@ -176,6 +180,23 @@ namespace UserInterface.Presenters
             try
             {
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "Interval", view.Interval));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// User has changed the crosses at zero checkbox,
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCrossesAtZeroChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "CrossesAtZero", view.CrossesAtZero));
             }
             catch (Exception err)
             {

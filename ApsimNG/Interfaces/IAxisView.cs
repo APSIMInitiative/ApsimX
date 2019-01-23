@@ -37,6 +37,11 @@ namespace UserInterface.Interfaces
         /// Invoked when the user has changed the interval field
         /// </summary>
         event EventHandler IntervalChanged;
+        
+        /// <summary>
+        /// Invoked when the user has changed the crosses at zero field
+        /// </summary>
+        event EventHandler CrossesAtZeroChanged;
 
         /// <summary>
         /// Gets or sets the title.
@@ -62,6 +67,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets the axis scale interval. double.Nan for auto scale
         /// </summary>
         double Interval { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        bool CrossesAtZero { get; set; }
 
         /// <summary>
         /// Sets the text in the minimum textbox.
