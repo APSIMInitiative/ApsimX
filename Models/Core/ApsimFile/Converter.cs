@@ -95,9 +95,9 @@
         /// <returns>True if model was changed.</returns>
         private static bool EnsureSoilHasInitWaterAndSample(JObject root)
         {
-            JToken rootType = root["$type"];
+            string rootType = JsonUtilities.Type(root, true);
 
-            if (rootType != null && rootType.ToString().Contains(".Soil"))
+            if (rootType != null && rootType == "Models.Soils.Soil")
             {
                 JArray soilChildren = root["Children"] as JArray;
                 if (soilChildren != null && soilChildren.Count > 0)
