@@ -69,6 +69,14 @@ namespace Models.CLEM.Activities
                 grazeStore = GrazeFoodStoreName.Split('.').Last();
                 var foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
+            else
+            {
+                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
+                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                {
+                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
+                }
+            }
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
