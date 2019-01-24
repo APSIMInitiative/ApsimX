@@ -148,18 +148,6 @@ namespace Models.Soils
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
-            if (Apsim.Children(this, typeof(ISoilTemperature)).Count < 1)
-            {
-                CERESSoilTemperature temperature = new CERESSoilTemperature();
-                Children.Add(temperature);
-                temperature.Parent = this;
-            }
-            if (Apsim.Children(this, typeof(INutrient)).Count < 1)
-            {
-                SoilNitrogen nitrogen = new SoilNitrogen();
-                Children.Add(nitrogen);
-                nitrogen.Parent = this;
-            }
             FindChildren();
         }
 
