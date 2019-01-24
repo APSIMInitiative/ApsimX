@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
                 foreach (var ind in herd)
                 {
                     aESum += ind.AdultEquivalent;
-                    saleValue += ind.BreedParams.ValueofIndividual(ind, false);
+                    saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     saleWeight += ind.Weight;
                     ruminantHerd.RemoveRuminant(ind);
                 }
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                                 head++;
                                 aESum += ind.AdultEquivalent;
                                 load450kgs += ind.Weight / 450.0;
-                                saleValue += ind.BreedParams.ValueofIndividual(ind, false);
+                                saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                                 saleWeight += ind.Weight;
                                 ruminantHerd.RemoveRuminant(ind);
 
@@ -211,7 +211,8 @@ namespace Models.CLEM.Activities
                             throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
                     }
                     expenseRequest.Reason = item.Name;
-                    bankAccount.Remove(expenseRequest);
+                    // uses bank account specified in the RuminantActivityFee
+                    item.BankAccount.Remove(expenseRequest);
                 }
 
                 // add and remove from bank
@@ -249,11 +250,12 @@ namespace Models.CLEM.Activities
                     double value = 0;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
                     {
-                        value = newind.BreedParams.SirePrice;
+                        value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase,  RuminantFilterParameters.BreedingSire, "true");
+//                        value = newind.BreedParams.SirePrice;
                     }
                     else
                     {
-                        value = newind.BreedParams.ValueofIndividual(newind, true);
+                        value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
                     }
                     if (cost + value <= fundsAvailable & fundsexceeded == false)
                     {
@@ -349,11 +351,12 @@ namespace Models.CLEM.Activities
                                 double value = 0;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
                                 {
-                                    value = ind.BreedParams.SirePrice;
+                                    value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.BreedingSire, "true");
+//                                    value = ind.BreedParams.SirePrice;
                                 }
                                 else
                                 {
-                                    value = ind.BreedParams.ValueofIndividual(ind, true);
+                                    value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
                                 }
                                 if (cost + value <= fundsAvailable & fundsexceeded == false)
                                 {
