@@ -139,8 +139,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Land.LastTransaction.Gain as Gain</string>
             <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Land.LastTransaction.Activity as Activity</string>
             <string>[Resources].Land.LastTransaction.Reason as Reason</string>
@@ -166,8 +166,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Loss as Loss</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Gain as Gain</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
@@ -210,7 +210,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>AnimalFoodLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Credit</YFieldName>
+            <YFieldName>Loss</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -233,7 +233,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>AnimalFoodLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Credit</YFieldName>
+            <YFieldName>Loss</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -450,8 +450,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Finances.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Finances.LastTransaction.Gain as Gain</string>
             <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
             <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
@@ -488,8 +488,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Loss as Loss</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Gain as Gain</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
@@ -507,8 +507,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Land.LastTransaction.Gain as Gain</string>
             <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Land.LastTransaction.Activity as Activity</string>
             <string>[Resources].Land.LastTransaction.Reason as Reason</string>
@@ -558,7 +558,7 @@
     <Graph>
       <Name>Graph_AnimalFoodStore</Name>
       <Series>
-        <Name>Credit</Name>
+        <Name>Loss</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -573,14 +573,14 @@
         <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Credit</YFieldName>
+        <YFieldName>Loss</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Debit</Name>
+        <Name>Gain</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -595,7 +595,7 @@
         <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Debit</YFieldName>
+        <YFieldName>Gain</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -927,8 +927,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Finances.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Finances.LastTransaction.Gain as Gain</string>
             <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
             <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
@@ -973,8 +973,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Loss as Loss</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Gain as Gain</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
@@ -992,8 +992,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Land.LastTransaction.Gain as Gain</string>
             <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Land.LastTransaction.Activity as Activity</string>
             <string>[Resources].Land.LastTransaction.Reason as Reason</string>
@@ -1058,7 +1058,7 @@
     <Graph>
       <Name>Graph_AnimalFoodStore</Name>
       <Series>
-        <Name>Credit</Name>
+        <Name>Loss</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -1073,14 +1073,14 @@
         <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Credit</YFieldName>
+        <YFieldName>Loss</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Debit</Name>
+        <Name>Gain</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Enabled>true</Enabled>
         <ReadOnly>false</ReadOnly>
@@ -1095,7 +1095,7 @@
         <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Debit</YFieldName>
+        <YFieldName>Gain</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1421,8 +1421,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Finances.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Finances.LastTransaction.Gain as Gain</string>
             <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
             <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
@@ -1459,8 +1459,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Loss as Loss</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Gain as Gain</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
@@ -1478,8 +1478,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Land.LastTransaction.Gain as Gain</string>
             <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Land.LastTransaction.Activity as Activity</string>
             <string>[Resources].Land.LastTransaction.Reason as Reason</string>
@@ -1550,7 +1550,7 @@
         <Checkpoint>Current</Checkpoint>
         <TableName>AnimalFoodStoreLedger</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Credit</YFieldName>
+        <YFieldName>Loss</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1717,8 +1717,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Loss as Loss</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Gain as Gain</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
@@ -1736,8 +1736,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Land.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Land.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Land.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Land.LastTransaction.Gain as Gain</string>
             <string>[Resources].Land.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Land.LastTransaction.Activity as Activity</string>
             <string>[Resources].Land.LastTransaction.Reason as Reason</string>

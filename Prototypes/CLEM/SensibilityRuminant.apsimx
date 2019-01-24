@@ -367,8 +367,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -388,8 +388,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -1204,8 +1204,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -1225,8 +1225,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -2057,8 +2057,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -2078,8 +2078,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -2897,8 +2897,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -2918,8 +2918,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -4056,8 +4056,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -4077,8 +4077,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -5073,8 +5073,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -5094,8 +5094,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -6226,8 +6226,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -6247,8 +6247,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -7290,8 +7290,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -7311,8 +7311,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -8416,8 +8416,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -8437,8 +8437,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -9513,8 +9513,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -9534,8 +9534,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"
@@ -10565,8 +10565,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"
@@ -10586,8 +10586,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].AnimalFoodStore.LastTransaction.Credit as Credit",
-                    "[Resources].AnimalFoodStore.LastTransaction.Debit as Debit",
+                    "[Resources].AnimalFoodStore.LastTransaction.Loss as Loss",
+                    "[Resources].AnimalFoodStore.LastTransaction.Gain as Gain",
                     "[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource",
                     "[Resources].AnimalFoodStore.LastTransaction.Activity as Activity",
                     "[Resources].AnimalFoodStore.LastTransaction.Reason as Reason"

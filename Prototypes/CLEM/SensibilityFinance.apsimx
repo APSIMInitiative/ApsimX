@@ -376,8 +376,8 @@
                   "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "[Resources].Finances.LastTransaction.Credit as Credit",
-                    "[Resources].Finances.LastTransaction.Debit as Debit",
+                    "[Resources].Finances.LastTransaction.Loss as Loss",
+                    "[Resources].Finances.LastTransaction.Gain as Gain",
                     "[Resources].Finances.LastTransaction.ResourceType as Resource",
                     "[Resources].Finances.LastTransaction.Activity as Activity",
                     "[Resources].Finances.LastTransaction.Reason as Reason"

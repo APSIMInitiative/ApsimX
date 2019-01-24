@@ -225,8 +225,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Finances.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Finances.LastTransaction.Gain as Gain</string>
             <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
             <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
@@ -242,8 +242,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].Products.LastTransaction.Credit as Credit</string>
-            <string>[Resources].Products.LastTransaction.Debit as Debit</string>
+            <string>[Resources].Products.LastTransaction.Loss as Loss</string>
+            <string>[Resources].Products.LastTransaction.Gain as Gain</string>
             <string>[Resources].Products.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].Products.LastTransaction.Activity as Activity</string>
             <string>[Resources].Products.LastTransaction.Reason as Reason</string>
@@ -279,8 +279,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
-            <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Loss as Loss</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Gain as Gain</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
@@ -335,7 +335,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>FinancesLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Credit</YFieldName>
+            <YFieldName>Loss</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -359,7 +359,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>FinancesLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Debit</YFieldName>
+            <YFieldName>Gain</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -404,7 +404,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>ProductsLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Credit</YFieldName>
+            <YFieldName>Loss</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -427,7 +427,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>ProductsLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Debit</YFieldName>
+            <YFieldName>Gain</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -472,7 +472,7 @@
             <Checkpoint>Current</Checkpoint>
             <TableName>AnimalFoodStoreLedger</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Debit</YFieldName>
+            <YFieldName>Gain</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

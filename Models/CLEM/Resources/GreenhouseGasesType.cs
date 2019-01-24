@@ -102,8 +102,8 @@ namespace Models.CLEM.Resources
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction();
-                details.Debit = addAmount;
-                details.DebitStandardised = addAmount * GlobalWarmingPotential;
+                details.Gain = addAmount;
+                details.GainStandardised = addAmount * GlobalWarmingPotential;
                 details.Activity = activity.Name;
                 details.ActivityType = activity.GetType().Name;
                 details.Reason = reason;
@@ -132,8 +132,8 @@ namespace Models.CLEM.Resources
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Credit = amountRemoved;
-            details.CreditStandardised = amountRemoved * GlobalWarmingPotential;
+            details.Loss = amountRemoved;
+            details.LossStandardised = amountRemoved * GlobalWarmingPotential;
             details.Activity = request.ActivityModel.Name;
             details.ActivityType = request.ActivityModel.GetType().Name;
             details.Reason = request.Reason;
