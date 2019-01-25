@@ -158,13 +158,13 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
-                        20.0,
+                        2.0,
+                        30.0,
                         35.0
                       ],
                       "Y": [
                         0.0,
-                        17.0,
+                        28.0,
                         0.0
                       ],
                       "Name": "XYPairs",
@@ -1323,7 +1323,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 25.0,
+                  "FixedValue": 22.0,
                   "Units": null,
                   "Name": "Plastochron",
                   "Children": [],
@@ -1352,7 +1352,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 3.0,
                           "Units": null,
                           "Name": "PrimordiaAtEmergence",
                           "Children": [],
@@ -6521,10 +6521,13 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 300,100",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 450,200",
+                "",
+                "// First leaf 2 Phyllochrons",
+                "// last leaves at 0.55 Phyllochron",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=76,38,38,19"
+                "[Structure].Phyllochron.XYPairs.Y=90,47,47,26"
               ],
               "Name": "Archer",
               "Children": [],
@@ -6536,9 +6539,9 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 300,200",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=60,57,57,29"
+                "[Structure].Phyllochron.XYPairs.Y=100,55,55,30"
               ],
               "Name": "ATR_Wahoo",
               "Children": [],
@@ -6549,8 +6552,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1"
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 275,275",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=100,52,52,29"
               ],
               "Name": "NS_Diamond",
               "Children": [],
@@ -6572,18 +6578,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
-              ],
-              "Name": "44Y90_CL",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
               ],
               "Name": "K50055",
               "Children": [],
@@ -6594,7 +6593,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=100,51,51,28"
               ],
               "Name": "Arazzo",
               "Children": [],
@@ -6605,7 +6608,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=96,48,48,27"
               ],
               "Name": "AV_Zircon",
               "Children": [],
@@ -6616,7 +6623,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=110,55,55,30"
               ],
               "Name": "ATR_Bonito",
               "Children": [],
@@ -6627,7 +6638,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
               ],
               "Name": "Sensation",
               "Children": [],
@@ -6638,7 +6653,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=100,51,51,28"
               ],
               "Name": "Victory_7001_CL",
               "Children": [],
@@ -6649,7 +6668,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=100,49,49,27"
               ],
               "Name": "45Y91_CL",
               "Children": [],
@@ -6660,10 +6683,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,200",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 375,10",
+                "",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=60,57,57,29"
+                "[Structure].Phyllochron.XYPairs.Y=100,49,49,27"
               ],
               "Name": "ATR_Stingray",
               "Children": [],
@@ -6677,7 +6701,7 @@
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=60,57,57,29"
+                "[Structure].Phyllochron.XYPairs.Y=100,51,51,28"
               ],
               "Name": "Hyola_970_CL",
               "Children": [],
@@ -6691,7 +6715,21 @@
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=60,57,57,29"
+                "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
+              ],
+              "Name": "Hyola_971_CL",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
+                "[Structure].Phyllochron.XYPairs.Y=94,47,47,26"
               ],
               "Name": "Oscar",
               "Children": [],
@@ -6704,24 +6742,11 @@
               "Command": [
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=60,57,57,29"
+                "[Structure].Phyllochron.XYPairs.Y=100,51,51,28"
               ],
               "Name": "AV_Garnet",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
-                "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=60,57,57,29"
-              ],
-              "Name": "Hyola_971_CL",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8397,7 +8422,7 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[SowingRule].Script.CultivarName=Archer,ATR_Wahoo,ATR_Stingray,NS_Diamond"
+                        "[SowingRule].Script.CultivarName=Archer,ATR_Wahoo,ATR_Stingray,NS_Diamond,ATR_Bonito"
                       ],
                       "Name": "Cv",
                       "Children": [],
@@ -10194,7 +10219,7 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[SowingRule].Script.CultivarName=Archer,ATR_Wahoo,ATR_Stingray,NS_Diamond,Hyola_970_CL,Hyola_971_CL,Oscar,AV_Garnet"
+                        "[SowingRule].Script.CultivarName=Archer,ATR_Wahoo,ATR_Stingray,NS_Diamond,Hyola_970_CL,Hyola_971_CL,Oscar,AV_Garnet,ATR_Bonito"
                       ],
                       "Name": "Cv",
                       "Children": [],
@@ -11861,7 +11886,7 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[SowingRule].Script.CultivarName=Archer,ATR_Wahoo,ATR_Stingray,NS_Diamond"
+                        "[SowingRule].Script.CultivarName=Archer,ATR_Wahoo,ATR_Stingray,NS_Diamond,ATR_Bonito"
                       ],
                       "Name": "Cv",
                       "Children": [],
@@ -13581,6 +13606,84 @@
                   ],
                   "LegendPosition": 3,
                   "DisabledSeries": [],
+                  "Name": "All Cultivars PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObservedLeafAppearance",
+                      "XFieldName": "Observed.Canola.Structure.LeafTipsAppeared",
+                      "YFieldName": "Predicted.Canola.Structure.LeafTipsAppeared",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
                   "Name": "Archer PvsO",
                   "Children": [
                     {
@@ -14153,6 +14256,874 @@
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": "[Predicted.Cv]=\"Oscar\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Bonito PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObservedLeafAppearance",
+                      "XFieldName": "Observed.Canola.Structure.LeafTipsAppeared",
+                      "YFieldName": "Predicted.Canola.Structure.LeafTipsAppeared",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Bonito\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "GreenBud PvO",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "All Cultivars PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Archer PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Archer\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Wahoo  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Wahoo\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Stingray  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Stingray\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "NS_Diamond  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"NS_Diamond\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "AV_Garnet  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"AV_Garnet\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Hyola_970_CL PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Hyola_970_CL\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Hyola_971_CL PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Hyola_971_CL\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Oscar PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Oscar\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Bonito PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Bonito\"",
                       "Name": "Predicted",
                       "Children": [
                         {
