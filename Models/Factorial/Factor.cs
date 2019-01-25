@@ -235,11 +235,6 @@ namespace Models.Factorial
 
                 if (Specifications.Count == 1)
                 {
-                    foreach (IModel newModel in Children)
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
-                else
-                {
                     foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
                         pairs.Add(new PathValuesPair() { path = specification, value = newModel });
                 }
