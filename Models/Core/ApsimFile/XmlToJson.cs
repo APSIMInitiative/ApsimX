@@ -187,7 +187,10 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
-                    newRoot[name] = newObject;
+                    if (newObject.Children().Count() == 1 && newObject.First.Path == "#text")
+                        newRoot[name] = newObject.First.First;
+                    else
+                        newRoot[name] = newObject;
                 }
                 else
                     AddNewChild(obj, newRoot);
@@ -273,9 +276,8 @@ namespace Models.Core.ApsimFile
             string propertyName = property.Name;
             if (propertyName == "@Version")
                 propertyName = "Version";
-            // Old memo have #text, we don't them.
-            if (propertyName == "#text")
-                return;
+            if (propertyName == "#text" && property.Path.Contains("Memo"))
+                return; // Old memo have #text, we don't want them.
 
             if (!propertyName.StartsWith("@"))
             {
