@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
@@ -33,7 +34,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
         //IHasWaterDemand, removing to see if it's necessary
 
@@ -47,6 +48,10 @@ namespace Models.PMF.Organs
 
         #region Canopy interface
 
+        /// <summary>Gets the LAI</summary>
+        [Units("m^2/m^2")]
+        public double DltLAI { get; set; }
+        
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
         public double LAI { get; set; }
@@ -89,6 +94,11 @@ namespace Models.PMF.Organs
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
+
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent { get; set; } = false;
 
         #endregion
 
@@ -235,6 +245,7 @@ namespace Models.PMF.Organs
                 return 0.0;
             }
         }
+        private double SowingDensity { get; set; }
 
         private bool LeafInitialised = false;
         #endregion
@@ -271,6 +282,11 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 LeafInitialised = true;
+                if(Culms.Count == 0)
+                {
+                    //first culm is the main culm
+                    AddCulm(new CulmParameters() { Density = SowingDensity });
+                }
             }
         }
 
@@ -286,10 +302,9 @@ namespace Models.PMF.Organs
             culm.Proportion = parameters.Proportion;
             culm.LeafAtAppearance = parameters.LeafAtAppearance;
             culm.VerticalAdjustment = parameters.VerticalAdjustment;
-
+            culm.Density = SowingDensity;
 
             Culms.Add(culm);
-
         }
 
         /// <summary>Clears this instance.</summary>
@@ -310,7 +325,7 @@ namespace Models.PMF.Organs
             LAI = 0;
 
             Culms = new List<Culm>();
-
+        
             LeafInitialised = false;
             laiEqlbLightTodayQ = new Queue<double>(10);
             laiEqlbLightTodayQ.Clear();
@@ -334,12 +349,16 @@ namespace Models.PMF.Organs
             {
 
                 //FRGR = FRGRFunction.Value();
-                if (CoverFunction == null && ExtinctionCoefficientFunction == null)
-                    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1));
+                //if (CoverFunction == null && ExtinctionCoefficientFunction == null)
+                //    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
+                //if (CoverFunction != null)
+                //    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1));
                 if (LAIFunction != null)
-                    LAI = LAIFunction.Value();
+                    LAI = LAIFunction.Value(); //doesn't need to be calculated here as it is dne at the ed of the day
+
+                var dltPotentialLAI = 0.0;
+                dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
+                DltLAI = dltPotentialLAI;
 
                 Height = HeightFunction.Value();
 
@@ -518,7 +537,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive) return;
+            // if (!parentPlant.IsAlive) return; wtf
             if (!Plant.IsAlive) return;
             if (!LeafInitialised) return;   
 
@@ -901,6 +920,8 @@ namespace Models.PMF.Organs
                 Live.StorageWt = 0.0;
                 Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
                 Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+
+                SowingDensity = data.Population;
             }
         }
 

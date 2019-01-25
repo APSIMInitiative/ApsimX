@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.Interfaces;
 using Models.PMF.Organs;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.PMF.Struct
 {
@@ -124,19 +125,7 @@ namespace Models.PMF.Struct
                 else
                 {
                     //finalLeafNo is calculated upon reference to it as a function
-                    //calcLeafAppearance
-                    double dltLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(thermalTime.Value(), phyllochron.Value(), 0), 0.0, remainingLeaves);
-
-                    var newLeafNo = CurrentLeafNo + dltLeafAppeared;
-
-                    var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
-                    if (newLeafAppeared)
-                        calcTillerAppearance((int)Math.Floor(newLeafNo));
-                    CurrentLeafNo = newLeafNo;
-                    //foreach (culm)
-                    //{
-                    //    culm.updateCulmValues(dltLeafNo)
-                    //}
+                    calcLeafAppearance();
                 }
             }
         }
@@ -155,8 +144,25 @@ namespace Models.PMF.Struct
         // 6. Public methods
         //-------------------------------------------------------------------------------------------
 
+            /// <summary>Calculate the number of new leaf that will appear today.</summary>
+        void calcLeafAppearance()
+        {
+            double dltNewLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(thermalTime.Value(), phyllochron.Value(), 0), 0.0, remainingLeaves);
+            var newLeafNo = CurrentLeafNo + dltNewLeafAppeared;
+            var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
+            if (newLeafAppeared)
+            {
+                calcCulmAppearance((int)Math.Floor(newLeafNo));
+            }
+            var updatedFinalLeaf = finalLeafNumber.Value();
+            CurrentLeafNo = newLeafNo;
+            for (var i = 0; i < leaf.Culms.Count; ++i)
+            {
+                leaf.Culms[i].UpdateLeafNumber(dltNewLeafAppeared, updatedFinalLeaf);
+            }
+        }
         /// <summary>Clears this instance.</summary>
-        void calcTillerAppearance(int newLeafNo)
+        void calcCulmAppearance(int newLeafNo)
         {
             //if there are still more tillers to add
             //and the newleaf is greater than 3
