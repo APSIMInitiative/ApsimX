@@ -94,7 +94,8 @@
             "[Canola].Phenology.EmergenceDAS",
             "[Canola].Phenology.FloralInitiationDAS",
             "[Canola].Phenology.GreenBudDAS",
-            "[Canola].Phenology.StartFloweringDAS"
+            "[Canola].Phenology.StartFloweringDAS",
+            "[Canola].Phenology.CumulativeVernalTime"
           ],
           "EventNames": [
             "[Canola].Harvesting"
@@ -1323,7 +1324,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 22.0,
+                  "FixedValue": 40.0,
                   "Units": null,
                   "Name": "Plastochron",
                   "Children": [],
@@ -6538,10 +6539,10 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 300,200",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=100,55,55,30"
+                "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
               ],
               "Name": "ATR_Wahoo",
               "Children": [],
@@ -6553,10 +6554,10 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 275,275",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 350,275",
                 "",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=100,52,52,29"
+                "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
               ],
               "Name": "NS_Diamond",
               "Children": [],
@@ -6623,11 +6624,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 200,1",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 300,200",
                 "",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
-                "[Structure].Phyllochron.XYPairs.Y=110,55,55,30"
+                "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
               ],
               "Name": "ATR_Bonito",
               "Children": [],
@@ -6683,8 +6684,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,200",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 375,10",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 350,200",
                 "",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
                 "[Structure].Phyllochron.XYPairs.Y=100,49,49,27"
@@ -6698,8 +6699,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,8,12,20,40",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 2500,2500,1200,600,200",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
                 "[Structure].Phyllochron.XYPairs.Y=100,51,51,28"
               ],
@@ -6712,8 +6713,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,8,12,20,40",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 2500,2500,1200,600,200",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
                 "[Structure].Phyllochron.XYPairs.Y=100,50,50,28"
               ],
@@ -6726,8 +6727,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 400,350",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
                 "[Structure].Phyllochron.XYPairs.Y=94,47,47,26"
               ],
@@ -6740,8 +6741,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,25",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 238,100",
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,20",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 450,350",
                 "",
                 "[Structure].Phyllochron.XYPairs.X=2,3,6,7",
                 "[Structure].Phyllochron.XYPairs.Y=100,51,51,28"
@@ -14365,6 +14366,862 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
+              "Name": "FloralInitiation PvO",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "All Cultivars PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": true
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "All Cultivars ErrorvsVern",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Predicted.Canola.Phenology.CumulativeVernalTime",
+                      "YFieldName": "Pred-Obs.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Hyola_971_CL\"",
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Archer PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Archer\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Wahoo  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Wahoo\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Stingray  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Stingray\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "NS_Diamond  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"NS_Diamond\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "AV_Garnet  PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"AV_Garnet\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Hyola_970_CL PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": "TOS",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Hyola_970_CL\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Hyola_971_CL PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Hyola_971_CL\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "Oscar PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"Oscar\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "DisabledSeries": [],
+                  "Name": "ATR_Bonito PvsO",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Cv]=\"ATR_Bonito\"",
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
               "Name": "GreenBud PvO",
               "Children": [
                 {
@@ -15155,7 +16012,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
-              "Name": "FloralInitiation PvO",
+              "Name": "StartFlowering PvO",
               "Children": [
                 {
                   "$type": "Models.Graph.Graph, Models",
@@ -15203,8 +16060,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15281,8 +16138,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.GreenBudDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.GreenBudDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15359,8 +16216,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15437,8 +16294,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15515,8 +16372,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15593,8 +16450,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15671,8 +16528,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15749,8 +16606,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15827,8 +16684,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -15905,8 +16762,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Canola.Phenology.FloralInitiationDAS",
-                      "YFieldName": "Predicted.Canola.Phenology.FloralInitiationDAS",
+                      "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
+                      "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
