@@ -10,6 +10,9 @@ namespace UserInterface.Views
     using System.Runtime.Serialization;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
+    using System.IO;
+    using System.Net.NetworkInformation;
+    using System.Net;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
@@ -104,10 +107,36 @@ namespace UserInterface.Views
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)
         {
-            //TODO: check internet connection and choose either local or remote help files
+            //Check internet connection and choose either local or online help files
             if(ModelHelpURL != "")
             {
-                System.Diagnostics.Process.Start(ModelHelpURL);
+                try
+                {
+                    string helpURL = "";
+                    // does offline help exist
+                    var directory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                    string offlinePath = Path.Combine(directory, "CLEM/Help");
+                    if (File.Exists(Path.Combine(offlinePath, "Default.htm")))
+                    {
+                        helpURL = "file:///" + offlinePath.Replace(@"\","/") + "/" + ModelHelpURL.TrimStart('/');
+                    }
+                    // is this application online for online help
+                    if(NetworkInterface.GetIsNetworkAvailable())
+                    {
+                        // set to web address
+                        // not currently available during development until web help is launched
+                        // helpURL = "http://www.apsim.info/CLEM/Help/" + ModelHelpURL.TrimStart('/');
+                    }
+                    if (helpURL == "")
+                    {
+                        helpURL = "http://www.apsim.info";
+                    }
+                    System.Diagnostics.Process.Start(helpURL);
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception(ex.Message); 
+                }
             }
         }
 

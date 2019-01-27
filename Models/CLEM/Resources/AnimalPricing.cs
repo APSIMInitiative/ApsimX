@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]
+    [Version(1, 0, 3, "Purchase and sales identifier used")]
     public class AnimalPricing: CLEMModel
     {
         /// <summary>
@@ -29,21 +30,8 @@ namespace Models.CLEM.Resources
         public AnimalPricing()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            this.SetDefaults();
         }
-
-        /// <summary>
-        /// Style of pricing animals
-        /// </summary>
-        [Description("Style of pricing animals")]
-        [Required]
-        public PricingStyleType PricingStyle { get; set; }
-
-        /// <summary>
-        /// Price of individual breeding sire
-        /// </summary>
-        [Description("Price of individual breeding sire")]
-        [Required, GreaterThanEqualValue(0)]
-        public double BreedingSirePrice { get; set; }
 
         /// <summary>
         /// Create a copy of the current instance
@@ -51,11 +39,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public AnimalPricing Clone()
         {
-            AnimalPricing clone = new AnimalPricing()
-            {
-                PricingStyle = this.PricingStyle,
-                BreedingSirePrice = this.BreedingSirePrice
-            };
+            AnimalPricing clone = new AnimalPricing();
 
             foreach (AnimalPriceGroup item in this.Children.OfType<AnimalPriceGroup>())
             {
@@ -72,10 +56,6 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Pricing is provided <span class=\"setvalue\">" + this.PricingStyle.ToString() + "</span></div>";
-            html += "\n<div class=\"activityentry\">";
-            html += "Male breeder purchase price is <span class=\"setvalue\">" + this.BreedingSirePrice.ToString("0.00") + "</span></div>";
             return html;
         }
 
@@ -102,7 +82,7 @@ namespace Models.CLEM.Resources
             string html = "";
             if(Apsim.Children(this, typeof(AnimalPriceGroup)).Count() >= 1)
             {
-                html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Purchase</th><th>Sell</th></tr>";
+                html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
             }
             else
             {

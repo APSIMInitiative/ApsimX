@@ -205,7 +205,7 @@ namespace Models.CLEM.Activities
                 var ah = Apsim.Find(this, typeof(ActivitiesHolder));
                 if(Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Purchased animals are currently placed in yards when managed pasture is available. These animals will not graze until mustered and will require feeding while in yards. This relates to [a={0}]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
         }

@@ -238,7 +238,7 @@ namespace UserInterface.Views
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
-
+         
             this.plot1.Model.LegendFontSize = FontSize;
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
@@ -565,13 +565,15 @@ namespace UserInterface.Views
         /// <param name="minimum">Minimum axis scale</param>
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
+        /// <param name="crossAtZero">Axis crosses at zero?</param>
         public void FormatAxis(
             Models.Graph.Axis.AxisType axisType,
             string title,
             bool inverted,
             double minimum,
             double maximum,
-            double interval)
+            double interval,
+            bool crossAtZero)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
@@ -580,6 +582,8 @@ namespace UserInterface.Views
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
+                oxyAxis.PositionAtZeroCrossing = crossAtZero;
+
                 if (inverted)
                 {
                     oxyAxis.StartPosition = 1;
