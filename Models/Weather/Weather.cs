@@ -76,6 +76,12 @@
         private int DiffuseFractionIndex;
 
         /// <summary>
+        /// The index of the DayLength column in the weather file
+        /// </summary>
+        private int dayLengthIndex;
+
+
+        /// <summary>
         /// A flag indicating whether this model should do a seek on the weather file
         /// </summary>
         private bool doSeek;
@@ -239,6 +245,13 @@
         public double DiffuseFraction { get; set; }
 
         /// <summary>
+        /// Gets or sets the Daylength value found in weather file or zero if not specified
+        /// </summary>
+        [XmlIgnore]
+        public double DayLength { get; set; }
+
+
+        /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
         [XmlIgnore]
@@ -340,7 +353,10 @@
         /// </summary>
         public double CalculateDayLength(double Twilight)
         {
+            if (dayLengthIndex == -1 && DayLength == -1)  // daylength is not set as column or constant
                 return MathUtilities.DayLength(this.clock.Today.DayOfYear, Twilight, this.Latitude);
+            else
+                return this.DayLength;
         }
 
         /// <summary>
@@ -359,6 +375,7 @@
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.DiffuseFractionIndex = 0;
+            this.dayLengthIndex = 0;
             this.CO2 = 350;
             this.AirPressure = 1010;
         }
@@ -465,6 +482,17 @@
             else
                 this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex]);
 
+            if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
+            {
+                if (this.reader.Constant("daylength") != null)
+                    this.DayLength = this.reader.ConstantAsDouble("daylength");
+                else
+                   this.DayLength = -1;
+            }
+            else
+                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex]);
+
+
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
         }
@@ -491,6 +519,7 @@
                     this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
+                    this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
 
                     if (this.maximumTemperatureIndex == -1)
                         if (this.reader == null || this.reader.Constant("maxt") == null)

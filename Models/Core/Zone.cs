@@ -30,7 +30,7 @@ namespace Models.Core
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
         [Description("Slope (deg)")]
-        public double Slope { get; set; }
+        virtual public double Slope { get; set; }
 
         /// <summary>Return a list of plant models.</summary>
         [XmlIgnore]

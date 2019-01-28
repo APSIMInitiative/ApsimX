@@ -124,7 +124,7 @@ namespace Models.CLEM.Resources
 
             this.amount = this.amount + addAmount;
             ResourceTransaction details = new ResourceTransaction();
-            details.Debit = addAmount;
+            details.Gain = addAmount;
             details.Activity = activity.Name;
             details.ActivityType = activity.GetType().Name;
             details.Reason = reason;
@@ -153,7 +153,7 @@ namespace Models.CLEM.Resources
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Credit = amountRemoved;
+            details.Loss = amountRemoved;
             details.Activity = request.ActivityModel.Name;
             details.ActivityType = request.ActivityModel.GetType().Name;
             details.Reason = request.Reason;

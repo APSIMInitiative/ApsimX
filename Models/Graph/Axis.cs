@@ -84,5 +84,10 @@ namespace Models.Graph
         /// axis.
         /// </summary>
         public bool DateTimeAxis { get; set; }
+
+        /// <summary>
+        /// Does this axis cross the other axis at the zero point?
+        /// </summary>
+        public bool CrossesAtZero { get; set; } = false;
     }
 }

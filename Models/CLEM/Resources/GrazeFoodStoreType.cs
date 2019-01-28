@@ -401,7 +401,7 @@ namespace Models.CLEM.Resources
                 biomassAddedThisYear += pool.Amount;
 
                 ResourceTransaction details = new ResourceTransaction();
-                details.Debit = pool.Amount;
+                details.Gain = pool.Amount;
                 details.Activity = activity.Name;
                 details.ActivityType = activity.GetType().Name;
                 details.Reason = reason;
@@ -486,7 +486,7 @@ namespace Models.CLEM.Resources
                 // report 
                 ResourceTransaction details = new ResourceTransaction();
                 details.ResourceType = this.Name;
-                details.Credit = request.Provided;
+                details.Loss = request.Provided;
                 details.Activity = request.ActivityModel.Name;
                 details.ActivityType = request.ActivityModel.GetType().Name;
                 details.Reason = request.Reason;
@@ -523,7 +523,7 @@ namespace Models.CLEM.Resources
                 // report 
                 ResourceTransaction details = new ResourceTransaction();
                 details.ResourceType = this.Name;
-                details.Debit = request.Provided * -1;
+                details.Gain = request.Provided * -1;
                 details.Activity = request.ActivityModel.Name;
                 details.ActivityType = request.ActivityModel.GetType().Name;
                 details.Reason = request.Reason;

@@ -118,6 +118,7 @@
     <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CustomQueryView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -219,6 +220,7 @@
     <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
+    <Compile Include="Presenters\CLEM\CustomQueryPresenter.cs" />
     <Compile Include="Presenters\CLEM\LabourAllocationPresenter.cs" />
     <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
     <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMView.cs" />
+    <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
@@ -446,6 +449,32 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcePricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItemMonthly.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityList.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CustomQuery.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityCutAndCarryLimiter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerPastureLevel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerResourceLevel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CLEMFolder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityOffFarm.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityTask.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourRequirement.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourRequirementNoUnitSize.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourRequirementSimple.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ManureActivityCollectAll.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ManureActivityCollectPaddock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureActivityBurn.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureActivityCutAndCarry.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportLabourRequirements.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceLedger.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityBuy.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityProcess.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantDestockGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroupMonthly.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Fodderbeet.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />

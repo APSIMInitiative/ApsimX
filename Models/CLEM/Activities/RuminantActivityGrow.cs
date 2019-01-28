@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// Gross energy content of forage (MJ/kg DM)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(18.4)]
-        [Description("Gross energy content of forage")]
+        [Description("Gross energy content of forage (MJ/kg DM)")]
         [Required]
         [Units("MJ/kg DM")]
         public double EnergyGross { get; set; }
@@ -708,7 +708,19 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "\n<div class=\"activityentry\">The gross energy content of forage is ";
+
+            if (EnergyGross == 0)
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>";
+            }
+            html += " MJ/kg dry matter</div>";
             return html;
+
         }
 
     }
