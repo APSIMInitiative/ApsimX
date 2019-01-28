@@ -178,7 +178,7 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             ResourceTransaction details = new ResourceTransaction();
-            details.Debit = 1;
+            details.Gain = 1;
             details.Activity = "Unknown";
             details.ActivityType = "Unknown";
             details.Reason = "Unknown";
@@ -210,7 +210,7 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = 1;
+            details.Loss = 1;
             details.Activity = "Unknown";
             details.ActivityType = "Unknown";
             details.Reason = "Unknown";

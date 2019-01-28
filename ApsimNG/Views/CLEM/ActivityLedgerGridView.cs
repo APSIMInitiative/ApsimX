@@ -25,6 +25,7 @@ namespace UserInterface.Views
         /// Gets or sets a value indicating whether the grid is read only
         /// </summary>
         bool ReadOnly { get; set; }
+
     }
 
     /// <summary>
@@ -52,6 +53,11 @@ namespace UserInterface.Views
         public Gtk.TreeView fixedcolview = null;
         private HBox hbox1 = null;
         private Gtk.Image image1 = null;
+        /// <summary>
+        /// The splitter between the fixed and non-fixed grids.
+        /// </summary>
+        private HPaned splitter = null;
+
 
         private Gdk.Pixbuf imagePixbuf = null;
 
@@ -68,6 +74,7 @@ namespace UserInterface.Views
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             gridview = (Gtk.TreeView)builder.GetObject("gridview");
             fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
+            splitter = (HPaned)builder.GetObject("hpaned1");
             image1 = (Gtk.Image)builder.GetObject("image1");
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
@@ -78,6 +85,8 @@ namespace UserInterface.Views
             fixedcolview.EnableSearch = false;
             image1.Pixbuf = null;
             image1.Visible = false;
+            splitter.Child1.Hide();
+            splitter.Child1.NoShowAll = true;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -657,8 +666,31 @@ namespace UserInterface.Views
                     Gridview_CursorChanged(this, EventArgs.Empty);
                     Gridview_Vadjustment_Changed(this, EventArgs.Empty);
                 }
+                if (!splitter.Child1.Visible)
+                {
+                    //Grid.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
+                    //Grid.Selection.Changed += GridviewCursorChanged;
+                    //fixedcolview.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
+                    //fixedcolview.Selection.Changed += FixedcolviewCursorChanged;
+                    //GridviewCursorChanged(this, EventArgs.Empty);
+                    //GridviewVadjustmentChanged(this, EventArgs.Empty);
+                }
+
                 fixedcolview.Model = gridmodel;
                 fixedcolview.Visible = true;
+                splitter.Child1.NoShowAll = false;
+                splitter.ShowAll();
+                splitter.PositionSet = true;
+                int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
+                if (splitter.Allocation.Width > 1)
+                {
+                    splitter.Position = Math.Min(fixedcolview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                }
+                else
+                {
+                    splitter.Position = fixedcolview.SizeRequest().Width + splitterWidth;
+                }
+
             }
             else
             {
@@ -667,6 +699,8 @@ namespace UserInterface.Views
                 fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
                 fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
                 fixedcolview.Visible = false;
+                splitter.Position = 0;
+                splitter.Child1.HideAll();
             }
             numberLockedCols = number;
         }
@@ -709,6 +743,31 @@ namespace UserInterface.Views
         private void GridView_Resize(object sender, EventArgs e)
         {
             ResizeControls();
+        }
+
+        /// <summary>
+        /// Does some cleanup work on the Grid.
+        /// </summary>
+        public void Dispose()
+        {
+            ClearGridColumns();
+            gridmodel.Dispose();
+            if (table != null)
+            {
+                table.Dispose();
+            }
+            _mainWidget.Destroyed -= MainWidgetDestroyed;
+            _owner = null;
+        }
+
+        /// <summary>
+        /// Does cleanup when the main widget is destroyed.
+        /// </summary>
+        /// <param name="sender">The sending object.</param>
+        /// <param name="e">The event arguments.</param>
+        private void MainWidgetDestroyed(object sender, EventArgs e)
+        {
+            Dispose();
         }
 
     }

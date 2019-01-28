@@ -394,8 +394,8 @@ namespace UserInterface.Commands
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
             // Format the axes.
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
             graph.BackColor = OxyPlot.OxyColors.White;
             graph.FontSize = 10;
             graph.Refresh();
