@@ -130,7 +130,7 @@ namespace Models.CLEM.Reporting
             base.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
 
-            if (EventNames is null)
+            if (EventNames[0] == "")
             {
                 events.Subscribe("[Clock].CLEMEndOfTimeStep", DoOutputEvent);
             }

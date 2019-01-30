@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
-            // decay N and DMD of pools and age by 1 month
+            // decay Amount and Moisture of pools and age by 1 month
             foreach (ManureStoreUncollected store in UncollectedStores)
             {
                 foreach (ManurePool pool in store.Pools)
