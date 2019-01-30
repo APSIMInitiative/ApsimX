@@ -683,6 +683,11 @@
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
     <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
     <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
+    <EmbeddedResource Include="Resources\ElementaryEffectEquation.png" />
+    <EmbeddedResource Include="Resources\MorrisGrid1.png" />
+    <EmbeddedResource Include="Resources\MorrisGrid2.png" />
+    <EmbeddedResource Include="Resources\MorrisGrid3.png" />
+    <EmbeddedResource Include="Resources\MorrisGrid4.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
