@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
-    public class RuminantActivityManage: CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
         /// Maximum number of breeders that can be kept
@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeders")]
         [Description("Number of age classes to distribute breeder purchases across")]
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, Range(1,4)]
+        [Required, Range(1, 4)]
         public int NumberOfBreederPurchaseAgeClasses { get; set; }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
 
-            if(12+(NumberOfBreederPurchaseAgeClasses-1)*12 >= MaximumBreederAge)
+            if (12 + (NumberOfBreederPurchaseAgeClasses - 1) * 12 >= MaximumBreederAge)
             {
                 string[] memberNames = new string[] { "NumberOfBreederPurchaseAgeClasses" };
                 results.Add(new ValidationResult("The number of age classes (12 months each) to spread breeder purchases across will exceed the maximum age of breeders. Reduce number of breeder age classes", memberNames));
@@ -275,7 +275,7 @@ namespace Models.CLEM.Activities
                 // Number of females
                 int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
                 int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleOldInHerd = herd.Where(a => a.Gender == Sex.Female & MaximumBreederAge - a.Age <= 12 & a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleOldInHerd = 0; // herd.Where(a => a.Gender == Sex.Female & MaximumBreederAge - a.Age <= 12 & a.SaleFlag == HerdChangeReason.None).Count();
                 int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && ((a as RuminantFemale).IsHeifer & a.SaleFlag == HerdChangeReason.None)).Count();
 
                 if (numberMaleSiresInHerd > MaximumSiresKept)
@@ -322,30 +322,34 @@ namespace Models.CLEM.Activities
                         {
                             // limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
                             double propOfBreeders = (double)numberFemaleBreedingInHerd / (double)MaximumBreedersKept;
+                            propOfBreeders = 1;
 
                             int sires = Convert.ToInt32(Math.Ceiling(Math.Ceiling(MaximumSiresKept * propOfBreeders)));
                             int numberToBuy = Math.Min(MaximumSiresPerPurchase, Math.Max(0, sires - numberMaleSiresInHerd));
 
                             for (int i = 0; i < numberToBuy; i++)
                             {
-                                RuminantMale newbull = new RuminantMale
+                                if (i < MaximumSiresPerPurchase)
                                 {
-                                    Location = grazeStore,
-                                    Age = 48,
-                                    Breed = this.PredictedHerdBreed,// breedParams.Breed;
-                                    HerdName = this.PredictedHerdName,
-                                    BreedingSire = true,
-                                    BreedParams = breedParams,
-                                    Gender = Sex.Male,
-                                    ID = 0, // ruminantHerd.NextUniqueID;
-                                    Weight = 450,
-                                    PreviousWeight = 450,
-                                    HighWeight = 450,
-                                    SaleFlag = HerdChangeReason.SirePurchase
-                                };
+                                    RuminantMale newbull = new RuminantMale
+                                    {
+                                        Location = grazeStore,
+                                        Age = 48,
+                                        Breed = this.PredictedHerdBreed,// breedParams.Breed;
+                                        HerdName = this.PredictedHerdName,
+                                        BreedingSire = true,
+                                        BreedParams = breedParams,
+                                        Gender = Sex.Male,
+                                        ID = 0, // ruminantHerd.NextUniqueID;
+                                        Weight = 450,
+                                        PreviousWeight = 450,
+                                        HighWeight = 450,
+                                        SaleFlag = HerdChangeReason.SirePurchase
+                                    };
 
-                                // add to purchase request list and await purchase in Buy/Sell
-                                ruminantHerd.PurchaseIndividuals.Add(newbull);
+                                    // add to purchase request list and await purchase in Buy/Sell
+                                    ruminantHerd.PurchaseIndividuals.Add(newbull);
+                                }
                             }
                         }
                     }
@@ -371,8 +375,7 @@ namespace Models.CLEM.Activities
                 // account for heifers already in the herd
                 excessHeifers += numberFemaleHeifersInHerd;
 
-                // surplus heifers to sell
-                if (excessHeifers > 0)
+                if (excessHeifers > 0) // surplus heifers to sell
                 {
                     foreach (var female in herd.Where(a => a.Gender == Sex.Female &&  (a as RuminantFemale).IsHeifer).Take(excessHeifers))
                     {
@@ -396,7 +399,7 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                else if (excessHeifers < 0)
+                else if (excessHeifers < 0) // shortfall heifers to buy
                 {
                     excessHeifers *= -1;
                     if ((foodStore == null) || (sufficientFood))
