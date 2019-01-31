@@ -216,10 +216,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalManage")]
         private void OnCLEMAnimalManage(object sender, EventArgs e)
         {
-            //List<Ruminant> localHerd = this.CurrentHerd();
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             // remove only the individuals that are affected by this activity.
+            // these are old purchases that were not made. This list will be regenerated in this method.
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed);
 
             List<Ruminant> herd = this.CurrentHerd(true);
@@ -256,6 +256,7 @@ namespace Models.CLEM.Activities
             // if management month
             if (this.TimingOK)
             {
+                // ensure pasture limits are ok before purchases
                 bool sufficientFood = true;
                 if (foodStore != null)
                 {
@@ -275,13 +276,17 @@ namespace Models.CLEM.Activities
                 // Number of females
                 int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
                 int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleOldInHerd = 0; // herd.Where(a => a.Gender == Sex.Female & MaximumBreederAge - a.Age <= 12 & a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && ((a as RuminantFemale).IsHeifer & a.SaleFlag == HerdChangeReason.None)).Count();
+
+                // these are females that will exceed max age and be sold in next 12 months
+                int numberFemaleOldInHerd = herd.Where(a => a.Gender == Sex.Female & (a.Age + 12 >= MaximumBreederAge) & a.SaleFlag == HerdChangeReason.None).Count();
+
+                // defined heifers here as weaned and will be a breeder in the next year
+                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && a.Weaned && ((a.Age - a.BreedParams.MinimumAge1stMating < 0) && (a.Age - a.BreedParams.MinimumAge1stMating > -12)) & a.SaleFlag == HerdChangeReason.None).Count();
 
                 if (numberMaleSiresInHerd > MaximumSiresKept)
                 {
                     // sell bulls
-                    // What rule? oldest first as they may be lost soonest
+                    // What rule? oldest first as they may be lost soonest?
                     int numberToRemove = numberMaleSiresInHerd - MaximumSiresKept;
                     if (numberToRemove > 0)
                     {
@@ -335,7 +340,7 @@ namespace Models.CLEM.Activities
                                     {
                                         Location = grazeStore,
                                         Age = 48,
-                                        Breed = this.PredictedHerdBreed,// breedParams.Breed;
+                                        Breed = this.PredictedHerdBreed,
                                         HerdName = this.PredictedHerdName,
                                         BreedingSire = true,
                                         BreedParams = breedParams,
@@ -356,28 +361,28 @@ namespace Models.CLEM.Activities
                 }
 
                 // FEMALES
-                // Breeding herd traded as heifers only
-                int excessHeifers = 0;
+                // Breeding herd sold as heifers only, purchased as breeders (>= minAge1stMating)
+                int excessBreeders = 0;
 
                 // get the mortality rate for the herd if available or assume zero
-                double mortalityRate = 0.0;
-                if(herd.Count()>0)
-                {
-                    mortalityRate = herd.FirstOrDefault().BreedParams.MortalityBase;
-                }
+                double mortalityRate = breedParams.MortalityBase;
 
                 // shortfall between actual and desired numbers of breeders (-ve for shortfall)
-                excessHeifers = numberFemaleBreedingInHerd - MaximumBreedersKept;
-                // add future cull for age + mortality base%
-                int numberDyingInNextYear = Convert.ToInt32((numberFemaleBreedingInHerd - numberFemaleOldInHerd) * mortalityRate) + numberFemaleOldInHerd;
-                excessHeifers -= numberDyingInNextYear;
+                excessBreeders = numberFemaleBreedingInHerd - MaximumBreedersKept;
+                // IAT-NABSA removes adjusts to account for the old animals that will be sold in the next year
+                // This is not required in CLEM as they have been sold in this method, and it wont be until this method is called again that the next lot are sold.
+                // Like IAT-NABSA we will account for mortality losses in the next year in our breeder purchases
+                int numberDyingInNextYear = Convert.ToInt32(numberFemaleBreedingInHerd * mortalityRate);
+                // adjust for future mortality
+                excessBreeders -= numberDyingInNextYear;
 
                 // account for heifers already in the herd
-                excessHeifers += numberFemaleHeifersInHerd;
+                // These are the next cohort that will become breeders in the next 12 months (before this method is called again)
+                excessBreeders += numberFemaleHeifersInHerd;
 
-                if (excessHeifers > 0) // surplus heifers to sell
+                if (excessBreeders > 0) // surplus heifers to sell
                 {
-                    foreach (var female in herd.Where(a => a.Gender == Sex.Female &&  (a as RuminantFemale).IsHeifer).Take(excessHeifers))
+                    foreach (var female in herd.Where(a => a.Gender == Sex.Female &&  (a as RuminantFemale).IsHeifer).Take(excessBreeders))
                     {
                         // if sell like males tag for grow out otherwise mark for sale
                         if (SellFemalesLikeMales)
@@ -392,16 +397,17 @@ namespace Models.CLEM.Activities
                             // tag for sale.
                             female.SaleFlag = HerdChangeReason.ExcessHeiferSale;
                         }
-                        excessHeifers--;
-                        if (excessHeifers == 0)
+                        excessBreeders--;
+                        if (excessBreeders == 0)
                         {
                             break;
                         }
                     }
                 }
-                else if (excessHeifers < 0) // shortfall heifers to buy
+                else if (excessBreeders < 0) // shortfall heifers to buy
                 {
-                    excessHeifers *= -1;
+                    double minBreedAge = breedParams.MinimumAge1stMating;
+                    excessBreeders *= -1;
                     if ((foodStore == null) || (sufficientFood))
                     {
                         // remove grow out heifers from grow out herd to replace breeders
@@ -410,8 +416,8 @@ namespace Models.CLEM.Activities
                             foreach (Ruminant female in herd.Where(a => a.Tags.Contains("GrowHeifer")).OrderByDescending(a => a.Age))
                             {
                                 female.Tags.Remove("GrowHeifer");
-                                excessHeifers--;
-                                if (excessHeifers == 0)
+                                excessBreeders--;
+                                if (excessBreeders == 0)
                                 {
                                     break;
                                 }
@@ -422,23 +428,22 @@ namespace Models.CLEM.Activities
                         foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & (a.SaleFlag == HerdChangeReason.AgeWeightSale | a.SaleFlag == HerdChangeReason.ExcessHeiferSale)).OrderByDescending(a => a.Age))
                         {
                             female.SaleFlag = HerdChangeReason.None;
-                            excessHeifers--;
-                            if (excessHeifers == 0)
+                            excessBreeders--;
+                            if (excessBreeders == 0)
                             {
                                 break;
                             }
                         }
 
                         // if still insufficient buy breeders.
-                        if (excessHeifers > 0 & (MaximumProportionBreedersPerPurchase > 0))
+                        if (excessBreeders > 0 & (MaximumProportionBreedersPerPurchase > 0))
                         {
-                            int ageOfHeifer = 0;
+                            int ageOfBreeder = 0;
 
-                            // buy mortality base% more to account for deaths before these individuals grow to breeding age
-                            // ceiling MaxProportion*MaxBreeders ensures at least one individual will set as limit. Important with small breeder herds.
+                            // IAT-NABSA had buy mortality base% more to account for deaths before these individuals grow to breeding age
+                            // These individuals are already of breeding age so we will ignore this in CLEM
                             // minimum of (max kept x prop in single purchase) and (the number needed + annual mortality)
-                            int numberToBuy = Math.Min(Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept)), Math.Max(0, Convert.ToInt32(excessHeifers * (1+ mortalityRate))));
-
+                            int numberToBuy = Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept));
                             int numberPerPurchaseCohort = Convert.ToInt32(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses));
 
                             for (int j = 0; j < NumberOfBreederPurchaseAgeClasses; j++)
@@ -449,30 +454,30 @@ namespace Models.CLEM.Activities
                                 {
                                     numberThisCohort = numberToBuy - ((NumberOfBreederPurchaseAgeClasses - 1) * numberPerPurchaseCohort);
                                 }
-                                ageOfHeifer = 12+(j*12);
+                                ageOfBreeder = Convert.ToInt32(minBreedAge+(j*12));
                                 for (int i = 0; i < numberThisCohort; i++)
                                 {
-                                    RuminantFemale newheifer = new RuminantFemale
+                                    RuminantFemale newBreeder = new RuminantFemale
                                     {
                                         Location = grazeStore,
-                                        Age = ageOfHeifer,
+                                        Age = ageOfBreeder,
                                         Breed = this.PredictedHerdBreed,
                                         HerdName = this.PredictedHerdName,
                                         BreedParams = breedParams,
                                         Gender = Sex.Female,
                                         ID = 0,
-                                        SaleFlag = HerdChangeReason.HeiferPurchase
+                                        SaleFlag = HerdChangeReason.BreederPurchase
                                     };
                                     // calculate normalised weight based on age.
-                                    double weight = newheifer.NormalisedAnimalWeight;
-                                    newheifer.Weight = weight;
-                                    newheifer.PreviousWeight = weight;
-                                    newheifer.HighWeight = weight;
+                                    double weight = newBreeder.NormalisedAnimalWeight;
+                                    newBreeder.Weight = weight;
+                                    newBreeder.PreviousWeight = weight;
+                                    newBreeder.HighWeight = weight;
 
-                                    // this individual must be weaned to be a heifer and permitted to start breeding.
-                                    newheifer.Wean();
+                                    // this individual must be weaned to be permitted to start breeding.
+                                    newBreeder.Wean();
                                     // add to purchase request list and await purchase in Buy/Sell
-                                    ruminantHerd.PurchaseIndividuals.Add(newheifer);
+                                    ruminantHerd.PurchaseIndividuals.Add(newBreeder);
                                 }
                             }
                         }
