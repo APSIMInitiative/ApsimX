@@ -631,8 +631,13 @@ namespace Models.Graph
             if (Filter == null || Filter == string.Empty)
                 filterToUse = CreateRowFilter(storage, factors, columnsInTable);
             else
-                filterToUse = Filter + " AND (" + CreateRowFilter(storage, factors, columnsInTable) + ")";
-
+            {
+                var f = CreateRowFilter(storage, factors, columnsInTable);
+                if (f != null)
+                    filterToUse = Filter + " AND (" + f + ")";
+                else
+                    filterToUse = Filter;
+            }
             return storage.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames.Distinct(), filter: filterToUse);
         }
 
