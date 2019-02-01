@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"labourgroupsborder\">";
+            html += "\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
             if(Apsim.Children(this, typeof(RuminantDestockGroup)).Count() == 0)

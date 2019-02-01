@@ -573,8 +573,8 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "\n<div class=\"activitybannerlight\">Breeding females</div>";
             html += "\n<div class=\"activitycontentlight\">";
-            html += "\n<div class=\"labournote\">Breeding females</div>";
             html += "\n<div class=\"activityentry\">";
             html += "The herd will be maintained ";
             if (MinimumBreedersKept == MaximumBreedersKept)
@@ -589,13 +589,16 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">";
             html += "Individuals will be sold when over <span class=\"setvalue\">" + MaximumBreederAge.ToString("###") + "</span> months old";
             html += "</div>";
-            html += "\n<div class=\"activityentry\">";
-            html += "A maximum of <span class=\"setvalue\">" + MaximumProportionBreedersPerPurchase.ToString("#0.##%") + "</span> of the Maximum Breeders Kept can be purchased in a single transaction";
-            html += "</div>";
+            if (MaximumProportionBreedersPerPurchase < 1)
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "A maximum of <span class=\"setvalue\">" + MaximumProportionBreedersPerPurchase.ToString("#0.##%") + "</span> of the Maximum Breeders Kept can be purchased in a single transaction";
+                html += "</div>";
+            }
             html += "</div>";
 
+            html += "\n<div class=\"activitybannerlight\">Breeding males (sires/rams etc)</div>";
             html += "\n<div class=\"activitycontentlight\">";
-            html += "\n<div class=\"labournote\">Breeding males (sires/rams etc)</div>";
             html += "\n<div class=\"activityentry\">";
             if (MaximumSiresKept == 0)
             {
@@ -611,8 +614,8 @@ namespace Models.CLEM.Activities
             html += "</div>";
             html += "</div>";
 
+            html += "\n<div class=\"activitybannerlight\">General herd</div>";
             html += "\n<div class=\"activitycontentlight\">";
-            html += "\n<div class=\"labournote\">General herd</div>";
             if (MaleSellingAge + MaleSellingWeight > 0)
             {
                 html += "\n<div class=\"activityentry\">";
