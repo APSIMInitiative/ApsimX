@@ -14019,6 +14019,8 @@
                         "[Wheat].AboveGround.N",
                         "[Wheat].Grain.Wt",
                         "[Wheat].Grain.Total.N",
+                        "[Wheat].Grain.Size",
+                        "[Wheat].Grain.Number",
                         "[Wheat].Ear.Wt",
                         "[Wheat].Leaf.Fw",
                         "[Wheat].Leaf.Fn",
@@ -14745,6 +14747,7 @@
                         "[Maize].AboveGround.Wt",
                         "[Maize].AboveGround.N",
                         "[Maize].Grain.Wt",
+                        "[Maize].Grain.Number",
                         "[Maize].EarLive.Wt",
                         "[Maize].Structure.LeafTipsAppeared",
                         "[Maize].Leaf.ExpandedCohortNo",
@@ -15526,7 +15529,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 4,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -15682,7 +15685,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -16114,7 +16117,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -16270,7 +16273,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -16673,6 +16676,162 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [],
+                  "Name": "GrainNumber",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": "Treatment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Maize.Grain.Number",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "PreMaize",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Treatment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Simulation",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Grain.Number",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "PreWheat",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": "Treatment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 1,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Maize.AboveGround.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "ObservedMaize",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Treatment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.AboveGround.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "ObservedWheat",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -16702,7 +16861,9 @@
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
                         "[WheatZone].Width=100",
-                        "[MaizeZone].Width=100"
+                        "[MaizeZone].Width=100",
+                        "[SetupMaizeRootZones].Script.UseExtraZone=false",
+                        "[SetupWheatRootZones].Script.UseExtraZone=false"
                       ],
                       "Name": "SoleCrop",
                       "Children": [],
@@ -16714,7 +16875,8 @@
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
                         "[WheatZone].Width=0.75",
-                        "[MaizeZone].Width=1.50"
+                        "[MaizeZone].Width=1.50",
+                        "[SowMaize].Script.SowDate=1-Jan"
                       ],
                       "Name": "60WM",
                       "Children": [],
@@ -16726,7 +16888,8 @@
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
                         "[WheatZone].Width=0.75",
-                        "[MaizeZone].Width=1.50"
+                        "[MaizeZone].Width=1.50",
+                        "[SowWheat].Script.SowDate=1-Jan"
                       ],
                       "Name": "02WM",
                       "Children": [],
@@ -16762,7 +16925,7 @@
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "2014-01-01T00:00:00",
+                  "StartDate": "2014-03-01T00:00:00",
                   "EndDate": "2014-12-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
@@ -17026,6 +17189,8 @@
                         "[Wheat].AboveGround.N",
                         "[Wheat].Grain.Wt",
                         "[Wheat].Grain.Total.N",
+                        "[Wheat].Grain.Size",
+                        "[Wheat].Grain.Number",
                         "[Wheat].Ear.Wt",
                         "[Wheat].Leaf.Fw",
                         "[Wheat].Leaf.Fn",
@@ -17577,8 +17742,8 @@
                         {
                           "$type": "Models.Operation, Models",
                           "Date": "2014-03-13",
-                          "Action": "[Wheat].Sow(population: 250, cultivar: Tybalt, depth: 30, rowSpacing: 125); ",
-                          "Enabled": true
+                          "Action": "[Wheat].Sow(population: 250, cultivar: Tybalt, depth: 30, rowSpacing: 125);",
+                          "Enabled": false
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -17608,13 +17773,13 @@
                           "$type": "Models.Operation, Models",
                           "Date": "2014-08-04",
                           "Action": "[Wheat].Harvest();",
-                          "Enabled": true
+                          "Enabled": false
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Date": "2014-08-04",
                           "Action": "[Wheat].EndCrop();",
-                          "Enabled": true
+                          "Enabled": false
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -17667,6 +17832,50 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Wheat.Root.ZoneNamesToGrowRootsIn.Add(\"MaizeZone\");\r\n            Wheat.Root.ZoneRootDepths.Add(50);\r\n            Wheat.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "UseExtraZone",
+                          "Value": "True"
+                        }
+                      ],
+                      "Name": "SetupWheatRootZones",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Wheat;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n    \r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "SowDate",
+                          "Value": "13-Mar"
+                        },
+                        {
+                          "Key": "CultivarName",
+                          "Value": "Tybalt"
+                        },
+                        {
+                          "Key": "SowingDepth",
+                          "Value": "30"
+                        },
+                        {
+                          "Key": "RowSpacing",
+                          "Value": "125"
+                        },
+                        {
+                          "Key": "Population",
+                          "Value": "250"
+                        }
+                      ],
+                      "Name": "SowWheat",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -17690,6 +17899,7 @@
                         "[Maize].AboveGround.Wt",
                         "[Maize].AboveGround.N",
                         "[Maize].Grain.Wt",
+                        "[Maize].Grain.Number",
                         "[Maize].EarLive.Wt",
                         "[Maize].Structure.LeafTipsAppeared",
                         "[Maize].Leaf.ExpandedCohortNo",
@@ -18211,8 +18421,8 @@
                         {
                           "$type": "Models.Operation, Models",
                           "Date": "2014-05-07",
-                          "Action": "[Maize].Sow(population: 10, cultivar: Atrium, depth: 30, rowSpacing: 750); ",
-                          "Enabled": true
+                          "Action": "[Maize].Sow(population: 10, cultivar: Atrium, depth: 30, rowSpacing: 750);",
+                          "Enabled": false
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -18242,13 +18452,13 @@
                           "$type": "Models.Operation, Models",
                           "Date": "2014-09-23",
                           "Action": "[Maize].Harvest();",
-                          "Enabled": true
+                          "Enabled": false
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Date": "2014-09-23",
                           "Action": "[Maize].EndCrop();",
-                          "Enabled": true
+                          "Enabled": false
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -18291,6 +18501,50 @@
                       "Name": "Irrigation",
                       "Children": [],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Maize.Root.ZoneNamesToGrowRootsIn.Add(\"WheatZone\");\r\n            Maize.Root.ZoneRootDepths.Add(50);\r\n            Maize.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "UseExtraZone",
+                          "Value": "True"
+                        }
+                      ],
+                      "Name": "SetupMaizeRootZones",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Maize;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n    \r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "SowDate",
+                          "Value": "7-May"
+                        },
+                        {
+                          "Key": "CultivarName",
+                          "Value": "Atrium"
+                        },
+                        {
+                          "Key": "SowingDepth",
+                          "Value": "30"
+                        },
+                        {
+                          "Key": "RowSpacing",
+                          "Value": "750"
+                        },
+                        {
+                          "Key": "Population",
+                          "Value": "10"
+                        }
+                      ],
+                      "Name": "SowMaize",
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -18409,7 +18663,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -18565,7 +18819,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -18841,7 +19095,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -18871,7 +19125,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 4,
+                      "Marker": 5,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -18997,7 +19251,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -19153,7 +19407,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
@@ -19309,7 +19563,7 @@
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 1,
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
