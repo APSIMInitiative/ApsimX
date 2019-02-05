@@ -19,21 +19,29 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPricing))]
     [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
     [Version(1, 0, 1, "")]
+    [Version(1, 0, 2, "Purchase and sales identifier used")]
     public class AnimalPriceGroup: CLEMModel
     {
         /// <summary>
-        /// Purchase value of individual
+        /// Style of pricing animals
         /// </summary>
-        [Description("Purchase value")]
-        [Required, GreaterThanEqualValue(0)]
-        public double PurchaseValue { get; set; }
+        [Description("Style of pricing animals")]
+        [Required]
+        public PricingStyleType PricingStyle { get; set; }
 
         /// <summary>
-        /// Sell value of individual
+        /// Value of individual
         /// </summary>
-        [Description("Sale value")]
+        [Description("Value")]
         [Required, GreaterThanEqualValue(0)]
-        public double SellValue { get; set; }
+        public double Value { get; set; }
+
+        /// <summary>
+        /// Determine whether this is a purchase or sale price, or both
+        /// </summary>
+        [Description("Purchase or sale price")]
+        [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
+        public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
         /// Constructor
@@ -51,8 +59,9 @@ namespace Models.CLEM.Groupings
         {
             AnimalPriceGroup clone = new AnimalPriceGroup()
             {
-                PurchaseValue = this.PurchaseValue,
-                SellValue = this.SellValue
+                PricingStyle = this.PricingStyle,
+                PurchaseOrSale = this.PurchaseOrSale,
+                Value = this.Value
             };
 
             foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
@@ -74,20 +83,32 @@ namespace Models.CLEM.Groupings
             if (!formatForParentControl)
             {
                 html += "\n<div class=\"activityentry\">";
-                if (PurchaseValue == SellValue)
+                switch (PurchaseOrSale)
                 {
-                    html += "Buy and sell for ";
+                    case PurchaseOrSalePricingStyleType.Both:
+                        html += "Buy and sell for ";
+                        break;
+                    case PurchaseOrSalePricingStyleType.Purchase:
+                        html += "Buy for ";
+                        break;
+                    case PurchaseOrSalePricingStyleType.Sale:
+                        html += "Sell for ";
+                        break;
+                }
+                if (Value.ToString() == "0")
+                {
+                    html += "<span class=\"errorlink\">NOT SET";
                 }
                 else
                 {
-                    html += "Buy for ";
                     html += "<span class=\"setvalue\">";
-                    html += PurchaseValue.ToString("#,0.##");
-                    html += "</span> and sell for ";
+                    html += Value.ToString("#,0.##");
                 }
+                html += "</span> ";
                 html += "<span class=\"setvalue\">";
-                html += SellValue.ToString("#,0.##");
-                html += "</span></div>";
+                html += PricingStyle.ToString();
+                html += "</span>";
+                html += "</div>";
             }
             return html;
         }
@@ -101,7 +122,32 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (formatForParentControl)
             {
-                html += "</td><td><span class=\"setvalue\">" + this.PurchaseValue.ToString("#,0.##") + "</span></td><td><span class=\"setvalue\">" + this.SellValue.ToString("#,0.##") + "</span></td></tr>";
+                if (Value.ToString() == "0")
+                {
+                    html += "</td><td><span class=\"errorlink\">NOT SET";
+                }
+                else
+                {
+                    html += "</td><td><span class=\"setvalue\">";
+                    html += this.Value.ToString("#,0.##");
+                }
+                html += "</span></td>";
+                html += "<td><span class=\"setvalue\">" + this.PricingStyle.ToString() + "</span></td>";
+                string buySellString = "";
+                switch (PurchaseOrSale)
+                {
+                    case PurchaseOrSalePricingStyleType.Both:
+                        buySellString = "Buy and sell";
+                        break;
+                    case PurchaseOrSalePricingStyleType.Purchase:
+                        buySellString = "Buy";
+                        break;
+                    case PurchaseOrSalePricingStyleType.Sale:
+                        buySellString = "Sell";
+                        break;
+                }
+                html += "<td><span class=\"setvalue\">" + buySellString + "</span></td>";
+                html += "</tr>";
             }
             else
             {

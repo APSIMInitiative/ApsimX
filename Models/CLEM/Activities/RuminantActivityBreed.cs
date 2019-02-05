@@ -479,7 +479,7 @@ namespace Models.CLEM.Activities
                     AllowTransmutation = false,
                     Required = sumneeded,
                     ResourceType = typeof(Finance),
-                    ResourceTypeName = "General account",
+                    ResourceTypeName = item.BankAccountName.Split('.').Last(),
                     ActivityModel = this,
                     FilterDetails = null,
                     Reason = item.Name

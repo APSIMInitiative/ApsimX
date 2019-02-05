@@ -139,7 +139,7 @@ namespace Models.CLEM.Resources
 
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction();
-            details.Debit = cohortToAdd.Number;
+            details.Gain = cohortToAdd.Number;
             details.Activity = activityName;
             details.ActivityType = "Unknown";
             details.Reason = reason;
@@ -175,7 +175,7 @@ namespace Models.CLEM.Resources
 
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = cohortToRemove.Number;
+            details.Loss = cohortToRemove.Number;
             details.Activity = activityName;
             details.ActivityType = "Unknown";
             details.Reason = reason;
