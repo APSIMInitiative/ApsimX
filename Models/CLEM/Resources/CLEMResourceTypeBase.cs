@@ -99,17 +99,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            html += "This resource is measured in ";
-            if (Units != "")
-            {
-                html += "<span class=\"setvalue\">" + this.Units + "</span>";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">Not defined</span>";
-            }
-            html += "</div>";
+            string html = "";
             return html;
         }
 

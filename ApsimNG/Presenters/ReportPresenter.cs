@@ -131,7 +131,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The argument values</param>
         private void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
-            GetCompletionOptions(sender, e, true, false, false);
+            GetCompletionOptions(sender, e, true, false, true);
         }
 
         /// <summary>The view is asking for event names.</summary>

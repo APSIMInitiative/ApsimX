@@ -1406,7 +1406,7 @@ namespace Models
 				object RootPartFrac = 0.1;
 				zone.Set("Slurp.Root.DMDemandFunction.PartitionFraction.FixedValue", RootPartFrac);
 				object GMaxValue = MaxG;
-				zone.Set("Slurp.Leaf.Gsmax", GMaxValue); 
+				zone.Set("Slurp.Leaf.Gsmax350", GMaxValue); 
 				object R50Value = R50; 
 				zone.Set("Slurp.Leaf.R50", R50Value); 
 			}

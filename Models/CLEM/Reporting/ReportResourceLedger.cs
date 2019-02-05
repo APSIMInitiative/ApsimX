@@ -69,6 +69,7 @@ namespace Models.CLEM.Reporting
         {
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
+            variableNames.Add("Parent.Name as Zone");
             variableNames.Add("[Clock].Today");
             if (VariableNames != null && VariableNames.Count() > 0)
             {
@@ -89,26 +90,28 @@ namespace Models.CLEM.Reporting
                         {
                             Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
                         }
-
-                        if (model.GetType() == typeof(Ruminant))
-                        {
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.HerdName as Herd");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.GenderAsString as Sex");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Age as Age");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Weight as Weight");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlagAsString as Reason");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
-                        }
                         else
                         {
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Debit as Debit");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Credit as Credit");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType as Resource");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity as Activity");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ActivityType as ActivityType");
-                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
+                            if (model.GetType() == typeof(Ruminant))
+                            {
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.HerdName as Herd");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.GenderAsString as Sex");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Age as Age");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Weight as Weight");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlagAsString as Reason");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
+                            }
+                            else
+                            {
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss as Loss");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType as Resource");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity as Activity");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ActivityType as ActivityType");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
+                            }
                         }
                     }
                 }

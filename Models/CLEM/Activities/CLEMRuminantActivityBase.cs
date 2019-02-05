@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
                 var filtergroup = current.Children.OfType<RuminantFilterGroup>().Cast<RuminantFilterGroup>();
                 if(filtergroup.Count() > 1)
                 {
-                    Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name +"]"+ Environment.NewLine + "Only the first filer group will be used.");
+                    Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name +"]"+ Environment.NewLine + "Only the first filter group will be used.");
                 }
                 if (filtergroup.FirstOrDefault() != null)
                 {

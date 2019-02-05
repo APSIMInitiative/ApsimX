@@ -3884,7 +3884,7 @@
       "NDemand": null,
       "potentialDMAllocation": null,
       "Albedo": 0.25,
-      "Gsmax": 0.011,
+      "Gsmax350": 0.011,
       "R50": 150.0,
       "FRGR": 0.0,
       "PotentialEP": 0.0,
@@ -3898,6 +3898,16 @@
       "FractionDied": 0.0,
       "Name": "Leaf",
       "Children": [
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 1.0,
+          "Units": "",
+          "Name": "StomatalConductanceCO2Modifier",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.PMF.Organs.LeafCohort, Models",
           "ApexCohort": null,

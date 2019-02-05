@@ -30,7 +30,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age (Months)
         /// </summary>
-        [Description("Age")]
+        [Description("Age (months)")]
+        [Units("Months")]
         [Required, GreaterThanEqualValue(0)]
         public int Age { get; set; }
 
@@ -45,6 +46,7 @@ namespace Models.CLEM.Resources
         /// Starting Weight
         /// </summary>
         [Description("Weight (kg)")]
+        [Units("kg")]
         [Required, GreaterThanEqualValue(0)]
         public double Weight { get; set; }
 

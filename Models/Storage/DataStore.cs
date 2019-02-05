@@ -341,8 +341,13 @@
                 sql.Append(" OFFSET ");
                 sql.Append(from);
             }
-
-            return connection.ExecuteQuery(sql.ToString());
+            // It appears that the a where clause that has 'SimulationName in ('xxx, 'yyy') is
+            // case sensitive despite having COLLATE NOCASE in the 'CREATE TABLE _Simulations'
+            // statement. I don't know why this is. The replace below seems to fix the problem.
+            var st = sql.ToString();
+            if (!useFirebird)
+                st = st.Replace("SimulationName IN ", "SimulationName COLLATE NOCASE IN ");
+            return connection.ExecuteQuery(st);
         }
 
         /// <summary>

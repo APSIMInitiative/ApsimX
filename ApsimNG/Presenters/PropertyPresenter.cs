@@ -231,8 +231,9 @@ namespace UserInterface.Presenters
 
                         if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
                         {
-                            SeparatorAttribute separator = Attribute.GetCustomAttribute(member, typeof(SeparatorAttribute)) as SeparatorAttribute;
-                            properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
+                            SeparatorAttribute[] separators = Attribute.GetCustomAttributes(member, typeof(SeparatorAttribute)) as SeparatorAttribute[];
+                            foreach (SeparatorAttribute separator in separators)
+                                properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
 
                         //If the above conditions have been met and,

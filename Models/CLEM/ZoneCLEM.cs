@@ -21,8 +21,9 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
-    [HelpUri("http://www.csiro.au")]
+    [HelpUri(@"content/features/CLEMComponent.htm")]
     [Version(1,0,1,"")]
+    [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject
     {
         [Link]
@@ -208,6 +209,18 @@ namespace Models.CLEM
             if (model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
                 starter = "[a=";
+            }
+            if (model.GetType().Name.Contains("Group"))
+            {
+                starter = "[f=";
+            }
+            if (model.GetType().Name.Contains("Timer"))
+            {
+                starter = "[f=";
+            }
+            if (model.GetType().Name.Contains("Filter"))
+            {
+                starter = "[f=";
             }
 
             modelPath += starter+model.Name+"]";

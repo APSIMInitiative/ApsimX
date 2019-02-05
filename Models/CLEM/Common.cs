@@ -140,6 +140,25 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Animal purchase or sale price style
+    /// </summary>
+    public enum PurchaseOrSalePricingStyleType
+    {
+        /// <summary>
+        /// Both purchase and sale price
+        /// </summary>
+        Both,
+        /// <summary>
+        /// Purchase price
+        /// </summary>
+        Purchase,
+        /// <summary>
+        /// Sale price
+        /// </summary>
+        Sale
+    }
+
+    /// <summary>
     /// Crop payment style
     /// </summary>
     public enum CropPaymentStyleType
