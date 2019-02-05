@@ -232,8 +232,21 @@ namespace Models.Factorial
                 IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-                foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
-                    pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                // If the user provides only a single specification, they want
+                // to make multiple replacements to a single model. Otherwise,
+                // they want to make a single replacement for multiple models.
+                if (Specifications.Count == 1)
+                    foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
+                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                else
+                {
+                    // In this case, the replacement model must have the same
+                    // name as the model which it is replacing.
+                    IModel replacementModel = Apsim.Child(this, modelToReplace.Name);
+                    if (replacementModel == null)
+                        throw new ApsimXException(this, "Unable to find a replacement model for model " + modelToReplace.Name + " in factor " + Name);
+                    pairs.Add(new PathValuesPair() { path = specification, value = replacementModel });
+                }
             }
             return pairs;
         }
