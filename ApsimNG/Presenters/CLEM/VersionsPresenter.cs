@@ -46,13 +46,14 @@ namespace UserInterface.Presenters
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {font-family: sans-serif, Arial, Helvetica; max-width:1000px; font-size:10pt; }" +
-                ".messagebanner {background-color:CornflowerBlue; border-radius:5px 5px 0px 0px; color:white; padding:5px; }" +
-                ".messagecontent {background-color:#FAFAFF; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".messagebanner {background-color:CornflowerBlue !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; }" +
+                ".messagecontent {background-color:#FAFAFF !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 ".version {font-weight:bold;float:left;}" +
                 ".author {float:right;}" +
                 ".messageentry {padding:5px 0px 5px 0px; line-height: 1.7em; }" +
                 ".clearfix::after {content:\"\"; clear:both; display:table;}"+
+                "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 "\n</style>\n</head>\n<body>";
 
             foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))

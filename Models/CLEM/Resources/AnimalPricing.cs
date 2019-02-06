@@ -16,13 +16,13 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]
     [Version(1, 0, 3, "Purchase and sales identifier used")]
-    public class AnimalPricing: CLEMModel
+    public class AnimalPricing: CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Constructor
@@ -46,6 +46,28 @@ namespace Models.CLEM.Resources
                 clone.Children.Add(item.Clone());
             }
             return clone;
+        }
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (Apsim.Children(this, typeof(AnimalPriceGroup)).Count() == 0)
+            {
+                string[] memberNames = new string[] { "Animal pricing" };
+                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r="+this.Name+ "].\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
+            }
+            else if (Apsim.Children(this, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+            {
+                string[] memberNames = new string[] { "Animal pricing" };
+                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r="+this.Name+"]\nThese will not result in price calculations and can be deleted.", memberNames));
+            }
+            return results;
         }
 
         /// <summary>
