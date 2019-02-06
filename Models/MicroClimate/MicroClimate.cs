@@ -134,6 +134,23 @@ namespace Models
         [Units("m")]
         public double ReferenceHeight { get; set; }
 
+        /// <summary>Shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)</summary>
+        [Description("Shortwave radiation reaching the surface (ie above the residue layer) (MJ/m2)")]
+        [Bounds(Lower = 0.0, Upper = 40.0)]
+        [Units("MJ/m2")]
+        public double[] SurfaceRS
+        {
+            get
+            {
+                double[] values = new double[zoneMicroClimates.Count];
+                for (int i = 0; i < zoneMicroClimates.Count; i++)
+                    values[i] = zoneMicroClimates[i].SurfaceRs;
+
+                return values;
+            }
+        }
+
+
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -258,11 +275,19 @@ namespace Models
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
                 tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot)/Ft;
+                tallest.SurfaceRs = weather.Radn*Soilt/Ft;
 
                 if (shortest.Canopies[0].Rs != null)
                     if (shortest.Canopies[0].Rs.Length>0)
                         shortest.Canopies[0].Rs[0] = weather.Radn * Ints/Fs;
-               
+                shortest.SurfaceRs = weather.Radn * Soils/Fs;
+            }
+            else
+            {
+                //tallest.Canopies[0].Rs[0] =0;
+                tallest.SurfaceRs = weather.Radn;
+                //shortest.Canopies[0].Rs[0] = 0;
+                shortest.SurfaceRs = weather.Radn;
             }
 
             
