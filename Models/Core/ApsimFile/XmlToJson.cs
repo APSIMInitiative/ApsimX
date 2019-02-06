@@ -437,7 +437,10 @@ namespace Models.Core.ApsimFile
         /// </remarks>
         private static string GetSoilCropName(string name)
         {
-            return name.First().ToString().ToUpper() + name.Substring(1) + "Soil";
+            name = name.First().ToString().ToUpper() + name.Substring(1);
+            if (!name.EndsWith("Soil"))
+                name += "Soil";
+            return name;
         }
     }
 }
