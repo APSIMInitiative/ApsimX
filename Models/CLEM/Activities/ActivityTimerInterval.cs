@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity time defines a start month and interval upon which to perform activities.")]
+    [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [XmlIgnore]
@@ -80,9 +83,53 @@ namespace Models.CLEM.Activities
                             Name = this.Name
                         }
                     };
+                    activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                 }
                 return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
+            }
+        }
+
+        /// <summary>
+        /// Method to determine whether the activity is due based on a specified date
+        /// </summary>
+        /// <returns>Whether the activity is due based on the specified date</returns>
+        public bool Check(DateTime dateToCheck)
+        {
+            // compare with next due date
+            if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+            {
+                return true;
+            }
+            DateTime dd = new DateTime(this.NextDueDate.Year, this.NextDueDate.Month, 1);
+            DateTime dd2c = new DateTime(dateToCheck.Year, dateToCheck.Month, 1);
+
+            int direction = (dd2c < dd) ? -1 : 1;
+            if(direction < 0)
+            {
+                while(dd2c<=dd)
+                {
+                    if (dd2c == dd)
+                    {
+                        return true;
+                    }
+
+                    dd = dd.AddMonths(Interval*-1);
+                }
+                return false;
+            }
+            else
+            {
+                while (dd2c >= dd)
+                {
+                    if (dd2c == dd)
+                    {
+                        return true;
+                    }
+
+                    dd = dd.AddMonths(Interval);
+                }
+                return false;
             }
         }
 
@@ -101,7 +148,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             if (MonthDue >= Clock.StartDate.Month)
@@ -125,8 +172,44 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filter\">";
+            html += "Perform every <span class=\"setvalueextra\">";
+            html += Interval.ToString();
+            html += "</span> months from <span class=\"setvalueextra\">";
+            html += new DateTime(2000, MonthDue, 1).ToString("MMMM");
+            html += "</span></div>";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
         }
 
     }

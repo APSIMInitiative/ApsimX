@@ -110,7 +110,7 @@ namespace UserInterface.Presenters
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis a in graph.Axes)
+                foreach (Models.Graph.Axis a in graph.Axis)
                 {
                     FormatAxis(a);
                 }
@@ -133,6 +133,8 @@ namespace UserInterface.Presenters
 
                 // Remove series titles out of the graph disabled series list when
                 // they are no longer valid i.e. not on the graph.
+                if (graph.DisabledSeries == null)
+                    graph.DisabledSeries = new List<string>();
                 IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.title);
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
@@ -172,48 +174,56 @@ namespace UserInterface.Presenters
         /// <param name="definition">The definition.</param>
         private void DrawOnView(SeriesDefinition definition)
         {
-            if (!graph.DisabledSeries.Contains(definition.title))
+            if (graph.DisabledSeries == null ||
+                !graph.DisabledSeries.Contains(definition.title))
             {
-                // Create the series and populate it with data.
-                if (definition.type == SeriesType.Bar)
+                try
                 {
-                    graphView.DrawBar(
-                                      definition.title, 
-                                      definition.x, 
-                                      definition.y,
-                                      definition.xAxis, 
-                                      definition.yAxis, 
-                                      definition.colour, 
-                                      definition.showInLegend);
+                    // Create the series and populate it with data.
+                    if (definition.type == SeriesType.Bar)
+                    {
+                        graphView.DrawBar(
+                                          definition.title,
+                                          definition.x,
+                                          definition.y,
+                                          definition.xAxis,
+                                          definition.yAxis,
+                                          definition.colour,
+                                          definition.showInLegend);
+                    }
+                    else if (definition.type == SeriesType.Scatter)
+                    {
+                        graphView.DrawLineAndMarkers(
+                                                    definition.title,
+                                                    definition.x,
+                                                    definition.y,
+                                                    definition.error,
+                                                    definition.xAxis,
+                                                    definition.yAxis,
+                                                    definition.colour,
+                                                    definition.line,
+                                                    definition.marker,
+                                                    definition.lineThickness,
+                                                    definition.markerSize,
+                                                    definition.showInLegend);
+                    }
+                    else if (definition.type == SeriesType.Area)
+                    {
+                        graphView.DrawArea(
+                                            definition.title,
+                                            definition.x,
+                                            definition.y,
+                                            definition.x2,
+                                            definition.y2,
+                                            definition.xAxis,
+                                            definition.yAxis,
+                                            definition.colour,
+                                            definition.showInLegend);
+                    }
                 }
-                else if (definition.type == SeriesType.Scatter)
+                catch (Exception err)
                 {
-                    graphView.DrawLineAndMarkers(
-                                                definition.title, 
-                                                definition.x, 
-                                                definition.y,
-                                                definition.error,
-                                                definition.xAxis, 
-                                                definition.yAxis, 
-                                                definition.colour,
-                                                definition.line, 
-                                                definition.marker,
-                                                definition.lineThickness, 
-                                                definition.markerSize, 
-                                                definition.showInLegend);
-                }
-                else if (definition.type == SeriesType.Area)
-                {
-                    graphView.DrawArea(
-                                        definition.title, 
-                                        definition.x, 
-                                        definition.y, 
-                                        definition.x2, 
-                                        definition.y2,
-                                        definition.xAxis, 
-                                        definition.yAxis, 
-                                        definition.colour, 
-                                        definition.showInLegend);
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
             }
         }
@@ -222,7 +232,7 @@ namespace UserInterface.Presenters
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(List<Annotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
+            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
@@ -293,6 +303,9 @@ namespace UserInterface.Presenters
                 {
                     if (definition.x != null && definition.xAxis == axis.Type && definition.xFieldName != null)
                     {
+                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        if (enumerator.MoveNext())
+                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string xName = definition.xFieldName;
                         if (definition.xFieldUnits != null)
                         {
@@ -304,6 +317,9 @@ namespace UserInterface.Presenters
 
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
                     {
+                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        if (enumerator.MoveNext())
+                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.yFieldName;
                         if (definition.yFieldUnits != null)
                         {
@@ -318,7 +334,7 @@ namespace UserInterface.Presenters
                 title = StringUtilities.BuildString(names.ToArray(), ", ");
             }
 
-            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
+            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval, axis.CrossesAtZero);
         }
         
         /// <summary>The graph model has changed.</summary>
@@ -370,7 +386,7 @@ namespace UserInterface.Presenters
         /// <exception cref="System.Exception">Cannot find axis with type:  + axisType.ToString()</exception>
         private object GetAxis(Axis.AxisType axisType)
         {
-            foreach (Axis a in graph.Axes)
+            foreach (Axis a in graph.Axis)
             {
                 if (a.Type.ToString() == axisType.ToString())
                 {

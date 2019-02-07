@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Serialization;
+using Models.CLEM.Activities;
 using Models.Core;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -9,24 +13,67 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
-    public class RuminantInitialCohorts : Model
+    [Version(1, 0, 1, "")]
+    public class RuminantInitialCohorts : CLEMModel
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        protected RuminantInitialCohorts()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
         /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
         /// <returns></returns>
         public List<Ruminant> CreateIndividuals()
         {
-            List<Ruminant> Individuals = new List<Ruminant>();
+            List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in Apsim.Children(this, typeof(RuminantTypeCohort)))
             {
-                Individuals.AddRange(cohort.CreateIndividuals());
+                individuals.AddRange(cohort.CreateIndividuals());
             }
-            return Individuals;
+            return individuals;
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "</table>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
+            return html;
+        }
+
     }
 }
 

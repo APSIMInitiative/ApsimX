@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Base Class and should not be used directly.")]
+    [Version(1, 0, 1, "")]
     public class ResourceBaseWithTransactions: CLEMModel
     {
         /// <summary>
@@ -34,33 +36,17 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler handler = TransactionOccurred;
-            if (handler != null)
-                handler(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
         /// Get resource by name
         /// </summary>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public object GetByName(string Name)
+        public object GetByName(string name)
         {
-            return this.Children.Where(a => a.Name == Name).FirstOrDefault();
+            return this.Children.Where(a => a.Name == name).FirstOrDefault();
         }
-
-        /// <summary>
-        /// Get main/first account
-        /// </summary>
-        /// <returns></returns>
-        public object GetFirst()
-        {
-            if (this.Children.Count() > 0)
-            {
-                return this.Children.FirstOrDefault();
-            }
-            return null;
-        }
-
     }
 }

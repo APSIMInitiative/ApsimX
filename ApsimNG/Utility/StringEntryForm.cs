@@ -3,7 +3,7 @@
 namespace Utility
 {
     using Gtk;
-    using UserInterface;
+    using UserInterface.Views;
     using UserInterface.Presenters;
 
     public class StringEntryForm
@@ -16,8 +16,6 @@ namespace Utility
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.StringEntryForm.glade");
             Dialog dialog = (Dialog)builder.GetObject("dialog");
             Label prompt = (Label)builder.GetObject("prompt");
-            Button okButton = (Button)builder.GetObject("okButton");
-            Button cancelButton = (Button)builder.GetObject("cancelButton");
             Entry entryBox = (Entry)builder.GetObject("entryBox");
 
             dialog.TransientFor = topLevelWindow;

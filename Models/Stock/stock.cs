@@ -11,11 +11,14 @@ namespace Models.GrazPlan
     using Models.Core;
     using Models.PMF.Interfaces;
     using Models.Soils;
-    using Models.SurfaceOM;
+    using Models.Surface;
     using StdUnits;
 
     /// <summary>
-    /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER199777].
+    /// #GrazPlan Stock
+    /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER1997].
+    ///
+    /// [The GrazPlan animal model technical description](http://www.grazplan.csiro.au/files/TechPaperMay12.pdf)
     /// 
     /// Animals may be of different genotypes. In particular, sheep and cattle may be represented within a single STOCK instance.
     /// 
@@ -104,7 +107,9 @@ namespace Models.GrazPlan
     /// * To set the priority score of an animal group, use the prioritise event.
     /// * To determine the priority score of an animal group, use the priority variable. 
     /// 
-    /// ## Merging groups of similar animals
+    ///  **Merging groups of similar animals**
+    ///  
+    /// Animal groups that become sufficiently similar are merged into a single group.
     /// Animals are similar if all these are the same:
     /// 
     /// * Occupy the same paddock
@@ -119,6 +124,122 @@ namespace Models.GrazPlan
     /// * Implants (hormone implants)
     /// * Mean age (if the animals are less than one year old )
     /// 
+    /// **Mangement Operations in Stock**
+    ///
+    ///**1. Add**
+    ///
+    /// * Causes a set of related age cohorts of animals to enter the simulation. 
+    /// Each age cohort may contain animals that are pregnant and/or lactating, in 
+    /// which case distributions of numbers of foetuses and/or suckling offspring are computed automatically. 
+    /// This event is primarily intended to simplify the initialisation of flocks and herds in simulations.
+    ///
+    ///**2. Buy**
+    /// 
+    /// * Buys animals (i.e. they enter the simulation). The purchased animals will form a new animal group that is placed at the end of the list of animal groups
+    ///
+    /// ***Method details:***
+    /// 
+    ///      public void Buy(StockBuy stock)
+    ///    
+    ///      public void Buy(string genotype, double number, string sex, double age, double weight, double fleeceWeight)
+    ///
+    /// _StockBuy_ type:
+    /// 
+    ///|Field       .|Type  .|Units  .|Description                   .| 
+    ///|---           |---     |---    |:--- |
+    ///|Genotype      |string  |       |Genotype of the animals to be bought. Must match the name field of a member of the genotypes property       |
+    ///|Number        |int     |       |Number of animals to be bought       |
+    ///|Sex           |string  |       |Sex of the animals. Feasible values are as for sheep: ram, crypto, wether, ewe or cattle: bull, steer, heifer, cow as appropriate       |
+    ///|Age           |int     |Months |Average age of the animals       |
+    ///|Weight        |double  |kg     |Average unfasted live weight of the animals. If a value of zero is given, a default value will be calculated, making use of the cond_score parameter if it is non-zero. |
+    ///|FleeceWt      |double  |kg     |Average greasy fleece weight of the animals. Only meaningful in sheep. |
+    ///|CondScore     |double  |       |Average condition score of the animals. If a value of zero is given, the default condition score for the weight and age will be used |
+    ///|MatedTo       |string  |       |Genotype of the rams or bulls with which the animals were mated prior to entry. Only meaningful if pregnant or lactating is non-zero. Must match the name field of a member of the genotypes property|
+    ///|Pregnant      |int     |days   |Zero denotes not pregnant; 1 or more denotes the time since conception. Only meaningful for females|
+    ///|Lactating     |int     |days   |Zero denotes not lactating; 1 or more denotes the time since parturition in lactating animals. Only meaningful for females|
+    ///|NumYoung      |int     |       |Number of foetuses and/or suckling offspring|
+    ///|YoungWt       |double  |kg     |Average unfasted live weight of any suckling lambs or calves.|
+    ///|YoungFleeceWt |double  |kg     |Average greasy fleece weight of any suckling lambs.|
+    ///|UseTag        |int     |       |Tag the new animals with this tag number|
+    ///
+    ///**3. Castrate**
+    ///
+    /// * Converts ram lambs to wether lambs, or bull calves to steers.  
+    /// If the animal group(s) denoted by group has no suckling young, has no effect. 
+    /// If the number of male lambs or calves in a nominated group is greater than the number to be castrated, 
+    /// the animal group will be split; the sub-group with castrated offspring will remain at the original index 
+    /// and the sub-group with offspring that were not castrated will be added at the end of the set of animal groups.
+    /// 
+    ///**4. Draft** 
+    /// 
+    /// * Assigns animals to paddocks. The process is as follows:
+    ///     1. Animal groups with a positive priority score are removed from their current paddock; groups with a zero or negative priority score remain in their current paddock.
+    ///     2. The set of unoccupied non-excluded paddocks is identified and then ranked according the quality of the pasture(the best paddock is that which would give highest DM intake).
+    ///     3. The unallocated animal groups are ranked by their priority(lowest values first).
+    ///     4. Unallocated animal groups are then assigned to paddocks in rank order(e.g.those with the lowest positive score are placed in the best unoccupied paddock). 
+    ///     Animal groups with the same priority score are placed in the same paddock.
+    /// 
+    ///
+    ///**5. DryOff**
+    ///
+    /// * Ends lactation in cows that have already had their calves weaned.  The event has no effect on other animals.
+    /// If the number of cows in a nominated group is greater than the number to be dried off, 
+    /// the animal group will be split; the sub-group that is no longer lactating will remain at 
+    /// the original index and the sub-group that continues lactating will be added at the end of the set of animal groups.
+    /// 
+    /// 
+    ///**6. Join** 
+    ///
+    /// * Commences mating of a particular group of animals.  If the animals are not empty females, or if they are too young, has no effect.
+    /// 
+    ///**7. Move**
+    ///
+    /// * Changes the paddock to which an animal group is assigned. 
+    /// 
+    ///**8. Prioritise**
+    ///
+    /// * Sets the "priority" of an animal group for later use in a draft event. It is usual practice to use positive values for priorities.
+    /// 
+    ///**9. Sell**
+    ///
+    /// * Removes animals from the simulation.
+    /// 
+    ///**10. SellTag**
+    ///
+    /// * Removes animals from the simulation based on their tag number.
+    /// 
+    ///**11. Shear**
+    ///
+    /// * Shears sheep. The event has no effect on cattle.
+    /// 
+    ///**12. Sort** 
+    ///
+    /// * Rearranges the list of animal groups in ascending order of tag value. This event has no parameters.
+    /// 
+    ///**13. Split**
+    ///
+    /// * Creates two or more animal groups from the nominated group.  One of these groups is placed at the end of 
+    /// the animal group list. The new groups remain in the same paddock and keep the same tag value as the original animal group. 
+    /// The division may only persist until the beginning of the next do_stock step, when sufficiently similar groups of 
+    /// animals are merged.Splitting an animal group is therefore usually carried out as a preliminary to some other management event.
+    ///
+    ///**14. SplitAll**
+    ///
+    /// * Creates new animal groups from all the animal groups.  The new groups are placed at the end of the animal group list. 
+    /// This event is for when splits need to occur over all animal groups. Description of split event also applies.
+    /// 
+    ///**15. Tag**
+    ///
+    /// * Changes the “tag value” associated with an animal group.  This value is used to sort animals; it can also be used 
+    /// to group animals for user-defined purposes (e.g. to identify animals that are to be managed as a single mob even though
+    /// they differ physiologically) and to keep otherwise similar animal groups distinct from one another.
+    /// 
+    ///**16. Wean**
+    ///
+    /// * Weans some or all of the lambs or calves from an animal group. The newly weaned animals are added to the end of
+    /// the list of animal groups, with males and females in separate groups. 
+    /// 
+    /// ---
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.StockView")]
@@ -144,7 +265,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Weather used by the model
         /// </summary>
-        private TAnimalWeather localWeather;
+        private AnimalWeather localWeather;
 
         /// <summary>
         /// True if at the first step of the run
@@ -174,17 +295,17 @@ namespace Models.GrazPlan
         /// <summary>
         /// The random number host
         /// </summary>
-        private TMyRandom randFactory;
+        private MyRandom randFactory;
 
         /// <summary>
         /// The supplement used
         /// </summary>
-        private TSupplement suppFed;
+        private FoodSupplement suppFed;
 
         /// <summary>
         /// The excretion info
         /// </summary>
-        private TExcretionInfo excretionInfo;
+        private ExcretionInfo excretionInfo;
 
         /// <summary>
         /// The current time value
@@ -221,6 +342,10 @@ namespace Models.GrazPlan
         [Link]
         private Simulation sim = null;
 
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
+        [Link]
+        private ISummary OutputSummary = null;
+
         #endregion
 
         /// <summary>
@@ -230,13 +355,13 @@ namespace Models.GrazPlan
         {
             this.userForages = new List<string>();
             this.userPaddocks = new List<string>();
-            this.randFactory = new TMyRandom(this.randSeed);       // random number generator
+            this.randFactory = new MyRandom(this.randSeed);       // random number generator
             this.stockModel = new StockList(this.randFactory);
 
             Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
-            this.suppFed = new TSupplement();
-            this.excretionInfo = new TExcretionInfo();
+            this.suppFed = new FoodSupplement();
+            this.excretionInfo = new ExcretionInfo();
             this.paddocksGiven = false;
             this.isFirstStep = true;
             this.randSeed = 0;
@@ -270,11 +395,14 @@ namespace Models.GrazPlan
 
             set
             {
-                Array.Resize(ref this.genotypeInits, value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
+                if (value != null)
                 {
-                    this.genotypeInits[idx] = new SingleGenotypeInits();
-                    this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
+                    Array.Resize(ref this.genotypeInits, value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                    {
+                        this.genotypeInits[idx] = new SingleGenotypeInits();
+                        this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
+                    }
                 }
             }
         }
@@ -294,10 +422,13 @@ namespace Models.GrazPlan
 
             set
             {
-                int offset = this.animalInits.Length;
-                Array.Resize(ref this.animalInits, offset + value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
-                    this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                if (value != null)
+                {
+                    int offset = this.animalInits.Length;
+                    Array.Resize(ref this.animalInits, offset + value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                        this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                }
             }
         }
 
@@ -316,10 +447,13 @@ namespace Models.GrazPlan
 
             set
             {
-                int offset = this.animalInits.Length;
-                Array.Resize(ref this.animalInits, offset + value.Length);
-                for (int idx = 0; idx < value.Length; idx++)
-                    this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                if (value != null)
+                {
+                    int offset = this.animalInits.Length;
+                    Array.Resize(ref this.animalInits, offset + value.Length);
+                    for (int idx = 0; idx < value.Length; idx++)
+                        this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
+                }
             }
         }
 
@@ -351,13 +485,10 @@ namespace Models.GrazPlan
                         // if the paddock object is found then add it to Paddocks
                         this.stockModel.Paddocks.Add(idx, value[idx].Name);
 
-                        paddockInfo = this.stockModel.Paddocks.byIndex(idx);
-                        paddockInfo.sExcretionDest = value[idx].Excretion;
-                        paddockInfo.sUrineDest = value[idx].Urine;
-                        paddockInfo.iExcretionID = UNKNOWN;
-                        paddockInfo.iAddFaecesID = UNKNOWN;
-                        paddockInfo.iAddUrineID = UNKNOWN;
-                        paddockInfo.fArea = value[idx].Area;
+                        paddockInfo = this.stockModel.Paddocks.ByIndex(idx);
+                        paddockInfo.ExcretionDest = value[idx].Excretion;
+                        paddockInfo.UrineDest = value[idx].Urine;
+                        paddockInfo.Area = value[idx].Area;
                         paddockInfo.Slope = value[idx].Slope;
                         for (int jdx = 0; jdx < value[idx].Forages.Length; jdx++)
                         {
@@ -385,7 +516,7 @@ namespace Models.GrazPlan
 
             set
             {
-                if (this.stockModel.Enterprises != null)
+                if (value != null && this.stockModel.Enterprises != null)
                 {
                     while (this.stockModel.Enterprises.Count > 0)
                         this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
@@ -411,7 +542,7 @@ namespace Models.GrazPlan
 
             set
             {
-                if (this.stockModel.GrazingPeriods != null)
+                if (value != null && this.stockModel.GrazingPeriods != null)
                 {
                     while (this.stockModel.GrazingPeriods.Count() > 0)
                     {
@@ -4097,14 +4228,14 @@ namespace Models.GrazPlan
                 foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
-                    this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
+                    this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
 
-                    PaddockInfo thePadd = this.stockModel.Paddocks.byObj(zone);
+                    PaddockInfo thePadd = this.stockModel.Paddocks.ByObj(zone);
 
                     // find all the child crop, pasture components that have removable biomass
                     foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
                     {
-                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop, true);
+                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
                     }
 
                     // locate surfaceOM and soil nutrient model
@@ -4180,13 +4311,13 @@ namespace Models.GrazPlan
                 // update the paddock area as this can change during the simulation
                 foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
                 {
-                    this.stockModel.Paddocks.byObj(zone).fArea = zone.Area;
-                    this.stockModel.Paddocks.byObj(zone).Slope = zone.Slope;
+                    this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
+                    this.stockModel.Paddocks.ByObj(zone).Slope = zone.Slope;
                 }
             }
             this.RequestAvailableToAnimal();  // accesses each forage provider (crop)
 
-            this.stockModel.Paddocks.beginTimeStep();
+            this.stockModel.Paddocks.BeginTimeStep();
 
             if (this.suppFeed != null)
             {
@@ -4196,7 +4327,7 @@ namespace Models.GrazPlan
                 {
                     // each paddock
                     this.suppFed.SetSuppAttrs(availSupp[idx]);
-                    this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed);
+                    this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed, availSupp[idx].FeedSuppFirst);
                 }
             }
 
@@ -4218,7 +4349,7 @@ namespace Models.GrazPlan
                 if (forageProvider.ForageObj != null)
                 {
                     // if there is forage removed from this forage object/crop/pasture
-                    if (forageProvider.somethingRemoved())
+                    if (forageProvider.SomethingRemoved())
                     {
                         forageProvider.RemoveHerbageFromPlant();
                     }
@@ -4231,12 +4362,12 @@ namespace Models.GrazPlan
             // send the values to the components
             for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
             {
-                PaddockInfo paddInfo = this.stockModel.Paddocks.byIndex(idx);
+                PaddockInfo paddInfo = this.stockModel.Paddocks.ByIndex(idx);
 
                 if (paddInfo.AddFaecesObj != null)
                 {
-                    SurfaceOrganicMatter.AddFaecesType faeces = new SurfaceOrganicMatter.AddFaecesType();
-                    if (this.PopulateFaeces(paddInfo.iPaddID, faeces))
+                    Surface.AddFaecesType faeces = new Surface.AddFaecesType();
+                    if (this.PopulateFaeces(paddInfo.PaddID, faeces))
                     {
                         ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
                     }
@@ -4244,14 +4375,13 @@ namespace Models.GrazPlan
                 if (paddInfo.AddUrineObj != null)
                 {
                     AddUrineType urine = new AddUrineType();
-                    if (this.PopulateUrine(paddInfo.iPaddID, urine))
+                    if (this.PopulateUrine(paddInfo.PaddID, urine))
                     {
                         ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
                     }
                 }
             }
         }
-
 
         // ............................................................................
         // Management methods                                                         
@@ -4266,6 +4396,7 @@ namespace Models.GrazPlan
         public void Add(StockAdd animals)
         {
             this.GetTimeAndWeather();
+            OutputSummary.WriteMessage(this, "Adding " + animals.Number.ToString() + ", " + animals.Genotype + " " + animals.Sex);
             this.stockModel.DoStockManagement(this.stockModel, animals, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4275,6 +4406,7 @@ namespace Models.GrazPlan
         /// <param name="stock">The stock data</param>
         public void Buy(StockBuy stock)
         {
+            OutputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex + " ");
             this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4296,6 +4428,7 @@ namespace Models.GrazPlan
             stock.Age = age;
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
+            OutputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex + " ");
             this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4311,7 +4444,7 @@ namespace Models.GrazPlan
         public void Draft(StockDraft closedZones)
         {
             this.RequestAvailableToAnimal();
-
+            OutputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed)); 
             this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4326,6 +4459,7 @@ namespace Models.GrazPlan
             StockSell selling = new StockSell();
             selling.Group = group;
             selling.Number = Convert.ToInt32(number);
+            OutputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals");
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4340,6 +4474,7 @@ namespace Models.GrazPlan
             StockSellTag selling = new StockSellTag();
             selling.Tag = tag;
             selling.Number = number;
+            OutputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals from tag group " + tag.ToString());
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4355,6 +4490,7 @@ namespace Models.GrazPlan
             StockShear shearing = new StockShear();
             shearing.Group = group;
             shearing.SubGroup = subGroup;
+            OutputSummary.WriteMessage(this, "Shearing animals");
             this.stockModel.DoStockManagement(this.stockModel, shearing, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4368,6 +4504,7 @@ namespace Models.GrazPlan
             StockMove move = new StockMove();
             move.Group = group;
             move.Paddock = paddock;
+            OutputSummary.WriteMessage(this, "Moving animal group " + group.ToString() + " to " + paddock);
             this.stockModel.DoStockManagement(this.stockModel, move, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4385,6 +4522,7 @@ namespace Models.GrazPlan
             join.Group = group;
             join.MateTo = mateTo;
             join.MateDays = mateDays;
+            OutputSummary.WriteMessage(this, "Joining animal group " + group.ToString() + " to " + mateTo);
             this.stockModel.DoStockManagement(this.stockModel, join, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4402,6 +4540,7 @@ namespace Models.GrazPlan
             StockCastrate castrate = new StockCastrate();
             castrate.Group = group;
             castrate.Number = number;
+            OutputSummary.WriteMessage(this, "Castrate " + number.ToString() + " animals in group " + group.ToString());
             this.stockModel.DoStockManagement(this.stockModel, castrate, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4412,6 +4551,7 @@ namespace Models.GrazPlan
         /// <param name="wean">The weaning data</param>
         public void Wean(StockWean wean)
         {
+            OutputSummary.WriteMessage(this, "Weaning " + wean.Number.ToString() + " " + wean.Sex);
             this.stockModel.DoStockManagement(this.stockModel, wean, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4428,6 +4568,7 @@ namespace Models.GrazPlan
             StockDryoff dryoff = new StockDryoff();
             dryoff.Group = group;
             dryoff.Number = number;
+            OutputSummary.WriteMessage(this, "Drying off " + number.ToString() + " animals in group " + group.ToString());
             this.stockModel.DoStockManagement(this.stockModel, dryoff, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4438,6 +4579,7 @@ namespace Models.GrazPlan
         /// <param name="splitall">The split data</param>
         public void SplitAll(StockSplitAll splitall)
         {
+            OutputSummary.WriteMessage(this, "Split all animals by " + splitall.Type + " at " + splitall.Value);
             this.stockModel.DoStockManagement(this.stockModel, splitall, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4451,6 +4593,7 @@ namespace Models.GrazPlan
         /// <param name="split">The split data</param>
         public void Split(StockSplit split)
         {
+            OutputSummary.WriteMessage(this, "Split animals by " + split.Type + " at " + split.Value);
             this.stockModel.DoStockManagement(this.stockModel, split, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4467,6 +4610,7 @@ namespace Models.GrazPlan
             StockTag tag = new StockTag();
             tag.Group = group;
             tag.Value = value;
+            OutputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString()); 
             this.stockModel.DoStockManagement(this.stockModel, tag, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4480,6 +4624,7 @@ namespace Models.GrazPlan
             StockPrioritise prioritise = new StockPrioritise();
             prioritise.Group = group;
             prioritise.Value = value;
+            OutputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString()); 
             this.stockModel.DoStockManagement(this.stockModel, prioritise, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4489,6 +4634,7 @@ namespace Models.GrazPlan
         public void Sort()
         {
             StockSort sortEvent = new StockSort();
+            OutputSummary.WriteMessage(this, "Sort animals");
             this.stockModel.DoStockManagement(this.stockModel, sortEvent, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4510,11 +4656,50 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Do a request for the biomasses
+        /// Do a request for all the biomasses in every paddock
+        /// Note: This could be optimised to not request paddocks that are unstocked (drafting still needs to get the amounts)
         /// </summary>
         private void RequestAvailableToAnimal()
         {
             ForageProvider forageProvider;
+
+            // iterate through all the paddocks and sum the total green and store it in each forage provider
+            for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
+            {
+                double pastureGreen = 0;
+                PaddockInfo paddInfo = this.stockModel.Paddocks.ByIndex(idx);
+                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+                {
+                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
+                    {
+                        if (forageProvider.ForageObj != null)
+                        {
+                            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IRemovableBiomass)))
+                            {
+                                if (biomass.IsAboveGround)
+                                {
+                                    if (biomass.Live.Wt > 0)
+                                    {
+                                        pastureGreen += biomass.Live.Wt;   // g/m^2
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+                {
+                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
+                    {
+                        forageProvider.PastureGreenDM = pastureGreen;
+                    }
+                }
+            }
+
+            // now update the available forages
             for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
             {
                 forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
@@ -4531,7 +4716,7 @@ namespace Models.GrazPlan
         /// <param name="paddID">The paddock ID</param>
         /// <param name="faecesValue">The faeces data</param>
         /// <returns>True if the number of defaecations > 0</returns>
-        private bool PopulateFaeces(int paddID, SurfaceOrganicMatter.AddFaecesType faecesValue)
+        private bool PopulateFaeces(int paddID, Surface.AddFaecesType faecesValue)
         {
             int n = (int)GrazType.TOMElement.n;
             int p = (int)GrazType.TOMElement.p;
@@ -4600,7 +4785,7 @@ namespace Models.GrazPlan
         /// <param name="genoInits">The list of genotypes</param>
         /// <param name="genoIdx">The index of the item in the list to use</param>
         /// <returns>The animal parameter set for this genotype</returns>
-        public TAnimalParamSet ParamsFromGenotypeInits(TAnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
+        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
         {
             SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
             for (int idx = 0; idx < genoInits.Length; idx++)

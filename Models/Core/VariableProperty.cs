@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="VariableProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
+// Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
 namespace Models.Core
@@ -51,7 +51,7 @@ namespace Models.Core
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
-            
+
             this.Object = model;
             this.property = property;
             if (arraySpecifier != null)
@@ -95,12 +95,12 @@ namespace Models.Core
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public override string Name 
-        { 
-            get 
+        public override string Name
+        {
+            get
             {
-                return this.property.Name; 
-            } 
+                return this.property.Name;
+            }
         }
 
         /// <summary>
@@ -192,26 +192,28 @@ namespace Models.Core
         {
             get
             {
-                // Get units from property
-                string unitString = null;
-                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsAttribute != null)
+                if (property != null)
                 {
-                    unitString = unitsAttribute.ToString();
+                    // Get units from property
+                    string unitString = null;
+                    UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                    PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                    if (unitsAttribute != null)
+                    {
+                        unitString = unitsAttribute.ToString();
+                    }
+                    else if (unitsInfo != null)
+                    {
+                        object val = unitsInfo.GetValue(this.Object, null);
+                        if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
+                            unitString = GetEnumDescription(val as Enum);
+                        else
+                            unitString = val.ToString();
+                    }
+                    if (unitString != null)
+                        return "(" + unitString + ")";
                 }
-                else if (unitsInfo != null)
-                {
-                    object val = unitsInfo.GetValue(this.Object, null);
-                    if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
-                        unitString = GetEnumDescription(val as Enum);
-                    else
-                        unitString = val.ToString();
-                }
-                if (unitString != null)
-                    return "(" + unitString + ")";
-                else
-                    return null;
+                return null;
             }
         }
 
@@ -226,14 +228,14 @@ namespace Models.Core
             FieldInfo fi = value.GetType().GetField(value.ToString());
 
             DescriptionAttribute[] attributes =
-                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
                 return attributes[0].ToString();
             else
                 return value.ToString();
         }
-        
+
         /// <summary>
         /// Simple structure to hold both a name and an associated label
         /// </summary>
@@ -352,14 +354,7 @@ namespace Models.Core
                     return ProcessPropertyOfArrayElement();
 
                 object obj = null;
-                try
-                {
-                    obj = this.property.GetValue(this.Object, null);
-                }
-                catch (Exception err)
-                {
-                    throw err.InnerException;
-                }
+                obj = this.property.GetValue(this.Object, null);
                 if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
                 {
                     IList array = obj as IList;
@@ -410,7 +405,27 @@ namespace Models.Core
                 }
                 else
                 {
-                    this.property.SetValue(this.Object, value, null);
+                    if (this.lowerArraySpecifier != 0)
+                    {
+                        object obj = null;
+                        try
+                        {
+                            obj = this.property.GetValue(this.Object, null);
+                        }
+                        catch (Exception err)
+                        {
+                            throw err.InnerException;
+                        }
+                        IList array = obj as IList;
+
+                        if (obj != null && obj is IList)
+                        {
+                            array[lowerArraySpecifier - 1] = value;
+                            this.property.SetValue(this.Object, obj, null);
+                        }
+                    }
+                    else
+                        this.property.SetValue(this.Object, value, null);
                 }
             }
         }
@@ -476,6 +491,10 @@ namespace Models.Core
             Type type = value.GetType();
             if (type == typeof(double))
                 return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            else if (value is Enum)
+                return GetEnumDescription(value as Enum);
+            else if (value is DateTime)
+                return ((DateTime)value).ToShortDateString();
             else
                 return value.ToString();
         }
@@ -536,7 +555,7 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return property.CanRead && property.CanWrite; } }
-    
+
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
         /// </summary>
@@ -581,36 +600,26 @@ namespace Models.Core
         {
             get
             {
-                try
+                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
+                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                 {
-                    DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                    bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                    if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
+                    double sum = 0.0;
+                    foreach (double doubleValue in this.Value as IEnumerable<double>)
                     {
-                        double sum = 0.0;
-                        foreach (double doubleValue in this.Value as IEnumerable<double>)
+                        if (doubleValue != MathUtilities.MissingValue)
                         {
-                            if (doubleValue != MathUtilities.MissingValue)
-                            {
-                                sum += doubleValue;
-                            }
+                            sum += doubleValue;
                         }
-
-                        return sum;
                     }
-                }
-                catch (Exception)
-                {
-                    return Double.NaN;
-                }
 
+                    return sum;
+                }
                 return double.NaN;
             }
         }
 
-        /// <summary>
         /// Gets the associated display type for the related property.
-        /// </summary>
         public override DisplayAttribute Display
         {
             get
@@ -676,6 +685,54 @@ namespace Models.Core
                     this.Value = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
+        }
+
+        /// <summary>
+        /// Convert the specified enum to a list of strings.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string[] EnumToStrings(object obj)
+        {
+            List<string> items = new List<string>();
+            foreach (object e in obj.GetType().GetEnumValues())
+            {
+                Enum value = e as Enum;
+                if (value != null)
+                    items.Add(GetEnumDescription(value));
+                else
+                    items.Add(e.ToString());
+            }
+            return items.ToArray();
+        }
+
+        /// <summary>
+        /// Parse the specified object to an enum. 
+        /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
+        /// </summary>
+        /// <param name="obj">Object to parse. Should probably be a string.</param>
+        /// <param name="t">Enum in which we will try to find a matching member.</param>
+        /// <returns>Enum member.</returns>
+        public static Enum ParseEnum(Type t, object obj)
+        {
+            FieldInfo[] fields = t.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                DescriptionAttribute description = field.GetCustomAttribute(typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (description != null && description.ToString() == obj.ToString())
+                    return field.GetValue(null) as Enum;
+            }
+            return Enum.Parse(t, obj.ToString()) as Enum;
         }
     }
 }

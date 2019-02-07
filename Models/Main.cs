@@ -13,6 +13,8 @@ namespace Models
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
+    using Models.Storage;
+    using Models.Core.ApsimFile;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -31,9 +33,12 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
-            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            Directory.CreateDirectory(tempFolder);
-            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            if (!Path.GetTempPath().Contains("ApsimX"))
+            {
+                string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
+                Directory.CreateDirectory(tempFolder);
+                Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            }
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             int exitCode = 0;
@@ -45,9 +50,10 @@ namespace Models
                 if (args.Length >= 1)
                     fileName = args[0];
 
+                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/m] [/?]";
                 if (args.Contains("/?"))
                 {
-                    string detailedHelpInfo = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/?]";
+                    string detailedHelpInfo = usageMessage;
                     detailedHelpInfo += Environment.NewLine + Environment.NewLine;
                     detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
                     detailedHelpInfo += Environment.NewLine + Environment.NewLine + "Options:" + Environment.NewLine;
@@ -55,15 +61,42 @@ namespace Models
                     detailedHelpInfo += "    /SingleThreaded      Run all simulations in a single thread." + Environment.NewLine;
                     detailedHelpInfo += "    /RunTests            Run all tests." + Environment.NewLine;
                     detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
+                    detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
+                    detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
+                    detailedHelpInfo += "    /Upgrade             Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
+                    detailedHelpInfo += "    /m                   Use the experimental multi-process job runner." + Environment.NewLine;
                     detailedHelpInfo += "    /?                   Show detailed help information.";
                     Console.WriteLine(detailedHelpInfo);
                     return 1;
                 }
 
-                if (args.Length < 1 || args.Length > 6)
+                if (args.Length < 1 || args.Length > 10)
                 {
-                    Console.WriteLine("Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/?]");
+                    Console.WriteLine(usageMessage);
                     return 1;
+                }
+
+                if (args.Contains("/Version"))
+                {
+                    Model m = new Model();
+                    Console.WriteLine(m.ApsimVersion);
+                    return 0;
+                }
+
+                if (args.Contains("/Upgrade"))
+                {
+                    string[] files = Directory.EnumerateFiles(Path.GetDirectoryName(fileName), Path.GetFileName(fileName), args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
+                    foreach (string file in files)
+                    {
+                        List<Exception> errors;
+                        Simulations sims = FileFormat.ReadFromFile<Simulations>(file, out errors);
+                        if (errors != null && errors.Count > 0)
+                            foreach (Exception error in errors)
+                                Console.Error.WriteLine(error.ToString());
+                        sims.Write(file);
+                        Console.WriteLine("Successfully upgraded " + file);
+                    }
+                    return 0;
                 }
 
                 Stopwatch timer = new Stopwatch();
@@ -72,8 +105,9 @@ namespace Models
                 // If the filename argument has a wildcard then create a IJobManager to go look for matching files to run.
                 // Otherwise, create a JobManager to open the filename and run it in a separate, external process
                 IJobManager job;
-                if (fileName.Contains('*') || fileName.Contains('?'))
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"));
+                bool hasWildcard = fileName.Contains('*') || fileName.Contains('?');
+                if (hasWildcard)
+                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"), args.Contains("/m"));
                 else
                     job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
@@ -81,6 +115,17 @@ namespace Models
                 IJobRunner jobRunner;
                 if (args.Contains("/SingleThreaded"))
                     jobRunner = new JobRunnerSync();
+                else if (args.Contains("/m"))
+                {
+                    // If the multi-process switch has been provided as well as a wildcard in the filename,
+                    // we want to use the single threaded job runner, but run each job in multi-process mode.
+                    // TODO : might be useful to allow users to run a directory of apsimx files via the multi-
+                    // process job runner. This could be faster if they have many small files.
+                    if (hasWildcard)
+                        jobRunner = new JobRunnerSync();
+                    else
+                        jobRunner = new JobRunnerMultiProcess(args.Contains("/Verbose"));
+                }
                 else
                     jobRunner = new JobRunnerAsync();
                 if (args.Select(arg => arg.ToLower()).Contains("/csv"))

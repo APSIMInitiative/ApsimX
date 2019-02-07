@@ -145,9 +145,8 @@ namespace Models.Soils
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
 
-        /// <summary>Called when [loaded].</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             FindChildren();
         }
@@ -251,11 +250,6 @@ namespace Models.Soils
             get
             {
                 return SoilWater.SWmm;
-            }
-
-            set
-            {
-                SoilWater.SWmm = value;
             }
         }
 
@@ -374,8 +368,8 @@ namespace Models.Soils
         { 
             get 
             {
-                if (SoilWater == null) return null;
-                return Map(SoilWater.SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                if (SoilWater == null || !(SoilWater is SoilWater)) return null;
+                return Map((SoilWater as SoilWater).SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
         }
 
@@ -388,7 +382,7 @@ namespace Models.Soils
             get
                 {
                 if (SoilWater == null) return null;
-                return Map(SoilWater.KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                return Map((SoilWater as SoilWater).KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
             }
         }
 
@@ -423,7 +417,7 @@ namespace Models.Soils
         [Description("Available SW-LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
-        public double[] PAWTotalmm
+        public double[] PAWmmInitial
         {
             get
             {
@@ -471,6 +465,16 @@ namespace Models.Soils
                                 LL15,
                                 SoilWater.SW,
                                 null);
+            }
+        }
+
+        /// <summary>Plant available water at standard thickness. Units:mm</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, Thickness);
             }
         }
 
@@ -1057,6 +1061,42 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the plant available nitrate N for each layer (kg/ha)</summary>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] PlantAvailableNO3N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("PlantAvailableNO3");
+            }
+            set
+            {
+                SoluteManager.SetSolute("PlantAvailableNO3", SoluteManager.SoluteSetterType.Soil, value);
+            }
+        }
+
+        /// <summary>Gets or sets the plant available ammonia N for each layer (kg/ha)</summary>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] PlantAvailableNH4N
+        {
+            get
+            {
+                if (SoluteManager == null)
+                    return new double[0];
+                else
+                    return SoluteManager.GetSolute("PlantAvailableNH4");
+            }
+            set
+            {
+                SoluteManager.SetSolute("PlantAvailableNH4", SoluteManager.SoluteSetterType.Soil, value);
+            }
+        }
+
         /// <summary>Gets the or sets urea N for each layer (kg/ha)</summary>
         [XmlIgnore]
         [Units("kg/ha")]
@@ -1396,8 +1436,8 @@ namespace Models.Soils
         internal double[] KLMapped (string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
-                ModifyKLForSubSoilConstraints(SoilCrop);
+            //if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
+            //    ModifyKLForSubSoilConstraints(SoilCrop);
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.KL;
             return Map(SoilCrop.KL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.KL));
@@ -1856,11 +1896,14 @@ namespace Models.Soils
             string Msg = "";
 
             // Check the summer / winter dates.
-            DateTime Temp;
-            if (!DateTime.TryParse(SoilWater.SummerDate, out Temp))
-                Msg += "Invalid summer date of: " + SoilWater.SummerDate + "\r\n";
-            if (!DateTime.TryParse(SoilWater.WinterDate, out Temp))
-                Msg += "Invalid winter date of: " + SoilWater.WinterDate + "\r\n";
+            if (SoilWater is SoilWater)
+            {
+                DateTime Temp;
+                if (!DateTime.TryParse((SoilWater as SoilWater).SummerDate, out Temp))
+                    Msg += "Invalid summer date of: " + (SoilWater as SoilWater).SummerDate + "\r\n";
+                if (!DateTime.TryParse((SoilWater as SoilWater).WinterDate, out Temp))
+                    Msg += "Invalid winter date of: " + (SoilWater as SoilWater).WinterDate + "\r\n";
+            }
 
             foreach (string Crop in CropNames)
             {

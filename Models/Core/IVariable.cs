@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="IVariable.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
@@ -68,5 +68,12 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public abstract bool Writable { get; }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public abstract Attribute GetAttribute(Type attributeType);
     }
 } 

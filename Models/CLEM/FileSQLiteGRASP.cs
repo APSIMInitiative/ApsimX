@@ -9,6 +9,8 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
+using Models.CLEM.Activities;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
@@ -25,8 +27,12 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.CLEMFileSQLiteGRASPView")]
     [PresenterName("UserInterface.Presenters.CLEMFileSQLiteGRASPPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
+    [Version(1, 0, 1, "")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>
@@ -35,8 +41,6 @@ namespace Models.CLEM
         [Link]
         private Clock clock = null;
 
-
-
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
@@ -44,8 +48,6 @@ namespace Models.CLEM
         [Description("Pasture file name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture file name must be supplied.")]
         public string FileName { get; set; }
-
-
 
         /// <summary>
         /// APSIMx SQLite class
@@ -67,11 +69,21 @@ namespace Models.CLEM
         [XmlIgnore]
         private double[] distinctStkRates;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileSQLiteGRASP()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
+        }
 
-
-
-
-
+        /// <summary>
+        /// Does file exist
+        /// </summary>
+        public bool FileExists
+        {
+            get { return File.Exists(this.FullFileName); }
+        }
 
         /// <summary>
         /// Opens the SQLite database if necessary
@@ -98,54 +110,48 @@ namespace Models.CLEM
                     }
                     catch (Exception ex)
                     {
-                        ErrorMessage = "There was a problem opening the SQLite database (" + FullFileName + ")\n" + ex.Message;
+                        ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name +"]\n" + ex.Message;
                         return false;
                     }
                 }
                 else
                 {
-                    ErrorMessage = "This SQLite database (" + FullFileName + ") cound not be found";
+                    ErrorMessage = "@error:The SQLite database [o=" + FullFileName + "] could not be found for [x="+this.Name+"]";
                     return false;
                 }
-
             }
             else
             {
                 //it's already open
                 return true;  
             } 
-                
         }
-
-
 
         /// <summary>
         /// Searches the DataTable created from the GRASP File for all the distinct values for the specified ColumnName.
         /// </summary>
         /// <returns>Sorted array of unique values for the column</returns>
-        private double[] GetCategories(string ColumnName)
+        private double[] GetCategories(string columnName)
         {
             //if the SQLite Database can't be opened throw an exception.
             if (OpenSQLiteDB() == false)
             {
                 throw new Exception(ErrorMessage);
             }
-
-            DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT " + ColumnName + " FROM Native_Inputs ORDER BY " + ColumnName + " ASC");
-
-            double[] results = new double[res.Rows.Count];
-            int i = 0;
-            foreach (DataRow row in res.Rows)
+            else
             {
-                results[i] = Convert.ToDouble(row[0]);
-                i++;
+                DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT " + columnName + " FROM Native_Inputs ORDER BY " + columnName + " ASC");
+
+                double[] results = new double[res.Rows.Count];
+                int i = 0;
+                foreach (DataRow row in res.Rows)
+                {
+                    results[i] = Convert.ToDouble(row[0]);
+                    i++;
+                }
+                return results;
             }
-            return results;
         }
-
-
-
-
 
         /// <summary>
         /// Validate model
@@ -157,10 +163,10 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // check for file
-            if(!File.Exists(FullFileName))
+            if(!this.FileExists)
             {
                 string[] memberNames = new string[] { "FileName" };
-                results.Add(new ValidationResult("This SQLite database ("+FullFileName+") cound not be found", memberNames));
+                results.Add(new ValidationResult("The SQLite database [x="+FullFileName+"] could not be found for [o="+this.Name+"]", memberNames));
             }
             else
             {
@@ -185,15 +191,15 @@ namespace Models.CLEM
 
                 DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info(Native_Inputs)");
 
-                List<string> DBcolumns = new List<string>();
+                List<string> dBcolumns = new List<string>();
                 foreach (DataRow row in res.Rows)
                 {
-                    DBcolumns.Add(row[1].ToString());
+                    dBcolumns.Add(row[1].ToString());
                 }
 
                 foreach (string col in expectedColumns)
                 {
-                    if (!DBcolumns.Contains(col))
+                    if (!dBcolumns.Contains(col))
                     {
                         string[] memberNames = new string[] { "Missing SQLite database column" };
                         results.Add(new ValidationResult("Unable to find column " + col + " in GRASP database (" + FullFileName +")", memberNames));
@@ -203,21 +209,7 @@ namespace Models.CLEM
             return results;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         #region Properties and Methods for populating the User Interface with data
-
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
@@ -231,23 +223,27 @@ namespace Models.CLEM
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                 if (simulation != null & this.FileName != null)
+                {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                }
                 else
+                {
                     return this.FileName;
+                }
             }
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null)
+                {
                     this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                }
                 else
+                {
                     this.FileName = value;
+                }
             }
         }
-
-
-
-
 
         /// <summary>
         /// Gets the first year in the SQLite File
@@ -258,24 +254,23 @@ namespace Models.CLEM
             return GetCategories("Year");
         }
 
-
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable(int StartYear, int EndYear)
+        public DataTable GetTable(int startYear, int endYear)
         {
             if (OpenSQLiteDB() == false)
             {
                 return null;
             }
 
-            string SQLquery = "SELECT  Region,Soil,GrassBA,LandCon,StkRate,Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs";
-            SQLquery += " WHERE Year BETWEEN " + StartYear + " AND " + EndYear;
+            string sqlQuery = "SELECT  Region,Soil,GrassBA,LandCon,StkRate,Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs";
+            sqlQuery += " WHERE Year BETWEEN " + startYear + " AND " + endYear;
 
             try
             {
-                DataTable results = SQLiteReader.ExecuteQuery(SQLquery);
+                DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
                 results.DefaultView.Sort = "Year, Month";
                 return results;
             }
@@ -285,22 +280,11 @@ namespace Models.CLEM
                 ErrorMessage = err.Message;
                 return null;
             }
-            
-
         }
-
 
         #endregion
 
-
-
-
-
-
-
         #region Event Handlers for Running Simulation
-
-
 
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
@@ -319,8 +303,6 @@ namespace Models.CLEM
             this.distinctStkRates = GetCategories("StkRate");
         }
 
-
-
         /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
@@ -334,16 +316,6 @@ namespace Models.CLEM
             }
         }
 
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Finds the closest Stocking Rate Category in the GRASP file for a given Stocking Rate.
         /// The GRASP file does not have every stocking rate. 
@@ -352,15 +324,15 @@ namespace Models.CLEM
         /// It will find the category with the next largest value to the actual stocking rate.
         /// So if the stocking rate is 0 the category with the next largest value will normally be 1
         /// </summary>
-        /// <param name="StkRate"></param>
+        /// <param name="stockingRate"></param>
         /// <returns></returns>
-        private double FindClosestStkRateCategory(double StkRate)
+        private double FindClosestStkRateCategory(double stockingRate)
         {
             //https://stackoverflow.com/questions/41277957/get-closest-value-in-an-array
             //https://msdn.microsoft.com/en-us/library/2cy9f6wb(v=vs.110).aspx
 
             // sorting not needed as now done at array creation
-            int index = Array.BinarySearch(distinctStkRates, StkRate); 
+            int index = Array.BinarySearch(distinctStkRates, stockingRate); 
             double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
             return category;
         }
@@ -369,65 +341,50 @@ namespace Models.CLEM
         /// Queries the the GRASP SQLite database using the specified parameters.
         /// nb. Ignore ForageNo , it is a legacy column in the GRASP file that is not used anymore.
         /// </summary>
-        /// <param name="Region"></param>
-        /// <param name="Soil"></param>
-        /// <param name="GrassBA"></param>
-        /// <param name="LandCon"></param>
-        /// <param name="StkRate"></param>
-        /// <param name="EcolCalculationDate"></param>
-        /// <param name="EcolCalculationInterval"></param>
+        /// <param name="region"></param>
+        /// <param name="soil"></param>
+        /// <param name="grassBasalArea"></param>
+        /// <param name="landCondition"></param>
+        /// <param name="stockingRate"></param>
+        /// <param name="ecolCalculationDate"></param>
+        /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int Region, int Soil, int GrassBA, int LandCon, int StkRate,
-                                         DateTime EcolCalculationDate, int EcolCalculationInterval)
+        public List<PastureDataType> GetIntervalsPastureData(int region, int soil, int grassBasalArea, int landCondition, int stockingRate,
+                                         DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
-            int startYear = EcolCalculationDate.Year;
-            int startMonth = EcolCalculationDate.Month;
-            DateTime EndDate = EcolCalculationDate.AddMonths(EcolCalculationInterval+1);
-            if(EndDate > clock.EndDate)
+            int startYear = ecolCalculationDate.Year;
+            int startMonth = ecolCalculationDate.Month;
+            DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
+            if(endDate > clock.EndDate)
             {
-                EndDate = clock.EndDate;
+                endDate = clock.EndDate;
             }
-            int endYear = EndDate.Year;
-            int endMonth = EndDate.Month;
+            int endYear = endDate.Year;
+            int endMonth = endDate.Month;
 
-            double stkRateCategory = FindClosestStkRateCategory(StkRate);
+            double stkRateCategory = FindClosestStkRateCategory(stockingRate);
 
-            string SQLquery = "SELECT Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs"
-                + " WHERE Region = " + Region
-                + " AND Soil = " + Soil
-                + " AND GrassBA = " + GrassBA
-                + " AND LandCon = " + LandCon
+            string sqlQuery = "SELECT Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs"
+                + " WHERE Region = " + region
+                + " AND Soil = " + soil
+                + " AND GrassBA = " + grassBasalArea
+                + " AND LandCon = " + landCondition
                 + " AND StkRate = " + stkRateCategory;
 
             if (startYear == endYear)
             {
-                SQLquery += " AND (( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
+                sqlQuery += " AND (( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
                 + ")";
             }
             else
             {
-                SQLquery += " AND (( Year = " + startYear + " AND Month >= " + startMonth + ")"
+                sqlQuery += " AND (( Year = " + startYear + " AND Month >= " + startMonth + ")"
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
                 + " OR  ( Year = " + endYear + " AND Month < " + endMonth + ")"
                 + ")"; 
             }
-            //SQLquery += " ORDER BY Year,Month";
 
-            //DateTime now = DateTime.Now;
-            //DataView results;
-            //string ConnectionString = $"Data Source=C:\\Data\\Source\\Repos\\ApsimX\\Prototypes\\CLEM\\NABSA_GRASP_NthQld_WdThck_Base.db;Version=3;";
-            //using (var connection = new SQLiteConnection(ConnectionString))
-            //{
-            //    using (var dataAdapter = new SQLiteDataAdapter(SQLquery, connection))
-            //    {
-            //        DataSet dataSet = new DataSet();
-            //        dataAdapter.Fill(dataSet);
-            //        results = dataSet.Tables[0].DefaultView;
-            //        dataSet.Dispose();
-            //    }
-            //}
-
-            DataTable results = SQLiteReader.ExecuteQuery(SQLquery);
+            DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
             results.DefaultView.Sort = "Year, Month";
 
             List<PastureDataType> pastureDetails = new List<PastureDataType>();
@@ -436,8 +393,8 @@ namespace Models.CLEM
                 pastureDetails.Add(DataRow2PastureDataType(row));
             }
 
-            CheckAllMonthsWereRetrieved(pastureDetails, EcolCalculationDate, EndDate,
-                Region, Soil, GrassBA, LandCon, StkRate);
+            CheckAllMonthsWereRetrieved(pastureDetails, ecolCalculationDate, endDate,
+                region, soil, grassBasalArea, landCondition, stockingRate);
 
             return pastureDetails;
         }
@@ -446,33 +403,36 @@ namespace Models.CLEM
         /// <summary>
         /// Do simple error checking to make sure the data retrieved is usable
         /// </summary>
-        /// <param name="Filtered"></param>
-        /// <param name="StartDate"></param>
-        /// <param name="EndDate"></param>
-        /// <param name="Region"></param>
-        /// <param name="Soil"></param>
-        /// <param name="GrassBA"></param>
-        /// <param name="LandCon"></param>
-        /// <param name="StkRate"></param>
-        private void CheckAllMonthsWereRetrieved(List<PastureDataType> Filtered, DateTime StartDate, DateTime EndDate,
-            int Region, int Soil, int GrassBA, int LandCon, int StkRate)
+        /// <param name="filtered"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="region"></param>
+        /// <param name="soil"></param>
+        /// <param name="grassBasalArea"></param>
+        /// <param name="landCondition"></param>
+        /// <param name="stockingRate"></param>
+        private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
+            int region, int soil, int grassBasalArea, int landCondition, int stockingRate)
         {
             string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
-                        + "For Region: " + Region + ", Soil: " + Soil 
-                        + ", GrassBA: " + GrassBA + ", LandCon: " + LandCon + ", StkRate: " + StkRate + System.Environment.NewLine;
+                        + "For Region: " + region + ", Soil: " + soil 
+                        + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
-            if (clock.EndDate == clock.Today) return;
+            if (clock.EndDate == clock.Today)
+            {
+                return;
+            }
 
             //Check if there is any data
-            if ((Filtered == null) || (Filtered.Count == 0))
+            if ((filtered == null) || (filtered.Count == 0))
             {
                 throw new ApsimXException(this, errormessageStart
                     + "Unable to retrieve any data what so ever");
             }
 
             //Check no gaps in the months
-            DateTime tempdate = StartDate;
-            foreach (PastureDataType month in Filtered)
+            DateTime tempdate = startDate;
+            foreach (PastureDataType month in filtered)
             {
                 if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
                 {
@@ -483,13 +443,11 @@ namespace Models.CLEM
             }
 
             //Check months go right up until EndDate
-            if ((tempdate.Month != EndDate.Month)&&(tempdate.Year != EndDate.Year))
+            if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
             {
                 throw new ApsimXException(this, errormessageStart
                         + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
             }
-            
-
         }
 
         private static PastureDataType DataRow2PastureDataType(DataRowView dr)
@@ -506,10 +464,32 @@ namespace Models.CLEM
             return pasturedata;
         }
 
-
-
-
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">";
+            if (FileName == null || FileName == "")
+            {
+                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+            }
+            else if(!this.FileExists)
+            {
+                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
+            }
+            else
+            {
+                html += "Using <span class=\"filelink\">" + FileName + "</span>";
+            }
+            html += "\n</div>";
+            return html;
+        }
 
     }
 

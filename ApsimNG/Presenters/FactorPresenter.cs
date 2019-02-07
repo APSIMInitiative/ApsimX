@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Reflection;
     using EventArguments;
     using Models.Core;
@@ -32,7 +33,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The presenter
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private ExplorerPresenter presenter;
+
+        /// <summary>
+        /// The intellisense object used to generate completion options.
+        /// </summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>
         /// Attach the view
@@ -44,13 +50,14 @@ namespace UserInterface.Presenters
         {
             this.factor = model as Factor;
             this.factorView = view as IEditorView;
-            this.explorerPresenter = explorerPresenter;
-
-            this.factorView.Lines = this.factor.Specifications.ToArray();
+            this.presenter = explorerPresenter;
+            intellisense = new IntellisensePresenter(factorView as ViewBase);
+            this.factorView.Lines = this.factor.Specifications?.ToArray() ?? new string[0];
 
             this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
         }
 
         /// <summary>
@@ -58,9 +65,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
-            this.factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;            
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            intellisense.Cleanup();
+            factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
+            factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
+            presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
         /// <summary>
@@ -77,25 +86,42 @@ namespace UserInterface.Presenters
 
             try
             {
-                Experiment experiment = this.factor.Parent.Parent as Experiment;
-                if (experiment != null && experiment.BaseSimulation != null)
+                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
+                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Gets a specific line of text, preserving empty lines.
+        /// </summary>
+        /// <param name="text">Text.</param>
+        /// <param name="lineNo">0-indexed line number.</param>
+        /// <returns>String containing a specific line of text.</returns>
+        /// <remarks>This method is a duplicate of ReportPresenter.GetLine().</remarks>
+        private string GetLine(string text, int lineNo)
+        {
+            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
+            // to use unix-style line endings, so every second element from the returned array is an empty string.
+            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
+
+            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
+            string currentLine;
+            using (System.IO.StringReader reader = new System.IO.StringReader(text))
+            {
+                int i = 0;
+                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
                 {
-                    object o = experiment.BaseSimulation.Get(e.ObjectName);
-
-                    if (o != null)
-                    {
-                        foreach (IVariable property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            e.Items.Add(property.Name);
-                        }
-
-                        e.Items.Sort();
-                    }
+                    i++;
                 }
             }
-            catch (Exception)
-            {
-            }
+            return currentLine;
         }
 
         /// <summary>
@@ -105,20 +131,25 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            List<string> newPaths = new List<string>();
-            foreach (string line in this.factorView.Lines)
+            try
             {
-                if (line != string.Empty)
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                List<string> newPaths = new List<string>();
+                foreach (string line in factorView.Lines)
                 {
-                    newPaths.Add(line);
+                    if (line != string.Empty)
+                    {
+                        newPaths.Add(line);
+                    }
                 }
+
+                presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specifications", newPaths));
+                presenter.CommandHistory.ModelChanged += OnModelChanged;
             }
-
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.factor, "Specifications", newPaths));
-
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -127,7 +158,21 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            this.factorView.Lines = this.factor.Specifications.ToArray();
+            factorView.Lines = factor.Specifications.ToArray();
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            if (string.IsNullOrEmpty(args.ItemSelected))
+                factorView.InsertAtCaret(args.ItemSelected);
+            else
+                factorView.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }

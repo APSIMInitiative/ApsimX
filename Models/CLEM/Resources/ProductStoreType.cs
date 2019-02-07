@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,8 +17,9 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
-    [Description("This resource represents a prodcut store type (e.g. Cotton).")]
-    public class ProductStoreType : CLEMModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a product store type (e.g. Cotton).")]
+    [Version(1, 0, 1, "")]
+    public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
         /// <summary>
         /// Starting amount
@@ -26,11 +28,12 @@ namespace Models.CLEM.Resources
         [Required]
         public double StartingAmount { get; set; }
 
-        private double amount;
         /// <summary>
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
+        double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -38,35 +41,27 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
-        }
-
-        /// <summary>
-        /// Initialise resource type
-        /// </summary>
-        public void Initialise()
-        {
             this.amount = 0;
             if (StartingAmount > 0)
             {
-                Add(StartingAmount, this.Name, "Starting value");
+                Add(StartingAmount, this, "Starting value");
             }
         }
 
         #region transactions
 
         /// <summary>
-        /// Back account transaction occured
+        /// Resource transaction occured
         /// </summary>
         public event EventHandler TransactionOccurred;
 
         /// <summary>
         /// Transcation occurred 
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name = "e" >args</param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            var h = TransactionOccurred; if (h != null) h(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -76,26 +71,36 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
-        /// Add money to account
+        /// Add product to store
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            if (ResourceAmount.GetType().ToString() != "System.Double")
+            double addAmount = 0;
+            if (resourceAmount.GetType().Name == "FoodResourcePacket")
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                addAmount = (resourceAmount as FoodResourcePacket).Amount;
             }
-            double addAmount = (double)ResourceAmount;
+            else if (resourceAmount.GetType().ToString() == "System.Double")
+            {
+                addAmount = (double)resourceAmount;
+            }
+            else
+            {
+                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+            }
+
             if (addAmount > 0)
             {
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.Activity = ActivityName;
-                details.Reason = Reason;
+                details.Gain = addAmount;
+                details.Activity = activity.Name;
+                details.ActivityType = activity.GetType().Name;
+                details.Reason = reason;
                 details.ResourceType = this.Name;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -104,32 +109,27 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove money (object) from account
-        /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
+            if (request.Required == 0)
+            {
+                return;
+            }
             // avoid taking too much
-            double amountRemoved = Request.Required;
+            double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
 
-            Request.Provided = amountRemoved;
+            request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
+            details.Loss = amountRemoved;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -138,13 +138,32 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
-            amount = NewAmount;
+            amount = newAmount;
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = base.ModelSummary(formatForParentControl);
+                
+            html += "\n<div class=\"activityentry\">";
+            if(StartingAmount > 0)
+            {
+                html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
+            }
+            html += "\n</div>";
+            return html;
+        }
+
 
     }
 }

@@ -61,17 +61,15 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
-        ///  &lt;Name&gt;Chicory&lt;/Name&gt;
-        ///  &lt;Memo&gt;
-        ///    &lt;Name&gt;GeneralDescription&lt;/Name&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;MemoText&gt;
-        ///      &lt;![CDATA[
-        ///## Presentation
-        ///
-        ///This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Chicory&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Chicory&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n# Presentation\n\nThis model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future release [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Chicory {
             get {
@@ -80,23 +78,43 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant&gt;
-        ///  &lt;Name&gt;Maize&lt;/Name&gt;
-        ///  &lt;OrganArbitrator&gt;
-        ///    &lt;Name&gt;Arbitrator&lt;/Name&gt;
-        ///    &lt;RelativeAllocation&gt;
-        ///      &lt;Name&gt;NArbitrator&lt;/Name&gt;
-        ///      &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;/RelativeAllocation&gt;
-        ///    &lt;RelativeAllocation&gt;
-        ///      &lt;Name&gt;DMArbitrator&lt;/Name&gt;
-        ///      &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;/RelativeAllocation&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///  &lt;/OrganArbitrator&gt;
-        ///  &lt;Phenology&gt;
-        ///   [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Eucalyptus&quot;,
+        ///  &quot;ResourceName&quot;: &quot;Eucalyptus&quot;,
+        ///  &quot;Name&quot;: &quot;Eucalyptus&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;Root:shoot ratio, and allometric relationships for height (Ht, m), stem diameter (DBH, cm, over bark at 1.3 m height), and their derivatives (stem volume Vol, and mean annual increment MAI) were developed as a function of above-ground biomass from [almeida2003application], [almeida2004parameterisation], [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Eucalyptus {
+            get {
+                return ResourceManager.GetString("Eucalyptus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Maize&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Maize&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
+        ///      &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.PMF.RelativeAllocation, Models&quot;,
+        ///          &quot;Name&quot;: &quot;NArbitrator&quot;,
+        ///          &quot;Children&quot;: [],
+        ///          &quot;IncludeInDocumentation&quot;: true,
+        ///          &quot;Enabled&quot;: true,
+        ///          &quot;ReadOnly&quot;: false
+        ///        },
+        ///        {
+        ///          &quot;$type [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {
@@ -105,15 +123,41 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
-        ///&lt;OilPalm&gt;
-        ///  &lt;Name&gt;OilPalm&lt;/Name&gt;
-        ///  &lt;Memo&gt;
-        ///    &lt;Name&gt;Memo&lt;/Name&gt;
-        ///    &lt;MemoText&gt;&lt;![CDATA[The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.]]&gt;&lt;/MemoText&gt;
-        ///  &lt;/Memo&gt;
-        ///  &lt;UnderstoryCoverMax&gt;0.4&lt;/UnderstoryCoverMax&gt;
-        ///  &lt;UnderstoryLegumeFraction&gt;1&lt;/UnderstoryLegumeFracti [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Wheat&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Oats&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n# The APSIM Oats Model\n \n_Allan Peake, Hamish Brown, Rob Zyskowski, Edmar I. Teixeira, Neil Huth_\n\nThe APSIM oats model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to co [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Oats {
+            get {
+                return ResourceManager.GetString("Oats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.OilPalm.OilPalm, Models&quot;,
+        ///  &quot;interception&quot;: 0.0,
+        ///  &quot;UnderstoryCoverMax&quot;: 0.4,
+        ///  &quot;UnderstoryLegumeFraction&quot;: 1.0,
+        ///  &quot;InterceptionFraction&quot;: 0.0,
+        ///  &quot;MaximumRootDepth&quot;: 5000.0,
+        ///  &quot;RootDepth&quot;: 0.0,
+        ///  &quot;DltDM&quot;: 0.0,
+        ///  &quot;ReproductiveGrowthFraction&quot;: 0.0,
+        ///  &quot;UnderstoryCoverGreen&quot;: 0.0,
+        ///  &quot;UnderstoryPotNUptake&quot;: null,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;OilPalm&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;The base configuration of the oil palm m [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string OilPalm {
             get {
@@ -122,40 +166,36 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Plant&gt;
-        ///	&lt;Name&gt;Potato&lt;/Name&gt;
-        ///	&lt;Memo&gt;
-        ///		&lt;Name&gt;TitlePage&lt;/Name&gt;
-        ///		&lt;IncludeInDocumentation&gt;false&lt;/IncludeInDocumentation&gt;
-        ///		&lt;MemoText&gt;&lt;![CDATA[
-        ///# The APSIM Potato Model
-        ///
-        ///_Brown, H.E., Huth, N.I. and Holzworth, D.P._
-        ///
-        ///##Building the model.
-        ///The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to cons [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Plantain&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Plantain&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n## Presentation\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, witho [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Potato {
+        internal static string Plantain {
             get {
-                return ResourceManager.GetString("Potato", resourceCulture);
+                return ResourceManager.GetString("Plantain", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;ResidueTypesList&gt;
-        ///  &lt;Name&gt;ResidueTypes&lt;/Name&gt;
-        ///  &lt;ResidueType&gt;
-        ///    &lt;fom_type&gt;base_type&lt;/fom_type&gt;
-        ///    &lt;fraction_C description=&quot;fraction of Carbon in FOM (0-1)&quot;&gt;0.4&lt;/fraction_C&gt;
-        ///    &lt;po4ppm description=&quot;labile P concentration(ppm)&quot;&gt;0.0&lt;/po4ppm&gt;
-        ///    &lt;nh4ppm description=&quot;ammonium N concentration (ppm)&quot;&gt;0.0&lt;/nh4ppm&gt;
-        ///    &lt;no3ppm description=&quot;nitrate N concentration (ppm)&quot;&gt;0.0&lt;/no3ppm&gt;
-        ///    &lt;specific_area description=&quot;specific area of residue (ha/kg&quot;&gt;0.0005&lt;/specifi [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Potato&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Potato&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n# The APSIM Potato Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n#Building the model.\nThe APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process subm [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string ResidueTypes {
+        internal static string Potato {
             get {
-                return ResourceManager.GetString("ResidueTypes", resourceCulture);
+                return ResourceManager.GetString("Potato", resourceCulture);
             }
         }
         
@@ -177,19 +217,15 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
-        ///  &lt;Name&gt;SCRUM&lt;/Name&gt;
-        ///  &lt;Memo&gt;
-        ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;MemoText&gt;
-        ///      &lt;![CDATA[
-        ///# SCRUM: the Simple Crop Resource Uptake Model
-        ///
-        ///_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
-        ///
-        ///This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in s [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;SCRUM&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;SCRUM&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n# SCRUM: the Simple Crop Resource Uptake Model\n\n_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SCRUM {
             get {
@@ -198,17 +234,15 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
-        ///  &lt;Name&gt;Slurp&lt;/Name&gt;
-        ///  &lt;Memo&gt;
-        ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;MemoText&gt;
-        ///      &lt;![CDATA[
-        ///# SLURP: the Sound of a crop using water
-        ///
-        ///This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on so [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Slurp&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Slurp&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n# SLURP: the Sound of a crop using water\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model doe [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Slurp {
             get {
@@ -229,18 +263,41 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Plant&gt; 
-        ///  &lt;Name&gt;Wheat&lt;/Name&gt;
-        ///  &lt;Memo&gt;
-        ///    &lt;Name&gt;TitlePage&lt;/Name&gt;
-        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
-        ///    &lt;MemoText&gt;
-        ///      &lt;![CDATA[
-        ///# The APSIM Wheat Model
-        ///
-        ///_Brown, H.E., Huth, N.I. and Holzworth, D.P._
-        ///
-        ///The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.Surface.SurfaceOrganicMatter, Models&quot;,
+        ///  &quot;InitialResidueName&quot;: null,
+        ///  &quot;InitialResidueType&quot;: null,
+        ///  &quot;InitialResidueMass&quot;: 0.0,
+        ///  &quot;InitialStandingFraction&quot;: 0.0,
+        ///  &quot;InitialCPR&quot;: 0.0,
+        ///  &quot;InitialCNR&quot;: 0.0,
+        ///  &quot;FractionFaecesAdded&quot;: 0.5,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;SurfaceOrganicMatter&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Surface.ResidueTypes, Models&quot;,
+        ///      &quot;ResidueType&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Surface.ResidueType, Models&quot;,
+        ///          &quot;fom_t [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SurfaceOrganicMatter {
+            get {
+                return ResourceManager.GetString("SurfaceOrganicMatter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Wheat&quot;,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Wheat&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///      &quot;Text&quot;: &quot;\n# The APSIM Wheat Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much t [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {

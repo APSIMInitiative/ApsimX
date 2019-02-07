@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using APSIM.Shared.Utilities;
     using EventArguments;
     using Models;
@@ -50,16 +51,7 @@ namespace UserInterface.Presenters
             this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
-            intellisense.ItemSelected += (sender, e) =>
-            {
-                if (e.TriggerWord == string.Empty)
-                    this.view.InsertAtCaret(e.ItemSelected);
-                else
-                {
-                    int position = this.view.Text.Substring(0, this.view.Offset).LastIndexOf(e.TriggerWord);
-                    this.view.InsertCompletionOption(e.ItemSelected, e.TriggerWord);
-                }
-            };
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             this.PopulateEditorView();
             this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -75,6 +67,7 @@ namespace UserInterface.Presenters
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.view.TextHasChangedByUser -= this.OnTextHasChangedByUser;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
             this.intellisense.Cleanup();
         }
 
@@ -84,13 +77,14 @@ namespace UserInterface.Presenters
         private void PopulateEditorView()
         {
             string st = string.Empty;
-            foreach (Operation operation in this.operations.Schedule)
-            {
-                // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                string dateStr = DateUtilities.validateDateString(operation.Date);
-                string commentChar = operation.Enabled ? string.Empty : "// ";
-                st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
-            }
+            if (operations.Operation != null)
+                foreach (Operation operation in this.operations.Operation)
+                {
+                    // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                    string dateStr = DateUtilities.validateDateString(operation.Date);
+                    string commentChar = operation.Enabled ? string.Empty : "// ";
+                    st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
+                }
 
             this.view.Text = st;
         }
@@ -102,32 +96,39 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            List<Operation> operations = new List<Operation>();
-            foreach (string line in this.view.Lines)
+            try
             {
-                string currentLine = line;
-                bool isComment = line.Trim().StartsWith("//");
-                if (isComment)
+                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+                List<Operation> operations = new List<Operation>();
+                foreach (string line in this.view.Lines)
                 {
-                    int index = line.IndexOf("//");
-                    if (index >= 0)
-                        currentLine = currentLine.Remove(index, 2).Trim();
-                }
-                    
-                int pos = currentLine.IndexOf(' ');
-                if (pos != -1)
-                {
-                    Operation operation = new Operation();
-                    operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
-                    operation.Action = currentLine.Substring(pos + 1);
-                    operation.Enabled = !isComment;
-                    operations.Add(operation);
-                }
-            }
+                    string currentLine = line;
+                    bool isComment = line.Trim().StartsWith("//");
+                    if (isComment)
+                    {
+                        int index = line.IndexOf("//");
+                        if (index >= 0)
+                            currentLine = currentLine.Remove(index, 2).Trim();
+                    }
 
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Schedule", operations));
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                    int pos = currentLine.IndexOf(' ');
+                    if (pos != -1)
+                    {
+                        Operation operation = new Operation();
+                        operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
+                        operation.Action = currentLine.Substring(pos + 1);
+                        operation.Enabled = !isComment;
+                        operations.Add(operation);
+                    }
+                }
+
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Operation", operations));
+                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -139,8 +140,10 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.Item1, e.Coordinates.Item2);
+                if (e.ControlShiftSpace)
+                    intellisense.ShowMethodCompletion(operations, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -155,6 +158,30 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             this.PopulateEditorView();
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            if (string.IsNullOrEmpty(args.TriggerWord))
+                view.InsertAtCaret(args.ItemSelected);
+            else
+            {
+                int position = view.Text.Substring(0, view.Offset).LastIndexOf(args.TriggerWord);
+                view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            }
+
+            if (args.IsMethod)
+            {
+                Point cursor = view.GetPositionOfCursor();
+                intellisense.ShowMethodCompletion(operations, view.Text, view.Offset, new Point(cursor.X, cursor.Y));
+            }
+                
         }
     }
 }

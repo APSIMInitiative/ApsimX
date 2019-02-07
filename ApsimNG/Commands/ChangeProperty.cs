@@ -8,6 +8,7 @@ namespace UserInterface.Commands
     using System;
     using System.Collections.Generic;
     using APSIM.Shared.Utilities;
+    using Models.Core;
 
     /// <summary>
     /// Perform one or more changes to properties in objects.
@@ -27,6 +28,8 @@ namespace UserInterface.Commands
         /// <param name="value">The new value of the property</param>
         public ChangeProperty(object obj, string name, object value)
         {
+            if (obj is IModel && (obj as IModel).ReadOnly)
+                throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", (obj as IModel).Name));
             Property property = new Property(obj, name, value);
 
             List<Property> listOfProperties = new List<Property>();
@@ -134,6 +137,8 @@ namespace UserInterface.Commands
             /// <param name="value">The new value of the property</param>
             public Property(object obj, string name, object value)
             {
+                if (obj is IModel && (obj as IModel).ReadOnly)
+                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", (obj as IModel).Name));
                 this.Obj = obj;
                 this.Name = name;
                 this.NewValue = value;

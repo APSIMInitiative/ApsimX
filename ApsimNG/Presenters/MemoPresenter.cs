@@ -6,10 +6,9 @@
 namespace UserInterface.Presenters
 {
     using System.IO;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
     using Models;
     using Views;
+    using System;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -43,7 +42,7 @@ namespace UserInterface.Presenters
             this.memoViewer = view as HTMLView;
             this.explorerPresenter = explorerPresenter;
             this.memoViewer.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            this.memoViewer.SetContents(this.memoModel.MemoText, true);
+            this.memoViewer.SetContents(this.memoModel.Text, true);
         }
 
         /// <summary>
@@ -51,10 +50,17 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            string markdown = this.memoViewer.GetMarkdown();
-            if (markdown != this.memoModel.MemoText)
+            try
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", markdown));
+                string markdown = this.memoViewer.GetMarkdown();
+                if (markdown != this.memoModel.Text)
+                {
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "Text", markdown));
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -66,7 +72,7 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.memoModel)
             {
-                this.memoViewer.SetContents(((Memo)changedModel).MemoText, true);
+                this.memoViewer.SetContents(((Memo)changedModel).Text, true);
             }
         }
 

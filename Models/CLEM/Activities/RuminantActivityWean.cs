@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -18,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages weaning of suckling ruminant individuals.")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         /// <summary>
@@ -37,9 +40,12 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
         /// </summary>
-        [Description("Name of GrazeFoodStore (paddock) to place weaners in (leave blank for general yards)")]
+        [Description("Name of GrazeFoodStore (paddock) to place weaners in")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreName { get; set; }
-
+        
+        private string grazeStore; 
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -55,10 +61,21 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
+
             // check GrazeFoodStoreExists
-            if ((GrazeFoodStoreName??"") != "")
+            grazeStore = "";
+            if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
             {
-                var foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                grazeStore = GrazeFoodStoreName.Split('.').Last();
+                var foodStore = Resources.GetResourceItem(this, GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            }
+            else
+            {
+                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
+                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                {
+                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
+                }
             }
         }
 
@@ -71,18 +88,62 @@ namespace Models.CLEM.Activities
             // if management month
             if (this.TimingOK)
             {
+                double labourlimit = this.LabourLimitProportion;
+                int weanedCount = 0;
+                ResourceRequest labour = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).FirstOrDefault<ResourceRequest>();
                 // Perform weaning
+                int count = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
                 foreach (var ind in this.CurrentHerd(true).Where(a => a.Weaned == false))
                 {
                     if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
                     {
                         ind.Wean();
-                        ind.Location = GrazeFoodStoreName;
+                        ind.Location = grazeStore;
+                        weanedCount++;
+                        Status = ActivityStatus.Success;
+                    }
+
+                    // stop if labour limited individuals reached and LabourShortfallAffectsActivity
+                    if (weanedCount > Convert.ToInt32(count * labourlimit))
+                    {
+                        break;
                     }
                 }
-                // report that this activity was performed as it does not use base GetResourcesRequired
-                //this.TriggerOnActivityPerformed();
             }
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            List<Ruminant> herd = CurrentHerd(false);
+            int head = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
+
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    daysNeeded = head * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perUnit:
+                    double numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return daysNeeded;
         }
 
         /// <summary>
@@ -99,6 +160,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            Status = ActivityStatus.NotNeeded;
             return;
         }
 
@@ -112,6 +174,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
         /// Resource shortfall event handler
         /// </summary>
         public override event EventHandler ResourceShortfallOccurred;
@@ -122,8 +192,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -137,11 +206,32 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
-
-
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Individuals are weaned at ";
+            html += "<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months or ";
+            html += "<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg";
+            html += "</div>";
+            html += "\n<div class=\"activityentry\">Weaned individuals will be placed in ";
+            if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
+            {
+                html += "<span class=\"resourcelink\">Not specified - general yards</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>";
+            }
+            html += "</div>";
+            return html;
+        }
     }
 }

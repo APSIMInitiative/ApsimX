@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -19,7 +20,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a date range to perfrom activities.")]
+    [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [XmlIgnore]
@@ -49,9 +52,6 @@ namespace Models.CLEM.Activities
         [Required]
         public bool Invert { get; set; }
 
-        private DateTime startDate;
-        private DateTime endDate;
-
         /// <summary>
         /// Activity performed
         /// </summary>
@@ -65,16 +65,6 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-            startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
-        }
-
         /// <summary>
         /// Method to determine whether the activity is due
         /// </summary>
@@ -83,11 +73,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                bool inrange = ((Clock.Today >= startDate) && (Clock.Today <= endDate));
-                if (Invert)
-                {
-                    inrange = !inrange;
-                }
+                bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {
                     // report activity performed.
@@ -99,10 +85,33 @@ namespace Models.CLEM.Activities
                             Name = this.Name
                         }
                     };
+                    activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                 }
                 return inrange;
             }
+        }
+
+        /// <summary>
+        /// Method to determine whether the activity is due based on a specified date
+        /// </summary>
+        /// <returns>Whether the activity is due based on the specified date</returns>
+        public bool Check(DateTime dateToCheck)
+        {
+            return IsMonthInRange(dateToCheck);
+        }
+
+        private bool IsMonthInRange(DateTime date)
+        {
+            DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+
+            bool inrange = ((date >= startDate) && (date <= endDate));
+            if (Invert)
+            {
+                inrange = !inrange;
+            }
+            return inrange;
         }
 
         /// <summary>
@@ -111,8 +120,66 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filter\">";
+            string invertString = "";
+            if (Invert)
+            {
+                invertString = "when <b>NOT</b> ";
+            }
+            html += "Perform "+invertString+"between <span class=\"setvalueextra\">";
+            html += startDate.ToString("d MMM yyyy");
+            html += "</span> and ";
+            if (EndDate <= StartDate)
+            {
+                html += "<span class=\"errorlink\">[must be > StartDate]";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += endDate.ToString("d MMM yyyy");
+            }
+            html += "</span>";
+            if(StartDate!=startDate | EndDate != endDate)
+            {
+                html += " (modified for monthly timestep)";
+            }
+            html += "</div>";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
     }
 }

@@ -1,0 +1,132 @@
+pipeline {
+	agent none
+    stages {
+		stage('CreateInstallers') {
+			parallel {
+				stage('Documentation') {
+					agent {
+						label "installation"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build /r
+							call runTests Validation
+							call runTests Examples
+							call createDocumentation
+							call uploadDocumentation
+						'''
+					}
+				}
+				stage('Windows') {
+					agent {
+						label "installation"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build /r
+							call createInstaller windows
+						'''
+					}
+				}
+				stage('MacOS') {
+					agent {
+						label "installation"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build /r
+							call createInstaller macos
+						'''
+					}
+				}
+				stage('Debian') {
+					agent {
+						label "installation"
+					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
+					steps {
+						bat '''
+							@echo off
+							if not exist ApsimX (
+								git config --system core.longpaths true
+								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+							)
+							if not exist APSIM.Shared (
+								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+							)
+							git -C APSIM.Shared pull origin master
+							cd ApsimX\\Jenkins
+							call cleanup
+							call build /r
+							call createInstaller debian
+						'''
+					}
+				}
+			}
+		}
+		stage('Deploy') {
+			agent {
+				label "installation"
+			}
+			environment {
+				CHANGE_DB_CREDS = credentials('change-db-creds')
+			}
+			steps {
+				bat '''
+					@echo off
+					if not exist ApsimX (
+						git config --system core.longpaths true
+						git clone https://github.com/APSIMInitiative/ApsimX ApsimX
+					)
+					cd ApsimX\\Jenkins
+					call cleanup
+					call deploy "%PULL_ID%" "%CHANGE_DB_CREDS_PSW%"
+				'''
+			}
+		}
+	}
+}

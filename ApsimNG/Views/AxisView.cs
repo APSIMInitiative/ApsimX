@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using Gtk;
     using Interfaces;
+    using OxyPlot.Axes;
 
     /// <summary>
     /// A Windows forms implementation of an AxisView
@@ -43,7 +44,12 @@ namespace UserInterface.Views
         /// Check button object
         /// </summary>
         private CheckButton checkbutton1 = null;
-        
+
+        /// <summary>
+        /// Crosses at checkbox.
+        /// </summary>
+        private CheckButton checkbutton2 = null;
+
         /// <summary>
         /// The constructor
         /// </summary>
@@ -57,12 +63,14 @@ namespace UserInterface.Views
             entryInterval = (Entry)builder.GetObject("entryInterval");
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
+            checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             _mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.Changed += OnMinimumChanged;
-            entryMax.Changed += OnMaximumChanged;
-            entryInterval.Changed += OnIntervalChanged;
+            entryMin.FocusOutEvent += OnMinimumChanged;
+            entryMax.FocusOutEvent += OnMaximumChanged;
+            entryInterval.FocusOutEvent += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
+            checkbutton2.Toggled += OnCrossesAtZeroChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -90,7 +98,12 @@ namespace UserInterface.Views
         /// Invoked when the user has changed the interval field
         /// </summary>
         public event EventHandler IntervalChanged;
-
+       
+        /// <summary>
+        /// Invoked when the user has changed the crosses at zero field
+        /// </summary>
+        public event EventHandler CrossesAtZeroChanged;
+       
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
@@ -123,6 +136,23 @@ namespace UserInterface.Views
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        public bool CrossesAtZero
+        {
+            get
+            {
+                return checkbutton2.Active;
+            }
+
+            set
+            {
+                checkbutton2.Active = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
@@ -130,20 +160,15 @@ namespace UserInterface.Views
         { 
             get
             {
+                DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
+                else if (DateTime.TryParse(entryMin.Text, out date))
+                    return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
-                                            entryMin.Text, 
+                                            entryMin.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
-            }
-            
-            set
-            {
-                if (double.IsNaN(value))
-                    entryMin.Text = string.Empty;
-                else
-                    entryMin.Text = value.ToString();
             }
         }
 
@@ -154,11 +179,14 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
+                else if (DateTime.TryParse(entryMax.Text, out date))
+                    return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
-                                            entryMax.Text, 
+                                            entryMax.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
             }
             
@@ -178,20 +206,63 @@ namespace UserInterface.Views
         {
             get
             {
+                DateTimeIntervalType intervalType;
                 if (string.IsNullOrEmpty(entryInterval.Text))
                     return double.NaN;
+                else if (Enum.TryParse(entryInterval.Text, out intervalType))
+                    return (double)intervalType;
                 else
                     return Convert.ToDouble(
-                                            entryInterval.Text, 
+                                            entryInterval.Text,
                                             System.Globalization.CultureInfo.InvariantCulture);
             }
+        }
 
-            set
+        /// <summary>
+        /// Sets the text in the minimum textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMinimum(double value, bool isDate)
+        {
+            if (!entryMin.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryMin.Text = string.Empty;
+                else
+                    entryMin.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the minimum textbox based on a DateTime stored as a double.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime.</param>
+        public void SetMaximum(double value, bool isDate)
+        {
+            if (!entryMax.HasFocus)
+            {
+                if (double.IsNaN(value))
+                    entryMax.Text = string.Empty;
+                else
+                    entryMax.Text = isDate ? DateTimeAxis.ToDateTime(value).ToShortDateString() : value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Sets the text in the interval textbox.
+        /// </summary>
+        /// <param name="value">Value to display.</param>
+        /// <param name="isDate">If true, the value will be interpreted as a DateTime interval.</param>
+        public void SetInterval(double value, bool isDate)
+        {
+            if (!entryInterval.HasFocus)
             {
                 if (double.IsNaN(value))
                     entryInterval.Text = string.Empty;
                 else
-                    entryInterval.Text = value.ToString();
+                    entryInterval.Text = isDate ? ((DateTimeIntervalType)((int)value)).ToString() : value.ToString();
             }
         }
 
@@ -203,10 +274,11 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entryTitle.Changed -= TitleTextBox_TextChanged;
-            entryMin.Changed -= OnMinimumChanged;
-            entryMax.Changed -= OnMaximumChanged;
-            entryInterval.Changed -= OnIntervalChanged;
+            entryMin.FocusOutEvent -= OnMinimumChanged;
+            entryMax.FocusOutEvent -= OnMaximumChanged;
+            entryInterval.FocusOutEvent -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
+            checkbutton2.Toggled -= OnCheckedChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
@@ -231,6 +303,17 @@ namespace UserInterface.Views
         {
             if (InvertedChanged != null)
                 InvertedChanged(this, e);
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the crosses at zero check box.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnCrossesAtZeroChanged(object sender, EventArgs e)
+        {
+            if (CrossesAtZeroChanged != null)
+                CrossesAtZeroChanged(this, e);
         }
 
         /// <summary>

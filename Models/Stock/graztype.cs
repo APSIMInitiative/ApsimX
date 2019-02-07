@@ -58,9 +58,14 @@ namespace Models.GrazPlan
         public const int MaxPlantSpp = 80;
 
         /// <summary>
-        /// Maximum soil layers
+        /// The ungrazeable amount of green in a paddock
         /// </summary>
-        public const int MaxSoilLayers = 50;
+        public const double Ungrazeable = 40.0;  // g/m^2 
+
+    /// <summary>
+    /// Maximum soil layers
+    /// </summary>
+    public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
         public const int stSEEDL = 1; public const int ptLEAF = 1; public const int SOFT = 1; public const int EFFR = 1;
         public const int stESTAB = 2; public const int ptSTEM = 2; public const int HARD = 2; public const int OLDR = 2;
@@ -247,7 +252,7 @@ namespace Models.GrazPlan
         /// Grazing inputs
         /// </summary>
         [Serializable]
-        public class TGrazingInputs
+        public class GrazingInputs
         {
             /// <summary>
             /// Available herbage
@@ -283,9 +288,9 @@ namespace Models.GrazPlan
             public double LegumeTrop;
 
             /// <summary>
-            /// Construct a TGrazingInputs object
+            /// Construct a GrazingInputs object
             /// </summary>
-            public TGrazingInputs()
+            public GrazingInputs()
             {
 
             }
@@ -294,7 +299,7 @@ namespace Models.GrazPlan
             /// Copy the whole object
             /// </summary>
             /// <param name="src"></param>
-            public void CopyFrom(TGrazingInputs src)
+            public void CopyFrom(GrazingInputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 this.TotalGreen = src.TotalGreen;
@@ -310,7 +315,7 @@ namespace Models.GrazPlan
             /// Copy constructor
             /// </summary>
             /// <param name="src"></param>
-            public TGrazingInputs(TGrazingInputs src)
+            public GrazingInputs(GrazingInputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 TotalGreen = src.TotalGreen;
@@ -326,7 +331,7 @@ namespace Models.GrazPlan
         /// Zero the grazing inputs
         /// </summary>
         /// <param name="Inputs"></param>
-        static public void zeroGrazingInputs(ref TGrazingInputs Inputs)
+        static public void zeroGrazingInputs(ref GrazingInputs Inputs)
         {
             Inputs.Herbage = new IntakeRecord[DigClassNo + 1];
             Inputs.TotalGreen = 0;
@@ -343,7 +348,7 @@ namespace Models.GrazPlan
         /// <param name="iPopn"></param>
         /// <param name="partInputs"></param>
         /// <param name="totalInputs"></param>
-        static public void addGrazingInputs(int iPopn, TGrazingInputs partInputs, ref TGrazingInputs totalInputs)
+        static public void addGrazingInputs(int iPopn, GrazingInputs partInputs, ref GrazingInputs totalInputs)
         {
             int iClass;
             // IntakeRecord intakeRec;
@@ -409,7 +414,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class TPopnHerbageAttr
+        public class PopulationnHerbageAttr
         {
             /// <summary>
             /// kg/ha
@@ -444,7 +449,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class TPopnHerbageData
+        public class PopulationHerbageData
         {
             /// <summary>
             /// Is a legume
@@ -457,11 +462,11 @@ namespace Models.GrazPlan
             /// <summary>
             /// 
             /// </summary>
-            public TPopnHerbageAttr[,] Herbage = new TPopnHerbageAttr[2, HerbClassNo + 1];
+            public PopulationnHerbageAttr[,] Herbage = new PopulationnHerbageAttr[2, HerbClassNo + 1];
             /// <summary>
             /// 
             /// </summary>
-            public TPopnHerbageAttr[] Seeds = new TPopnHerbageAttr[RIPE + 1];
+            public PopulationnHerbageAttr[] Seeds = new PopulationnHerbageAttr[RIPE + 1];
             /// <summary>
             /// 
             /// </summary>
@@ -473,7 +478,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class TGrazingOutputs // Quantities grazed from a pasture         
+        public class GrazingOutputs // Quantities grazed from a pasture         
         {
             /// <summary>
             /// 
@@ -487,7 +492,7 @@ namespace Models.GrazPlan
             /// <summary>
             /// Copy from grazing outputs
             /// </summary>
-            public void CopyFrom(TGrazingOutputs src)
+            public void CopyFrom(GrazingOutputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 Array.Copy(src.Seed, this.Seed, src.Seed.Length);
@@ -580,13 +585,13 @@ namespace Models.GrazPlan
         /// <param name="Inputs"></param>
         /// <param name="fScale"></param>
         /// <returns></returns>
-        static public TGrazingInputs scaleGrazingInputs(TGrazingInputs Inputs, double fScale)
+        static public GrazingInputs scaleGrazingInputs(GrazingInputs Inputs, double fScale)
         {
             int iClass;
             int iSpecies;
             int iRipe;
 
-            TGrazingInputs Result = new TGrazingInputs(Inputs);
+            GrazingInputs Result = new GrazingInputs(Inputs);
 
             if (fScale != 1.0)
             {

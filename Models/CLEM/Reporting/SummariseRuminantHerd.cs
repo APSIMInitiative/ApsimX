@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Models.CLEM.Activities;
+using Models.Core.Attributes;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM
 {
@@ -17,7 +19,9 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    [Version(1, 0, 1, "")]
     public class SummariseRuminantHerd: CLEMModel
     {
         [Link]
@@ -35,13 +39,80 @@ namespace Models.CLEM
         public HerdReportItemGeneratedEventArgs ReportDetails { get; set; }
 
         /// <summary>
+        /// List of filters that define the herd
+        /// </summary>
+        private List<RuminantFilterGroup> herdFilters { get; set; }
+
+        /// <summary>
         /// Report item generated and ready for reporting 
         /// </summary>
         /// <param name="e"></param>
         protected virtual void ReportItemGenerated(HerdReportItemGeneratedEventArgs e)
         {
-            if (OnReportItemGenerated != null)
-                OnReportItemGenerated(this, e);
+            OnReportItemGenerated?.Invoke(this, e);
+        }
+
+        private Report.Report hSReport;
+
+        /// <summary>
+        /// List of filters that define the herd
+        /// </summary>
+        public List<RuminantFilterGroup> HerdFilters { get; set; }
+
+        /// <summary>An event handler to allow us to initialize ourselves.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            // determine any herd filtering
+            herdFilters = new List<RuminantFilterGroup>();
+            IModel current = this;
+            while (current.GetType() != typeof(ZoneCLEM))
+            {
+                var filtergroup = current.Children.OfType<RuminantFilterGroup>().Cast<RuminantFilterGroup>();
+                if (filtergroup.Count() > 1)
+                {
+                    Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
+                }
+                if (filtergroup.FirstOrDefault() != null)
+                {
+                    herdFilters.Insert(0, filtergroup.FirstOrDefault());
+                }
+                current = current.Parent as IModel;
+            }
+
+            // get full name for reporting
+            current = this;
+            string name = this.Name;
+            while (current.GetType() != typeof(ZoneCLEM))
+            {
+                string quoteName = (current.GetType() == typeof(ActivitiesHolder)) ? "["+current.Name+"]":current.Name;
+                name = quoteName + "." + name;
+                current = current.Parent as IModel;
+            }
+
+            hSReport = new Report.Report();
+            hSReport.Name = this.Name + "Report";
+            hSReport.VariableNames = new string[]
+            {
+                "[Clock].Today as Date",
+                name + ".ReportDetails" + ".Breed as Breed",
+                name + ".ReportDetails" + ".Herd as Herd",
+                name + ".ReportDetails" + ".Age as AgeGroup",
+                name + ".ReportDetails" + ".Sex as Sex",
+                name + ".ReportDetails" + ".Number as Num",
+                name + ".ReportDetails" + ".AverageWeight as AvgWt",
+                name + ".ReportDetails" + ".AverageWeightGain as AvgWtGn",
+                name + ".ReportDetails" + ".AverageIntake as AvgIntake",
+                name + ".ReportDetails" + ".AdultEquivalents as AE",
+                name + ".ReportDetails" + ".NumberPregnant as NoPregnant",
+                name + ".ReportDetails" + ".NumberOfBirths as Births"
+            };
+            hSReport.EventNames = new string[]
+            {
+                name+".OnReportItemGenerated"
+            };
         }
 
         /// <summary>
@@ -53,11 +124,11 @@ namespace Models.CLEM
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             timestep++;
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            List<Ruminant> herd = ruminantHerd.Herd;
-
-            // one individual
-            herd = herd.ToList();
+            List<Ruminant> herd = Resources.RuminantHerd().Herd;
+            foreach (RuminantFilterGroup filter in herdFilters)
+            {
+                herd = herd.Filter(filter).ToList();
+            }
 
             // group by breed
             foreach (var breedGroup in herd.GroupBy(a => a.Breed))
@@ -107,6 +178,18 @@ namespace Models.CLEM
                 }
             }
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
+
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Individual filter term for ruminant group of filters to identify individul ruminants
+    /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
     [Description("This other animal filter filter rule is used to define specific individuals from the other animals. Multiple filters are additive.")]
+    [Version(1, 0, 1, "")]
     public class OtherAnimalsFilter: CLEMModel
     {
         /// <summary>

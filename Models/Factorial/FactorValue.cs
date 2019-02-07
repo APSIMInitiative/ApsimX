@@ -16,6 +16,7 @@ namespace Models.Factorial
     /// </summary>
     [ValidParent(ParentType = typeof(Factor))]
     [ValidParent(ParentType = typeof(FactorValue))]
+    [Serializable]
     public class FactorValue
     {
         /// <summary>Parent factor.</summary>
@@ -38,6 +39,12 @@ namespace Models.Factorial
         /// The values for each path.
         /// </summary>
         private List<object> values;
+
+        /// <summary>Parameterless constrctor needed for serialisation</summary>
+        public FactorValue()
+        {
+
+        }
 
         /// <summary>
         /// Constructor
@@ -68,6 +75,17 @@ namespace Models.Factorial
         public List<object> Values { get { return values; } }
 
         /// <summary>
+        /// Gets all paths.
+        /// </summary>
+        public List<string> Paths
+        {
+            get
+            {
+                return paths;
+            }
+        }
+
+        /// <summary>
         /// Apply this FactorValue to the specified simulation
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
@@ -80,6 +98,8 @@ namespace Models.Factorial
             {
                 if (values[i] is string)
                     ApplyStringAsValue(newSimulation, paths[i], values[i].ToString());
+                else if (values[i] is double || values[i] is float)
+                    ApplyDoubleAsValue(newSimulation, paths[i], Convert.ToDouble(values[i]));
                 else
                     ApplyModelReplacement(newSimulation, paths[i], values[i] as IModel);
 
@@ -113,6 +133,15 @@ namespace Models.Factorial
         }
 
         /// <summary>
+        /// Use the name of this object as a value to insert into the specified 'newSimulation'
+        /// </summary>
+        private static void ApplyDoubleAsValue(Simulation newSimulation, string path, double value)
+        {
+            object newValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            newSimulation.Set(path, newValue);
+        }
+
+        /// <summary>
         /// Replace the object specified by 'path' in 'newSimulation' with the specified 'value'
         /// </summary>
         private static void ApplyModelReplacement(Simulation newSimulation, string path, IModel value)
@@ -131,10 +160,7 @@ namespace Models.Factorial
             modelToReplace.Parent.Children.Insert(index, newModel as Model);
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
-
-            Events events = new Events(newModel);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newModel, loadedArgs });
+            newModel.OnCreated();
         }
     }
 }

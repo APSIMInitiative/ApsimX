@@ -8,6 +8,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Reflection;
 
     /// <summary>
@@ -33,13 +34,14 @@ namespace Models.Core
             allModels.Add(relativeTo);
             allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
 
-            List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
-            List<Events.Subscriber> subscribers = Events.Subscriber.FindAll(allModels);
+            List<Publisher> publishers = Publisher.FindAll(allModels);
 
             // Connect publishers to subscribers.
-            Dictionary<IModel, List<Subscriber>> cache = new Dictionary<IModel, List<Subscriber>>();
-            foreach (Events.Publisher publisher in publishers)
-                ConnectPublisherToScriber(publisher, FilterSubscribersInScope(publisher, cache, scope, subscribers));
+            foreach (Publisher publisher in publishers)
+            {
+                var subscribers = Subscriber.FindAll(publisher.Name, publisher.Model as IModel, scope);
+                subscribers.ForEach(subscriber => publisher.ConnectSubscriber(subscriber));
+            }
         }
 
         /// <summary>Connect all events in the specified simulation.</summary>
@@ -114,56 +116,12 @@ namespace Models.Core
         /// <param name="args">The event arguments. Can be null</param>
         internal void Publish(string eventName, object[] args)
         {
-            List<IModel> allModels = new List<IModel>();
-            allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
-            List<Events.Subscriber> subscribers = Events.Subscriber.FindAll(allModels);
+            List<Subscriber> subscribers = Subscriber.FindAll(eventName, relativeTo, scope);
 
-            List<Subscriber> matches = subscribers.FindAll(subscriber => subscriber.Name == eventName &&
-                                                                         allModels.Contains(subscriber.Model as IModel));
-
-            foreach (Subscriber subscriber in matches)
+            foreach (Subscriber subscriber in subscribers)
                 subscriber.Invoke(args);
         }
-
-        /// <summary>Connect the specified publisher to all subscribers in scope</summary>
-        /// <param name="publisher">Publisher to connect.</param>
-        /// <param name="subscribers">All subscribers</param>
-        private static void ConnectPublisherToScriber(Events.Publisher publisher, List<Events.Subscriber> subscribers)
-        {
-            // Find all publishers with the same name.
-            List<Events.Subscriber> matchingSubscribers = subscribers.FindAll(subscriber => subscriber.Name == publisher.Name);
-
-            // Connect subscriber to all matching publishers.
-            matchingSubscribers.ForEach(subscriber => publisher.ConnectSubscriber(subscriber));
-        }
-
-        /// <summary>
-        /// Return a list of subscribers that are in scope.
-        /// </summary>
-        /// <param name="relativeTo">Model to base scoping rules on.</param>
-        /// <param name="cache">The model/scriber cache</param>
-        /// <param name="scope">An instance of scoping rules</param>
-        /// <param name="subscribers">A collection of all subscribers</param>
-        private static List<Subscriber> FilterSubscribersInScope(Publisher relativeTo, 
-                                                                 Dictionary<IModel, List<Subscriber>> cache, 
-                                                                 ScopingRules scope,
-                                                                 List<Events.Subscriber> subscribers)
-        {
-            // Try cache
-            List<Subscriber> subscribersInScope;
-            if (cache.TryGetValue(relativeTo.Model as IModel, out subscribersInScope))
-                return subscribersInScope;
-
-            List<IModel> modelsInScope = new List<IModel>(scope.FindAll(relativeTo.Model as IModel));
-            subscribersInScope = new List<Subscriber>();
-            subscribersInScope = subscribers.FindAll(subscriber => modelsInScope.Contains(subscriber.Model as IModel));
-            cache.Add(relativeTo.Model as IModel, subscribersInScope);
-            return subscribersInScope;
-        }
-
-
-
+        
         /// <summary>A wrapper around an event subscriber MethodInfo.</summary>
         internal class Subscriber
         {
@@ -177,17 +135,19 @@ namespace Models.Core
             public string Name { get; private set; }
 
             /// <summary>Find all event subscribers in the specified models.</summary>
-            /// <param name="models">The models to scan for event handlers.</param>
+            /// <param name="name">The name of the event to look for</param>
+            /// <param name="relativeTo">The model to use in scoping lookup</param>
+            /// <param name="scope">Scoping rules</param>
             /// <returns>The list of event subscribers</returns>
-            internal static List<Subscriber> FindAll(List<IModel> models)
+            internal static List<Subscriber> FindAll(string name, IModel relativeTo, ScopingRules scope)
             {
                 List<Subscriber> subscribers = new List<Subscriber>();
-                foreach (IModel modelNode in models)
+                foreach (IModel modelNode in scope.FindAll(relativeTo as IModel))
                 {
                     foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
                     {
                         EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
-                        if (subscriberAttribute != null)
+                        if (subscriberAttribute != null && subscriberAttribute.ToString() == name)
                             subscribers.Add(new Subscriber()
                             {
                                 Name = subscriberAttribute.ToString(),
@@ -243,6 +203,22 @@ namespace Models.Core
             internal void DisconnectAll()
             {
                 FieldInfo eventAsField = Model.GetType().GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                if (eventAsField == null)
+                {
+                    //GetField will not find the EventHandler on a DerivedClass as the delegate is private
+                    Type searchType = Model.GetType().BaseType;
+                    while(eventAsField == null)
+                    {
+                        eventAsField = searchType?.GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
+                        searchType = searchType.BaseType;
+                        if(searchType == null)
+                        {
+                            //not sure it's even possible to get to here, but it will make it easier to find itf it does
+                            throw new Exception("Could not find " + Name + " in " + Model.GetType().Name + " using GetField");
+                        }
+
+                    }
+                }
                 eventAsField.SetValue(Model, null);
             }
 

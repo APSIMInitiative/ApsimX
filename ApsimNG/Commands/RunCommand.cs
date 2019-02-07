@@ -40,21 +40,22 @@
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
+        public event EventHandler Finished;
 
         /// <summary>Constructor</summary>
         /// <param name="model">The model the user has selected to run</param>
         /// <param name="presenter">The explorer presenter.</param>
         /// <param name="multiProcess">Use the multi-process runner?</param>
         /// <param name="storage">A storage writer where all data should be stored</param>
-        public RunCommand(IModel model, ExplorerPresenter presenter, bool multiProcess, IStorageWriter storage)
+        public RunCommand(IModel model, ExplorerPresenter presenter, bool multiProcess)
         {
             this.jobName = model.Name;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
-            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
+            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, true);
 
             if (multiProcess)
-                jobRunner = new JobRunnerMultiProcess(storage);
+                jobRunner = new JobRunnerMultiProcess(false);
             else
                 jobRunner = new JobRunnerAsync();
             jobRunner.JobCompleted += OnJobCompleded;
@@ -98,18 +99,18 @@
         {
             if (e.exceptionThrown != null)
                 errors.Add(e.exceptionThrown);
-
-            Stop();
-            if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.MessageType.Information);
-            else
+            try
             {
-                string errorMessage = null;
-                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
-                                                     +  "----------------------------------------------" + Environment.NewLine);
-                explorerPresenter.MainPresenter.ShowError(errors);
+                Stop();
             }
+            catch
+            {
+                // We could display the error message, but we're about to display output to the user anyway.
+            }
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, stopwatch.Elapsed.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information);
+            else
+                explorerPresenter.MainPresenter.ShowError(errors);
 
             SoundPlayer player = new SoundPlayer();
             if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
@@ -117,6 +118,8 @@
             else
                 player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
             player.Play();
+
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -142,9 +145,9 @@
         private void Stop()
         {
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
-            timer.Stop();
-            stopwatch.Stop();
-            jobRunner.Stop();
+            timer?.Stop();
+            stopwatch?.Stop();
+            jobRunner?.Stop();
 
             IsRunning = false;
             jobManager = null;
@@ -159,12 +162,26 @@
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             int numSimulations = 0;
-            if (jobManager.SimulationNamesBeingRun != null)
+            if (jobManager?.SimulationNamesBeingRun != null)
                 numSimulations = jobManager.SimulationNamesBeingRun.Count;
-            double percentComplete = (numSimulationsRun * 1.0 / numSimulations) * 100.0;
+
+            double numberComplete = 0.0;
+            if (jobManager.SimClocks != null)
+            {
+                int numClocks = jobManager.SimClocks.Count;
+                for (int i = 0; i < numClocks; i++)
+                    if (jobManager.SimClocks[i] != null)
+                        if (jobManager.SimClocks[i].FractionComplete > 0)
+                            numberComplete += jobManager.SimClocks[i].FractionComplete;
+            }
+            if (numberComplete < 0.1)
+            {
+                numberComplete = numSimulationsRun;
+            }
 
             if (numSimulations > 0)
             {
+                double percentComplete = (numberComplete / numSimulations) * 100.0;
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
                          numSimulationsRun + " of " +
                          (numSimulations) + " completed)", Simulation.MessageType.Information);

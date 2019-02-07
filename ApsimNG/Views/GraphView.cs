@@ -26,7 +26,7 @@ namespace UserInterface.Views
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
-    public class GraphView : ViewBase, Interfaces.IGraphView
+    public class GraphView : ViewBase, IGraphView
     {
         /// <summary>
         /// Overall font size for the graph.
@@ -238,7 +238,7 @@ namespace UserInterface.Views
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
-
+         
             this.plot1.Model.LegendFontSize = FontSize;
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
@@ -565,13 +565,15 @@ namespace UserInterface.Views
         /// <param name="minimum">Minimum axis scale</param>
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
+        /// <param name="crossAtZero">Axis crosses at zero?</param>
         public void FormatAxis(
             Models.Graph.Axis.AxisType axisType,
             string title,
             bool inverted,
             double minimum,
             double maximum,
-            double interval)
+            double interval,
+            bool crossAtZero)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
@@ -580,6 +582,8 @@ namespace UserInterface.Views
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
+                oxyAxis.PositionAtZeroCrossing = crossAtZero;
+
                 if (inverted)
                 {
                     oxyAxis.StartPosition = 1;
@@ -594,7 +598,15 @@ namespace UserInterface.Views
                     oxyAxis.Minimum = minimum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
-                if (!double.IsNaN(interval) && interval > 0)
+                
+                if (oxyAxis is DateTimeAxis)
+                {
+                    DateTimeIntervalType intervalType = double.IsNaN(interval) ? DateTimeIntervalType.Auto : (DateTimeIntervalType)interval;
+                    (oxyAxis as DateTimeAxis).IntervalType = intervalType;
+                    (oxyAxis as DateTimeAxis).MinorIntervalType = intervalType - 1;
+                    (oxyAxis as DateTimeAxis).StringFormat = "dd/MM/yyyy";
+                }
+                else if(!double.IsNaN(interval) && interval > 0)
                     oxyAxis.MajorStep = interval;
             }
         }
@@ -790,7 +802,7 @@ namespace UserInterface.Views
         {
             // axis.IntervalLength = 100;
 
-            if (axis is DateTimeAxis)
+            if (axis is DateTimeAxis && (axis as DateTimeAxis).IntervalType == DateTimeIntervalType.Auto)
             {
                 DateTimeAxis dateAxis = axis as DateTimeAxis;
 
@@ -940,18 +952,21 @@ namespace UserInterface.Views
             {
                 this.EnsureAxisExists(axisType, typeof(string));
                 CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                do
+                if (axis != null)
                 {
-                    int index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                    if (index == -1)
+                    do
                     {
-                        axis.Labels.Add(enumerator.Current.ToString());
-                        index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                    }
+                        int index = axis.Labels.IndexOf(enumerator.Current.ToString());
+                        if (index == -1)
+                        {
+                            axis.Labels.Add(enumerator.Current.ToString());
+                            index = axis.Labels.IndexOf(enumerator.Current.ToString());
+                        }
 
-                    dataPointValues.Add(index);
+                        dataPointValues.Add(index);
+                    }
+                    while (enumerator.MoveNext());
                 }
-                while (enumerator.MoveNext());
             }
 
             return dataPointValues.ToArray();

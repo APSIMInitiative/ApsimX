@@ -237,7 +237,7 @@ namespace UserInterface.Commands
                 ExplorerPresenter examplePresenter = ExplorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl: true);
 
                 Memo instructionsMemo = userDocumentation.Children[0] as Memo;
-                string[] instructions = instructionsMemo.MemoText.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] instructions = instructionsMemo.Text.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string instruction in instructions)
                 {
                     IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);
@@ -250,13 +250,7 @@ namespace UserInterface.Commands
                             AutoDocumentation.DocumentModel(model, tags, 1, 0);
                         else
                         {
-                            System.Drawing.Image image = null;
-
-                            if (model is Manager)
-                                image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
-                            else
-                                image = examplePresenter.GetScreenhotOfRightHandPanel();
-
+                            Image image = examplePresenter.GetScreenhotOfRightHandPanel();
                             if (image != null)
                             {
                                 string name = "Example" + instruction;
@@ -379,7 +373,14 @@ namespace UserInterface.Commands
             // Determine the name of the .png file to write.
             string PNGFileName = Path.Combine(graphDirectory,
                                               graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + ".png");
-
+            int count = 0;
+            // If there are multiple graphs with the same name, they may overwrite each other.
+            // Therefore, we attempt to generate a unique name. After 20 attempts, we give up.
+            while (File.Exists(PNGFileName) && count < 20)
+            {
+                count++;
+                PNGFileName = Path.Combine(graphDirectory, graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + Guid.NewGuid() + ".png");
+            }
             // Setup graph.
             GraphView graph = new GraphView();
             graph.Clear();
@@ -393,8 +394,8 @@ namespace UserInterface.Commands
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
             // Format the axes.
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
             graph.BackColor = OxyPlot.OxyColors.White;
             graph.FontSize = 10;
             graph.Refresh();
@@ -583,6 +584,7 @@ namespace UserInterface.Commands
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
+                        para.Format.KeepWithNext = true;
                         if (heading.headingLevel == 1)
                             para.Format.OutlineLevel = OutlineLevel.Level1;
                         else if (heading.headingLevel == 2)
@@ -714,7 +716,7 @@ namespace UserInterface.Commands
             HtmlToMigraDoc.Convert(html, section, workingDirectory);
 
             Paragraph para = section.LastParagraph;
-            para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);
+            para.Format.LeftIndent += Unit.FromCentimeter(paragraph.indent);
             if (paragraph.bookmarkName != null)
                 para.AddBookmark(paragraph.bookmarkName);
             if (paragraph.handingIndent)

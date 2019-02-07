@@ -2780,7 +2780,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -6665,7 +6665,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -9436,7 +9436,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -13067,7 +13067,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>FieldPeaSoil</Name>
+              <Name>FieldPea1Soil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
@@ -16479,8 +16479,6 @@ namespace Models
 		[XmlIgnore] public double AccumRainfall { get; set; }
 		[XmlIgnore] public double SoilWaterDeficit { get; set; }
 		
-		[XmlIgnore] public double AccumTtemerg { get; set; }
-		
 		[XmlIgnore] public double  InitialSoilOMN { get; set; }
 		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
 		[XmlIgnore] public double  InitialMineralN { get; set; }
@@ -16549,11 +16547,7 @@ namespace Models
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
-			
-			//!!!!!! Thermal time calculation !!!!!!
-			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (FieldPea.Phenology.Stage >= 3)
-			AccumTtemerg += FieldPea.Phenology.ThermalTime.Value();
+
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]

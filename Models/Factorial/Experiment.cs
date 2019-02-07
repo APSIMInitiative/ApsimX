@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Runners;
     using System;
     using System.Collections.Generic;
@@ -14,8 +15,8 @@
     /// Encapsulates a factorial experiment.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.FactorControlView")]
-    [PresenterName("UserInterface.Presenters.FactorControlPresenter")]
+    [ViewName("UserInterface.Views.ExperimentView")]
+    [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model, ISimulationGenerator, ICustomDocumentation
     {
@@ -33,7 +34,7 @@
 
         /// <summary>Simulation runs are about to begin.</summary>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        private void OnBeginRun()
         {
             Initialise();
         }
@@ -41,11 +42,11 @@
         /// <summary>Gets the next job to run</summary>
         public Simulation NextSimulationToRun(bool fullFactorial = true)
         {
-            if (allCombinations == null || allCombinations.Count == 0)
-                return null;
-
             if (serialisedBase == null)
                 Initialise(fullFactorial);
+
+            if (allCombinations == null || allCombinations.Count == 0)
+                return null;
 
             var combination = allCombinations[0];
             allCombinations.RemoveAt(0);
@@ -59,13 +60,8 @@
             newSimulation.FileName = parentSimulations.FileName;
             Apsim.ParentAllChildren(newSimulation);
 
-            // Make substitutions.
-            parentSimulations.MakeSubstitutions(newSimulation);
-
-            // Call OnLoaded in all models.
-            Events events = new Events(newSimulation);
-            LoadedEventArgs loadedArgs = new LoadedEventArgs();
-            events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+            // Make substitutions and issue Loaded event
+            parentSimulations.MakeSubsAndLoad(newSimulation);
 
             foreach (FactorValue value in combination)
                 value.ApplyToSimulation(newSimulation);
@@ -89,16 +85,17 @@
             {
                 Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
 
-                string xml = Apsim.Serialise(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), xml);
+                string st = FileFormat.WriteToString(sims);
+                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
                 sim = NextSimulationToRun();
             }
         }
+        
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
             List<string> names = new List<string>();
-            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
+            List<List<FactorValue>> allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;
@@ -109,6 +106,34 @@
                 names.Add(newSimulationName);
             }
             return names;
+        }
+
+        /// <summary>Gets a list of factors</summary>
+        public List<ISimulationGeneratorFactors> GetFactors()
+        {
+            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
+
+            List<string> simulationNames = new List<string>();
+            foreach (List<FactorValue> combination in AllCombinations())
+            {
+                // Work out a simulation name for this combination
+                string simulationName = Name;
+                foreach (FactorValue value in combination)
+                    simulationName += value.Name;
+                SimulationGeneratorFactors simulationFactors = new SimulationGeneratorFactors("SimulationName", simulationName);
+                factors.Add(simulationFactors);
+                simulationFactors.AddFactor("Experiment", Name);
+
+                foreach (FactorValue value in combination)
+                {
+                    string factorName = value.Factor.Name;
+                    if (value.Factor.Parent is Factor)
+                        factorName = value.Factor.Parent.Name;
+                    string factorValue = value.Name.Replace(factorName, "");
+                    simulationFactors.AddFactor(factorName, factorValue);
+                }
+            }
+            return factors;
         }
 
         /// <summary>
@@ -234,13 +259,8 @@
                     newSimulation.FileName = parentSimulations.FileName;
                     Apsim.ParentAllChildren(newSimulation);
 
-                    // Make substitutions.
-                    parentSimulations.MakeSubstitutions(newSimulation);
-
-                    // Connect events and links in our new  simulation.
-                    Events events = new Events(newSimulation);
-                    LoadedEventArgs loadedArgs = new LoadedEventArgs();
-                    events.Publish("Loaded", new object[] { newSimulation, loadedArgs });
+                    // Make substitutions
+                    parentSimulations.MakeSubsAndLoad(newSimulation);
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);
@@ -265,12 +285,27 @@
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)
             {
-                bool doFullFactorial = false;
+                bool doFullFactorial = true;
                 foreach (Factor factor in Factors.factors)
                 {
-                    List<FactorValue> factorValues = factor.CreateValues();
-                    allValues.Add(factorValues);
-                    doFullFactorial = doFullFactorial || factorValues.Count > 1;
+                    if (factor.Enabled)
+                    {
+                        List<FactorValue> factorValues = factor.CreateValues();
+
+                        // Iff any of the factors modify the same model (e.g. have a duplicate path), then we do not want to do a full factorial.
+                        // This code should check if there are any such duplicates by checking each path in each factor value in the list of factor
+                        // values for the current factor against each path in each list of factor values in the list of all factors which we have
+                        // already added to the global list of list of factor values.
+                        foreach (FactorValue currentFactorValue in factorValues)
+                            foreach (string currentFactorPath in currentFactorValue.Paths)
+                                foreach (List<FactorValue> allFactorValues in allValues)
+                                    foreach (FactorValue globalValue in allFactorValues)
+                                        foreach (string globalPath in globalValue.Paths)
+                                            if (string.Equals(globalPath, currentFactorPath, StringComparison.CurrentCulture))
+                                                doFullFactorial = false;
+
+                        allValues.Add(factorValues);
+                    }
                 }
                 if (doFullFactorial)
                     return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());
@@ -287,7 +322,8 @@
         /// <returns></returns>
         public List<List<FactorValue>> EnabledCombinations()
         {
-            if (DisabledSimNames == null || DisabledSimNames.Count < 1) return AllCombinations();
+            if (DisabledSimNames == null || DisabledSimNames.Count < 1)
+                return AllCombinations();
 
             // easy but inefficient method (for testing purposes)
             return AllCombinations().Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();

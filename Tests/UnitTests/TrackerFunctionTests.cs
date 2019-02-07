@@ -4,7 +4,7 @@ using Models.Core.Interfaces;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using Models.PMF.Functions;
+using Models.Functions;
 
 namespace UnitTests
 {

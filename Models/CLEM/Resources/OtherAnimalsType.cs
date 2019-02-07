@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
     [Description("This resource represents an other animal group (e.g. Chickens).")]
-    public class OtherAnimalsType : CLEMModel, IResourceWithTransactionType
+    [Version(1, 0, 1, "")]
+    public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Current cohorts of this Other Animal Type.
@@ -92,12 +94,20 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
+        /// Amount
+        /// </summary>
+        public double Amount { get; set; }
+
+        /// <summary>
         /// Override base event
         /// </summary>
         protected void OnTransactionOccurred(EventArgs e)
         {
             EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            if (invoker != null)
+            {
+                invoker(this, e);
+            }
         }
 
         /// <summary>
@@ -108,12 +118,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add individuals to type based on cohort
         /// </summary>
-        /// <param name="AddIndividuals"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object AddIndividuals, string ActivityName, string Reason)
+        /// <param name="addIndividuals"></param>
+        /// <param name="activityName"></param>
+        /// <param name="reason"></param>
+        public void Add(object addIndividuals, string activityName, string reason)
         {
-            OtherAnimalsTypeCohort cohortToAdd = AddIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
 
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age & a.Gender == cohortToAdd.Gender).FirstOrDefault();
 
@@ -129,9 +139,10 @@ namespace Models.CLEM.Resources
 
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = cohortToAdd.Number;
-            details.Activity = ActivityName;
-            details.Reason = Reason;
+            details.Gain = cohortToAdd.Number;
+            details.Activity = activityName;
+            details.ActivityType = "Unknown";
+            details.Reason = reason;
             details.ResourceType = this.Name;
             details.ExtraInformation = cohortToAdd;
             LastTransaction = details;
@@ -143,21 +154,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Remove individuals from type based on cohort
         /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
+        /// <param name="removeIndividuals"></param>
+        /// <param name="activityName"></param>
+        /// <param name="reason"></param>
+        public void Remove(object removeIndividuals, string activityName, string reason)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Remove individuals from type based on cohort
-        /// </summary>
-        /// <param name="RemoveIndividuals"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Remove(object RemoveIndividuals, string ActivityName, string Reason)
-        {
-            OtherAnimalsTypeCohort cohortToRemove = RemoveIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortToRemove = removeIndividuals as OtherAnimalsTypeCohort;
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age & a.Gender == cohortToRemove.Gender).First();
 
             if (cohortexists == null)
@@ -173,9 +175,10 @@ namespace Models.CLEM.Resources
 
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction();
-            details.Debit = cohortToRemove.Number * -1;
-            details.Activity = ActivityName;
-            details.Reason = Reason;
+            details.Loss = cohortToRemove.Number;
+            details.Activity = activityName;
+            details.ActivityType = "Unknown";
+            details.Reason = reason;
             details.ResourceType = this.Name;
             details.ExtraInformation = cohortToRemove;
             LastTransaction = details;
@@ -187,9 +190,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
+            throw new NotImplementedException();
         }
 
         #endregion

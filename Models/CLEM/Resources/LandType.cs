@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -18,11 +19,9 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
-    public class LandType : CLEMModel, IResourceType, IResourceWithTransactionType
+    [Version(1, 0, 1, "")]
+    public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
-        [Link]
-        ISummary Summary = null;
-
         /// <summary>
         /// Total Area
         /// </summary>
@@ -34,17 +33,23 @@ namespace Models.CLEM.Resources
         /// Unusable Portion - Buildings, paths etc. (%)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0.0)]
-        [Description("Buildings - proportion taken up with bldgs, paths (%)")]
-        [Required, Percentage]
-        public double UnusablePortion { get; set; }
+        [Description("Proportion taken up with buildings etc.")]
+        [Required, Proportion]
+        public double PortionBuildings
+        {
+            get; set;
+        }
 
         /// <summary>
-        /// Allocate proportion of Total Area
+        /// Allocate only proportion of Land area
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1.0)]
-        [Description("Proportion of Total Area to assign")]
+        [Description("Allocate only proportion of Land area")]
         [Required, Proportion]
-        public double ProportionOfTotalArea { get; set; }
+        public double ProportionOfTotalArea
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Soil Type (1-5) 
@@ -58,19 +63,22 @@ namespace Models.CLEM.Resources
         /// </summary>
         [XmlIgnore]
         public double AreaAvailable { get { return areaAvailable; } }
-        private double areaAvailable;
-
-        /// <summary>
-        /// Area already used (ha)
-        /// </summary>
-        [XmlIgnore]
-        public double AreaUsed { get { return UsableArea - areaAvailable; } }
+        private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
+        private double roundedAreaAvailable;
 
         /// <summary>
         /// The total area available 
         /// </summary>
         [XmlIgnore]
-        public double UsableArea { get { return (this.LandArea * (1.0 - (UnusablePortion / 100)))*ProportionOfTotalArea; }  }
+        public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
+
+        /// <summary>
+        /// List of currently allocated land
+        /// </summary>
+        [XmlIgnore]
+        public List<LandActivityAllocation> AllocatedActivitiesList;
+
+        private CLEMModel ActivityRequestingRemainingLand;
 
         /// <summary>
         /// Constructor
@@ -78,17 +86,6 @@ namespace Models.CLEM.Resources
         public LandType()
         {
             this.SetDefaults();
-        }
-
-        /// <summary>
-        /// Initialise the current state to the starting amount of fodder
-        /// </summary>
-        public void Initialise()
-        {
-            if (UsableArea > 0)
-            {
-                Add(UsableArea, this.Name, "Initialise");
-            }
         }
 
         /// <summary>
@@ -108,7 +105,25 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
+            if (UsableArea > 0)
+            {
+                Add(UsableArea, this, "Initialise");
+            }
+
+            // take away buildings (allows building to change over time. 
+            if (PortionBuildings > 0)
+            {
+                ResourceRequest resourceRequest = new ResourceRequest()
+                {
+                    ActivityModel = this,
+                    AllowTransmutation = false,
+                    Reason = "Allocate buildings",
+                    Required = UsableArea * PortionBuildings,
+                    Resource = this as IResourceType,
+                    ResourceTypeName = this.Name,
+                };
+                this.Remove(resourceRequest);
+            }
         }
 
         #region Transactions
@@ -116,21 +131,21 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="resourceAmount"></param>
+        /// <param name="activity"></param>
+        /// <param name="reason"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            if (ResourceAmount.GetType().ToString() != "System.Double")
+            if (resourceAmount.GetType().ToString() != "System.Double")
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported Add method in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
             }
-            double addAmount = (double)ResourceAmount;
+            double addAmount = (double)resourceAmount;
             double amountAdded = addAmount;
             if (this.areaAvailable + addAmount > this.UsableArea )
             {
                 amountAdded = this.UsableArea - this.areaAvailable;
-                string message = "Tried to add more available land to " + this.Name + " than exists.";
+                string message = "Tried to add more available land to [r=" + this.Name + "] than exists.";
                 Summary.WriteWarning(this, message);
                 this.areaAvailable = this.UsableArea;
             }
@@ -139,52 +154,118 @@ namespace Models.CLEM.Resources
                 this.areaAvailable = this.areaAvailable + addAmount;
             }
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = amountAdded;
-            details.Activity = ActivityName;
-            details.Reason = Reason;
+            details.Gain = amountAdded;
+            details.Activity = activity.Name;
+            details.ActivityType = activity.GetType().Name;
+            details.Reason = reason;
             details.ResourceType = this.Name;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
+
+            if (reason != "Initialise")
+            {
+                UpdateLandAllocatedList(activity, amountAdded, true);
+                // adjust activity using all remaining land as well.
+                if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != activity)
+                {
+                    UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountAdded, true);
+                }
+            }
         }
 
         /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
-            double amountRemoved = Request.Required;
+            if (request.Required == 0)
+            {
+                return;
+            }
+
+            double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.areaAvailable, amountRemoved);
-            this.areaAvailable -= amountRemoved;
 
-            Request.Provided = amountRemoved;
+            if (request.Reason != "Assign unallocated")
+            {
+                this.areaAvailable -= amountRemoved;
+            }
+            else
+            {
+                // activitiy requesting all unallocated land.
+                if (ActivityRequestingRemainingLand == null)
+                {
+                    ActivityRequestingRemainingLand = request.ActivityModel;
+                }
+                else if (ActivityRequestingRemainingLand != request.ActivityModel)
+                {
+                    // error! more than one activity is requesting all unallocated land.
+                    throw new ApsimXException(this, "More than one activity [" + ActivityRequestingRemainingLand.Name + "] and [" + request.ActivityModel.Name + "] is requesting to use all unallocated land from land type [" + this.Name + "]");
+                }
+            }
+
+            request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
+            details.Loss = amountRemoved;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
+
+            UpdateLandAllocatedList(request.ActivityModel, amountRemoved, false);
+            // adjust activity using all remaining land as well.
+            if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != request.ActivityModel)
+            {
+                UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountRemoved, false);
+            }
         }
 
         /// <summary>
         /// Set amount of land available
         /// </summary>
-        /// <param name="NewValue">New value to set land to</param>
-        public void Set(double NewValue)
+        /// <param name="newValue">New value to set land to</param>
+        public new void Set(double newValue)
         {
-            if ((NewValue < 0) || (NewValue > this.UsableArea))
+            throw new NotImplementedException("Set() method of LandType is not currently implemented. Use add and Remove to modify this resource.");
+        }
+
+        private void UpdateLandAllocatedList(CLEMModel activity, double amountChanged, bool added)
+        {
+            if (AllocatedActivitiesList == null)
             {
-                Summary.WriteMessage(this, "Tried to Set Available Land to Invalid New Amount." + Environment.NewLine
-                    + "New Value must be between 0 and the Land Area.");
+                AllocatedActivitiesList = new List<LandActivityAllocation>();
+            }
+
+            // find activity in list
+            LandActivityAllocation allocation = AllocatedActivitiesList.Where(a => a.Activity.Name == activity.Name).FirstOrDefault();
+            if(allocation!= null)
+            {
+                // modify - remove if added by activity and add if removed or taken for the activity
+                allocation.LandAllocated += amountChanged * (added?-1:1);
+                if(allocation.LandAllocated < 0.00001)
+                {
+                    AllocatedActivitiesList.Remove(allocation);
+                }
             }
             else
             {
-                this.areaAvailable = NewValue;
+                // if resource was removed by activity it is added to the activty 
+                if(!added & amountChanged > 0)
+                {
+                    AllocatedActivitiesList.Add(new LandActivityAllocation()
+                    {
+                        LandName = this.Name,
+                        Activity = activity,
+                        LandAllocated = amountChanged,
+                        ActivityName = (activity.Name == this.Name)?"Buildings":activity.Name
+                    });
+                }
             }
         }
 
@@ -199,8 +280,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            if (TransactionOccurred != null)
-                TransactionOccurred(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -211,6 +291,50 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "\n<div class=\"activityentry\">";
+            html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
+            if (PortionBuildings > 0)
+            {
+                html += " of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings";
+            }
+            html += "</div>";
+            html += "\n<div class=\"activityentry\">";
+            html += "This land has soil of index <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
+            html += "\n</div>";
+            return html;
+        }
+
+    }
+
+    /// <summary>
+    /// Class to store land allocation details
+    /// </summary>
+    [Serializable]
+    public class LandActivityAllocation
+    {
+        /// <summary>
+        /// Name of activity using the land
+        /// </summary>
+        public string LandName { get; set; }
+        /// <summary>
+        /// Unique activity ID
+        /// </summary>
+        public CLEMModel Activity { get; set; }
+        /// <summary>
+        /// Name for activity
+        /// </summary>
+        public string ActivityName { get; set; }
+        /// <summary>
+        /// Amount of land allocated
+        /// </summary>
+        public double LandAllocated { get; set; }
     }
 
 }

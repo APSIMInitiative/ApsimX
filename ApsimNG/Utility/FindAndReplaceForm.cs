@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Gtk;
 using Mono.TextEditor;
 using Cairo;
-using UserInterface;
+using UserInterface.Views;
 
 namespace Utility
 {
@@ -136,6 +136,7 @@ namespace Utility
 
             window1.Parent = editor.Toplevel;
             UpdateTitleBar();
+            window1.WindowPosition = WindowPosition.CenterOnParent;
             window1.Show();
             txtLookFor.GrabFocus();
         }

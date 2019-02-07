@@ -1,6 +1,6 @@
 ﻿using Models;
 using Models.Core;
-using Models.PMF.Functions;
+using Models.Functions;
 using Models.Soils;
 using NUnit.Framework;
 using System;
@@ -54,8 +54,8 @@ namespace UnitTests
             Operation fertiliseOperation = new Operation();
             fertiliseOperation.Date = "1-jan";
             fertiliseOperation.Action = "[Fertilise].Apply(Amount: 100, Type:Fertiliser.Types.NO3N, Depth:300)";
-            operations.Schedule = new List<Operation>();
-            operations.Schedule.Add(fertiliseOperation);
+            operations.Operation = new List<Operation>();
+            operations.Operation.Add(fertiliseOperation);
             simulation.Children.Add(operations);
 
             simulation.Children.Add(new SoluteManager());

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -17,9 +18,16 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
+    [Version(1, 0, 1, "")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
-        private List<LabourFilterGroupSpecified> labour;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        protected CropActivityTask()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+        }
 
         /// <summary>
         /// Validate model
@@ -34,31 +42,7 @@ namespace Models.CLEM.Activities
                 string[] memberNames = new string[] { "Parent model" };
                 results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
             }
-
-            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-            foreach (CropActivityFee item in Apsim.Children(this, typeof(CropActivityFee)))
-            {
-                if (!ProductParent.IsTreeCrop)
-                {
-                    if (item.PaymentStyle == CropPaymentStyleType.perTree)
-                    {
-                        string[] memberNames = new string[] { item.Name + ".PaymentStyle" };
-                        results.Add(new ValidationResult("The payment style " + item.PaymentStyle.ToString() + " is not supported for crops defined non tree crops", memberNames));
-                    }
-                }
-            }
             return results;
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
         }
 
         /// <summary>
@@ -67,85 +51,71 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            ResourceRequestList = null;
+            return null;
+        }
 
-            if (this.TimingOK)
+        /// <summary>
+        /// Determines how much labour is required from this activity based on the requirement provided
+        /// </summary>
+        /// <param name="requirement">The details of how labour are to be provided</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (requirement.UnitType)
             {
-                // get all crop fees for task
-                foreach (CropActivityFee item in Apsim.Children(this, typeof(CropActivityFee)))
-                {
-                    if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                    double sumneeded = 0;
-                    switch (item.PaymentStyle)
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHa:
+                    CropActivityManageCrop cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
                     {
-                        case CropPaymentStyleType.Fixed:
-                            sumneeded = item.Amount;
-                            break;
-                        case CropPaymentStyleType.perHa:
-                            CropActivityManageCrop CropParent = Parent.Parent as CropActivityManageCrop;
-                            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-                            sumneeded = CropParent.Area * ProductParent.UnitsToHaConverter * item.Amount;
-                            break;
-                        case CropPaymentStyleType.perTree:
-                            CropParent = Parent.Parent as CropActivityManageCrop;
-                            ProductParent = Parent as CropActivityManageProduct;
-                            sumneeded = ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter * item.Amount;
-                            break;
-                        default:
-                            throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+                        numberUnits = Math.Ceiling(numberUnits);
                     }
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = sumneeded,
-                        ResourceType = typeof(Finance),
-                        ResourceTypeName = "General account",
-                        ActivityModel = this,
-                        FilterDetails = null,
-                        Reason = item.Name
-                    }
-                    );
-                }
 
-                // for each labour item specified
-                foreach (var item in labour)
-                {
-                    double daysNeeded = 0;
-                    switch (item.UnitType)
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perTree:
+                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
                     {
-                        case LabourUnitType.Fixed:
-                            daysNeeded = item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perHa:
-                            CropActivityManageCrop CropParent = Parent.Parent as CropActivityManageCrop;
-                            CropActivityManageProduct ProductParent = Parent as CropActivityManageProduct;
-                            daysNeeded = Math.Ceiling(CropParent.Area * ProductParent.UnitsToHaConverter / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        case LabourUnitType.perTree:
-                            CropParent = Parent.Parent as CropActivityManageCrop;
-                            ProductParent = Parent as CropActivityManageProduct;
-                            daysNeeded = Math.Ceiling(ProductParent.TreesPerHa * CropParent.Area * ProductParent.UnitsToHaConverter / item.UnitSize) * item.LabourPerUnit;
-                            break;
-                        default:
-                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+                        numberUnits = Math.Ceiling(numberUnits);
                     }
-                    if (daysNeeded > 0)
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perKg:
+                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    numberUnits = productParent.AmountHarvested;
+                    if (requirement.WholeUnitBlocks)
                     {
-                        if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                        ResourceRequestList.Add(new ResourceRequest()
-                        {
-                            AllowTransmutation = false,
-                            Required = daysNeeded,
-                            ResourceType = typeof(Labour),
-                            ResourceTypeName = "",
-                            ActivityModel = this,
-                            FilterDetails = new List<object>() { item }
-                        }
-                        );
+                        numberUnits = Math.Ceiling(numberUnits);
                     }
-                }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perUnit:
+                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    numberUnits = productParent.AmountHarvested / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return ResourceRequestList;
+            return daysNeeded;
         }
 
         /// <summary>
@@ -176,8 +146,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -191,8 +160,32 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            if(Apsim.Children(this, typeof(CropActivityFee)).Count() + Apsim.Children(this, typeof(LabourRequirement)).Count() == 0)
+            {
+                html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
+            }
+            return html;
+        }
+
+
     }
 }

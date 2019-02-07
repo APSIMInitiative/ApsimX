@@ -5,20 +5,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// Manger for all activities available to the model
+    /// Manager for all activities available to the model
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
-    public class ActivitiesHolder: CLEMModel
+    [Version(1, 0, 1, "")]
+    public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
-        private ActivityFolder TimeStep = new ActivityFolder() { Name = "TimeStep" };
+        private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
 
         /// <summary>
         /// List of the all the Activities.
@@ -55,11 +58,29 @@ namespace Models.CLEM.Activities
                 }
                 UnBindEvents(item.Children.Cast<IModel>().ToList());
             }
-            // add link to all timers as children so they can fire activity performed
+            // remove link to all timers as children
             foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
             {
                 (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
             }
+        }
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure all folders are not APSIM folders
+            if(Apsim.ChildrenRecursively(this, typeof(Folder)).Count>0)
+            {
+                string[] memberNames = new string[] { "ActivityHolder" };
+                results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+            }
+            return results;
         }
 
         /// <summary>
@@ -86,8 +107,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -114,25 +134,30 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>
         /// Function to return an activity from the list of available activities.
         /// </summary>
         /// <param name="activity"></param>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        private IModel SearchForNameInActivity(Model activity, string Name)
+        private IModel SearchForNameInActivity(Model activity, string name)
         {
-            IModel found = activity.Children.Find(x => x.Name == Name);
-            if (found != null) return found;
+            IModel found = activity.Children.Find(x => x.Name == name);
+            if (found != null)
+            {
+                return found;
+            }
 
             foreach (var child in activity.Children)
             {
-                found = SearchForNameInActivity(child, Name);
-                if (found != null) return found;
+                found = SearchForNameInActivity(child, name);
+                if (found != null)
+                {
+                    return found;
+                }
             }
             return null;
         }
@@ -140,17 +165,23 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Function to return an activity from the list of available activities.
         /// </summary>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public IModel SearchForNameInActivities(string Name)
+        public IModel SearchForNameInActivities(string name)
         {
-            IModel found = Children.Find(x => x.Name == Name);
-            if (found != null) return found;
+            IModel found = Children.Find(x => x.Name == name);
+            if (found != null)
+            {
+                return found;
+            }
 
             foreach (var child in Children)
             {
-                found = SearchForNameInActivity(child, Name);
-                if (found != null) return found;
+                found = SearchForNameInActivity(child, name);
+                if (found != null)
+                {
+                    return found;
+                }
             }
             return null;
         }
@@ -182,7 +213,7 @@ namespace Models.CLEM.Activities
         {
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.GetResourcesForAllActivities();
+                child.GetResourcesForAllActivities(this);
             }
         }
 
@@ -213,9 +244,9 @@ namespace Models.CLEM.Activities
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
             {
-                Activity = TimeStep
+                Activity = timeStep
             };
-            LastActivityPerformed = TimeStep;
+            LastActivityPerformed = timeStep;
             OnActivityPerformed(ea);
         }
 
@@ -232,5 +263,32 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            return "\n<h1>Activities summary</h1>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "\n<div class=\"activity\">";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "\n</div>";
+        }
     }
 }

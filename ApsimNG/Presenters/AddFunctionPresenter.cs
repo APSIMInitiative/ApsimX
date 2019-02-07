@@ -1,18 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AddFunctionPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using Interfaces;
+    using Models.Core;
+    using Models.Core.ApsimFile;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
     using Views;
 
     /// <summary>This presenter lets the user add a model.</summary>
@@ -43,7 +38,7 @@ namespace UserInterface.Presenters
             this.allowableChildFunctions = Apsim.GetAllowableChildFunctions(this.model);
 
             this.view.List.IsModelList = true;
-            this.view.List.Values = this.allowableChildFunctions.Select(m => m.Name).ToArray();
+            this.view.List.Values = this.allowableChildFunctions.Select(m => m.FullName).ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
 
             // Trap events from the view.
@@ -64,20 +59,15 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            Type selectedModelType = this.allowableChildFunctions.Find(m => m.Name == this.view.List.SelectedValue);
+            Type selectedModelType = this.allowableChildFunctions.Find(m => m.FullName == this.view.List.SelectedValue);
             if (selectedModelType != null)
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
-                    // Use the pre built serialization assembly.
-                    string binDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                    string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
-
                     object child = Activator.CreateInstance(selectedModelType, true);
-                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
-                    this.explorerPresenter.Add(childXML, Apsim.FullPath(this.model));
-                    /* this.explorerPresenter.HideRightHandPanel(); */
+                    string childString = FileFormat.WriteToString(child as IModel);
+                    this.explorerPresenter.Add(childString, Apsim.FullPath(this.model));
                 }
                 finally
                 {
@@ -103,7 +93,7 @@ namespace UserInterface.Presenters
                 {
                     foreach (Type t in assembly.GetTypes())
                     {
-                        if (t.Name == modelName && t.IsPublic && t.IsClass)
+                        if (t.FullName == modelName && t.IsPublic && t.IsClass)
                         {
                             modelType = t;
                             break;
@@ -118,13 +108,13 @@ namespace UserInterface.Presenters
                     string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
 
                     object child = Activator.CreateInstance(modelType, true);
-                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
-                    (this.view.List as ListBoxView).SetClipboardText(childXML);
+                    string childString = FileFormat.WriteToString(child as IModel);
+                    (this.view.List as ListBoxView).SetClipboardText(childString);
 
                     DragObject dragObject = new DragObject();
                     dragObject.NodePath = e.NodePath;
                     dragObject.ModelType = modelType;
-                    dragObject.Xml = childXML;
+                    dragObject.ModelString = childString;
                     e.DragObject = dragObject;
                 }
             }

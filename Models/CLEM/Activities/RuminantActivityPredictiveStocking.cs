@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -22,17 +23,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 1, "")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
         Clock Clock = null;
-
-        ///// <summary>
-        ///// Herd to manage for dry season pasture availability
-        ///// </summary>
-        //[Description("Name of herd to manage")]
-        //[Required]
-        //public string HerdName { get; set; }
 
         /// <summary>
         /// Month for assessing dry season feed requirements
@@ -57,36 +52,8 @@ namespace Models.CLEM.Activities
 
         // minimum no that can be sold off... now controlled by sale and transport activity 
 
-        ///// <summary>
-        ///// Minimum breedeer age allowed to be sold
-        ///// </summary>
-        //[Description("Minimum breedeer age allowed to be sold")]
-        //[Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
-        //public double MinimumBreederAgeLimit { get; set; }
-
         // restock proportion. I don't understand this.
         // Maximum % restock breeders/age group
-
-        ///// <summary>
-        ///// Allow dry cows to be sold if feed shortage
-        ///// </summary>
-        //[Description("Allow dry cows to be sold if feed shortage")]
-        //[Required]
-        //public bool SellDryCows { get; set; }
-
-        ///// <summary>
-        ///// Allow wet cows to be sold if feed shortage
-        ///// </summary>
-        //[Description("Allow wet cows to be sold if feed shortage")]
-        //[Required]
-        //public bool SellWetCows { get; set; }
-
-        ///// <summary>
-        ///// Allow steers to be sold if feed shortage
-        ///// </summary>
-        //[Description("Allow steers to be sold if feed shortage")]
-        //[Required]
-        //public bool SellSteers { get; set; }
 
         /// <summary>
         /// Validate this model
@@ -106,7 +73,10 @@ namespace Models.CLEM.Activities
                     destockGroupFound = true;
                     break;
                 }
-                if (destockGroupFound) break;
+                if (destockGroupFound)
+                {
+                    break;
+                }
             }
 
             if (!destockGroupFound)
@@ -132,9 +102,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
+            this.Status = ActivityStatus.Ignored;
             // this event happens after management has marked individuals for purchase or sale.
             if (Clock.Today.Month == AssessmentMonth)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
                 RuminantHerd ruminantHerd = Resources.RuminantHerd();
                 foreach (var paddockGroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
@@ -146,13 +118,13 @@ namespace Models.CLEM.Activities
                     }
 
                     // total adult equivalents not marked for sale of all breeds on pasture for utilisation
-                    double AETotal = paddockGroup.Where(a => a.SaleFlag == HerdChangeReason.None).Sum(a => a.AdultEquivalent);
+                    double totalAE = paddockGroup.Where(a => a.SaleFlag == HerdChangeReason.None).Sum(a => a.AdultEquivalent);
 
-                    double ShortfallAE = 0;
+                    double shortfallAE = 0;
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
-                    ShortfallAE = 0;
-                    GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                    shortfallAE = 0;
+                    GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     double pastureBiomass = pasture.Amount;
 
                     // Adjust fodder balance for detachment rate (6%/month)
@@ -160,29 +132,37 @@ namespace Models.CLEM.Activities
                     for (int i = 0; i < this.DrySeasonLength; i++)
                     {
                         pastureBiomass *= (1.0 - pasture.DetachRate);
-                        pastureBiomass -= feedRequiredAE * AETotal;
+                        pastureBiomass -= feedRequiredAE * totalAE;
                     }
 
                     // Shortfall in Fodder in kg per hectare
-                    double pastureShortFallKgHa = pastureBiomass / pasture.Area;
-                    pastureShortFallKgHa = Math.Max(0, pastureShortFallKgHa - FeedLowLimit);
+                    // pasture at end of period in kg/ha
+                    double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
+                    // shortfall from low limit
+                    pastureShortFallKgHa = Math.Max(0, FeedLowLimit - pastureShortFallKgHa);
                     // Shortfall in Fodder in kg for paddock
-                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Area;
+                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
 
-                    if (pastureShortFallKg == 0) return;
+                    if (pastureShortFallKg == 0)
+                    {
+                        return;
+                    }
 
                     // number of AE to sell to balance shortfall_kg
-                    ShortfallAE = pastureShortFallKg / feedRequiredAE;
+                    shortfallAE = pastureShortFallKg / feedRequiredAE;
 
                     // get prediction
-                    HandleDestocking(ShortfallAE, paddockGroup.Key);
+                    HandleDestocking(shortfallAE, paddockGroup.Key);
                 }
             }
         }
 
-        private void HandleDestocking(double AEforSale, string PaddockName)
+        private void HandleDestocking(double animalEquivalentsforSale, string paddockName)
         {
-            if (AEforSale <= 0) return;
+            if (animalEquivalentsforSale <= 0)
+            {
+                return;
+            }
 
             // move to underutilised paddocks
             // TODO: This can be added later as an activity including spelling
@@ -190,26 +170,30 @@ namespace Models.CLEM.Activities
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == PaddockName);
+            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
             foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == PaddockName & !a.ReadyForSale).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName & !a.ReadyForSale).ToList();
                 herd = herd.Filter(item);
                 int cnt = 0;
-                while (cnt < herd.Count() & AEforSale > 0)
+                while (cnt < herd.Count() & animalEquivalentsforSale > 0)
                 {
-                    AEforSale -= herd[cnt].AdultEquivalent;
+                    this.Status = ActivityStatus.Success;
+                    animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
                     herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (AEforSale < herd.Min(a => a.AdultEquivalent))
+                    if (animalEquivalentsforSale < herd.Min(a => a.AdultEquivalent))
                     {
-                        AEforSale = 0;
+                        animalEquivalentsforSale = 0;
                     }
                     cnt++;
                 }
-                if (AEforSale <= 0) return;
+                if (animalEquivalentsforSale <= 0)
+                {
+                    return;
+                }
             }
 
             // Possible destock groups
@@ -241,6 +225,24 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
         /// Method to determine resources required for initialisation of this activity
         /// </summary>
         /// <returns></returns>
@@ -260,8 +262,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -275,8 +276,59 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
+            html += "<span class=\"setvalue\">";
+            html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+            html += "</span> for a dry season of ";
+            html += "<span class=\"setvalue\">";
+            html += DrySeasonLength.ToString("#0");
+            html += "</span> months ";
+            html += "</div>";
+            html += "\n<div class=\"activityentry\">The herd will be sold to maintain ";
+            html += "<span class=\"setvalue\">";
+            html += FeedLowLimit.ToString("#,##0");
+            html += "</span> kg/ha at the end of this period";
+            html += "</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n</div>";
+            return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activitygroupsborder\">";
+            html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
+
+            if(Apsim.Children(this, typeof(RuminantDestockGroup)).Count() == 0)
+            {
+                html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
+            }
+            return html;
         }
 
     }

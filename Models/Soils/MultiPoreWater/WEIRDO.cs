@@ -9,12 +9,12 @@ using Models;
 using System.Xml.Serialization;
 using Models.PMF;
 using System.Runtime.Serialization;
-using Models.SurfaceOM;
+using Models.Surface;
 using Models.Soils;
 using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF.Functions;
+using Models.Functions;
 
 namespace Models.Soils
 {
@@ -34,7 +34,7 @@ namespace Models.Soils
         public string WaterModelName { get { return this.Name; } }
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
-        public double residueinterception { get { return ResidueWater; } set { } }
+        public double ResidueInterception { get { return ResidueWater; } set { } }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double catchment_area { get; set; }
@@ -85,19 +85,19 @@ namespace Models.Soils
         public double[] ESW { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] flow { get; set; }
+        public double[] Flow { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] flow_nh4 { get; set; }
+        public double[] FlowNH4 { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] flow_no3 { get; set; }
+        public double[] FlowNO3 { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] flow_urea { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] flux { get; set; }
+        public double[] Flux { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double gravity_gradient { get; set; }
@@ -124,7 +124,7 @@ namespace Models.Soils
         public double max_pond { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] outflow_lat { get; set; }
+        public double[] LateralOutflow { get; set; }
         /// <summary> The Plant available water content of the soil layer /// </summary>
         [XmlIgnore]
         public double[] PAWC { get; set; }
@@ -190,7 +190,7 @@ namespace Models.Soils
         [XmlIgnore]
         public double WinterU { get; set; }
         ///<summary> Who knows</summary>
-        public void SetSWmm(int Layer, double NewSWmm) { }
+        public void RemoveWater(double[] NewSWmm) { }
         ///<summary> Who knows</summary>
         public void SetWater_frac(double[] New_SW) { }
         ///<summary> Who knows</summary>
@@ -803,8 +803,8 @@ namespace Models.Soils
         [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType IrrigationData)
         {
-            ResidueWater = ResidueWater + ResidueInterception(IrrigationData.Amount);
-            Irrigation += IrrigationData.Amount - ResidueInterception(IrrigationData.Amount);
+            ResidueWater = ResidueWater + CalcResidueInterception(IrrigationData.Amount);
+            Irrigation += IrrigationData.Amount - CalcResidueInterception(IrrigationData.Amount);
             //Fix me.  Need to subtract out canopy interception also
             IrrigationDuration += IrrigationData.Duration / 60.0;
         }
@@ -816,8 +816,8 @@ namespace Models.Soils
         {
             if (Met.Rain > 0)
             {
-                ResidueWater = ResidueWater + ResidueInterception(Met.Rain);
-                double DailyRainfall = Met.Rain - ResidueInterception(Met.Rain);
+                ResidueWater = ResidueWater + CalcResidueInterception(Met.Rain);
+                double DailyRainfall = Met.Rain - CalcResidueInterception(Met.Rain);
                 //Fix me.  Need to subtract out canopy interception also
             }
         }
@@ -1233,7 +1233,7 @@ namespace Models.Soils
             }
             
         }
-        private double ResidueInterception(double Precipitation)
+        private double CalcResidueInterception(double Precipitation)
         {
             double ResidueWaterCapacity = 0.0002 * SurfaceOM.Wt; //Fixme coefficient should be obtained from surface OM
             return Math.Min(Precipitation * SurfaceOM.Cover, ResidueWaterCapacity - ResidueWater);

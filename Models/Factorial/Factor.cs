@@ -45,6 +45,8 @@ namespace Models.Factorial
         /// </summary>
         public List<FactorValue> CreateValues()
         {
+            if (Specifications == null)
+                Specifications = new List<string>();
             List<FactorValue> factorValues = new List<FactorValue>();
 
             // Example specifications:
@@ -57,7 +59,6 @@ namespace Models.Factorial
             //      [FertiliserRule]
             //    compound specification has multiple other specifications that
             //    result in a single factor value being returned.
-
 
             List<List<PathValuesPair>> allValues = new List<List<PathValuesPair>>();
             List<PathValuesPair> fixedValues = new List<PathValuesPair>();
@@ -146,6 +147,15 @@ namespace Models.Factorial
                         factorName += pathValue.value.ToString();
                 }
             }
+            else if (pathsForFactor.Count == 1 && valuesForFactor.Count == 1 && !(Parent is Factor))
+            {
+                if (valuesForFactor[0] is string)
+                    factorName += valuesForFactor[0];
+                else if (valuesForFactor[0] is IModel)
+                    factorName += (valuesForFactor[0] as IModel).Name;
+                else
+                    factorName += valuesForFactor.ToString();
+            }
 
             if (pathsForFactor.Count > 0)
                 factorValues.Add(new FactorValue(this, factorName, pathsForFactor, valuesForFactor));
@@ -222,17 +232,8 @@ namespace Models.Factorial
                 IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-
-                if (Specifications.Count == 1)
-                {
-                    foreach (IModel newModel in Children)
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
-                else
-                {
-                    foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
+                foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
+                    pairs.Add(new PathValuesPair() { path = specification, value = newModel });
             }
             return pairs;
         }

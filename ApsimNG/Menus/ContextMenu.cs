@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using Models.Report;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -26,9 +27,6 @@ namespace UserInterface.Presenters
     {
         [Link(IsOptional = true)]
         IStorageReader storage = null;
-
-        [Link(IsOptional = true)]
-        IStorageWriter storageWriter = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -50,11 +48,128 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Empty the data store
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Empty the data store",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void EmptyDataStore(object sender, EventArgs e)
+        {
+            storage.EmptyDataStore();
+        }
+
+        /// <summary>
+        /// Run post simulation models.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Refresh",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void RunPostSimulationModels(object sender, EventArgs e)
+        {
+            try
+            {
+                // Run all child model post processors.
+                foreach (IPostSimulationTool tool in Apsim.FindAll(explorerPresenter.ApsimXFile, typeof(IPostSimulationTool)))
+                    if ((tool as IModel).Enabled)
+                        tool.Run(storage);
+                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Run APSIM" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Run APSIM",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder),
+                                              typeof(Morris),
+                                              typeof(Sobol)},
+                     ShortcutKey = "F5")]
+        public void RunAPSIM(object sender, EventArgs e)
+        {
+            RunAPSIMInternal(multiProcessRunner: false);
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Run APSIM multi-process (experimental)" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Run APSIM multi-process (experimental)",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder),
+                                              typeof(Morris)},
+                     ShortcutKey = "F6")]
+        public void RunAPSIMMultiProcess(object sender, EventArgs e)
+        {
+            RunAPSIMInternal(multiProcessRunner: true);
+        }
+
+        [ContextMenu(MenuName = "Run on cloud",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder)
+                                            }
+                    )
+        ]
+        /// <summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        public void RunOnCloud(object sender, EventArgs e)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "UserInterface.Views.NewAzureJobView",
+                                                       "UserInterface.Presenters.NewAzureJobPresenter");
+            }
+            else
+            {
+                explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
+            }
+
+        }
+
+        /// <summary>
+        /// Event handler for generate .apsimx files option.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Generate .apsimx files",
+             AppliesTo = new Type[] {   typeof(Folder),
+                                        typeof(Simulations),
+                                        typeof(Simulation),
+                                        typeof(Experiment),
+                                    }
+            )
+        ]
+        public void OnGenerateApsimXFiles(object sender, EventArgs e)
+        {
+            explorerPresenter.GenerateApsimXFiles(Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel); ;
+        }
+        /// <summary>
         /// User has clicked rename
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Rename", ShortcutKey = "F2")]
+        [ContextMenu(MenuName = "Rename", ShortcutKey = "F2", FollowsSeparator = true)]
         public void OnRename(object sender, EventArgs e)
         {
             this.explorerPresenter.Rename();
@@ -72,9 +187,9 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 // Set the clipboard text.
-                string xml = Apsim.Serialise(model);
-                this.explorerPresenter.SetClipboardText(xml, "_APSIM_MODEL");
-                this.explorerPresenter.SetClipboardText(xml, "CLIPBOARD");
+                string st = FileFormat.WriteToString(model);
+                this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
+                this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
             }
         }
 
@@ -90,25 +205,9 @@ namespace UserInterface.Presenters
             string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
             if (externalCBText == null || externalCBText == "")
-                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);                
+                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
             else
-            {
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                try
-                {
-                    doc.LoadXml(externalCBText);
-                    this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
-                }
-                catch (System.Xml.XmlException)
-                {
-                    // External clipboard does not contain valid xml
-                    this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
-                }
-                catch (Exception ex)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(ex);
-                }
-            }
+                this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -129,7 +228,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Move up", ShortcutKey = "Ctrl+Up")]
+        [ContextMenu(MenuName = "Move up", ShortcutKey = "Ctrl+Up", FollowsSeparator = true)]
         public void OnMoveUpClick(object sender, EventArgs e)
         {
             IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
@@ -150,44 +249,13 @@ namespace UserInterface.Presenters
                 this.explorerPresenter.MoveDown(model);
         }
 
-        /// <summary>
-        /// Event handler for a User interface "Run APSIM" action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run APSIM",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder) },
-                     ShortcutKey = "F5")]
-        public void RunAPSIM(object sender, EventArgs e)
-        {
-            RunAPSIMInternal(multiProcessRunner: false);
-        }
-
-        /// <summary>
-        /// Event handler for a User interface "Run APSIM multi-process (experimental)" action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run APSIM multi-process (experimental)",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder) },
-                     ShortcutKey = "F6")]
-        public void RunAPSIMMultiProcess(object sender, EventArgs e)
-        {
-            RunAPSIMInternal(multiProcessRunner: true);
-        }
 
         [ContextMenu(MenuName = "Copy path to node",
                      ShortcutKey = "Ctrl+Shift+C")]
         public void CopyPathToNode(object sender, EventArgs e)
         {
-            string nodePath = explorerPresenter.CurrentNodePath;            
-            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.PMF.Functions.IFunction)
+            string nodePath = explorerPresenter.CurrentNodePath;
+            if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is Models.Functions.IFunction)
             {
                 nodePath += ".Value()";
             }
@@ -209,7 +277,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    this.command = new Commands.RunCommand(model, this.explorerPresenter, multiProcessRunner, storageWriter);
+                    this.command = new RunCommand(model, this.explorerPresenter, multiProcessRunner);
                     this.command.Do(null);
                 }
             }
@@ -242,10 +310,10 @@ namespace UserInterface.Presenters
             if (currentSoil != null)
             {
                 string errorMessages = currentSoil.Check(false);
-                if (errorMessages != string.Empty)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(errorMessages);
-                }
+                if (!string.IsNullOrEmpty(errorMessages))
+                    explorerPresenter.MainPresenter.ShowError(errorMessages);
+                else
+                    explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
             }
         }
 
@@ -293,46 +361,12 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Run post simulation models.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Refresh",
-                     AppliesTo = new Type[] { typeof(DataStore) })]
-        public void RunPostSimulationModels(object sender, EventArgs e)
-        {
-            try
-            {
-                // Run all child model post processors.
-                foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
-                    tool.Run(storage);
-                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Empty the data store
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Empty the data store",
-                     AppliesTo = new Type[] { typeof(DataStore) })]
-        public void EmptyDataStore(object sender, EventArgs e)
-        {
-            storage.EmptyDataStore();
-        }
-
-        /// <summary>
         /// Export the data store to EXCEL format
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Export to EXCEL",
-                     AppliesTo = new Type[] { typeof(DataStore) })]
+                     AppliesTo = new Type[] { typeof(DataStore) }, FollowsSeparator = true)]
         public void ExportDataStoreToEXCEL(object sender, EventArgs e)
         {
             explorerPresenter.MainPresenter.ShowWaitCursor(true);
@@ -351,12 +385,15 @@ namespace UserInterface.Presenters
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
             }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
             finally
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
-
 
         /// <summary>
         /// Export output in the data store to text files
@@ -411,11 +448,133 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Event handler for a Add model action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true)]
+        public void AddModel(object sender, EventArgs e)
+        {
+            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(model,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.AddModelPresenter");
+        }
+
+        /// <summary>
+        /// Event handler for a Add function action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Add function...")]
+        public void AddFunction(object sender, EventArgs e)
+        {
+            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.ShowInRightHandPanel(model,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.AddFunctionPresenter");
+        }
+
+
+        public bool ShowIncludeInDocumentationChecked()
+        {
+            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Include in documentation' menu item.
+        /// </summary>
+        public bool IncludeInDocumentationChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return (model != null) ? model.IncludeInDocumentation : false;
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Include in documentation' menu item.
+        /// </summary>
+        public bool ShowPageOfGraphsChecked()
+        {
+            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+            return (folder != null) ? folder.ShowPageOfGraphs : false;
+        }
+
+        /// <summary>
+        /// Event handler for 'Checkpoints' menu item
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
+                     AppliesTo = new Type[] { typeof(Simulations) })]
+        public void ShowCheckpoints(object sender, EventArgs e)
+        {
+            explorerPresenter.HideRightHandPanel();
+            explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.CheckpointsPresenter");
+        }
+
+        /// <summary>
+        /// Event handler for 'Show Model Structure' menu item.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        [ContextMenu(MenuName = "Show Model Structure",
+                     IsToggle = true,
+                     AppliesTo = new Type[] { typeof(ModelCollectionFromResource) })]
+        public void ShowModelStructure(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null)
+            {
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.IsHidden = !child.IsHidden;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
+        }
+
+        public bool ShowModelStructureChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model.Children.Count < 1)
+                return true;
+            return !model.Children[0].IsHidden;
+        }
+
+        /// <summary>
+        /// Event handler for 'Enabled' menu item.
+        /// </summary>
+        [ContextMenu(MenuName = "Enabled", IsToggle = true)]
+        public void Enabled(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null)
+            {
+                model.Enabled = !model.Enabled;
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.Enabled = model.Enabled;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Enabled' menu item.
+        /// </summary>
+        public bool EnabledChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.Enabled;
+        }
+
+        /// <summary>
         /// Event handler for a User interface "Create documentation" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create documentation")]
+        [ContextMenu(MenuName = "Create documentation", FollowsSeparator = true)]
         public void CreateDocumentation(object sender, EventArgs e)
         {
             if (this.explorerPresenter.Save())
@@ -445,82 +604,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        [ContextMenu(MenuName = "Run on cloud",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder)
-                                            }            
-                    )
-        ]
-        /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>        
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        public void RunOnCloud(object sender, EventArgs e)
-        {
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowInRightHandPanel(model,
-                                                       "UserInterface.Views.NewAzureJobView",
-                                                       "UserInterface.Presenters.NewAzureJobPresenter");
-            } else
-            {
-                explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
-            }
-            
-        }
-
-        /// <summary>
-        /// Event handler for generate .apsimx files option.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Generate .apsimx files",
-             AppliesTo = new Type[] {   typeof(Folder),
-                                        typeof(Simulations),
-                                        typeof(Simulation),
-                                        typeof(Experiment),
-                                    }
-            )
-        ]
-        public void OnGenerateApsimXFiles(object sender, EventArgs e)
-        {
-            explorerPresenter.GenerateApsimXFiles(Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel); ;
-        }
-
-        /// <summary>
-        /// Event handler for a Add model action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add model...")]
-        public void AddModel(object sender, EventArgs e)
-        {
-            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
-            explorerPresenter.HideRightHandPanel();
-            explorerPresenter.ShowInRightHandPanel(model,
-                                                   "UserInterface.Views.ListButtonView",
-                                                   "UserInterface.Presenters.AddModelPresenter");
-        }
-
-        /// <summary>
-        /// Event handler for a Add function action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add function...")]
-        public void AddFunction(object sender, EventArgs e)
-        {
-            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
-            explorerPresenter.ShowInRightHandPanel(model,
-                                                   "UserInterface.Views.ListButtonView",
-                                                   "UserInterface.Presenters.AddFunctionPresenter");
-        }
-
         /// <summary>
         /// Event handler for a write debug document
         /// </summary>
@@ -547,7 +630,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation", IsToggle=true)]
+        [ContextMenu(MenuName = "Include in documentation", IsToggle = true)]
         public void IncludeInDocumentation(object sender, EventArgs e)
         {
             try
@@ -572,26 +655,12 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
         }
 
-        public bool ShowIncludeInDocumentationChecked()
-        {
-            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
-        }
-
-        /// <summary>
-        /// Event handler for checkbox for 'Include in documentation' menu item.
-        /// </summary>
-        public bool IncludeInDocumentationChecked()
-        {
-            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-            return (model != null) ? model.IncludeInDocumentation : false;
-        }
-
         /// <summary>
         /// Event handler for 'Include in documentation'
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle =true,
+        [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
                      AppliesTo = new Type[] { typeof(Folder) })]
         public void ShowPageOfGraphs(object sender, EventArgs e)
         {
@@ -600,30 +669,6 @@ namespace UserInterface.Presenters
             foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
                 child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
             explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-        }
-
-        /// <summary>
-        /// Event handler for checkbox for 'Include in documentation' menu item.
-        /// </summary>
-        public bool ShowPageOfGraphsChecked()
-        {
-            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
-            return (folder != null) ? folder.ShowPageOfGraphs : false;
-        }
-
-        /// <summary>
-        /// Event handler for 'Checkpoints' menu item
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
-                     AppliesTo = new Type[] { typeof(Simulations) })]
-        public void ShowCheckpoints(object sender, EventArgs e)
-        {
-            explorerPresenter.HideRightHandPanel();
-            explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
-                                                   "UserInterface.Views.ListButtonView",
-                                                   "UserInterface.Presenters.CheckpointsPresenter");
         }
     }
 }

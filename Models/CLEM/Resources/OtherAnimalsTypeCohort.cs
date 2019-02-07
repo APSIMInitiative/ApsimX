@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +17,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("This specifies an other animal cohort at the start of the simulation.")]
+    [Version(1, 0, 1, "")]
     public class OtherAnimalsTypeCohort: CLEMModel
     {
         /// <summary>
@@ -28,7 +30,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age (Months)
         /// </summary>
-        [Description("Age")]
+        [Description("Age (months)")]
+        [Units("Months")]
         [Required, GreaterThanEqualValue(0)]
         public int Age { get; set; }
 
@@ -43,6 +46,7 @@ namespace Models.CLEM.Resources
         /// Starting Weight
         /// </summary>
         [Description("Weight (kg)")]
+        [Units("kg")]
         [Required, GreaterThanEqualValue(0)]
         public double Weight { get; set; }
 

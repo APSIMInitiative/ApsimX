@@ -429,7 +429,7 @@ namespace Models.GrazPlan
         /// <param name="genoValues">The genotypes returned</param>
         public static void MakeGenotypesValue(StockList model, ref StockGeno[] genoValues)
         {
-            TAnimalParamSet parameters;
+            AnimalParamSet parameters;
             string damBreed = string.Empty;
             string sireBreed = string.Empty;
             int generation = 0;
@@ -495,7 +495,7 @@ namespace Models.GrazPlan
         /// <param name="initValue">The sheep data</param>
         public static void MakeSheepValue(StockList model, GrazType.AnimalType animal, ref SheepInit[] initValue)
         {
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             int count;
             int idx, jdx;
 
@@ -575,7 +575,7 @@ namespace Models.GrazPlan
         /// <param name="initValue">The cattle init value</param>
         public static void MakeCattleValue(StockList model, GrazType.AnimalType animal, ref CattleInit[] initValue)
         {
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             int count;
             int idx, jdx;
 
@@ -663,15 +663,15 @@ namespace Models.GrazPlan
 
             for (idx = 0; idx < initValue.Length; idx++)
             {
-                paddock = model.Paddocks.byIndex(idx);
+                paddock = model.Paddocks.ByIndex(idx);
                 initValue[idx] = new PaddockInit();
-                initValue[idx].Name = paddock.sName;                                       // "name"                                
-                initValue[idx].Area = paddock.fArea;                                       // "area"                                
+                initValue[idx].Name = paddock.Name;                                       // "name"                                
+                initValue[idx].Area = paddock.Area;                                       // "area"                                
                 initValue[idx].Slope = paddock.Slope;                                       // "slope"                               
                 Array.Resize(ref initValue[idx].Forages, paddock.Forages.Count());
                 for (jdx = 0; jdx < paddock.Forages.Count(); jdx++)
-                    initValue[idx].Forages[jdx] = paddock.Forages.byIndex(jdx).sName;
-                initValue[idx].Excretion = paddock.sExcretionDest;                              // "excretion"                           
+                    initValue[idx].Forages[jdx] = paddock.Forages.ByIndex(jdx).Name;
+                initValue[idx].Excretion = paddock.ExcretionDest;                              // "excretion"                           
             }
         }
 
@@ -730,7 +730,7 @@ namespace Models.GrazPlan
         public static bool PopulateNumberValue(StockList model, CountType code, bool useYoung, bool useAll, bool useTag, ref int[] numbers)
         {
             int numPasses;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             int value;
             int total;
             int p, idx;
@@ -804,7 +804,7 @@ namespace Models.GrazPlan
         public static bool PopulateRealValue(StockList model, int varCode, bool useYoung, bool useAll, bool useTag, ref double[] arrayValues)
         {
             int numPasses;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             double value;
             double total;
             int denom;
@@ -848,7 +848,7 @@ namespace Models.GrazPlan
                                     break;
                                 case StockProps.prpBASE_WT: value = animalGroup.BaseWeight;
                                     break;
-                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(TAnimalParamSet.TCond_System.csSYSTEM1_5);
+                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(AnimalParamSet.Cond_System.csSYSTEM1_5);
                                     break;
                                 case StockProps.prpMAX_PREV_WT: value = animalGroup.MaxPrevWeight;
                                     break;
@@ -974,7 +974,7 @@ namespace Models.GrazPlan
         public static bool PopulateDMPoolValue(StockList model, int propCode, bool useYoung, bool useAll, bool useTag, ref DMPoolHead[] poolValues)
         {
             int numPasses;
-            TAnimalGroup animalGroup;
+            AnimalGroup animalGroup;
             GrazType.DM_Pool pool = new GrazType.DM_Pool();
             GrazType.DM_Pool totalPool = new GrazType.DM_Pool();
             int denom;
@@ -1077,7 +1077,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Copy the supplement eaten into a TSupplementEaten[]
+        /// Copy the supplement eaten into a SupplementEaten[]
         /// </summary>
         /// <param name="model">The animal model</param>
         /// <param name="suppValues">The supplement data returned</param>
@@ -1090,18 +1090,18 @@ namespace Models.GrazPlan
             count = 0;
             for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
             {
-                if (model.Paddocks.byIndex(paddIdx).SuppRemovalKG > 0.0)
+                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
                     count++;
             }
             
             suppValues = new SupplementEaten[count];
             idx = 0;
             for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
-                if (model.Paddocks.byIndex(paddIdx).SuppRemovalKG > 0.0)
+                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
                 {
                     suppValues[idx] = new SupplementEaten();
-                    suppValues[idx].Paddock = model.Paddocks.byIndex(paddIdx).sName;
-                    suppValues[idx].Eaten = model.Paddocks.byIndex(paddIdx).SuppRemovalKG;
+                    suppValues[idx].Paddock = model.Paddocks.ByIndex(paddIdx).Name;
+                    suppValues[idx].Eaten = model.Paddocks.ByIndex(paddIdx).SuppRemovalKG;
                     idx++;
                 }
         }
@@ -1120,7 +1120,7 @@ namespace Models.GrazPlan
 
             for (idx = 1; idx <= model.Count(); idx++)
             {
-                TAnimalGroup group = model.At(idx);
+                AnimalGroup group = model.At(idx);
                 ME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
                 ME_MoveGraze = group.AnimalState.EnergyUse.Maint - ME_Metab - group.AnimalState.EnergyUse.Cold;
 

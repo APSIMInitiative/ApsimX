@@ -58,6 +58,11 @@ namespace Models.PMF
         [XmlIgnore]
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the actual water demand.</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double WaterDemand { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
@@ -119,6 +124,8 @@ namespace Models.PMF
         [Units("kg/ha")]
         public double NDemand { get; set; }
 
+        /// <summary>Aboveground mass</summary>
+        public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
         [XmlIgnore]
@@ -180,7 +187,7 @@ namespace Models.PMF
         /// <param name="soilstate"></param>
         /// <returns>list of uptakes</returns>
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -207,6 +214,9 @@ namespace Models.PMF
             Uptake.Water = SWUptake;
             Uptake.NO3N = new double[SWUptake.Length];
             Uptake.NH4N = new double[SWUptake.Length];
+            Uptake.NH4N = new double[SWUptake.Length];
+            Uptake.PlantAvailableNO3N = new double[SWUptake.Length];
+            Uptake.PlantAvailableNH4N = new double[SWUptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -214,7 +224,7 @@ namespace Models.PMF
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soil state</param>
         /// <returns></returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -242,6 +252,8 @@ namespace Models.PMF
             ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
             Uptake.NO3N = NO3Uptake;
             Uptake.NH4N = NH4Uptake;
+            Uptake.PlantAvailableNO3N = new double[NO3Uptake.Length];
+            Uptake.PlantAvailableNH4N = new double[NO3Uptake.Length];
             Uptake.Water = new double[NO3Uptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
@@ -250,18 +262,17 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         {
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
 
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
-                Soil.SoilWater.SetSWmm(j, Soil.SoilWater.SWmm[j] - SWUptake[j]);
+            Soil.SoilWater.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         {
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;

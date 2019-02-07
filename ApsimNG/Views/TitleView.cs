@@ -56,14 +56,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// When the user 'enters' the position combo box, save the current text value for later.
-        /// </summary>
-        private void OnTitleTextBoxEnter(object sender, EventArgs e)
-        {
-            OriginalText = entry1.Text;
-        }
-
-        /// <summary>
         /// When the user changes the combo box check to see if the text has changed. 
         /// If so then invoke the 'OnPositionChanged' event so that the presenter can pick it up.
         /// </summary>

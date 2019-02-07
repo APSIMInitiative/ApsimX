@@ -35,11 +35,13 @@ namespace Models.Core
         /// </summary>
         /// <param name="rootNode"></param>
         /// <param name="recurse">Recurse through all child models?</param>
-        public void Resolve(IModel rootNode, bool recurse = true)
+        /// <param name="allLinks">Unresolve all links or just the non child links?</param>
+        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
         {
             if (recurse)
             {
-                List<IModel> allModels = Apsim.ChildrenRecursively(rootNode);
+                List<IModel> allModels = new List<IModel>() { rootNode };
+                allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
                 foreach (IModel modelNode in allModels)
                     ResolveInternal(modelNode, null);
             }
@@ -65,18 +67,18 @@ namespace Models.Core
         public void Resolve(object obj)
         {
             // Go looking for [Link]s
-            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
-                                                            GetModel(obj).GetType(),
-                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+            foreach (IVariable field in GetAllDeclarations(obj, GetModel(obj).GetType(),
+                                                           BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                           allLinks:true))
             {
-                LinkAttribute link = GetLinkAttribute(field);
+                LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
 
                 if (link != null)
                 {
                     // For now only try matching on a service
-                    object match = services.Find(s => field.FieldType.IsAssignableFrom(s.GetType()));
+                    object match = services.Find(s => field.DataType.IsAssignableFrom(s.GetType()));
                     if (match != null)
-                        field.SetValue(GetModel(obj), GetModel(match));
+                        field.Value = GetModel(match);
                     else if (!link.IsOptional)
                         throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                 }
@@ -87,18 +89,22 @@ namespace Models.Core
         /// Set to null all link fields in the specified model.
         /// </summary>
         /// <param name="model">The model to look through for links</param>
-        public void Unresolve(IModel model)
+        /// <param name="allLinks">Unresolve all links or just the non child links?</param>
+        public void Unresolve(IModel model, bool allLinks)
         {
-            foreach (IModel modelNode in Apsim.ChildrenRecursively(model))
+            List<IModel> allModels = new List<IModel>() { model };
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s
-                foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
-                                                model.GetType(),
-                                                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+                foreach (IVariable declaration in GetAllDeclarations(modelNode,
+                                                                     modelNode.GetType(),
+                                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                                     allLinks))
                 {
-                    LinkAttribute link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                    LinkAttribute link = declaration.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
                     if (link != null)
-                        field.SetValue(model, null);
+                        declaration.Value = null;
                 }
             }
         }
@@ -111,20 +117,21 @@ namespace Models.Core
         private void ResolveInternal(object obj, List<ModelWrapper> allModels)
         {
             // Go looking for [Link]s
-            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
-                                                            GetModel(obj).GetType(),
-                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+            foreach (IVariable field in GetAllDeclarations(GetModel(obj),
+                                                     GetModel(obj).GetType(),
+                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                     allLinks: true))
             {
-                LinkAttribute link = GetLinkAttribute(field);
+                LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
 
                 if (link != null)
                 {
                     // Get the field type or the array element if it is an array field.
-                    Type fieldType = field.FieldType;
+                    Type fieldType = field.DataType;
                     if (fieldType.IsArray)
                         fieldType = fieldType.GetElementType();
-                    else if (field.FieldType.Name.StartsWith("List") && field.FieldType.GenericTypeArguments.Length == 1)
-                        fieldType = field.FieldType.GenericTypeArguments[0];
+                    else if (field.DataType.Name.StartsWith("List") && field.DataType.GenericTypeArguments.Length == 1)
+                        fieldType = field.DataType.GenericTypeArguments[0];
 
                     // Try and get a match from our services first.
                     List<object> matches;
@@ -168,22 +175,22 @@ namespace Models.Core
                     if (link.UseNameToMatch(field))
                         matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
 
-                    if (field.FieldType.IsArray)
+                    if (field.DataType.IsArray)
                     {
                         Array array = Array.CreateInstance(fieldType, matches.Count);
                         for (int i = 0; i < matches.Count; i++)
                             array.SetValue(GetModel(matches[i]), i);
-                        field.SetValue(GetModel(obj), array);
+                        field.Value = array;
                         
                     }
-                    else if (field.FieldType.Name.StartsWith("List") && field.FieldType.GenericTypeArguments.Length == 1)
+                    else if (field.DataType.Name.StartsWith("List") && field.DataType.GenericTypeArguments.Length == 1)
                     {
                         var listType = typeof(List<>);
                         var constructedListType = listType.MakeGenericType(fieldType);
                         IList array = Activator.CreateInstance(constructedListType) as IList;
                         for (int i = 0; i < matches.Count; i++)
                             array.Add(GetModel(matches[i]));
-                        field.SetValue(GetModel(obj), array);
+                        field.Value = array;
                     }
                     else if (matches.Count == 0)
                     {
@@ -193,26 +200,9 @@ namespace Models.Core
                     else if (matches.Count >= 2 && !link.IsScoped(field))
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
                     else
-                        field.SetValue(GetModel(obj), GetModel(matches[0]));
+                        field.Value = GetModel(matches[0]);
                 }
             }
-        }
-
-        /// <summary>
-        /// Go looking for a link attribute.
-        /// </summary>
-        /// <param name="field">The associated field.</param>
-        /// <returns>Returns link or null if none field on specified field.</returns>
-        private static LinkAttribute GetLinkAttribute(FieldInfo field)
-        {
-            var attributes = field.GetCustomAttributes();
-            foreach (Attribute attribute in attributes)
-            {
-                LinkAttribute link = attribute as LinkAttribute;
-                if (link != null)
-                    return link;
-            }
-            return null;
         }
 
         /// <summary>
@@ -299,6 +289,40 @@ namespace Models.Core
                 return (obj as IModel).Children.Cast<object>().ToList();
             else
                 return (obj as ModelWrapper).Children.Cast<object>().ToList();
+        }
+
+        /// <summary>
+        /// Return all fields. The normal .NET reflection doesn't return private fields in base classes.
+        /// This function does.
+        /// </summary>
+        public static List<IVariable> GetAllDeclarations(object obj, Type type, BindingFlags flags, bool allLinks)
+        {
+            if (type == typeof(Object) || type == typeof(Model)) return new List<IVariable>();
+
+            var list = GetAllDeclarations(obj, type.BaseType, flags, allLinks);
+            // in order to avoid duplicates, force BindingFlags.DeclaredOnly
+            foreach (FieldInfo field in type.GetFields(flags | BindingFlags.DeclaredOnly))
+                foreach (Attribute a in field.GetCustomAttributes())
+                {
+                    LinkAttribute link = a as LinkAttribute;
+                    if (link != null)
+                    {
+                        if (allLinks || !link.GetType().Name.StartsWith("Child"))
+                            list.Add(new VariableField(obj, field));
+                    }
+                }
+            foreach (PropertyInfo property in type.GetProperties(flags | BindingFlags.DeclaredOnly))
+                foreach (Attribute a in property.GetCustomAttributes())
+                {
+                    LinkAttribute link = a as LinkAttribute;
+                    if (link != null)
+                    {
+                        if (allLinks || !link.GetType().Name.StartsWith("Child"))
+                            list.Add(new VariableProperty(obj, property));
+                    }
+                }
+
+            return list;
         }
 
 

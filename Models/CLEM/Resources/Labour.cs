@@ -7,6 +7,8 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -18,7 +20,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all labour types (people) for the simulation.")]
-    public class Labour: ResourceBaseWithTransactions
+    [Version(1, 0, 1, "")]
+    public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
         /// <summary>
         /// Get the Clock.
@@ -39,16 +42,24 @@ namespace Models.CLEM.Resources
         [Required]
         public bool AllowAging { get; set; }
 
-        ///// <summary>
-        ///// Total resources currently available
-        ///// </summary>
-        //public double Available
-        //{
-        //    get
-        //    {
-        //        return this.Children.Where(a => a.GetType() == typeof(IResourceType)).Cast<IResourceType>().Sum(a => a.Amount);
-        //    }
-        //} 
+        private LabourAvailabilityList availabilityList;
+
+        /// <summary>
+        /// Validation of this resource
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            availabilityList = Apsim.Children(this, typeof(LabourAvailabilityList)).Cast<LabourAvailabilityList>().FirstOrDefault();
+            if (availabilityList == null && Apsim.Children(this, typeof(LabourType)).Count > 0)
+            {
+                string[] memberNames = new string[] { "Labour.AvailabilityList" };
+                results.Add(new ValidationResult("A labour availability list is required under the labour resource for this simulation.", memberNames));
+            }
+            return results;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -57,19 +68,21 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in Apsim.Children(this, typeof(IModel)).Cast<LabourType>().ToList())
+            foreach (LabourType labourChildModel in Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().ToList())
             {
-                for (int i = 0; i < Math.Max(labourChildModel.Individuals, 1); i++)
+                for (int i = 0; i < labourChildModel.Individuals; i++)
                 {
+                    // get the availability from provided list
+
                     LabourType labour = new LabourType()
                     {
                         Gender = labourChildModel.Gender,
                         Individuals = 1,
                         InitialAge = labourChildModel.InitialAge,
-                        AgeInMonths = labourChildModel.InitialAge*12,
-                        MaxLabourSupply = labourChildModel.MaxLabourSupply,
+                        AgeInMonths = labourChildModel.InitialAge * 12,
+                        LabourAvailability = labourChildModel.LabourAvailability,
                         Parent = this,
-                        Name = labourChildModel.Name // + ((labourChildModel.Individuals>1)?i.ToString():"")
+                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1)?"_"+(i+1).ToString():"")
                     };
                     labour.TransactionOccurred += Resource_TransactionOccurred;
                     Items.Add(labour);
@@ -113,9 +126,43 @@ namespace Models.CLEM.Resources
         private void OnStartOfMonth(object sender, EventArgs e)
         {
             int currentmonth = Clock.Today.Month;
-            foreach (var item in Items)
+            foreach (LabourType item in Items)
             {
+                CheckAssignLabourAvailability(item);
+
+                // set available days from availabilityitem
                 item.SetAvailableDays(currentmonth);
+            }
+        }
+
+        private void CheckAssignLabourAvailability(LabourType labour)
+        {
+            List<LabourType> checkList = new List<LabourType>() { labour };
+            if (labour.LabourAvailability != null)
+            {
+                // check labour availability still ok
+                if (checkList.Filter(labour.LabourAvailability).Count == 0)
+                {
+                    labour.LabourAvailability = null;
+                }
+            }
+
+            // if not assign new value
+            if (labour.LabourAvailability == null)
+            {
+                foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
+                {
+                    if (checkList.Filter(availItem).Count > 0)
+                    {
+                        labour.LabourAvailability = availItem as LabourSpecificationItem;
+                        break;
+                    }
+                }
+                // if still null report error
+                if (labour.LabourAvailability == null)
+                {
+                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
+                }
             }
         }
 
@@ -127,9 +174,13 @@ namespace Models.CLEM.Resources
         {
             if(AllowAging)
             {
-                foreach (var item in Items)
+                foreach (LabourType item in Items)
                 {
                     item.AgeInMonths++;
+
+                    //Update labour available if needed.
+                    CheckAssignLabourAvailability(item);
+
                 }
             }
         }
@@ -143,8 +194,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected new void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -158,8 +208,40 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(e);
         }
 
-
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            if(AllowAging)
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "Individuals age with time";
+                html += "</div>";
+            }
+            html += "\n<div class=\"holderresourcesub\">";
+            html += "\n<div class=\"clearfix resourcebannerlight\">Labour types</div>";
+            html += "\n<div class=\"resourcecontentlight\">";
+            html += "<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th></tr>";
+            foreach (LabourType labourType in Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().ToList())
+            {
+                html += "<tr>";
+                html += "<td>" + labourType.Name + "</td>";
+                html += "<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>";
+                html += "<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>";
+                html += "<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>";
+                html += "</tr>";
+            }
+            html += "</table>";
+            html += "</div></div>";
+            return html;
+        }
+
 
     }
 }

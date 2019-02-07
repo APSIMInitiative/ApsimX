@@ -1,9 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ProfilePresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -20,12 +15,11 @@ namespace UserInterface.Presenters
     using Views;
 
     /// <summary>
-    /// <para>
     /// This presenter talks to a ProfileView to display profile (layered) data in a grid.
-    /// It uses reflection to look for public properties that are read/write, have a
-    /// [Description] attribute and return either double[] or string[].
-    /// </para>
-    /// <para>
+    /// It uses reflection to look for public properties that are read/write, and have a
+    /// [Description] attribute.
+    /// </summary>
+    /// <remarks>
     /// For each property found it will
     ///   1. optionally look for units via a units attribute:
     ///         [Units("kg/ha")]
@@ -36,8 +30,8 @@ namespace UserInterface.Presenters
     ///         where {Property} is the name of the property being examined.
     ///   3. optionally look for a metadata property named:
     ///     {Property}Metadata { get; set; }
-    /// </para>
-    /// </summary>
+    /// </remarks>
+
     public class ProfilePresenter : IPresenter
     {
         /// <summary>
@@ -71,6 +65,11 @@ namespace UserInterface.Presenters
         private List<VariableProperty> propertiesInGrid = new List<VariableProperty>();
 
         /// <summary>
+        /// Presenter for the profile grid.
+        /// </summary>
+        private GridPresenter profileGrid = new GridPresenter();
+
+        /// <summary>
         /// Our graph.
         /// </summary>
         private Graph graph;
@@ -95,11 +94,7 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.view = view as IProfileView;
-            this.view.ProfileGrid.FormatColumns += (sender, e) =>
-            {
-                FormatGrid((view as IProfileView).ProfileGrid.DataSource);
-            };
-
+            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
             this.explorerPresenter = explorerPresenter;
 
             this.view.ShowView(false);
@@ -124,6 +119,16 @@ namespace UserInterface.Presenters
             }
             else
             {
+                // The graph's series contain many variables such as [Soil].LL. We now replace
+                // these relative paths with absolute paths.
+                foreach (Series series in Apsim.Children(graph, typeof(Series)))
+                {
+                    series.XFieldName = series.XFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.YFieldName = series.YFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                }
+
                 this.parentForGraph = this.model.Parent as IModel;
                 if (this.parentForGraph != null)
                 {
@@ -150,8 +155,8 @@ namespace UserInterface.Presenters
                             cropLLSeries.ShowInLegend = true;
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
-                            cropLLSeries.YFieldName = "[Soil].DepthMidPoints";
-                            cropLLSeries.XFieldName = "[" + (property.Object as Model).Name + "]." + property.Name;
+                            cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
+                            cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
                             this.graph.Children.Add(cropLLSeries);
@@ -168,13 +173,11 @@ namespace UserInterface.Presenters
 
             // Trap the right click on column header so that we can potentially put
             // units on the context menu.
-            this.view.ProfileGrid.ColumnHeaderClicked += this.OnColumnHeaderClicked;
+            this.view.ProfileGrid.GridColumnClicked += this.OnGridColumnClicked;
 
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             
-            this.view.ProfileGrid.ResizeControls();
-            this.view.PropertyGrid.ResizeControls();
             this.view.ShowView(true);
         }
 
@@ -185,10 +188,11 @@ namespace UserInterface.Presenters
         {
             this.view.ProfileGrid.EndEdit();
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
-            this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
+            this.view.ProfileGrid.GridColumnClicked -= this.OnGridColumnClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-            this.propertyPresenter.Detach();
+            propertyPresenter.Detach();
+            profileGrid.Detach();
             if (this.graphPresenter != null)
             {
                 this.graphPresenter.Detach();
@@ -283,7 +287,7 @@ namespace UserInterface.Presenters
                 }
 
                 string format = property.Format;
-                if (format == null)
+                if (format == null || format == string.Empty)
                 {
                     format = "N3";
                 }
@@ -300,9 +304,16 @@ namespace UserInterface.Presenters
                 }
 
                 // colour the column headers of total columns.
-                if (!double.IsNaN(property.Total))
+                try
                 {
-                    gridColumn.HeaderForegroundColour = Color.Red;
+                    if (!double.IsNaN(property.Total))
+                    {
+                        gridColumn.HeaderForegroundColour = Color.Red;
+                    }
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
             }
 
@@ -367,7 +378,16 @@ namespace UserInterface.Presenters
                 }
 
                 // add a total to the column header if necessary.
-                double total = property.Total;
+                double total;
+                try
+                {
+                    total = property.Total;
+                }
+                catch (Exception err)
+                {
+                    total = double.NaN;
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
                 if (!double.IsNaN(total))
                 {
                     columnName = columnName + "\r\n" + total.ToString("N1");
@@ -379,8 +399,9 @@ namespace UserInterface.Presenters
                 {
                     values = property.Value as Array;
                 }
-                catch (Exception)
+                catch (Exception err)
                 {
+                    explorerPresenter.MainPresenter.ShowError(err);
                 }
 
                 if (table.Columns.IndexOf(columnName) == -1)
@@ -551,12 +572,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception e)
                     {
-                        if (e is System.Reflection.TargetInvocationException)
-                        {
-                            e = (e as System.Reflection.TargetInvocationException).InnerException;
-                        }
-
-                        this.explorerPresenter.MainPresenter.ShowError(e);
+                        explorerPresenter.MainPresenter.ShowError(e);
                     }
                 }
             }
@@ -581,16 +597,17 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnColumnHeaderClicked(object sender, GridHeaderClickedArgs e)
+        private void OnGridColumnClicked(object sender, GridColumnClickedArgs e)
         {
             if (e.RightClick)
             {
-                this.view.ProfileGrid.ClearContextActions();
+                this.view.ProfileGrid.ClearContextActions(!e.OnHeader);
                 this.indexOfClickedVariable = e.Column.ColumnIndex;
                 VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
                 if (property.AllowableUnits.Length > 0)
                 {
-                    this.view.ProfileGrid.AddContextSeparator();
+                    if (!e.OnHeader)
+                        this.view.ProfileGrid.AddContextSeparator();
                     foreach (VariableProperty.NameLabelPair unit in property.AllowableUnits)
                     {
                         this.view.ProfileGrid.AddContextOption(unit.Name, unit.Label, this.OnUnitClick, unit.Name == property.Units);
@@ -606,11 +623,18 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnUnitClick(object sender, EventArgs e)
         {
-            VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-            if (sender is Gtk.MenuItem)
+            try
             {
-                string unitsString = (sender as Gtk.MenuItem).Name;
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));               
+                VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
+                if (sender is Gtk.MenuItem)
+                {
+                    string unitsString = (sender as Gtk.MenuItem).Name;
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
     }

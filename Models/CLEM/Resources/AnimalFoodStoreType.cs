@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Resources
 {
@@ -17,34 +18,27 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
     [Description("This resource represents an animal food store (e.g. Lucerne).")]
-    public class AnimalFoodStoreType : CLEMModel, IResourceType, IResourceWithTransactionType, IFeedType
+    [Version(1, 0, 1, "")]
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeedType, IResourceType
     {
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        [Description("Dry Matter (%)")]
-        [Required, Percentage]
-        public double DryMatter { get; set; }
-
         /// <summary>
         /// Dry Matter Digestibility (%)
         /// </summary>
         [Description("Dry Matter Digestibility (%)")]
-        [Required, Percentage]
+        [Required, Percentage, GreaterThanValue(0)]
         public double DMD { get; set; }
 
         /// <summary>
         /// Nitrogen (%)
         /// </summary>
         [Description("Nitrogen (%)")]
-        [Required, Percentage]
+        [Required, Percentage, GreaterThanValue(0)]
         public double Nitrogen { get; set; }
 
         /// <summary>
         /// Current store nitrogen (%)
         /// </summary>
         [XmlIgnore]
-//        [Description("Current store nitrogen (%)")]
         public double CurrentStoreNitrogen { get; set; }
 
         /// <summary>
@@ -58,20 +52,9 @@ namespace Models.CLEM.Resources
         /// Amount currently available (kg dry)
         /// </summary>
         [XmlIgnore]
-        public double Amount { get {return amount;} set { return; } }
-        private double amount;
-
-        /// <summary>
-        /// Initialise the current state to the starting amount of animal food
-        /// </summary>
-        public void Initialise()
-        {
-            this.amount = 0;
-            if (StartingAmount > 0)
-            {
-                Add(StartingAmount, "Starting value", this.Name);
-            }
-        }
+        public double Amount { get { return amount; } set { return; } }
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -79,7 +62,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
+            this.amount = 0;
+            if (StartingAmount > 0)
+            {
+                Add(StartingAmount, this, "Starting value");
+            }
         }
 
         #region Transactions
@@ -87,36 +74,37 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="ActivityName">Name of activity adding resource</param>
-        /// <param name="Reason">Name of individual adding resource</param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="reason">Name of individual adding resource</param>
+        public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             double addAmount = 0;
             double nAdded = 0;
-            switch (ResourceAmount.GetType().ToString())
+            switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
-                    addAmount = (double)ResourceAmount;
+                    addAmount = (double)resourceAmount;
                     nAdded = Nitrogen;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
-                    nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
+                    addAmount = ((FoodResourcePacket)resourceAmount).Amount;
+                    nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
                     break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
             // update N based on new input added
-            CurrentStoreNitrogen = ((Nitrogen/100*Amount) + (nAdded/100 * addAmount)) / (Amount + addAmount)*100;
+            CurrentStoreNitrogen = ((CurrentStoreNitrogen*Amount) + (nAdded * addAmount)) / (Amount + addAmount);
 
             this.amount = this.amount + addAmount;
 
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = addAmount;
-            details.Activity = ActivityName;
-            details.Reason = Reason;
+            details.Gain = addAmount;
+            details.Activity = activity.Name;
+            details.ActivityType = activity.GetType().Name;
+            details.Reason = reason;
             details.ResourceType = this.Name;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -126,26 +114,31 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Remove from animal food store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
-            double amountRemoved = Request.Required;
+            if (request.Required == 0)
+            {
+                return;
+            }
+
+            double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.amount, amountRemoved);
             this.amount -= amountRemoved;
 
             FoodResourcePacket additionalDetails = new FoodResourcePacket();
             additionalDetails.DMD = this.DMD;
-            additionalDetails.PercentN = this.Nitrogen;
-            Request.AdditionalDetails = additionalDetails;
+            additionalDetails.PercentN = this.CurrentStoreNitrogen;
+            request.AdditionalDetails = additionalDetails;
 
-            Request.Provided = amountRemoved;
+            request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction();
             details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
+            details.Loss = amountRemoved;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -155,10 +148,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set amount of animal food available
         /// </summary>
-        /// <param name="NewValue">New value to set food store to</param>
-        public void Set(double NewValue)
+        /// <param name="newValue">New value to set food store to</param>
+        public new void Set(double newValue)
         {
-            this.amount = NewValue;
+            this.amount = newValue;
         }
 
         /// <summary>
@@ -172,8 +165,7 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            if (TransactionOccurred != null)
-                TransactionOccurred(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -183,7 +175,36 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "<div class=\"activityentry\">";
+            html += "This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###")+"%</span>";
+            if(DMD > 0)
+            {
+                html += " and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>";
+            }
+            else
+            {
+                html += " and a Dry Matter Digesibility estimated from N%";
+            }
+            html += "</div>";
+            if (StartingAmount > 0)
+            {
+                html += "<div class=\"activityentry\">";
+                html += "Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg";
+                html += "</div>";
+            }
+            return html;
+        }
+
     }
 
- 
+
 }

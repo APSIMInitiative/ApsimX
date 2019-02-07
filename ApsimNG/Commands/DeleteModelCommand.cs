@@ -15,7 +15,7 @@ namespace UserInterface.Commands
         private IModel modelToDelete;
 
         /// <summary>The node description</summary>
-        private NodeDescriptionArgs nodeDescription;
+        private TreeViewNode nodeDescription;
 
         /// <summary>The parent model.</summary>
         private IModel parent;
@@ -32,8 +32,10 @@ namespace UserInterface.Commands
         /// <summary>The constructor</summary>
         /// <param name="modelToDelete">The model to delete</param>
         /// <param name="explorerView">The explorer view.</param>
-        public DeleteModelCommand(IModel modelToDelete, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
+        public DeleteModelCommand(IModel modelToDelete, TreeViewNode nodeDescription, IExplorerView explorerView)
         {
+            if (modelToDelete.ReadOnly)
+                throw new ApsimXException(modelToDelete, string.Format("Unable to delete {0} - it is read-only.", modelToDelete.Name));
             this.modelToDelete = modelToDelete;
             this.nodeDescription = nodeDescription;
             this.explorerView = explorerView;
@@ -44,7 +46,7 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history instance</param>
         public void Do(CommandHistory commandHistory)
         {
-            this.explorerView.Delete(Apsim.FullPath(this.modelToDelete));
+            this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToDelete));
             pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
             modelWasRemoved = Apsim.Delete(this.modelToDelete as Model);
         }
@@ -56,7 +58,7 @@ namespace UserInterface.Commands
             if (this.modelWasRemoved)
             {
                 this.parent.Children.Insert(pos, this.modelToDelete as Model);
-                this.explorerView.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
+                this.explorerView.Tree.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
                 Apsim.ClearCache(this.modelToDelete);
             }
         }

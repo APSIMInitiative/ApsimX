@@ -27,6 +27,7 @@ namespace Models.Report
     public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
+        [NonSerialized]
         private List<IReportColumn> columns = null;
 
         /// <summary>An array of column names to write to storage.</summary>
@@ -111,10 +112,13 @@ namespace Models.Report
             this.FindVariableMembers();
 
             // Subscribe to events.
-            foreach (string eventName in EventNames)
+            if (EventNames != null)
             {
-                if (eventName != string.Empty)
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
+                foreach (string eventName in EventNames)
+                {
+                    if (eventName != string.Empty)
+                        events.Subscribe(eventName.Trim(), DoOutputEvent);
+                }
             }
         }
 
