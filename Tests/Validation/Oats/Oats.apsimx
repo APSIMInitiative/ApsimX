@@ -7295,6 +7295,7 @@ In Statefactors have donethe irrigations for
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <Specifications>
+                <string>[IrrigationSchedule]</string>
                 <string>[TreatmentSpecificActions].Script.IrrFactor = true</string>
               </Specifications>
             </Factor>
@@ -7319,6 +7320,7 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <Specifications>
+                <string>[IrrigationSchedule]</string>
                 <string>[TreatmentSpecificActions].Script.IrrFactor = false</string>
               </Specifications>
             </Factor>
