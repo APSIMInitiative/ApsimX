@@ -10629,7 +10629,7 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Das",
-                  "YFieldName": "Arbitrator.WSupply",
+                  "YFieldName": "Arbitrator.WatSupply",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
