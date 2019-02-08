@@ -255,7 +255,7 @@ namespace Models.Factorial
                             foreach (string spec in Specifications.Where(s => s != specification))
                             {
                                 IModel candidate = Apsim.Get(experiment.BaseSimulation, spec) as IModel;
-                                if (modelToReplace.GetType() == candidate.GetType())
+                                if (modelToReplace?.GetType() == candidate?.GetType())
                                     throw new ApsimXException(this, $"Unable to find replacement model for model {modelToReplace.Name} in factor {Name}. {Apsim.Child(this, modelToReplace.GetType()).Name} is of the correct type, but is already being used to replace model {spec}.");
                             }
                             replacementModel = Apsim.Child(this, modelToReplace.GetType());
