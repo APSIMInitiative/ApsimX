@@ -76,7 +76,7 @@ namespace Models.PMF.Organs
         /// <summary>Add number of new leaf appeared</summary>
         public double calcPotentialArea()
         {
-            var leafNoCorrection = 0.0;
+            var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
             double leafNoEffective = Math.Min(CurrentLeafNumber + leafNoCorrection, FinalLeafNumber - LeafAtAppearance);
             var leafArea = calcIndividualLeafSize(leafNoEffective);

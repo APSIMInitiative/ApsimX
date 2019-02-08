@@ -85,6 +85,7 @@ namespace Models.PMF.Struct
         private bool leavesInitialised;
         private double tillersAdded;
         private bool dayofEmergence;
+        private double dltTTDayBefore;
 
         /// <summary>FertileTillerNumber</summary>
         public double FertileTillerNumber { get; set; }
@@ -120,6 +121,7 @@ namespace Models.PMF.Struct
                 if (dayofEmergence)
                 {
                     CurrentLeafNo = LeafNumAtEmergence.Value();
+                    leaf.Culms[0].CurrentLeafNumber = CurrentLeafNo;
                     dayofEmergence = false;
                 }
                 else
@@ -128,6 +130,11 @@ namespace Models.PMF.Struct
                     calcLeafAppearance();
                 }
             }
+
+            //old version uses the thermaltime from yesterday to calculate leafAppearance.
+            //plant->process() calls leaf->CalcNo before phenology->development()
+            //remaining functions use todays... potentially a bug
+            dltTTDayBefore = thermalTime.Value();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -147,7 +154,7 @@ namespace Models.PMF.Struct
             /// <summary>Calculate the number of new leaf that will appear today.</summary>
         void calcLeafAppearance()
         {
-            double dltNewLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(thermalTime.Value(), phyllochron.Value(), 0), 0.0, remainingLeaves);
+            double dltNewLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
             var newLeafNo = CurrentLeafNo + dltNewLeafAppeared;
             var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
             if (newLeafAppeared)

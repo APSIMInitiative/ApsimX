@@ -810,6 +810,10 @@ namespace Models.PMF.Organs
                 {
                     if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                     {
+                        var prop = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
+                        var kltmp = kl[layer] * klModifier.Value(layer);
+                        var avail = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer];
+
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
