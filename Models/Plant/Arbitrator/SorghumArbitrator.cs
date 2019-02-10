@@ -81,51 +81,51 @@ namespace Models.PMF
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
-            SoilState InitialSoilState = new SoilState(this.Parent);
-            InitialSoilState.Initialise(zones);
-            GetWaterUptake(InitialSoilState);
+            //SoilState InitialSoilState = new SoilState(this.Parent);
+            //InitialSoilState.Initialise(zones);
+            //GetWaterUptake(InitialSoilState);
         }
 
 
-        /// <summary>Called at water arbitration.</summary>
-        /// <summary>WaterSupply is being calculated as the same as what is uptaken.</summary>
-        /// <param name="soilstate">The sender of the event</param>
-        public void GetWaterUptake(SoilState soilstate)
-        {
-            if (Plant.IsAlive)
-            {
-                // Get all water supplies.
-                double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+        ///// <summary>Called at water arbitration.</summary>
+        ///// <summary>WaterSupply is being calculated as the same as what is uptaken.</summary>
+        ///// <param name="soilstate">The sender of the event</param>
+        //public void GetWaterUptake(SoilState soilstate)
+        //{
+        //    if (Plant.IsAlive)
+        //    {
+        //        // Get all water supplies.
+        //        double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
 
-                List<double[]> supplies = new List<double[]>();
-                List<Zone> zones = new List<Zone>();
-                foreach (ZoneWaterAndN zone in soilstate.Zones)
-                    foreach (IOrgan o in Organs)
-                        if (o is IWaterNitrogenUptake)
-                        {
-                            double[] organSupply = (o as IWaterNitrogenUptake).CalculateWaterSupply(zone);
-                            if (organSupply != null)
-                            {
-                                supplies.Add(organSupply);
-                                zones.Add(zone.Zone);
-                                waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
-                            }
-                        }
+        //        List<double[]> supplies = new List<double[]>();
+        //        List<Zone> zones = new List<Zone>();
+        //        foreach (ZoneWaterAndN zone in soilstate.Zones)
+        //            foreach (IOrgan o in Organs)
+        //                if (o is IWaterNitrogenUptake)
+        //                {
+        //                    double[] organSupply = (o as IWaterNitrogenUptake).CalculateWaterSupply(zone);
+        //                    if (organSupply != null)
+        //                    {
+        //                        supplies.Add(organSupply);
+        //                        zones.Add(zone.Zone);
+        //                        waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+        //                    }
+        //                }
 
-                // Calculate total water demand.
-                double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-                foreach (IArbitration o in Organs)
-                    if (o is IHasWaterDemand)
-                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+        //        // Calculate total water demand.
+        //        double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+        //        foreach (IArbitration o in Organs)
+        //            if (o is IHasWaterDemand)
+        //                waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
 
-                // Calculate demand / supply ratio.
-                double fractionUsed = 0;
-                if (waterSupply > 0)
-                    fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+        //        // Calculate demand / supply ratio.
+        //        double fractionUsed = 0;
+        //        if (waterSupply > 0)
+        //            fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
 
-                WatSupply = waterSupply;
-            }
-        }
+        //        WatSupply = waterSupply;
+        //    }
+        //}
         #endregion
 
         #region Plant interface methods

@@ -120,6 +120,10 @@ namespace Models.PMF.Organs
         [ChildLinkByName(IsOptional = true)]
         private IFunction NitrogenRootCalcSwitch = null;
 
+        /// <summary>The nitrogen root calc switch</summary>
+        [ChildLinkByName(IsOptional = true)]
+        public IFunction RootFrontCalcSwitch = null;
+
         /// <summary>The N retranslocation factor</summary>
         [ChildLinkByName(IsOptional = true)]
         [Units("/d")]
@@ -810,18 +814,93 @@ namespace Models.PMF.Organs
                 {
                     if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                     {
-                        var prop = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
                         var kltmp = kl[layer] * klModifier.Value(layer);
                         var avail = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer];
+                        var prop = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
+                        var prop2 = rootProportionInLayer(layer, myZone);
 
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
-                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) *
+                            rootProportionInLayer(layer, myZone));
+                        //Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                        var prop3 = rootProportionInLayer(layer, myZone);
                     }
                 }
                 return supply;
             }            
         }
 
+        private double rootProportionInLayer(int layer, ZoneState zone)
+        {
+            if(RootFrontCalcSwitch.Value() >= 1.0)
+            {
+                /* Row Spacing and configuration (skip) are used to calculate semicircular root front to give
+                    proportion of the layer occupied by the roots. */
+                double top;
+
+                if (layer == 0) top = 0;
+                else top = MathUtilities.Sum(zone.soil.Thickness, 0, layer);
+
+                if (top > zone.Depth) return 0.0;
+                double bottom = top + zone.soil.Thickness[layer];
+
+                double rootArea = calcRootArea(zone, top, bottom, zone.RightDist);    // Right side
+                rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);          // Left Side
+                double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
+
+                return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
+            }
+                
+            return Soil.ProportionThroughLayer(layer, zone.Depth, zone.soil.Thickness);
+        }
+
+        //------------------------------------------------------------------------------------------------
+        //sorghum specific variables
+        /// <summary>Gets the RootFront</summary>
+        public double RootAngle { get; set; } = 45;
+
+        /// <summary>Gets the RootFront</summary>
+        public double SWAvailabilityRatio { get; set; }
+
+        /// <summary>Link to the KNO3 link</summary>
+        [ChildLinkByName(IsOptional = true)]
+        public IFunction RootDepthStressFactor = null;
+
+        double DegToRad(double degs)
+        {
+            return degs * Math.PI / 180.0;
+        }
+
+        double RadToDeg(double rads)
+        {
+            return rads * 180.0 / Math.PI;
+        }
+
+        double calcRootArea(ZoneState zone, double top, double bottom, double hDist)
+        {
+            if (zone.RootFront == 0.0)
+            {
+                return 0.0;
+            }
+
+            double depth, depthInLayer;
+
+            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   //Semi minor axis
+
+            if (zone.RootFront >= bottom)
+            {
+                depth = (bottom - top) / 2.0 + top;
+                depthInLayer = bottom - top;
+            }
+            else
+            {
+                depth = (zone.RootFront - top) / 2.0 + top;
+                depthInLayer = zone.RootFront - top;
+            }
+            double xDist = zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2)));
+
+            return Math.Min(depthInLayer * xDist, depthInLayer * hDist);
+        }
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="amountToRemove">The fractions of biomass to remove</param>
@@ -914,7 +993,7 @@ namespace Models.PMF.Organs
             {
                 if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
-                        Soil.ProportionThroughLayer(layer, Depth, DZ));
+                        rootProportionInLayer(layer, PlantZone));
             }
             return supply;
         }
@@ -1050,8 +1129,10 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == parentPlant)
             {
+                //sorghum calcs
                 PlantZone.Initialise(parentPlant.SowingData.Depth, initialDM.Value(), parentPlant.Population, maximumNConc.Value());
                 InitialiseZones();
+
                 needToRecalculateLiveDead = true;
             }
         }

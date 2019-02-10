@@ -641,7 +641,7 @@ namespace Models.PMF.Organs
         private double calcLaiSenescenceWater()
         {
             /* TODO : Direct translation sort of. needs work */
-            var tmp = Arbitrator.WatSupply;
+            Arbitrator.WatSupply = Plant.Root.TotalExtractableWater();
             double dlt_dm_transp = PotentialBiomassTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
