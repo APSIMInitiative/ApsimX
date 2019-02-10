@@ -814,16 +814,9 @@ namespace Models.PMF.Organs
                 {
                     if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                     {
-                        var kltmp = kl[layer] * klModifier.Value(layer);
-                        var avail = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer];
-                        var prop = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
-                        var prop2 = rootProportionInLayer(layer, myZone);
-
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) *
                             rootProportionInLayer(layer, myZone));
-                        //Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
-                        var prop3 = rootProportionInLayer(layer, myZone);
                     }
                 }
                 return supply;
@@ -832,7 +825,7 @@ namespace Models.PMF.Organs
 
         private double rootProportionInLayer(int layer, ZoneState zone)
         {
-            if(RootFrontCalcSwitch.Value() >= 1.0)
+            if (RootFrontCalcSwitch?.Value() >= 1.0)
             {
                 /* Row Spacing and configuration (skip) are used to calculate semicircular root front to give
                     proportion of the layer occupied by the roots. */
