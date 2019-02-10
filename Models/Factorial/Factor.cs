@@ -232,8 +232,41 @@ namespace Models.Factorial
                 IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-                foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
-                    pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                // If the user provides only a single specification, they want
+                // to make multiple replacements to a single model. Otherwise,
+                // they want to make a single replacement for multiple models.
+                if (Specifications.Count == 1)
+                    foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
+                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
+                else
+                {
+                    // In this case, the replacement model must have the same
+                    // name as the model which it is replacing.
+                    IModel replacementModel = Apsim.Child(this, modelToReplace.Name);
+                    if (replacementModel == null)
+                    {
+                        // We couldn't find a replacement model with the correct name.
+                        int numMatches = Apsim.Children(this, modelToReplace.GetType()).Count;
+                        if (numMatches == 1)
+                        {
+                            // If there is only one child of the correct type, we will
+                            // use it iff there are no other specifications replacing
+                            // a model of that type.
+                            foreach (string spec in Specifications.Where(s => s != specification))
+                            {
+                                IModel candidate = Apsim.Get(experiment.BaseSimulation, spec) as IModel;
+                                if (modelToReplace?.GetType() == candidate?.GetType())
+                                    throw new ApsimXException(this, $"Unable to find replacement model for model {modelToReplace.Name} in factor {Name}. {Apsim.Child(this, modelToReplace.GetType()).Name} is of the correct type, but is already being used to replace model {spec}.");
+                            }
+                            replacementModel = Apsim.Child(this, modelToReplace.GetType());
+                        }
+                        else if (numMatches > 1)
+                            throw new ApsimXException(this, $"Error in factor {Name}: too many replacement candidates for model {modelToReplace.Name}. You have {numMatches} replacement models of type {modelToReplace.GetType().Name}, but none have the correct name ({modelToReplace.Name}).");
+                        else
+                            throw new ApsimXException(this, $"Unable to find a replacement model for model {modelToReplace.Name} in factor {Name}");
+                    }
+                    pairs.Add(new PathValuesPair() { path = specification, value = replacementModel });
+                }
             }
             return pairs;
         }

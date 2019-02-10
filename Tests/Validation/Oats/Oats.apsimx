@@ -7130,7 +7130,6 @@ Oats Experiment Management:
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <Specifications>
-                <string>[FertiliserSchedule]</string>
                 <string>[TreatmentSpecificActions].Script.NitFactor = 0</string>
               </Specifications>
             </Factor>
@@ -7140,7 +7139,6 @@ Oats Experiment Management:
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <Specifications>
-                <string>[FertiliserSchedule]</string>
                 <string>[TreatmentSpecificActions].Script.NitFactor = 50</string>
               </Specifications>
             </Factor>
@@ -7150,7 +7148,6 @@ Oats Experiment Management:
               <Enabled>true</Enabled>
               <ReadOnly>false</ReadOnly>
               <Specifications>
-                <string>[FertiliserSchedule]</string>
                 <string>[TreatmentSpecificActions].Script.NitFactor = 300</string>
               </Specifications>
             </Factor>
