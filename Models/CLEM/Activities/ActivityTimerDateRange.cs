@@ -52,9 +52,6 @@ namespace Models.CLEM.Activities
         [Required]
         public bool Invert { get; set; }
 
-        private DateTime startDate;
-        private DateTime endDate;
-
         /// <summary>
         /// Activity performed
         /// </summary>
@@ -66,16 +63,6 @@ namespace Models.CLEM.Activities
         public ActivityTimerDateRange()
         {
             this.SetDefaults();
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-            startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
         }
 
         /// <summary>
@@ -116,6 +103,9 @@ namespace Models.CLEM.Activities
 
         private bool IsMonthInRange(DateTime date)
         {
+            DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+
             bool inrange = ((date >= startDate) && (date <= endDate));
             if (Invert)
             {
@@ -140,14 +130,35 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
+            DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
-            html += "Perform between <span class=\"setvalueextra\">";
-            html += StartDate.ToString("dd MMM yyyy");
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += EndDate.ToString("dd MMM yyyy");
-            html += "</span></div>";
+            string invertString = "";
+            if (Invert)
+            {
+                invertString = "when <b>NOT</b> ";
+            }
+            html += "Perform "+invertString+"between <span class=\"setvalueextra\">";
+            html += startDate.ToString("d MMM yyyy");
+            html += "</span> and ";
+            if (EndDate <= StartDate)
+            {
+                html += "<span class=\"errorlink\">[must be > StartDate]";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += endDate.ToString("d MMM yyyy");
+            }
+            html += "</span>";
+            if(StartDate!=startDate | EndDate != endDate)
+            {
+                html += " (modified for monthly timestep)";
+            }
+            html += "</div>";
             html += "\n</div>";
             return html;
         }

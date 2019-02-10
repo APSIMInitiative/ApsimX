@@ -28,6 +28,22 @@ namespace UserInterface.Presenters
         private IPresenter summaryPresenter;
 
         /// <summary>
+        /// The message presenter
+        /// </summary>
+        private IPresenter messagePresenter;
+
+        /// <summary>
+        /// The property presenter
+        /// </summary>
+        private IPresenter propertyPresenter;
+
+        /// <summary>
+        /// The version presenter
+        /// </summary>
+        private IPresenter versionPresenter;
+
+
+        /// <summary>
         /// Attach the view
         /// </summary>
         /// <param name="model">The model</param>
@@ -36,6 +52,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.explorerPresenter = explorerPresenter;
+
             this.view = view as ICLEMView;
             if (model != null)
             {
@@ -45,11 +62,11 @@ namespace UserInterface.Presenters
                     if (model is ZoneCLEM)
                     {
                         object newView = new HTMLView(this.view as ViewBase);
-                        IPresenter ip = new MessagePresenter();
-                        if (newView != null && ip != null)
+                        messagePresenter = new MessagePresenter();
+                        if (newView != null && messagePresenter != null)
                         {
                             this.view.AddTabView("Messages", newView);
-                            ip.Attach(model, newView, this.explorerPresenter);
+                            messagePresenter.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }
@@ -90,11 +107,11 @@ namespace UserInterface.Presenters
                     {
                         ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                        IPresenter ip = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
-                        if (newView != null && ip != null)
+                        propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
+                        if (newView != null && propertyPresenter != null)
                         {
                             this.view.AddTabView("Properties", newView);
-                            ip.Attach(model, newView, this.explorerPresenter);
+                            propertyPresenter.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }
@@ -109,11 +126,11 @@ namespace UserInterface.Presenters
                     if (versions.Count() > 0)
                     {
                         object newView = new HTMLView(this.view as ViewBase);
-                        IPresenter ip = new VersionsPresenter();
-                        if (newView != null && ip != null)
+                        versionPresenter = new VersionsPresenter();
+                        if (newView != null && versionPresenter != null)
                         {
                             this.view.AddTabView("Version", newView);
-                            ip.Attach(model, newView, this.explorerPresenter);
+                            versionPresenter.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }
@@ -138,6 +155,23 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.view.SummaryTabSelected -= OnSummaryTabSelected;
+            if(propertyPresenter!=null)
+            {
+                propertyPresenter.Detach();
+            }
+            if (versionPresenter != null)
+            {
+                versionPresenter.Detach();
+            }
+            if (messagePresenter != null)
+            {
+                messagePresenter.Detach();
+            }
+            if (summaryPresenter != null)
+            {
+                summaryPresenter.Detach();
+            }
+
         }
 
     }

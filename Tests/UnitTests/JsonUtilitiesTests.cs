@@ -47,10 +47,10 @@ namespace UnitTests
             List<JObject> children = JsonUtilities.Children(rootNode);
 
             // Ensure typename with namespace is correct.
-            Assert.AreEqual("Models.Core.Simulations", JsonUtilities.Type(rootNode));
+            Assert.AreEqual("Models.Core.Simulations", JsonUtilities.Type(rootNode, true));
 
             // Ensure typename without namespace is correct.
-            Assert.AreEqual("Simulations", JsonUtilities.Type(rootNode, false));
+            Assert.AreEqual("Simulations", JsonUtilities.Type(rootNode));
 
             // Ensure that typename of null is null.
             Assert.Null(JsonUtilities.Type(null));
@@ -84,6 +84,39 @@ namespace UnitTests
 
             // Ensure children of a node with no children property is an empty list.
             Assert.AreEqual(emptyList, JsonUtilities.Children(children[1] as JObject));
+        }
+
+        /// <summary>
+        /// Ensures the ChildWithName() method works correctly.
+        /// </summary>
+        [Test]
+        public void ChildWithName()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureChildrenWorks.json");
+            JObject rootNode = JObject.Parse(json);
+
+            Assert.NotNull(JsonUtilities.ChildWithName(rootNode, "Clock"));
+
+            Assert.IsNull(JsonUtilities.ChildWithName(rootNode, "XYZ"));
+        }
+
+        /// <summary>
+        /// Ensures the ChildWithName() method works correctly.
+        /// </summary>
+        [Test]
+        public void ChildOfType()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.EnsureChildrenWorks.json");
+            JObject rootNode = JObject.Parse(json);
+
+            var clocks = JsonUtilities.ChildrenOfType(rootNode, "Clock");
+            Assert.AreEqual(clocks.Count, 3);
+
+            var folders = JsonUtilities.ChildrenOfType(rootNode, "Folder");
+            Assert.AreEqual(folders.Count, 1);
+
+            var empty = JsonUtilities.ChildrenOfType(rootNode, "XYZ");
+            Assert.AreEqual(empty.Count, 0);
         }
 
         /// <summary>
@@ -214,6 +247,58 @@ namespace UnitTests
             JObject childWithNoCode = JsonUtilities.Children(rootNode).First();
             JsonUtilities.ReplaceManagerCodeUsingRegex(childWithNoCode, "test1", "test2");
             Assert.Null(childWithNoCode["Code"]);
+        }
+
+        /// <summary>
+        /// Ensures the Parent() method works correctly
+        /// </summary>
+        [Test]
+        public void ParentTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.DescendantsByType.json");
+            JObject rootNode = JObject.Parse(json);
+
+            Assert.IsNull(JsonUtilities.Parent(rootNode));
+
+            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+            var graph = JsonUtilities.Parent(descendants[0]);
+            Assert.AreEqual(JsonUtilities.Name(graph), "Graph");
+
+        }
+
+        /// <summary>
+        /// Ensures the RenameProperty() method works correctly
+        /// </summary>
+        [Test]
+        public void RenamePropertyTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.DescendantsByType.json");
+            JObject rootNode = JObject.Parse(json);
+
+            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+
+            JsonUtilities.RenameProperty(axes[0], "Title", "Title2");
+            Assert.IsNull(axes[0]["Title"]);
+            Assert.AreEqual(axes[0]["Title2"].Value<string>(), "Date");
+        }
+
+        /// <summary>
+        /// Ensures the AddConstantFunctionIfNotExists() method works correctly
+        /// </summary>
+        [Test]
+        public void AddConstantFunctionIfNotExistsTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.DescendantsByType.json");
+            JObject rootNode = JObject.Parse(json);
+
+            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+
+            JsonUtilities.AddConstantFunctionIfNotExists(axes[0], "ConstantFunction", "1");
+
+            var constant = JsonUtilities.ChildWithName(axes[0], "ConstantFunction");
+            Assert.NotNull(constant);
+            Assert.AreEqual(constant["$type"].Value<string>(), "Models.Functions.Constant, Models");
+            Assert.AreEqual(constant["FixedValue"].Value<string>(), "1");
         }
     }
 }

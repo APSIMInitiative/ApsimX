@@ -32,19 +32,19 @@ namespace Models.CLEM
         /// <summary>
         /// Amount removed
         /// </summary>
-        public double Debit { get; set; }
+        public double Gain { get; set; }
         /// <summary>
         /// Amount added
         /// </summary>
-        public double Credit { get; set; }
+        public double Loss { get; set; }
         /// <summary>
         /// Standardised amount removed
         /// </summary>
-        public double DebitStandardised { get; set; }
+        public double GainStandardised { get; set; }
         /// <summary>
         /// Standardised amount added
         /// </summary>
-        public double CreditStandardised { get; set; }
+        public double LossStandardised { get; set; }
 
         /// <summary>
         /// Object to sotre specific extra information such as cohort details

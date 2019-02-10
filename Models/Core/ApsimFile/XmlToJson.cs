@@ -165,11 +165,13 @@ namespace Models.Core.ApsimFile
             else
             {
                 Type modelType = GetModelTypeName(name);
-
                 if (modelType == null || modelType.GetInterface("IModel") == null)
                 {
+                    modelType = GetModelTypeName(JsonUtilities.Type(newRoot));
+                    var property = modelType?.GetProperty(name);
                     var newObject = CreateObject(obj);
-                    if (arrayVariableNames.Contains(name))
+                    // If the new obejct is NOT a JArray, and this object is supposed to be an array...
+                    if (!(newObject is JArray) && (arrayVariableNames.Contains(name) || (property != null && property.PropertyType.IsArray)))
                     {
                         // Should be an array of objects.
                         if (newObject.First.First is JArray)
@@ -185,7 +187,10 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
-                    newRoot[name] = newObject;
+                    if (newObject.Children().Count() == 1 && newObject.First.Path == "#text")
+                        newRoot[name] = newObject.First.First;
+                    else
+                        newRoot[name] = newObject;
                 }
                 else
                     AddNewChild(obj, newRoot);
@@ -271,9 +276,8 @@ namespace Models.Core.ApsimFile
             string propertyName = property.Name;
             if (propertyName == "@Version")
                 propertyName = "Version";
-            // Old memo have #text, we don't them.
-            if (propertyName == "#text")
-                return;
+            if (propertyName == "#text" && property.Path.Contains("Memo"))
+                return; // Old memo have #text, we don't want them.
 
             if (!propertyName.StartsWith("@"))
             {
@@ -312,7 +316,12 @@ namespace Models.Core.ApsimFile
                     bool boolValue;
                     DateTime dateValue;
                     if (property.Name == "Name")
-                        toObject[propertyName] = value;
+                    {
+                        if (JsonUtilities.Type(toObject) == "SoilCrop")
+                            toObject["Name"] = GetSoilCropName(property.Value.ToString());
+                        else
+                            toObject[propertyName] = value;
+                    }
                     else if (int.TryParse(value, out intValue))
                         toObject[propertyName] = intValue;
                     else if (double.TryParse(value, out doubleValue))
@@ -339,6 +348,9 @@ namespace Models.Core.ApsimFile
 
         private static Type GetModelTypeName(string modelNameToFind)
         {
+            if (modelNameToFind == null)
+                return null;
+
             string[] modelWords = modelNameToFind.Split(".".ToCharArray());
             string m = modelWords[modelWords.Length - 1];
 
@@ -387,7 +399,7 @@ namespace Models.Core.ApsimFile
                         if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
                         {
                             int i = 1;
-                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == childXmlName + "Soil")))
+                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == GetSoilCropName(childXmlName))))
                             {
                                 bool alreadyAdded = newArray.FirstOrDefault(c => c["Name"].ToString() == childXmlName) != null;
 
@@ -414,6 +426,21 @@ namespace Models.Core.ApsimFile
             }
         }
 
-
+        /// <summary>
+        /// Gets the name of a SoilCrop. This should start with an upper case
+        /// letter and end with "Soil". e.g. WheatSoil.
+        /// </summary>
+        /// <param name="name">Name of the crop.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// todo: rework the SoilCrop class so that this isn't necessary?
+        /// </remarks>
+        private static string GetSoilCropName(string name)
+        {
+            name = name.First().ToString().ToUpper() + name.Substring(1);
+            if (!name.EndsWith("Soil"))
+                name += "Soil";
+            return name;
+        }
     }
 }

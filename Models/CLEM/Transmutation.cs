@@ -203,7 +203,7 @@ namespace Models.CLEM
             if (CostPerUnit > 0)
             {
                 html += "<div class=\"activityentry\">";
-                html += "<span class=\"setvalue\">"+CostPerUnit.ToString() + "</span> x ";
+                html += "<span class=\"setvalue\">"+CostPerUnit.ToString("#,##0.##") + "</span> x ";
                 html += (ResourceName!=null & ResourceName!="")? "<span class=\"setvalue\">" + ResourceName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
                 html += (ResourceTypeName != null & ResourceTypeName != "") ? "<span class=\"setvalue\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Unknown Type</span>";
                 html += "</div>";

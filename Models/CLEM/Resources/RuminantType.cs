@@ -56,7 +56,7 @@ namespace Models.CLEM.Resources
             if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
             {
                 PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
-                SirePrice = PriceList.BreedingSirePrice;
+//                SirePrice = PriceList.BreedingSirePrice;
             }
 
             // get advanced conception parameters
@@ -73,41 +73,101 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        /// <summary>
-        /// Purchase price of a sire
-        /// </summary>
-        [XmlIgnore]
-        public double SirePrice { get; set; }
+        private List<string> WarningsMultipleEntry = new List<string>();
+        private List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public double ValueofIndividual(Ruminant ind, bool purchasePrice)
+        public double ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
         {
             if (PricingAvailable())
             {
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
-                // search through RuminantPriceGroups for first match
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)))
+                // search through RuminantPriceGroups for first match with desired purchase or sale flag
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
-                        if (purchasePrice)
-                        {
-                            return item.PurchaseValue * ((PriceList.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                        }
-                        else
-                        {
-                            return item.SellValue * ((PriceList.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                        }
+                        return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
                 }
                 // no price match found.
-                Summary.WriteWarning(this, "No pricing entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight + "])");
+                Summary.WriteWarning(this, "No "+purchaseStyle.ToString()+" price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight + "])");
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
+        /// </summary>
+        /// <returns>value</returns>
+        public double ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
+        {
+            double price = 0;
+            if (PricingAvailable())
+            {
+                string criteria = property.ToString().ToUpper() + ":" + value.ToUpper();
+                List<Ruminant> animalList = new List<Ruminant>() { ind };
+
+                //find first pricing entry matching specific criteria
+                AnimalPriceGroup matchIndividual = null;
+                AnimalPriceGroup matchCriteria = null;
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                {
+                    if (animalList.Filter(item).Count() == 1 & matchIndividual is null)
+                    {
+                        matchIndividual = item;
+                    }
+
+                    // check that pricing item meets the specified criteria.
+                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() & a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    {
+                        if (matchCriteria == null)
+                        {
+                            matchCriteria = item;
+                        }
+                        else
+                        {
+                            // multiple price entries were found. using first. value = xxx.
+                            if (!WarningsMultipleEntry.Contains(criteria))
+                            {
+                                WarningsMultipleEntry.Add(criteria);
+                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
+                            }
+                        }
+                    }
+                }
+
+                if(matchCriteria is null)
+                {
+                    // report specific criteria not found in price list
+                    string warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]"+ (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+
+                    if(matchIndividual != null)
+                    {
+                        // add using the best pricing available for [][] purchases of xx per head
+                        warningString += "\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] ["+matchIndividual.PricingStyle.ToString()+ "] will be used.";
+                        price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                    }
+                    else
+                    {
+                        Summary.WriteWarning(this, "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for ["+ind.Breed+"]");
+                    }
+                    if (!WarningsNotFound.Contains(criteria))
+                    {
+                        WarningsNotFound.Add(criteria);
+                        Summary.WriteWarning(this, warningString);
+                    }
+                }
+                else
+                {
+                    price = matchCriteria.Value * ((matchCriteria.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                }
+            }
+            return price;
         }
 
         /// <summary>
@@ -327,7 +387,7 @@ namespace Models.CLEM.Resources
         /// SWR growth scalar
         /// </summary>
         [Category("Advanced", "Growth")]
-        [Description("SWR growth scalar")]
+        [Description("SRW growth scalar")]
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
@@ -362,7 +422,7 @@ namespace Models.CLEM.Resources
         /// Weight(kg) of 1 animal equivalent(steer)
         /// </summary>
         [Category("Basic", "General")]
-        [Description("Weight(kg) of 1 animal equivalent(steer)")]
+        [Description("Weight (kg) of an animal equivalent")]
         [Required, GreaterThanValue(0)]
         public double BaseAnimalEquivalent { get; set; }
         /// <summary>

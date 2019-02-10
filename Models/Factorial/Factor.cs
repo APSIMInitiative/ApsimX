@@ -232,17 +232,8 @@ namespace Models.Factorial
                 IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-
-                if (Specifications.Count == 1)
-                {
-                    foreach (IModel newModel in Children)
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
-                else
-                {
-                    foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
+                foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
+                    pairs.Add(new PathValuesPair() { path = specification, value = newModel });
             }
             return pairs;
         }

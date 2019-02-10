@@ -37,8 +37,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Starting Age (Months)
         /// </summary>
-        [Description("Age")]
+        [Description("Age (months)")]
         [Required, GreaterThanEqualValue(0)]
+        [Units("months")]
         public int Age { get; set; }
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace Models.CLEM.Resources
         /// Starting Weight
         /// </summary>
         [Description("Weight (kg)")]
+        [Units("kg")]
         [Required, GreaterThanEqualValue(0)]
         public double Weight { get; set; }
 
@@ -92,7 +94,7 @@ namespace Models.CLEM.Resources
         {
             List<Ruminant> individuals = new List<Ruminant>();
 
-            RuminantType parent = this.Parent.Parent as RuminantType;
+            RuminantType parent = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
 
             // get Ruminant Herd resource for unique ids
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
@@ -134,7 +136,7 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females");
+                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r="+parent.Name+"].[r="+this.Parent.Name+"].[r="+this.Name+"]");
                         }
                     }
 

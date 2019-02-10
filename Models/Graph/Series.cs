@@ -16,6 +16,7 @@ namespace Models.Graph
     using Models.Core;
     using Models.Factorial;
     using Storage;
+    using Models.CLEM;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -281,7 +282,7 @@ namespace Models.Graph
         /// <summary>Find a parent to base our series on.</summary>
         private IModel FindParent()
         {
-            Type[] parentTypesToMatch = new Type[] { typeof(Simulation), typeof(Zone), typeof(Experiment),
+            Type[] parentTypesToMatch = new Type[] { typeof(Simulation), typeof(Zone), typeof(ZoneCLEM), typeof(Experiment),
                                                      typeof(Folder), typeof(Simulations) };
 
             IModel obj = Parent;
@@ -630,8 +631,13 @@ namespace Models.Graph
             if (Filter == null || Filter == string.Empty)
                 filterToUse = CreateRowFilter(storage, factors, columnsInTable);
             else
-                filterToUse = Filter + " AND (" + CreateRowFilter(storage, factors, columnsInTable) + ")";
-
+            {
+                var f = CreateRowFilter(storage, factors, columnsInTable);
+                if (f != null)
+                    filterToUse = Filter + " AND (" + f + ")";
+                else
+                    filterToUse = Filter;
+            }
             return storage.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames.Distinct(), filter: filterToUse);
         }
 

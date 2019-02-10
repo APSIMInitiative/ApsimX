@@ -50,24 +50,25 @@ namespace UserInterface.Presenters
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {font-family: sans-serif, Arial, Helvetica; max-width:1000px; font-size:10pt; }" +
-                ".errorbanner {background-color:red; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".errorcontent {background-color:#FFFAFA; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:red; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-                ".warningbanner {background-color:orange; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".warningcontent {background-color:#FFFFFA; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-                ".messagebanner {background-color:CornflowerBlue; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".messagecontent {background-color:#FAFAFF; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-                ".okbanner {background-color:green; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".okcontent {background-color:#FAFFFF; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".errorbanner {background-color:red !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
+                ".errorcontent {background-color:#FFFAFA !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:red; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".warningbanner {background-color:orange !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
+                ".warningcontent {background-color:#FFFFFA !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".messagebanner {background-color:CornflowerBlue !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
+                ".messagecontent {background-color:#FAFAFF !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".okbanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
+                ".okcontent {background-color:#FAFFFF !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
-                ".resourcelink {color:#996633; font-weight:bold; background-color:Cornsilk;border-color:#996633; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-                ".activitylink {color:#009999; font-weight:bold; background-color:floralwhite;border-color:#009999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-                ".filterlink {border-color:#cc33cc; background-color:#f2e2f2; color:#cc33cc; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; border-radius:3px;}" +
-                ".filelink {color:green; font-weight:bold; background-color:mintcream;border-color:green; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-                ".errorlink {color:white; font-weight:bold; background-color:red;border-color:darkred; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-                ".setvalue {font-weight:bold; background-color:#e8fbfc;border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
-                ".otherlink {font-weight:bold; color:#333333; background-color:#eeeeee;border-color:#999999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
+                ".resourcelink {color:#996633; font-weight:bold; background-color:Cornsilk !important;border-color:#996633; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
+                ".activitylink {color:#009999; font-weight:bold; background-color:floralwhite !important;border-color:#009999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
+                ".filterlink {border-color:#cc33cc; background-color:#f2e2f2 !important; color:#cc33cc; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; border-radius:3px;}" +
+                ".filelink {color:green; font-weight:bold; background-color:mintcream !important;border-color:green; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
+                ".errorlink {color:white; font-weight:bold; background-color:red !important;border-color:darkred; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
+                ".setvalue {font-weight:bold; background-color:#e8fbfc !important;border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
+                ".otherlink {font-weight:bold; color:#333333; background-color:#eeeeee !important;border-color:#999999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".messageentry {padding:5px 0px 5px 0px; line-height: 1.7em; }" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
+                "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 "\n</style>\n</head>\n<body>";
 
             // find IStorageReader of simulation
@@ -98,6 +99,18 @@ namespace UserInterface.Presenters
 
                     if (!ignore)
                     {
+                        // trim first two rows of error reporting file and simulation.
+                        List<string> parts = new List<string>( msgStr.Split('\n'));
+                        if(parts[0].Contains("ERROR in file:"))
+                        {
+                            parts.RemoveAt(0);
+                        }
+                        if (parts[0].Contains("Simulation name:"))
+                        {
+                            parts.RemoveAt(0);
+                        }
+                        msgStr = string.Join("\n", parts.ToArray());
+
                         string type = "Message";
                         string title = "Message";
                         switch (dr[8].ToString())

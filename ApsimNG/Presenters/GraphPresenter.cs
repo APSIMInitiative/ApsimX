@@ -333,7 +333,7 @@ namespace UserInterface.Presenters
                 title = StringUtilities.BuildString(names.ToArray(), ", ");
             }
 
-            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
+            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval, axis.CrossesAtZero);
         }
         
         /// <summary>The graph model has changed.</summary>

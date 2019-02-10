@@ -28,7 +28,7 @@ namespace Utility
         public List<string> MruList { get; set; }
 
         /// <summary>The maximum number of files allowed in the mru list</summary>
-        private int FilesInHistory; // this could be a user setting
+        public int FilesInHistory { get; set; }
 
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
@@ -230,9 +230,9 @@ namespace Utility
                     instance.MainFormMaximized = true;
                     instance.MruList = new List<string>();
                     instance.PreviousFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    instance.FilesInHistory = 20;
                 }
 
-                instance.FilesInHistory = 20;
                 instance.ConfigurationFile = ConfigurationFile;
                 return instance;
             }

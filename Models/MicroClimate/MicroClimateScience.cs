@@ -26,18 +26,17 @@ namespace Models
         /// Calculate the crop canopy conductance
         /// <param name="cropGsMax">crop-specific maximum stomatal conductance (m/s)</param>
         /// <param name="cropR50">crop-specific SolRad at which stomatal conductance decreases to 50% (W/m2)</param>
-        /// <param name="cropRGfac">crop-specific relative growth stress factor (0-1)</param>
         /// <param name="cropLAIfac">crop-specific LAI fraction of total LAI in current layer (0-1)</param>
         /// <param name="layerK">layer-averaged light extinction coeficient (-)</param>
         /// <param name="layerLAI">LAI within the current layer (m2/m2)</param>
         /// <param name="layerSolRad">solar radiation arriving at the top of the current layer(W/m2)</param>
         /// </summary>
-        private double CanopyConductance(double cropGsMax, double cropR50, double cropRGfac, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
+        private double CanopyConductance(double cropGsMax, double cropR50, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
         {
             double numerator = layerSolRad + cropR50;
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
             double hyperbolic = Math.Max(1.0, MathUtilities.Divide(numerator, denominator, 0.0));
-            return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropRGfac * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
+            return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
         }
 
         /// <summary>
@@ -185,60 +184,62 @@ namespace Models
         {
             return (2501.0 - 2.38 * temperature) * 1000.0;  // J/kg
         }
+
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
-        private void CalculateShortWaveRadiation(MicroClimateZone MCZone)
+        private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
         {
-            // Perform Top-Down Light Balance
-            // ==============================
-            double Rin = weather.Radn;
-            double Rint = 0;
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-            {
-                Rint = Rin * (1.0 - Math.Exp(-MCZone.layerKtot[i] * MCZone.LAItotsum[i]));
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MCZone.Canopies[j].Ftot[i] * MCZone.Canopies[j].Ktot, MCZone.layerKtot[i], 0.0);
-                Rin -= Rint;
-            }
+                // Perform Top-Down Light Balance
+                // ==============================
+                double Rin = weather.Radn;
+                double Rint = 0;
+                for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                {
+                    Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
+                    for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                        ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
+                    Rin -= Rint;
+                }
+            ZoneMC.SurfaceRs = Rin;
         }
 
         /// <summary>
         /// Calculate the overall system energy terms
         /// </summary>
-        private void CalculateEnergyTerms(MicroClimateZone MCZone)
+        private void CalculateEnergyTerms(ZoneMicroClimate ZoneMC)
         {
-            MCZone.sumRs = 0.0;
-            MCZone.Albedo = 0.0;
-            MCZone.Emissivity = 0.0;
+            ZoneMC.sumRs = 0.0;
+            ZoneMC.Albedo = 0.0;
+            ZoneMC.Emissivity = 0.0;
 
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                 {
-                    MCZone.Albedo += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.Canopies[j].Canopy.Albedo;
-                    MCZone.Emissivity += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * CanopyEmissivity;
-                    MCZone.sumRs += MCZone.Canopies[j].Rs[i];
+                    ZoneMC.Albedo += MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.Canopies[j].Canopy.Albedo;
+                    ZoneMC.Emissivity += MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * CanopyEmissivity;
+                    ZoneMC.sumRs += ZoneMC.Canopies[j].Rs[i];
                 }
 
-            MCZone.Albedo += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * soil_albedo;
-            MCZone.Emissivity += (1.0 - MathUtilities.Divide(MCZone.sumRs, weather.Radn, 0.0)) * SoilEmissivity;
+            ZoneMC.Albedo += (1.0 - MathUtilities.Divide(ZoneMC.sumRs, weather.Radn, 0.0)) * soil_albedo;
+            ZoneMC.Emissivity += (1.0 - MathUtilities.Divide(ZoneMC.sumRs, weather.Radn, 0.0)) * SoilEmissivity;
         }
 
         /// <summary>
         /// Calculate Net Long Wave Radiation Balance
         /// </summary>
-        private void CalculateLongWaveRadiation(MicroClimateZone MCZone)
+        private void CalculateLongWaveRadiation(ZoneMicroClimate ZoneMC)
         {
             double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
             double averageT = CalcAverageT(weather.MinT, weather.MaxT);
-            MCZone.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, MCZone.Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
+            ZoneMC.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, ZoneMC.Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
 
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rl[i] = MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.NetLongWaveRadiation;
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                    ZoneMC.Canopies[j].Rl[i] = MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.NetLongWaveRadiation;
         }
 
         /// <summary>
@@ -260,16 +261,16 @@ namespace Models
         /// <summary>
         /// Calculate Radiation loss to soil heating
         /// </summary>
-        private void CalculateSoilHeatRadiation(MicroClimateZone MCZone)
+        private void CalculateSoilHeatRadiation(ZoneMicroClimate ZoneMC)
         {
-            double radnint = MCZone.sumRs;   // Intercepted SW radiation
-            MCZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
+            double radnint = ZoneMC.sumRs;   // Intercepted SW radiation
+            ZoneMC.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
-            for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rsoil[i] = MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.soil_heat;
+            for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
+                for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                    ZoneMC.Canopies[j].Rsoil[i] = MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.soil_heat;
         }
 
         /// <summary>
