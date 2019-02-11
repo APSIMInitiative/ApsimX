@@ -518,14 +518,10 @@ namespace Models.Graph
 
                 DataTable data = storage.GetData(TableName, fieldNames: fieldNames, filter: Filter);
 
-                if (!string.IsNullOrWhiteSpace(XFieldName) && data.Columns[XFieldName] != null)
-                    definition.x = data.AsEnumerable().Select(r => r[XFieldName]);
-                if (!string.IsNullOrWhiteSpace(YFieldName) && data.Columns[YFieldName] != null)
-                    definition.y = data.AsEnumerable().Select(r => r[YFieldName]);
-                if (!string.IsNullOrWhiteSpace(X2FieldName) && data.Columns[X2FieldName] != null)
-                    definition.x2 = data.AsEnumerable().Select(r => r[X2FieldName]);
-                if (!string.IsNullOrWhiteSpace(Y2FieldName) && data.Columns[Y2FieldName] != null)
-                    definition.y2 = data.AsEnumerable().Select(r => r[Y2FieldName]);
+                definition.x = GetDataFromTable(data, XFieldName);
+                definition.y = GetDataFromTable(data, YFieldName);
+                definition.x2 = GetDataFromTable(data, X2FieldName);
+                definition.y2 = GetDataFromTable(data, Y2FieldName);
             }
 
             return definition;
