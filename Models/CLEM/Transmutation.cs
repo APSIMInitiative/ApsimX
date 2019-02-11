@@ -29,7 +29,7 @@ namespace Models.CLEM
         /// </summary>
         public Transmutation()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "<div class=\"activityentry\">";
+            string html = "<div class=\"activitybannercontent\">";
             if (AmountPerUnitPurchase > 0)
             {
                 html += "When needed <span class=\"setvalue\">" + AmountPerUnitPurchase.ToString("#,##0.##") + "</span> of this resource will be converted from";
@@ -74,7 +74,7 @@ namespace Models.CLEM
             html += "</div>";
             if (this.Children.OfType<TransmutationCost>().Count() + this.Children.OfType<TransmutationCostLabour>().Count() == 0)
             {
-                html += "<div class=\"activityentry\">";
+                html += "<div class=\"activitybannercontent\">";
                 html += "Invalid transmutation provided. No transmutation costs provided";
                 html += "</div>";
             }
@@ -99,7 +99,7 @@ namespace Models.CLEM
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activitycontent clearfix\">";
+            html += "\n<div class=\"activitycontentlight clearfix\">";
             if (!(Apsim.Children(this, typeof(TransmutationCost)).Count() >= 1))
             {
                 html += "<div class=\"errorlink\">No transmutation costs provided</div>";
@@ -126,12 +126,13 @@ namespace Models.CLEM
         [Link]
         private ResourcesHolder Resources = null;
 
-        /// <summary>
-        /// Name of resource to use
-        /// </summary>
-        [Description("Name of Resource to use")]
-        [Required]
-        public string ResourceName { get; set; }
+        ///// <summary>
+        ///// Name of resource to use
+        ///// </summary>
+        //[Description("Name of Resource to use")]
+        //[Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore) })]
+        //[Required]
+        //public string ResourceName { get; set; }
 
         /// <summary>
         /// Type of resource to use
@@ -142,6 +143,7 @@ namespace Models.CLEM
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) })]
         [Required]
         public string ResourceTypeName { get; set; }
 
@@ -168,11 +170,22 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            object result = Resources.GetResourceGroupByName(ResourceName);
-            if (result == null)
+            if (ResourceTypeName != null & ResourceTypeName != "")
             {
-                string[] memberNames = new string[] { "ResourceTypeName" };
-                results.Add(new ValidationResult("Could not find resource " + this.ResourceName + " in transmutation cost", memberNames));
+                if (!ResourceTypeName.Contains("."))
+                {
+                    string[] memberNames = new string[] { "ResourceTypeName" };
+                    results.Add(new ValidationResult("Invalid resource type entry. Please select resource type from the drop down list provided or ensure the value is formatted as ResourceGroup.ResourceType", memberNames));
+                }
+                else
+                {
+                    object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
+                    if (result == null)
+                    {
+                        string[] memberNames = new string[] { "ResourceTypeName" };
+                        results.Add(new ValidationResult("Could not find resource " + ResourceTypeName.Split('.').First() + " in transmutation cost", memberNames));
+                    }
+                }
             }
             return results;
         }
@@ -188,7 +201,7 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // determine resource type from name
-            object result = Resources.GetResourceGroupByName(ResourceName);
+            object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
             ResourceType = result.GetType();
         }
 
@@ -204,8 +217,7 @@ namespace Models.CLEM
             {
                 html += "<div class=\"activityentry\">";
                 html += "<span class=\"setvalue\">"+CostPerUnit.ToString("#,##0.##") + "</span> x ";
-                html += (ResourceName!=null & ResourceName!="")? "<span class=\"setvalue\">" + ResourceName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
-                html += (ResourceTypeName != null & ResourceTypeName != "") ? "<span class=\"setvalue\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Unknown Type</span>";
+                html += (ResourceTypeName!=null & ResourceTypeName!="")? "<span class=\"resourcelink\">" + ResourceTypeName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
                 html += "</div>";
             }
             else

@@ -248,7 +248,7 @@ namespace Models.CLEM.Resources
             string[] names = resourceGroupAndItem.Split('.');
             if(names.Count()!=2)
             {
-                string errorMsg = String.Format("@error:Invalid resource group and type string for [{0}], expecting 'Resourcename.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
+                string errorMsg = String.Format("@error:Invalid resource group and type string for [{0}], expecting 'ResourceName.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
                 throw new Exception(errorMsg);
             }
 
@@ -417,7 +417,7 @@ namespace Models.CLEM.Resources
 
                                 // get transcost resource
                                 IResourceType transResource = null;
-                                if (transcost.ResourceName == "Labour")
+                                if (transcost.ResourceType.Name == "Labour")
                                 {
                                     // get by labour group filter under the transmutation cost
                                     ResourceRequest labourRequest = new ResourceRequest();
@@ -432,7 +432,8 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceType, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                    //transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceType, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                 }
 
                                 if (!queryOnly)
