@@ -585,7 +585,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "VCS_Ruakura.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\VCS_Ruakura.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
