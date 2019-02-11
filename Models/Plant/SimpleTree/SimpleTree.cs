@@ -283,14 +283,15 @@ namespace Models.PMF
 
 
 
-       /// <summary>Sows the plant</summary>
+        /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        /// <param name="rowConfig">The row configuration.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
 
         }
