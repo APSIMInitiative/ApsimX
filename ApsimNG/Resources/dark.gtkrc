@@ -79,16 +79,33 @@ GtkCheckButton::indicator-spacing = 4
 	GtkScale::slider-width = 16
 	GtkScale::trough-side-details = 1
 
-	GtkScrollbar::activate-slider = 1
-	GtkScrollbar::has-backward-stepper = 0
-	GtkScrollbar::has-forward-stepper = 0
+	# This controls whether the scroll bar will change colour when we click on it.
+	# Turning this setting off makes it hard to tell when the scrollbar has been clicked on,
+	# but if we turn this on, the scrollbar's colour when clicked on will be the same
+	# as the trough background colour, making it very difficult to see the scrollbar.
+	GtkScrollbar::activate-slider = 0
+
+	# These two settings control whether the scrollbar has up/down arrows at the top/bottom
+	# (or left/right arrows if the scrollbar is horizontal).
+	GtkScrollbar::has-backward-stepper = 1
+	GtkScrollbar::has-forward-stepper = 1
+
+	# These two give the option to put an up arrow next to the down arrow, and vice versa.
+	# Not sure why this would be useful...
 	GtkScrollbar::has-secondary-backward-stepper = 0
 	GtkScrollbar::has-secondary-forward-stepper = 0
+
+	# This controls the minimum length of the scrollbar. Setting this too high makes
+	# it impossible to drag the scrollbar.
 	GtkScrollbar::min-slider-length = 80
+
+	# Controls the width of the scrollbar.
 	GtkScrollbar::slider-width = 18
+
+	# This adds a small border to either side of the scrollbar.
 	GtkScrollbar::trough-border = 0
 
-	GtkScrolledWindow::scrollbar-spacing = 0
+	GtkScrolledWindow::scrollbar-spacing = 1
 	GtkScrolledWindow::scrollbars-within-bevel = 1
 
 	GtkSeparatorMenuItem::horizontal-padding = 0
