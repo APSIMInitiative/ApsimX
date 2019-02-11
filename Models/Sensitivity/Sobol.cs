@@ -6,6 +6,7 @@
     using Models.Factorial;
     using Models.Interfaces;
     using Models.Sensitivity;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -54,6 +55,16 @@
         /// <summary>List of simulation names from last run</summary>
         [XmlIgnore]
         public List<string> simulationNames { get; set; }
+
+        /// <summary>
+        /// This ID is used to identify temp files used by this Sobol model.
+        /// </summary>
+        /// <remarks>
+        /// Without this, Sobols run in paralel could overwrite each other's
+        /// temp files, as the temp files would have the same name.
+        /// </remarks>
+        [JsonIgnore]
+        private readonly string id = Guid.NewGuid().ToString();
 
         /// <summary>Constructor</summary>
         public Sobol()
@@ -262,8 +273,8 @@
                                             Parameters[i].UpperBound - Parameters[i].LowerBound);
                 }
 
-                string sobolx1FileName = Path.Combine(Path.GetTempPath(), "sobolx1.csv");
-                string sobolx2FileName = Path.Combine(Path.GetTempPath(), "sobolx2.csv");
+                string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
+                string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
 
                 script += string.Format("write.table(X1, \"{0}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
                                         "write.table(X2, \"{1}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
@@ -278,7 +289,7 @@
                 // Read in the 2 data frames (X1, X2) that R wrote.
                 if (!File.Exists(sobolx1FileName))
                 {
-                    string rFileName = Path.Combine(Path.GetTempPath(), "sobolscript.r");
+                    string rFileName = GetTempFileName("sobolscript", ".r");
                     if (!File.Exists(rFileName))
                         throw new Exception("Cannot find file: " + rFileName);
                     string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
@@ -342,9 +353,9 @@
                 }
 
                 string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
-                string sobolx1FileName = Path.Combine(Path.GetTempPath(), "sobolx1.csv");
-                string sobolx2FileName = Path.Combine(Path.GetTempPath(), "sobolx2.csv");
-                string sobolVariableValuesFileName = Path.Combine(Path.GetTempPath(), "sobolvariableValues.csv");
+                string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
+                string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
+                string sobolVariableValuesFileName = GetTempFileName("sobolvariableValues", ".csv");
 
                 // Write variables file
                 using (var writer = new StreamWriter(sobolVariableValuesFileName))
@@ -398,7 +409,7 @@
         /// </summary>
         private DataTable RunR(string script)
         {
-            string rFileName = Path.Combine(Path.GetTempPath(), "sobolscript.r");
+            string rFileName = GetTempFileName("sobolscript", ".r");
             File.WriteAllText(rFileName, script);
             R r = new R();
             Console.WriteLine(r.GetPackage("boot"));
@@ -430,8 +441,8 @@
                                         Parameters[i].UpperBound - Parameters[i].LowerBound);
             }
 
-            string sobolx1FileName = Path.Combine(Path.GetTempPath(), "sobolx1.csv");
-            string sobolx2FileName = Path.Combine(Path.GetTempPath(), "sobolx2.csv");
+            string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
+            string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
 
             script += string.Format("write.csv(X1, \"{0}\")" + Environment.NewLine +
                                     "write.csv(X2, \"{1}\")" + Environment.NewLine
@@ -441,6 +452,17 @@
 
             //script += "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine;
             return script;
+        }
+
+        /// <summary>
+        /// Returns a unique temporary filename.
+        /// </summary>
+        /// <param name="name">Base name of the file. The returned filename will contain this name.</param>
+        /// <param name="extension">File extension to be used.</param>
+        /// <returns>Unique temporary filename.</returns>
+        private string GetTempFileName(string name, string extension)
+        {
+            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

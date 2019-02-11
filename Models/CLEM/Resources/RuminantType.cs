@@ -387,7 +387,7 @@ namespace Models.CLEM.Resources
         /// SWR growth scalar
         /// </summary>
         [Category("Advanced", "Growth")]
-        [Description("SWR growth scalar")]
+        [Description("SRW growth scalar")]
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
@@ -422,7 +422,7 @@ namespace Models.CLEM.Resources
         /// Weight(kg) of 1 animal equivalent(steer)
         /// </summary>
         [Category("Basic", "General")]
-        [Description("Weight(kg) of 1 animal equivalent(steer)")]
+        [Description("Weight (kg) of an animal equivalent")]
         [Required, GreaterThanValue(0)]
         public double BaseAnimalEquivalent { get; set; }
         /// <summary>

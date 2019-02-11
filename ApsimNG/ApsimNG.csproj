@@ -449,6 +449,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionAdvanced.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItemMonthly.png" />
@@ -688,6 +689,7 @@
     <EmbeddedResource Include="Resources\MorrisGrid2.png" />
     <EmbeddedResource Include="Resources\MorrisGrid3.png" />
     <EmbeddedResource Include="Resources\MorrisGrid4.png" />
+    <EmbeddedResource Include="Resources\SobolParameterDistributions.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

@@ -280,9 +280,21 @@ namespace UserInterface.Presenters
                     // for each row in the grid
                     for (int r = 0; r < data.Rows.Count; r++)
                     {
-                        yr = Convert.ToInt32(data.Rows[r][yearCol]);
-                        day = Convert.ToInt32(data.Rows[r][dayCol]);
-                        DateTime rowDate = new DateTime(yr, 1, 1);
+                        DateTime rowDate;
+                        try
+                        {
+                            yr = Convert.ToInt32(data.Rows[r][yearCol]);
+                            day = Convert.ToInt32(data.Rows[r][dayCol]);
+                            rowDate = new DateTime(yr, 1, 1);
+                        }
+                        catch (Exception err)
+                        {
+                            DateTime previousRowDate;
+                            if (r > 0 && DateTime.TryParse((string)data.Rows[r - 1][0], out previousRowDate))
+                                throw new Exception("Invalid date detected in file: " + this.weatherData.FileName + ". Previous row: " + previousRowDate.ToShortDateString() + " (day of year = " + previousRowDate.DayOfYear + ")");
+                            else
+                                throw new Exception("Encountered an error while parsing date: " + err.Message);
+                        }
                         rowDate = rowDate.AddDays(day - 1);                 // calc date
                         data.Rows[r][0] = rowDate.ToShortDateString();      // store in Date col
                     }

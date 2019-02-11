@@ -94,7 +94,7 @@ namespace Models.CLEM.Resources
         {
             List<Ruminant> individuals = new List<Ruminant>();
 
-            RuminantType parent = this.Parent.Parent as RuminantType;
+            RuminantType parent = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
 
             // get Ruminant Herd resource for unique ids
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
@@ -136,7 +136,7 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females");
+                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r="+parent.Name+"].[r="+this.Parent.Name+"].[r="+this.Name+"]");
                         }
                     }
 
