@@ -127,8 +127,8 @@ namespace Models.Graph
             List<SeriesDefinition> ourDefinitions = new List<SeriesDefinition>();
 
             // If this series doesn't have a table name then it must be getting its data from other models.
-            if (TableName == null)
-                ourDefinitions.Add(CreateDefinition(Name, null, Colour, Marker, Line, null));
+            if (TableName == null || !storage.ColumnNames(TableName).Contains("SimulationID"))
+                ourDefinitions.Add(CreateDefinition(Name, null, Colour, Marker, Line, null, storage));
             else
             {
                 // Find a parent that heads the scope that we're going to graph
@@ -470,8 +470,9 @@ namespace Models.Graph
         /// <param name="line">The line type.</param>
         /// <param name="marker">The marker type.</param>
         /// <param name="simulationNames">A list of simulations to include in data.</param>
+        /// <param name="storage">Storage reader.</param>
         /// <returns>The newly created definition.</returns>
-        private SeriesDefinition CreateDefinition(string title, string filter, Color colour, MarkerType marker, LineType line, string[] simulationNames)
+        private SeriesDefinition CreateDefinition(string title, string filter, Color colour, MarkerType marker, LineType line, string[] simulationNames, IStorageReader storage)
         {
             SeriesDefinition definition = new SeriesDefinition();
             definition.SimulationNames = simulationNames;
@@ -502,6 +503,29 @@ namespace Models.Graph
                     definition.x2 = GetDataFromModels(X2FieldName);
                 if (!String.IsNullOrEmpty(Y2FieldName))
                     definition.y2 = GetDataFromModels(Y2FieldName);
+            }
+            else
+            {
+                List<string> fieldNames = new List<string>();
+                if (!string.IsNullOrWhiteSpace(XFieldName))
+                    fieldNames.Add(XFieldName);
+                if (!string.IsNullOrWhiteSpace(YFieldName))
+                    fieldNames.Add(YFieldName);
+                if (!string.IsNullOrWhiteSpace(X2FieldName))
+                    fieldNames.Add(X2FieldName);
+                if (!string.IsNullOrWhiteSpace(Y2FieldName))
+                    fieldNames.Add(Y2FieldName);
+
+                DataTable data = storage.GetData(TableName, fieldNames: fieldNames, filter: Filter);
+
+                if (!string.IsNullOrWhiteSpace(XFieldName) && data.Columns[XFieldName] != null)
+                    definition.x = data.AsEnumerable().Select(r => r[XFieldName]);
+                if (!string.IsNullOrWhiteSpace(YFieldName) && data.Columns[YFieldName] != null)
+                    definition.y = data.AsEnumerable().Select(r => r[YFieldName]);
+                if (!string.IsNullOrWhiteSpace(X2FieldName) && data.Columns[X2FieldName] != null)
+                    definition.x2 = data.AsEnumerable().Select(r => r[X2FieldName]);
+                if (!string.IsNullOrWhiteSpace(Y2FieldName) && data.Columns[Y2FieldName] != null)
+                    definition.y2 = data.AsEnumerable().Select(r => r[Y2FieldName]);
             }
 
             return definition;
