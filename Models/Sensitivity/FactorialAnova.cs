@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
-    using System.Linq;
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
     using Utilities;
 
@@ -32,6 +32,16 @@
         /// List of analysis inputs
         /// </summary>
         public List<string> Inputs { get; set; }
+
+        /// <summary>
+        /// This ID is used to identify temp files used by this Factorial ANOVA method.
+        /// </summary>
+        /// <remarks>
+        /// Without this, analyses run in paralel could overwrite each other's
+        /// temp files, as the temp files would have the same name.
+        /// </remarks>
+        [JsonIgnore]
+        private readonly string id = Guid.NewGuid().ToString();
 
         /// <summary>Constructor</summary>
         public FactorialAnova()
@@ -115,7 +125,7 @@
 
                 string outputNames = StringUtilities.Build(Outputs, ",", "\"", "\"");
                 string inputNames = StringUtilities.Build(Inputs, ",", "\"", "\"");
-                string anovaVariableValuesFileName = Path.Combine(Path.GetTempPath(), "anovavariableValues.csv");
+                string anovaVariableValuesFileName = GetTempFileName("anovaVariableValues", ".csv");
 
                 // Write variables file
                 using (var writer = new StreamWriter(anovaVariableValuesFileName))
@@ -163,10 +173,21 @@
         /// </summary>
         private DataTable RunR(string script)
         {
-            string rFileName = Path.Combine(Path.GetTempPath(), "ANOVAscript.r");
+            string rFileName = GetTempFileName("ANOVAscript", ".r");
             File.WriteAllText(rFileName, script);
             R r = new R();
             return r.RunToTable(rFileName);
+        }
+
+        /// <summary>
+        /// Returns a unique temporary filename.
+        /// </summary>
+        /// <param name="name">Base name of the file. The returned filename will contain this name.</param>
+        /// <param name="extension">File extension to be used.</param>
+        /// <returns>Unique temporary filename.</returns>
+        private string GetTempFileName(string name, string extension)
+        {
+            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
         }
 
 
