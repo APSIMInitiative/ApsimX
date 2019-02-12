@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 52; } }
+        public static int LatestVersion { get { return 51; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -72,12 +72,7 @@
                         throw new Exception("Cannot find converter to go to version " + versionFunction);
 
                     // Found converter method so call it.
-                    object[] parameters = new object[] { returnData.Root, fileName };
-                    method.Invoke(null, parameters);
-
-                    // If any of the arguments were passed by reference, apply the changes now.
-                    returnData.Root = parameters[0] as JObject;
-                    fileName = parameters[1] as string;
+                    method.Invoke(null, new object[] { returnData.Root, fileName });
 
                     fileVersion++;
                 }
@@ -224,23 +219,6 @@
             {
                 JsonUtilities.RenameProperty(model, "Gsmax", "Gsmax350");
                 JsonUtilities.AddConstantFunctionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
-            }
-        }
-
-        /// <summary>
-        /// Adds a top-level simulations object if the top-level object is not of type Simulations.
-        /// </summary>
-        /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion52(ref JObject root, string fileName)
-        {
-            if (JsonUtilities.Type(root) != typeof(Simulations).Name)
-            {
-                Simulations sims = new Simulations();
-                string st = FileFormat.WriteToString(sims);
-                JObject newRoot = JObject.Parse(st);
-                JsonUtilities.AddChild(newRoot, root);
-                root = newRoot;
             }
         }
     }
