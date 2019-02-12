@@ -85,15 +85,18 @@ namespace Models
 
                 if (args.Contains("/Upgrade"))
                 {
-                    string[] files = Directory.EnumerateFiles(Path.GetDirectoryName(fileName), Path.GetFileName(fileName), args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
+                    string dir = Path.GetDirectoryName(fileName);
+                    if (string.IsNullOrWhiteSpace(dir))
+                        dir = Directory.GetCurrentDirectory();
+                    string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
                     foreach (string file in files)
                     {
                         List<Exception> errors;
-                        Simulations sims = FileFormat.ReadFromFile<Simulations>(file, out errors);
+                        IModel sims = FileFormat.ReadFromFile<Model>(file, out errors);
                         if (errors != null && errors.Count > 0)
                             foreach (Exception error in errors)
                                 Console.Error.WriteLine(error.ToString());
-                        sims.Write(file);
+                        File.WriteAllText(file, FileFormat.WriteToString(sims));
                         Console.WriteLine("Successfully upgraded " + file);
                     }
                     return 0;
