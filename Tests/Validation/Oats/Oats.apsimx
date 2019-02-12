@@ -68,7 +68,8 @@
             "[Oats].Structure.TotalStemPopn",
             "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
             "[Clock].Today.Year",
-            "[Oats].Leaf.Senesced.Wt"
+            "[Oats].Leaf.Senesced.Wt",
+            "[Oats].Leaf.GreenCohortNo"
           ],
           "EventNames": [
             "[Clock].DoReport"
