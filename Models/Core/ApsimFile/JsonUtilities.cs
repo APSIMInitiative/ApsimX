@@ -244,6 +244,19 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Adds a child node to the specified parent.
+        /// </summary>
+        /// <param name="parent">Parent node to which the child will be added.</param>
+        /// <param name="child">Child node to be added.</param>
+        public static void AddChild(JObject parent, JObject child)
+        {
+            JArray children = parent["Children"] as JArray;
+            if (children == null)
+                children = new JArray();
+            children.Add(child);
+        }
+
+        /// <summary>
         /// Helper method for <see cref="ChildrenRecursively(JObject)"/>.
         /// Will never return null.
         /// </summary>
