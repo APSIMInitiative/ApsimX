@@ -14,6 +14,7 @@ namespace Models
     using System.Collections.Generic;
     using System.Linq;
     using Models.Storage;
+    using Models.Core.ApsimFile;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -49,7 +50,7 @@ namespace Models
                 if (args.Length >= 1)
                     fileName = args[0];
 
-                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/m] [/?]";
+                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/m] [/?]";
                 if (args.Contains("/?"))
                 {
                     string detailedHelpInfo = usageMessage;
@@ -62,13 +63,14 @@ namespace Models
                     detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
                     detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
                     detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
+                    detailedHelpInfo += "    /Upgrade             Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
                     detailedHelpInfo += "    /m                   Use the experimental multi-process job runner." + Environment.NewLine;
                     detailedHelpInfo += "    /?                   Show detailed help information.";
                     Console.WriteLine(detailedHelpInfo);
                     return 1;
                 }
 
-                if (args.Length < 1 || args.Length > 9)
+                if (args.Length < 1 || args.Length > 10)
                 {
                     Console.WriteLine(usageMessage);
                     return 1;
@@ -78,6 +80,25 @@ namespace Models
                 {
                     Model m = new Model();
                     Console.WriteLine(m.ApsimVersion);
+                    return 0;
+                }
+
+                if (args.Contains("/Upgrade"))
+                {
+                    string dir = Path.GetDirectoryName(fileName);
+                    if (string.IsNullOrWhiteSpace(dir))
+                        dir = Directory.GetCurrentDirectory();
+                    string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
+                    foreach (string file in files)
+                    {
+                        List<Exception> errors;
+                        IModel sims = FileFormat.ReadFromFile<Model>(file, out errors);
+                        if (errors != null && errors.Count > 0)
+                            foreach (Exception error in errors)
+                                Console.Error.WriteLine(error.ToString());
+                        File.WriteAllText(file, FileFormat.WriteToString(sims));
+                        Console.WriteLine("Successfully upgraded " + file);
+                    }
                     return 0;
                 }
 

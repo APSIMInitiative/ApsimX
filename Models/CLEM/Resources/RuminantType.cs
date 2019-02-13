@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
                 AnimalPriceGroup matchCriteria = null;
                 foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 & matchIndividual is null)
+                    if (animalList.Filter(item).Count() == 1 & matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
@@ -141,7 +141,7 @@ namespace Models.CLEM.Resources
                     }
                 }
 
-                if(matchCriteria is null)
+                if(matchCriteria == null)
                 {
                     // report specific criteria not found in price list
                     string warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]"+ (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");

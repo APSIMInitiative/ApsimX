@@ -6873,26 +6873,6 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Weather, Models",
-                              "FileName": "GattonPP14H.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "14",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Weather, Models",
-                              "FileName": "GattonPP16H.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "16",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -10159,26 +10139,6 @@
                               "FileName": "Canberra.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Natural",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Weather, Models",
-                              "FileName": "CanberraPP14H.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "14",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Weather, Models",
-                              "FileName": "CanberraPP16H.met",
-                              "ExcelWorkSheetName": "",
-                              "Name": "16",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
