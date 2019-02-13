@@ -565,23 +565,23 @@ namespace Models.PMF.Organs
         
         /// <summary>Gets the initialised cohort no.</summary>
         [Description("Number of leaf cohort objects that have been initialised")]
-        public int InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
+        public int InitialisedCohortNo { get { return Leaves.Count(l => l.IsInitialised);} }
 
         /// <summary>Gets the appeared cohort no.</summary>
         [Description("Number of leaf cohort that have appeared")]
-        public int AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
+        public int AppearedCohortNo { get { return Leaves.Count(l => l.IsAppeared); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
-        public int ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
+        public int ExpandingCohortNo { get { return Leaves.Count(l => l.IsGrowing); } }
 
         /// <summary>Gets the expanded cohort no.</summary>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public int ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
+        public int ExpandedCohortNo { get { return Leaves.Count(l => l.IsFullyExpanded); } }
 
         /// <summary>Gets the green cohort no.</summary>
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
-        public int GreenCohortNo { get { return CohortCounter("IsGreen"); } }
+        public int GreenCohortNo { get { return Leaves.Count(l => l.IsGreen); } }
 
         /// <summary>Gets the green cohort no.</summary>
         [Description("Number of leaf cohorts that are have expanded but 50% fully senesced")]
@@ -597,11 +597,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the senescing cohort no.</summary>
         [Description("Number of leaf cohorts that are Senescing")]
-        public int SenescingCohortNo { get { return CohortCounter("IsSenescing"); } }
+        public int SenescingCohortNo { get { return Leaves.Count(l => l.IsSenescing); } }
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.finalLeafNumber.Value()); } }
+        public double DeadCohortNo { get { return Math.Min(Leaves.Count(l => l.IsDead), Structure.finalLeafNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -1166,23 +1166,6 @@ namespace Models.PMF.Organs
 
         /// <summary>1 based rank of the current leaf.</summary>
         private int CurrentRank { get; set; }
-
-        /// <summary>Counts cohorts with a given condition.</summary>
-        /// <param name="Condition">The condition.</param>
-        /// <returns></returns>
-        private int CohortCounter(string Condition)
-        {
-            int count = 0;
-            foreach (LeafCohort L in Leaves)
-            {
-                object o = ReflectionUtilities.GetValueOfFieldOrProperty(Condition, L);
-                if (o == null)
-                    throw new ApsimXException(this, "Leaf.CohortCounter returned null for function GetValueOfFieldOrProperty for condition " + Condition);
-                if ((bool)o)
-                    count++;
-            }
-            return count;
-        }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
