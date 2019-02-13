@@ -38,11 +38,11 @@ namespace Models.PMF.Organs
     /// 
     /// Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into.  
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
-    /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
+    /// (kNO3 or kNH4), the concentration of N form (ppm), and a relative water content (RWC) which decreases as the soil dries.  
     /// 
-    ///     _NO3 uptake = NO3<sub>i</sub> x kNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NO3 uptake = NO3<sub>i</sub> x kNO3 x NO3<sub>ppm, i</sub> x RWC_
     ///     
-    ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x RWC_
     /// 
     /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
@@ -313,8 +313,9 @@ namespace Models.PMF.Organs
                     return new double[0]; 
                 double[] value;
                 value = new double[PlantZone.soil.Thickness.Length];
+                double SRL = specificRootLength.Value();
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * specificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                    value[i] = PlantZone.LayerLive[i].Wt * SRL * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -581,10 +582,13 @@ namespace Models.PMF.Organs
                 //Note: MetabolicN is assumed to be zero
 
                 double NDeficit = 0.0;
+                double minNConc = minimumNConc.Value();
+                double maxNConc = maximumNConc.Value();
+
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * maxNConc * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, maxNConc * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     structuralNDemand += Z.StructuralNDemand[i];
@@ -709,7 +713,7 @@ namespace Models.PMF.Organs
                 double[] bd = myZone.soil.BD;
 
                 double accuDepth = 0;
-                
+
                 for (int layer = 0; layer < thickness.Length; layer++)
                 {
                     accuDepth += thickness[layer];
@@ -718,16 +722,15 @@ namespace Models.PMF.Organs
                         double factorRootDepth = Math.Max(0, Math.Min(1, 1 - (accuDepth - Depth ) / thickness[layer]));
                         RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
-                        double SWAF = nUptakeSWFactor.Value(layer);
 
                         double kno3 = this.kno3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NO3Uptake));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * RWC[layer] * factorRootDepth, (maxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
                         double knh4 = this.knh4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NH4Uptake));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * RWC[layer] * factorRootDepth, (maxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
                     }
                 }
@@ -1017,9 +1020,10 @@ namespace Models.PMF.Organs
             if (nRetranslocationFactor != null)
             {
                 double labileN = 0.0;
+                double minNConc = minimumNConc.Value();
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minimumNConc.Value());
+                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minNConc);
 
                 double availableN = Math.Max(0.0, labileN - nReallocationSupply) * nRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
