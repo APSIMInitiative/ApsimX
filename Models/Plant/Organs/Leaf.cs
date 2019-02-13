@@ -1299,9 +1299,10 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
+                double thermalTime = ThermalTime.Value();
                 foreach (LeafCohort L in Leaves)
                 {
-                    L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
+                    L.DoActualGrowth(thermalTime, CohortParameters);
                     needToRecalculateLiveDead = true;
                 }
 
