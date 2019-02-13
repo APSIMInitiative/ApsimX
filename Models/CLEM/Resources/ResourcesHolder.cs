@@ -411,29 +411,15 @@ namespace Models.CLEM.Resources
                         {
                             // check if resources available for activity and transmutation
                             double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
-                            foreach (TransmutationCost transcost in Apsim.Children(trans, typeof(TransmutationCost)))
+                            foreach (ITransmutationCost transcost in Apsim.Children(trans, typeof(IModel)).Where(a => a is ITransmutationCost).Cast<ITransmutationCost>())
                             {
                                 double transmutationCost = unitsNeeded * transcost.CostPerUnit;
 
                                 // get transcost resource
                                 IResourceType transResource = null;
-                                if (transcost.ResourceType.Name == "Labour")
-                                {
-                                    // get by labour group filter under the transmutation cost
-                                    ResourceRequest labourRequest = new ResourceRequest();
-                                    labourRequest.ActivityModel = request.ActivityModel;
-                                    labourRequest.ResourceType = typeof(Labour);
-                                    labourRequest.FilterDetails = Apsim.Children(transcost, typeof(LabourFilterGroup)).ToList<object>();
-                                    transResource = this.GetResourceItem(labourRequest, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-
-                                    // TODO: put group name in the transcost resource type name
-                                    // this still needs to be checked
-                                    transcost.ResourceTypeName = (transResource as LabourType).Name;
-                                }
-                                else
+                                if (transcost.ResourceType.Name != "Labour")
                                 {
                                     transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-                                    //transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceType, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                 }
 
                                 if (!queryOnly)
@@ -447,7 +433,17 @@ namespace Models.CLEM.Resources
                                     transRequest.ActivityModel = request.ActivityModel;
 
                                     // used to pass request, but this is not the transmutation cost
-                                    transResource.Remove(transRequest);
+
+                                    if (transcost.ResourceType.Name == "Labour")
+                                    {
+                                        transRequest.ResourceType = typeof(Labour);
+                                        transRequest.FilterDetails = Apsim.Children(transcost as IModel, typeof(LabourFilterGroup)).ToList<object>();
+                                        CLEMActivityBase.TakeLabour(transRequest, true, transRequest.ActivityModel, this, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                                    }
+                                    else
+                                    {
+                                        transResource.Remove(transRequest);
+                                    }
                                 }
                                 else
                                 {

@@ -81,7 +81,7 @@ namespace UserInterface.Presenters
                 ".croprotationborder {border-color:#86b2b1; background-color:white !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px; }" +
                 ".labourgroupsborder {border-color:#996633; background-color:white !important; border-width:1px; border-style:solid; padding:10px; margin-bottom:5px; margin-top:5px;}" +
                 ".activitygroupsborder {border-color:#86b2b1; background-color:white !important; border-width:1px; border-style:solid; padding:10px; margin-bottom:5px; margin-top:5px;}" +
-                ".labournote {font-style: italic; color:#666666;}" +
+                ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:#f2e2f2 !important; border-width:1px; border-style:solid; padding:5px; margin:10px 0px 5px 0px; border-radius:5px; }" +
                 ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
                 ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
