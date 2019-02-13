@@ -164,10 +164,11 @@
             hpaned1.PositionSet = true;
             hpaned1.Child2.Hide();
             hpaned1.Child2.NoShowAll = true;
-            notebook1.SetMenuLabel(vbox1, new Label(indexTabText));
-            notebook2.SetMenuLabel(vbox2, new Label(indexTabText));
-            hbox1.HeightRequest = 20;
-            
+
+            Widget homeIconLabel = LabelWithIcon(indexTabText, "go-home");
+            notebook1.SetMenuLabel(vbox1, homeIconLabel);
+            notebook2.SetMenuLabel(vbox2, homeIconLabel);
+            hbox1.HeightRequest = 20;            
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
@@ -317,6 +318,10 @@
             eventbox.ShowAll();
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
             notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, new Label(tabLabel.Text));
+
+            // Attach an icon to the context menu
+            Widget iconLabel = LabelWithIcon(tabLabel.Text, "../ApsimNG/Resources/apsim logo32.png");
+            notebook.SetMenuLabel(notebook.CurrentPageWidget, iconLabel);
         }
 
         /// <summary>
@@ -365,6 +370,7 @@
             {
                 Widget tab = (ownerView as ExplorerView).MainWidget;
                 Notebook notebook = tab.IsAncestor(notebook1) ? notebook1 : notebook2;
+                
                 // The top level of the "label" is an EventBox
                 EventBox ebox = (EventBox)notebook.GetTabLabel(tab);
                 ebox.TooltipText = tooltip;
@@ -374,7 +380,54 @@
                 // And the HBox has the actual label as its first child
                 Label tabLabel = (Label)hbox.Children[0];
                 tabLabel.Text = newTabName;
+
+                // Update the context menu label
+                Widget label = LabelWithIcon(newTabName, "../ApsimNG/Resources/apsim logo32.png");
+                notebook.SetMenuLabel(tab, label);
             }
+        }
+
+        /// <summary>
+        /// Creates a widget that contains a label with an icon on its left.
+        /// </summary>
+        /// <param name="text">The label text</param>
+        /// <param name="icon">Icon path/Stock name</param>
+        /// <remarks>
+        /// If 'icon' is not a valid path, it is treated like a stock name.
+        /// Invalid stock names default to an invalid file icon.
+        /// </remarks>
+        public Widget LabelWithIcon(string text, string icon)
+        {
+            Gtk.Image image;
+
+            // Find the icon
+            if (File.Exists(icon))
+            {
+                Gdk.Pixbuf pix = new Gdk.Pixbuf(icon, 12, 12);
+                image = new Gtk.Image(pix);
+            }
+            else
+            {
+                image = new Gtk.Image();
+                image.SetFromIconName(icon, IconSize.Menu);
+            }
+            image.Visible = true;
+
+            // Make a label
+            Label label = new Label(text);
+            label.Visible = true;
+
+            // Attach the label and icon together
+            HBox box = new HBox(false, 4);
+            box.PackStart(image, false, true, 0);
+            box.PackStart(label, false, true, 0);
+            box.Visible = true;
+
+            // The final widget can only have 1 child, so we have to pack one layer deeper
+            HBox bin = new HBox(false, 4);
+            bin.PackStart(box, false, true, 0);
+
+            return bin;
         }
 
         /// <summary>Set the wait cursor (or not)/</summary>

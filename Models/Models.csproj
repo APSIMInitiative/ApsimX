@@ -142,6 +142,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="CLEM\Reporting\CustomQuery.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -237,7 +238,10 @@
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
+    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
+    <Compile Include="Plant\Structure\CulmStructure.cs" />
+    <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
@@ -657,7 +661,6 @@
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />
     <Compile Include="Zones\CircularZone.cs" />
-    <Compile Include="Zones\StripCropZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
   <ItemGroup>

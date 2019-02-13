@@ -46,6 +46,7 @@ namespace Models.CLEM.Activities
         {
             if (Resources.GrazeFoodStore() != null)
             {
+                this.InitialiseHerd(true, true);
                 // create activity for each pasture type (and common land) and breed at startup
                 // do not include common land pasture..
                 foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) | a.GetType() == typeof(CommonLandFoodStoreType)))
@@ -148,7 +149,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = this.CurrentHerd(false);
+            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location != "").ToList();
+
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;

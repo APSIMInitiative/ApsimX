@@ -6,6 +6,7 @@
     using Models.Factorial;
     using Models.Interfaces;
     using Models.Sensitivity;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -66,6 +67,16 @@
         /// <summary>List of simulation names from last run</summary>
         [XmlIgnore]
         public List<string> simulationNames { get; set; }
+
+        /// <summary>
+        /// This ID is used to identify temp files used by this Morris method.
+        /// </summary>
+        /// <remarks>
+        /// Without this, Morri run in paralel could overwrite each other's
+        /// temp files, as the temp files would have the same name.
+        /// </remarks>
+        [JsonIgnore]
+        private readonly string id = Guid.NewGuid().ToString();
 
         /// <summary>Constructor</summary>
         public Morris()
@@ -451,13 +462,12 @@
             hasRun = false;
         }
 
-
         /// <summary>
         /// Get a list of parameter values that we are to run. Call R to do this.
         /// </summary>
         private DataTable RunRToGetParameterValues()
         {
-            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript.r");
+            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript" + id + ".r");
             string script = GetMorrisRScript();
             script += "write.table(apsimMorris$X, row.names = F, col.names = T, sep = \",\")" + Environment.NewLine;
             File.WriteAllText(rFileName, script);
@@ -471,11 +481,11 @@
         /// </summary>
         private void RunRPostSimulation(DataTable predictedValues, out DataTable eeDataRaw, out DataTable statsDataRaw)
         {
-            string morrisParametersFileName = Path.Combine(Path.GetTempPath(), "parameters.csv");
-            string apsimVariableFileName = Path.Combine(Path.GetTempPath(), "apsimvariable.csv");
-            string rFileName = Path.Combine(Path.GetTempPath(), "morrisscript.r");
-            string eeFileName = Path.Combine(Path.GetTempPath(), "ee.csv");
-            string statsFileName = Path.Combine(Path.GetTempPath(), "stats.csv");
+            string morrisParametersFileName = GetTempFileName("parameters", ".csv");
+            string apsimVariableFileName = GetTempFileName("apsimvariable", ".csv");
+            string rFileName = GetTempFileName("morrisscript", ".r");
+            string eeFileName = GetTempFileName("ee", ".csv");
+            string statsFileName = GetTempFileName("stats", ".csv");
 
             // write predicted values file
             using (StreamWriter writer = new StreamWriter(apsimVariableFileName))
@@ -552,6 +562,17 @@
             " )" + Environment.NewLine,
             paramNames, NumPaths, NumIntervals + 1, Jump, lowerBounds, upperBounds);
             return script;
+        }
+
+        /// <summary>
+        /// Returns a unique temporary filename.
+        /// </summary>
+        /// <param name="name">Base name of the file. The returned filename will contain this name.</param>
+        /// <param name="extension">File extension to be used.</param>
+        /// <returns>Unique temporary filename.</returns>
+        private string GetTempFileName(string name, string extension)
+        {
+            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

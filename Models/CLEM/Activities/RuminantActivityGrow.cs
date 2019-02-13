@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// Gross energy content of forage (MJ/kg DM)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(18.4)]
-        [Description("Gross energy content of forage")]
+        [Description("Gross energy content of forage (MJ/kg DM)")]
         [Required]
         [Units("MJ/kg DM")]
         public double EnergyGross { get; set; }
@@ -470,7 +470,7 @@ namespace Models.CLEM.Activities
                 double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
 
                 // Reference: SCA p.24
-                // Regference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
+                // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
                 // 0.000082 is -0.03 Age in Years/365 for days 
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
                 ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
@@ -708,7 +708,19 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "\n<div class=\"activityentry\">The gross energy content of forage is ";
+
+            if (EnergyGross == 0)
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>";
+            }
+            html += " MJ/kg dry matter</div>";
             return html;
+
         }
 
     }

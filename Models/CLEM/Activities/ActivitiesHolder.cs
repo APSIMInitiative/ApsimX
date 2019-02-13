@@ -74,6 +74,12 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
 
+            // ensure all folders are not APSIM folders
+            if(Apsim.ChildrenRecursively(this, typeof(Folder)).Count>0)
+            {
+                string[] memberNames = new string[] { "ActivityHolder" };
+                results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+            }
             return results;
         }
 

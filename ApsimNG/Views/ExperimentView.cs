@@ -295,16 +295,22 @@ namespace UserInterface.Views
         /// </summary>
         public void Detach()
         {
-            exportButton.Clicked -= OnExportToCsv;
-            importButton.Clicked -= OnImportCsv;
-            disableButton.Clicked -= DisableSims;
-            enableButton.Clicked -= EnableSims;
-            changeMaxSimsButton.Clicked -= SetMaxSims;
-            run.ButtonPressEvent -= OnRunSim;
+            if (exportButton != null)
+                exportButton.Clicked -= OnExportToCsv;
+            if (importButton != null)
+                importButton.Clicked -= OnImportCsv;
+            if (disableButton != null)
+                disableButton.Clicked -= DisableSims;
+            if (enableButton != null)
+                enableButton.Clicked -= EnableSims;
+            if (changeMaxSimsButton != null)
+                changeMaxSimsButton.Clicked -= SetMaxSims;
+            if (run != null)
+                run.ButtonPressEvent -= OnRunSim;
 
-            store.Dispose();
-            contextMenu.Dispose();
-            MainWidget.Destroy();
+            store?.Dispose();
+            contextMenu?.Dispose();
+            MainWidget?.Destroy();
             _owner = null;
         }
 

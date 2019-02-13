@@ -2,6 +2,7 @@
 
 namespace Models.PostSimulationTools
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Factorial;
     using Models.Storage;
@@ -127,6 +128,26 @@ namespace Models.PostSimulationTools
 
                 if (predictedObservedData != null)
                 {
+                    // Add in error columns for each data column.
+                    foreach (string columnName in commonCols)
+                    {
+                        if (predictedObservedData.Columns.Contains("Predicted." + columnName) &&
+                            predictedObservedData.Columns["Predicted." + columnName].DataType == typeof(double))
+                        {
+                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName);
+                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName);
+                            if (predicted.Length > 0 && predicted.Length == observed.Length)
+                            {
+                                var errorData = MathUtilities.Subtract(predicted, observed);
+                                var errorColumnName = "Pred-Obs." + columnName;
+                                var errorColumn = predictedObservedData.Columns.Add(errorColumnName, typeof(double));
+                                DataTableUtilities.AddColumn(predictedObservedData, errorColumnName, errorData);
+                                predictedObservedData.Columns[errorColumnName].SetOrdinal(predictedObservedData.Columns["Predicted." + columnName].Ordinal + 1);
+                            }
+                        }
+                    }
+
+                    // Write table to datastore.
                     predictedObservedData.TableName = this.Name;
                     dataStore.WriteTable(predictedObservedData);
 

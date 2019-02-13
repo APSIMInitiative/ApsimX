@@ -36,6 +36,7 @@ namespace UserInterface.Views
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
+            treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
             popup = new MenuView();
             RightHandView = (Viewport)builder.GetObject("RightHandView");
@@ -82,6 +83,24 @@ namespace UserInterface.Views
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             return bitmap;
         }
+
+        /// <summary>
+        /// Invoked when the view is drawn on the screen.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnLoaded(object sender, EventArgs args)
+        {
+            // Context menu keyboard shortcuts are registered when the tree
+            // view gains focus. Unfortunately, some views seem to prevent this
+            // event from firing, and as a result, the keyboard shortcuts don't
+            // work. To fix this, we select the first node in the tree when it
+            // is "realized" (rendered).
+            TreeIter iter;
+            treeviewWidget.Model.GetIterFirst(out iter);
+            string firstNodeName = treeviewWidget.Model.GetValue(iter, 0)?.ToString();
+            Tree.SelectedNode = "." + firstNodeName;
+        }
         
         /// <summary>
         /// Widget has been destroyed - clean up.
@@ -90,6 +109,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnDestroyed(object sender, EventArgs e)
         {
+            treeviewWidget.Realized -= OnLoaded;
             if (RightHandView != null)
             {
                 foreach (Widget child in RightHandView.Children)

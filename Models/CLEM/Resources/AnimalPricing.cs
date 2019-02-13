@@ -16,12 +16,13 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]
-    public class AnimalPricing: CLEMModel
+    [Version(1, 0, 3, "Purchase and sales identifier used")]
+    public class AnimalPricing: CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Constructor
@@ -29,21 +30,8 @@ namespace Models.CLEM.Resources
         public AnimalPricing()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            this.SetDefaults();
         }
-
-        /// <summary>
-        /// Style of pricing animals
-        /// </summary>
-        [Description("Style of pricing animals")]
-        [Required]
-        public PricingStyleType PricingStyle { get; set; }
-
-        /// <summary>
-        /// Price of individual breeding sire
-        /// </summary>
-        [Description("Price of individual breeding sire")]
-        [Required, GreaterThanEqualValue(0)]
-        public double BreedingSirePrice { get; set; }
 
         /// <summary>
         /// Create a copy of the current instance
@@ -51,17 +39,35 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public AnimalPricing Clone()
         {
-            AnimalPricing clone = new AnimalPricing()
-            {
-                PricingStyle = this.PricingStyle,
-                BreedingSirePrice = this.BreedingSirePrice
-            };
+            AnimalPricing clone = new AnimalPricing();
 
             foreach (AnimalPriceGroup item in this.Children.OfType<AnimalPriceGroup>())
             {
                 clone.Children.Add(item.Clone());
             }
             return clone;
+        }
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (Apsim.Children(this, typeof(AnimalPriceGroup)).Count() == 0)
+            {
+                string[] memberNames = new string[] { "Animal pricing" };
+                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r="+this.Name+ "].\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
+            }
+            else if (Apsim.Children(this, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+            {
+                string[] memberNames = new string[] { "Animal pricing" };
+                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r="+this.Name+"]\nThese will not result in price calculations and can be deleted.", memberNames));
+            }
+            return results;
         }
 
         /// <summary>
@@ -72,10 +78,6 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Pricing is provided <span class=\"setvalue\">" + this.PricingStyle.ToString() + "</span></div>";
-            html += "\n<div class=\"activityentry\">";
-            html += "Male breeder purchase price is <span class=\"setvalue\">" + this.BreedingSirePrice.ToString("0.00") + "</span></div>";
             return html;
         }
 
@@ -102,7 +104,7 @@ namespace Models.CLEM.Resources
             string html = "";
             if(Apsim.Children(this, typeof(AnimalPriceGroup)).Count() >= 1)
             {
-                html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Purchase</th><th>Sell</th></tr>";
+                html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
             }
             else
             {

@@ -79,7 +79,7 @@ namespace Models.CLEM.Resources
                 {
                     if (sucklingList.Count > 0)
                     {
-                        Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}]. Unassigned calves will need to graze or be fed and may have reduced growth until weaned.", sucklingList.Count, herdName));
+                        Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length at the start of the simulation to provide a calf.", sucklingList.Count, herdName));
                     }
                 }
                 else
@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
                             breedFemales[0].DryBreeder = false;
 
                             //Initialise female milk production in at birth so ready for sucklings to consume
-                            double milkTime = 15; // equivalent to mid month production
+                            double milkTime = (suckling.Age*30.4) + 15; // +15 equivalent to mid month production
 
                             // need to calculate normalised animal weight here for milk production
                             double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
@@ -116,8 +116,12 @@ namespace Models.CLEM.Resources
                             // calculate previous births
                             breedFemales[0].NumberOfBirths = Convert.ToInt32((breedFemales[0].Age - suckling.Age - breedFemales[0].BreedParams.GestationLength - breedFemales[0].BreedParams.MinimumAge1stMating) / ((currentIPI + minsizeIPI) / 2));
                             // add this birth
-                            breedFemales[0].NumberOfBirths++;
-                            breedFemales[0].NumberOfBirthsThisTimestep++;
+                            if (suckling.Age == 0)
+                            {
+                                // do not add if this is not a new born suckling at initialisation as was assumed to be previousl added
+                                breedFemales[0].NumberOfBirths++;
+                                breedFemales[0].NumberOfBirthsThisTimestep++;
+                            }
 
                             //breedFemales[0].Parity = breedFemales[0].Age - suckling.Age - 9;
                             // AL removed the -9 as this would make it conception month not birth month
@@ -139,7 +143,7 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}]. Unassigned calves will need to graze or be fed and may have reduced growth until weaned.", sucklingList.Count - sucklingCount, herdName));
+                            Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length at the start of the simulation to provide a calf.", sucklingList.Count - sucklingCount, herdName));
                         }
                     }
 
@@ -159,6 +163,8 @@ namespace Models.CLEM.Resources
 
                         female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2)) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
+                        female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                        female.SuccessfulPregnancy = true;
                     }
                 }
             }
@@ -178,7 +184,7 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             ResourceTransaction details = new ResourceTransaction();
-            details.Debit = 1;
+            details.Gain = 1;
             details.Activity = "Unknown";
             details.ActivityType = "Unknown";
             details.Reason = "Unknown";
@@ -210,7 +216,7 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             ResourceTransaction details = new ResourceTransaction();
-            details.Credit = 1;
+            details.Loss = 1;
             details.Activity = "Unknown";
             details.ActivityType = "Unknown";
             details.Reason = "Unknown";

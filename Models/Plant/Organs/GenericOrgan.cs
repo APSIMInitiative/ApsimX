@@ -82,6 +82,11 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         private IFunction initialWtFunction = null;
 
+        /// <summary>The initial N Concentration</summary>
+        [ChildLinkByName(IsOptional = true)]
+        [Units("g/m2")]
+        private IFunction initialNConcFunction = null;
+
         /// <summary>The maximum N concentration</summary>
         [ChildLinkByName]
         [Units("g/g")]
@@ -457,8 +462,15 @@ namespace Models.PMF.Organs
                 ClearBiomassFlows();
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;
-                Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+                if(initialNConcFunction != null)
+                {
+                    Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
+                }
+                else
+                {
+                    Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
+                    Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+                }
             }
         }
 
