@@ -608,9 +608,9 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
-        /// Se
         /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
         /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// A blank list of ResourceNameResourceGroups will result in all available resources types being created in the list
         /// 
         /// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
         /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
@@ -623,6 +623,7 @@ namespace UserInterface.Presenters
             List<string> result = new List<string>();
             ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
             ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+
             foreach (Type resGroupType in resourceNameResourceGroups)
             {
                 IModel resGroup = Apsim.Child(resHolder, resGroupType);
