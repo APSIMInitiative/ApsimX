@@ -132,7 +132,7 @@
         private void OnFilterChanged(object sender, EventArgs e)
         {
             string filter = view.Filter;
-            this.view.List.Values = this.allowableChildModels.Where(m => m.Name.Contains(filter)).Select(m => m.FullName).ToArray();
+            this.view.List.Values = this.allowableChildModels.Where(m => m.Name.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).Select(m => m.FullName).ToArray();
         }
     }
 }
