@@ -44,6 +44,7 @@
             // Trap events from the view.
             this.view.List.DoubleClicked += this.OnAddButtonClicked;
             this.view.List.DragStarted += this.OnDragStart;
+            this.view.FilterChanged += this.OnFilterChanged;
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -52,6 +53,7 @@
             // Trap events from the view.
             this.view.List.DoubleClicked -= this.OnAddButtonClicked;
             this.view.List.DragStarted -= this.OnDragStart;
+            this.view.FilterChanged -= this.OnFilterChanged;
         }
 
         /// <summary>The user has clicked the add button.</summary>
@@ -122,6 +124,17 @@
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
+        }
+
+        /// <summary>
+        /// The filter/search textbox has been modified by the user.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnFilterChanged(object sender, EventArgs e)
+        {
+            string filter = view.Filter;
+            this.view.List.Values = this.allowableChildFunctions.Where(m => m.Name.Contains(filter)).Select(m => m.FullName).ToArray();
         }
     }
 }
