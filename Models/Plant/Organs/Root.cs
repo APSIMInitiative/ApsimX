@@ -583,7 +583,7 @@ namespace Models.PMF.Organs
 
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * maxNConc * NitrogenSwitch;
+                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minNConc * NitrogenSwitch;
                     NDeficit = Math.Max(0.0, maxNConc * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
