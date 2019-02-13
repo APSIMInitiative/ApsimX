@@ -93,10 +93,6 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         private IFunction knh4 = null;
 
-        /// <summary>Soil water factor for N Uptake</summary>
-        [ChildLinkByName]
-        private IFunction nUptakeSWFactor = null;
-
         /// <summary>Gets or sets the initial biomass dry matter weight</summary>
         [ChildLinkByName]
         [Units("g/plant")]
