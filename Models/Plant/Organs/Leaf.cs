@@ -1436,11 +1436,12 @@ namespace Models.PMF.Organs
             }
             else
             {
+                double dMConversionEfficiency = DMConversionEfficiency.Value();
                 foreach (LeafCohort L in Leaves)
                 {
-                    StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency.Value();
-                    MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency.Value();
-                    StorageDemand += L.StorageDMDemand / DMConversionEfficiency.Value();
+                    StructuralDemand += L.StructuralDMDemand / dMConversionEfficiency;
+                    MetabolicDemand += L.MetabolicDMDemand / dMConversionEfficiency;
+                    StorageDemand += L.StorageDMDemand / dMConversionEfficiency;
                 }
             }
             DMDemand.Structural = StructuralDemand;
@@ -1677,7 +1678,7 @@ namespace Models.PMF.Organs
             }
 
             double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
-            double CheckValue = StartWt + value.Structural * DMConversionEfficiency.Value() + value.Metabolic * DMConversionEfficiency.Value() + value.Storage * DMConversionEfficiency.Value() - value.Reallocation - value.Retranslocation - value.Respired;
+            double CheckValue = StartWt + (value.Structural + value.Metabolic + value.Storage) * DMConversionEfficiency.Value() - value.Reallocation - value.Retranslocation - value.Respired;
             double ExtentOfError = Math.Abs(EndWt - CheckValue);
             double FloatingPointError = 0.00000001;
             if (ExtentOfError > FloatingPointError)
