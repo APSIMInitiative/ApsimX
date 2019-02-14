@@ -33,6 +33,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/datareaders/graspdatareadersql.htm")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>

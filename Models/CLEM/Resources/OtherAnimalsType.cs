@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(OtherAnimals))]
     [Description("This resource represents an other animal group (e.g. Chickens).")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/other animals/otheranimaltype.htm")]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
