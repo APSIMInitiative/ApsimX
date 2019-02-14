@@ -22,6 +22,14 @@ namespace UnitTests
 
             [Solute]
             public double[] NO3 { get; set; }
+            public double[] kgha { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+            public double[] ppm => throw new NotImplementedException();
+
+            public void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value)
+            {
+                throw new NotImplementedException();
+            }
         }
 
 

@@ -40,7 +40,7 @@ namespace Models.Soils
 
         /// <summary>Link to the soil.</summary>
         [Link]
-        private Soil Soil = null;
+        public Soil Soil = null;
 
         #endregion
 
