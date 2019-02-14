@@ -20,5 +20,10 @@
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
         void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value);
+
+        /// <summary>Setter for kgha delta.</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="delta">New delta values</param>
+        void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta);
     }
 }

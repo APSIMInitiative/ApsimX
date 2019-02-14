@@ -2454,6 +2454,24 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void Seturea(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
+            // get the delta N
+            var currentUrea = urea;
+            double[] deltaN = new double[value.Length];
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                deltaN[layer] = value[layer] - currentUrea[layer];
+
+            SetureaDelta(callingModelType, deltaN);
+        }
+
+        /// <summary>Setter for urea delta</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
+        /// </remarks>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="deltaN">New values</param>
+        public void SetureaDelta(SoluteManager.SoluteSetterType callingModelType, double[] deltaN)
+        {
             // get the sender module (this is for report/testing only)
             if (callingModelType == SoluteManager.SoluteSetterType.Soil)
                 senderModule = "WaterModule";
@@ -2465,11 +2483,9 @@ namespace Models.Soils
                 senderModule = "Other";
 
             // get the delta N
-            double[] deltaN = new double[value.Length];
             bool hasChanges = false;
-            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+            for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
             {
-                deltaN[layer] = value[layer] - urea[layer];
                 if (Math.Abs(deltaN[layer]) > epsilon)
                     hasChanges = true;
             }
@@ -2495,7 +2511,6 @@ namespace Models.Soils
                 }
             }
         }
-
         /// <summary>
         /// Soil ammonium nitrogen amount (kgN/ha)
         /// </summary>
@@ -2524,6 +2539,24 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void SetNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
+            // get the delta N
+            var nh4 = NH4;
+            double[] deltaN = new double[value.Length];
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                deltaN[layer] = value[layer] - nh4[layer];
+            
+            SetNH4Delta(callingModelType, deltaN);
+        }
+
+        /// <summary>Setter for NH4 delta.</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
+        /// </remarks>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="deltaN">New values</param>
+        public void SetNH4Delta(SoluteManager.SoluteSetterType callingModelType, double[] deltaN)
+        {
             // get the sender module (this is for report/testing only)
             if (callingModelType == SoluteManager.SoluteSetterType.Soil)
                 senderModule = "WaterModule";
@@ -2535,11 +2568,9 @@ namespace Models.Soils
                 senderModule = "Other";
 
             // get the delta N
-            double[] deltaN = new double[value.Length];
             bool hasChanges = false;
-            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+            for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
             {
-                deltaN[layer] = value[layer] - NH4[layer];
                 if (Math.Abs(deltaN[layer]) > epsilon)
                     hasChanges = true;
             }
@@ -2599,6 +2630,23 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void SetNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
+            // get the delta N
+            double[] no3 = NO3;
+            double[] deltaN = new double[value.Length];
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+                deltaN[layer] = value[layer] - no3[layer];
+            SetNO3Delta(callingModelType, deltaN);
+         }
+
+        /// <summary>Setter for delta NO3</summary>
+        /// <remarks>
+        /// This is necessary to allow the use of the SoilCNPatch capability
+        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
+        /// </remarks>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="deltaN">New values</param>
+        public void SetNO3Delta(SoluteManager.SoluteSetterType callingModelType, double[] deltaN)
+        {
             // get the sender module (this is for report/testing only)
             if (callingModelType == SoluteManager.SoluteSetterType.Soil)
                 senderModule = "WaterModule";
@@ -2610,11 +2658,9 @@ namespace Models.Soils
                 senderModule = "Other";
 
             // get the delta N
-            double[] deltaN = new double[value.Length];
             bool hasChanges = false;
-            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
+            for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
             {
-                deltaN[layer] = value[layer] - NO3[layer];
                 if (Math.Abs(deltaN[layer]) > epsilon)
                     hasChanges = true;
             }

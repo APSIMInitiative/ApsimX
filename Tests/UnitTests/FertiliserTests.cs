@@ -30,6 +30,11 @@ namespace UnitTests
             {
                 throw new NotImplementedException();
             }
+
+            public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
+            {
+                throw new NotImplementedException();
+            }
         }
 
 

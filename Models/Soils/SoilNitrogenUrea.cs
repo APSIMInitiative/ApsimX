@@ -42,5 +42,13 @@
         {
             parent.Seturea(callingModelType, value);
         }
+
+        /// <summary>Setter for kgha delta.</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="delta">New delta values</param>
+        public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
+        {
+            parent.SetureaDelta(callingModelType, delta);
+        }
     }
 }
