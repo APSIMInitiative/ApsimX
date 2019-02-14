@@ -23,12 +23,9 @@
           "ExperimentFactorValues": null,
           "VariableNames": [
             "[Clock].Today",
-            "[Barley].Phenology.Photoperiod.Value() as Photoperiod",
             "([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
             "[Barley].AboveGround.N",
             "[Barley].AboveGround.Wt",
-            "[Barley].AboveGroundDead.N",
-            "[Barley].AboveGroundDead.Wt",
             "[Barley].AboveGroundLive.N",
             "[Barley].AboveGroundLive.Wt",
             "[Barley].Ear.N",
@@ -40,62 +37,33 @@
             "[Barley].Grain.Size",
             "[Barley].Grain.Wt",
             "[Barley].Leaf.CohortArea",
-            "[Barley].Leaf.AppearedCohortNo",
-            "[Barley].Leaf.CoverDead",
             "[Barley].Leaf.CoverGreen",
             "[Barley].Leaf.CoverTotal",
-            "[Barley].Leaf.Dead.N",
-            "[Barley].Leaf.Dead.NConc",
             "[Barley].Leaf.Dead.Wt",
-            "[Barley].Leaf.DeadCohortNo",
             "[Barley].Leaf.ExpandedCohortNo",
-            "[Barley].Leaf.Fw",
-            "[Barley].Leaf.Fn",
-            "[Barley].Leaf.Height",
-            "[Barley].Leaf.InitialisedCohortNo",
             "[Barley].Leaf.LAI",
-            "[Barley].Leaf.Live.N",
             "[Barley].Leaf.Live.NConc",
             "[Barley].Leaf.Live.Wt",
             "[Barley].Leaf.SenescingCohortNo",
             "[Barley].Leaf.SpecificArea",
             "[Barley].Phenology.AccumulatedEmergedTT",
-            "[Barley].Phenology.CurrentPhaseName",
             "[Barley].Phenology.CurrentStageName",
             "[Barley].Phenology.FlagLeafDAS.Value()",
             "[Barley].Phenology.FloweringDAS.Value()",
             "[Barley].Phenology.MaturityDAS.Value()",
             "[Barley].Phenology.Stage",
             "[Barley].Phenology.Zadok.Stage",
-            "[Barley].Root.N",
-            "[Barley].Root.Nconc",
-            "[Barley].Root.Wt",
             "[Barley].SowingData.Cultivar",
-            "[Barley].Spike.Live.StorageWt",
-            "[Barley].Spike.N",
-            "[Barley].Spike.NConc",
             "[Barley].Spike.Wt",
-            "[Barley].Stem.Live.StorageWt",
-            "[Barley].Stem.N",
             "[Barley].Stem.NConc",
-            "[Barley].Stem.PercentWSC",
             "[Barley].Stem.Wt",
-            "[Barley].StemPlusSpike.N",
-            "[Barley].StemPlusSpike.Wt",
-            "[Barley].Structure.FinalLeafNumber.Value()",
-            "[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()",
             "[Barley].Structure.HaunStage.Value()",
             "[Barley].Structure.Height",
             "[Barley].Structure.LeafTipsAppeared",
             "[Barley].Structure.MainStemPopn",
-            "[Barley].Structure.MeanTillerGrowthRate.Value()",
-            "[Barley].Structure.TotalStemPopn",
-            "[Barley].Total.N",
-            "[Barley].Total.Wt",
             "[Soil].SoilNitrogen.mineral_n",
             "[Soil].SoilWater.SW",
             "[Soil].SoilWater.SWmm",
-            "[SurfaceOrganicMatter].Wt",
             "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
             "sum([Soil].SoilWater.SWmm) as ProfileWater"
           ],
@@ -4814,101 +4782,6 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
-                                      "ShowInLegend": false,
-                                      "IncludeSeriesNameInLegend": false,
-                                      "Cumulative": false,
-                                      "CumulativeX": false,
-                                      "Filter": null,
-                                      "Name": "Series",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[IWeather].MeanT",
-                          "Name": "TemperatureEffect",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                12.0,
-                                14.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Graph, Models",
-                                  "Caption": null,
-                                  "Axis": [
-                                    {
-                                      "$type": "Models.Graph.Axis, Models",
-                                      "Type": 0,
-                                      "Title": "Y",
-                                      "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
-                                      "DateTimeAxis": false,
-                                      "CrossesAtZero": false
-                                    },
-                                    {
-                                      "$type": "Models.Graph.Axis, Models",
-                                      "Type": 3,
-                                      "Title": "X",
-                                      "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
-                                      "DateTimeAxis": false,
-                                      "CrossesAtZero": false
-                                    }
-                                  ],
-                                  "LegendPosition": 3,
-                                  "DisabledSeries": null,
-                                  "Name": "Graph",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Graph.Series, Models",
-                                      "Type": 1,
-                                      "XAxis": 3,
-                                      "YAxis": 0,
-                                      "ColourArgb": -65536,
-                                      "FactorToVaryColours": null,
-                                      "FactorToVaryMarkers": null,
-                                      "FactorToVaryLines": null,
-                                      "Marker": 11,
-                                      "MarkerSize": 0,
-                                      "Line": 0,
-                                      "LineThickness": 0,
-                                      "Checkpoint": "Current",
-                                      "TableName": null,
-                                      "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.TemperatureEffect.XYPairs.X",
-                                      "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.TemperatureEffect.XYPairs.Y",
                                       "X2FieldName": null,
                                       "Y2FieldName": null,
                                       "ShowInLegend": false,
@@ -9971,8 +9844,8 @@
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": -8.7547947024356052,
-            "Longitude": 114.16992187500001
+            "Latitude": -8.75479470243561,
+            "Longitude": 114.169921875
           },
           "Zoom": 3.0,
           "Name": "Map",
@@ -12065,23 +11938,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
-                          "VariableNames": [
-                            "[Clock].Today",
-                            "sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater"
-                          ],
-                          "EventNames": [
-                            "[Clock].DoReport"
-                          ],
-                          "Name": "SupReport",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -12206,7 +12062,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -12222,7 +12078,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "StemWt",
                       "Children": [
                         {
@@ -12312,7 +12168,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -12328,7 +12184,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafWt",
                       "Children": [
                         {
@@ -12418,7 +12274,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -12434,7 +12290,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "SpikeWt",
                       "Children": [
                         {
@@ -12620,7 +12476,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -12636,7 +12492,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafDeadWt",
                       "Children": [
                         {
@@ -12918,7 +12774,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -12929,12 +12785,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "EarNconc",
                       "Children": [
                         {
@@ -13120,7 +12976,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -13131,12 +12987,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LAI",
                       "Children": [
                         {
@@ -13216,7 +13072,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -13227,12 +13083,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverGreen",
                       "Children": [
                         {
@@ -13312,7 +13168,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -13323,12 +13179,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverTotal",
                       "Children": [
                         {
@@ -13525,12 +13381,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_20cm",
                       "Children": [
                         {
@@ -13621,12 +13477,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "20_40cm",
                       "Children": [
                         {
@@ -13717,12 +13573,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "40_60cm",
                       "Children": [
                         {
@@ -13813,12 +13669,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "60_80cm",
                       "Children": [
                         {
@@ -13909,12 +13765,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "80_100cm",
                       "Children": [
                         {
@@ -14005,12 +13861,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "100_120cm",
                       "Children": [
                         {
@@ -14101,12 +13957,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "120_140cm",
                       "Children": [
                         {
@@ -14197,12 +14053,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "140_160cm",
                       "Children": [
                         {
@@ -14298,12 +14154,12 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 2,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "SoilNProfile",
                   "Children": [
                     {
@@ -14399,12 +14255,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_20cm",
                       "Children": [
                         {
@@ -14495,12 +14351,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "20_40cm",
                       "Children": [
                         {
@@ -15933,7 +15789,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -15949,7 +15805,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "StemWt",
                       "Children": [
                         {
@@ -16029,7 +15885,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -16045,7 +15901,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafWt",
                       "Children": [
                         {
@@ -16125,7 +15981,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -16141,7 +15997,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "EarWt",
                       "Children": [
                         {
@@ -16327,7 +16183,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -16338,12 +16194,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LAI",
                       "Children": [
                         {
@@ -16423,7 +16279,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -16434,12 +16290,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverGreen",
                       "Children": [
                         {
@@ -16519,7 +16375,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -16530,12 +16386,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverTot",
                       "Children": [
                         {
@@ -16636,12 +16492,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_20cm",
                       "Children": [
                         {
@@ -16732,12 +16588,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "20_40cm",
                       "Children": [
                         {
@@ -16828,12 +16684,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "40_60cm",
                       "Children": [
                         {
@@ -16924,12 +16780,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "60_80cm",
                       "Children": [
                         {
@@ -17020,12 +16876,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "80_100cm",
                       "Children": [
                         {
@@ -17116,12 +16972,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "100_120cm",
                       "Children": [
                         {
@@ -17212,12 +17068,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "120_140cm",
                       "Children": [
                         {
@@ -17308,12 +17164,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "140_160cm1",
                       "Children": [
                         {
@@ -18494,35 +18350,6 @@
                           "ExperimentFactorNames": null,
                           "ExperimentFactorValues": null,
                           "VariableNames": [
-                            "[Clock].Today",
-                            "[Leaf].CohortSize",
-                            "[Leaf].CohortParameters.MaxArea.Value()",
-                            "[Oats].Structure.Phyllochron",
-                            "[Oats].Leaf.CohortMaxSize",
-                            "[Oats].Leaf.CohortParameters.GrowthDuration.Value()",
-                            "[Oats].Leaf.CohortParameters.LagDuration.Value()",
-                            "[Oats].Leaf.CohortParameters.SenescenceDuration.Value()",
-                            "[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()",
-                            "[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()",
-                            "[LeafSize].Script.LeafAppearedPosition",
-                            "[LeafSize].Script.MostRecentlyAppearedLeafMaxSize",
-                            "[LeafSize].Script.LeafExpandedPosition",
-                            "[LeafSize].Script.MostRecentlyExpandedLeafSize"
-                          ],
-                          "EventNames": [
-                            "[Clock].DoReport"
-                          ],
-                          "Name": "SupReport",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
-                          "VariableNames": [
                             "[MaxLeafSize].Script.MaxLeafSize",
                             "[MaxLeafSize].Script.LeafPosition"
                           ],
@@ -18995,7 +18822,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -19011,7 +18838,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafLigules",
                       "Children": [
                         {
@@ -19091,7 +18918,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -19102,12 +18929,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverGreen",
                       "Children": [
                         {
@@ -19187,7 +19014,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -19198,12 +19025,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverTot",
                       "Children": [
                         {
@@ -19299,7 +19126,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafSize",
                       "Children": [
                         {
@@ -19400,12 +19227,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_20cm",
                       "Children": [
                         {
@@ -19496,12 +19323,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "20_40cm",
                       "Children": [
                         {
@@ -19592,12 +19419,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "40_60cm",
                       "Children": [
                         {
@@ -19688,12 +19515,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "60_80cm",
                       "Children": [
                         {
@@ -19784,12 +19611,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "80_100cm",
                       "Children": [
                         {
@@ -19880,12 +19707,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "100_120cm",
                       "Children": [
                         {
@@ -19976,12 +19803,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "120_140cm",
                       "Children": [
                         {
@@ -20072,12 +19899,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "140_160cm",
                       "Children": [
                         {
@@ -21330,12 +21157,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_15cm",
                       "Children": [
                         {
@@ -21426,12 +21253,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "15_30cm",
                       "Children": [
                         {
@@ -21522,12 +21349,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "30_60cm",
                       "Children": [
                         {
@@ -21618,12 +21445,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "60_90cm",
                       "Children": [
                         {
@@ -21714,12 +21541,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "90_120cm",
                       "Children": [
                         {
@@ -21810,12 +21637,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "120_150cm",
                       "Children": [
                         {
@@ -21906,12 +21733,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "150_180cm",
                       "Children": [
                         {
@@ -22097,7 +21924,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22113,7 +21940,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "StemWt",
                       "Children": [
                         {
@@ -22193,7 +22020,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22209,7 +22036,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafWt",
                       "Children": [
                         {
@@ -22299,7 +22126,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22315,7 +22142,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "EarWt",
                       "Children": [
                         {
@@ -22405,7 +22232,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22416,12 +22243,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "GrainWt",
                       "Children": [
                         {
@@ -22501,7 +22328,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22512,12 +22339,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "GrainN",
                       "Children": [
                         {
@@ -22586,7 +22413,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22597,12 +22424,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "Zadok",
                       "Children": [
                         {
@@ -22874,7 +22701,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -22885,12 +22712,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CoverGreen",
                       "Children": [
                         {
@@ -22967,201 +22794,9 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": "Number of leaves",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "DisabledSeries": null,
-                      "Name": "LeafLigules",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Cult",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Irr",
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "DailyReport",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Barley.Leaf.ExpandedCohortNo",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Cult",
-                          "FactorToVaryMarkers": "Irr",
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "Observed",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Barley.Leaf.ExpandedCohortNo",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": "Volumetric soil water (mm)",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "DisabledSeries": null,
-                  "Name": "Stress",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Irr",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Cult",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Barley.Leaf.Fn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Irr",
-                      "FactorToVaryMarkers": "Cult",
-                      "FactorToVaryLines": "Cult",
-                      "Marker": 0,
-                      "MarkerSize": 1,
-                      "Line": 4,
-                      "LineThickness": 1,
-                      "Checkpoint": "Current",
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Barley.Leaf.Fw",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -24793,7 +24428,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -24804,12 +24439,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "GrainWt",
                       "Children": [
                         {
@@ -24889,7 +24524,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -24905,7 +24540,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "StemWt",
                       "Children": [
                         {
@@ -24985,7 +24620,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -25001,7 +24636,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafWt",
                       "Children": [
                         {
@@ -25081,7 +24716,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -25097,7 +24732,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "EarWt",
                       "Children": [
                         {
@@ -25304,12 +24939,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_20cm",
                       "Children": [
                         {
@@ -25400,12 +25035,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "20_40cm",
                       "Children": [
                         {
@@ -25496,12 +25131,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "40_60cm",
                       "Children": [
                         {
@@ -25592,12 +25227,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "60_80cm",
                       "Children": [
                         {
@@ -25688,12 +25323,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "80_100cm",
                       "Children": [
                         {
@@ -25784,12 +25419,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "100_120cm",
                       "Children": [
                         {
@@ -25880,12 +25515,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "120_140cm",
                       "Children": [
                         {
@@ -25976,12 +25611,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "140_160cm",
                       "Children": [
                         {
@@ -28311,7 +27946,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -28327,7 +27962,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "StemWt",
                       "Children": [
                         {
@@ -28407,7 +28042,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -28423,7 +28058,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "LeafWt",
                       "Children": [
                         {
@@ -28503,7 +28138,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -28519,7 +28154,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "EarWt",
                       "Children": [
                         {
@@ -28918,12 +28553,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "0_20cm",
                       "Children": [
                         {
@@ -29014,12 +28649,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "20_40cm",
                       "Children": [
                         {
@@ -29110,12 +28745,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "40_60cm",
                       "Children": [
                         {
@@ -29206,12 +28841,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "60_80cm",
                       "Children": [
                         {
@@ -29302,12 +28937,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "80_100cm",
                       "Children": [
                         {
@@ -29398,12 +29033,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "100_120cm",
                       "Children": [
                         {
@@ -29494,12 +29129,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "120_140cm",
                       "Children": [
                         {
@@ -29590,12 +29225,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "140_160cm",
                       "Children": [
                         {
@@ -29674,72 +29309,6 @@
                   "Axis": [
                     {
                       "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": "Volumetric soil water (mm)",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "DisabledSeries": null,
-                  "Name": "SoilNProfile",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": "Water",
-                      "FactorToVaryLines": "N",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "ProfileN",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -29762,7 +29331,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "Harvest Biomass",
                   "Children": [
                     {
@@ -29840,7 +29409,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "Harvest Yield",
                   "Children": [
                     {
@@ -30931,23 +30500,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
-                          "VariableNames": [
-                            "[Clock].Today",
-                            "sum([Soil].SoilNitrogen.mineral_n[1:3]) as ProfileN_0_60"
-                          ],
-                          "EventNames": [
-                            "[Clock].DoReport"
-                          ],
-                          "Name": "ProfileWaterReport",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -31081,7 +30633,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -31092,12 +30644,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "GrainWt",
                       "Children": [
                         {
@@ -31292,7 +30844,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -31303,12 +30855,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "GrainN",
                       "Children": [
                         {
@@ -31413,7 +30965,7 @@
                         }
                       ],
                       "LegendPosition": 3,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "Grain Size",
                       "Children": [
                         {
@@ -31491,7 +31043,7 @@
                         }
                       ],
                       "LegendPosition": 3,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "Grain Number",
                       "Children": [
                         {
@@ -32629,35 +32181,6 @@
                             "[Clock].EndOfSimulation"
                           ],
                           "Name": "HarvestReport",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
-                          "VariableNames": [
-                            "[Clock].Today",
-                            "[Leaf].CohortSize",
-                            "[Leaf].CohortParameters.MaxArea.Value()",
-                            "[Oats].Structure.Phyllochron",
-                            "[Oats].Leaf.CohortMaxSize",
-                            "[Oats].Leaf.CohortParameters.GrowthDuration.Value()",
-                            "[Oats].Leaf.CohortParameters.LagDuration.Value()",
-                            "[Oats].Leaf.CohortParameters.SenescenceDuration.Value()",
-                            "[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()",
-                            "[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()",
-                            "[LeafSize].Script.LeafAppearedPosition",
-                            "[LeafSize].Script.MostRecentlyAppearedLeafMaxSize",
-                            "[LeafSize].Script.LeafExpandedPosition",
-                            "[LeafSize].Script.MostRecentlyExpandedLeafSize"
-                          ],
-                          "EventNames": [
-                            "[Clock].DoReport"
-                          ],
-                          "Name": "SupReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -34335,7 +33858,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "TotalWt",
               "Children": [
                 {
@@ -34413,7 +33936,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "GrainWt",
               "Children": [
                 {
@@ -34491,7 +34014,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "LeafWt",
               "Children": [
                 {
@@ -34569,7 +34092,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "LAI",
               "Children": [
                 {
@@ -34647,7 +34170,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "StemWt",
               "Children": [
                 {
@@ -34725,7 +34248,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "EarWt",
               "Children": [
                 {
@@ -34803,7 +34326,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "AppearedLeaves",
               "Children": [
                 {
@@ -34904,7 +34427,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Harvest Biomass",
               "Children": [
                 {
@@ -35060,7 +34583,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "TotalWt",
               "Children": [
                 {
@@ -35138,7 +34661,7 @@
                 }
               ],
               "LegendPosition": 3,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Leaf Area Index",
               "Children": [
                 {
@@ -48023,7 +47546,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\r\nThis was a sowing date by irrigation trial conducted at Lincoln. The following were evaluated:\r\n\r\n- Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)\r\n- Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)\r\n",
+              "Text": "\r\nThis is a hypothetical experiment with Barley sown on the 15th of October every year for 20 years at Lincoln, New Zealand.  The treatments applied are as follows:\r\n\r\n- Two water treatments; Dry (nil irrigation) and Wet, with irrigation applied when soil water deficit reaches 60% to return water content to 100% of capacity. \r\n- five fertiliser N treatments; 0, 50, 100, 200 and 400 kg N/ha with half of the N applied at sowing and the other half applied at growth stage 32.\r\n",
               "Name": "Experimental Details",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -48042,7 +47565,7 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[AutoIrrigation].Script.AutoIrrigationOn = true"
+                        "[AutoIrrigation].Script.AutoIrrigationOn = false"
                       ],
                       "Name": "Dry",
                       "Children": [],
@@ -48074,56 +47597,11 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[Fertilise at sowing]",
-                        "[Fertilise on Zadok stage]"
+                        "[FertiliseAtSowing].Script.Amount = 0",
+                        "[FertiliseOnZadokStage].Script.Amount = 0"
                       ],
                       "Name": "0",
-                      "Children": [
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n    \r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                Summary.WriteMessage(this, \"Fertilising!!\"); \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "0"
-                            }
-                          ],
-                          "Name": "Fertilise at sowing",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Stage",
-                              "Value": "32"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "0"
-                            }
-                          ],
-                          "Name": "Fertilise on Zadok stage",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -48131,56 +47609,11 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[Fertilise at sowing]",
-                        "[Fertilise on Zadok stage]"
+                        "[FertiliseAtSowing].Script.Amount = 25",
+                        "[FertiliseOnZadokStage].Script.Amount = 25"
                       ],
                       "Name": "50",
-                      "Children": [
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n    \r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                Summary.WriteMessage(this, \"Fertilising!!\"); \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "25"
-                            }
-                          ],
-                          "Name": "Fertilise at sowing",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Stage",
-                              "Value": "32"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "25"
-                            }
-                          ],
-                          "Name": "Fertilise on Zadok stage",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -48188,56 +47621,11 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[Fertilise at sowing]",
-                        "[Fertilise on Zadok stage]"
+                        "[FertiliseAtSowing].Script.Amount = 50",
+                        "[FertiliseOnZadokStage].Script.Amount = 50"
                       ],
                       "Name": "100",
-                      "Children": [
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n    \r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                Summary.WriteMessage(this, \"Fertilising!!\"); \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "50"
-                            }
-                          ],
-                          "Name": "Fertilise at sowing",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Stage",
-                              "Value": "32"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "50"
-                            }
-                          ],
-                          "Name": "Fertilise on Zadok stage",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -48245,56 +47633,11 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[Fertilise at sowing]",
-                        "[Fertilise on Zadok stage]"
+                        "[FertiliseAtSowing].Script.Amount = 100",
+                        "[FertiliseOnZadokStage].Script.Amount = 100"
                       ],
                       "Name": "200",
-                      "Children": [
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n    \r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                Summary.WriteMessage(this, \"Fertilising!!\"); \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "100"
-                            }
-                          ],
-                          "Name": "Fertilise at sowing",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Stage",
-                              "Value": "32"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "100"
-                            }
-                          ],
-                          "Name": "Fertilise on Zadok stage",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -48302,56 +47645,11 @@
                     {
                       "$type": "Models.Factorial.Factor, Models",
                       "Specifications": [
-                        "[Fertilise at sowing]",
-                        "[Fertilise on Zadok stage]"
+                        "[FertiliseAtSowing].Script.Amount = 200",
+                        "[FertiliseOnZadokStage].Script.Amount = 200"
                       ],
                       "Name": "400",
-                      "Children": [
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n    \r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                Summary.WriteMessage(this, \"Fertilising!!\"); \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "200"
-                            }
-                          ],
-                          "Name": "Fertilise at sowing",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Stage",
-                              "Value": "32"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "200"
-                            }
-                          ],
-                          "Name": "Fertilise on Zadok stage",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -48393,7 +47691,7 @@
                 {
                   "$type": "Models.Summary, Models",
                   "CaptureErrors": true,
-                  "CaptureWarnings": true,
+                  "CaptureWarnings": false,
                   "CaptureSummaryText": true,
                   "Name": "summaryfile",
                   "Children": [],
@@ -48716,7 +48014,7 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 31.5,
-                          "RootWt": 1500.0,
+                          "RootWt": 0.0,
                           "SoilCN": 11.0,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
@@ -48737,9 +48035,9 @@
                             "120-150"
                           ],
                           "OC": [
-                            2.68,
-                            2.78,
-                            1.45,
+                            2.0,
+                            1.5,
+                            1.0,
                             0.38,
                             0.24,
                             0.24
@@ -48779,20 +48077,20 @@
                             300.0
                           ],
                           "NO3": [
-                            8.4,
-                            11.6,
-                            10.0,
-                            11.0,
-                            9.0,
-                            3.0
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "NH4": [
-                            2.0,
-                            0.6,
-                            0.8,
-                            0.3,
-                            0.2,
-                            0.4
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
                           ],
                           "SW": null,
                           "OC": null,
@@ -48820,40 +48118,12 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Thickness": [
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": [
-                            0.33,
-                            0.33,
-                            0.3,
-                            0.31,
-                            0.32,
-                            0.33,
-                            0.34,
-                            0.33
-                          ],
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "NO3Units": 1,
-                          "NH4Units": 1,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial water",
+                          "$type": "Models.Soils.InitialWater, Models",
+                          "PercentMethod": 1,
+                          "FractionFull": 0.75,
+                          "DepthWetSoil": "NaN",
+                          "RelativeTo": null,
+                          "Name": "InitialWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -48888,7 +48158,7 @@
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "InitialResidueName": "Barley_stubble",
                       "InitialResidueType": "Barley",
-                      "InitialResidueMass": 1500.0,
+                      "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
@@ -48932,138 +48202,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "Manager folder",
-                      "Children": [
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n    [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "SowDate",
-                              "Value": "28-May"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "Dash"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "20"
-                            },
-                            {
-                              "Key": "RowSpacing",
-                              "Value": "150"
-                            },
-                            {
-                              "Key": "Population",
-                              "Value": "300"
-                            }
-                          ],
-                          "Name": "Sow",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "0"
-                            }
-                          ],
-                          "Name": "Fertilise at sowing",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Stage",
-                              "Value": "32"
-                            },
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "UreaN"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "0"
-                            }
-                          ],
-                          "Name": "Fertilise on Zadok stage",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "AutoIrrigationOn",
-                              "Value": "False"
-                            },
-                            {
-                              "Key": "FASWThreshold",
-                              "Value": "0.9"
-                            },
-                            {
-                              "Key": "FASWDepth",
-                              "Value": "600"
-                            }
-                          ],
-                          "Name": "AutoIrrigation",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Crop",
-                              "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
-                            }
-                          ],
-                          "Name": "Harvesting",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Report.Report, Models",
                       "ExperimentFactorNames": null,
                       "ExperimentFactorValues": null,
@@ -49076,6 +48214,132 @@
                       ],
                       "Name": "SensibilityReport",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n    [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "Crop",
+                          "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
+                        },
+                        {
+                          "Key": "SowDate",
+                          "Value": "28-May"
+                        },
+                        {
+                          "Key": "CultivarName",
+                          "Value": "Dash"
+                        },
+                        {
+                          "Key": "SowingDepth",
+                          "Value": "20"
+                        },
+                        {
+                          "Key": "RowSpacing",
+                          "Value": "150"
+                        },
+                        {
+                          "Key": "Population",
+                          "Value": "300"
+                        }
+                      ],
+                      "Name": "Sow",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n\r\n        public double CumulativeSowFert  {get; set;} \r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n       [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                CumulativeSowFert += Amount;\r\n                Summary.WriteMessage(this, \"Fertilising!! applying \" + Amount.ToString()); \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "CumulativeSowFert",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "FertiliserType",
+                          "Value": "UreaN"
+                        },
+                        {
+                          "Key": "Amount",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "FertiliseAtSowing",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    public double CumulativeGS30Fert {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!! applying \" + Amount.ToString()); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n         CumulativeGS30Fert += Amount;\r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "Stage",
+                          "Value": "32"
+                        },
+                        {
+                          "Key": "CumulativeGS30Fert",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "FertiliserType",
+                          "Value": "UreaN"
+                        },
+                        {
+                          "Key": "Amount",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "FertiliseOnZadokStage",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "AutoIrrigationOn",
+                          "Value": "False"
+                        },
+                        {
+                          "Key": "FASW",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "WaterDeficit",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "FASWThreshold",
+                          "Value": "0.9"
+                        },
+                        {
+                          "Key": "FASWDepth",
+                          "Value": "600"
+                        }
+                      ],
+                      "Name": "AutoIrrigation",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "Crop",
+                          "Value": ".Simulations.Sensibility tests.WaterByNFactorial.SensibilityBase.Paddock.Barley"
+                        }
+                      ],
+                      "Name": "Harvesting",
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -49119,7 +48383,7 @@
               ],
               "LegendPosition": 0,
               "DisabledSeries": [],
-              "Name": "Graph",
+              "Name": "CPD",
               "Children": [
                 {
                   "$type": "Models.Graph.Series, Models",
@@ -49129,10 +48393,10 @@
                   "ColourArgb": -16777216,
                   "FactorToVaryColours": "Nitrogen",
                   "FactorToVaryMarkers": "Irrigation",
-                  "FactorToVaryLines": "Irrigation",
+                  "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 0,
-                  "Line": 0,
+                  "Line": 1,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "Probability",
@@ -49152,6 +48416,15 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The results for irrigted, High N treatments the range of yields are inline with expectations for the location of the simulations.  There is no sensitivity to irrigation with zero nitrogen as N supply is the factor limiting production.  As N inputs increase the crop becomes increasingly sensitive to water application and the crop is more responsive to nitrogen with irrigation.  These results show the model is giving sensible predictions \r\n",
+              "Name": "Interpretation",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
