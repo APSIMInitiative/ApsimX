@@ -339,7 +339,7 @@ namespace Models.Core.ApsimFile
             else if (propertyName == "@name") // Name attribute.
             {
                 // SoilCrops copied from Apsim classic need to be renamed to CropNameSoil e.g. WheatSoil.
-                if (toObject["$type"].ToString() == "Models.Soils.SoilCrop, Models")
+                if (toObject["$type"]?.ToString() == "Models.Soils.SoilCrop, Models")
                     toObject["Name"] = property.Value.ToString() + "Soil";
                 else if (toObject["Name"] == null)
                     toObject["Name"] = property.Value;

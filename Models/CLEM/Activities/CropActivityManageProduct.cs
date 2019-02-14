@@ -408,6 +408,10 @@ namespace Models.CLEM.Activities
                                 this.Status = ActivityStatus.Partial;
                             }
 
+                            // now limit further by fees not paid
+                            double financeLimit = this.LimitProportion(typeof(Finance));
+
+
                             limiter.AddWeightCarried(AmountHarvested);
                         }
 
