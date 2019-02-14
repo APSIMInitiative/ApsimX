@@ -12,6 +12,7 @@
     using System.Data;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Xml.Serialization;
     using Utilities;
 
@@ -339,68 +340,118 @@
             DataTable predictedData = dataStore.RunQuery(sql);
             if (predictedData != null)
             {
-                IndexedDataTable predictedDataIndexed = new IndexedDataTable(predictedData, null);
                 IndexedDataTable variableValues = new IndexedDataTable(null);
 
-                foreach (DataColumn predictedColumn in predictedData.Columns)
+                // Determine how many years we have per simulation
+                DataView view = new DataView(predictedData);
+                view.RowFilter = "SimulationName='" + Name + "Simulation1'";
+                var Years = DataTableUtilities.GetColumnAsIntegers(view, "Clock.Today.Year");
+
+                // Create a results table.
+                IndexedDataTable results;
+                if (Years.Count() > 1)
+                    results = new IndexedDataTable(new string[] { "Year" });
+                else
+                    results = new IndexedDataTable(null);
+
+
+                // Loop through all years and perform analysis on each.
+                List<string> errorsFromR = new List<string>();
+                foreach (double year in Years)
                 {
-                    if (predictedColumn.DataType == typeof(double))
+                    view.RowFilter = "Clock.Today.Year=" + year;
+
+                    foreach (DataColumn predictedColumn in predictedData.Columns)
                     {
-                        var values = predictedDataIndexed.Get<double>(predictedColumn.ColumnName);
-                        if (values.Distinct().Count() > 1)
-                            variableValues.SetValues(predictedColumn.ColumnName, values);
+                        if (predictedColumn.DataType == typeof(double))
+                        {
+                            var values = DataTableUtilities.GetColumnAsDoubles(view, predictedColumn.ColumnName);
+                            if (values.Distinct().Count() > 1)
+                                variableValues.SetValues(predictedColumn.ColumnName, values);
+                        }
                     }
+
+                    string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
+                    string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
+                    string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
+                    string sobolVariableValuesFileName = GetTempFileName("sobolvariableValues", ".csv");
+
+                    // Write variables file
+                    using (var writer = new StreamWriter(sobolVariableValuesFileName))
+                        DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",", true, writer, excelFriendly: false, decimalFormatString:"F6");
+
+                    // Write X1
+                    using (var writer = new StreamWriter(sobolx1FileName))
+                        DataTableUtilities.DataTableToText(X1, 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
+
+                    // Write X2
+                    using (var writer = new StreamWriter(sobolx2FileName))
+                        DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
+
+                    string script = string.Format(
+                         "library('boot')" + Environment.NewLine +
+                         "library('sensitivity')" + Environment.NewLine +
+                         "params <- c({0})" + Environment.NewLine +
+                         "n <- {1}" + Environment.NewLine +
+                         "nparams <- {2}" + Environment.NewLine +
+                         "X1 <- read.csv(\"{3}\")" + Environment.NewLine +
+                         "X2 <- read.csv(\"{4}\")" + Environment.NewLine +
+                         "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine +
+                         "variableValues = read.csv(\"{5}\")" + Environment.NewLine +
+                         "for (columnName in colnames(variableValues))" + Environment.NewLine +
+                         "{{" + Environment.NewLine +
+                         "  sa$y <- variableValues[[columnName]]" + Environment.NewLine +
+                         "  tell(sa)" + Environment.NewLine +
+                         "  colnames(sa$T) <- paste(columnName, colnames(sa$T), sep=\".\")" + Environment.NewLine +
+                         "  sa$T$Parameter <- params" + Environment.NewLine +
+                         "  if (!exists(\"allData\"))" + Environment.NewLine +
+                         "    allData <- sa$T" + Environment.NewLine +
+                         "  else" + Environment.NewLine +
+                         "    allData <- merge(allData, sa$T)" + Environment.NewLine +
+                         "}}" + Environment.NewLine +
+                         "write.table(allData, sep=\",\", row.names=FALSE)" + Environment.NewLine
+                        ,
+                        paramNames, NumPaths, Parameters.Count,
+                        sobolx1FileName.Replace("\\", "/"),
+                        sobolx1FileName.Replace("\\", "/"),
+                        sobolVariableValuesFileName.Replace("\\", "/"));
+
+                    DataTable resultsForYear = null;
+                    try
+                    {
+                        resultsForYear = RunR(script);
+
+                        // Put output from R into results table.
+                        if (Years.Count() > 1)
+                            results.SetIndex(new object[] { year.ToString() });
+
+                        foreach (DataColumn col in resultsForYear.Columns)
+                        {
+                            if (col.DataType == typeof(string))
+                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsStrings(resultsForYear, col.ColumnName));
+                            else
+                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsDoubles(resultsForYear, col.ColumnName));
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        string msg = err.Message;
+
+                        if (Years.Count() > 1)
+                            msg = "Year " + year + ": " +  msg;
+                        errorsFromR.Add(msg);
+                    }
+                 }
+                var resultsRawTable = results.ToTable();
+                resultsRawTable.TableName = Name + "Statistics";
+                dataStore.DeleteDataInTable(resultsRawTable.TableName);
+                dataStore.WriteTable(resultsRawTable);
+
+                if (errorsFromR.Count > 0)
+                {
+                    string msg = StringUtilities.BuildString(errorsFromR.ToArray(), Environment.NewLine);
+                    throw new Exception(msg);
                 }
-
-                string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
-                string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
-                string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
-                string sobolVariableValuesFileName = GetTempFileName("sobolvariableValues", ".csv");
-
-                // Write variables file
-                using (var writer = new StreamWriter(sobolVariableValuesFileName))
-                    DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",",true, writer, excelFriendly:true);
-
-                // Write X1
-                using (var writer = new StreamWriter(sobolx1FileName))
-                    DataTableUtilities.DataTableToText(X1, 0, ",", true, writer, excelFriendly: true);
-
-                // Write X2
-                using (var writer = new StreamWriter(sobolx2FileName))
-                    DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: true);
-
-                string script = string.Format(
-                     "library('boot')" + Environment.NewLine +
-                     "library('sensitivity')" + Environment.NewLine +
-                     "params <- c({0})" + Environment.NewLine +
-                     "n <- {1}" + Environment.NewLine +
-                     "nparams <- {2}" + Environment.NewLine +
-                     "X1 <- read.csv(\"{3}\")" + Environment.NewLine +
-                     "X2 <- read.csv(\"{4}\")" + Environment.NewLine +
-                     "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine +
-                     "variableValues = read.csv(\"{5}\")" + Environment.NewLine +
-                     "for (columnName in colnames(variableValues))" + Environment.NewLine +
-                     "{{" + Environment.NewLine +
-                     "  sa$y <- variableValues[[columnName]]" + Environment.NewLine +
-                     "  tell(sa)" + Environment.NewLine +
-                     "  colnames(sa$T) <- paste(columnName, colnames(sa$T), sep=\".\")" + Environment.NewLine +
-                     "  sa$T$Parameter <- params" + Environment.NewLine +
-                     "  if (!exists(\"allData\"))" + Environment.NewLine +
-                     "    allData <- sa$T" + Environment.NewLine +
-                     "  else" + Environment.NewLine +
-                     "    allData <- merge(allData, sa$T)" + Environment.NewLine +
-                     "}}" + Environment.NewLine +
-                     "write.table(allData, sep=\",\", row.names=FALSE)" + Environment.NewLine
-                    ,
-                    paramNames, NumPaths, Parameters.Count,
-                    sobolx1FileName.Replace("\\", "/"),
-                    sobolx1FileName.Replace("\\", "/"),
-                    sobolVariableValuesFileName.Replace("\\", "/"));
-
-                DataTable results = RunR(script);
-                results.TableName = Name + "Statistics";
-                dataStore.DeleteDataInTable(results.TableName);
-                dataStore.WriteTable(results);
             }
         }
 
@@ -414,7 +465,40 @@
             R r = new R();
             Console.WriteLine(r.GetPackage("boot"));
             Console.WriteLine(r.GetPackage("sensitivity"));
-            return r.RunToTable(rFileName);
+
+            string result = r.Run(rFileName, "");
+            string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
+            if (!File.Exists(tempFile))
+                File.Create(tempFile).Close();
+
+            using (var reader = new StringReader(result))
+            using (var writer = new StreamWriter(tempFile))
+            {
+                var line = reader.ReadLine();
+                while (line != null)
+                {
+                    if (!line.StartsWith("[")) // detect R error.
+                        writer.WriteLine(line);
+                    line = reader.ReadLine();
+                }
+            }
+
+            DataTable table = null;
+            try
+            {
+                table = ApsimTextFile.ToTable(tempFile);
+            }
+            catch (Exception)
+            {
+                throw new Exception(File.ReadAllText(tempFile));
+            }
+            finally
+            {
+                Thread.Sleep(200);
+                if (File.Exists(tempFile))
+                    File.Delete(tempFile);
+            }
+            return table;
         }
 
         /// <summary>
