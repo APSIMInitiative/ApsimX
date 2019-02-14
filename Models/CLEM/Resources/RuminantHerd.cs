@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
                             breedFemales[0].DryBreeder = false;
 
                             //Initialise female milk production in at birth so ready for sucklings to consume
-                            double milkTime = 15; // equivalent to mid month production
+                            double milkTime = (suckling.Age*30.4) + 15; // +15 equivalent to mid month production
 
                             // need to calculate normalised animal weight here for milk production
                             double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
@@ -116,8 +116,12 @@ namespace Models.CLEM.Resources
                             // calculate previous births
                             breedFemales[0].NumberOfBirths = Convert.ToInt32((breedFemales[0].Age - suckling.Age - breedFemales[0].BreedParams.GestationLength - breedFemales[0].BreedParams.MinimumAge1stMating) / ((currentIPI + minsizeIPI) / 2));
                             // add this birth
-                            breedFemales[0].NumberOfBirths++;
-                            breedFemales[0].NumberOfBirthsThisTimestep++;
+                            if (suckling.Age == 0)
+                            {
+                                // do not add if this is not a new born suckling at initialisation as was assumed to be previousl added
+                                breedFemales[0].NumberOfBirths++;
+                                breedFemales[0].NumberOfBirthsThisTimestep++;
+                            }
 
                             //breedFemales[0].Parity = breedFemales[0].Age - suckling.Age - 9;
                             // AL removed the -9 as this would make it conception month not birth month
@@ -159,6 +163,8 @@ namespace Models.CLEM.Resources
 
                         female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2)) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
+                        female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                        female.SuccessfulPregnancy = true;
                     }
                 }
             }

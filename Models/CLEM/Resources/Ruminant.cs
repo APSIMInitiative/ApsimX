@@ -210,7 +210,7 @@ namespace Models.CLEM.Resources
                         return -1;
                     case HerdChangeReason.TradePurchase:
                         return 1;
-                    case HerdChangeReason.HeiferPurchase:
+                    case HerdChangeReason.BreederPurchase:
                         return 1;
                     case HerdChangeReason.ExcessHeiferSale:
                         return -1;

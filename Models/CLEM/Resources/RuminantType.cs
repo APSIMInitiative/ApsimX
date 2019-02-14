@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
                 AnimalPriceGroup matchCriteria = null;
                 foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 & matchIndividual is null)
+                    if (animalList.Filter(item).Count() == 1 & matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
@@ -141,7 +141,7 @@ namespace Models.CLEM.Resources
                     }
                 }
 
-                if(matchCriteria is null)
+                if(matchCriteria == null)
                 {
                     // report specific criteria not found in price list
                     string warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]"+ (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
@@ -387,7 +387,7 @@ namespace Models.CLEM.Resources
         /// SWR growth scalar
         /// </summary>
         [Category("Advanced", "Growth")]
-        [Description("SWR growth scalar")]
+        [Description("SRW growth scalar")]
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
@@ -422,7 +422,7 @@ namespace Models.CLEM.Resources
         /// Weight(kg) of 1 animal equivalent(steer)
         /// </summary>
         [Category("Basic", "General")]
-        [Description("Weight(kg) of 1 animal equivalent(steer)")]
+        [Description("Weight (kg) of an animal equivalent")]
         [Required, GreaterThanValue(0)]
         public double BaseAnimalEquivalent { get; set; }
         /// <summary>

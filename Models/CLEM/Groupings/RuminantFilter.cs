@@ -86,7 +86,7 @@ namespace Models.CLEM.Groupings
         public override string ToString()
         {
             string str = "";
-            if (Value is null)
+            if (Value == null)
             {
                 str = "FILTER NOT DEFINED";
             }
@@ -152,7 +152,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            if (this.Value is null)
+            if (this.Value == null)
             {
                 return "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
             }
