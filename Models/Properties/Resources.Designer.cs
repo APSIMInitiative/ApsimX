@@ -63,6 +63,33 @@ namespace Models.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///  &quot;CropType&quot;: &quot;Barley&quot;,
+        ///  &quot;IsEnding&quot;: false,
+        ///  &quot;DaysAfterEnding&quot;: 0,
+        ///  &quot;ResourceName&quot;: null,
+        ///  &quot;Name&quot;: &quot;Barley&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
+        ///      &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.PMF.RelativeAllocation, Models&quot;,
+        ///          &quot;Name&quot;: &quot;NArbitrator&quot;,
+        ///          &quot;Children&quot;: [],
+        ///          &quot;IncludeInDocumentation&quot;: false,
+        ///          &quot;Enabled&quot;: true,
+        ///          &quot;ReadOnl [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Barley {
+            get {
+                return ResourceManager.GetString("Barley", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
         ///  &quot;CropType&quot;: &quot;Chicory&quot;,
         ///  &quot;ResourceName&quot;: null,
         ///  &quot;Name&quot;: &quot;Chicory&quot;,

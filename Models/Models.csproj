@@ -700,6 +700,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <EmbeddedResource Include="Resources\Eucalyptus.json" />
+    <None Include="Resources\Barley.json" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.json">
       <SubType>Designer</SubType>
