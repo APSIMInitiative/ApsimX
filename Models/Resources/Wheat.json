@@ -4865,12 +4865,12 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "StartGrainFill",
+                      "End": "FlagLeaf",
                       "Name": "VegetativeGrowth",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.3,
+                          "FixedValue": 0.85,
                           "Units": null,
                           "Name": "StructuralFractionEG",
                           "Children": [],
@@ -4886,7 +4886,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "StartGrainFill",
-                      "End": "EndGrainFill",
+                      "End": "FlagLeaf",
                       "Name": "ReproductiveGrowth",
                       "Children": [
                         {
