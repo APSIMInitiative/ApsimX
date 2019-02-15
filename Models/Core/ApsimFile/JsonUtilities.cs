@@ -154,31 +154,32 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Returns a all descendants of a node, which are of a given type.
-        /// Will never return null;
+        /// Perform a search and replace in manager script.
         /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="nameFilter">Name of token to search for.</param>
-        /// <returns></returns>
-        public static List<JObject> ChildrenRecursivelyWithName(JObject node, string nameFilter)
+        /// <param name="manager">The manager model.</param>
+        /// <param name="searchPattern">The string to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        public static void ReplaceManagerCode(JObject manager, string searchPattern, string replacePattern)
         {
-            List<JObject> descendants = new List<JObject>();
-            Descendants(node, ref descendants);
-            return descendants;
+            string code = manager["Code"]?.ToString();
+            if (code == null || searchPattern == null)
+                return;
+            manager["Code"] = code.Replace(searchPattern, replacePattern);
         }
 
         /// <summary>
-        /// Returns a list of child managers recursively.
+        /// Perform a search and replace in manager script.
         /// </summary>
-        /// <param name="node">The root node.</param>
-        /// <returns>Returns a list of manager models.</returns>
-        public static List<ManagerConverter> ChildManagers(JObject node)
+        /// <param name="manager">The manager model.</param>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        /// <param name="options">Regular expression options to use. Default value is none.</param>
+        public static void ReplaceManagerCodeUsingRegex(JObject manager, string searchPattern, string replacePattern, RegexOptions options = RegexOptions.None)
         {
-            var managers = new List<ManagerConverter>();
-
-            foreach (var manager in JsonUtilities.ChildrenOfType(node, "Manager"))
-                managers.Add(new ManagerConverter(manager));
-            return managers;
+            string code = manager["Code"]?.ToString();
+            if (code == null || searchPattern == null)
+                return;
+            manager["Code"] = Regex.Replace(code, searchPattern, replacePattern, options);
         }
 
         /// <summary>
@@ -186,13 +187,13 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="modelToken">The model token to find the parent for.</param>
         /// <returns>The parent or null if not found.</returns>
-        public static JObject Parent(JObject modelToken)
+        public static JToken Parent(JToken modelToken)
         {
             var obj = modelToken.Parent;
             while (obj != null)
             {
                 if (Type(obj) != null)
-                    return obj as JObject;
+                    return obj;
 
                 obj = obj.Parent;
             }
@@ -259,25 +260,6 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Perform a search and replace in report variables.
-        /// </summary>
-        /// <param name="report">The report model.</param>
-        /// <param name="searchPattern">The pattern to search for.</param>
-        /// <param name="replacePattern">The string to replace.</param>
-        public static void SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
-        {
-            var variableNames = Values(report, "VariableNames");
-
-            if (variableNames != null)
-            {
-                for (int i = 0; i < variableNames.Count; i++)
-                    variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
-
-                SetValues(report, "VariableNames", variableNames);
-            }
-        }
-
-        /// <summary>
         /// Add a constant function to the specified JSON model token.
         /// </summary>
         /// <param name="modelToken">The APSIM model token.</param>
@@ -301,29 +283,6 @@ namespace Models.Core.ApsimFile
                 children.Add(constantModel);
             }
         }
-
-        /// <summary>
-        /// Create and add a new child model node.
-        /// </summary>
-        /// <param name="parent">The parent model node.</param>
-        /// <param name="name">The model name.</param>
-        /// <param name="fullTypeName">The typespace name + model class name eg. Models.Clock</param>
-        public static JObject CreateNewChildModel(JObject parent, string name, string fullTypeName)
-        {
-            var children = parent["Children"] as JArray;
-            if (children == null)
-            {
-                children = new JArray();
-                parent["Children"] = children;
-            }
-
-            var newChild = new JObject();
-            newChild["$type"] = fullTypeName + ", Models";
-            newChild["Name"] = name;
-            children.Add(newChild);
-            return newChild;
-        }
-
 
         /// <summary>
         /// Helper method for <see cref="ChildrenRecursively(JObject)"/>.

@@ -156,9 +156,10 @@
         /// <param name="fileName"></param>
         private static void UpgradeToVersion48(JObject root, string fileName)
         {
-            foreach (var manager in JsonUtilities.ChildManagers(root))
-                manager.Replace("DisplayTypeEnum", "DisplayType");
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+                JsonUtilities.ReplaceManagerCode(manager, "DisplayTypeEnum", "DisplayType");
         }
+
 
         /// <summary>
         /// Upgrades to version 49. Renames Models.Morris+Parameter to Models.Sensitivity.Parameter.
@@ -196,7 +197,6 @@
                 }
             }
         }
-        
         /// <summary>
         /// Changes GsMax to Gsmax350 in all models that implement ICanopy.
         /// </summary>
@@ -221,80 +221,14 @@
                 JsonUtilities.AddConstantFunctionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
             }
         }
-        
+
         /// <summary>
-        /// Upgrades to version 52. Convert SoilN to SoilNutrient
+        /// Changes initial Root Wt to an array.
         /// </summary>
-        /// <param name="root">The node to upgrade.</param>
-        /// <param name="fileName">The name of the .apsimx file</param>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion52(JObject root, string fileName)
         {
-            // Delete all alias children.
-            foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
-            {
-                var parent = JsonUtilities.Parent(soilNitrogen);
-                var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
-                nutrient["ResourceName"] = "Nutrient";
-                soilNitrogen.Remove();
-            }
-
-            foreach (var manager in JsonUtilities.ChildManagers(root))
-            {
-                manager.Replace("using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
-
-                manager.Replace(".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                manager.Replace(".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-
-                if (manager.Replace("Soil.SoilNitrogen.HumicN", "Humic.N"))
-                    manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[ScopedLinkByName]" });
-                if (manager.Replace("Soil.SoilNitrogen.HumicC", "Humic.C"))
-                    manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[ScopedLinkByName]" });
-
-                if (manager.Replace("Soil.SoilNitrogen.MicrobialN", "Microbial.N"))
-                    manager.AddDeclaration("NutrientPool", "Microbial", new string[] { "[ScopedLinkByName]" });
-                if (manager.Replace("Soil.SoilNitrogen.MicrobialC", "Microbial.C"))
-                    manager.AddDeclaration("NutrientPool", "Microbial", new string[] { "[ScopedLinkByName]" });
-
-                if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
-                    manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
-
-                if (manager.Replace("Soil.SoilNitrogen.urea", "Urea.kgha"))
-                    manager.AddDeclaration("Solute", "Urea", new string[] { "[ScopedLinkByName]" });
-                if (manager.Replace("Soil.SoilNitrogen.NO3", "NO3.kgha"))
-                    manager.AddDeclaration("Solute", "NO3", new string[] { "[ScopedLinkByName]" });
-                if (manager.Replace("Soil.SoilNitrogen.NH4", "NH4.kgha"))
-                    manager.AddDeclaration("Solute", "NH4", new string[] { "[ScopedLinkByName]" });
-
-                manager.Replace(".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                manager.Replace(".SoilNitrogen.TotalN", ".Nutrient.TotalN");
-                manager.Replace(".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                manager.Replace(".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-                manager.Replace(".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                manager.Replace(".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
-                manager.Save();
-            }
-
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Microbial.N");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Microbial.C");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.Decomposition.MineralisedN");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.TotalC", ".Nutrient.TotalC");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.TotalN", ".Nutrient.TotalN");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.NO3", ".Nutrient.NO3.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.NH4", ".Nutrient.NH4.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Nitrification", ".Nutrient.NH4.Nitrification");
-            }
-
             foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
             {
                 double rootWt = Convert.ToDouble(SOM["RootWt"]);
@@ -319,8 +253,9 @@
 
                 JsonUtilities.SetValues(SOM, "RootWt", rootWtVector);
             }
+
         }
+
     }
 }
-
 

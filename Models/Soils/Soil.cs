@@ -13,7 +13,6 @@ namespace Models.Soils
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Interfaces;
-    using Soils.Nutrients;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -40,11 +39,6 @@ namespace Models.Soils
         [XmlIgnore]
         public SoilNitrogen SoilNitrogen { get; private set; }
 
-        /// <summary>
-        /// Soil Nutrient model
-        /// </summary>
-        [XmlIgnore]
-        public Nutrient Nutrient { get; private set; }
 
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
@@ -176,7 +170,6 @@ namespace Models.Soils
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoluteManager = Apsim.Find(this, typeof(SoluteManager)) as SoluteManager;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
-            Nutrient = Apsim.Child(this, typeof(Nutrient)) as Nutrient;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
@@ -943,6 +936,7 @@ namespace Models.Soils
                            MapType.Concentration, LastValue(SoilOrganicMatter.FInert));
             }
         }
+
         /// <summary>Initial Root Wt</summary>
         /// <value>Initial Root Wt</value>
         [Units("kg/ha")]
@@ -955,6 +949,7 @@ namespace Models.Soils
                            MapType.Mass, LastValue(SoilOrganicMatter.RootWt));
             }
         }
+
         #endregion
 
         #region Analysis
