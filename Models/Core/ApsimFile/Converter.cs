@@ -276,15 +276,17 @@
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.urea", "SoilNitrogen.Urea.kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
             }
             foreach (var manager in JsonUtilities.ChildrenOfType(root, "Manager"))
-            { 
+            {
+                
                 JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
+                
                 JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
-                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.urea", "SoilNitrogen.Urea.kgha");
                 JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
                 JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
             }
@@ -295,7 +297,7 @@
                 {
                     series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
                     series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
-                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.urea", "SoilNitrogen.Urea.kgha");
                     series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
                     series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
                 }
@@ -303,7 +305,7 @@
                 {
                     series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
                     series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
-                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.urea", "SoilNitrogen.Urea.kgha");
                     series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
                     series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
                 }
