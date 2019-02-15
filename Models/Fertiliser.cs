@@ -148,17 +148,17 @@ namespace Models
 
                 if (fertiliserType.FractionNO3 != 0)
                 {
-                    solutes.AddToLayer(layer, "NO3", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNO3);
+                    solutes.AddToLayer(layer, "NO3", SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNO3);
                     NitrogenApplied += Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
-                    solutes.AddToLayer(layer, "NH4", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNH4);
+                    solutes.AddToLayer(layer, "NH4", SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNH4);
                     NitrogenApplied += Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
-                    solutes.AddToLayer(layer, "Urea", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionUrea);
+                    solutes.AddToLayer(layer, "Urea", SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionUrea);
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
                 if (doOutput)

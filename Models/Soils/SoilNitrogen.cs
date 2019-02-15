@@ -64,7 +64,7 @@ namespace Models.Soils
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model, IHasSolutes, INutrient
+    public partial class SoilNitrogen : Model, INutrient
     {
 
         /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>
@@ -76,18 +76,6 @@ namespace Models.Soils
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
             Patch[0].PatchName = "base";
-        }
-
-        /// <summary>Get a list of solutes</summary>
-        public List<ISolute> GetSolutes()
-        {
-            List<ISolute> solutes = new List<ISolute>();
-            solutes.Add(new SoilNitrogenNO3(this));
-            solutes.Add(new SoilNitrogenNH4(this));
-            solutes.Add(new SoilNitrogenUrea(this));
-            solutes.Add(new SoilNitrogenPlantAvailableNO3(this));
-            solutes.Add(new SoilNitrogenPlantAvailableNH4(this));
-            return solutes;
         }
 
         #region >>  Events which we publish

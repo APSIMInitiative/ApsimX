@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 51; } }
+        public static int LatestVersion { get { return 52; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -219,6 +219,61 @@
             {
                 JsonUtilities.RenameProperty(model, "Gsmax", "Gsmax350");
                 JsonUtilities.AddConstantFunctionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
+            }
+        }
+
+        /// <summary>
+        /// Adds solutes under SoilNitrogen.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion52(JObject root, string fileName)
+        {
+            // Loop through all models and rename Gsmax to Gsmax350.
+            foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
+            {
+                JsonUtilities.CreateNewChildModel(soilNitrogen, "NO3", "Models.Soils.SoilNitrogenNO3");
+                JsonUtilities.CreateNewChildModel(soilNitrogen, "NH4", "Models.Soils.SoilNitrogenNH4");
+                JsonUtilities.CreateNewChildModel(soilNitrogen, "Urea", "Models.Soils.SoilNitrogenUrea");
+                JsonUtilities.CreateNewChildModel(soilNitrogen, "PlantAvailableNO3", "Models.Soils.SoilNitrogenPlantAvailableNO3");
+                JsonUtilities.CreateNewChildModel(soilNitrogen, "PlantAvailableNH4", "Models.Soils.SoilNitrogenPlantAvailableNH4");
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
+            }
+            foreach (var manager in JsonUtilities.ChildrenOfType(root, "Manager"))
+            { 
+                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
+                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
+                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
+                JsonUtilities.ReplaceManagerCode(manager, "SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
+            }
+
+            foreach (var series in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if (series["XProperty"] != null)
+                {
+                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
+                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
+                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
+                    series["XProperty"] = series["XProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
+                }
+                if (series["YProperty"] != null)
+                {
+                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.NO3", "SoilNitrogen.NO3.kgha");
+                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.NH4", "SoilNitrogen.NH4.kgha");
+                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.Urea", "SoilNitrogen.Urea.kgha");
+                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
+                    series["YProperty"] = series["YProperty"].ToString().Replace("SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
+                }
             }
         }
     }

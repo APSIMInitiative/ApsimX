@@ -6,6 +6,7 @@ namespace Models.Soils.Nutrients
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
+    using Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -128,8 +129,8 @@ namespace Models.Soils.Nutrients
                 }
 
             }
-            solutes.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, NH4);
-            solutes.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, NO3);
+            solutes.SetSolute("NH4", SoluteSetterType.Soil, NH4);
+            solutes.SetSolute("NO3", SoluteSetterType.Soil, NO3);
         }
 
 

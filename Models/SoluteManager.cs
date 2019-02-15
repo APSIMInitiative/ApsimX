@@ -18,17 +18,6 @@
         /// <summary>List of all solutes.</summary>
         private Dictionary<string, ISolute> solutes = new Dictionary<string, ISolute>(StringComparer.InvariantCultureIgnoreCase);
 
-        /// <summary>The known types of solute setters.</summary>
-        public enum SoluteSetterType
-        {
-            /// <summary>The setting model is a plant model</summary>
-            Plant,
-            /// <summary>The setting model is a soil model</summary>
-            Soil,
-            /// <summary>The setting model is a fertiliser model</summary>
-            Fertiliser
-        }
-
         /// <summary>Return a list of solute names.</summary>
         public string[] SoluteNames
         {
@@ -70,7 +59,7 @@
         public void Add(string name, SoluteSetterType callingModelType, double[] delta)
         {
             var solute = FindSolute(name);
-            solute.SetKgHaDelta(callingModelType, delta);
+            solute.AddKgHaDelta(callingModelType, delta);
         }
 
         /// <summary>
@@ -129,10 +118,6 @@
         {
             if (solutes.Count == 0)
             {
-                // Find all models that have solutes.
-                foreach (var soluteModel in Apsim.FindAll(this, typeof(IHasSolutes)).Cast<IHasSolutes>())
-                    soluteModel.GetSolutes().ForEach(solute => solutes.Add(solute.Name, solute));
-
                 // Find all solutes.
                 foreach (var solute in Apsim.FindAll(this, typeof(ISolute)).Cast<ISolute>())
                     solutes.Add(solute.Name, solute);
