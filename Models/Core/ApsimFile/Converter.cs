@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 52; } }
+        public static int LatestVersion { get { return 53; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -223,11 +223,44 @@
         }
 
         /// <summary>
-        /// Adds solutes under SoilNitrogen.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion52(JObject root, string fileName)
+        {
+            foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
+            {
+                double rootWt = Convert.ToDouble(SOM["RootWt"]);
+                SOM.Remove("RootWt");
+                double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
+
+                double profileDepth = MathUtilities.Sum(thickness);
+                double cumDepth = 0;
+                double[] rootWtFraction = new double[thickness.Length];
+
+                for (int layer = 0; layer < thickness.Length; layer++)
+                {
+                    double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
+                    cumDepth += thickness[layer];
+                    rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
+                }
+                // get the actuall FOM distribution through layers (adds up to one)
+                double totFOMfraction = MathUtilities.Sum(rootWtFraction);
+                for (int layer = 0; layer < thickness.Length; layer++)
+                    rootWtFraction[layer] /= totFOMfraction;
+                double[] rootWtVector = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+
+                JsonUtilities.SetValues(SOM, "RootWt", rootWtVector);
+            }
+
+        }
+
+        /// <summary>
+        /// Adds solutes under SoilNitrogen.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion53(JObject root, string fileName)
         {
             // Loop through all models and rename Gsmax to Gsmax350.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))

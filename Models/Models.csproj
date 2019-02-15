@@ -241,6 +241,7 @@
     <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
     <Compile Include="Plant\Structure\CulmStructure.cs" />
+    <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
