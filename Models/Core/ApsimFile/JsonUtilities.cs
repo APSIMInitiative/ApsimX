@@ -219,6 +219,47 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Gets a list of property values.
+        /// </summary>
+        /// <param name="node">The model node to look under.</param>
+        /// <param name="propertyName">The property name to return.</param>
+        /// <returns>The values or null if not found.</returns>
+        public static List<string> Values(JObject node, string propertyName)
+        {
+            var variableNamesObject = node[propertyName];
+            if (variableNamesObject is JArray)
+            {
+                var array = variableNamesObject as JArray;
+                return array.Values<string>().ToList();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets a list of property values.
+        /// </summary>
+        /// <param name="node">The model node to look under.</param>
+        /// <param name="propertyName">The property name to return.</param>
+        /// <param name="values">New values</param>
+        /// <returns>The values or null if not found.</returns>
+        public static void SetValues<T>(JObject node, string propertyName, IEnumerable<T> values)
+        {
+            var variableNamesObject = node[propertyName];
+            if (variableNamesObject == null)
+            {
+                variableNamesObject = new JArray();
+                node[propertyName] = variableNamesObject;
+            }
+            if (variableNamesObject is JArray)
+            {
+                var array = variableNamesObject as JArray;
+                array.Clear();
+                foreach (var value in values)
+                    array.Add(value);
+            }
+        }
+
+        /// <summary>
         /// Add a constant function to the specified JSON model token.
         /// </summary>
         /// <param name="modelToken">The APSIM model token.</param>
