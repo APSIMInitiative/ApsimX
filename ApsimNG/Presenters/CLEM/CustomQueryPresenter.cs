@@ -90,15 +90,13 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("EndOfSimulation")]
         private void ExecuteQuery(object sender, EventArgs e)
-        {
+        {                      
             IStorageWriter writer = Apsim.Find(query, typeof(IStorageWriter)) as IStorageWriter;
             view.gridview1.DataSource = writer.ExecuteQuery(view.Sql);
 
             WriteTableEventArgs args = new WriteTableEventArgs();
             args.tablename = view.Tablename;
-            WriteTable(this, args);
 
             SaveData();
         }
@@ -115,7 +113,7 @@ namespace ApsimNG.Presenters.CLEM
 
             IStorageReader reader = Apsim.Find(query, typeof(IStorageReader)) as IStorageReader;
             reader.DeleteDataInTable(args.tablename);
-            reader.WriteTable(data);
+            reader.WriteTable(data);            
 
             SaveData();
         }

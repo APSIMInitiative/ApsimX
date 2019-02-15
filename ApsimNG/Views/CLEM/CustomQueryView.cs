@@ -104,10 +104,8 @@ namespace ApsimNG.Views.CLEM
 
             // Add the custom gridview (external to glade)
             gridview1 = new GridView(owner);
-            gridview1.ReadOnly = true;
-            
+            gridview1.ReadOnly = true;            
             vbox4.Add(gridview1.MainWidget);
-            //notebook1.AppendPage(gridview1.MainWidget, data);
 
             // Assign methods to button click events
             loadbtn.Clicked += OnLoadClicked;
