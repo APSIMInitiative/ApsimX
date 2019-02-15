@@ -23,6 +23,9 @@ namespace Models.Soils.Nutrients
         private IFunction NLoss = null;
 
         [Link]
+        private IFunction N2OFraction = null;
+
+        [Link]
         private SoluteManager solutes = null;
 
         /// <summary>
@@ -32,7 +35,12 @@ namespace Models.Soils.Nutrients
         /// <summary>
         /// Value of total loss
         /// </summary>
-        public double[] Loss { get; set; }
+        public double[] Natm { get; set; }
+        
+        /// <summary>
+        /// Value of N2O lost
+        /// </summary>
+        public double[] N2Oatm { get; set; }
 
         /// <summary>
         /// Name of source pool
@@ -57,8 +65,11 @@ namespace Models.Soils.Nutrients
             double[] source = solutes.GetSolute(Parent.Name);
             if (Value == null)
                 Value = new double[source.Length];
-            if (Loss == null)
-                Loss = new double[source.Length];
+            if (Natm == null)
+                Natm = new double[source.Length];
+            if (N2Oatm == null)
+                N2Oatm = new double[source.Length];
+
 
             double[] destination = null;
             if (destinationName !=null)
@@ -67,8 +78,9 @@ namespace Models.Soils.Nutrients
             for (int i= 0; i < source.Length; i++)
             {
                 double nitrogenFlow = rate.Value(i) * source[i];
-                Loss[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
-                double nitrogenFlowToDestination = nitrogenFlow - Loss[i];
+                Natm[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
+                double nitrogenFlowToDestination = nitrogenFlow - Natm[i];
 
                 if (destination == null && NLoss.Value(i) != 1)
                     throw new Exception("N loss fraction for N flow must be 1 if no destination is specified.");
