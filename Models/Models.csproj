@@ -236,6 +236,7 @@
     <Compile Include="Functions\StringComparisonFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
+    <Compile Include="Interfaces\IHasSolutes.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Organs\Culm.cs" />
@@ -263,6 +264,11 @@
     <Compile Include="Plant\Structure\BudNumberFunction.cs" />
     <Compile Include="Soils\Nutrients\Chloride.cs" />
     <Compile Include="Plant\Structure\ApexBase.cs" />
+    <Compile Include="Soils\SoilNitrogenPlantAvailableNH4.cs" />
+    <Compile Include="Soils\SoilNitrogenPlantAvailableNO3.cs" />
+    <Compile Include="Soils\SoilNitrogenUrea.cs" />
+    <Compile Include="Soils\SoilNitrogenNH4.cs" />
+    <Compile Include="Soils\SoilNitrogenNO3.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />

@@ -8,6 +8,7 @@ using Models.Core.Runners;
 using System.Collections.Generic;
 using Models.Interfaces;
 using Models.Core.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace UnitTests
 {
@@ -16,12 +17,51 @@ namespace UnitTests
     {
         /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
         [Serializable]
-        public class MockSoil : Model, ISoil, ISolute
+        public class MockSoil : Model, ISoil, IHasSolutes
         {
             public double[] Thickness { get; set; }
 
-            [Solute]
             public double[] NO3 { get; set; }
+
+            public List<ISolute> GetSolutes()
+            {
+                return new List<ISolute>() { new MockSoilSolute(this) };
+            }
+
+            public void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        class MockSoilSolute : ISolute
+        {
+            private MockSoil parentSoil;
+
+            public MockSoilSolute(MockSoil parent)
+            {
+                parentSoil = parent;
+            }
+            public string Name { get { return "NO3"; } }
+
+            public double[] kgha { get { return parentSoil.NO3; } set { parentSoil.NO3 = value; } }
+
+            public double[] ppm => throw new NotImplementedException();
+
+            public void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value)
+            {
+                kgha = value;
+            }
+
+            public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
+            {
+                kgha = MathUtilities.Add(kgha, delta);
+            }
         }
 
 

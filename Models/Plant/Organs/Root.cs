@@ -313,8 +313,9 @@ namespace Models.PMF.Organs
                     return new double[0]; 
                 double[] value;
                 value = new double[PlantZone.soil.Thickness.Length];
+                double SRL = specificRootLength.Value();
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * specificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                    value[i] = PlantZone.LayerLive[i].Wt * SRL * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -581,10 +582,13 @@ namespace Models.PMF.Organs
                 //Note: MetabolicN is assumed to be zero
 
                 double NDeficit = 0.0;
+                double minNConc = minimumNConc.Value();
+                double maxNConc = maximumNConc.Value();
+
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minimumNConc.Value() * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, maximumNConc.Value() * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minNConc * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, maxNConc * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     structuralNDemand += Z.StructuralNDemand[i];
@@ -709,7 +713,7 @@ namespace Models.PMF.Organs
                 double[] bd = myZone.soil.BD;
 
                 double accuDepth = 0;
-                
+
                 for (int layer = 0; layer < thickness.Length; layer++)
                 {
                     accuDepth += thickness[layer];
@@ -1017,9 +1021,10 @@ namespace Models.PMF.Organs
             if (nRetranslocationFactor != null)
             {
                 double labileN = 0.0;
+                double minNConc = minimumNConc.Value();
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minimumNConc.Value());
+                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minNConc);
 
                 double availableN = Math.Max(0.0, labileN - nReallocationSupply) * nRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)

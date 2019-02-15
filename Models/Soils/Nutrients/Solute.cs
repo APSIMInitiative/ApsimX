@@ -44,5 +44,22 @@ namespace Models.Soils.Nutrients
                 initialppm = new double[soil.Thickness.Length];
             kgha = soil.ppm2kgha(initialppm);
         }
+
+        /// <summary>Setter for kgha.</summary>
+        /// <param name="callingModelType">Type of calling model.</param>
+        /// <param name="value">New values.</param>
+        public void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value)
+        {
+            kgha = value;
+        }
+
+        /// <summary>Setter for kgha delta.</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="delta">New delta values</param>
+        public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
+        {
+            for (int i = 0; i < delta.Length; i++)
+                kgha[i] += delta[i];
+        }
     }
 }
