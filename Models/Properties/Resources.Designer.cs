@@ -124,6 +124,36 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///  &quot;$type&quot;: &quot;Models.Soils.Nutrients.Nutrient, Models&quot;,
+        ///  &quot;DirectedGraphInfo&quot;: {
+        ///	&quot;$type&quot;: &quot;Models.Graph.DirectedGraph, Models&quot;,
+        ///	&quot;Nodes&quot;: [
+        ///	  {
+        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///		&quot;Name&quot;: &quot;Inert&quot;,
+        ///		&quot;Location&quot;: &quot;50, 50&quot;,
+        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
+        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
+        ///	  },
+        ///	  {
+        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///		&quot;Name&quot;: &quot;SurfaceResidue&quot;,
+        ///		&quot;Location&quot;: &quot;200, 50&quot;,
+        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
+        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
+        ///	  },
+        ///	  {
+        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///	 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Nutrient {
+            get {
+                return ResourceManager.GetString("Nutrient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
         ///  &quot;CropType&quot;: &quot;Wheat&quot;,
         ///  &quot;ResourceName&quot;: null,
