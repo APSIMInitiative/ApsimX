@@ -4885,8 +4885,8 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartGrainFill",
-                      "End": "FlagLeaf",
+                      "Start": "FlagLeaf",
+                      "End": "EndGrainFill",
                       "Name": "ReproductiveGrowth",
                       "Children": [
                         {
