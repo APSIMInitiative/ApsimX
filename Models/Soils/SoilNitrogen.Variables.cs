@@ -2703,8 +2703,9 @@ namespace Models.Soils
                     for (int k = 0; k < Patch.Count; k++)
                     {
                         Patch[k].CalcTotalMineralNInRootZone();
+                        var nh4 = Patch[k].nh4AvailableToPlants;
                         for (int layer = 0; layer < nLayers; layer++)
-                            result[layer] += Patch[k].nh4AvailableToPlants[layer] * Patch[k].RelativeArea;
+                            result[layer] += nh4[layer] * Patch[k].RelativeArea;
                     }
                 }
 
@@ -2740,8 +2741,9 @@ namespace Models.Soils
                     for (int k = 0; k < Patch.Count; k++)
                     {
                         Patch[k].CalcTotalMineralNInRootZone();
+                        var no3 = Patch[k].no3AvailableToPlants;
                         for (int layer = 0; layer < nLayers; layer++)
-                            result[layer] += Patch[k].no3AvailableToPlants[layer] * Patch[k].RelativeArea;
+                            result[layer] += no3[layer] * Patch[k].RelativeArea;
                     }
                 }
 
