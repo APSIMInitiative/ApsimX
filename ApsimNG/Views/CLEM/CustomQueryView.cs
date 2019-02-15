@@ -130,15 +130,7 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         public event EventHandler OnLoadFile;
 
-        public event EventHandler<WriteTableEventArgs> OnWriteTable;
-
-        /// <summary>
-        /// Arguments for the WriteTableEvent
-        /// </summary>
-        public class WriteTableEventArgs :  EventArgs
-        {
-            public string tablename { get; set; }
-        }
+        public event EventHandler<WriteTableEventArgs> OnWriteTable;        
 
         /// <summary>
         /// Select an SQL query file
@@ -269,5 +261,13 @@ namespace ApsimNG.Views.CLEM
             runbtn.Clicked -= OnRunClicked;
             storebtn.Clicked -= OnStoreClicked;
         }
+    }
+
+    /// <summary>
+    /// Arguments for the WriteTableEvent
+    /// </summary>
+    public class WriteTableEventArgs : EventArgs
+    {
+        public string tablename { get; set; }
     }
 }
