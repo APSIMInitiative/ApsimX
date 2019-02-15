@@ -462,6 +462,23 @@
             }
         }
 
+        /// <summary>Executes specified query.</summary>
+        /// <param name="sql">The SQL.</param>
+        /// <returns></returns>
+        public DataTable ExecuteQuery(string sql)
+        {
+            Open(readOnly: false);
+
+            try
+            {
+                return connection.ExecuteQuery(sql);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
         /// <param name="tableName">The table name</param>
         public IEnumerable<string> ColumnNames(string tableName)
