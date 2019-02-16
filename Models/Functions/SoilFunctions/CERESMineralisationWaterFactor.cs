@@ -27,9 +27,21 @@ namespace Models.Functions
         {
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
-
             double WF = 0;
-            //double LL15 = soil.
+
+            if (soil.SoilWater.SW[arrayIndex] < soil.LL15[arrayIndex])
+                WF = 0;
+            else if (soil.SoilWater.SW[arrayIndex] < soil.DUL[arrayIndex])
+                if (soil.SoilType!=null)
+                    if (soil.SoilType.ToLower()=="sand")
+                        WF = 0.05+0.95*Math.Min(1, 2 * (soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex]) / (soil.DUL[arrayIndex] - soil.LL15[arrayIndex]));
+                    else
+                        WF = Math.Min(1, 2 * (soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex]) / (soil.DUL[arrayIndex] - soil.LL15[arrayIndex]));
+                else
+                    WF = Math.Min(1, 2 * (soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex]) / (soil.DUL[arrayIndex] - soil.LL15[arrayIndex]));
+            else
+                WF = 1 - 0.5 * ((soil.SoilWater.SW[arrayIndex] - soil.DUL[arrayIndex]) / (soil.SAT[arrayIndex] - soil.DUL[arrayIndex]));
+
             return WF;
         }
 

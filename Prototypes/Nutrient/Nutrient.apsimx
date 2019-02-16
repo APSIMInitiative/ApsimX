@@ -5174,8 +5174,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5307,8 +5306,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5440,8 +5438,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5622,9 +5619,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
-                          "Name": "WF",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                          "Name": "CERESMineralisationWaterFactor",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5753,8 +5749,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
