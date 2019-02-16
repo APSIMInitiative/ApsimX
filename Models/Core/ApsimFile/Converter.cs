@@ -15,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 52; } }
+        public static int LatestVersion { get { return 53; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -254,8 +254,16 @@
                 JsonUtilities.SetValues(SOM, "RootWt", rootWtVector);
             }
 
-        }
+            /// <summary>
+            /// Changes initial Root Wt to an array.
+            /// </summary>
+            /// <param name="root">The root JSON token.</param>
+            /// <param name="fileName">The name of the apsimx file.</param>
+            private static void UpgradeToVersion53(JObject root, string fileName)
+            {
 
-    }
+            }
+
+        }
 }
 
