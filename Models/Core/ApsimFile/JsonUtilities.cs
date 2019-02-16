@@ -56,7 +56,7 @@ namespace Models.Core.ApsimFile
         public static string Type(JToken node, bool withNamespace = false)
         {
             // If the node is not a JObject, it is not an apsim model.
-            if ( !(node is JObject) )
+            if (!(node is JObject))
                 return null;
 
             JProperty typeProperty = (node as JObject).Property("$type");

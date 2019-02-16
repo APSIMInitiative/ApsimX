@@ -277,8 +277,8 @@ namespace Models.PMF
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
-            solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
+            solutes.Subtract("NO3", SoluteSetterType.Plant, NO3Uptake);
+            solutes.Subtract("NH4", SoluteSetterType.Plant, NH4Uptake);
         }
 
 

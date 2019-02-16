@@ -236,7 +236,6 @@
     <Compile Include="Functions\StringComparisonFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
-    <Compile Include="Interfaces\IHasSolutes.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Organs\Culm.cs" />

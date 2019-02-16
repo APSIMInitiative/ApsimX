@@ -1,5 +1,17 @@
 ﻿namespace Models.Interfaces
 {
+
+    /// <summary>The known types of solute setters.</summary>
+    public enum SoluteSetterType
+    {
+        /// <summary>The setting model is a plant model</summary>
+        Plant,
+        /// <summary>The setting model is a soil model</summary>
+        Soil,
+        /// <summary>The setting model is a fertiliser model</summary>
+        Fertiliser
+    }
+
     /// <summary>This interface defines what a solute can do.</summary>
     public interface ISolute
     {
@@ -19,11 +31,11 @@
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value);
+        void SetKgHa(SoluteSetterType callingModelType, double[] value);
 
         /// <summary>Setter for kgha delta.</summary>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">New delta values</param>
-        void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta);
+        void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta);
     }
 }

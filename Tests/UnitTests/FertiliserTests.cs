@@ -17,48 +17,32 @@ namespace UnitTests
     {
         /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
         [Serializable]
-        public class MockSoil : Model, ISoil, IHasSolutes
+        public class MockSoil : Model, ISoil
         {
             public double[] Thickness { get; set; }
 
             public double[] NO3 { get; set; }
-
-            public List<ISolute> GetSolutes()
-            {
-                return new List<ISolute>() { new MockSoilSolute(this) };
-            }
-
-            public void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
-            {
-                throw new NotImplementedException();
-            }
         }
 
-        class MockSoilSolute : ISolute
+        class MockSoilSolute : Model, ISolute
         {
             private MockSoil parentSoil;
 
             public MockSoilSolute(MockSoil parent)
             {
                 parentSoil = parent;
+                Name = "NO3";
             }
-            public string Name { get { return "NO3"; } }
-
             public double[] kgha { get { return parentSoil.NO3; } set { parentSoil.NO3 = value; } }
 
             public double[] ppm => throw new NotImplementedException();
 
-            public void SetKgHa(SoluteManager.SoluteSetterType callingModelType, double[] value)
+            public void SetKgHa(SoluteSetterType callingModelType, double[] value)
             {
                 kgha = value;
             }
 
-            public void SetKgHaDelta(SoluteManager.SoluteSetterType callingModelType, double[] delta)
+            public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
             {
                 kgha = MathUtilities.Add(kgha, delta);
             }
@@ -85,6 +69,7 @@ namespace UnitTests
             soil.Thickness = new double[] { 100, 100, 100 };
             soil.NO3 = new double[] { 1, 2, 3 };
             simulation.Children.Add(soil);
+            soil.Children.Add(new MockSoilSolute(soil));
 
             Fertiliser fertiliser = new Fertiliser();
             fertiliser.Name = "Fertilise";
