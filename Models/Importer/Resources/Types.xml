@@ -1555,6 +1555,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="CERESMineralisationWaterFactor">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
   <Type name="Constant">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
