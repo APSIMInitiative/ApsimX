@@ -7,7 +7,7 @@ namespace Models.Soils.Nutrients
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
     using Interfaces;
-
+    using System.Data;
     /// <summary>
     /// # [Name]
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
@@ -16,7 +16,7 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
-    public class CarbonFlow : Model
+    public class CarbonFlow : Model, ICustomDocumentation
     {
         private List<NutrientPool> destinations = new List<NutrientPool>();
 
@@ -28,6 +28,16 @@ namespace Models.Soils.Nutrients
 
         [Link]
         private SoluteManager solutes = null;
+
+        /// <summary>
+        /// Net N Mineralisation
+        /// </summary>
+        public double[] MineralisedN { get; set; }
+
+        /// <summary>
+        /// CO2 lost to the atmosphere
+        /// </summary>
+        public double[] Catm { get; set; }
 
         /// <summary>
         /// Name of destination pool
@@ -53,6 +63,8 @@ namespace Models.Soils.Nutrients
                     throw new Exception("Cannot find destination pool with name: " + destinationName);
                 destinations.Add(destination);
             }
+            MineralisedN = new double[(Parent as NutrientPool).C.Length];
+            Catm = new double[(Parent as NutrientPool).C.Length];
         }
 
         /// <summary>
@@ -69,6 +81,7 @@ namespace Models.Soils.Nutrients
 
             for (int i = 0; i < source.C.Length; i++)
             {
+
                 double carbonFlowFromSource = Rate.Value(i) * source.C[i];
                 double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
 
@@ -78,22 +91,22 @@ namespace Models.Soils.Nutrients
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
-                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j],destinations[j].CNRatio[i],0.0);
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j], destinations[j].CNRatio[i], 0.0);
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
-                double NSupply = nitrogenFlowFromSource + NO3[i] + NH4[i];
+                // some pools do not fully occupy a layer (e.g. residue decomposition) and so need to incorporate fraction of layer
+                double MineralNSupply = (NO3[i] + NH4[i]) * source.LayerFraction[i];
+                double NSupply = nitrogenFlowFromSource + MineralNSupply;
 
                 if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
                 {
-                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(NO3[i] + NH4[i], TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
+                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(MineralNSupply, TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
 
                     for (int j = 0; j < destinations.Count; j++)
                     {
                         carbonFlowToDestination[j] *= NSupplyFactor;
                         nitrogenFlowToDestination[j] *= NSupplyFactor;
-                        if (nitrogenFlowToDestination[j] > 0.5)
-                        { }
                     }
                     TotalNitrogenFlowToDestinations *= NSupplyFactor;
 
@@ -104,15 +117,18 @@ namespace Models.Soils.Nutrients
 
                 source.C[i] -= carbonFlowFromSource;
                 source.N[i] -= nitrogenFlowFromSource;
+                Catm[i] = carbonFlowFromSource - MathUtilities.Sum(carbonFlowToDestination);
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     destinations[j].C[i] += carbonFlowToDestination[j];
                     destinations[j].N[i] += nitrogenFlowToDestination[j];
                 }
 
-
                 if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
-                    NH4[i] += nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
+                {
+                    MineralisedN[i] = nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
+                    NH4[i] += MineralisedN[i];
+                }
                 else
                 {
                     double NDeficit = TotalNitrogenFlowToDestinations - nitrogenFlowFromSource;
@@ -124,6 +140,8 @@ namespace Models.Soils.Nutrients
                     NO3[i] -= NO3Immobilisation;
                     NDeficit -= NO3Immobilisation;
 
+                    MineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
+
                     if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
                         throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);
                 }
@@ -133,6 +151,44 @@ namespace Models.Soils.Nutrients
             solutes.SetSolute("NO3", SoluteSetterType.Soil, NO3);
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // Write Phase Table
+                tags.Add(new AutoDocumentation.Paragraph("**Destination of C from " + this.Name + "**", indent));
+                DataTable tableData = new DataTable();
+                tableData.Columns.Add("Destination Pool", typeof(string));
+                tableData.Columns.Add("Carbon Fraction", typeof(string));
+
+                if (destinationNames != null)
+                    for (int j = 0; j < destinationNames.Length; j++)
+                    {
+                        DataRow row = tableData.NewRow();
+                        row[0] = destinationNames[j];
+                        row[1] = destinationFraction[j].ToString();
+                        tableData.Rows.Add(row);
+                    }
+
+                tags.Add(new AutoDocumentation.Table(tableData, indent));
+
+                // write remaining children
+                foreach (IModel memo in Apsim.Children(this, typeof(IFunction)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+            }
+        }
 
     }
 }

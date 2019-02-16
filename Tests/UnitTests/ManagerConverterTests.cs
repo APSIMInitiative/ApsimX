@@ -2,10 +2,13 @@
 
 namespace UnitTests
 {
+    using APSIM.Shared.Utilities;
     using Models.Core.ApsimFile;
+    using Newtonsoft.Json.Linq;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Test the writer's load/save .apsimx capability 
@@ -70,7 +73,7 @@ namespace UnitTests
 
         /// <summary>Ensure we can find declarations</summary>
         [Test]
-        public void ManagerConverter_FindDeclaration()
+        public void ManagerConverter_Declarations()
         {
             string script =
                 "using System" + Environment.NewLine +
@@ -89,24 +92,24 @@ namespace UnitTests
 
             ManagerConverter converter = new ManagerConverter();
             converter.Read(script);
-            Declaration declaration1 = converter.FindDeclaration("mySolutes1");
-            Assert.AreEqual(declaration1.LineIndex, 5);
-            Assert.AreEqual(declaration1.InstanceName, "mySolutes1");
-            Assert.AreEqual(declaration1.TypeName, "SoluteManager");
-            Assert.AreEqual(declaration1.Attributes[0], "[Link]");
 
-            Declaration declaration2 = converter.FindDeclaration("fert");
-            Assert.AreEqual(declaration2.LineIndex, 8);
-            Assert.AreEqual(declaration2.InstanceName, "fert");
-            Assert.AreEqual(declaration2.TypeName, "Fertiliser");
-            Assert.IsTrue(declaration2.Attributes.Contains("[Link]"));
-            Assert.IsTrue(declaration2.Attributes.Contains("[Units(0-1)]"));
+            var declarations = converter.GetDeclarations();
 
-            Declaration declaration3 = converter.FindDeclaration("mySoil");
-            Assert.AreEqual(declaration3.LineIndex, 10);
-            Assert.AreEqual(declaration3.InstanceName, "mySoil");
-            Assert.AreEqual(declaration3.TypeName, "Soil");
-            Assert.AreEqual(declaration3.Attributes[0], "[Link(Type = LinkType.Descendant, ByName = true)]");
+            Assert.AreEqual(declarations[0].LineIndex, 5);
+            Assert.AreEqual(declarations[0].InstanceName, "mySolutes1");
+            Assert.AreEqual(declarations[0].TypeName, "SoluteManager");
+            Assert.AreEqual(declarations[0].Attributes[0], "[Link]");
+
+            Assert.AreEqual(declarations[1].LineIndex, 8);
+            Assert.AreEqual(declarations[1].InstanceName, "fert");
+            Assert.AreEqual(declarations[1].TypeName, "Fertiliser");
+            Assert.IsTrue(declarations[1].Attributes.Contains("[Link]"));
+            Assert.IsTrue(declarations[1].Attributes.Contains("[Units(0-1)]"));
+
+            Assert.AreEqual(declarations[2].LineIndex, 10);
+            Assert.AreEqual(declarations[2].InstanceName, "mySoil");
+            Assert.AreEqual(declarations[2].TypeName, "Soil");
+            Assert.AreEqual(declarations[2].Attributes[0], "[Link(Type = LinkType.Descendant, ByName = true)]");
         }
 
         /// <summary>Ensure we can find method calls</summary>
@@ -184,6 +187,214 @@ namespace UnitTests
             Assert.AreEqual(foundMethod.InstanceName, "mySolutes1");
             Assert.AreEqual(foundMethod.MethodName, "Add2");
             Assert.AreEqual(foundMethod.Arguments, new string[] { "10" });
+        }
+
+        /// <summary>
+        /// Ensures the SearchReplaceManagerText method works correctly.
+        /// </summary>
+        [Test]
+        public void ReplaceManagerTextTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.ReplaceManagerText.json");
+            JObject rootNode = JObject.Parse(json);
+
+            var manager = new ManagerConverter(rootNode);
+
+            string newText = "new text";
+            manager.Replace("original text", newText);
+
+            // Ensure the code was modified correctly.
+            Assert.AreEqual(newText + Environment.NewLine, manager.ToString());
+
+            // Ensure that passing in a null search string causes no changes.
+            manager.Replace(null, "test");
+            Assert.AreEqual(newText + Environment.NewLine, manager.ToString());
+
+            // Attempt to replace code of a node which doesn't have a code
+            // property. Ensure that no code property is created (and that
+            // no exception is thrown).
+            var childWithNoCode = new ManagerConverter(JsonUtilities.Children(rootNode).First());
+            childWithNoCode.Replace("test1", "test2");
+            Assert.Null(childWithNoCode.ToString());
+        }
+
+        /// <summary>
+        /// Ensures the ReplaceManagerCodeUsingRegex method works correctly.
+        /// </summary>
+        [Test]
+        public void ReplaceManagerCodeRegexTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.ReplaceManagerTextRegex.json");
+            JObject rootNode = JObject.Parse(json);
+
+            var manager = new ManagerConverter(rootNode);
+
+            // The manager's code is "original text".
+            // This regular expression will effectively remove the first space.
+            // There are simpler ways to achieve this but this method tests
+            // backreferencing.
+            string newText = "originaltext\r\n";
+            manager.ReplaceRegex(@"([^\s]*)\s", @"$1");
+            Assert.AreEqual(manager.ToString(), newText);
+
+            // Ensure that passing in a null search string causes no changes.
+            manager.ReplaceRegex(null, "test");
+            Assert.AreEqual(manager.ToString(), newText);
+
+            // Attempt to replace code of a node which doesn't have a code
+            // property. Ensure that no code property is created (and that
+            // no exception is thrown).
+            var childWithNoCode = new ManagerConverter(JsonUtilities.Children(rootNode).First());
+            childWithNoCode.ReplaceRegex("test1", "test2");
+            Assert.Null(childWithNoCode.ToString());
+        }
+
+        /// <summary>
+        /// Ensures the AddDeclaration method works correctly when
+        /// the manager object has an empty script.
+        /// </summary>
+        [Test]
+        public void AddManagerDeclarationToEmptyScript()
+        {
+            JObject rootNode = new JObject();
+            rootNode["Code"] = "using System;";
+            var manager = new ManagerConverter(rootNode);
+
+            manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
+
+            // Ensure the link has been added below the using statement.
+            Assert.AreEqual(manager.ToString(),
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "        [Link]" + Environment.NewLine +
+                "        private NutrientPool Humic;" + Environment.NewLine +
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Ensures the AddDeclaration method works correctly when
+        /// the manager object has no declarations.
+        /// </summary>
+        [Test]
+        public void AddManagerDeclarationToEmptyDeclarationSection()
+        {
+            JObject rootNode = new JObject();
+            rootNode["Code"] =
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine;
+            var manager = new ManagerConverter(rootNode);
+
+            manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
+
+            // Ensure the link has been added below the using statement.
+            Assert.AreEqual(manager.ToString(),
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "        [Link]" + Environment.NewLine +
+                "        private NutrientPool Humic;" + Environment.NewLine +
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Ensures the AddDeclaration method works correctly when
+        /// the manager object has no declarations.
+        /// </summary>
+        [Test]
+        public void AddManagerDeclarationToExistingDeclarationSection()
+        {
+            JObject rootNode = new JObject();
+            rootNode["Code"] =
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "        [Link]" + Environment.NewLine +
+                "        A B;" + Environment.NewLine + 
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine;
+            var manager = new ManagerConverter(rootNode);
+
+            manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
+
+            // Ensure the link has been added below the using statement.
+            Assert.AreEqual(manager.ToString(),
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "        [Link]" + Environment.NewLine +
+                "        private A B;" + Environment.NewLine +
+                "        [Link]" + Environment.NewLine +
+                "        private NutrientPool Humic;" + Environment.NewLine +
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Ensures the AddDeclaration method works correctly when
+        /// the manager object has no declarations.
+        /// </summary>
+        [Test]
+        public void AddManagerDeclarationHandleProperties()
+        {
+            JObject rootNode = new JObject();
+            rootNode["Code"] =
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "        [Link] private A B = null;" + Environment.NewLine +
+                "        [Link] " + Environment.NewLine +
+                "        public C D;" + Environment.NewLine +
+                "        [Link] E F;" + Environment.NewLine +
+                "        [Description(\"Turn ferliser applications on? \")]" + Environment.NewLine +
+                "        public yesnoType AllowFertiliser { get; set; }" + Environment.NewLine +
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine;
+            var manager = new ManagerConverter(rootNode);
+
+            manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[Link]" });
+
+            // Ensure the link has been added below the using statement.
+            Assert.AreEqual(manager.ToString(),
+                "using System;" + Environment.NewLine +
+                "namespace Models" + Environment.NewLine +
+                "{" + Environment.NewLine +
+                "    [Serializable]" + Environment.NewLine +
+                "    public class Script : Model" + Environment.NewLine +
+                "    {" + Environment.NewLine +
+                "        [Link] private A B;" + Environment.NewLine +
+                "        [Link]" + Environment.NewLine +
+                "        public C D;" + Environment.NewLine +
+                "        [Link] private E F;" + Environment.NewLine + 
+                "        [Link]" + Environment.NewLine +
+                "        private NutrientPool Humic;" + Environment.NewLine +
+                "        [Description(\"Turn ferliser applications on? \")]" + Environment.NewLine +
+                "        public yesnoType AllowFertiliser { get; set; }" + Environment.NewLine +
+                "    }" + Environment.NewLine +
+                "}" + Environment.NewLine);
         }
     }
 }

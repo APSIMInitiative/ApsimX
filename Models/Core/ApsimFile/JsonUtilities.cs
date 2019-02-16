@@ -183,6 +183,20 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns a list of child managers recursively.
+        /// </summary>
+        /// <param name="node">The root node.</param>
+        /// <returns>Returns a list of manager models.</returns>
+        public static List<ManagerConverter> ChildManagers(JObject node)
+        {
+            var managers = new List<ManagerConverter>();
+
+            foreach (var manager in JsonUtilities.ChildrenOfType(node, "Manager"))
+                managers.Add(new ManagerConverter(manager));
+            return managers;
+        }
+
+        /// <summary>
         /// Return the parent APSIM model token for the specified model token.
         /// </summary>
         /// <param name="modelToken">The model token to find the parent for.</param>
