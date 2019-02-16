@@ -5166,8 +5166,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5300,8 +5299,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5434,8 +5432,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5617,8 +5614,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5749,8 +5745,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5889,8 +5884,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TemperatureFactorForMineralisation]",
+                              "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                               "Name": "TF",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5958,73 +5952,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MinimumFunction, Models",
-              "Name": "TemperatureFactorForMineralisation",
-              "Children": [
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([AbsT]^2)/([Topt]^2)",
-                  "Name": "TF",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 32.0,
-                      "Units": null,
-                      "Name": "Topt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "AbsT",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Soil].Temperature",
-                          "Name": "VariableReference",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "One",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
