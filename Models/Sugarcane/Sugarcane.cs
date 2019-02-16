@@ -14218,8 +14218,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                solutes.Add("NO3", SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteSetterType.Plant, l_dlt_NH4);
 
 
 
@@ -14245,8 +14245,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                solutes.Add("NO3", SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteSetterType.Plant, l_dlt_NH4);
             }
             else
                 {

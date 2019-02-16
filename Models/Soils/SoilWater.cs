@@ -1766,11 +1766,11 @@ namespace Models.Soils
         /// </summary>
         private void SendNitrogenChangedEvent()
             {
-            solutes.Add("Urea",SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
-            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
-            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
+            solutes.Add("Urea",SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
+            solutes.Add("NH4", SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
+            solutes.Add("NO3", SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
             if(solutes.SoluteNames.Contains("Chloride"))
-                solutes.Add("Chloride", SoluteManager.SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
+                solutes.Add("Chloride", SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
         }
 
     }

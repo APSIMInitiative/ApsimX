@@ -1058,7 +1058,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, value);
+                SoluteManager.SetSolute("NO3", SoluteSetterType.Soil, value);
             }
         }
 
@@ -1076,7 +1076,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, value);
+                SoluteManager.SetSolute("NH4", SoluteSetterType.Soil, value);
             }
         }
 
@@ -1094,7 +1094,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("PlantAvailableNO3", SoluteManager.SoluteSetterType.Soil, value);
+                SoluteManager.SetSolute("PlantAvailableNO3", SoluteSetterType.Soil, value);
             }
         }
 
@@ -1112,7 +1112,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("PlantAvailableNH4", SoluteManager.SoluteSetterType.Soil, value);
+                SoluteManager.SetSolute("PlantAvailableNH4", SoluteSetterType.Soil, value);
             }
         }
 
@@ -1130,7 +1130,7 @@ namespace Models.Soils
             }
             set
             {
-                SoluteManager.SetSolute("urea", SoluteManager.SoluteSetterType.Soil, value);
+                SoluteManager.SetSolute("urea", SoluteSetterType.Soil, value);
             }
         }
 

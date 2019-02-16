@@ -5,6 +5,7 @@ namespace Models.Soils.Nutrients
     using Models.Functions;
     using System;
     using System.Reflection;
+    using Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -90,9 +91,9 @@ namespace Models.Soils.Nutrients
                 if (destination != null)
                     destination[i] += nitrogenFlowToDestination;
             }
-            solutes.SetSolute(sourceName, SoluteManager.SoluteSetterType.Soil, source);
+            solutes.SetSolute(sourceName, SoluteSetterType.Soil, source);
             if (destination != null)
-                solutes.SetSolute(destinationName, SoluteManager.SoluteSetterType.Soil, destination);
+                solutes.SetSolute(destinationName, SoluteSetterType.Soil, destination);
         }
 
 

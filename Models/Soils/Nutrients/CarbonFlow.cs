@@ -6,6 +6,7 @@ namespace Models.Soils.Nutrients
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
+    using Interfaces;
     using System.Data;
     /// <summary>
     /// # [Name]
