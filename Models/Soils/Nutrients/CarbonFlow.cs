@@ -90,12 +90,12 @@ namespace Models.Soils.Nutrients
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
-                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j],destinations[j].CNRatio[i],0.0);
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j], destinations[j].CNRatio[i], 0.0);
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
                 // some pools do not fully occupy a layer (e.g. residue decomposition) and so need to incorporate fraction of layer
-                double MineralNSupply = (NO3[i] + NH4[i])* source.LayerFraction[i];
+                double MineralNSupply = (NO3[i] + NH4[i]) * source.LayerFraction[i];
                 double NSupply = nitrogenFlowFromSource + MineralNSupply;
 
                 if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
@@ -166,18 +166,19 @@ namespace Models.Soils.Nutrients
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // Write Phase Table
-                tags.Add(new AutoDocumentation.Paragraph("**Destination of C from "+this.Name+"**", indent));
+                tags.Add(new AutoDocumentation.Paragraph("**Destination of C from " + this.Name + "**", indent));
                 DataTable tableData = new DataTable();
                 tableData.Columns.Add("Destination Pool", typeof(string));
                 tableData.Columns.Add("Carbon Fraction", typeof(string));
 
-                for (int j = 0; j < destinationNames.Length; j++)
-                {
-                    DataRow row = tableData.NewRow();
-                    row[0] = destinationNames[j];
-                    row[1] = destinationFraction[j].ToString();
-                    tableData.Rows.Add(row);
-                }
+                if (destinationNames != null)
+                    for (int j = 0; j < destinationNames.Length; j++)
+                    {
+                        DataRow row = tableData.NewRow();
+                        row[0] = destinationNames[j];
+                        row[1] = destinationFraction[j].ToString();
+                        tableData.Rows.Add(row);
+                    }
 
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 

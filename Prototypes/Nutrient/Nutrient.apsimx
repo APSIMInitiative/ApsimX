@@ -744,7 +744,8 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 },
                                 {
                                   "$type": "Models.Graph.Axis, Models",
@@ -754,7 +755,8 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 3,
@@ -837,7 +839,8 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 },
                                 {
                                   "$type": "Models.Graph.Axis, Models",
@@ -847,7 +850,8 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 3,
@@ -930,7 +934,8 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 },
                                 {
                                   "$type": "Models.Graph.Axis, Models",
@@ -940,7 +945,8 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 3,
@@ -1455,6 +1461,8 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootAngle": 45.0,
+              "SWAvailabilityRatio": 0.0,
               "Name": "Root",
               "Children": [
                 {
@@ -6483,7 +6491,8 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -6493,7 +6502,8 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -9546,6 +9556,8 @@
                                   "potentialDMAllocation": null,
                                   "GrowthRespiration": 0.0,
                                   "MaintenanceRespiration": 0.0,
+                                  "RootAngle": 45.0,
+                                  "SWAvailabilityRatio": 0.0,
                                   "Name": "Root",
                                   "Children": [
                                     {
@@ -15655,6 +15667,20 @@
                                         "Location": "350, 350",
                                         "Colour": "White",
                                         "OutlineColour": "White"
+                                      },
+                                      {
+                                        "$type": "Models.Graph.Node, Models",
+                                        "Name": "PlantAvailableNO3",
+                                        "Location": "500, 350",
+                                        "Colour": "LightCoral",
+                                        "OutlineColour": "Black"
+                                      },
+                                      {
+                                        "$type": "Models.Graph.Node, Models",
+                                        "Name": "PlantAvailableNH4",
+                                        "Location": "50, 500",
+                                        "Colour": "LightCoral",
+                                        "OutlineColour": "Black"
                                       }
                                     ],
                                     "Arcs": [
@@ -16036,7 +16062,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16046,7 +16073,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -16130,7 +16158,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16140,7 +16169,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -16216,7 +16246,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16226,7 +16257,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
@@ -16310,7 +16342,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16320,7 +16353,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -16386,7 +16420,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16396,7 +16431,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
@@ -16480,7 +16516,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16490,7 +16527,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -16556,7 +16594,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16566,7 +16605,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
@@ -16650,7 +16690,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16660,7 +16701,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -16726,7 +16768,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16736,7 +16779,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 2,
@@ -16820,7 +16864,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -16830,7 +16875,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17356,6 +17402,20 @@
                                     "Location": "350, 350",
                                     "Colour": "White",
                                     "OutlineColour": "White"
+                                  },
+                                  {
+                                    "$type": "Models.Graph.Node, Models",
+                                    "Name": "PlantAvailableNO3",
+                                    "Location": "500, 350",
+                                    "Colour": "LightCoral",
+                                    "OutlineColour": "Black"
+                                  },
+                                  {
+                                    "$type": "Models.Graph.Node, Models",
+                                    "Name": "PlantAvailableNH4",
+                                    "Location": "50, 500",
+                                    "Colour": "LightCoral",
+                                    "OutlineColour": "Black"
                                   }
                                 ],
                                 "Arcs": [
@@ -18047,7 +18107,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -18057,7 +18118,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -18171,7 +18233,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -18181,7 +18244,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -18295,7 +18359,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -18305,7 +18370,8 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -18840,6 +18906,20 @@
                                     "Location": "350, 350",
                                     "Colour": "White",
                                     "OutlineColour": "White"
+                                  },
+                                  {
+                                    "$type": "Models.Graph.Node, Models",
+                                    "Name": "PlantAvailableNO3",
+                                    "Location": "500, 350",
+                                    "Colour": "LightCoral",
+                                    "OutlineColour": "Black"
+                                  },
+                                  {
+                                    "$type": "Models.Graph.Node, Models",
+                                    "Name": "PlantAvailableNH4",
+                                    "Location": "50, 500",
+                                    "Colour": "LightCoral",
+                                    "OutlineColour": "Black"
                                   }
                                 ],
                                 "Arcs": [
@@ -19602,7 +19682,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -19612,7 +19693,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -19696,7 +19778,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -19706,7 +19789,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21485,6 +21569,20 @@
                                     "Location": "350, 350",
                                     "Colour": "White",
                                     "OutlineColour": "White"
+                                  },
+                                  {
+                                    "$type": "Models.Graph.Node, Models",
+                                    "Name": "PlantAvailableNO3",
+                                    "Location": "500, 350",
+                                    "Colour": "LightCoral",
+                                    "OutlineColour": "Black"
+                                  },
+                                  {
+                                    "$type": "Models.Graph.Node, Models",
+                                    "Name": "PlantAvailableNH4",
+                                    "Location": "50, 500",
+                                    "Colour": "LightCoral",
+                                    "OutlineColour": "Black"
                                   }
                                 ],
                                 "Arcs": [
@@ -22047,7 +22145,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22057,7 +22156,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22171,7 +22271,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22181,7 +22282,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22265,7 +22367,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22275,7 +22378,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22359,7 +22463,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22369,7 +22474,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22453,7 +22559,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22463,7 +22570,8 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -29138,6 +29246,8 @@
                                   "potentialDMAllocation": null,
                                   "GrowthRespiration": 0.0,
                                   "MaintenanceRespiration": 0.0,
+                                  "RootAngle": 45.0,
+                                  "SWAvailabilityRatio": 0.0,
                                   "Name": "Root",
                                   "Children": [
                                     {
@@ -35281,6 +35391,20 @@
                                         "Location": "350, 350",
                                         "Colour": "White",
                                         "OutlineColour": "White"
+                                      },
+                                      {
+                                        "$type": "Models.Graph.Node, Models",
+                                        "Name": "PlantAvailableNO3",
+                                        "Location": "500, 350",
+                                        "Colour": "LightCoral",
+                                        "OutlineColour": "Black"
+                                      },
+                                      {
+                                        "$type": "Models.Graph.Node, Models",
+                                        "Name": "PlantAvailableNH4",
+                                        "Location": "50, 500",
+                                        "Colour": "LightCoral",
+                                        "OutlineColour": "Black"
                                       }
                                     ],
                                     "Arcs": [
@@ -35665,7 +35789,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -35675,7 +35800,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -35789,7 +35915,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -35799,7 +35926,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -35883,7 +36011,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -35893,7 +36022,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -35977,7 +36107,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -35987,7 +36118,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36071,7 +36203,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36081,7 +36214,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36165,7 +36299,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36175,7 +36310,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36259,7 +36395,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36269,7 +36406,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36335,7 +36473,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36345,7 +36484,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36411,7 +36551,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36421,7 +36562,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36487,7 +36629,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36497,7 +36640,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36573,7 +36717,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36583,7 +36728,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36667,7 +36813,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36677,7 +36824,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
@@ -36743,7 +36891,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -36753,7 +36902,8 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
