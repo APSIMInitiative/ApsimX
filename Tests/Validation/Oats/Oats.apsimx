@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 51,
+  "Version": 53,
   "Name": "Simulations",
   "Children": [
     {
@@ -2307,7 +2307,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -2315,7 +2356,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 40.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 11.0,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -2354,6 +2394,13 @@
                                 0.85,
                                 0.945,
                                 0.983
+                              ],
+                              "RootWt": [
+                                427.52753771689794,
+                                316.72018978386836,
+                                142.31155479059541,
+                                82.931809846844757,
+                                30.508907861793567
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -5871,7 +5918,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -5879,7 +5967,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 30.0,
-                              "RootWt": 3000.0,
                               "SoilCN": 11.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -5923,6 +6010,14 @@
                                 0.9,
                                 0.96,
                                 0.96
+                              ],
+                              "RootWt": [
+                                1243.9310541346904,
+                                833.83192147272689,
+                                457.61666105087295,
+                                251.14534845521521,
+                                137.83148958311097,
+                                75.643525303383925
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -7120,7 +7215,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -7128,7 +7264,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 30.0,
-                              "RootWt": 3000.0,
                               "SoilCN": 11.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -7172,6 +7307,14 @@
                                 0.9,
                                 0.96,
                                 0.96
+                              ],
+                              "RootWt": [
+                                1243.9310541346904,
+                                833.83192147272689,
+                                457.61666105087295,
+                                251.14534845521521,
+                                137.83148958311097,
+                                75.643525303383925
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -8262,7 +8405,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -8270,7 +8454,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 30.0,
-                              "RootWt": 3000.0,
                               "SoilCN": 11.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -8314,6 +8497,14 @@
                                 0.9,
                                 0.96,
                                 0.96
+                              ],
+                              "RootWt": [
+                                1243.9310541346904,
+                                833.83192147272689,
+                                457.61666105087295,
+                                251.14534845521521,
+                                137.83148958311097,
+                                75.643525303383925
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -9120,7 +9311,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\n// This script performs management actions that are not common to all treatments\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Fertiliser Fert;\r\n        [Link] Soil ThisSoil;\r\n        [Link] SoluteManager soluteManager;\r\n\r\n        [Description(\"Allow irrigation to be applied?\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n\r\n\r\n        private void SetSoilLayers()\r\n        {\r\n        \r\n            int i = 0;\r\n\r\n            if (ThisSoil.Thickness.Length != 7)\r\n               throw new Exception(\"Soil layer exception\");\r\n\r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                soluteManager.SetSolute(\"NH4\",SoluteManager.SoluteSetterType.Fertiliser,new double[]{108,12,7,5,4,3,3});\r\n                soluteManager.SetSolute(\"NO3\",SoluteManager.SoluteSetterType.Fertiliser,new double[] {55,30,25,12,3,5,5});\r\n            }   \r\n            else if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                soluteManager.SetSolute(\"NH4\",SoluteManager.SoluteSetterType.Fertiliser,new double[]{14.2,3.6,3.2,1.0,2.8,3.7,3});\r\n                soluteManager.SetSolute(\"NO3\",SoluteManager.SoluteSetterType.Fertiliser,new double[] {34,16.8,15.8,7.7,1.8,2.3,5});\r\n            }   \r\n            else if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                soluteManager.SetSolute(\"NH4\",SoluteManager.SoluteSetterType.Fertiliser,new double[]{3.7,3.5,4.1,1.2,2.1,2.3,3});\r\n                soluteManager.SetSolute(\"NO3\",SoluteManager.SoluteSetterType.Fertiliser,new double[] {18,13.7,10.8,4.2,1.9,2.8,5});\r\n            }   \r\n            else if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                soluteManager.SetSolute(\"NH4\",SoluteManager.SoluteSetterType.Fertiliser,new double[]{1.8,1.8,3.0,2.3,2.4,1.8,3});\r\n                soluteManager.SetSolute(\"NO3\",SoluteManager.SoluteSetterType.Fertiliser,new double[] {12.6,6.4,5.3,2.8,2.2,2.2,5});\r\n            }   \r\n            else if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                soluteManager.SetSolute(\"NH4\",SoluteManager.SoluteSetterType.Fertiliser,new double[]{1.9,1.5,3.5,2.0,2.6,1.8,3});\r\n                soluteManager.SetSolute(\"NO3\",SoluteManager.SoluteSetterType.Fertiliser,new double[] {8.5,5.4,1.9,1.5,1.8,2.7,5});\r\n            }\r\n            else if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                soluteManager.SetSolute(\"NH4\",SoluteManager.SoluteSetterType.Fertiliser,new double[]{2.5,2.4,3.1,3.4,5.6,2.5,3});\r\n                soluteManager.SetSolute(\"NO3\",SoluteManager.SoluteSetterType.Fertiliser,new double[] {5.6,3.9,1.3,1.0,1.3,2.2,5});\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (Clock.Today.Date == DateTime.Parse(\"02-Jun-2017\"))\r\n               SetSoilLayers();\r\n\r\n        \r\n            // Oats - Irrigation on dryland plots only, after harvest\r\n            if (IrrFactor == false)\r\n            {\r\n                if ((Clock.Today.Date == DateTime.Parse(\"25-May-2017\")) || (Clock.Today.Date == DateTime.Parse(\"26-May-2017\")))\r\n                    Irrigation.Apply(50.0);\r\n\r\n                if (Clock.Today.Date == DateTime.Parse(\"29-May-2017\"))\r\n                if (NitFactor == 300)\r\n                    Irrigation.Apply(64.0);\r\n\r\n                if (Clock.Today.Date == DateTime.Parse(\"30-May-2017\"))\r\n                {\r\n                    if (NitFactor == 0)\r\n                        Irrigation.Apply(30.3);\r\n                    if (NitFactor == 50)\r\n                        Irrigation.Apply(51.0);\r\n                }\r\n            }\r\n\r\n            // Oats - Irrigation on all 300N plots plus dryland 50N plots\r\n            if (Clock.Today.Date == DateTime.Parse(\"13-Dec-2017\"))\r\n            {\r\n                if (NitFactor == 300)\r\n                    Irrigation.Apply(50.0);\r\n                if ((NitFactor == 50) && (IrrFactor == false))\r\n                    Irrigation.Apply(50.0);\r\n            }\r\n\r\n            // Oats - Fertiliser for irrigated plots only, on sowing\r\n            if (Clock.Today.Date == DateTime.Parse(\"05-Jul-2017\"))\r\n            if (IrrFactor == true)\r\n            {\r\n                if (NitFactor == 0)\r\n                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);\r\n                if (NitFactor == 50)\r\n                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);\r\n                if (NitFactor == 300)\r\n                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n// This script performs management actions that are not common to all treatments\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Fertiliser Fert;\r\n        [Link] Soil ThisSoil;\r\n        [ScopedLinkByName] ISolute no3;\r\n        [ScopedLinkByName] ISolute nh4;\r\n\r\n        [Description(\"Allow irrigation to be applied?\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n\r\n\r\n        private void SetSoilLayers()\r\n        {\r\n        \r\n            int i = 0;\r\n\r\n            if (ThisSoil.Thickness.Length != 7)\r\n               throw new Exception(\"Soil layer exception\");\r\n\r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{108,12,7,5,4,3,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {55,30,25,12,3,5,5});\r\n            }   \r\n            else if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{14.2,3.6,3.2,1.0,2.8,3.7,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {34,16.8,15.8,7.7,1.8,2.3,5});\r\n            }   \r\n            else if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{3.7,3.5,4.1,1.2,2.1,2.3,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {18,13.7,10.8,4.2,1.9,2.8,5});\r\n            }   \r\n            else if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{1.8,1.8,3.0,2.3,2.4,1.8,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {12.6,6.4,5.3,2.8,2.2,2.2,5});\r\n            }   \r\n            else if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{1.9,1.5,3.5,2.0,2.6,1.8,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {8.5,5.4,1.9,1.5,1.8,2.7,5});\r\n            }\r\n            else if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{2.5,2.4,3.1,3.4,5.6,2.5,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {5.6,3.9,1.3,1.0,1.3,2.2,5});\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (Clock.Today.Date == DateTime.Parse(\"02-Jun-2017\"))\r\n               SetSoilLayers();\r\n\r\n        \r\n            // Oats - Irrigation on dryland plots only, after harvest\r\n            if (IrrFactor == false)\r\n            {\r\n                if ((Clock.Today.Date == DateTime.Parse(\"25-May-2017\")) || (Clock.Today.Date == DateTime.Parse(\"26-May-2017\")))\r\n                    Irrigation.Apply(50.0);\r\n\r\n                if (Clock.Today.Date == DateTime.Parse(\"29-May-2017\"))\r\n                if (NitFactor == 300)\r\n                    Irrigation.Apply(64.0);\r\n\r\n                if (Clock.Today.Date == DateTime.Parse(\"30-May-2017\"))\r\n                {\r\n                    if (NitFactor == 0)\r\n                        Irrigation.Apply(30.3);\r\n                    if (NitFactor == 50)\r\n                        Irrigation.Apply(51.0);\r\n                }\r\n            }\r\n\r\n            // Oats - Irrigation on all 300N plots plus dryland 50N plots\r\n            if (Clock.Today.Date == DateTime.Parse(\"13-Dec-2017\"))\r\n            {\r\n                if (NitFactor == 300)\r\n                    Irrigation.Apply(50.0);\r\n                if ((NitFactor == 50) && (IrrFactor == false))\r\n                    Irrigation.Apply(50.0);\r\n            }\r\n\r\n            // Oats - Fertiliser for irrigated plots only, on sowing\r\n            if (Clock.Today.Date == DateTime.Parse(\"05-Jul-2017\"))\r\n            if (IrrFactor == true)\r\n            {\r\n                if (NitFactor == 0)\r\n                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);\r\n                if (NitFactor == 50)\r\n                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);\r\n                if (NitFactor == 300)\r\n                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "IrrFactor",
@@ -9542,7 +9733,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -9550,7 +9782,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 40.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 11.0,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -9609,6 +9840,17 @@
                                 0.99,
                                 0.99,
                                 0.99
+                              ],
+                              "RootWt": [
+                                271.50490768352796,
+                                211.44823471166109,
+                                151.50928073646068,
+                                117.99554648014092,
+                                84.547503561285836,
+                                65.8456619802618,
+                                47.18047847431572,
+                                31.103288362566367,
+                                18.865098009779651
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -9731,10 +9973,10 @@
                             "sum([Soil].SoilNitrogen.FOMN) as TotalFOMN",
                             "sum([Soil].SoilNitrogen.MicrobialN) as TotalMicrobialN",
                             "sum([Soil].SoilNitrogen.HumicN) as TotalHumicN",
-                            "(sum([Soil].SoilNitrogen.NH4) + sum([Soil].SoilNitrogen.NO3)) as TotalSoilN",
-                            "sum([Soil].SoilNitrogen.urea) as TotalUrea",
-                            "sum([Soil].SoilNitrogen.NH4) as TotalNH4",
-                            "sum([Soil].SoilNitrogen.NO3) as TotalNO3",
+                            "(sum([Soil].SoilNitrogen.NH4.kgha) + sum([Soil].SoilNitrogen.NO3.kgha)) as TotalSoilN",
+                            "sum([Soil].SoilNitrogen.Urea.kgha) as TotalUrea",
+                            "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4",
+                            "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3",
                             "[Soil].SoilNitrogen.oc"
                           ],
                           "EventNames": [
@@ -9757,7 +9999,7 @@
                             "[Soil].SoilWater.SWmm",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
                             "[SurfaceOrganicMatter].Wt",
-                            "sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen",
+                            "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
                             "[Oats].AboveGround.N",
                             "[Oats].AboveGround.Wt",
                             "[Oats].AboveGroundLive.N",
@@ -9837,7 +10079,7 @@
                             "[Oats].Total.Wt",
                             "[SurfaceOrganicMatter].Wt",
                             "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
-                            "sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen",
+                            "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
                             "[Oats].Phenology.FlagLeafDAS",
                             "[Oats].Phenology.FloweringDAS",
                             "[Oats].Phenology.MaturityDAS",
@@ -13633,7 +13875,48 @@
                                         0.9
                                       ],
                                       "Name": "SoilNitrogen",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                          "Name": "NO3",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                          "Name": "NH4",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                          "Name": "Urea",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                          "Name": "PlantAvailableNO3",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                          "Name": "PlantAvailableNH4",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -13641,7 +13924,6 @@
                                     {
                                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                                       "RootCN": 20.0,
-                                      "RootWt": 500.0,
                                       "SoilCN": 14.5,
                                       "EnrACoeff": 7.4,
                                       "EnrBCoeff": 0.2,
@@ -13690,6 +13972,15 @@
                                         0.99,
                                         0.99,
                                         0.99
+                                      ],
+                                      "RootWt": [
+                                        173.5645161563782,
+                                        135.17218109599685,
+                                        81.986072174950522,
+                                        49.727066443520314,
+                                        30.160990415562338,
+                                        18.293565414337436,
+                                        11.0956082992543
                                       ],
                                       "OCUnits": 0,
                                       "Name": "SoilOrganicMatter",
@@ -16618,7 +16909,48 @@
                                         0.9
                                       ],
                                       "Name": "SoilNitrogen",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                          "Name": "NO3",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                          "Name": "NH4",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                          "Name": "Urea",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                          "Name": "PlantAvailableNO3",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                          "Name": "PlantAvailableNH4",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -16626,7 +16958,6 @@
                                     {
                                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                                       "RootCN": 20.0,
-                                      "RootWt": 500.0,
                                       "SoilCN": 14.5,
                                       "EnrACoeff": 7.4,
                                       "EnrBCoeff": 0.2,
@@ -16675,6 +17006,15 @@
                                         0.99,
                                         0.99,
                                         0.99
+                                      ],
+                                      "RootWt": [
+                                        173.5645161563782,
+                                        135.17218109599685,
+                                        81.986072174950522,
+                                        49.727066443520314,
+                                        30.160990415562338,
+                                        18.293565414337436,
+                                        11.0956082992543
                                       ],
                                       "OCUnits": 0,
                                       "Name": "SoilOrganicMatter",
@@ -18076,7 +18416,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -18084,7 +18465,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -18133,6 +18513,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -19007,7 +19396,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -19015,7 +19445,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 20.0,
-                                  "RootWt": 500.0,
                                   "SoilCN": 14.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -19059,6 +19488,14 @@
                                     0.99,
                                     0.99,
                                     0.99
+                                  ],
+                                  "RootWt": [
+                                    195.29876946176833,
+                                    144.68088689399622,
+                                    79.402554247828846,
+                                    43.577045706795644,
+                                    23.915589750490678,
+                                    13.125153939120324
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -23252,7 +23689,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -23260,7 +23738,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 1000.0,
                                   "SoilCN": 12.0,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -23309,6 +23786,15 @@
                                     1.0,
                                     1.0,
                                     1.0
+                                  ],
+                                  "RootWt": [
+                                    351.4981570792782,
+                                    251.85943515628685,
+                                    166.03597275435834,
+                                    109.45765931452689,
+                                    66.389426314640659,
+                                    34.085467992689367,
+                                    20.673881388219733
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -25325,7 +25811,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -25333,7 +25860,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -25382,6 +25908,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -26137,7 +26672,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -26145,7 +26721,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -26194,6 +26769,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -26949,7 +27533,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -26957,7 +27582,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -27006,6 +27630,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -27821,7 +28454,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -27829,7 +28503,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -27878,6 +28551,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -28675,7 +29357,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -28683,7 +29406,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -28732,6 +29454,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -29529,7 +30260,48 @@
                                     0.9
                                   ],
                                   "Name": "SoilNitrogen",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                      "Name": "NO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                      "Name": "NH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                      "Name": "Urea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                      "Name": "PlantAvailableNO3",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                      "Name": "PlantAvailableNH4",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -29537,7 +30309,6 @@
                                 {
                                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                                   "RootCN": 40.0,
-                                  "RootWt": 200.0,
                                   "SoilCN": 12.5,
                                   "EnrACoeff": 7.4,
                                   "EnrBCoeff": 0.2,
@@ -29586,6 +30357,15 @@
                                     0.95,
                                     0.95,
                                     0.95
+                                  ],
+                                  "RootWt": [
+                                    69.4258064625513,
+                                    54.068872438398742,
+                                    32.794428869980209,
+                                    19.890826577408127,
+                                    12.064396166224935,
+                                    7.3174261657349753,
+                                    4.43824331970172
                                   ],
                                   "OCUnits": 0,
                                   "Name": "SoilOrganicMatter",
@@ -32751,7 +33531,48 @@
                             0.9
                           ],
                           "Name": "SoilNitrogen",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "Name": "NO3",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "Name": "NH4",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "Name": "Urea",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                              "Name": "PlantAvailableNO3",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                              "Name": "PlantAvailableNH4",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -32759,7 +33580,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 40.0,
-                          "RootWt": 1000.0,
                           "SoilCN": 12.0,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
@@ -32808,6 +33628,15 @@
                             1.0,
                             1.0,
                             1.0
+                          ],
+                          "RootWt": [
+                            351.4981570792782,
+                            251.85943515628685,
+                            166.03597275435834,
+                            109.45765931452689,
+                            66.389426314640659,
+                            34.085467992689367,
+                            20.673881388219733
                           ],
                           "OCUnits": 0,
                           "Name": "SoilOrganicMatter",
@@ -33185,7 +34014,7 @@
                         "[Oats].Total.Wt",
                         "[SurfaceOrganicMatter].Wt",
                         "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
-                        "sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen",
+                        "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
                         "[Oats].Phenology.FlagLeafDAS",
                         "[Oats].Phenology.FloweringDAS",
                         "[Oats].Phenology.MaturityDAS",

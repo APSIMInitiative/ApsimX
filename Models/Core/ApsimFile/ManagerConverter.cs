@@ -145,6 +145,7 @@ namespace Models.Core.ApsimFile
             {
                 Match match = Regex.Match(lines[i], pattern);
                 if (match.Groups["TypeName"].Value != string.Empty &&
+                    match.Groups["TypeName"].Value != "as" &&
                     match.Groups["InstanceName"].Value != string.Empty &&
                     match.Groups["TypeName"].Value != "using")
                 {
@@ -323,7 +324,7 @@ namespace Models.Core.ApsimFile
             bool replacementDone = false;
             for (int i = 0; i < lines.Count; i++)
             {
-                int pos = lines[i].IndexOf(searchPattern);
+                int pos = lines[i].IndexOf(searchPattern, StringComparison.CurrentCultureIgnoreCase);
                 while (pos != -1)
                 {
                     lines[i] = lines[i].Remove(pos, searchPattern.Length);

@@ -448,8 +448,8 @@ namespace Models.AgPasture
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
                 if (myRoot != null)
                 {
-                    myRoot.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, zone.NO3N);
-                    myRoot.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, zone.NH4N);
+                    myRoot.solutes.Subtract("NO3", SoluteSetterType.Plant, zone.NO3N);
+                    myRoot.solutes.Subtract("NH4", SoluteSetterType.Plant, zone.NH4N);
 
                     mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
                     mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
