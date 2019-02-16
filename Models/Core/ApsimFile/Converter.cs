@@ -279,46 +279,52 @@
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.urea", "SoilNitrogen.Urea.kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNO3", "SoilNitrogen.PlantAvailableNO3.kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNH4", "SoilNitrogen.PlantAvailableNH4.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].no3", "[SoilNitrogen].NO3.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].nh4", "[SoilNitrogen].NH4.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].urea", "[SoilNitrogen].Urea.kgha");
             }
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 var originalCode = manager.ToString();
-                if (originalCode.Contains("SoilNitrogen.NO3"))
+                if (originalCode != null)
                 {
-                    manager.Replace("Soil.SoilNitrogen.NO3", "NO3.kgha");
-                    manager.Replace("SoilNitrogen.NO3", "NO3.kgha");
-                    manager.AddDeclaration("ISolute", "NO3", new string[] { "[ScopedLinkByName]" });
-                }
-                if (originalCode.Contains("SoilNitrogen.NH4"))
-                {
-                    manager.Replace("Soil.SoilNitrogen.NH4", "NH4.kgha");
-                    manager.Replace("SoilNitrogen.NH4", "NH4.kgha");
-                    manager.AddDeclaration("ISolute", "NH4", new string[] { "[ScopedLinkByName]" });
-                }
-                if (originalCode.Contains("SoilNitrogen.urea"))
-                {
-                    manager.Replace("Soil.SoilNitrogen.urea", "Urea.kgha");
-                    manager.Replace("SoilNitrogen.urea", "Urea.kgha");
-                    manager.AddDeclaration("ISolute", "Urea", new string[] { "[ScopedLinkByName]" });
-                }
-                if (originalCode.Contains("SoilNitrogen.PlantAvailableNO3"))
-                {
-                    manager.Replace("Soil.SoilNitrogen.PlantAvailableNO3", "PlantAvailableNO3.kgha");
-                    manager.Replace("SoilNitrogen.PlantAvailableNO3", "PlantAvailableNO3.kgha");
-                    manager.AddDeclaration("ISolute", "PlantAvailableNO3", new string[] { "[ScopedLinkByName]" });
-                }
-                if (originalCode.Contains("SoilNitrogen.PlantAvailableNH4"))
-                {
-                    manager.Replace("Soil.SoilNitrogen.PlantAvailableNH4", "PlantAvailableNH4.kgha");
-                    manager.Replace("SoilNitrogen.PlantAvailableNH4", "PlantAvailableNH4.kgha");
-                    manager.AddDeclaration("ISolute", "PlantAvailableNH4", new string[] { "[ScopedLinkByName]" });
-                }
-                if (originalCode != manager.ToString())
-                {
-                    var usingLines = manager.GetUsingStatements().ToList();
-                    usingLines.Add("Models.Interfaces");
-                    manager.SetUsingStatements(usingLines);
-                    manager.Save();
+                    if (originalCode.Contains("SoilNitrogen.NO3"))
+                    {
+                        manager.Replace("Soil.SoilNitrogen.NO3", "NO3.kgha");
+                        manager.Replace("SoilNitrogen.NO3", "NO3.kgha");
+                        manager.AddDeclaration("ISolute", "NO3", new string[] { "[ScopedLinkByName]" });
+                    }
+                    if (originalCode.Contains("SoilNitrogen.NH4"))
+                    {
+                        manager.Replace("Soil.SoilNitrogen.NH4", "NH4.kgha");
+                        manager.Replace("SoilNitrogen.NH4", "NH4.kgha");
+                        manager.AddDeclaration("ISolute", "NH4", new string[] { "[ScopedLinkByName]" });
+                    }
+                    if (originalCode.Contains("SoilNitrogen.urea"))
+                    {
+                        manager.Replace("Soil.SoilNitrogen.urea", "Urea.kgha");
+                        manager.Replace("SoilNitrogen.urea", "Urea.kgha");
+                        manager.AddDeclaration("ISolute", "Urea", new string[] { "[ScopedLinkByName]" });
+                    }
+                    if (originalCode.Contains("SoilNitrogen.PlantAvailableNO3"))
+                    {
+                        manager.Replace("Soil.SoilNitrogen.PlantAvailableNO3", "PlantAvailableNO3.kgha");
+                        manager.Replace("SoilNitrogen.PlantAvailableNO3", "PlantAvailableNO3.kgha");
+                        manager.AddDeclaration("ISolute", "PlantAvailableNO3", new string[] { "[ScopedLinkByName]" });
+                    }
+                    if (originalCode.Contains("SoilNitrogen.PlantAvailableNH4"))
+                    {
+                        manager.Replace("Soil.SoilNitrogen.PlantAvailableNH4", "PlantAvailableNH4.kgha");
+                        manager.Replace("SoilNitrogen.PlantAvailableNH4", "PlantAvailableNH4.kgha");
+                        manager.AddDeclaration("ISolute", "PlantAvailableNH4", new string[] { "[ScopedLinkByName]" });
+                    }
+                    if (originalCode != manager.ToString())
+                    {
+                        var usingLines = manager.GetUsingStatements().ToList();
+                        usingLines.Add("Models.Interfaces");
+                        manager.SetUsingStatements(usingLines);
+                        manager.Save();
+                    }
                 }
             }
 
