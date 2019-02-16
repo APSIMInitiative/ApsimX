@@ -82,8 +82,17 @@
 
         /// <summary>
         /// Reset all pools
-        /// </summary>
-        public void Reset() { }
+        /// </summary> 
+        public void Reset()
+        {
+            List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+            foreach (NutrientPool P in Pools)
+                P.Reset();
+
+            List<IModel> Solutes = Apsim.Children(this, typeof(ISolute));
+            foreach (Solute S in Solutes)
+                S.Reset();
+        }
 
         /// <summary>
         /// Total C in each soil layer
