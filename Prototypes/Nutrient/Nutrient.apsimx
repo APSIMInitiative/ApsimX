@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 52,
+  "Version": 53,
   "Name": "Simulations",
   "Children": [
     {
@@ -5166,8 +5166,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5175,8 +5174,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5300,8 +5298,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5309,8 +5306,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5434,8 +5430,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5443,8 +5438,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5617,8 +5611,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5626,9 +5619,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
-                          "Name": "WF",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                          "Name": "CERESMineralisationWaterFactor",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5749,8 +5741,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[TemperatureFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                           "Name": "TF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5758,8 +5749,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[WaterFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
                           "Name": "WF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5889,8 +5879,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TemperatureFactorForMineralisation]",
+                              "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                               "Name": "TF",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5958,73 +5947,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MinimumFunction, Models",
-              "Name": "TemperatureFactorForMineralisation",
-              "Children": [
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([AbsT]^2)/([Topt]^2)",
-                  "Name": "TF",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 32.0,
-                      "Units": null,
-                      "Name": "Topt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "AbsT",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Soil].Temperature",
-                          "Name": "VariableReference",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "One",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -15427,7 +15349,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable] \r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Plant Wheat;\r\n        \r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tif (Wheat.IsReadyForHarvesting)\r\n\t\t\t{\r\n\t\t\t\tWheat.Harvest();\r\n\t\t\t\tWheat.EndCrop();\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n\t   ",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": null,
                               "Name": "Harvesting",
                               "IncludeInDocumentation": true,
@@ -15974,7 +15896,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock Clock;\r\n\t\t[Link] Fertiliser Fertiliser;\r\n\t\t[Link] Summary Summary;\r\n\t\t\r\n\t\t\r\n\t\t[Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n\t\tpublic double Amount { get; set; }\r\n\t\t\r\n\t\t[Description(\"Crop to be fertilised\")]\r\n\t\tpublic string CropName { get; set; }\r\n\t\t\r\n\t\t\r\n\t\t\r\n\r\n\t\t[EventSubscribe(\"Sowing\")]\r\n\t\tprivate void OnSowing(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tModel crop = sender as Model;\r\n\t\t\tif (crop.Name.ToLower() == CropName.ToLower())\r\n\t\t\t\tFertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n\t\t}\r\n\t\t\r\n\t}\r\n}\r\n",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower() == CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Amount",
@@ -21073,7 +20995,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock Clock;\r\n\t\t[EventSubscribe(\"Commencing\")]\r\n\t\tprivate void OnSimulationCommencing(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t/*\r\n\t\t\t\tdays_since_spraying = 0\r\n\t\t\t*/\r\n\t\t}\r\n\t\t[EventSubscribe(\"DoCalculations\")]\r\n\t\tprivate void OnDoCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t/*\r\n\t\t\t\tdays_since_spraying = days_since_spraying + 1\r\n\t\t\t*/\r\n\t\t}\r\n\t\t//[EventSubscribe(\"unknown\")]\r\n\t\t//private void OnUnknown(object sender, EventArgs e)\r\n\t\t//{\r\n\t\t/*\r\n\t\t\t\t// ----- spray ----- \r\n\r\nif weed.plant_status = 'alive' or weed.plant_status = 'dead' then\r\n   !weed kill_crop\r\n   !weed end_crop\r\n   days_since_spraying = 0\r\nendif\r\n\r\n\r\n\t\t\t*/\r\n\t\t//}\r\n\t}\r\n}\r\n",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            /*\r\n                days_since_spraying = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            /*\r\n                days_since_spraying = days_since_spraying + 1\r\n            */\r\n        }\r\n        //[EventSubscribe(\"unknown\")]\r\n        //private void OnUnknown(object sender, EventArgs e)\r\n        //{\r\n        /*\r\n                // ----- spray ----- \r\n\r\nif weed.plant_status = 'alive' or weed.plant_status = 'dead' then\r\n   !weed kill_crop\r\n   !weed end_crop\r\n   days_since_spraying = 0\r\nendif\r\n\r\n\r\n            */\r\n        //}\r\n    }\r\n}\r\n",
                               "Parameters": null,
                               "Name": "SprayManager",
                               "IncludeInDocumentation": false,
@@ -21082,7 +21004,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock Clock;\r\n\t\t[ScopedLinkByName] NutrientPool FOMLignin;\r\n\t\t\r\n\t\t[EventSubscribe(\"Commencing\")]\r\n\t\tprivate void OnSimulationCommencing(object sender, EventArgs e)\r\n\t\t{\r\n\t\t}\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t//Debugger.Break();\r\n\t\t    \r\n\t\t\tif (Clock.Today.DayOfYear == 60 && Clock.Today.Year == 1982)\r\n\t\t\t{\r\n\t\t\t\tdouble[] CAdded = new double[] { 11600, 80, 80 };\r\n\t\t\t\tdouble[] NAdded = new double[] { 1450, 10, 10 };\r\n\t\t\t\tFOMLignin.Add(CAdded, NAdded);\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [ScopedLinkByName] NutrientPool FOMLignin;\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Debugger.Break();\r\n            \r\n            if (Clock.Today.DayOfYear == 60 && Clock.Today.Year == 1982)\r\n            {\r\n                double[] CAdded = new double[] { 11600, 80, 80 };\r\n                double[] NAdded = new double[] { 1450, 10, 10 };\r\n                FOMLignin.Add(CAdded, NAdded);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": null,
                               "Name": "TillManager",
                               "IncludeInDocumentation": false,
@@ -21091,7 +21013,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock Clock;\r\n\t\t[Link] Soil Soil;\r\n\t\t\r\n\t\tpublic double CumRunoff { get; set; }\r\n\t\t\r\n\t\t[EventSubscribe(\"Commencing\")]\r\n\t\tprivate void OnSimulationCommencing(object sender, EventArgs e)\r\n\t\t{\r\n/*\r\n\t\t\t\tCumRunoff = 0\r\nPOC = 0\r\nHOC = 0\r\nTOC = 0\r\nsw40 = 0\r\nsw80 = 0\r\nsw120 = 0\r\nsw200 = 0\r\nNexport = 0\r\nc10 = 0\r\nc20 = 0\r\nc30 = 0\r\n\t\t\t*/\r\n\t\t}\r\n\t\t[EventSubscribe(\"DoCalculations\")]\r\n\t\tprivate void OnDoCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tif (Clock.Today.Year > 1983)\r\n\t\t\t\tCumRunoff += Soil.SoilWater.Runoff;\r\n\t\t\t\t\r\n \r\n/*\r\nPOC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.\r\nHOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000\r\n\t\t\tTOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000\r\n\r\n!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\n!sw80 = sw40 + sw_dep(5) + sw_dep(6)\r\n!sw120 = sw80 + sw_dep(7) + sw_dep(8)\r\n!sw200 = sw120 + sw_dep(9) + sw_dep(10)\r\n\r\nsw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\nsw80 = sw_dep(5) + sw_dep(6)\r\nsw120 = sw_dep(7) + sw_dep(8)\r\nsw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)\r\n\r\nc10 = carbon_tot(1) + 7590\r\nc20 = carbon_tot(2) + 2460\r\nc30 = carbon_tot(3) + 2600\r\n\r\n\t\t\t*/\r\n\t\t}\r\n\t}\r\n}\r\n",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils.Nutrients;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        \r\n        public double CumRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n/*\r\n                CumRunoff = 0\r\nPOC = 0\r\nHOC = 0\r\nTOC = 0\r\nsw40 = 0\r\nsw80 = 0\r\nsw120 = 0\r\nsw200 = 0\r\nNexport = 0\r\nc10 = 0\r\nc20 = 0\r\nc30 = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Year > 1983)\r\n                CumRunoff += Soil.SoilWater.Runoff;\r\n                \r\n \r\n/*\r\nPOC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.\r\nHOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000\r\n            TOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000\r\n\r\n!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\n!sw80 = sw40 + sw_dep(5) + sw_dep(6)\r\n!sw120 = sw80 + sw_dep(7) + sw_dep(8)\r\n!sw200 = sw120 + sw_dep(9) + sw_dep(10)\r\n\r\nsw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\nsw80 = sw_dep(5) + sw_dep(6)\r\nsw120 = sw_dep(7) + sw_dep(8)\r\nsw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)\r\n\r\nc10 = carbon_tot(1) + 7590\r\nc20 = carbon_tot(2) + 2460\r\nc30 = carbon_tot(3) + 2600\r\n\r\n            */\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "CumRunoff",
@@ -21105,7 +21027,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock Clock;\r\n\t\t[EventSubscribe(\"Commencing\")]\r\n\t\tprivate void OnSimulationCommencing(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t/*\r\n\t\t\t\tCumNRunoff = 0\r\nNRunoff = 0\r\ndelta = 0\r\n\t\t\t*/\r\n\t\t}\r\n\t\t[EventSubscribe(\"DoCalculations\")]\r\n\t\tprivate void OnDoCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t/*\r\n\t\t\t\t\r\nif (runoff > 0) then\r\nNRunoff = runoff * 0.17\r\n   if no3(1) < NRunoff then\r\n      NRunoff = no3(1)\r\n   endif\r\n\r\n   CumNRunoff = CumNRunoff + NRunoff\r\n   delta = NRunoff * -1\r\n    'Upper Nitrogen' set dlt_no3 = delta 0 0 0 0 0 0 0 0 0 0 0\r\n\r\nelse\r\n   NRunoff = 0\r\n   delta = 0\r\nendif\r\n\r\n\t\t\t*/\r\n\t\t}\r\n\t}\r\n}\r\n",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            /*\r\n                CumNRunoff = 0\r\nNRunoff = 0\r\ndelta = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            /*\r\n                \r\nif (runoff > 0) then\r\nNRunoff = runoff * 0.17\r\n   if no3(1) < NRunoff then\r\n      NRunoff = no3(1)\r\n   endif\r\n\r\n   CumNRunoff = CumNRunoff + NRunoff\r\n   delta = NRunoff * -1\r\n    'Upper Nitrogen' set dlt_no3 = delta 0 0 0 0 0 0 0 0 0 0 0\r\n\r\nelse\r\n   NRunoff = 0\r\n   delta = 0\r\nendif\r\n\r\n            */\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": null,
                               "Name": "Nrunoff",
                               "IncludeInDocumentation": false,
@@ -22092,7 +22014,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Plant Wheat;\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tif (Wheat.IsReadyForHarvesting)\r\n\t\t\t{\r\n\t\t\t   Wheat.Harvest();\r\n\t\t\t   Wheat.EndCrop();\t\r\n\t\t\t}\r\n\t\t\r\n\t\t}\r\n\t\t\r\n\t}\r\n}\r\n",
+                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                           "Parameters": null,
                           "Name": "Harvest",
                           "IncludeInDocumentation": false,
@@ -26900,7 +26822,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable] \r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Description(\"Crop\")]\r\n\t\t[Link] Plant Wheat;\r\n\t\t[Description(\"Tillage date (d-mmm)\")]\r\n\t\tpublic string TillDate { get; set; }\r\n\t\t[Description(\"Incorporation fraction (0-1)\")]\r\n\t\tpublic double IncorpFraction { get; set; }\r\n\r\n\t\t[Link] Clock Clock;\r\n\t\t[Link] SurfaceOrganicMatter SOM;\r\n\t\t\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tif ((!Wheat.IsAlive) && DateUtilities.WithinDates(TillDate, Clock.Today, TillDate))\r\n\t\t\t\tSOM.Incorporate(fraction: IncorpFraction, depth: 200);\t\t\t\r\n\t\t}\r\n\t}\r\n}\r\n\t   ",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        [Link] Plant Wheat;\r\n        [Description(\"Tillage date (d-mmm)\")]\r\n        public string TillDate { get; set; }\r\n        [Description(\"Incorporation fraction (0-1)\")]\r\n        public double IncorpFraction { get; set; }\r\n\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if ((!Wheat.IsAlive) && DateUtilities.WithinDates(TillDate, Clock.Today, TillDate))\r\n                SOM.Incorporate(fraction: IncorpFraction, depth: 200);            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "TillDate",
@@ -35117,7 +35039,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable] \r\n\tpublic class Script : Model\r\n\t{\r\n\r\n\t\t[Link] Plant Wheat;\r\n        \r\n       \r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tif (Wheat.IsReadyForHarvesting)\r\n\t\t\t{\r\n\t\t\t\tWheat.Harvest();\r\n\t\t\t\tWheat.EndCrop();\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n\t   ",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Plant Wheat;\r\n        \r\n       \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": null,
                               "Name": "Harvesting",
                               "IncludeInDocumentation": true,
