@@ -495,7 +495,12 @@ namespace Models.Report
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
             {
                 if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
+                    if (this.valuesToAggregate[0].GetType() == typeof(double))
+                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
+                    else if (this.valuesToAggregate[0].GetType() == typeof(int))
+                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
+                    else
+                        throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
                 else if (this.aggregationFunction.Equals("avg", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Average(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
@@ -507,7 +512,7 @@ namespace Models.Report
                 else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
                     result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture);
                 else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) - 
+                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) -
                                     Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
 
                 //if (!double.IsNaN(result))
