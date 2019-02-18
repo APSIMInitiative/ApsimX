@@ -837,33 +837,30 @@
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
             
-            if (MathUtilities.Sum(CPool) > 0.0)
+            FPoolProfile.Layer = new FOMPoolLayerType[deepestLayer + 1];
+
+            for (int layer = 0; layer <= deepestLayer; layer++)
             {
-                FPoolProfile.Layer = new FOMPoolLayerType[deepestLayer + 1];
-
-                for (int layer = 0; layer <= deepestLayer; layer++)
+                FPoolProfile.Layer[layer] = new FOMPoolLayerType()
                 {
-                    FPoolProfile.Layer[layer] = new FOMPoolLayerType()
-                    {
-                        thickness = soil.Thickness[layer],
-                        no3 = no3[layer],
-                        nh4 = nh4[layer],
-                        po4 = po4[layer],
-                        Pool = new FOMType[maxFr]
-                    };
+                    thickness = soil.Thickness[layer],
+                    no3 = no3[layer],
+                    nh4 = nh4[layer],
+                    po4 = po4[layer],
+                    Pool = new FOMType[maxFr]
+                };
 
-                    for (int i = 0; i < maxFr; i++)
-                        FPoolProfile.Layer[layer].Pool[i] = new FOMType()
-                        {
-                            C = CPool[i, layer],
-                            N = NPool[i, layer],
-                            P = PPool[i, layer],
-                            AshAlk = AshAlkPool[i, layer]
-                        };
-                }
-                if (IncorpFOMPool != null)
-                    IncorpFOMPool.Invoke(FPoolProfile);
+                for (int i = 0; i < maxFr; i++)
+                    FPoolProfile.Layer[layer].Pool[i] = new FOMType()
+                    {
+                        C = CPool[i, layer],
+                        N = NPool[i, layer],
+                        P = PPool[i, layer],
+                        AshAlk = AshAlkPool[i, layer]
+                    };
             }
+            if (IncorpFOMPool != null)
+                IncorpFOMPool.Invoke(FPoolProfile);
 
             for (int pool = 0; pool < maxFr; pool++)
             {
