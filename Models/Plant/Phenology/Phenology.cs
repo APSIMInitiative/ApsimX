@@ -144,6 +144,15 @@ namespace Models.PMF.Phen
             return -1;
         }
 
+        /// <summary>Look for a particular stage and return it's index or -1 if not found.</summary>
+        public int IndexFromStageName(string name)
+        {
+            for (int phaseIndex = 0; phaseIndex < phases.Count; phaseIndex++)
+                if (String.Equals(phases[phaseIndex].Start, name, StringComparison.OrdinalIgnoreCase))
+                    return phaseIndex;
+            return -1;
+        }
+
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
@@ -233,32 +242,20 @@ namespace Models.PMF.Phen
             return String.Equals(CurrentPhase.Name, phaseName, StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
-        public bool Between(String start, String end)
+        /// <summary> A utility function to return true if the simulation is currently between the specified start and end stages. </summary>
+        public bool Between(int start, int end)
         {
             if (phases == null)
                 return false;
 
-            int startPhaseIndex = -1;
-            int endPhaseIndex = -1;
-            int i= 0;
-            while (endPhaseIndex == -1 || i<phases.Count())
-            {
-                if (phases[i].Start == start)
-                    startPhaseIndex = i;
-                if (phases[i].End == end)
-                    endPhaseIndex = i;
-                i += 1;
-            }
-            
-            if (startPhaseIndex == -1)
+            if (start == -1)
                 throw new Exception("Cannot find phase: " + start);
-            if (endPhaseIndex == -1)
+            if (end == -1)
                 throw new Exception("Cannot find phase: " + end);
-            if (startPhaseIndex > endPhaseIndex)
+            if (start > end)
                 throw new Exception("Start phase " + start + " is after phase " + end);
 
-            return currentPhaseIndex >= startPhaseIndex && currentPhaseIndex <= endPhaseIndex;
+            return currentPhaseIndex >= start && currentPhaseIndex <= end;
         }
 
         /// <summary> A utility function to return true if the simulation is at or past the specified startstage.</summary>
