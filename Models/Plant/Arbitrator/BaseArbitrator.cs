@@ -137,7 +137,7 @@ namespace Models.PMF
                 double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
 
                 List<double[]> supplies = new List<double[]>();
-                List<Zone> zones = new List<Zone>();
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                     foreach (IOrgan o in Organs)
                         if (o is IWaterNitrogenUptake)
@@ -146,7 +146,7 @@ namespace Models.PMF
                             if (organSupply != null)
                             {
                                 supplies.Add(organSupply);
-                                zones.Add(zone.Zone);
+                                zones.Add(zone);
                                 waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
                             }
                         }
