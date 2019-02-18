@@ -154,7 +154,7 @@ namespace Models.Core.ApsimFile
                     decl.TypeName = match.Groups["TypeName"].Value;
                     decl.InstanceName = match.Groups["InstanceName"].Value;
                     decl.Attributes = new List<string>();
-                    decl.IsEvent = lines.Contains("event");
+                    decl.IsEvent = lines[i].Contains("event");
                     decl.IsPrivate = !decl.IsEvent && match.Groups["Access"].Value.TrimEnd() != "public";
                     if (match.Groups["Link"].Success)
                     {
