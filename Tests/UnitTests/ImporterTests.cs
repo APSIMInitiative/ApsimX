@@ -136,19 +136,19 @@
             Assert.AreEqual(sw.WinterCona, 2);
             Assert.AreEqual(sw.WinterU, 2);
 
-            Assert.IsTrue(s.Children[3] is SoilOrganicMatter);
+            Assert.IsTrue(s.Children[3] is SoilNitrogen);
 
-            SoilOrganicMatter som = s.Children[3] as SoilOrganicMatter;
+            SoilOrganicMatter som = s.Children[4] as SoilOrganicMatter;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(som.OC, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
-            Analysis a = s.Children[4] as Analysis;
+            Analysis a = s.Children[5] as Analysis;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
 
-            Sample sam = s.Children[5] as Sample;
+            Sample sam = s.Children[6] as Sample;
             Assert.AreEqual(sam.Thickness, new double[] { 150, 150, 300 });
             Assert.AreEqual(sam.NO3, new double[] { 6.5, 2.1, 2.1 });
             Assert.AreEqual(sam.NH4, new double[] { 0.5, 0.1, 0.1 });
