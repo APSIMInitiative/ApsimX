@@ -39,12 +39,19 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Reset();
+        }
+
+        /// <summary>
+        /// Set solute to initialisation state
+        /// </summary>
+        public void Reset()
+        {
             double[] initialppm = Apsim.Get(soil, "Initial" + Name + "N", true) as double[];
             if (initialppm == null)
                 initialppm = new double[soil.Thickness.Length];
             kgha = soil.ppm2kgha(initialppm);
         }
-
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>
