@@ -495,7 +495,7 @@ namespace Models.Report
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
             {
                 if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Sum(this.valuesToAggregate);
+                    result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
                 else if (this.aggregationFunction.Equals("avg", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Average(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
