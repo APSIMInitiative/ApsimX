@@ -407,7 +407,16 @@
                     manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
                     managerChanged = true;
                 }
-
+                if (manager.Replace("soil.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("soil1.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
                 var declarations = manager.GetDeclarations();
                 if (declarations.RemoveAll(declaration => declaration.TypeName == "SoluteManager") > 0)
                 {
