@@ -603,7 +603,7 @@ namespace Models.Core.ApsimFile
                 {
                     if (method.Arguments.Count == 2)
                     {
-                        method.Arguments.Insert(1, "SoluteManager.SoluteSetterType.Fertiliser");
+                        method.Arguments.Insert(1, "SoluteSetterType.Fertiliser");
                         manager.SetMethodCall(method);
                     }
                 }

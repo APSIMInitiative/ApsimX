@@ -2712,7 +2712,7 @@ namespace Models.Soils
                         solute_n[node] = Ctot;
                         dlt_solute_s[node] = Ctot - cslstart[solnum][node];
                     }
-                    soluteManager.SetSolute(solute_names[solnum], SoluteManager.SoluteSetterType.Soil, solute_n);
+                    soluteManager.SetSolute(solute_names[solnum], SoluteSetterType.Soil, solute_n);
                 }
             }
         }

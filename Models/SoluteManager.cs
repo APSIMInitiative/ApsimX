@@ -15,32 +15,17 @@
     [ValidParent(ParentType = typeof(Zone))]
     public class SoluteManager : Model
     {
-        /// <summary>List of all solutes</summary>
-        private List<Solute> solutes = null;
-
-        /// <summary>List of all models that have solutes.</summary>
-        [Link]
-        private List<ISolute> soluteModels = null;
-
-        /// <summary>The known types of solute setters.</summary>
-        public enum SoluteSetterType
-        {
-            /// <summary>The setting model is a plant model</summary>
-            Plant,
-            /// <summary>The setting model is a soil model</summary>
-            Soil,
-            /// <summary>The setting model is a fertiliser model</summary>
-            Fertiliser
-        }
+        /// <summary>List of all solutes.</summary>
+        private Dictionary<string, ISolute> solutes = new Dictionary<string, ISolute>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>Return a list of solute names.</summary>
         public string[] SoluteNames
         {
             get
             {
-                if (solutes == null)
+                if (solutes.Count == 0)
                     FindSolutes();
-                return solutes.Select(solute => solute.Name).ToArray();
+                return solutes.Keys.ToArray();
             }
         }
         
@@ -50,12 +35,7 @@
         /// <param name="name">Name of solute</param>
         public double[] GetSolute(string name)
         {
-            if (solutes == null)
-                FindSolutes();
-            Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (foundSolute == null)
-                throw new Exception("Cannot find solute: " + name);
-            return foundSolute.GetValue();
+            return FindSolute(name).kgha;
         }
 
         /// <summary>
@@ -66,10 +46,8 @@
         /// <param name="value">Value of solute</param>
         public void SetSolute(string name, SoluteSetterType callingModelType, double[] value)
         {
-            Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (foundSolute == null)
-                throw new Exception("Cannot find solute: " + name);
-            foundSolute.SetValue(callingModelType, value);
+            var solute = FindSolute(name);
+            solute.SetKgHa(callingModelType, value);
         }
 
         /// <summary>
@@ -80,10 +58,8 @@
         /// <param name="delta">Delta values to be added to solute</param>
         public void Add(string name, SoluteSetterType callingModelType, double[] delta)
         {
-            Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (foundSolute == null)
-                throw new Exception("Cannot find solute: " + name);
-            foundSolute.SetValue(callingModelType, MathUtilities.Add(foundSolute.GetValue(), delta));
+            var solute = FindSolute(name);
+            solute.AddKgHaDelta(callingModelType, delta);
         }
 
         /// <summary>
@@ -95,13 +71,11 @@
         /// <param name="delta">Value to be added to top layer of solute</param>
         public void AddToLayer(int layerIndex, string name, SoluteSetterType callingModelType, double delta)
         {
-            Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (foundSolute == null)
-                throw new Exception("Cannot find solute: " + name);
+            var solute = FindSolute(name);
 
-            double[] values = foundSolute.GetValue();
+            double[] values = solute.kgha;
             values[layerIndex] += delta;
-            foundSolute.SetValue(callingModelType, values);
+            solute.SetKgHa(callingModelType, values);
         }
 
         /// <summary>
@@ -112,10 +86,8 @@
         /// <param name="delta">Delta values to be subtracted from solute</param>
         public void Subtract(string name, SoluteSetterType callingModelType, double[] delta)
         {
-            Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (foundSolute == null)
-                throw new Exception("Cannot find solute: " + name);
-            foundSolute.SetValue(callingModelType, MathUtilities.Subtract(foundSolute.GetValue(), delta));
+            var solute = FindSolute(name);
+            solute.SetKgHa(callingModelType, MathUtilities.Subtract(solute.kgha, delta));
         }
 
         /// <summary>Performs the initial checks and setup</summary>
@@ -124,62 +96,31 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (solutes == null)
-                FindSolutes();
+            FindSolutes();
+        }
+
+        /// <summary>
+        /// Find a solute. Throw exception if not found.
+        /// </summary>
+        /// <param name="name">Name of solute.</param>
+        private ISolute FindSolute(string name)
+        {
+            FindSolutes();
+            ISolute foundSolute;
+            solutes.TryGetValue(name, out foundSolute);
+            if (foundSolute == null)
+                throw new Exception("Cannot find solute: " + name);
+            return foundSolute;
         }
 
         /// <summary>Find all solutes.</summary>
         private void FindSolutes()
         {
-            solutes = new List<Solute>();
-            // Find all solutes.
-            foreach (IModel soluteModel in soluteModels)
+            if (solutes.Count == 0)
             {
-                foreach (PropertyInfo property in soluteModel.GetType().GetProperties())
-                {
-                    if (ReflectionUtilities.GetAttribute(property, typeof(SoluteAttribute), false) != null)
-                    {
-                        string setterName = "Set" + property.Name;
-                        MethodInfo setterMethod = soluteModel.GetType().GetMethod(setterName);
-                        solutes.Add(new Solute() { model = soluteModel, property = property, setMethod = setterMethod});
-                    }
-                }
-
-                PropertyInfo kgha = soluteModel.GetType().GetProperty("kgha");
-                if (kgha != null)
-                    solutes.Add(new Solute() { model = soluteModel, property = kgha });
-            }
-        }
-
-        /// <summary>
-        /// Internal solute class.
-        /// </summary>
-        [Serializable]
-        private class Solute
-        {
-            public PropertyInfo property;
-            public MethodInfo setMethod;
-            public IModel model;
-            public string Name
-            {
-                get
-                {
-                    if (property.Name == "kgha")
-                        return model.Name;
-                    else
-                        return property.Name;
-                }
-            }
-            public double[] GetValue()
-            {
-                return (double[])property.GetValue(model);
-            }
-            public void SetValue(SoluteSetterType callingModelType, double[] value)
-            {
-                if (setMethod == null)
-                    property.SetValue(model, value);
-                else
-                    setMethod.Invoke(model, new object[] { callingModelType, value });
+                // Find all solutes.
+                foreach (var solute in Apsim.FindAll(this, typeof(ISolute)).Cast<ISolute>())
+                    solutes.Add(solute.Name, solute);
             }
         }
     }
