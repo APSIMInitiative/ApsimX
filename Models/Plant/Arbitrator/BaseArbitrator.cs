@@ -170,7 +170,7 @@ namespace Models.PMF
                 for (int i = 0; i < supplies.Count; i++)
                 {
                     // Just send uptake from my zone
-                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
+                    ZoneWaterAndN uptake = new ZoneWaterAndN(soilstate.Zones[0]);
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
@@ -238,7 +238,7 @@ namespace Models.PMF
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
+                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone);
 
                     UptakeDemands.NO3N = new double[zone.NO3N.Length];
                     UptakeDemands.NH4N = new double[zone.NH4N.Length];
