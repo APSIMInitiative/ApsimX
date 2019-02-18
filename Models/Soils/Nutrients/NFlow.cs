@@ -78,9 +78,20 @@ namespace Models.Soils.Nutrients
 
             for (int i= 0; i < source.Length; i++)
             {
-                double nitrogenFlow = rate.Value(i) * source[i];
-                Natm[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
-                N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
+                double nitrogenFlow = 0;
+                if (source[i]>0)
+                    nitrogenFlow = rate.Value(i) * source[i];
+
+                if (nitrogenFlow > 0)
+                    Natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                else
+                    Natm[i] = 0;
+
+                if (Natm[i] > 0)
+                    N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
+                else
+                    N2Oatm[i] = 0;
+
                 double nitrogenFlowToDestination = nitrogenFlow - Natm[i];
 
                 if (destination == null && NLoss.Value(i) != 1)
