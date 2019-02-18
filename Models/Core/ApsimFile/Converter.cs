@@ -367,6 +367,21 @@
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 bool managerChanged = false;
+                if (manager.Replace("mySoil.NO3N", "NO3.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "NO3", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("mySoil.NH4N", "NH4.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "NH4", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("mySoil.UreaN", "Urea.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "Urea", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
                 if (manager.Replace("Soil.NO3N", "NO3.kgha"))
                 {
                     manager.AddDeclaration("ISolute", "NO3", new string[] { "[ScopedLinkByName]" });
@@ -382,10 +397,24 @@
                     manager.AddDeclaration("ISolute", "Urea", new string[] { "[ScopedLinkByName]" });
                     managerChanged = true;
                 }
+                if (manager.Replace("mySoil.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
                 if (manager.Replace("Soil.SoilNitrogen.", "SoilNitrogen."))
                 {
                     manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
                 }
+
+                var declarations = manager.GetDeclarations();
+                if (declarations.RemoveAll(declaration => declaration.TypeName == "SoluteManager") > 0)
+                {
+                    manager.SetDeclarations(declarations);
+                    managerChanged = true;
+                }
+
                 if (managerChanged)
                 {
                     var usingLines = manager.GetUsingStatements().ToList();
