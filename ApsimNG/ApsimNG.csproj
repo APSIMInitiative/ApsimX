@@ -449,6 +449,13 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostLabour.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FactorialAnova.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNH4.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNO3.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenUrea.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenNH4.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenNO3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionAdvanced.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItem.png" />
@@ -690,6 +697,7 @@
     <EmbeddedResource Include="Resources\MorrisGrid3.png" />
     <EmbeddedResource Include="Resources\MorrisGrid4.png" />
     <EmbeddedResource Include="Resources\SobolParameterDistributions.png" />
+    <EmbeddedResource Include="Resources\AnovaSampleGrid.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

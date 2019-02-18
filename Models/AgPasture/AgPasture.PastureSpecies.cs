@@ -232,13 +232,14 @@ namespace Models.AgPasture
         /// <param name="rowSpacing">The space between rows</param>
         /// <param name="maxCover">The maximum ground cover (optional)</param>
         /// <param name="budNumber">The number of buds (optional)</param>
+        /// <param name="rowConfig">The row configuration.</param>
         /// <remarks>
         /// For AgPasture species the sow parameters are not used, the command to sow simply enables the plant to grow. This is done
         /// by setting the plant status to 'alive'. From this point germination processes takes place and eventually emergence occurs.
         /// At emergence, plant DM is set to its default minimum value, allocated according to EmergenceFractions and with
         /// optimum N concentration. Plant height and root depth are set to their minimum values.
         /// </remarks>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
             if (isAlive)
                 mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing");
@@ -447,8 +448,8 @@ namespace Models.AgPasture
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
                 if (myRoot != null)
                 {
-                    myRoot.solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, zone.NO3N);
-                    myRoot.solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, zone.NH4N);
+                    myRoot.solutes.Subtract("NO3", SoluteSetterType.Plant, zone.NO3N);
+                    myRoot.solutes.Subtract("NH4", SoluteSetterType.Plant, zone.NH4N);
 
                     mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
                     mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);

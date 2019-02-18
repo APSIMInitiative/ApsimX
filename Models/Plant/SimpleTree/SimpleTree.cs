@@ -277,20 +277,21 @@ namespace Models.PMF
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
-            solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
+            solutes.Subtract("NO3", SoluteSetterType.Plant, NO3Uptake);
+            solutes.Subtract("NH4", SoluteSetterType.Plant, NH4Uptake);
         }
 
 
 
-       /// <summary>Sows the plant</summary>
+        /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        /// <param name="rowConfig">The row configuration.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
 
         }

@@ -161,7 +161,6 @@ namespace Models.CLEM
                     EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
                 }
             }
-
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

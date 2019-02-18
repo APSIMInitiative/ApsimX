@@ -77,7 +77,7 @@ namespace Models.PMF.Phen
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
                     double[] zadok_code_y = { 30.0, 33, 39.0, 65.0, 71.0, 87.0, 90.0};
-                    double[] zadok_code_x = { 3.9, 4.9, 5.0, 6.0, 7.0, 8.0, 9.0};
+                    double[] zadok_code_x = { 4.3, 4.9, 5.0, 6.0, 7.0, 8.0, 9.0};
                     bool DidInterpolate;
                     zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                zadok_code_x, zadok_code_y,

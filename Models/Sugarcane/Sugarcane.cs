@@ -12119,7 +12119,8 @@ namespace Models
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        /// <param name="rowConfig">The row configuration.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
             {
             SowNewPlant(population, depth, cultivar);
             }
@@ -14217,8 +14218,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                solutes.Add("NO3", SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteSetterType.Plant, l_dlt_NH4);
 
 
 
@@ -14244,8 +14245,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                solutes.Add("NO3", SoluteSetterType.Plant, l_dlt_NO3);
+                solutes.Add("NH4", SoluteSetterType.Plant, l_dlt_NH4);
             }
             else
                 {
