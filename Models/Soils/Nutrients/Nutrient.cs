@@ -72,8 +72,10 @@
         NutrientPool FOMLignin = null;
         [ChildLinkByName]
         NutrientPool SurfaceResidue = null;
-        [Link]
-        private SoluteManager solutes = null;
+        [ScopedLinkByName]
+        private ISolute NO3 = null;
+        [ScopedLinkByName]
+        private ISolute NH4 = null;
 
         // Carbon content of FOM
         private double CinFOM = 0.4;
@@ -184,10 +186,10 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                double[] NH4 = solutes.GetSolute("NH4");
-                double[] NO3 = solutes.GetSolute("NO3");
-                values = MathUtilities.Add(values, NH4);
-                values = MathUtilities.Add(values, NO3);
+                double[] nh4 = NH4.kgha;
+                double[] no3 = NO3.kgha;
+                values = MathUtilities.Add(values, nh4);
+                values = MathUtilities.Add(values, no3);
                 return values;
             }
         }
@@ -214,13 +216,13 @@
         {
             get
             {
-                double[] NH4 = solutes.GetSolute("NH4");
-                double[] NO3 = solutes.GetSolute("NO3");
+                double[] nh4 = NH4.kgha;
+                double[] no3 = NO3.kgha;
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < FOMLignin.C.Length; i++)
                     values[i] = MathUtilities.Divide(FOMCarbohydrate.C[i] + FOMCellulose.C[i] + FOMLignin.C[i],
-                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + NH4[i] + NO3[i], 0.0);
+                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + nh4[i] + no3[i], 0.0);
 
                 return values;
             }
