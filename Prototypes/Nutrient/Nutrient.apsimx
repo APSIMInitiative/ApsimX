@@ -4309,20 +4309,6 @@
                 "Location": "350, 350",
                 "Colour": "White",
                 "OutlineColour": "White"
-              },
-              {
-                "$type": "Models.Graph.Node, Models",
-                "Name": "PlantAvailableNO3",
-                "Location": "50, 50",
-                "Colour": "LightCoral",
-                "OutlineColour": "Black"
-              },
-              {
-                "$type": "Models.Graph.Node, Models",
-                "Name": "PlantAvailableNH4",
-                "Location": "200, 50",
-                "Colour": "LightCoral",
-                "OutlineColour": "Black"
               }
             ],
             "Arcs": [
@@ -6134,44 +6120,6 @@
               "PHUnits": 0,
               "Name": "Initial conditions",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Nutrients.Solute, Models",
-              "kgha": null,
-              "Name": "PlantAvailableNO3",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Nutrients.Solute, Models",
-              "kgha": null,
-              "Name": "PlantAvailableNH4",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This pool simulates the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize [jones_ceres-maize:_1986].",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
