@@ -32,9 +32,11 @@
         [Link]
         private IWeather weather = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
+        /// <summary>Link to NO3 solute.</summary>
+        private ISolute NO3Solute = null;
+
+        /// <summary>Link to NH4 solute.</summary>
+        private ISolute NH4Solute = null;
 
         /// <summary>Link to the soil N model</summary>
         [Link]
@@ -377,6 +379,8 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
+            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
             Reset();
         }
 
@@ -652,8 +656,12 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                solutes.AddToLayer(0, "NH4", SoluteSetterType.Soil, nh4Incorp);
-                solutes.AddToLayer(0, "NO3", SoluteSetterType.Soil, no3Incorp);
+                var delta = new double[soil.Thickness.Length];
+                delta[0] = no3Incorp;
+                NO3Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
+
+                delta[0] = nh4Incorp;
+                NH4Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
             }
 
             for (int i = 0; i < numSurfom; i++)

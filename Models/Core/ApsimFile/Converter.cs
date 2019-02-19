@@ -14,7 +14,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 53; } }
+        public static int LatestVersion { get { return 54; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -346,13 +346,99 @@
                 }
             }
         }
-        
-		/// <summary>
-        /// Changes initial Root Wt to an array.
+
+        /// <summary>
+        /// Remove SoluteManager.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion54(JObject root, string fileName)
+        {
+            foreach (var soluteManager in JsonUtilities.ChildrenOfType(root, "SoluteManager"))
+                soluteManager.Remove();
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].NO3N", "[Soil].SoilNitrogen.NO3.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].NH4N", "[Soil].SoilNitrogen.NH4.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].UreaN", "[Soil].SoilNitrogen.Urea.kgha");
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool managerChanged = false;
+                if (manager.Replace("mySoil.NO3N", "NO3.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "NO3", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("mySoil.NH4N", "NH4.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "NH4", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("mySoil.UreaN", "Urea.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "Urea", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("Soil.NO3N", "NO3.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "NO3", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("Soil.NH4N", "NH4.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "NH4", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("Soil.UreaN", "Urea.kgha"))
+                {
+                    manager.AddDeclaration("ISolute", "Urea", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("mySoil.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("Soil.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("soil.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                if (manager.Replace("soil1.SoilNitrogen.", "SoilNitrogen."))
+                {
+                    manager.AddDeclaration("SoilNitrogen", "SoilNitrogen", new string[] { "[ScopedLinkByName]" });
+                    managerChanged = true;
+                }
+                var declarations = manager.GetDeclarations();
+                if (declarations.RemoveAll(declaration => declaration.TypeName == "SoluteManager") > 0)
+                {
+                    manager.SetDeclarations(declarations);
+                    managerChanged = true;
+                }
+
+                if (managerChanged)
+                {
+                    var usingLines = manager.GetUsingStatements().ToList();
+                    usingLines.Add("Models.Interfaces");
+                    manager.SetUsingStatements(usingLines);
+                    manager.Save();
+                }
+            }
+        }
+        /// <summary>
+        /// Changes initial Root Wt to an array.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion55(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
