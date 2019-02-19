@@ -454,8 +454,11 @@ namespace Models.AgPasture
         /// <summary>Soil nitrogen model.</summary>
         private INutrient SoilNitrogen;
 
-        /// <summary>The solute manager in this zone</summary>
-        public SoluteManager solutes = null;
+        /// <summary>The NO3 solute.</summary>
+        public ISolute NO3 = null;
+
+        /// <summary>The NH4 solute.</summary>
+        public ISolute NH4 = null;
 
         /// <summary>The collection of tissues for this organ.</summary>
         internal RootTissue[] Tissue { get; set; }
@@ -534,9 +537,8 @@ namespace Models.AgPasture
             myZoneName = mySoil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
-            solutes = Apsim.Find(mySoil, typeof(SoluteManager)) as SoluteManager;
-            if (solutes == null)
-                throw new Exception("Cannot find solute manager in zone");
+            NO3 = Apsim.Find(mySoil, "NO3") as ISolute;
+            NH4 = Apsim.Find(mySoil, "NH4") as ISolute;
 
             SoilNitrogen = Apsim.Find(mySoil, typeof(INutrient)) as INutrient;
             if (SoilNitrogen == null)

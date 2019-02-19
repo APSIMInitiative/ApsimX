@@ -414,7 +414,6 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
-    <Compile Include="SoluteManager.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
     <Compile Include="Stock\grazenv.cs" />
