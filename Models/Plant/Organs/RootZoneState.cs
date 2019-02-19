@@ -2,6 +2,7 @@
 using Models.Core;
 using System;
 using Models.Functions;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -12,8 +13,11 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil soil = null;
 
-        /// <summary>The solute manager in this zone</summary>
-        public SoluteManager solutes = null;
+        /// <summary>The NO3 solute.</summary>
+        public ISolute NO3 = null;
+
+        /// <summary>The NH4 solute.</summary>
+        public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
         private Plant plant = null;
@@ -112,9 +116,8 @@ namespace Models.PMF.Organs
             Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            solutes = Apsim.Child(zone, typeof(SoluteManager)) as SoluteManager;
-            if (solutes == null)
-                throw new Exception("Cannot find solute manager in zone");
+            NO3 = Apsim.Find(zone, "NO3") as ISolute;
+            NH4 = Apsim.Find(zone, "NH4") as ISolute;
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
