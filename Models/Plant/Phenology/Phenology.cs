@@ -148,8 +148,12 @@ namespace Models.PMF.Phen
         public int IndexFromStageName(string name)
         {
             for (int phaseIndex = 0; phaseIndex < phases.Count; phaseIndex++)
+            {
                 if (String.Equals(phases[phaseIndex].Start, name, StringComparison.OrdinalIgnoreCase))
                     return phaseIndex;
+                else if (String.Equals(phases[phaseIndex].End, name, StringComparison.OrdinalIgnoreCase))
+                    return phaseIndex + 1;
+            }
             return -1;
         }
 
@@ -255,7 +259,7 @@ namespace Models.PMF.Phen
             if (start > end)
                 throw new Exception("Start phase " + start + " is after phase " + end);
 
-            return currentPhaseIndex >= start && currentPhaseIndex <= end;
+            return Stage >= start && Stage <= end;
         }
 
         /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
