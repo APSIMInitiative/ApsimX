@@ -386,9 +386,9 @@ namespace Models.Soils
         [Link]
         ISummary Summary = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
+        /// <summary>Link to NO3.</summary>
         [Link]
-        private SoluteManager solutes = null;
+        private List<ISolute> solutes = null;
 
         // Module Constants (Default Values) (NOT specified in GUI)
 
@@ -1485,16 +1485,8 @@ namespace Models.Soils
         /// </summary>
         private void GetTodaysSoluteAmounts()
         {
-            //for the number of solutes that was read in by OnNewSolute event handler)
-            foreach (SoluteInLayer sol in SoilObject.GetAllSolutesInALayer())
-            {
-                object objValue = solutes.GetSolute(sol.name);
-                if (objValue != null)
-                {
-                    double[] value = objValue as double[];
-                    SoilObject.UpdateSoluteAmounts(sol.name, value);
-                }
-            }
+            foreach (var solute in solutes)
+                SoilObject.UpdateSoluteAmounts(solute.Name, solute.kgha);
         }
 
         //EVENT HANDLERS
@@ -1506,18 +1498,18 @@ namespace Models.Soils
         /// </summary>
         private void FindSolutes()
         {
-            foreach (string soluteName in solutes.SoluteNames)
+            foreach (var solute in solutes)
             {
-                bool isMobile = (PositionInCharArray(soluteName, mobile_solutes) >= 0);
-                bool isImmobile = (PositionInCharArray(soluteName, immobile_solutes) >= 0);
+                bool isMobile = (PositionInCharArray(solute.Name, mobile_solutes) >= 0);
+                bool isImmobile = (PositionInCharArray(solute.Name, immobile_solutes) >= 0);
                 if (!isMobile && !isImmobile)
-                    throw new ApsimXException(this, "No solute mobility information for " + soluteName + " , please specify as mobile or immobile in the SoilWater ini file.");
+                    throw new ApsimXException(this, "No solute mobility information for " + solute.Name + " , please specify as mobile or immobile in the SoilWater ini file.");
 
                 //Add the solute to each layer of the Soil
                 foreach (Layer lyr in SoilObject)
                 {
-                    SoluteInLayer newSolute = new SoluteInLayer(soluteName, null, isMobile);
-                    if (lyr.GetASolute(soluteName) == null)
+                    SoluteInLayer newSolute = new SoluteInLayer(solute.Name, null, isMobile);
+                    if (lyr.GetASolute(solute.Name) == null)
                     {
                         lyr.AddSolute(newSolute);
                     }
@@ -1765,12 +1757,13 @@ namespace Models.Soils
         /// Sends the nitrogen changed event.
         /// </summary>
         private void SendNitrogenChangedEvent()
+        {
+            foreach (var solute in solutes)
             {
-            solutes.Add("Urea",SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("urea"));
-            solutes.Add("NH4", SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NH4"));
-            solutes.Add("NO3", SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("NO3"));
-            if(solutes.SoluteNames.Contains("Chloride"))
-                solutes.Add("Chloride", SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute("Chloride"));
+                bool isMobile = (PositionInCharArray(solute.Name, mobile_solutes) >= 0);
+                if (isMobile)
+                    solute.AddKgHaDelta(SoluteSetterType.Soil, SoilObject.GetDeltaArrayForASolute(solute.Name));
+            }
         }
 
     }
