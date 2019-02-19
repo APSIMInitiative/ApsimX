@@ -656,13 +656,12 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                var values = NO3Solute.kgha;
-                values[0] = no3Incorp;
-                NO3Solute.SetKgHa(SoluteSetterType.Soil, values);
+                var delta = new double[soil.Thickness.Length];
+                delta[0] = no3Incorp;
+                NO3Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
 
-                values = NH4Solute.kgha;
-                values[0] = nh4Incorp;
-                NH4Solute.SetKgHa(SoluteSetterType.Soil, values);
+                delta[0] = nh4Incorp;
+                NH4Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
             }
 
             for (int i = 0; i < numSurfom; i++)
