@@ -259,7 +259,7 @@ namespace Models.PMF.Phen
             if (start > end)
                 throw new Exception("Start phase " + start + " is after phase " + end);
 
-            return Stage >= start && Stage < end;
+            return Stage >= start && Stage <= end;
         }
 
         /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
@@ -363,7 +363,9 @@ namespace Models.PMF.Phen
 
                     currentPhaseIndex = currentPhaseIndex + 1;
 
-                        PhaseChangedType PhaseChangedData = new PhaseChangedType();
+                    Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+
+                    PhaseChangedType PhaseChangedData = new PhaseChangedType();
                         PhaseChangedData.StageName = CurrentPhase.Start;
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
