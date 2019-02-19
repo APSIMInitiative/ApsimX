@@ -9,11 +9,11 @@ using Models.Soils;
 
 namespace Models.Functions
 {
-    /// <summary>Fraction of NH4 which nitrifies today</summary>
+    /// <summary>Water factor for daily soil organic matter mineralisation</summary>
     /// \pre All children have to contain a public function "Value"
     /// \retval fraction of NH4 nitrified.
     [Serializable]
-    [Description("Mineralisation Temperature Factor from CERES-Maize")]
+    [Description("Mineralisation Water Factor from CERES-Maize")]
     public class CERESMineralisationWaterFactor : Model, IFunction, ICustomDocumentation
     {
 
@@ -34,13 +34,13 @@ namespace Models.Functions
             else if (soil.SoilWater.SW[arrayIndex] < soil.DUL[arrayIndex])
                 if (soil.SoilType!=null)
                     if (soil.SoilType.ToLower()=="sand")
-                        WF = 0.05+0.95*Math.Min(1, 2 * (soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex]) / (soil.DUL[arrayIndex] - soil.LL15[arrayIndex]));
+                        WF = 0.05+0.95*Math.Min(1, 2 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex], soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
                     else
-                        WF = Math.Min(1, 2 * (soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex]) / (soil.DUL[arrayIndex] - soil.LL15[arrayIndex]));
+                        WF = Math.Min(1, 2 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex], soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
                 else
-                    WF = Math.Min(1, 2 * (soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex]) / (soil.DUL[arrayIndex] - soil.LL15[arrayIndex]));
+                    WF = Math.Min(1, 2 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex],soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
             else
-                WF = 1 - 0.5 * ((soil.SoilWater.SW[arrayIndex] - soil.DUL[arrayIndex]) / (soil.SAT[arrayIndex] - soil.DUL[arrayIndex]));
+                WF = 1 - 0.5 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.DUL[arrayIndex], soil.SAT[arrayIndex] - soil.DUL[arrayIndex],0.0);
 
             return WF;
         }

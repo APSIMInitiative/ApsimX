@@ -233,6 +233,7 @@
     <Compile Include="Functions\DailyMeanVPD.cs" />
     <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESUreaHydrolysisModel.cs" />
     <Compile Include="Functions\SoilFunctions\CERESMineralisationWaterFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESMineralisationTemperatureFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESNitrificationModel.cs" />
