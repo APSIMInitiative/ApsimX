@@ -5690,123 +5690,44 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "NLoss",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.CERESNitrificationModel, Models",
                       "Name": "Rate",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Potential nitrification rate is assumed to follow Michaelis-Menton kinetics. Daily nitrification rate is estimated from this potential rate as affected by soil water, temperature and pH conditions.",
-                          "Name": "Memo",
+                          "$type": "Models.Functions.CERESNitrificationWaterFactor, Models",
+                          "Name": "CERESNitrificationWaterFactor",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "40/([Nutrient].NH4.ppm+90)",
-                          "Name": "MichaelisMenton",
+                          "$type": "Models.Functions.CERESNitrificationpHFactor, Models",
+                          "Name": "CERESNitrificationpHFactor",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MinimumFunction, Models",
-                          "Name": "PNI",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[SoilWaterScale]",
-                              "Name": "WF",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SoilWaterScale, Models",
-                                  "Name": "SoilWaterScale",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    0.25,
-                                    1.0,
-                                    2.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    1.0,
-                                    1.0,
-                                    0.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
-                              "Name": "TF",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Soil].PH",
-                              "Name": "pHF",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    4.5,
-                                    6.0,
-                                    8.0,
-                                    9.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    1.0,
-                                    1.0,
-                                    0.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                          "Name": "CERESMineralisationTemperatureFactor",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "NLoss",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
