@@ -697,7 +697,7 @@
     <EmbeddedResource Include="Resources\MorrisGrid4.png" />
     <EmbeddedResource Include="Resources\SobolParameterDistributions.png" />
     <EmbeddedResource Include="Resources\AnovaSampleGrid.png" />
-    <Content Include="Resources\ArbitratorSequenceDiagram.png" />
+    <EmbeddedResource Include="Resources\ArbitratorSequenceDiagram.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
