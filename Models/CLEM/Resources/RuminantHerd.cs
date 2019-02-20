@@ -163,6 +163,8 @@ namespace Models.CLEM.Resources
 
                         female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2)) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
+                        female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                        female.SuccessfulPregnancy = true;
                     }
                 }
             }

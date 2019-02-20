@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 47,
+  "Version": 51,
   "Name": "Simulations",
   "Children": [
     {
@@ -45,11 +45,6 @@
             "[Eucalyptus].Wood.Wt",
             "[Eucalyptus].Leaf.CoverGreen",
             "[Eucalyptus].Leaf.LAI",
-            "[Eucalyptus].Leaf.Fn",
-            "[Eucalyptus].Leaf.Fw",
-            "[Eucalyptus].Leaf.Photosynthesis.FT.Value()",
-            "[Eucalyptus].Leaf.Photosynthesis.FVPD.Value()",
-            "[Eucalyptus].Leaf.Photosynthesis.RueAct",
             "[Eucalyptus].TotalLive.Wt",
             "[Eucalyptus].IndividualTreeLiveWt.Value()",
             "[Eucalyptus].IndividualTreeStemWt.Value()",
@@ -214,7 +209,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -223,7 +220,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -288,7 +287,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -297,7 +298,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -362,7 +365,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -371,7 +376,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -436,7 +443,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -445,7 +454,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -510,7 +521,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -519,7 +532,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -584,7 +599,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -593,7 +610,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -658,7 +677,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -667,7 +688,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -732,7 +755,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -741,7 +766,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -806,7 +833,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -815,7 +844,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -1430,6 +1461,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": false,
@@ -1507,7 +1540,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -1516,7 +1551,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -1599,7 +1636,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -1608,7 +1647,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -1751,7 +1792,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -1760,7 +1803,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -6677,6 +6722,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -8860,7 +8907,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -8869,7 +8918,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -8952,7 +9003,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -8961,7 +9014,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -9044,7 +9099,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -9053,7 +9110,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -9136,7 +9195,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -9145,7 +9206,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 100.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -9814,6 +9877,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": false,
@@ -9823,6 +9888,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "SCRUM",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "SCRUM",
                           "Name": "SCRUM",
                           "IncludeInDocumentation": false,
@@ -10028,7 +10095,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10037,7 +10106,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10150,7 +10221,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10159,7 +10232,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10168,7 +10243,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10281,7 +10358,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10290,7 +10369,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10373,7 +10454,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10382,7 +10465,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10465,7 +10550,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10474,7 +10561,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11154,6 +11243,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -11264,7 +11355,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11273,7 +11366,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11356,7 +11451,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11365,7 +11462,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11418,7 +11517,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11427,7 +11528,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12725,6 +12828,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -13419,7 +13524,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13428,7 +13535,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13511,7 +13620,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13520,7 +13631,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13603,7 +13716,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13612,7 +13727,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -14300,6 +14417,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -14419,7 +14538,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -14428,7 +14549,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -14511,7 +14634,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -14520,7 +14645,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -14603,7 +14730,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -14612,7 +14741,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -14695,7 +14826,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -14704,7 +14837,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -15401,6 +15536,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -15521,7 +15658,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15530,7 +15669,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15613,7 +15754,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15622,7 +15765,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15705,7 +15850,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15714,7 +15861,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -15779,7 +15928,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15788,7 +15939,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -15871,7 +16024,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15880,7 +16035,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -16508,6 +16665,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": false,
@@ -17127,6 +17286,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": false,
@@ -17220,7 +17381,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -17229,7 +17392,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -17312,7 +17477,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -17321,7 +17488,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -18039,6 +18208,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -18137,7 +18308,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -18146,7 +18319,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -18229,7 +18404,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -18238,7 +18415,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -18956,6 +19135,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -19068,7 +19249,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -19077,7 +19260,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -19160,7 +19345,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -19169,7 +19356,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -19252,7 +19441,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -19261,7 +19452,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -19314,7 +19507,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -19323,7 +19518,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
@@ -19381,7 +19578,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -19390,7 +19589,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -19473,7 +19674,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -19482,7 +19685,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -20200,6 +20405,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -20317,7 +20524,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -20326,7 +20535,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -20409,7 +20620,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -20418,7 +20631,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21083,7 +21298,9 @@
                                       "Inverted": true,
                                       "Minimum": "NaN",
                                       "Maximum": "NaN",
-                                      "Interval": "NaN"
+                                      "Interval": "NaN",
+                                      "DateTimeAxis": false,
+                                      "CrossesAtZero": false
                                     },
                                     {
                                       "$type": "Models.Graph.Axis, Models",
@@ -21092,7 +21309,9 @@
                                       "Inverted": false,
                                       "Minimum": "NaN",
                                       "Maximum": "NaN",
-                                      "Interval": "NaN"
+                                      "Interval": "NaN",
+                                      "DateTimeAxis": false,
+                                      "CrossesAtZero": false
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -21339,6 +21558,8 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
                               "Name": "Eucalyptus",
                               "IncludeInDocumentation": false,
@@ -21465,7 +21686,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -21474,7 +21697,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21557,7 +21782,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -21566,7 +21793,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21692,7 +21921,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -21701,7 +21932,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -22280,6 +22513,8 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsEnding": false,
+                      "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
                       "Name": "Eucalyptus",
                       "IncludeInDocumentation": false,
@@ -22892,6 +23127,8 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsEnding": false,
+                      "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
                       "Name": "Eucalyptus",
                       "IncludeInDocumentation": false,
@@ -23504,6 +23741,8 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsEnding": false,
+                      "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
                       "Name": "Eucalyptus",
                       "IncludeInDocumentation": false,
@@ -24116,6 +24355,8 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsEnding": false,
+                      "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
                       "Name": "Eucalyptus",
                       "IncludeInDocumentation": false,
@@ -24385,6 +24626,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": false,
@@ -24923,7 +25166,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -24932,7 +25177,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -24985,7 +25232,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -24994,7 +25243,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -25380,6 +25631,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": false,
@@ -25918,7 +26171,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -25927,7 +26182,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -26687,6 +26944,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": true,
@@ -27019,7 +27278,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -27028,7 +27289,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -27081,7 +27344,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -27090,7 +27355,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -27143,7 +27410,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -27152,7 +27421,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -27205,7 +27476,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -27214,7 +27487,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -27267,7 +27542,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -27276,7 +27553,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -28022,6 +28301,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
                           "Name": "Eucalyptus",
                           "IncludeInDocumentation": true,
@@ -28354,7 +28635,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -28363,7 +28646,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -28416,7 +28701,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -28425,7 +28712,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -28478,7 +28767,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -28487,7 +28778,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -28540,7 +28833,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -28549,7 +28844,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -28602,7 +28899,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -28611,7 +28910,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,

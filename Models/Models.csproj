@@ -233,12 +233,18 @@
     <Compile Include="Functions\DailyMeanVPD.cs" />
     <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESMineralisationWaterFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESMineralisationTemperatureFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESNitrificationModel.cs" />
     <Compile Include="Functions\StringComparisonFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
+    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
+    <Compile Include="Plant\Structure\CulmStructure.cs" />
+    <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
@@ -260,6 +266,11 @@
     <Compile Include="Plant\Structure\BudNumberFunction.cs" />
     <Compile Include="Soils\Nutrients\Chloride.cs" />
     <Compile Include="Plant\Structure\ApexBase.cs" />
+    <Compile Include="Soils\SoilNitrogenPlantAvailableNH4.cs" />
+    <Compile Include="Soils\SoilNitrogenPlantAvailableNO3.cs" />
+    <Compile Include="Soils\SoilNitrogenUrea.cs" />
+    <Compile Include="Soils\SoilNitrogenNH4.cs" />
+    <Compile Include="Soils\SoilNitrogenNO3.cs" />
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
@@ -374,7 +385,7 @@
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\Nutrients\NFlow.cs" />
-    <Compile Include="Soils\Nutrients\CFlow.cs" />
+    <Compile Include="Soils\Nutrients\CarbonFlow.cs" />
     <Compile Include="Soils\Nutrients\NutrientPool.cs" />
     <Compile Include="Soils\Nutrients\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
@@ -403,7 +414,6 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
-    <Compile Include="SoluteManager.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
     <Compile Include="Stock\grazenv.cs" />
@@ -697,6 +707,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <EmbeddedResource Include="Resources\Eucalyptus.json" />
+    <None Include="Resources\Barley.json" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.json">
       <SubType>Designer</SubType>
