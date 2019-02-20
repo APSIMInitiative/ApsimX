@@ -157,12 +157,6 @@ namespace Models.Graph
                 // Merge factors where possible.
                 factors = MergeFactors(factors);
 
-                if (factors == null || factors.Count == 0)
-                {
-                    definitions.Add(CreateDefinition(Name, null, Colour, Marker, Line, null, storage));
-                    return;
-                }
-
                 if (!ColourUtilities.Colours.Contains(Colour))
                     Colour = ColourUtilities.Colours[0];
 
@@ -235,11 +229,14 @@ namespace Models.Graph
             if (FactorToVaryMarkers != null)
                 factorsToKeep.Add(FactorToVaryMarkers);
             factorsToKeep = factorsToKeep.Distinct().ToList();
-            IEnumerable<string> factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
+            if (factorsToKeep.Count != 0)
+            {
+                var factorsToRemove = GetFactorList(factors).Except(factorsToKeep);
 
-            foreach (var factor in factors)
-                foreach (var factorToRemove in factorsToRemove)
-                    factor.RemoveFactor(factorToRemove);
+                foreach (var factor in factors)
+                    foreach (var factorToRemove in factorsToRemove)
+                        factor.RemoveFactor(factorToRemove);
+            }
 
             // Remove empty factors
             factors.RemoveAll(f => f.Factors.Count == 0);
