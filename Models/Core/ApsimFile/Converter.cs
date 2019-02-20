@@ -468,10 +468,23 @@
 
                 if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
                     manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
-
+                
                 manager.Replace(".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
+
                 manager.Replace(".SoilNitrogen.TotalN", ".Nutrient.TotalN");
+                if (manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN"))
+                {
+                    manager.RemoveDeclaration("SoilNitrogen");
+                    manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
+                }
+
                 manager.Replace(".SoilNitrogen.TotalC", ".Nutrient.TotalC");
+                if (manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC"))
+                {
+                    manager.RemoveDeclaration("SoilNitrogen");
+                    manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
+                }
+
                 manager.Replace(".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
                 manager.Replace(".SoilNitrogen.Denitrification", ".Nutrient.Natm");
                 manager.Replace(".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
