@@ -101,7 +101,7 @@ namespace Models.Soils.Nutrients
                 double MineralNSupply = (NO3.kgha[i] + NH4.kgha[i]) * source.LayerFraction[i];
                 double NSupply = nitrogenFlowFromSource + MineralNSupply;
 
-                if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
+                if (TotalNitrogenFlowToDestinations > NSupply)
                 {
                     double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(MineralNSupply, TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
 
