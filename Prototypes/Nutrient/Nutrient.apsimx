@@ -4912,8 +4912,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[CNRatioFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
                           "Name": "CNRF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5044,8 +5043,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[CNRatioFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
                           "Name": "CNRF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5176,8 +5174,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[CNRatioFactorForMineralisation]",
+                          "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
                           "Name": "CNRF",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5685,34 +5682,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MinimumFunction, Models",
-              "Name": "CNRatioFactorForMineralisation",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "One",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "Exp(-0.693*([Nutrient].FOMCNR-25)/25)",
-                  "Name": "CNRF",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false

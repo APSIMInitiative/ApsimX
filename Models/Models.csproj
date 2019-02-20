@@ -235,6 +235,7 @@
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
     <Compile Include="Functions\SoilFunctions\CERESDenitrificationWaterFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESDenitrificationTemperatureFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESMineralisationFOMCNRFactor.cs" />
     <Compile Include="Functions\SoilFunctions\DayCentN2OFractionModel.cs" />
     <Compile Include="Functions\SoilFunctions\CERESNitrificationpHFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESNitrificationWaterFactor.cs" />
