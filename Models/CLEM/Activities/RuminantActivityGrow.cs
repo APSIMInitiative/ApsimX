@@ -217,11 +217,14 @@ namespace Models.CLEM.Activities
             double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
             double milkTime = ind.DaysLactating;
             double milkCurve = 0;
-            if (ind.SucklingOffspring.Count == 0 && ind.MilkingPerformed) // no suckling calf and milking has been performed
+            // determine milk production curve to use
+            // if milking is taking place use the non-suckling curve for duration of lactation
+            // otherwise use the suckling curve where there is a larger drop off in milk production
+            if (ind.MilkingPerformed)
             {
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             }
-            else // suckling calf
+            else // no milking
             {
                 milkCurve = ind.BreedParams.MilkCurveSuckling;
             }
@@ -230,13 +233,14 @@ namespace Models.CLEM.Activities
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.MilkProductionPotential * 3.2 / kl;
             // adjust last time step's energy balance
-            if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
+            double adjustedEnergyBalance = ind.EnergyBalance;
+            if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
             {
-                ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
+                adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
             }
 
             // set milk production in lactating females for consumption.
-            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
+            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
             ind.MilkAmount = ind.MilkProduction * 30.4;
 
             // returns the energy required for milk production

@@ -715,7 +715,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Rate at which twins are concieved")]
-        [Required]
+        [Required, Proportion]
         public double TwinRate { get; set; }
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
