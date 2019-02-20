@@ -286,7 +286,7 @@ namespace Models.PMF.Phen
             int startPhaseIndex = -1;
             int endPhaseIndex = -1;
             int i = 0;
-            while (endPhaseIndex == -1 && i < phases.Count())
+            while (endPhaseIndex == -1 || i < phases.Count())
             {
                 if (phases[i].Start == start)
                     startPhaseIndex = i;
