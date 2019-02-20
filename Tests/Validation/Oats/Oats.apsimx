@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 53,
+  "Version": 54,
   "Name": "Simulations",
   "Children": [
     {
@@ -2507,14 +2507,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6123,14 +6115,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
                           "Children": [],
@@ -7420,14 +7404,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
                           "Children": [],
@@ -8610,14 +8586,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
                           "Children": [],
@@ -9384,14 +9352,6 @@
                           "FractionFaecesAdded": 0.5,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -14150,14 +14110,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.SoluteManager, Models",
-                                  "Name": "SoluteManager",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Irrigation, Models",
                                   "Name": "Irrigation",
                                   "Children": [],
@@ -17184,14 +17136,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.SoluteManager, Models",
-                                  "Name": "SoluteManager",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Irrigation, Models",
                                   "Name": "Irrigation",
                                   "Children": [],
@@ -18691,14 +18635,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
@@ -19653,14 +19589,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -23964,14 +23892,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
@@ -26086,14 +26006,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
@@ -26947,14 +26859,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
@@ -27803,14 +27707,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -28729,14 +28625,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
@@ -29632,14 +29520,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
@@ -30530,14 +30410,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.SoluteManager, Models",
-                              "Name": "SoluteManager",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -33801,14 +33673,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.SoluteManager, Models",
-                      "Name": "SoluteManager",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
