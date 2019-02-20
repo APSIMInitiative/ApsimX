@@ -145,16 +145,35 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Look for a particular stage and return it's index or -1 if not found.</summary>
-        public int IndexFromStageName(string name)
+        public int StartStagePhaseIndex(string stageName)
         {
-            for (int phaseIndex = 0; phaseIndex < phases.Count; phaseIndex++)
+            int startPhaseIndex = -1;
+            int i = 0;
+            while (startPhaseIndex == -1 && i < phases.Count())
             {
-                if (String.Equals(phases[phaseIndex].Start, name, StringComparison.OrdinalIgnoreCase))
-                    return phaseIndex +1; //PhaseIndex is zero based but stage is 1 based so need to add one
-                else if (String.Equals(phases[phaseIndex].End, name, StringComparison.OrdinalIgnoreCase))
-                    return phaseIndex + 2; //PhaseIndex is zero based but stage is 1 based so need to add two
+                if (phases[i].Start == stageName)
+                    startPhaseIndex = i;
+                i += 1;
             }
-            return -1;
+            if (startPhaseIndex == -1)
+                throw new Exception("Cannot find phase beginning with: " + stageName);
+            return startPhaseIndex;
+        }
+
+        /// <summary>Look for a particular stage and return it's index or -1 if not found.</summary>
+        public int EndStagePhaseIndex(string stageName)
+        {
+            int endPhaseIndex = -1;
+            int i = 0;
+            while (endPhaseIndex == -1 && i < phases.Count())
+            {
+                if (phases[i].End == stageName)
+                    endPhaseIndex = i;
+                i += 1;
+            }
+            if (endPhaseIndex == -1)
+                throw new Exception("Cannot find phase ending with: " + stageName);
+            return endPhaseIndex;
         }
 
         /// <summary>A function that resets phenology to a specified stage</summary>
@@ -247,19 +266,15 @@ namespace Models.PMF.Phen
         }
 
         /// <summary> A utility function to return true if the simulation is currently between the specified start and end stages. </summary>
-        public bool Between(int start, int end)
+        public bool Between(int startPhaseIndex, int endPhaseIndex)
         {
             if (phases == null)
                 return false;
+            
+            if (startPhaseIndex > endPhaseIndex)
+                throw new Exception("Start phase " + startPhaseIndex + " is after phase " + endPhaseIndex);
 
-            if (start == -1)
-                throw new Exception("Cannot find phase: " + start);
-            if (end == -1)
-                throw new Exception("Cannot find phase: " + end);
-            if (start > end)
-                throw new Exception("Start phase " + start + " is after phase " + end);
-
-            return Stage >= start && Stage <= end;
+            return currentPhaseIndex >= startPhaseIndex && currentPhaseIndex <= endPhaseIndex;
         }
 
         /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
@@ -271,7 +286,7 @@ namespace Models.PMF.Phen
             int startPhaseIndex = -1;
             int endPhaseIndex = -1;
             int i = 0;
-            while (endPhaseIndex == -1 || i < phases.Count())
+            while (endPhaseIndex == -1 || i < phases.Count()-1)
             {
                 if (phases[i].Start == start)
                     startPhaseIndex = i;

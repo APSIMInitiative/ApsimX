@@ -81,8 +81,8 @@ namespace Models.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            startStageIndex = Phenology.IndexFromStageName(Start);
-            endStageIndex = Phenology.IndexFromStageName(End);
+            startStageIndex = Phenology.StartStagePhaseIndex(Start);
+            endStageIndex = Phenology.EndStagePhaseIndex(End);
         }
     }
 }

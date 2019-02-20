@@ -114,8 +114,8 @@ namespace Models.PMF.Phen
 
             vernalisingRecord = new double[(int)DaysToStabilise.FixedValue];
             DaysVernalised = 0.0;
-            startStageIndex = phenology.IndexFromStageName(StartStage);
-            endStageIndex = phenology.IndexFromStageName(EndStage);
+            startStageIndex = phenology.StartStagePhaseIndex(StartStage);
+            endStageIndex = phenology.EndStagePhaseIndex(EndStage);
         }
 
         [EventSubscribe("DoDailyInitialisation")]

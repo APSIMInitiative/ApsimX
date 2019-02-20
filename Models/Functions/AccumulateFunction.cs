@@ -72,8 +72,8 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
-            startStageIndex = phenology.IndexFromStageName(StartStageName);
-            endStageIndex = phenology.IndexFromStageName(EndStageName);
+            startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
+            endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>

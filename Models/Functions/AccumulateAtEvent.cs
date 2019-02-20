@@ -91,8 +91,8 @@ namespace Models.Functions
 
             events.Subscribe(AccumulateEventName, OnCalcEvent);
 
-            startStageIndex = phenology.IndexFromStageName(StartStageName);
-            endStageIndex = phenology.IndexFromStageName(EndStageName);
+            startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
+            endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
         }
 
         /// <summary>
