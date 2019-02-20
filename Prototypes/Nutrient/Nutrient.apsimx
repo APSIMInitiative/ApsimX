@@ -4765,75 +4765,17 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.BoundFunction, Models",
+                          "$type": "Models.Functions.CERESDenitrificationTemperatureFactor, Models",
                           "Name": "TF",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Upper",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Lower",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "0.1 * Exp(0.046 * [Soil].Temperature)",
-                              "Name": "Tfactor",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[SoilWaterScale]",
+                          "$type": "Models.Functions.CERESDenitrificationWaterFactor, Models",
                           "Name": "WF",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SoilWaterScale, Models",
-                              "Name": "SoilWaterScale",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                1.0,
-                                2.0
-                              ],
-                              "Y": [
-                                0.0,
-                                0.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
