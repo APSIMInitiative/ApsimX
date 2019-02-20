@@ -4786,8 +4786,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "1 / ([N2N2ORatio].Value() + 1)",
+                      "$type": "Models.Functions.DayCentN2OFractionModel, Models",
                       "Name": "N2OFraction",
                       "Children": [
                         {
@@ -4795,102 +4794,6 @@
                           "Text": "The emission of N2O during denitrification is calculated from an N2:N2O ratio using the approach from the DayCent model ([PARTON1998]) as previously tested in APSIM ([THORBURN2010]).",
                           "Name": "Memo",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MinimumFunction, Models",
-                          "Name": "N2N2ORatio",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Zero",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Ratio",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 25.1,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[SoilWaterScale]",
-                                  "Name": "WFPSEffect",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        28.0,
-                                        88.0,
-                                        100.0
-                                      ],
-                                      "Y": [
-                                        0.1,
-                                        0.1,
-                                        1.0,
-                                        1.18
-                                      ],
-                                      "Name": "XYPairs",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.MinimumFunction, Models",
-                                  "Name": "CO2Effect",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.16,
-                                      "Units": null,
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "Math.Exp(-0.8 * [Nutrient].NO3.kgha / [Nutrient].Catm)",
-                                      "Name": "Effect",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
