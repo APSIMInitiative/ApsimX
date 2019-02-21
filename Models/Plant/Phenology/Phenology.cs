@@ -149,7 +149,7 @@ namespace Models.PMF.Phen
         {
             int startPhaseIndex = -1;
             int i = 0;
-            while (startPhaseIndex == -1 || i < phases.Count())
+            while (startPhaseIndex == -1 && i < phases.Count())
             {
                 if (phases[i].Start == stageName)
                     startPhaseIndex = i;
@@ -165,7 +165,7 @@ namespace Models.PMF.Phen
         {
             int endPhaseIndex = -1;
             int i = 0;
-            while (endPhaseIndex == -1 || i < phases.Count())
+            while (endPhaseIndex == -1 && i < phases.Count())
             {
                 if (phases[i].End == stageName)
                     endPhaseIndex = i;
@@ -286,7 +286,7 @@ namespace Models.PMF.Phen
             int startPhaseIndex = -1;
             int endPhaseIndex = -1;
             int i = 0;
-            while (endPhaseIndex == -1 || i < phases.Count())
+            while (endPhaseIndex == -1 && i < phases.Count())
             {
                 if (phases[i].Start == start)
                     startPhaseIndex = i;
@@ -377,8 +377,6 @@ namespace Models.PMF.Phen
                         throw new Exception("Cannot transition to the next phase. No more phases exist");
 
                     currentPhaseIndex = currentPhaseIndex + 1;
-
-                    Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                         PhaseChangedData.StageName = CurrentPhase.Start;
