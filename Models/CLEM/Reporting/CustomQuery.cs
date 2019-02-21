@@ -49,6 +49,9 @@ namespace Models.CLEM.Reporting
 
             IStorageWriter writer = Apsim.Find(this, typeof(IStorageWriter)) as IStorageWriter;
             DataTable data = writer.ExecuteQuery(Sql);
+
+            if (data == null) return;
+
             data.TableName = Tablename;
 
             reader.DeleteDataInTable(Tablename);
