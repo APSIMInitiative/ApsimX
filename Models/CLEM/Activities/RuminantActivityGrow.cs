@@ -82,7 +82,7 @@ namespace Models.CLEM.Activities
             {
                 if (ind.Age >= ind.BreedParams.GestationLength)
                 {
-                    ind.Wean();
+                    ind.Wean(true, "Natural");
                 }
             }
         }

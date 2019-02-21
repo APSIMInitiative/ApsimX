@@ -130,5 +130,9 @@ namespace Models.CLEM.Reporting
         /// Individual ruminant to report as Male
         /// </summary>
         public RuminantMale Male { get { return RumObj as RuminantMale; } }
+        /// <summary>
+        /// Reason string
+        /// </summary>
+        public string Reason { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -98,7 +99,8 @@ namespace Models.CLEM.Activities
                 {
                     if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
                     {
-                        ind.Wean();
+                        string reason = (ind.Age >= WeaningAge)? "Age" : "Weight";
+                        ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
                         Status = ActivityStatus.Success;

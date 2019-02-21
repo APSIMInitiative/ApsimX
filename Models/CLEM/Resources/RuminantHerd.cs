@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -40,6 +41,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         [XmlIgnore]
         public object LastIndividualChanged { get; set; }
+
+        /// <summary>
+        /// The details of an individual for reporting
+        /// </summary>
+        [XmlIgnore]
+        public RuminantReportItemEventArgs ReportIndividual { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -292,6 +299,31 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        #region weaning event
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public void OnWeanOccurred(EventArgs e)
+        {
+            ReportIndividual = e as RuminantReportItemEventArgs;
+            WeanOccurred?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public event EventHandler WeanOccurred;
+
+        private void Resource_WeanOccurred(object sender, EventArgs e)
+        {
+            OnWeanOccurred(e);
+        }
+
+        #endregion
+
+
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

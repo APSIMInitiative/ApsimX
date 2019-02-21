@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.CLEM.Reporting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -307,13 +308,23 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean()
+        public void Wean(bool report, string reason)
         {
             weaned = true;
             if (this.Mother != null)
             {
                 this.Mother.SucklingOffspring.Remove(this);
             }
+            if(report)
+            {
+                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+                {
+                    RumObj = this,
+                    Reason = reason
+                };
+                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+            }
+
         }
 
         private bool weaned = true;

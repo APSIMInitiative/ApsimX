@@ -472,7 +472,7 @@ namespace Models.CLEM.Activities
                                 newBreeder.HighWeight = weight;
 
                                 // this individual must be weaned to be permitted to start breeding.
-                                newBreeder.Wean();
+                                newBreeder.Wean(false, "Initial");
                                 // add to purchase request list and await purchase in Buy/Sell
                                 ruminantHerd.PurchaseIndividuals.Add(newBreeder);
                                 numberBought++;
