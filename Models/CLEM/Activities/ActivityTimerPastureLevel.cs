@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
             html += MinimumPastureLevel.ToString();
             html += "</span> and <span class=\"setvalueextra\">";
             html += MaximumPastureLevel.ToString();
-            html += "</span> tonnes per hectare</div>";
+            html += "</span> kg per hectare</div>";
             html += "\n</div>";
             return html;
         }

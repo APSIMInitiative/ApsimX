@@ -12,6 +12,8 @@ namespace Models.Core.ApsimFile
     using System.Text.RegularExpressions;
     using System.Xml;
     using System;
+    using Newtonsoft.Json.Linq;
+    using System.Text;
 
     /// <summary>
     /// Provides helper methods to read and manipulate manager scripts.
@@ -19,11 +21,27 @@ namespace Models.Core.ApsimFile
     public class ManagerConverter
     {
         private List<string> lines = new List<string>();
+        private JObject manager;
+
+        /// <summary>Default constructor.</summary>
+        public ManagerConverter() { }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="manager">The JSON manager object.</param>
+        public ManagerConverter(JObject manager)
+        {
+            this.manager = manager;
+            if (manager["Code"] != null)
+                Read(manager["Code"].ToString());
+        }
 
         /// <summary>Load script</summary>
         /// <param name="script">The manager script to work on</param>
         public void Read(string script)
         {
+            lines.Clear();
             using (StringReader reader = new StringReader(script))
             {
                 string line = reader.ReadLine();
@@ -55,9 +73,20 @@ namespace Models.Core.ApsimFile
             codeNode.InnerText = builder.ToString();
         }
 
+        /// <summary>
+        /// Save the manager object code back to the manager JSON object.
+        /// </summary>
+        public void Save()
+        {
+            manager["Code"] = ToString();
+        }
+
         /// <summary>Write script</summary>
         public new string ToString()
         {
+            if (lines.Count == 0)
+                return null;
+
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
             lines.ForEach(line => builder.AppendLine(line));
             return builder.ToString();
@@ -106,26 +135,32 @@ namespace Models.Core.ApsimFile
             }
         }
 
-        /// <summary>
-        /// Find a declaration
-        /// </summary>
-        /// <param name="instanceName"></param>
-        /// <returns>The declaration or null if not found</returns>
-        public Declaration FindDeclaration(string instanceName)
+        /// <summary>Gets a collection of declarations.</summary>
+        public List<Declaration> GetDeclarations()
         {
-            string pattern = @"(?<Link>\[.+\])?\s+(?<TypeName>\w+)\s+(?<InstanceName>\w+);";
+            List<Declaration> foundDeclarations = new List<Declaration>();
+
+            string pattern = @"(?<Link>\[.+\])?\s+(?<Access>public\s+|private\s+)?(?<TypeName>\w+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
             for (int i = 0; i < lines.Count; i++)
             {
                 Match match = Regex.Match(lines[i], pattern);
-                if (match.Success && match.Groups["InstanceName"].Value == instanceName)
+                if (match.Groups["TypeName"].Value != string.Empty &&
+                    match.Groups["TypeName"].Value != "as" &&
+                    match.Groups["InstanceName"].Value != string.Empty &&
+                    match.Groups["TypeName"].Value != "using")
                 {
                     Declaration decl = new Declaration();
                     decl.LineIndex = i;
                     decl.TypeName = match.Groups["TypeName"].Value;
                     decl.InstanceName = match.Groups["InstanceName"].Value;
                     decl.Attributes = new List<string>();
+                    decl.IsEvent = lines[i].Contains("event");
+                    decl.IsPrivate = !decl.IsEvent && match.Groups["Access"].Value.TrimEnd() != "public";
                     if (match.Groups["Link"].Success)
+                    {
                         decl.Attributes.Add(match.Groups["Link"].Value);
+                        decl.AttributesOnPreviousLines = false;
+                    }
 
                     // Look on previous lines for attributes.
                     string linkPattern = @"(?<Link>\[.+\])\s*$";
@@ -138,10 +173,89 @@ namespace Models.Core.ApsimFile
                             break;
                     }
 
-                    return decl;
+                    foundDeclarations.Add(decl);
                 }
             }
-            return null;
+            return foundDeclarations;
+        }
+
+        /// <summary>
+        /// Set the complete list of declarations.
+        /// </summary>
+        /// <param name="newDeclarations">A list of declarations for the manager model.</param>
+        public void SetDeclarations(List<Declaration> newDeclarations)
+        {
+            int lineNumberStartDeclarations;
+            
+            var existingDeclarations = GetDeclarations();
+            if (existingDeclarations.Count == 0)
+            {
+                lineNumberStartDeclarations = FindStartOfClass();
+                if (lineNumberStartDeclarations == -1)
+                {
+                    lines.AddRange(new string[]
+                    {
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "    }",
+                        "}"
+                    });
+                }
+            }
+            else
+            {
+                // Remove existing declarations
+                for (int i = existingDeclarations.Count-1; i >= 0; i--)
+                {
+                    int beginLineIndex = existingDeclarations[i].LineIndex;
+                    if (existingDeclarations[i].AttributesOnPreviousLines)
+                        beginLineIndex -= existingDeclarations[i].Attributes.Count;
+
+                    int numLinesToRemove = existingDeclarations[i].LineIndex - beginLineIndex + 1;
+                    lines.RemoveRange(beginLineIndex, numLinesToRemove);
+                }
+            }
+
+            lineNumberStartDeclarations = FindStartOfClass();
+
+            foreach (var newDeclaration in newDeclarations)
+            {
+                var declarationLineBuilder = new StringBuilder();
+                declarationLineBuilder.Append("        ");
+                if (newDeclaration.AttributesOnPreviousLines)
+                {
+                    // Write attributes
+                    foreach (var attribute in newDeclaration.Attributes)
+                    {
+                        lines.Insert(lineNumberStartDeclarations, "        " + attribute + "");
+                        lineNumberStartDeclarations++;
+                    }
+                }
+                else
+                {
+                    // Write attributes
+                    foreach (var attribute in newDeclaration.Attributes)
+                        declarationLineBuilder.Append(attribute);
+                    declarationLineBuilder.Append(' ');
+                }
+
+                // Write declaration
+                if (newDeclaration.IsPrivate)
+                    declarationLineBuilder.Append("private ");
+                else
+                    declarationLineBuilder.Append("public ");
+                if (newDeclaration.IsEvent)
+                    declarationLineBuilder.Append(" event ");
+                declarationLineBuilder.Append(newDeclaration.TypeName);
+                declarationLineBuilder.Append(' ');
+                declarationLineBuilder.Append(newDeclaration.InstanceName);
+                declarationLineBuilder.Append(';');
+                lines.Insert(lineNumberStartDeclarations, declarationLineBuilder.ToString());
+                lineNumberStartDeclarations++;
+            }
         }
 
         /// <summary>
@@ -163,7 +277,7 @@ namespace Models.Core.ApsimFile
                 if (match != null)
                 {
                     string instanceName = match.Groups["InstanceName"].Value;
-                    Declaration decl = FindDeclaration(instanceName);
+                    Declaration decl = GetDeclarations().Find(d => d.InstanceName == instanceName);
                     if (decl != null && decl.TypeName == instanceType)
                     {
                         MethodCall method = new MethodCall();
@@ -200,10 +314,104 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Search for the old string and replace with the new string.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        /// <returns></returns>
+        public bool Replace(string searchPattern, string replacePattern)
+        {
+            if (searchPattern == null)
+                return false;
+
+            bool replacementDone = false;
+            for (int i = 0; i < lines.Count; i++)
+            {
+                int pos = lines[i].IndexOf(searchPattern, StringComparison.CurrentCultureIgnoreCase);
+                while (pos != -1)
+                {
+                    lines[i] = lines[i].Remove(pos, searchPattern.Length);
+                    lines[i] = lines[i].Insert(pos, replacePattern);
+                    replacementDone = true;
+                    pos = lines[i].IndexOf(searchPattern, pos+1);
+                }
+            }
+            return replacementDone;
+        }
+
+        /// <summary>
+        /// Perform a search and replace in manager script.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        /// <param name="options">Regular expression options to use. Default value is none.</param>
+        public bool ReplaceRegex(string searchPattern, string replacePattern, RegexOptions options = RegexOptions.None)
+        {
+            bool replacementDone = false;
+            string oldCode = ToString();
+            if (oldCode == null || searchPattern == null)
+                return false;
+            var newCode = Regex.Replace(oldCode, searchPattern, replacePattern, options);
+            if (newCode != oldCode)
+            {
+                Read(newCode);
+                replacementDone = true;
+            }
+            return replacementDone;
+        }
+
+        /// <summary>
+        /// Add a declaration if it doesn't exist.
+        /// </summary>
+        /// <param name="typeName">The type name of the declaration.</param>
+        /// <param name="instanceName">The instance name of the declaration.</param>
+        /// <param name="attributes">The attributes of the declaration e.g. [Link].</param>
+        /// <returns>true if link was inserted.</returns>
+        public bool AddDeclaration(string typeName, string instanceName, IEnumerable<string> attributes = null)
+        {
+            var declarations = GetDeclarations();
+            var declaration = declarations.Find(d => d.InstanceName == instanceName);
+
+            if (declaration == null)
+            {
+                declarations.Add(new Declaration()
+                {
+                    TypeName = typeName,
+                    InstanceName = instanceName,
+                    Attributes = attributes.ToList()
+                });
+
+                SetDeclarations(declarations);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Remove a declaration.
+        /// </summary>
+        /// <param name="instanceName">The instance name of the declaration.</param>
+        /// <returns>true if link was inserted.</returns>
+        public bool RemoveDeclaration(string instanceName)
+        {
+            var declarations = GetDeclarations();
+            var declaration = declarations.Find(d => d.InstanceName == instanceName);
+            if (declaration != null)
+            {
+                declarations.Remove(declaration);
+                SetDeclarations(declarations);
+                return true;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
         /// Find a line with the matching string
         /// </summary>
-        /// <param name="stringToFind"></param>
-        /// <param name="startIndex">Index to start search from</param>
+        /// <param name="stringToFind">String to find.</param>
+        /// <param name="startIndex">LineNumber to start search from</param>
         /// <returns>The index of the line of the match or -1 if not found</returns>
         private int FindString(string stringToFind, int startIndex = 0)
         {
@@ -238,6 +446,23 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Find the start of the manager class
+        /// </summary>
+        /// <returns>The line after the classes curly bracket.</returns>
+        private int FindStartOfClass()
+        {
+            int lineNumberClass = FindString("public class Script");
+            if (lineNumberClass != -1)
+            {
+                while (!lines[lineNumberClass].Contains('{'))
+                    lineNumberClass++;
+                return lineNumberClass + 1; // The line after the curly bracket.
+            }
+            else
+                return -1;
+        }
+
         /// <summary>Trim the line of spaces and remove comments.</summary>
         /// <param name="line">Line to clean</param>
         /// <returns>A new string without leading / trailing spaces and comments</returns>
@@ -257,16 +482,25 @@ namespace Models.Core.ApsimFile
     public class Declaration
     {
         /// <summary>The index of the line starting the declaration</summary>
-        public int LineIndex { get; set; }
+        public int LineIndex { get; set; } = -1;
+
+        /// <summary>Was the declaration all on one line?</summary>
+        public bool AttributesOnPreviousLines { get; set; } = true;
 
         /// <summary>The attributes of the declaration</summary>
-        public List<string> Attributes { get; set; }
+        public List<string> Attributes { get; set; } = new List<string>();
 
         /// <summary>The type name of the declaration</summary>
         public string TypeName { get; set; }
 
         /// <summary>The instance name of the declaration</summary>
         public string InstanceName { get; set; }
+
+        /// <summary>Is declaration private?</summary>
+        public bool IsPrivate { get; set; } = true;
+
+        /// <summary>Is declaration an event?</summary>
+        public bool IsEvent { get; set; }
     }
         
 

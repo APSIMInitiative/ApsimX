@@ -194,62 +194,6 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Ensures the SearchReplaceManagerText method works correctly.
-        /// </summary>
-        [Test]
-        public void ReplaceManagerTextTests()
-        {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.ReplaceManagerText.json");
-            JObject rootNode = JObject.Parse(json);
-
-            string newText = "new text";
-            JsonUtilities.ReplaceManagerCode(rootNode, "original text", newText);
-
-            // Ensure the code was modified correctly.
-            Assert.AreEqual(newText, rootNode["Code"].ToString());
-
-            // Ensure that passing in a null search string causes no changes.
-            JsonUtilities.ReplaceManagerCode(rootNode, null, "test");
-            Assert.AreEqual(newText, rootNode["Code"].ToString());
-
-            // Attempt to replace code of a node which doesn't have a code
-            // property. Ensure that no code property is created (and that
-            // no exception is thrown).
-            JObject childWithNoCode = JsonUtilities.Children(rootNode).First();
-            JsonUtilities.ReplaceManagerCode(childWithNoCode, "test1", "test2");
-            Assert.Null(childWithNoCode["Code"]);
-        }
-
-        /// <summary>
-        /// Ensures the ReplaceManagerCodeUsingRegex method works correctly.
-        /// </summary>
-        [Test]
-        public void ReplaceManagerCodeRegexTests()
-        {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.JsonUtilitiesTests.ReplaceManagerTextRegex.json");
-            JObject rootNode = JObject.Parse(json);
-
-            // The manager's code is "original text".
-            // This regular expression will effectively remove the first space.
-            // There are simpler ways to achieve this but this method tests
-            // backreferencing.
-            string newText = "originaltext";
-            JsonUtilities.ReplaceManagerCodeUsingRegex(rootNode, @"([^\s]*)\s", @"$1");
-            Assert.AreEqual(newText, rootNode["Code"].ToString());
-
-            // Ensure that passing in a null search string causes no changes.
-            JsonUtilities.ReplaceManagerCodeUsingRegex(rootNode, null, "test");
-            Assert.AreEqual(newText, rootNode["Code"].ToString());
-
-            // Attempt to replace code of a node which doesn't have a code
-            // property. Ensure that no code property is created (and that
-            // no exception is thrown).
-            JObject childWithNoCode = JsonUtilities.Children(rootNode).First();
-            JsonUtilities.ReplaceManagerCodeUsingRegex(childWithNoCode, "test1", "test2");
-            Assert.Null(childWithNoCode["Code"]);
-        }
-
-        /// <summary>
         /// Ensures the Parent() method works correctly
         /// </summary>
         [Test]
@@ -299,6 +243,40 @@ namespace UnitTests
             Assert.NotNull(constant);
             Assert.AreEqual(constant["$type"].Value<string>(), "Models.Functions.Constant, Models");
             Assert.AreEqual(constant["FixedValue"].Value<string>(), "1");
+        }
+        
+        /// <summary>
+        /// Ensures the Values() method works correctly
+        /// </summary>
+        [Test]
+        public void ValuesTests()
+        {
+            var originalValues = new string[] { "string1", "string2", "string3" };
+
+            JArray arr = new JArray();
+            originalValues.ToList().ForEach(value => arr.Add(value));
+
+            JObject rootNode = new JObject();
+            rootNode["A"] = arr;
+
+            List<string> values = JsonUtilities.Values(rootNode, "A");
+            Assert.AreEqual(values, originalValues);
+        }
+
+        /// <summary>
+        /// Ensures the SetValues() method works correctly
+        /// </summary>
+        [Test]
+        public void SetValuesTests()
+        {
+            var values = new string[] { "string1", "string2", "string3" };
+            
+            JObject rootNode = new JObject();
+            JsonUtilities.SetValues(rootNode, "A", values.ToList());
+
+            JArray arr = rootNode["A"] as JArray;
+
+            Assert.AreEqual(arr.Values<string>(), values);
         }
     }
 }

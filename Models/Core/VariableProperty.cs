@@ -192,26 +192,28 @@ namespace Models.Core
         {
             get
             {
-                // Get units from property
-                string unitString = null;
-                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsAttribute != null)
+                if (property != null)
                 {
-                    unitString = unitsAttribute.ToString();
+                    // Get units from property
+                    string unitString = null;
+                    UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                    PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                    if (unitsAttribute != null)
+                    {
+                        unitString = unitsAttribute.ToString();
+                    }
+                    else if (unitsInfo != null)
+                    {
+                        object val = unitsInfo.GetValue(this.Object, null);
+                        if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
+                            unitString = GetEnumDescription(val as Enum);
+                        else
+                            unitString = val.ToString();
+                    }
+                    if (unitString != null)
+                        return "(" + unitString + ")";
                 }
-                else if (unitsInfo != null)
-                {
-                    object val = unitsInfo.GetValue(this.Object, null);
-                    if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
-                        unitString = GetEnumDescription(val as Enum);
-                    else
-                        unitString = val.ToString();
-                }
-                if (unitString != null)
-                    return "(" + unitString + ")";
-                else
-                    return null;
+                return null;
             }
         }
 

@@ -16,7 +16,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureParentChildRelationshipConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure arrays of values convert.</summary>
@@ -27,7 +27,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureArraysConvert.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureArraysOfModelsWorks.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure a manager model can be converted.</summary>
@@ -52,7 +52,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureManagerWorks.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure a child not implementing IModel (e.g. Axis) is converted OK.</summary>
@@ -63,7 +63,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_ChildNotOfTypeModel.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure a memo model can be converted.</summary>
@@ -74,7 +74,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureMemoWorks.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure a memo model can be converted.</summary>
@@ -85,7 +85,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureTestsWorks.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure a one line model in XML can be converted.</summary>
@@ -96,7 +96,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureOneLineModelConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure a cultivar is converted.</summary>
@@ -107,7 +107,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureCultivarConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure residuetypes is converted.</summary>
@@ -118,7 +118,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureResidueTypesConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure Leaf.Leaves isn't written.</summary>
@@ -129,7 +129,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureLeavesIsntWritten.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure List of List of strings.</summary>
@@ -140,7 +140,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureListListStringWorks.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Some models have an xsi:type attribute.</summary>
@@ -151,7 +151,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureXSITypeConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure suppliment works.</summary>
@@ -162,7 +162,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureSupplimentConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure stock works.</summary>
@@ -173,7 +173,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureStockConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
         /// <summary>Ensure 2 models of same name works.</summary>
@@ -184,7 +184,7 @@
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.XMLToJSONTests_EnsureModelsWithSameNameConverts.json");
 
             string json = XmlToJson.Convert(xml);
-            Assert.AreEqual(json, expectedJson);
+            Assert.AreEqual(expectedJson, json);
         }
 
     }

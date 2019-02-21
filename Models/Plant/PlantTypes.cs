@@ -127,6 +127,7 @@
             RowSpacing = 150;
             MaxCover = 1;
             BudNumber = 1;
+            SkipRow = 1;
         }
 
 

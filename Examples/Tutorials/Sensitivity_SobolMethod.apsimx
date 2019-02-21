@@ -1,0 +1,3267 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 53,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# Introduction\n\nIn this tutorial we will be looking at the Sobol method. It is a quantitative sensitivity analysis method, which assigns a percentage of output variance to each input or combination of inputs. This tutorial will build on the concepts introduced in the `MorrisMethod` tutorial. It may be useful to have a look at the `MorrisMethod` tutorial first, if you have not already done so. The `MorrisMethod` tutorial introduces sensitivity analysis inputs and outputs in the context of APSIM. It also introduces the nitrogen leaching simulation used in this tutorial.\n\nThe Sobol method is a robust, reproducible sensitivity analysis method. It is based on the idea that a mathematical function of *m* inputs can be decomposed into 2<sup>*m*</sup> functions, each corresponding to one combination of inputs. It belongs to a class of sensitivity analysis methods named variance-based methods. A good overview of these may be found in [Pianosi2016].\n\nJust like the Morris method, the Sobol method can be used to identify inputs that have a large contribution to output variability, or a negligible contribution to output variability. The Sobol method has two major advantages however:\n\n* The Sobol method can *quantify* the contribution of each input, as a percentage of total output variance.\n* The Sobol method can also quantify the contribution of interactions between inputs.\n\nThe additional information comes at a price: the Sobol method is very computationally intensive. This is an issue for larger models, with many inputs or long run times. The Sobol method is most often used as a follow-up to less computationally intensive methods, for example the Morris method. A typical sensitivity analysis may involve the following steps:\n\n1. Use the Morris method to analyse *all* inputs of interest, and identify non-influential inputs.\n2. Fix non-influential inputs to a constant value.\n3. Use the Sobol method on the remaining inputs, assigning a percentage of output variance to each input or combination of inputs.\n\nNote we do not need to use the above approach in this example, as we are only analysing a handful of inputs.\n\nThis tutorial will show you how to set up a Sobol analysis in APSIM. It will then look at the analysis results, and compare them to the results of the Morris method. The limitations of the current Sobol method implementation will also be highlighted.\n\n<br/>",
+      "Name": "Introduction",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# Sobol Method Setup\n\n<br/>\n\n## Base Simulation\n\nThe structure of the Sobol method is very similar to the structure of the Morris method. The Sobol method is run from a `Sobol` node, which can be found in `Models`, and should be added at the same level as the `DataStore`. Like the Morris node, the Sobol node requires a base simulation. We are using the same simulation (`UrinePatchSimulation`), but with a few modifications. You may wish to expand the base simulation, to remind yourself of its structure. The current implementation of the Sobol method cannot analyse multiple values of the same output. Hence the simulation runs for 3 years only, and reports a single value of nitrogen leached (`LeachN`).\n\n<br>\n\n<hr>\n**Note**: If the output is reported more than once, the analysis will run without errors. The results will be non-sense however! You can still obtain an estimate of temporal variability, but you will need to run a separate Sobol analysis for each reporting period.\n<hr>\n\nThe Sobol method shares some additional reporting requirements with the Morris method:\n\n* The report node must be named 'Report'.\n* `[Clock].Today.Year` must be included as a reporting variable.\n\nThe finished base simulation is copied into the Sobol node. The original simulation may again be deleted.\n\n<br/>\n\n## Sobol Node\n\nSelect the Sobol node, `SobolMethodExample`. It has a very similar structure to the Morris node. Do not let this fool you: The underlying analysis is in fact very different! The input information is again entered in the bottom panel of the user interface. If you are unsure of the process, revisit the Morris method tutorial.\n\nThe `LowerBound` and `UpperBound` are now used a little differently. In this implementation, each input range is used to define a uniform distribution:\n\n![Input Uniform Distributions](SobolParameterDistributions.png)\n\nEach uniform distribution is used to produce a sample of corresponding input values. Like with the Morris method, the range is one of the most important pieces of information fed into the analysis. See the Morris method tutorial, or Section 4 of [Pianosi2016], if you need more information.\n\nThe size of the sample drawn from each uniform distribution corresponds to the `Number of paths` (top panel of the user interface). Note that the meaning of path here is slightly different than in the Morris node. Later on, you will again see how to assess the adequacy of the `Number of paths` value. Here the value is small, to reduce analysis run time. In practice, several hundred paths may be required for a useful result.\n\n<hr>\n**Tip**: The number of simulations that runs in this particular implementation of the Sobol method is *n*(*m* + 2), where *n* is the number of paths, and *m* the number of inputs. You can again use this to estimate the run time of the analysis.\n<hr>\n\n<hr>\n**Advanced**: The choice of input distribution is limited to the uniform distribution in this implementation of the Sobol method. This is a common choice, but other distributions may also be used.\n<hr>\n\n<br/>\n\n## The Sobol Method Algorithm\n\nNow run APSIM from the `Simulations` node, if you have not done so already. It may again take a couple of minutes to finish. The algorithm behind the Sobol method is complex, and largely beyond the scope of this tutorial. The method typically produces two sensitivity measures for each input:\n\n* A first-order index. The *i*th first-order index is the proportion of output variance due to varying input *i* alone (i.e. not considering any interaction effects). \n* A total-order index. The *i*th total-order index is the proportion of output variance due to varying input *i*, taking into account all interaction effects involving input *i*.\n\nCurrently, only the latter is returned to the user in APSIM. Some additional information regarding the Sobol method is provided below, for the interested reader.\n\n<hr>\n**Advanced**: The Sobol method again implements the R language package `sensitivity`. The implemented function is `sobolSalt`, a version of the Sobol method modified by Saltelli to improve performance. The input distributions are used to produce two *n* x *m* matrices - a sampling matrix and a resampling matrix. The sampling is carried out using Sobol sequences, and is said to be *quasi-random*. Quasi-random sampling ensures a more even coverage of the sample space, than simple random sampling. \n\nThe columns from the two matrices are 'mixed and matched' to produce the sensitivity indices. Note that in theory any order index may be produced (i.e. an index for any *group* of inputs). In practice, this has a prohibitive associated computational cost.\n\nThe (very) mathematically inclined reader may find a detailed account of Saltelli's version of the Sobol method in [Saltelli2002].\n<hr>\n<br>",
+      "Name": "SobolMethodSetup",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Sobol, Models",
+      "ParameterValues": [
+        {
+          "V1": 2.55867481,
+          "V2": 674.221252,
+          "V3": 0.395481169
+        },
+        {
+          "V1": 2.282419,
+          "V2": 979.7954,
+          "V3": 0.3708285
+        },
+        {
+          "V1": 1.62909043,
+          "V2": 148.037277,
+          "V3": 0.301185161
+        },
+        {
+          "V1": 1.52540135,
+          "V2": 680.388855,
+          "V3": 0.211787924
+        },
+        {
+          "V1": 7.02136946,
+          "V2": 319.735962,
+          "V3": 0.295708656
+        },
+        {
+          "V1": 5.512472,
+          "V2": 446.479675,
+          "V3": 0.298895031
+        },
+        {
+          "V1": 1.47315812,
+          "V2": 476.7102,
+          "V3": 0.3705472
+        },
+        {
+          "V1": 1.088699,
+          "V2": 111.429214,
+          "V3": 0.297288448
+        },
+        {
+          "V1": 2.79208469,
+          "V2": 421.356873,
+          "V3": 0.391625583
+        },
+        {
+          "V1": 1.56133032,
+          "V2": 465.759827,
+          "V3": 0.338516116
+        },
+        {
+          "V1": 4.30367231,
+          "V2": 504.342529,
+          "V3": 0.256473452
+        },
+        {
+          "V1": 3.41994333,
+          "V2": 589.5241,
+          "V3": 0.22465232
+        },
+        {
+          "V1": 3.39572763,
+          "V2": 949.508362,
+          "V3": 0.242441148
+        },
+        {
+          "V1": 1.16243529,
+          "V2": 255.54628,
+          "V3": 0.251005739
+        },
+        {
+          "V1": 6.5326767,
+          "V2": 339.30896,
+          "V3": 0.225282028
+        },
+        {
+          "V1": 6.951723,
+          "V2": 322.5878,
+          "V3": 0.207304984
+        },
+        {
+          "V1": 3.830253,
+          "V2": 218.358521,
+          "V3": 0.302772552
+        },
+        {
+          "V1": 6.573943,
+          "V2": 756.7438,
+          "V3": 0.291368335
+        },
+        {
+          "V1": 2.159763,
+          "V2": 629.9275,
+          "V3": 0.27943334
+        },
+        {
+          "V1": 4.73347425,
+          "V2": 150.660309,
+          "V3": 0.3484464
+        },
+        {
+          "V1": 1.22849715,
+          "V2": 769.960632,
+          "V3": 0.296405762
+        },
+        {
+          "V1": 2.47215986,
+          "V2": 960.6601,
+          "V3": 0.260979146
+        },
+        {
+          "V1": 2.84447336,
+          "V2": 570.0947,
+          "V3": 0.3641741
+        },
+        {
+          "V1": 1.02268243,
+          "V2": 950.9903,
+          "V3": 0.216312319
+        },
+        {
+          "V1": 1.91491449,
+          "V2": 586.1198,
+          "V3": 0.392710865
+        },
+        {
+          "V1": 3.90620852,
+          "V2": 948.824158,
+          "V3": 0.270995855
+        },
+        {
+          "V1": 9.113123,
+          "V2": 913.5815,
+          "V3": 0.326296836
+        },
+        {
+          "V1": 4.72765064,
+          "V2": 557.433,
+          "V3": 0.373059422
+        },
+        {
+          "V1": 2.18737912,
+          "V2": 578.6477,
+          "V3": 0.39596042
+        },
+        {
+          "V1": 5.37792873,
+          "V2": 331.83017,
+          "V3": 0.399966925
+        },
+        {
+          "V1": 7.766603,
+          "V2": 933.158569,
+          "V3": 0.346197248
+        },
+        {
+          "V1": 8.103149,
+          "V2": 357.918732,
+          "V3": 0.210570931
+        },
+        {
+          "V1": 8.037777,
+          "V2": 825.2066,
+          "V3": 0.2492653
+        },
+        {
+          "V1": 9.354165,
+          "V2": 826.6234,
+          "V3": 0.261326522
+        },
+        {
+          "V1": 5.19493,
+          "V2": 135.136261,
+          "V3": 0.3312105
+        },
+        {
+          "V1": 4.367224,
+          "V2": 918.961548,
+          "V3": 0.21290794
+        },
+        {
+          "V1": 5.603717,
+          "V2": 409.761047,
+          "V3": 0.205430627
+        },
+        {
+          "V1": 7.89512444,
+          "V2": 229.335526,
+          "V3": 0.241255313
+        },
+        {
+          "V1": 2.30947876,
+          "V2": 715.008,
+          "V3": 0.328937948
+        },
+        {
+          "V1": 8.976383,
+          "V2": 584.5942,
+          "V3": 0.258524269
+        },
+        {
+          "V1": 7.213669,
+          "V2": 177.4352,
+          "V3": 0.203015491
+        },
+        {
+          "V1": 9.126169,
+          "V2": 941.0484,
+          "V3": 0.235574841
+        },
+        {
+          "V1": 5.23063231,
+          "V2": 889.713562,
+          "V3": 0.222028285
+        },
+        {
+          "V1": 6.362736,
+          "V2": 105.817635,
+          "V3": 0.257893
+        },
+        {
+          "V1": 2.50772667,
+          "V2": 136.3754,
+          "V3": 0.2599365
+        },
+        {
+          "V1": 9.442043,
+          "V2": 189.306183,
+          "V3": 0.261494458
+        },
+        {
+          "V1": 3.6894412,
+          "V2": 116.644135,
+          "V3": 0.205400348
+        },
+        {
+          "V1": 8.226828,
+          "V2": 560.4276,
+          "V3": 0.208646476
+        },
+        {
+          "V1": 2.08628631,
+          "V2": 574.42804,
+          "V3": 0.346257538
+        },
+        {
+          "V1": 9.060222,
+          "V2": 663.3831,
+          "V3": 0.375912458
+        },
+        {
+          "V1": 2.55867481,
+          "V2": 725.65625,
+          "V3": 0.3905486
+        },
+        {
+          "V1": 2.282419,
+          "V2": 751.4249,
+          "V3": 0.223348066
+        },
+        {
+          "V1": 1.62909043,
+          "V2": 171.628983,
+          "V3": 0.27980873
+        },
+        {
+          "V1": 1.52540135,
+          "V2": 558.092163,
+          "V3": 0.311183631
+        },
+        {
+          "V1": 7.02136946,
+          "V2": 325.496155,
+          "V3": 0.263404518
+        },
+        {
+          "V1": 5.512472,
+          "V2": 763.5036,
+          "V3": 0.254443765
+        },
+        {
+          "V1": 1.47315812,
+          "V2": 282.44696,
+          "V3": 0.327305734
+        },
+        {
+          "V1": 1.088699,
+          "V2": 243.743408,
+          "V3": 0.3050793
+        },
+        {
+          "V1": 2.79208469,
+          "V2": 100.560837,
+          "V3": 0.271738857
+        },
+        {
+          "V1": 1.56133032,
+          "V2": 293.772369,
+          "V3": 0.24220632
+        },
+        {
+          "V1": 4.30367231,
+          "V2": 448.629425,
+          "V3": 0.264018118
+        },
+        {
+          "V1": 3.41994333,
+          "V2": 165.914642,
+          "V3": 0.206759438
+        },
+        {
+          "V1": 3.39572763,
+          "V2": 584.76825,
+          "V3": 0.329489857
+        },
+        {
+          "V1": 1.16243529,
+          "V2": 990.7334,
+          "V3": 0.294606924
+        },
+        {
+          "V1": 6.5326767,
+          "V2": 104.786613,
+          "V3": 0.326087236
+        },
+        {
+          "V1": 6.951723,
+          "V2": 881.862366,
+          "V3": 0.364703536
+        },
+        {
+          "V1": 3.830253,
+          "V2": 704.580261,
+          "V3": 0.228134945
+        },
+        {
+          "V1": 6.573943,
+          "V2": 486.091644,
+          "V3": 0.253502846
+        },
+        {
+          "V1": 2.159763,
+          "V2": 234.127731,
+          "V3": 0.320623815
+        },
+        {
+          "V1": 4.73347425,
+          "V2": 618.785156,
+          "V3": 0.253434241
+        },
+        {
+          "V1": 1.22849715,
+          "V2": 776.926331,
+          "V3": 0.3171611
+        },
+        {
+          "V1": 2.47215986,
+          "V2": 142.430832,
+          "V3": 0.304709464
+        },
+        {
+          "V1": 2.84447336,
+          "V2": 137.787048,
+          "V3": 0.307866633
+        },
+        {
+          "V1": 1.02268243,
+          "V2": 461.0938,
+          "V3": 0.3156689
+        },
+        {
+          "V1": 1.91491449,
+          "V2": 565.1397,
+          "V3": 0.202597111
+        },
+        {
+          "V1": 3.90620852,
+          "V2": 251.850647,
+          "V3": 0.237075686
+        },
+        {
+          "V1": 9.113123,
+          "V2": 854.446533,
+          "V3": 0.348395079
+        },
+        {
+          "V1": 4.72765064,
+          "V2": 819.6764,
+          "V3": 0.309573472
+        },
+        {
+          "V1": 2.18737912,
+          "V2": 932.7163,
+          "V3": 0.203196526
+        },
+        {
+          "V1": 5.37792873,
+          "V2": 294.73056,
+          "V3": 0.280980617
+        },
+        {
+          "V1": 7.766603,
+          "V2": 943.7218,
+          "V3": 0.379701853
+        },
+        {
+          "V1": 8.103149,
+          "V2": 525.5115,
+          "V3": 0.227660567
+        },
+        {
+          "V1": 8.037777,
+          "V2": 626.977966,
+          "V3": 0.273971349
+        },
+        {
+          "V1": 9.354165,
+          "V2": 809.1711,
+          "V3": 0.3656091
+        },
+        {
+          "V1": 5.19493,
+          "V2": 485.334229,
+          "V3": 0.375098377
+        },
+        {
+          "V1": 4.367224,
+          "V2": 634.7603,
+          "V3": 0.22311531
+        },
+        {
+          "V1": 5.603717,
+          "V2": 122.824333,
+          "V3": 0.357629478
+        },
+        {
+          "V1": 7.89512444,
+          "V2": 830.1726,
+          "V3": 0.296379268
+        },
+        {
+          "V1": 2.30947876,
+          "V2": 962.019165,
+          "V3": 0.21066989
+        },
+        {
+          "V1": 8.976383,
+          "V2": 618.0274,
+          "V3": 0.3637049
+        },
+        {
+          "V1": 7.213669,
+          "V2": 555.2039,
+          "V3": 0.270720184
+        },
+        {
+          "V1": 9.126169,
+          "V2": 607.6772,
+          "V3": 0.3021056
+        },
+        {
+          "V1": 5.23063231,
+          "V2": 407.872742,
+          "V3": 0.200213313
+        },
+        {
+          "V1": 6.362736,
+          "V2": 268.513947,
+          "V3": 0.355497718
+        },
+        {
+          "V1": 2.50772667,
+          "V2": 692.1307,
+          "V3": 0.21628283
+        },
+        {
+          "V1": 9.442043,
+          "V2": 378.418518,
+          "V3": 0.208915785
+        },
+        {
+          "V1": 3.6894412,
+          "V2": 465.54776,
+          "V3": 0.33043167
+        },
+        {
+          "V1": 8.226828,
+          "V2": 184.860031,
+          "V3": 0.2348272
+        },
+        {
+          "V1": 2.08628631,
+          "V2": 382.567383,
+          "V3": 0.2833694
+        },
+        {
+          "V1": 9.060222,
+          "V2": 884.4885,
+          "V3": 0.349773973
+        },
+        {
+          "V1": 7.751094,
+          "V2": 674.221252,
+          "V3": 0.3905486
+        },
+        {
+          "V1": 1.11525357,
+          "V2": 979.7954,
+          "V3": 0.223348066
+        },
+        {
+          "V1": 3.25062418,
+          "V2": 148.037277,
+          "V3": 0.27980873
+        },
+        {
+          "V1": 5.16542625,
+          "V2": 680.388855,
+          "V3": 0.311183631
+        },
+        {
+          "V1": 6.181178,
+          "V2": 319.735962,
+          "V3": 0.263404518
+        },
+        {
+          "V1": 7.884658,
+          "V2": 446.479675,
+          "V3": 0.254443765
+        },
+        {
+          "V1": 5.98942471,
+          "V2": 476.7102,
+          "V3": 0.327305734
+        },
+        {
+          "V1": 6.231102,
+          "V2": 111.429214,
+          "V3": 0.3050793
+        },
+        {
+          "V1": 8.72062,
+          "V2": 421.356873,
+          "V3": 0.271738857
+        },
+        {
+          "V1": 8.088089,
+          "V2": 465.759827,
+          "V3": 0.24220632
+        },
+        {
+          "V1": 3.64749718,
+          "V2": 504.342529,
+          "V3": 0.264018118
+        },
+        {
+          "V1": 2.67967749,
+          "V2": 589.5241,
+          "V3": 0.206759438
+        },
+        {
+          "V1": 2.22616267,
+          "V2": 949.508362,
+          "V3": 0.329489857
+        },
+        {
+          "V1": 8.071207,
+          "V2": 255.54628,
+          "V3": 0.294606924
+        },
+        {
+          "V1": 4.948256,
+          "V2": 339.30896,
+          "V3": 0.326087236
+        },
+        {
+          "V1": 4.85258532,
+          "V2": 322.5878,
+          "V3": 0.364703536
+        },
+        {
+          "V1": 8.325523,
+          "V2": 218.358521,
+          "V3": 0.228134945
+        },
+        {
+          "V1": 3.09361,
+          "V2": 756.7438,
+          "V3": 0.253502846
+        },
+        {
+          "V1": 9.690039,
+          "V2": 629.9275,
+          "V3": 0.320623815
+        },
+        {
+          "V1": 8.871344,
+          "V2": 150.660309,
+          "V3": 0.253434241
+        },
+        {
+          "V1": 2.79803538,
+          "V2": 769.960632,
+          "V3": 0.3171611
+        },
+        {
+          "V1": 2.24838948,
+          "V2": 960.6601,
+          "V3": 0.304709464
+        },
+        {
+          "V1": 5.649031,
+          "V2": 570.0947,
+          "V3": 0.307866633
+        },
+        {
+          "V1": 4.0655303,
+          "V2": 950.9903,
+          "V3": 0.3156689
+        },
+        {
+          "V1": 7.190914,
+          "V2": 586.1198,
+          "V3": 0.202597111
+        },
+        {
+          "V1": 5.02237654,
+          "V2": 948.824158,
+          "V3": 0.237075686
+        },
+        {
+          "V1": 7.32058525,
+          "V2": 913.5815,
+          "V3": 0.348395079
+        },
+        {
+          "V1": 7.9697423,
+          "V2": 557.433,
+          "V3": 0.309573472
+        },
+        {
+          "V1": 4.00048447,
+          "V2": 578.6477,
+          "V3": 0.203196526
+        },
+        {
+          "V1": 6.966943,
+          "V2": 331.83017,
+          "V3": 0.280980617
+        },
+        {
+          "V1": 6.17923164,
+          "V2": 933.158569,
+          "V3": 0.379701853
+        },
+        {
+          "V1": 7.028293,
+          "V2": 357.918732,
+          "V3": 0.227660567
+        },
+        {
+          "V1": 3.781674,
+          "V2": 825.2066,
+          "V3": 0.273971349
+        },
+        {
+          "V1": 9.777431,
+          "V2": 826.6234,
+          "V3": 0.3656091
+        },
+        {
+          "V1": 3.795538,
+          "V2": 135.136261,
+          "V3": 0.375098377
+        },
+        {
+          "V1": 2.517306,
+          "V2": 918.961548,
+          "V3": 0.22311531
+        },
+        {
+          "V1": 5.19737148,
+          "V2": 409.761047,
+          "V3": 0.357629478
+        },
+        {
+          "V1": 7.316538,
+          "V2": 229.335526,
+          "V3": 0.296379268
+        },
+        {
+          "V1": 2.23610163,
+          "V2": 715.008,
+          "V3": 0.21066989
+        },
+        {
+          "V1": 8.978478,
+          "V2": 584.5942,
+          "V3": 0.3637049
+        },
+        {
+          "V1": 8.994537,
+          "V2": 177.4352,
+          "V3": 0.270720184
+        },
+        {
+          "V1": 3.25610137,
+          "V2": 941.0484,
+          "V3": 0.3021056
+        },
+        {
+          "V1": 8.031414,
+          "V2": 889.713562,
+          "V3": 0.200213313
+        },
+        {
+          "V1": 2.10251641,
+          "V2": 105.817635,
+          "V3": 0.355497718
+        },
+        {
+          "V1": 2.849949,
+          "V2": 136.3754,
+          "V3": 0.21628283
+        },
+        {
+          "V1": 7.476581,
+          "V2": 189.306183,
+          "V3": 0.208915785
+        },
+        {
+          "V1": 5.782069,
+          "V2": 116.644135,
+          "V3": 0.33043167
+        },
+        {
+          "V1": 7.37697363,
+          "V2": 560.4276,
+          "V3": 0.2348272
+        },
+        {
+          "V1": 3.47378063,
+          "V2": 574.42804,
+          "V3": 0.2833694
+        },
+        {
+          "V1": 4.90556049,
+          "V2": 663.3831,
+          "V3": 0.349773973
+        },
+        {
+          "V1": 7.751094,
+          "V2": 725.65625,
+          "V3": 0.395481169
+        },
+        {
+          "V1": 1.11525357,
+          "V2": 751.4249,
+          "V3": 0.3708285
+        },
+        {
+          "V1": 3.25062418,
+          "V2": 171.628983,
+          "V3": 0.301185161
+        },
+        {
+          "V1": 5.16542625,
+          "V2": 558.092163,
+          "V3": 0.211787924
+        },
+        {
+          "V1": 6.181178,
+          "V2": 325.496155,
+          "V3": 0.295708656
+        },
+        {
+          "V1": 7.884658,
+          "V2": 763.5036,
+          "V3": 0.298895031
+        },
+        {
+          "V1": 5.98942471,
+          "V2": 282.44696,
+          "V3": 0.3705472
+        },
+        {
+          "V1": 6.231102,
+          "V2": 243.743408,
+          "V3": 0.297288448
+        },
+        {
+          "V1": 8.72062,
+          "V2": 100.560837,
+          "V3": 0.391625583
+        },
+        {
+          "V1": 8.088089,
+          "V2": 293.772369,
+          "V3": 0.338516116
+        },
+        {
+          "V1": 3.64749718,
+          "V2": 448.629425,
+          "V3": 0.256473452
+        },
+        {
+          "V1": 2.67967749,
+          "V2": 165.914642,
+          "V3": 0.22465232
+        },
+        {
+          "V1": 2.22616267,
+          "V2": 584.76825,
+          "V3": 0.242441148
+        },
+        {
+          "V1": 8.071207,
+          "V2": 990.7334,
+          "V3": 0.251005739
+        },
+        {
+          "V1": 4.948256,
+          "V2": 104.786613,
+          "V3": 0.225282028
+        },
+        {
+          "V1": 4.85258532,
+          "V2": 881.862366,
+          "V3": 0.207304984
+        },
+        {
+          "V1": 8.325523,
+          "V2": 704.580261,
+          "V3": 0.302772552
+        },
+        {
+          "V1": 3.09361,
+          "V2": 486.091644,
+          "V3": 0.291368335
+        },
+        {
+          "V1": 9.690039,
+          "V2": 234.127731,
+          "V3": 0.27943334
+        },
+        {
+          "V1": 8.871344,
+          "V2": 618.785156,
+          "V3": 0.3484464
+        },
+        {
+          "V1": 2.79803538,
+          "V2": 776.926331,
+          "V3": 0.296405762
+        },
+        {
+          "V1": 2.24838948,
+          "V2": 142.430832,
+          "V3": 0.260979146
+        },
+        {
+          "V1": 5.649031,
+          "V2": 137.787048,
+          "V3": 0.3641741
+        },
+        {
+          "V1": 4.0655303,
+          "V2": 461.0938,
+          "V3": 0.216312319
+        },
+        {
+          "V1": 7.190914,
+          "V2": 565.1397,
+          "V3": 0.392710865
+        },
+        {
+          "V1": 5.02237654,
+          "V2": 251.850647,
+          "V3": 0.270995855
+        },
+        {
+          "V1": 7.32058525,
+          "V2": 854.446533,
+          "V3": 0.326296836
+        },
+        {
+          "V1": 7.9697423,
+          "V2": 819.6764,
+          "V3": 0.373059422
+        },
+        {
+          "V1": 4.00048447,
+          "V2": 932.7163,
+          "V3": 0.39596042
+        },
+        {
+          "V1": 6.966943,
+          "V2": 294.73056,
+          "V3": 0.399966925
+        },
+        {
+          "V1": 6.17923164,
+          "V2": 943.7218,
+          "V3": 0.346197248
+        },
+        {
+          "V1": 7.028293,
+          "V2": 525.5115,
+          "V3": 0.210570931
+        },
+        {
+          "V1": 3.781674,
+          "V2": 626.977966,
+          "V3": 0.2492653
+        },
+        {
+          "V1": 9.777431,
+          "V2": 809.1711,
+          "V3": 0.261326522
+        },
+        {
+          "V1": 3.795538,
+          "V2": 485.334229,
+          "V3": 0.3312105
+        },
+        {
+          "V1": 2.517306,
+          "V2": 634.7603,
+          "V3": 0.21290794
+        },
+        {
+          "V1": 5.19737148,
+          "V2": 122.824333,
+          "V3": 0.205430627
+        },
+        {
+          "V1": 7.316538,
+          "V2": 830.1726,
+          "V3": 0.241255313
+        },
+        {
+          "V1": 2.23610163,
+          "V2": 962.019165,
+          "V3": 0.328937948
+        },
+        {
+          "V1": 8.978478,
+          "V2": 618.0274,
+          "V3": 0.258524269
+        },
+        {
+          "V1": 8.994537,
+          "V2": 555.2039,
+          "V3": 0.203015491
+        },
+        {
+          "V1": 3.25610137,
+          "V2": 607.6772,
+          "V3": 0.235574841
+        },
+        {
+          "V1": 8.031414,
+          "V2": 407.872742,
+          "V3": 0.222028285
+        },
+        {
+          "V1": 2.10251641,
+          "V2": 268.513947,
+          "V3": 0.257893
+        },
+        {
+          "V1": 2.849949,
+          "V2": 692.1307,
+          "V3": 0.2599365
+        },
+        {
+          "V1": 7.476581,
+          "V2": 378.418518,
+          "V3": 0.261494458
+        },
+        {
+          "V1": 5.782069,
+          "V2": 465.54776,
+          "V3": 0.205400348
+        },
+        {
+          "V1": 7.37697363,
+          "V2": 184.860031,
+          "V3": 0.208646476
+        },
+        {
+          "V1": 3.47378063,
+          "V2": 382.567383,
+          "V3": 0.346257538
+        },
+        {
+          "V1": 4.90556049,
+          "V2": 884.4885,
+          "V3": 0.375912458
+        },
+        {
+          "V1": 7.751094,
+          "V2": 725.65625,
+          "V3": 0.3905486
+        },
+        {
+          "V1": 1.11525357,
+          "V2": 751.4249,
+          "V3": 0.223348066
+        },
+        {
+          "V1": 3.25062418,
+          "V2": 171.628983,
+          "V3": 0.27980873
+        },
+        {
+          "V1": 5.16542625,
+          "V2": 558.092163,
+          "V3": 0.311183631
+        },
+        {
+          "V1": 6.181178,
+          "V2": 325.496155,
+          "V3": 0.263404518
+        },
+        {
+          "V1": 7.884658,
+          "V2": 763.5036,
+          "V3": 0.254443765
+        },
+        {
+          "V1": 5.98942471,
+          "V2": 282.44696,
+          "V3": 0.327305734
+        },
+        {
+          "V1": 6.231102,
+          "V2": 243.743408,
+          "V3": 0.3050793
+        },
+        {
+          "V1": 8.72062,
+          "V2": 100.560837,
+          "V3": 0.271738857
+        },
+        {
+          "V1": 8.088089,
+          "V2": 293.772369,
+          "V3": 0.24220632
+        },
+        {
+          "V1": 3.64749718,
+          "V2": 448.629425,
+          "V3": 0.264018118
+        },
+        {
+          "V1": 2.67967749,
+          "V2": 165.914642,
+          "V3": 0.206759438
+        },
+        {
+          "V1": 2.22616267,
+          "V2": 584.76825,
+          "V3": 0.329489857
+        },
+        {
+          "V1": 8.071207,
+          "V2": 990.7334,
+          "V3": 0.294606924
+        },
+        {
+          "V1": 4.948256,
+          "V2": 104.786613,
+          "V3": 0.326087236
+        },
+        {
+          "V1": 4.85258532,
+          "V2": 881.862366,
+          "V3": 0.364703536
+        },
+        {
+          "V1": 8.325523,
+          "V2": 704.580261,
+          "V3": 0.228134945
+        },
+        {
+          "V1": 3.09361,
+          "V2": 486.091644,
+          "V3": 0.253502846
+        },
+        {
+          "V1": 9.690039,
+          "V2": 234.127731,
+          "V3": 0.320623815
+        },
+        {
+          "V1": 8.871344,
+          "V2": 618.785156,
+          "V3": 0.253434241
+        },
+        {
+          "V1": 2.79803538,
+          "V2": 776.926331,
+          "V3": 0.3171611
+        },
+        {
+          "V1": 2.24838948,
+          "V2": 142.430832,
+          "V3": 0.304709464
+        },
+        {
+          "V1": 5.649031,
+          "V2": 137.787048,
+          "V3": 0.307866633
+        },
+        {
+          "V1": 4.0655303,
+          "V2": 461.0938,
+          "V3": 0.3156689
+        },
+        {
+          "V1": 7.190914,
+          "V2": 565.1397,
+          "V3": 0.202597111
+        },
+        {
+          "V1": 5.02237654,
+          "V2": 251.850647,
+          "V3": 0.237075686
+        },
+        {
+          "V1": 7.32058525,
+          "V2": 854.446533,
+          "V3": 0.348395079
+        },
+        {
+          "V1": 7.9697423,
+          "V2": 819.6764,
+          "V3": 0.309573472
+        },
+        {
+          "V1": 4.00048447,
+          "V2": 932.7163,
+          "V3": 0.203196526
+        },
+        {
+          "V1": 6.966943,
+          "V2": 294.73056,
+          "V3": 0.280980617
+        },
+        {
+          "V1": 6.17923164,
+          "V2": 943.7218,
+          "V3": 0.379701853
+        },
+        {
+          "V1": 7.028293,
+          "V2": 525.5115,
+          "V3": 0.227660567
+        },
+        {
+          "V1": 3.781674,
+          "V2": 626.977966,
+          "V3": 0.273971349
+        },
+        {
+          "V1": 9.777431,
+          "V2": 809.1711,
+          "V3": 0.3656091
+        },
+        {
+          "V1": 3.795538,
+          "V2": 485.334229,
+          "V3": 0.375098377
+        },
+        {
+          "V1": 2.517306,
+          "V2": 634.7603,
+          "V3": 0.22311531
+        },
+        {
+          "V1": 5.19737148,
+          "V2": 122.824333,
+          "V3": 0.357629478
+        },
+        {
+          "V1": 7.316538,
+          "V2": 830.1726,
+          "V3": 0.296379268
+        },
+        {
+          "V1": 2.23610163,
+          "V2": 962.019165,
+          "V3": 0.21066989
+        },
+        {
+          "V1": 8.978478,
+          "V2": 618.0274,
+          "V3": 0.3637049
+        },
+        {
+          "V1": 8.994537,
+          "V2": 555.2039,
+          "V3": 0.270720184
+        },
+        {
+          "V1": 3.25610137,
+          "V2": 607.6772,
+          "V3": 0.3021056
+        },
+        {
+          "V1": 8.031414,
+          "V2": 407.872742,
+          "V3": 0.200213313
+        },
+        {
+          "V1": 2.10251641,
+          "V2": 268.513947,
+          "V3": 0.355497718
+        },
+        {
+          "V1": 2.849949,
+          "V2": 692.1307,
+          "V3": 0.21628283
+        },
+        {
+          "V1": 7.476581,
+          "V2": 378.418518,
+          "V3": 0.208915785
+        },
+        {
+          "V1": 5.782069,
+          "V2": 465.54776,
+          "V3": 0.33043167
+        },
+        {
+          "V1": 7.37697363,
+          "V2": 184.860031,
+          "V3": 0.2348272
+        },
+        {
+          "V1": 3.47378063,
+          "V2": 382.567383,
+          "V3": 0.2833694
+        },
+        {
+          "V1": 4.90556049,
+          "V2": 884.4885,
+          "V3": 0.349773973
+        }
+      ],
+      "X1": [
+        {
+          "X1": 2.55867481,
+          "X2": 674.221252,
+          "X3": 0.395481169
+        },
+        {
+          "X1": 2.282419,
+          "X2": 979.7954,
+          "X3": 0.3708285
+        },
+        {
+          "X1": 1.62909043,
+          "X2": 148.037277,
+          "X3": 0.301185161
+        },
+        {
+          "X1": 1.52540135,
+          "X2": 680.388855,
+          "X3": 0.211787924
+        },
+        {
+          "X1": 7.02136946,
+          "X2": 319.735962,
+          "X3": 0.295708656
+        },
+        {
+          "X1": 5.512472,
+          "X2": 446.479675,
+          "X3": 0.298895031
+        },
+        {
+          "X1": 1.47315812,
+          "X2": 476.7102,
+          "X3": 0.3705472
+        },
+        {
+          "X1": 1.088699,
+          "X2": 111.429214,
+          "X3": 0.297288448
+        },
+        {
+          "X1": 2.79208469,
+          "X2": 421.356873,
+          "X3": 0.391625583
+        },
+        {
+          "X1": 1.56133032,
+          "X2": 465.759827,
+          "X3": 0.338516116
+        },
+        {
+          "X1": 4.30367231,
+          "X2": 504.342529,
+          "X3": 0.256473452
+        },
+        {
+          "X1": 3.41994333,
+          "X2": 589.5241,
+          "X3": 0.22465232
+        },
+        {
+          "X1": 3.39572763,
+          "X2": 949.508362,
+          "X3": 0.242441148
+        },
+        {
+          "X1": 1.16243529,
+          "X2": 255.54628,
+          "X3": 0.251005739
+        },
+        {
+          "X1": 6.5326767,
+          "X2": 339.30896,
+          "X3": 0.225282028
+        },
+        {
+          "X1": 6.951723,
+          "X2": 322.5878,
+          "X3": 0.207304984
+        },
+        {
+          "X1": 3.830253,
+          "X2": 218.358521,
+          "X3": 0.302772552
+        },
+        {
+          "X1": 6.573943,
+          "X2": 756.7438,
+          "X3": 0.291368335
+        },
+        {
+          "X1": 2.159763,
+          "X2": 629.9275,
+          "X3": 0.27943334
+        },
+        {
+          "X1": 4.73347425,
+          "X2": 150.660309,
+          "X3": 0.3484464
+        },
+        {
+          "X1": 1.22849715,
+          "X2": 769.960632,
+          "X3": 0.296405762
+        },
+        {
+          "X1": 2.47215986,
+          "X2": 960.6601,
+          "X3": 0.260979146
+        },
+        {
+          "X1": 2.84447336,
+          "X2": 570.0947,
+          "X3": 0.3641741
+        },
+        {
+          "X1": 1.02268243,
+          "X2": 950.9903,
+          "X3": 0.216312319
+        },
+        {
+          "X1": 1.91491449,
+          "X2": 586.1198,
+          "X3": 0.392710865
+        },
+        {
+          "X1": 3.90620852,
+          "X2": 948.824158,
+          "X3": 0.270995855
+        },
+        {
+          "X1": 9.113123,
+          "X2": 913.5815,
+          "X3": 0.326296836
+        },
+        {
+          "X1": 4.72765064,
+          "X2": 557.433,
+          "X3": 0.373059422
+        },
+        {
+          "X1": 2.18737912,
+          "X2": 578.6477,
+          "X3": 0.39596042
+        },
+        {
+          "X1": 5.37792873,
+          "X2": 331.83017,
+          "X3": 0.399966925
+        },
+        {
+          "X1": 7.766603,
+          "X2": 933.158569,
+          "X3": 0.346197248
+        },
+        {
+          "X1": 8.103149,
+          "X2": 357.918732,
+          "X3": 0.210570931
+        },
+        {
+          "X1": 8.037777,
+          "X2": 825.2066,
+          "X3": 0.2492653
+        },
+        {
+          "X1": 9.354165,
+          "X2": 826.6234,
+          "X3": 0.261326522
+        },
+        {
+          "X1": 5.19493,
+          "X2": 135.136261,
+          "X3": 0.3312105
+        },
+        {
+          "X1": 4.367224,
+          "X2": 918.961548,
+          "X3": 0.21290794
+        },
+        {
+          "X1": 5.603717,
+          "X2": 409.761047,
+          "X3": 0.205430627
+        },
+        {
+          "X1": 7.89512444,
+          "X2": 229.335526,
+          "X3": 0.241255313
+        },
+        {
+          "X1": 2.30947876,
+          "X2": 715.008,
+          "X3": 0.328937948
+        },
+        {
+          "X1": 8.976383,
+          "X2": 584.5942,
+          "X3": 0.258524269
+        },
+        {
+          "X1": 7.213669,
+          "X2": 177.4352,
+          "X3": 0.203015491
+        },
+        {
+          "X1": 9.126169,
+          "X2": 941.0484,
+          "X3": 0.235574841
+        },
+        {
+          "X1": 5.23063231,
+          "X2": 889.713562,
+          "X3": 0.222028285
+        },
+        {
+          "X1": 6.362736,
+          "X2": 105.817635,
+          "X3": 0.257893
+        },
+        {
+          "X1": 2.50772667,
+          "X2": 136.3754,
+          "X3": 0.2599365
+        },
+        {
+          "X1": 9.442043,
+          "X2": 189.306183,
+          "X3": 0.261494458
+        },
+        {
+          "X1": 3.6894412,
+          "X2": 116.644135,
+          "X3": 0.205400348
+        },
+        {
+          "X1": 8.226828,
+          "X2": 560.4276,
+          "X3": 0.208646476
+        },
+        {
+          "X1": 2.08628631,
+          "X2": 574.42804,
+          "X3": 0.346257538
+        },
+        {
+          "X1": 9.060222,
+          "X2": 663.3831,
+          "X3": 0.375912458
+        }
+      ],
+      "X2": [
+        {
+          "X1": 7.751094,
+          "X2": 725.65625,
+          "X3": 0.3905486
+        },
+        {
+          "X1": 1.11525357,
+          "X2": 751.4249,
+          "X3": 0.223348066
+        },
+        {
+          "X1": 3.25062418,
+          "X2": 171.628983,
+          "X3": 0.27980873
+        },
+        {
+          "X1": 5.16542625,
+          "X2": 558.092163,
+          "X3": 0.311183631
+        },
+        {
+          "X1": 6.181178,
+          "X2": 325.496155,
+          "X3": 0.263404518
+        },
+        {
+          "X1": 7.884658,
+          "X2": 763.5036,
+          "X3": 0.254443765
+        },
+        {
+          "X1": 5.98942471,
+          "X2": 282.44696,
+          "X3": 0.327305734
+        },
+        {
+          "X1": 6.231102,
+          "X2": 243.743408,
+          "X3": 0.3050793
+        },
+        {
+          "X1": 8.72062,
+          "X2": 100.560837,
+          "X3": 0.271738857
+        },
+        {
+          "X1": 8.088089,
+          "X2": 293.772369,
+          "X3": 0.24220632
+        },
+        {
+          "X1": 3.64749718,
+          "X2": 448.629425,
+          "X3": 0.264018118
+        },
+        {
+          "X1": 2.67967749,
+          "X2": 165.914642,
+          "X3": 0.206759438
+        },
+        {
+          "X1": 2.22616267,
+          "X2": 584.76825,
+          "X3": 0.329489857
+        },
+        {
+          "X1": 8.071207,
+          "X2": 990.7334,
+          "X3": 0.294606924
+        },
+        {
+          "X1": 4.948256,
+          "X2": 104.786613,
+          "X3": 0.326087236
+        },
+        {
+          "X1": 4.85258532,
+          "X2": 881.862366,
+          "X3": 0.364703536
+        },
+        {
+          "X1": 8.325523,
+          "X2": 704.580261,
+          "X3": 0.228134945
+        },
+        {
+          "X1": 3.09361,
+          "X2": 486.091644,
+          "X3": 0.253502846
+        },
+        {
+          "X1": 9.690039,
+          "X2": 234.127731,
+          "X3": 0.320623815
+        },
+        {
+          "X1": 8.871344,
+          "X2": 618.785156,
+          "X3": 0.253434241
+        },
+        {
+          "X1": 2.79803538,
+          "X2": 776.926331,
+          "X3": 0.3171611
+        },
+        {
+          "X1": 2.24838948,
+          "X2": 142.430832,
+          "X3": 0.304709464
+        },
+        {
+          "X1": 5.649031,
+          "X2": 137.787048,
+          "X3": 0.307866633
+        },
+        {
+          "X1": 4.0655303,
+          "X2": 461.0938,
+          "X3": 0.3156689
+        },
+        {
+          "X1": 7.190914,
+          "X2": 565.1397,
+          "X3": 0.202597111
+        },
+        {
+          "X1": 5.02237654,
+          "X2": 251.850647,
+          "X3": 0.237075686
+        },
+        {
+          "X1": 7.32058525,
+          "X2": 854.446533,
+          "X3": 0.348395079
+        },
+        {
+          "X1": 7.9697423,
+          "X2": 819.6764,
+          "X3": 0.309573472
+        },
+        {
+          "X1": 4.00048447,
+          "X2": 932.7163,
+          "X3": 0.203196526
+        },
+        {
+          "X1": 6.966943,
+          "X2": 294.73056,
+          "X3": 0.280980617
+        },
+        {
+          "X1": 6.17923164,
+          "X2": 943.7218,
+          "X3": 0.379701853
+        },
+        {
+          "X1": 7.028293,
+          "X2": 525.5115,
+          "X3": 0.227660567
+        },
+        {
+          "X1": 3.781674,
+          "X2": 626.977966,
+          "X3": 0.273971349
+        },
+        {
+          "X1": 9.777431,
+          "X2": 809.1711,
+          "X3": 0.3656091
+        },
+        {
+          "X1": 3.795538,
+          "X2": 485.334229,
+          "X3": 0.375098377
+        },
+        {
+          "X1": 2.517306,
+          "X2": 634.7603,
+          "X3": 0.22311531
+        },
+        {
+          "X1": 5.19737148,
+          "X2": 122.824333,
+          "X3": 0.357629478
+        },
+        {
+          "X1": 7.316538,
+          "X2": 830.1726,
+          "X3": 0.296379268
+        },
+        {
+          "X1": 2.23610163,
+          "X2": 962.019165,
+          "X3": 0.21066989
+        },
+        {
+          "X1": 8.978478,
+          "X2": 618.0274,
+          "X3": 0.3637049
+        },
+        {
+          "X1": 8.994537,
+          "X2": 555.2039,
+          "X3": 0.270720184
+        },
+        {
+          "X1": 3.25610137,
+          "X2": 607.6772,
+          "X3": 0.3021056
+        },
+        {
+          "X1": 8.031414,
+          "X2": 407.872742,
+          "X3": 0.200213313
+        },
+        {
+          "X1": 2.10251641,
+          "X2": 268.513947,
+          "X3": 0.355497718
+        },
+        {
+          "X1": 2.849949,
+          "X2": 692.1307,
+          "X3": 0.21628283
+        },
+        {
+          "X1": 7.476581,
+          "X2": 378.418518,
+          "X3": 0.208915785
+        },
+        {
+          "X1": 5.782069,
+          "X2": 465.54776,
+          "X3": 0.33043167
+        },
+        {
+          "X1": 7.37697363,
+          "X2": 184.860031,
+          "X3": 0.2348272
+        },
+        {
+          "X1": 3.47378063,
+          "X2": 382.567383,
+          "X3": 0.2833694
+        },
+        {
+          "X1": 4.90556049,
+          "X2": 884.4885,
+          "X3": 0.349773973
+        }
+      ],
+      "NumPaths": 50,
+      "Parameters": [
+        {
+          "$type": "Models.Sensitivity.Parameter, Models",
+          "Name": "SOC",
+          "Path": "Field.Soil.SoilOrganicMatter.OC[1]",
+          "LowerBound": 1.0,
+          "UpperBound": 10.0
+        },
+        {
+          "$type": "Models.Sensitivity.Parameter, Models",
+          "Name": "Load",
+          "Path": "Field.Folder.AddUrinePatches.Script.DepositionLoad",
+          "LowerBound": 100.0,
+          "UpperBound": 1000.0
+        },
+        {
+          "$type": "Models.Sensitivity.Parameter, Models",
+          "Name": "DUL",
+          "Path": "Field.Soil.Water.DUL[1]",
+          "LowerBound": 0.2,
+          "UpperBound": 0.4
+        }
+      ],
+      "Name": "SobolMethodExample",
+      "Children": [
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "Name": "UrinePatchSimulation",
+          "Children": [
+            {
+              "$type": "Models.Clock, Models",
+              "StartDate": "1972-01-01T00:00:00",
+              "EndDate": "1975-12-31T00:00:00",
+              "Name": "Clock",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Weather, Models",
+              "FileName": "%root%\\Examples\\WeatherFiles\\VCS_Ruakura.met",
+              "ExcelWorkSheetName": "",
+              "Name": "Weather",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "CaptureErrors": true,
+              "CaptureWarnings": true,
+              "CaptureSummaryText": true,
+              "Name": "Summary",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+              "Name": "SoilArbitrator",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Zone, Models",
+              "Area": 1.0,
+              "Slope": 0.0,
+              "Name": "Field",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Folder",
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "// Defoliates AgPasture on a regular rotation or one-off via a schedule\r\n// currenty defoliates the amount specified by spreading evenly over the specified period\r\n\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t// - Links to APSIM models\r\n\t\t[Link] Zone zone;\r\n\t\t[Link] Clock Clock;\r\n\t\t[Link] Fertiliser fertiliser;\r\n\t\t[ScopedLinkByName] ISolute urea;\r\n\t\t[Link] Soil mySoil;\r\n\t\t[Link] ISummary summary = null;\r\n\t\t[Link] AgPasture.Sward Pasture;\r\n        \r\n\t\t// - Parameters for this manager\r\n\t\t[Separator(\"Rules for controlling pasture defoliation and residue management\")]\r\n\r\n\t\t[Description(\"Allow this manager to control defoliation? (untick if using Operations for defoliation)\")] public bool ControlDefoliationAllowed { get; set; }\r\n\t\t[Description(\"Date to begin the rotation: \")] public DateTime CutRotationStartDate { get; set; }\r\n\t\t[Description(\"Date to finish the rotation: \")] public DateTime CutRotationEndDate { get; set; }\r\n\t\t[Description(\"How the interval is defined? \")] public rotationIntervalTypes IntervalType { get; set; }\r\n\t\t[Description(\"Rotation interval (days): \")] public int CutInterval { get; set; }\r\n\t\t[Description(\"Duration of each event (days): \")] public int DurationOfCut { get; set; }\r\n\t\t[Description(\"What amount is being defined? \")] public removeAmountTypes RemoveAmountType { get; set; }\r\n\t\t[Description(\"Amount to use (kg/ha): \")] public double AmountGiven { get; set; }\r\n\r\n\t\t[Separator(\"Management of harvested material and residue\")] \r\n\t\t[Description(\"How much of harvested DM (and C) is removed from the simulation? \")] public removeDMTypes DMRemoveType { get; set; }\r\n\t\t[Description(\"Fraction of harvested material to remove, if choosing UseTheFractionSetBelow (0-1):\")] public double fractionDM2Remove  { get; set; }\r\n\t\t[Description(\"Fraction of harvested N that is removed from the simulation (0-1):\")] public double FractionN2Remove { get; set; }\r\n\t\t[Description(\"How the non-removed material is returned to the soil? \")] public returnTypes ReturnType { get; set; }\r\n\r\n\t\t[Separator(\"Parameters used when returning material as dung and urine\")]\r\n\t\t[Description(\"How should the partitioning of N to dung and urine be defined? \")] public dungNContentTypes NDungType { get; set; }\r\n\t\t[Description(\"Proportion of N returned in dung (0-1): \")] public double ProportionN2Dung { get; set; }\r\n\t\t[Description(\"The C:N of dung (typically around 20): \")] public double CNRatioDung { get; set; }\r\n\t\t[Description(\"Depth in the soil to which urine is applied (mm): \")] public double UrineDepth { get; set; }\r\n\r\n\t\t// - Outputs from this manager\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Pasture DM defoliated today\r\n        public double DefoliatedWt { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Pasture N defoliate today\r\n        public double DefoliatedN { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Pasture DM harvested today\r\n        public double HarvestedWt { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Pasture N harvested today\r\n        public double HarvestedN { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Pasture DM removed from the field\r\n        public double RemovedWt { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Pasture N removed from the field\r\n        public double RemovedN { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Residue DM returned to the field\r\n        public double ReturnedWt { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Residue N returned to the field\r\n        public double ReturnedN { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Harvested N returned as dung (SurfaceOM)\r\n        public double NReturnedInDung { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Harvested N returned as urine (urea)\r\n        public double NReturnedInUrine { get; set; }\r\n\t\t[XmlIgnore][Units(\"day\")]// Description: Number of days after last defoliation\r\n        public int DaysAfterCut { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut\r\n        public double PreHarvestDM { get; set; }\r\n\t\t[XmlIgnore][Units(\"g/m2\")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut\r\n        public double PostHarvestDM { get; set; }\r\n\t\t[XmlIgnore][Units(\"\")]// auxiliary flag for defoliation\r\n        public bool aCutHasHappened { get; set; }\r\n\r\n\t\t[XmlIgnore][Units(\"\")] public bool HarvestedToday { get; set; }\r\n\t\t// auxiliary flag for defoliation\r\n\r\n\r\n\t\t// - Internal variables\r\n\t\t// number of days for each defoliation event\r\n\t\tprivate int cuttingDuration = 0;\r\n\t\t// counter for day within each defoliation\r\n\t\tprivate int daysCutting = 0;\r\n\t\t// total existing DM harvestable\r\n\t\tprivate double existingDM;\r\n\t\t// total herbage to remove in g/m2 per day\r\n\t\tprivate double herbageToRemove;\r\n\t\t// type of DM amount (ResidualDM or DMToRemove)\r\n\t\tprivate string amountType;\r\n\t\t// fraction of urine that is applied to each layer\r\n\t\tprivate double[] fractionUrine;\r\n\t\t// number of layers in the soil\r\n\t\tprivate int nLayers;\r\n\r\n\t\t// - Event to add residue or dung to surface OM\r\n\t\tpublic event BiomassRemovedDelegate BiomassRemoved;\r\n\r\n\t\t[EventSubscribe(\"StartOfSimulation\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// reset variables\r\n\t\t\tDaysAfterCut = 0;\r\n\t\t\tresetVariables();\r\n\t\t\tcuttingDuration = DurationOfCut;\r\n\t\t\tHarvestedToday = false;\r\n            \r\n\t\t\t// get the type of amount given\r\n\t\t\tif (RemoveAmountType == removeAmountTypes.ResidualDM)\r\n\t\t\t\tamountType = \"SetResidueAmount\";\r\n\t\t\telse\r\n\t\t\t\tamountType = \"SetRemoveAmount\";\r\n\r\n\t\t\t// make sure that rotation start when startDate < simulationStartDay\r\n\t\t\tif ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))\r\n\t\t\t\tCutRotationStartDate = Clock.Today;\r\n\r\n\t\t\t// set the fraction of urine for each layer\r\n\t\t\tnLayers = mySoil.Thickness.Length;\r\n\t\t\tfractionUrine = new double[nLayers];\r\n\t\t\tdouble soilDepth = 0.0;\r\n\t\t\tdouble distFactor = 1.5;\r\n\t\t\tif (ReturnType == returnTypes.AsDungUrine)\r\n\t\t\t{\r\n\t\t\t\tdouble atZ0;\r\n\t\t\t\tdouble atZ1;\r\n\t\t\t\tdouble totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);\r\n                \r\n\t\t\t\tatZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);\r\n\t\t\t\tfor (int z = 0; z < nLayers; z++)\r\n\t\t\t\t{\r\n\t\t\t\t\tatZ0 = atZ1;\r\n\t\t\t\t\tsoilDepth += mySoil.Thickness[z];\r\n\t\t\t\t\tatZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);\r\n\t\t\t\t\tif (1.0 - (soilDepth / UrineDepth) < 0.0)\r\n\t\t\t\t\t\tatZ1 = 0;\r\n\t\t\t\t\tfractionUrine[z] = (atZ0 - atZ1) / totalProp;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\tsummary.WriteMessage(this, \"Cut rotation initialised. Management valid between \" + CutRotationStartDate.ToShortDateString() + \" and \" + CutRotationEndDate.ToShortDateString());\r\n\t\t\tsummary.WriteMessage(this, \"   manager will remove biomass every \" + CutInterval + \" days.\");\r\n\t\t\tif (amountType == \"SetResidueAmount\")\r\n\t\t\t\tsummary.WriteMessage(this, \"   removing all biomass down to a residue of \" + AmountGiven.ToString(\"#0.0\") + \" kg/ha.\");\r\n\t\t\telse\r\n\t\t\t\tsummary.WriteMessage(this, \"   removing \" + AmountGiven.ToString(\"#0.0\") + \" kg/ha in every event.\");\r\n\t\t}\r\n        \r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// Check whether defoliation is allowed at all\r\n\t\t\tHarvestedToday = false;\r\n\t\t\tif (ControlDefoliationAllowed)\r\n\t\t\t{\r\n\t\t\t\tif (Clock.Today == CutRotationStartDate)\r\n\t\t\t\t\tDaysAfterCut = CutInterval;\r\n\r\n\t\t\t\t// Check whether we can defoliate\r\n\t\t\t\tif ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))\r\n\t\t\t\t{\r\n\t\t\t\t\t// Check whether we should start a defoliation\r\n\t\t\t\t\tif ((Pasture.IsAlive) && (DaysAfterCut >= (CutInterval - 1)))\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tStartDefoliation(AmountGiven, amountType, DurationOfCut);\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t\t//// Note: Only the code above should be limited by 'ControlDefoliationAllowed'. So the rest of the code\r\n\t\t\t////  can be used by being called from another manager or a schedulle thingy\r\n\r\n\t\t\t// Check whether we need to continue cutting\r\n\t\t\tif ((daysCutting > 0) && (daysCutting < cuttingDuration))\r\n\t\t\t{\r\n\t\t\t\t// reset outputs\r\n\t\t\t\tresetVariables();\r\n\r\n\t\t\t\t// remove biomass and return residue\r\n\t\t\t\tremoveDM(herbageToRemove);\r\n\t\t\t\tif (ReturnType == returnTypes.AsResidue)\r\n\t\t\t\t\treturnResidues();\r\n\t\t\t\telse\r\n\t\t\t\t\treturnExcreta();\r\n\t\t\t\tdaysCutting += 1;\r\n\t\t\t\tif (daysCutting == cuttingDuration)\r\n\t\t\t\t\tPostHarvestDM = Pasture.StandingHerbageWt;\r\n\t\t\t}\r\n\r\n\t\t\t// reset outputs\r\n\t\t\tif (daysCutting < 0)\r\n\t\t\t{\r\n\t\t\t\tresetVariables();\r\n\t\t\t\tdaysCutting = 0;\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"DoManagementCalculations\")]\r\n\t\tprivate void OnDoManagementCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// Check whether a cutting has finished\r\n\t\t\tif (daysCutting == cuttingDuration)\r\n\t\t\t{\r\n\t\t\t\taCutHasHappened = true;\r\n\t\t\t\tdaysCutting = -1;\r\n\t\t\t}\r\n\r\n\t\t\t// Increase the counter for days after cutting\r\n\t\t\tif (aCutHasHappened && (daysCutting == 0))\r\n\t\t\t\tDaysAfterCut += 1;\r\n\t\t}\r\n\r\n\t\t// Resets the values of all outputs\r\n\t\tprivate void resetVariables()\r\n\t\t{\r\n\t\t\tDefoliatedWt = 0.0;\r\n\t\t\tDefoliatedN = 0.0;\r\n\t\t\tHarvestedWt = 0.0;\r\n\t\t\tHarvestedN = 0.0;\r\n\t\t\tRemovedWt = 0.0;\r\n\t\t\tRemovedN = 0.0;\r\n\t\t\tReturnedWt = 0.0;\r\n\t\t\tReturnedN = 0.0;\r\n\t\t\tNReturnedInDung = 0.0;\r\n\t\t\tNReturnedInUrine = 0.0;\r\n\t\t}\r\n\r\n\t\t// Description: Perform the basic calculations for defoliation\r\n\t\tpublic void StartDefoliation(double amountDM, string amountType, int duration)\r\n\t\t{\r\n\t\t\t// Get the existing plant amount\r\n\t\t\tPreHarvestDM = Pasture.StandingHerbageWt;\r\n\t\t\texistingDM = Pasture.HarvestableWt;\r\n\t\t\tHarvestedToday = true;\r\n            \r\n\t\t\t// Check the amount to remove and print some info\r\n\t\t\tif ((amountType == \"SetRemoveAmount\") && (existingDM >= amountDM / duration))\r\n\t\t\t{\r\n\t\t\t\tsummary.WriteMessage(this, \"   Defoliating \" + (amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n\t\t\t\therbageToRemove = amountDM / duration;\r\n\t\t\t}\r\n\t\t\telse if ((amountType == \"SetResidueAmount\") && (existingDM >= amountDM))\r\n\t\t\t{\r\n\t\t\t\tsummary.WriteMessage(this, \"   Defoliating down to approximately \" + (amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n\t\t\t\therbageToRemove = (PreHarvestDM - amountDM) / duration;\r\n\t\t\t}\r\n\t\t\telse\r\n\t\t\t{\r\n\t\t\t\tsummary.WriteMessage(this, \"   Defoliation will not happend because there is not enough plant material\");\r\n\t\t\t\tif (IntervalType == rotationIntervalTypes.FixedInterval)\r\n\t\t\t\t\tDaysAfterCut = -duration;\r\n\t\t\t\treturn;\r\n\t\t\t}\r\n\r\n\t\t\tcuttingDuration = duration;\r\n\t\t\t// Preform first defoliation\r\n\t\t\tremoveDM(herbageToRemove);\r\n\t\t\tif (ReturnType == returnTypes.AsResidue)\r\n\t\t\t\treturnResidues();\r\n\t\t\telse\r\n\t\t\t\treturnExcreta();\r\n\t\t\tdaysCutting = 1;\r\n\t\t\tDaysAfterCut = 0;\r\n\t\t\tif (daysCutting == cuttingDuration)\r\n\t\t\t\tPostHarvestDM = Pasture.StandingHerbageWt;\r\n\t\t}\r\n\r\n\t\t// Do the DM removal\r\n\t\tprivate void removeDM(double removeAmount)\r\n\t\t{\r\n\t\t\tPasture.Graze(amount: removeAmount, type: \"SetRemoveAmount\");\r\n            \r\n\t\t\t// get total harvested\r\n\t\t\tDefoliatedWt = Pasture.HarvestedWt;\r\n\t\t\tDefoliatedN = Pasture.HarvestedN;\r\n\t\t\tHarvestedWt = DefoliatedWt;\r\n\t\t\tHarvestedN = DefoliatedN;\r\n\r\n\t\t\t// get amounts actually removed from field and that to be returned (dung/urine)\r\n\t\t\tif (DMRemoveType == removeDMTypes.RemoveAll)\r\n\t\t\t\tfractionDM2Remove = 1.0;\r\n\t\t\telse if (DMRemoveType == removeDMTypes.RemoveNone)\r\n\t\t\t\tfractionDM2Remove = 0.0;\r\n\t\t\telse\r\n\t\t\t\tfractionDM2Remove = Pasture.HarvestedDigestibility; //UseTheFractionSetBelow\r\n\r\n\t\t\tRemovedWt = HarvestedWt * fractionDM2Remove;\r\n\t\t\tRemovedN = HarvestedN * FractionN2Remove;\r\n\t\t\tReturnedWt = HarvestedWt - RemovedWt;\r\n\t\t\tReturnedN = HarvestedN - RemovedN;\r\n            \r\n\t\t\tif (ReturnType == returnTypes.AsDungUrine)\r\n\t\t\t{\r\n\t\t\t\tif (NDungType == dungNContentTypes.DefineProportion)\r\n\t\t\t\t\tNReturnedInDung = ReturnedN * ProportionN2Dung;\r\n\t\t\t\telse\r\n\t\t\t\t\tNReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);\r\n\t\t\t\tNReturnedInUrine = ReturnedN - NReturnedInDung;\r\n\t\t\t}\r\n\t\t\telse\r\n\t\t\t{\r\n\t\t\t\tNReturnedInDung = 0.0;\r\n\t\t\t\tNReturnedInUrine = 0.0;\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t// Return dung and urine\r\n\t\tprivate void returnExcreta()\r\n\t\t{\r\n\t\t\tif ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))\r\n\t\t\t{\r\n\t\t\t\tPMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n\t\t\t\tstring[] type = new string[] { \"RuminantDung_PastureFed\" };\r\n\t\t\t\tfloat[] dltdm = new float[] { (Single)ReturnedWt };\r\n\t\t\t\tfloat[] dltn = new float[] { (Single)NReturnedInDung };\r\n\t\t\t\tfloat[] dltp = new float[] { 0 };\r\n\t\t\t\tfloat[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n\t\t\t\tBiomassDung.crop_type = \"RuminantDung_PastureFed\";\r\n\t\t\t\tBiomassDung.dm_type = type;\r\n\t\t\t\tBiomassDung.dlt_crop_dm = dltdm;\r\n\t\t\t\tBiomassDung.dlt_dm_n = dltn;\r\n\t\t\t\tBiomassDung.dlt_dm_p = dltp;\r\n\t\t\t\tBiomassDung.fraction_to_residue = fraction;\r\n\t\t\t\tBiomassRemoved.Invoke(BiomassDung);\r\n\t\t\t}\r\n\r\n\t\t\tif (NReturnedInUrine > 0.0)\r\n\t\t\t{\r\n\t\t\t\tdouble[] myUrineDeposition = new double[nLayers];\r\n\t\t\t\tfor (int z = 0; z < nLayers; z++)\r\n\t\t\t\t\tmyUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];\r\n\r\n\t\t\t\turea.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t// Return pasture residues\r\n\t\tprivate void returnResidues()\r\n\t\t{\r\n\t\t\tif ((ReturnedWt > 0.0) || (ReturnedN > 0.0))\r\n\t\t\t{\r\n\t\t\t\tPMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n\t\t\t\tstring[] type = new string[] { \"Grass\" };\r\n\t\t\t\tfloat[] dltdm = new float[] { (Single)ReturnedWt };\r\n\t\t\t\tfloat[] dltn = new float[] { (Single)ReturnedN };\r\n\t\t\t\tfloat[] dltp = new float[] { 0 };\r\n\t\t\t\tfloat[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n\t\t\t\tBiomassDung.crop_type = \"Grass\";\r\n\t\t\t\tBiomassDung.dm_type = type;\r\n\t\t\t\tBiomassDung.dlt_crop_dm = dltdm;\r\n\t\t\t\tBiomassDung.dlt_dm_n = dltn;\r\n\t\t\t\tBiomassDung.dlt_dm_p = dltp;\r\n\t\t\t\tBiomassDung.fraction_to_residue = fraction;\r\n\t\t\t\tBiomassRemoved.Invoke(BiomassDung);\r\n\t\t\t}\r\n\t\t}\r\n        \r\n\t\t// Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\r\n\r\n\t\tpublic enum removeAmountTypes\r\n\t\t{\r\n\t\t\t/// <summary>Setting DM amount to remove</summary>\r\n\t\t\tDMToRemove,\r\n\t\t\t/// <summary>Setting residual DM amount</summary>\r\n\t\t\tResidualDM\r\n\t\t}\r\n\r\n\t\tpublic enum rotationIntervalTypes\r\n\t\t{\r\n\t\t\t/// <summary>Setting a fixed interval</summary>\r\n\t\t\tFixedInterval,\r\n\t\t\t/// <summary>Setting a target (minimum) inteval</summary>\r\n\t\t\tTargetInterval\r\n\t\t}\r\n        \r\n\t\tpublic enum removeDMTypes\r\n\t\t{\r\n\t\t\t/// <summary>Remove all DM</summary>\r\n\t\t\tRemoveAll,\r\n\t\t\t/// <summary>Remove no DM</summary>\r\n\t\t\tRemoveNone,\r\n\t\t\t/// <summary>Remove a fraction based on digestibility</summary>\r\n\t\t\tBasedOnDigestibility,\r\n\t\t\t/// <summary>Remove a user-defined fraction</summary>\r\n\t\t\tUseTheFractionSetBelow\r\n\t\t}\r\n\r\n\t\tpublic enum returnTypes\r\n\t\t{\r\n\t\t\t/// <summary>Return plant material as residue</summary>\r\n\t\t\tAsResidue,\r\n\t\t\t/// <summary>Return meterial as dung and urine</summary>\r\n\t\t\tAsDungUrine\r\n\t\t}\r\n\r\n\t\tpublic enum dungNContentTypes\r\n\t\t{\r\n\t\t\t/// <summary>Define the proportion of N returned as dung</summary>\r\n\t\t\tDefineProportion,\r\n\t\t\t/// <summary>Define the C:N of dung</summary>\r\n\t\t\tDefineCNratio,\r\n\t\t}\r\n\t}\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "ControlDefoliationAllowed",
+                          "Value": "True"
+                        },
+                        {
+                          "Key": "CutRotationStartDate",
+                          "Value": "1900-01-01"
+                        },
+                        {
+                          "Key": "CutRotationEndDate",
+                          "Value": "2100-12-31"
+                        },
+                        {
+                          "Key": "IntervalType",
+                          "Value": "FixedInterval"
+                        },
+                        {
+                          "Key": "CutInterval",
+                          "Value": "21"
+                        },
+                        {
+                          "Key": "DurationOfCut",
+                          "Value": "1"
+                        },
+                        {
+                          "Key": "RemoveAmountType",
+                          "Value": "ResidualDM"
+                        },
+                        {
+                          "Key": "AmountGiven",
+                          "Value": "1500"
+                        },
+                        {
+                          "Key": "DMRemoveType",
+                          "Value": "RemoveAll"
+                        },
+                        {
+                          "Key": "fractionDM2Remove",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "FractionN2Remove",
+                          "Value": "1"
+                        },
+                        {
+                          "Key": "ReturnType",
+                          "Value": "AsDungUrine"
+                        },
+                        {
+                          "Key": "NDungType",
+                          "Value": "DefineProportion"
+                        },
+                        {
+                          "Key": "ProportionN2Dung",
+                          "Value": "0.4"
+                        },
+                        {
+                          "Key": "CNRatioDung",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "UrineDepth",
+                          "Value": "250"
+                        }
+                      ],
+                      "Name": "CutRotation",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "// Adds a urine patch\r\n\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [ScopedLinkByName] ISolute urea;\r\n        [Link] Soil mySoil;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Parameters for this manager\r\n        [Separator(\"Addition of a single urine patch\")]\r\n\r\n        //[Description(\"Test date array: \")] public DateTime[] TestDates { get; set; }\r\n        [Description(\"Date for the urine deposition: \")] public DateTime FirstDepositionDate { get; set; }\r\n        [Description(\"Interval between depositions (years): \")] public double DepositionInterval { get; set; }\r\n        [Description(\"Number of depositions (-): \")] public int Depositions { get; set; }\r\n        [Description(\"Nitrogen load within the urine patch (kg N /ha): \")] public double DepositionLoad { get; set; }\r\n        [Description(\"Depth in the soil to which urine is applied (mm): \")] public double DepositionDepth { get; set; }\r\n\r\n        // - Outputs from this manager\r\n        [XmlIgnore][Units(\"\")] public DateTime[] DepositionDates { get; set; }\r\n        [XmlIgnore][Units(\"\")] public int DepositionMonth { get; set; }\r\n        [XmlIgnore][Units(\"\")] public int DepositionYear { get; set; }  // this will change with each sucessive urine patch\r\n\r\n        // - Internal variables\r\n\r\n        private double[] fractionUrine;  // fraction of urine that is applied to each layer\r\n        private int nLayers;  // number of layers in the soil\r\n\r\n        public event BiomassRemovedDelegate BiomassRemoved;  // - Event to add residue or dung to surface OM\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \t// sort out the array of dates\r\n        \tint maxDepositions = Convert.ToInt32(Math.Floor((Clock.EndDate.Year - Clock.StartDate.Year ) / DepositionInterval));\r\n        \tif (Depositions > maxDepositions)\r\n        \t\tthrow new Exception(\"Too many Depositions specified, the maximum possible in this simulation is \" + maxDepositions);\r\n       \t\t//summary.WriteMessage(this, \"Too many Depositions specified, the maximum possible in this simulation is \" + maxDepositions);\r\n        \tDepositionDates = new DateTime[Depositions];\r\n        \tfor (int i = 0; i < Depositions; i++)\r\n        \t{\r\n        \t\tDepositionDates[i] = FirstDepositionDate.AddYears(Convert.ToInt32(i * DepositionInterval));\r\n        \t\tsummary.WriteMessage(this, \"DepositionDates[i] \" + i + \"  \" + DepositionDates[i].ToShortDateString());\r\n        \t}\r\n        \tDepositionYear = DepositionDates[0].Year;\r\n      \t\tDepositionMonth = FirstDepositionDate.Month;\r\n\r\n      \t\t// set the fraction of urine for each layer\r\n            nLayers = mySoil.Thickness.Length;\r\n            fractionUrine = new double[nLayers];\r\n            double soilDepth = 0.0;\r\n            double distFactor = 1.5;\r\n            double atZ0;\r\n            double atZ1;\r\n            double totalProp = DepositionDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);\r\n                \r\n            atZ1 = (DepositionDepth - soilDepth) * Math.Pow(1.0 - soilDepth / DepositionDepth, distFactor) / (distFactor + 1.0);\r\n            for (int z = 0; z < nLayers; z++)\r\n            {\r\n                atZ0 = atZ1;\r\n                soilDepth += mySoil.Thickness[z];\r\n                atZ1 = (DepositionDepth - soilDepth) * Math.Pow(1.0 - soilDepth / DepositionDepth, distFactor) / (distFactor + 1);\r\n                if (1.0 - (soilDepth / DepositionDepth) < 0.0)\r\n                    atZ1 = 0;\r\n                fractionUrine[z] = (atZ0 - atZ1) / totalProp;\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tfor (int i = 0; i < DepositionDates.Length; i++)\r\n        \t{\r\n\t        \tif (Clock.Today == DepositionDates[i])\r\n\t        \t{\r\n    \t            returnExcreta();\r\n                   \tDepositionYear = Clock.Today.Year;\r\n    \t        }\r\n        \t}\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n\r\n\r\n        // Return dung and urine\r\n        private void returnExcreta()\r\n        {\r\n                double[] myUrineDeposition = new double[nLayers];\r\n                double fractionNInUrea = 1 / 0.46;\r\n                for (int z = 0; z < nLayers; z++)\r\n                    myUrineDeposition[z] = DepositionLoad * fractionUrine[z]; // * fractionNInUrea;\r\n                // \"Urea\" is being treated as UreaN at present (ditto for NO3 and NH4) - issue report #3353 submitted (5 Dec 2018)\r\n                urea.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "FirstDepositionDate",
+                          "Value": "1972-08-15"
+                        },
+                        {
+                          "Key": "DepositionInterval",
+                          "Value": "2"
+                        },
+                        {
+                          "Key": "Depositions",
+                          "Value": "1"
+                        },
+                        {
+                          "Key": "DepositionLoad",
+                          "Value": "600"
+                        },
+                        {
+                          "Key": "DepositionDepth",
+                          "Value": "300"
+                        }
+                      ],
+                      "Name": "AddUrinePatches",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] public string[] FertiliserDates { get; set; }  // ignore for now\r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tforeach (string ddMMM in FertiliserDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n        \t\t{\r\n        \t\t\tif (AmountType)\r\n        \t\t\t\tFertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        \t\t\telse\r\n        \t\t\t\tFertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n        \t\t}\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "FertiliserType",
+                          "Value": "UreaN"
+                        },
+                        {
+                          "Key": "FertiliserDates",
+                          "Value": "5-jan, 5-feb, 5-mar, 5-apr, 5-aug, 5-sep, 5-oct, 5-nov, 5-dec"
+                        },
+                        {
+                          "Key": "Amount",
+                          "Value": "100"
+                        },
+                        {
+                          "Key": "AmountType",
+                          "Value": "False"
+                        }
+                      ],
+                      "Name": "FertiliseOnFixedDates",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        //Communication to other modules\r\n        [Link] ISummary summary = null;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link(IsOptional = true)] IPlant existingCrop;\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [XmlIgnore] public double TopSWdeficit { get; set; }\r\n        [XmlIgnore] public double TopSWC { get; set; }\r\n        [XmlIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [XmlIgnore] public double AmountToApply { get; set; }\r\n        [XmlIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = Soil.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);\r\n                TopLL += Soil.LL15mm[layer] * fracLayer;\r\n                TopDUL += Soil.DULmm[layer] * fracLayer;\r\n                depthFromSurface += Soil.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + Soil.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);\r\n                TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;\r\n                depthFromSurface += Soil.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "allowIrrigation",
+                          "Value": "False"
+                        },
+                        {
+                          "Key": "seasonStart",
+                          "Value": "15-Aug"
+                        },
+                        {
+                          "Key": "seasonEnd",
+                          "Value": "30-May"
+                        },
+                        {
+                          "Key": "seasonsAllocation",
+                          "Value": "10000"
+                        },
+                        {
+                          "Key": "triggerDeficit",
+                          "Value": "50"
+                        },
+                        {
+                          "Key": "targetDeficit",
+                          "Value": "99"
+                        },
+                        {
+                          "Key": "returndays",
+                          "Value": "1"
+                        },
+                        {
+                          "Key": "maximumAmount",
+                          "Value": "30"
+                        },
+                        {
+                          "Key": "depthPAWC",
+                          "Value": "300"
+                        }
+                      ],
+                      "Name": "AutomaticIrrigation",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] SoluteManager mySolutes;\r\n        [Link] Soil mySoil;\r\n        [Link] ISummary summary = null;\r\n        [Link] AgPasture.Sward Pasture;\r\n\r\n        //[ScopedLinkByName] Report.Report HarvestReport;\r\n\r\n        [Separator(\"Point to component and true/false variable for the harvesting\")]\r\n        [Description(\"Name of the component that does the reporting       :\")] public string ReportName { get; set; }\r\n\r\n        public double HarvestedWt { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n\r\n        [XmlIgnore][Units(\"\")] public DateTime[] ResetDates { get; set; }\r\n        [XmlIgnore][Units(\"\")] public DateTime[] ReportDates { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double HerbageCut { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double HerbageNCut { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Fixation { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double LeachN { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Denit { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double DenitN2O { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Drainage { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double PropLeached { get; set; }\r\n\r\n        private double[] soilUrea;\r\n        private double[] soilNH4;\r\n        private double[] soilNO3;\r\n        private double urineApplied;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \t// set the reset and reporting dates\r\n        \tDateTime[] urineDates = (DateTime[])Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionDates\");\r\n        \tResetDates = new DateTime[urineDates.Length + 1];\r\n        \tReportDates = new DateTime[urineDates.Length + 1];\r\n        \tfor (int i = 0; i < urineDates.Length; i++)\r\n        \t{\r\n        \t\tResetDates[i] = urineDates[i].AddDays(-1);  // -1 because this manager is after AddUrinePatches\r\n        \t\tReportDates[i] = urineDates[i].AddYears(2).AddDays(-2); // -2 to capture the data before the reset\r\n        \t\tsummary.WriteMessage(this, \"ReportDate \" + i + \" \" + ReportDates[i]);\r\n        \t}\r\n        \tsoilUrea = new double[mySoil.Depth.Length];\r\n        \tsoilNH4 = new double[mySoil.Depth.Length];\r\n        \tsoilNO3 = new double[mySoil.Depth.Length];\r\n\r\n        \turineApplied = (double)Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionLoad\");\r\n       \t\tsummary.WriteMessage(this, \"DoReportingSensit has found a urineApplied value of \" + urineApplied);\r\n\r\n       \t\tsummary.WriteMessage(this, \"DoReportingSensit has initialised\");\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\t\t\tif (DateUtilities.Equals(ResetDates[0], Clock.Today))\r\n\t\t\t{\r\n\t\t\t\tsoilUrea = mySoil.UreaN;\r\n\t\t\t\tsoilNH4 = mySoil.NH4N;\r\n\t\t\t\tsoilNO3 = mySoil.NO3N;\r\n\t\t\t\tsummary.WriteMessage(this, \"Capturing soil mineral N values for future resetting\");\r\n\t\t\t}\r\n\r\n        \tforeach (DateTime myDate in ResetDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(myDate, Clock.Today))\r\n        \t\t{\r\n\t\t\t\t\tmySoil.UreaN = soilUrea;\r\n\t\t\t\t\tmySoil.NH4N = soilNH4;\r\n\t\t\t\t\tmySoil.NO3N = soilNO3;\r\n\t\t\t\t\tsummary.WriteMessage(this, \"Resetting soil mineral N values prior to urine deposition\");\r\n        \t\t}\r\n        \t}\r\n\r\n        \tDateTime[] urineDates = (DateTime[])Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionDates\");\r\n        \tforeach (DateTime myDate in urineDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(myDate, Clock.Today))\r\n        \t\t{\r\n\t\t\t\t\tHerbageCut = 0.0;\r\n\t\t\t\t\tHerbageNCut = 0.0;\r\n\t\t\t\t\tFixation = 0.0;\r\n\t\t\t\t\tLeachN = 0.0;\r\n\t\t\t\t\tDenit = 0.0;\r\n\t\t\t\t\tDenitN2O = 0.0;\r\n\t\t\t\t\tDrainage = 0.0;\r\n\t\t\t\t\tPropLeached = 0.0;\r\n\t\t\t\t\tsummary.WriteMessage(this, \"Resetting reporting values\");\r\n        \t\t}\r\n        \t}\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t\tHerbageCut += Pasture.HarvestedWt;\r\n\t\t\tHerbageNCut += Pasture.HarvestedN;\r\n\t\t\tFixation += Pasture.FixedN;\r\n\t\t\tLeachN += mySoil.SoilWater.LeachUrea + mySoil.SoilWater.LeachNH4 + mySoil.SoilWater.LeachNO3;\r\n\t\t\tfor (int i = 0; i < mySoil.Depth.Length; i++)\r\n\t\t\t{\r\n\t\t\t\tDenit += mySoil.SoilNitrogen.Denitrification[i];\r\n\t\t\t\tDenitN2O += mySoil.SoilNitrogen.n2o_atm[i];\r\n\t\t\t}\r\n\t\t\tDrainage += mySoil.SoilWater.Drainage;\r\n\r\n\t\t\tforeach (DateTime myDate in ReportDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(myDate, Clock.Today))\r\n        \t\t{\r\n\t\t\t\t\tif (urineApplied > 0.0)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tPropLeached = LeachN / urineApplied;\r\n\t\t\t\t\t\tsummary.WriteMessage(this, \"PropLeached calc first\" + LeachN + \" \" + urineApplied);\r\n\t\t\t\t\t}\r\n\t\t\t\t\telse\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tPropLeached = 0.0;\r\n\t\t\t\t\t\tsummary.WriteMessage(this, \"PropLeached calc second\" + LeachN + \" \" + urineApplied);\r\n\t\t       \t\t}\r\n\t\t       \t\tModels.Report.Report myReportName = Apsim.Find(this, ReportName) as Models.Report.Report;\r\n\t\t\t\t\tif (myReportName == null)\r\n   \t\t\t\t\t\tthrow new Exception(string.Format(\"Unable to locate report {0}.\", ReportName));\r\n\t\t\t\t\tmyReportName.DoOutput();\r\n        \t\t}\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "ReportName",
+                          "Value": "Report"
+                        },
+                        {
+                          "Key": "HarvestedWt",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "IntervalNHA",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "DoReportingSensit",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.MicroClimate, Models",
+                  "a_interception": 0.0,
+                  "b_interception": 0.0,
+                  "c_interception": 0.0,
+                  "d_interception": 0.0,
+                  "soil_albedo": 0.23,
+                  "SoilHeatFluxFraction": 0.4,
+                  "NightInterceptionFraction": 0.5,
+                  "ReferenceHeight": 2.0,
+                  "Name": "MicroClimate",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Irrigation, Models",
+                  "Name": "Irrigation",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Fertiliser, Models",
+                  "Name": "Fertiliser",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "InitialResidueName": "Sward",
+                  "InitialResidueType": "grass",
+                  "InitialResidueMass": 1000.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 15.0,
+                  "FractionFaecesAdded": 0.5,
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Name": "SurfaceOrganicMatter",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Soil, Models",
+                  "Weirdo": null,
+                  "RecordNumber": 0,
+                  "ASCOrder": null,
+                  "ASCSubOrder": null,
+                  "SoilType": "Umbric Andosol (ANu)",
+                  "LocalName": null,
+                  "Site": null,
+                  "NearestTown": null,
+                  "Region": null,
+                  "State": null,
+                  "Country": "New Zealan",
+                  "NaturalVegetation": null,
+                  "ApsoilNumber": null,
+                  "Latitude": -37.967,
+                  "Longitude": 175.767,
+                  "LocationAccuracy": null,
+                  "DataSource": "Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling & Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.",
+                  "Comments": "You will need to add crops to this soil before running simulations.",
+                  "Name": "Soil",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        200.0,
+                        150.0,
+                        200.0,
+                        350.0
+                      ],
+                      "BD": [
+                        1.311,
+                        1.524,
+                        1.42,
+                        1.424
+                      ],
+                      "AirDry": [
+                        0.077,
+                        0.201,
+                        0.299,
+                        0.308
+                      ],
+                      "LL15": [
+                        0.154,
+                        0.201,
+                        0.299,
+                        0.308
+                      ],
+                      "DUL": [
+                        0.374,
+                        0.332,
+                        0.426,
+                        0.446
+                      ],
+                      "SAT": [
+                        0.456,
+                        0.394,
+                        0.442,
+                        0.456
+                      ],
+                      "KS": [
+                        4832.039,
+                        389.229,
+                        21.6,
+                        19.051
+                      ],
+                      "BDMetadata": null,
+                      "AirDryMetadata": null,
+                      "LL15Metadata": null,
+                      "DULMetadata": null,
+                      "SATMetadata": null,
+                      "KSMetadata": null,
+                      "Name": "Water",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.154,
+                            0.201,
+                            0.299,
+                            0.308
+                          ],
+                          "KL": [
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.05
+                          ],
+                          "XF": [
+                            1.0,
+                            0.8,
+                            0.8,
+                            0.3
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "SwardSoil",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.154,
+                            0.201,
+                            0.299,
+                            0.308
+                          ],
+                          "KL": [
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.05
+                          ],
+                          "XF": [
+                            1.0,
+                            0.8,
+                            0.8,
+                            0.3
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "RyegrassSoil",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.154,
+                            0.201,
+                            0.299,
+                            0.308
+                          ],
+                          "KL": [
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.05
+                          ],
+                          "XF": [
+                            1.0,
+                            0.8,
+                            0.8,
+                            0.3
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "WhiteCloverSoil",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilWater, Models",
+                      "SummerDate": "1-Nov",
+                      "SummerU": 9.12,
+                      "SummerCona": 3.0,
+                      "WinterDate": "1-Apr",
+                      "WinterU": 9.12,
+                      "WinterCona": 3.0,
+                      "DiffusConst": 0.0,
+                      "DiffusSlope": 0.0,
+                      "Salb": 0.13,
+                      "CN2Bare": 73.0,
+                      "CNRed": 0.0,
+                      "CNCov": 0.0,
+                      "slope": "NaN",
+                      "discharge_width": "NaN",
+                      "catchment_area": "NaN",
+                      "max_pond": 0.0,
+                      "Thickness": [
+                        180.0,
+                        120.0,
+                        210.0,
+                        230.0
+                      ],
+                      "SWCON": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.7
+                      ],
+                      "KLAT": null,
+                      "ResidueInterception": 0.0,
+                      "Name": "SoilWater",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogen, Models",
+                      "fom_types": [
+                        "default",
+                        "manure",
+                        "mucuna",
+                        "lablab",
+                        "shemp",
+                        "stable"
+                      ],
+                      "fract_carb": [
+                        0.2,
+                        0.3,
+                        0.54,
+                        0.57,
+                        0.45,
+                        0.0
+                      ],
+                      "fract_cell": [
+                        0.7,
+                        0.3,
+                        0.37,
+                        0.37,
+                        0.47,
+                        0.1
+                      ],
+                      "fract_lign": [
+                        0.1,
+                        0.4,
+                        0.09,
+                        0.06,
+                        0.08,
+                        0.9
+                      ],
+                      "Name": "SoilNitrogen",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "Name": "NO3",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "Name": "NH4",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "Name": "Urea",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                          "Name": "PlantAvailableNO3",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                          "Name": "PlantAvailableNH4",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilOrganicMatter, Models",
+                      "RootCN": 0.0,
+                      "SoilCN": 11.01,
+                      "EnrACoeff": 0.0,
+                      "EnrBCoeff": 0.0,
+                      "Thickness": [
+                        180.0,
+                        120.0,
+                        210.0,
+                        230.0
+                      ],
+                      "Depth": [
+                        "0-18",
+                        "18-30",
+                        "30-51",
+                        "51-74"
+                      ],
+                      "OC": [
+                        7.9,
+                        2.0,
+                        1.0,
+                        0.5
+                      ],
+                      "OCMetadata": null,
+                      "FBiom": [
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.01
+                      ],
+                      "FInert": [
+                        0.26,
+                        0.5,
+                        0.9,
+                        0.99
+                      ],
+                      "RootWt": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "OCUnits": 0,
+                      "Name": "SoilOrganicMatter",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Analysis, Models",
+                      "Thickness": [
+                        180.0,
+                        120.0,
+                        210.0,
+                        230.0
+                      ],
+                      "Rocks": null,
+                      "RocksMetadata": null,
+                      "Texture": null,
+                      "TextureMetadata": null,
+                      "MunsellColour": null,
+                      "MunsellMetadata": null,
+                      "EC": null,
+                      "ECMetadata": null,
+                      "PH": [
+                        5.6,
+                        6.2,
+                        6.2,
+                        6.4
+                      ],
+                      "PHMetadata": null,
+                      "CL": null,
+                      "CLMetadata": null,
+                      "Boron": null,
+                      "BoronMetadata": null,
+                      "CEC": null,
+                      "CECMetadata": null,
+                      "Ca": null,
+                      "CaMetadata": null,
+                      "Mg": null,
+                      "MgMetadata": null,
+                      "Na": null,
+                      "NaMetadata": null,
+                      "K": null,
+                      "KMetadata": null,
+                      "ESP": null,
+                      "ESPMetadata": null,
+                      "Mn": null,
+                      "MnMetadata": null,
+                      "Al": null,
+                      "AlMetadata": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSilt": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClay": null,
+                      "ParticleSizeClayMetadata": null,
+                      "PHUnits": 0,
+                      "BoronUnits": 0,
+                      "Name": "Analysis",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.InitialWater, Models",
+                      "PercentMethod": 0,
+                      "FractionFull": 1.0,
+                      "DepthWetSoil": "NaN",
+                      "RelativeTo": null,
+                      "Name": "Initial Water",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Sample, Models",
+                      "Thickness": [
+                        180.0,
+                        120.0,
+                        210.0,
+                        230.0
+                      ],
+                      "NO3": [
+                        10.0,
+                        10.0,
+                        1.0,
+                        0.1
+                      ],
+                      "NH4": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
+                      "SW": null,
+                      "OC": null,
+                      "EC": null,
+                      "CL": null,
+                      "ESP": null,
+                      "PH": null,
+                      "NO3Units": 0,
+                      "NH4Units": 0,
+                      "SWUnits": 0,
+                      "OCUnits": 0,
+                      "PHUnits": 0,
+                      "Name": "Initial nitrogen",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "Name": "CERESSoilTemperature",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.Sward, Models",
+                  "ControlledBySward": 0,
+                  "WaterUptakeSource": "soilarbitrator",
+                  "NUptakeSource": "soilarbitrator",
+                  "Name": "Sward",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.PastureSpecies, Models",
+                      "MaximumNUptake": 10.0,
+                      "Albedo": 0.26,
+                      "Gsmax": 0.011,
+                      "R50": 200.0,
+                      "SpeciesFamily": 0,
+                      "PhotosyntheticPathway": 0,
+                      "InitialShootDM": 1500.0,
+                      "InitialRootDM": 450.0,
+                      "InitialRootDepth": 750.0,
+                      "ReferencePhotosyntheticRate": 1.0,
+                      "LightExtinctionCoefficient": 0.5,
+                      "GrowthTminimum": 1.0,
+                      "GrowthToptimum": 20.0,
+                      "GrowthTEffectExponent": 1.7,
+                      "UseHeatStressFactor": 0,
+                      "HeatOnsetTemperature": 28.0,
+                      "HeatFullTemperature": 35.0,
+                      "HeatRecoverySumDD": 30.0,
+                      "HeatRecoveryTReference": 25.0,
+                      "UseColdStressFactor": 0,
+                      "ColdOnsetTemperature": 1.0,
+                      "ColdFullTemperature": -5.0,
+                      "ColdRecoverySumDD": 25.0,
+                      "ColdRecoveryTReference": 0.0,
+                      "MaintenanceRespirationCoefficient": 0.03,
+                      "GrowthRespirationCoefficient": 0.25,
+                      "RespirationTReference": 20.0,
+                      "RespirationExponent": 1.5,
+                      "NThresholdsForLeaves": [
+                        0.04,
+                        0.012,
+                        0.05
+                      ],
+                      "NThresholdsForStems": [
+                        0.02,
+                        0.006,
+                        0.025
+                      ],
+                      "NThresholdsForStolons": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "NThresholdsForRoots": [
+                        0.02,
+                        0.006,
+                        0.025
+                      ],
+                      "DegreesDayForGermination": 125.0,
+                      "TargetShootRootRatio": 4.0,
+                      "MaxRootAllocation": 0.25,
+                      "ShootRootGlfFactor": 0.5,
+                      "UseReproSeasonFactor": 0,
+                      "ReproSeasonReferenceLatitude": 41.0,
+                      "ReproSeasonTimingCoeff": 0.14,
+                      "ReproSeasonMaxAllocationIncrease": 0.5,
+                      "ReproSeasonAllocationCoeff": 0.1,
+                      "FractionLeafMaximum": 0.7,
+                      "FractionLeafMinimum": 0.7,
+                      "FractionLeafDMThreshold": 500.0,
+                      "FractionLeafDMFactor": 2000.0,
+                      "FractionLeafExponent": 3.0,
+                      "FractionToStolon": 0.0,
+                      "SpecificLeafArea": 25.0,
+                      "SpecificRootLength": 100.0,
+                      "StolonEffectOnLAI": 0.0,
+                      "ShootMaxEffectOnLAI": 1000.0,
+                      "MaxStemEffectOnLAI": 1.0,
+                      "LiveLeavesPerTiller": 3.0,
+                      "TissueTurnoverRateShoot": 0.05,
+                      "TissueTurnoverRateRoot": 0.02,
+                      "DetachmentRateShoot": 0.08,
+                      "TurnoverTemperatureMin": 2.0,
+                      "TurnoverTemperatureRef": 20.0,
+                      "TurnoverTemperatureExponent": 1.0,
+                      "TurnoverDroughtEffectMax": 1.0,
+                      "TurnoverDroughtThreshold": 0.5,
+                      "TurnoverDefoliationCoefficient": 0.5,
+                      "TurnoverDefoliationRootEffect": 0.1,
+                      "FractionNLuxuryRemobilisable": [
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
+                      "MinimumNFixation": 0.0,
+                      "MaximumNFixation": 0.0,
+                      "SoilSaturationEffectMax": 0.1,
+                      "MinimumWaterFreePorosity": -1.0,
+                      "SoilSaturationRecoveryFactor": 0.25,
+                      "NDillutionCoefficient": 0.25,
+                      "GlfGeneric": 1.0,
+                      "GlfSoilFertility": 1.0,
+                      "PlantHeightMinimum": 25.0,
+                      "PlantHeightMaximum": 600.0,
+                      "PlantHeightMassForMax": 10000.0,
+                      "PlantHeightExponent": 2.8,
+                      "RootDepthMinimum": 50.0,
+                      "RootDepthMaximum": 750.0,
+                      "RootElongationRate": 25.0,
+                      "RootDistributionDepthParam": 90.0,
+                      "RootDistributionExponent": 3.2,
+                      "DigestibilitiesCellWall": [
+                        0.6,
+                        0.6,
+                        0.6,
+                        0.2
+                      ],
+                      "MinimumGreenWt": 100.0,
+                      "FractionStolonStanding": 0.0,
+                      "PreferenceForGreenOverDead": 1.0,
+                      "PreferenceForLeafOverStems": 1.0,
+                      "WaterAvailableMethod": 0,
+                      "NitrogenAvailableMethod": 0,
+                      "Name": "Ryegrass",
+                      "Children": [
+                        {
+                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                          "Name": "Leaves",
+                          "Children": [
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort1",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort2",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "Dead",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                          "Name": "Stems",
+                          "Children": [
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort1",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort2",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "Dead",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                          "Name": "Stolons",
+                          "Children": [
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort1",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort2",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "Dead",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.PastureSpecies, Models",
+                      "MaximumNUptake": 10.0,
+                      "Albedo": 0.26,
+                      "Gsmax": 0.011,
+                      "R50": 200.0,
+                      "SpeciesFamily": 1,
+                      "PhotosyntheticPathway": 0,
+                      "InitialShootDM": 500.0,
+                      "InitialRootDM": 150.0,
+                      "InitialRootDepth": 350.0,
+                      "ReferencePhotosyntheticRate": 1.0,
+                      "LightExtinctionCoefficient": 0.8,
+                      "GrowthTminimum": 2.0,
+                      "GrowthToptimum": 22.0,
+                      "GrowthTEffectExponent": 1.7,
+                      "UseHeatStressFactor": 0,
+                      "HeatOnsetTemperature": 30.0,
+                      "HeatFullTemperature": 36.0,
+                      "HeatRecoverySumDD": 20.0,
+                      "HeatRecoveryTReference": 25.0,
+                      "UseColdStressFactor": 0,
+                      "ColdOnsetTemperature": 2.0,
+                      "ColdFullTemperature": -5.0,
+                      "ColdRecoverySumDD": 30.0,
+                      "ColdRecoveryTReference": 0.0,
+                      "MaintenanceRespirationCoefficient": 0.04,
+                      "GrowthRespirationCoefficient": 0.25,
+                      "RespirationTReference": 20.0,
+                      "RespirationExponent": 1.5,
+                      "NThresholdsForLeaves": [
+                        0.045,
+                        0.02,
+                        0.055
+                      ],
+                      "NThresholdsForStems": [
+                        0.0225,
+                        0.01,
+                        0.0275
+                      ],
+                      "NThresholdsForStolons": [
+                        0.0225,
+                        0.01,
+                        0.0275
+                      ],
+                      "NThresholdsForRoots": [
+                        0.0225,
+                        0.01,
+                        0.0275
+                      ],
+                      "DegreesDayForGermination": 125.0,
+                      "TargetShootRootRatio": 4.0,
+                      "MaxRootAllocation": 0.25,
+                      "ShootRootGlfFactor": 0.5,
+                      "UseReproSeasonFactor": 0,
+                      "ReproSeasonReferenceLatitude": 41.0,
+                      "ReproSeasonTimingCoeff": 0.14,
+                      "ReproSeasonMaxAllocationIncrease": 0.5,
+                      "ReproSeasonAllocationCoeff": 0.1,
+                      "FractionLeafMaximum": 0.56,
+                      "FractionLeafMinimum": 0.28,
+                      "FractionLeafDMThreshold": 500.0,
+                      "FractionLeafDMFactor": 2000.0,
+                      "FractionLeafExponent": 3.0,
+                      "FractionToStolon": 0.2,
+                      "SpecificLeafArea": 30.0,
+                      "SpecificRootLength": 45.0,
+                      "StolonEffectOnLAI": 0.3,
+                      "ShootMaxEffectOnLAI": 500.0,
+                      "MaxStemEffectOnLAI": 0.5,
+                      "LiveLeavesPerTiller": 3.0,
+                      "TissueTurnoverRateShoot": 0.05,
+                      "TissueTurnoverRateRoot": 0.02,
+                      "DetachmentRateShoot": 0.11,
+                      "TurnoverTemperatureMin": 2.0,
+                      "TurnoverTemperatureRef": 20.0,
+                      "TurnoverTemperatureExponent": 1.0,
+                      "TurnoverDroughtEffectMax": 1.0,
+                      "TurnoverDroughtThreshold": 0.5,
+                      "TurnoverDefoliationCoefficient": 0.5,
+                      "TurnoverDefoliationRootEffect": 0.1,
+                      "FractionNLuxuryRemobilisable": [
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
+                      "MinimumNFixation": 0.2,
+                      "MaximumNFixation": 0.6,
+                      "SoilSaturationEffectMax": 0.1,
+                      "MinimumWaterFreePorosity": -1.0,
+                      "SoilSaturationRecoveryFactor": 0.25,
+                      "NDillutionCoefficient": 1.0,
+                      "GlfGeneric": 1.0,
+                      "GlfSoilFertility": 1.0,
+                      "PlantHeightMinimum": 25.0,
+                      "PlantHeightMaximum": 350.0,
+                      "PlantHeightMassForMax": 7500.0,
+                      "PlantHeightExponent": 2.5,
+                      "RootDepthMinimum": 30.0,
+                      "RootDepthMaximum": 350.0,
+                      "RootElongationRate": 25.0,
+                      "RootDistributionDepthParam": 70.0,
+                      "RootDistributionExponent": 2.5,
+                      "DigestibilitiesCellWall": [
+                        0.6,
+                        0.6,
+                        0.6,
+                        0.2
+                      ],
+                      "MinimumGreenWt": 50.0,
+                      "FractionStolonStanding": 0.0,
+                      "PreferenceForGreenOverDead": 1.0,
+                      "PreferenceForLeafOverStems": 1.0,
+                      "WaterAvailableMethod": 0,
+                      "NitrogenAvailableMethod": 0,
+                      "Name": "WhiteClover",
+                      "Children": [
+                        {
+                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                          "Name": "Leaves",
+                          "Children": [
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort1",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort2",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "Dead",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                          "Name": "Stems",
+                          "Children": [
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort1",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort2",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "Dead",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                          "Name": "Stolons",
+                          "Children": [
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort1",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort2",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "LeafCohort3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.GenericTissue, Models",
+                              "Name": "Dead",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.SoluteManager, Models",
+                  "Name": "SoluteManager",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": [
+                    "[Clock].Today.Year",
+                    "",
+                    "[AddUrinePatches].Script.DepositionYear as DepositionYear",
+                    "[DoReportingSensit].Script.LeachN as LeachN"
+                  ],
+                  "EventNames": [
+                    ""
+                  ],
+                  "Name": "Report",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# Analysis Results\n\nThe Sobol analysis produces two data sources: `Report` and `Statistics`. `Report` is not very interesting in this example, so we will focus on `Statistics`. Select the graph node, `TotalEffectIndices`. The provided graph (Figure 1) contains the total effect indices for each input. The orange dots indicate a 95% confidence interval. The confidence interval is quite large in this case, and the estimates not particularly useful. The interval may be reduced by increasing the sample size (`Number of paths`). If you have time, you may wish to try increasing the `Number of paths` to 100. The analysis will take longer to run, but the results will be more useful.\n\nCompare this to the Morris analysis plot (`MorrisMethod` tutorial, Figure 3). Hint: use the filter feature in the `Series` node to select the year 1974. This way you can directly compare the two sets of results. Note that the results of both the Morris and Sobol method will differ somewhat between runs. The Sobol method identifies `Load` as the most influential input, which aligns with the general findings in the Morris method tutorial. The inputs `SOC` and `DUL` also account for some variability. This again aligns with the Morris method, where `SOC` and `DUL` were shown to be important in some years.\n\n<br>\n\n<hr>\n**Advanced**: The confidence interval is obtained using bootstrapping (sampling with replacement). The two matrices used to obtain the initial sensitivity indices are resampled, producing additional sensitivity index estimates. The estimates are aggregrated, and the 2.5th and 97.5th percentiles used as the minimum and maximum boundaries of the confidence interval respectively. A more visually appealing plot can be constructed in Excel. Simply export the data, and create a bar graph with error bars.\n<hr>",
+      "Name": "AnalysisResults",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph.Graph, Models",
+      "Caption": "Figure 1. Total effect indices for nitrogen leaching from 1972 to 1975. Dots represent a 95% confidence interval.",
+      "Axis": [
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 3,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 0,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        }
+      ],
+      "LegendPosition": 0,
+      "DisabledSeries": [],
+      "Name": "TotalEffectIndices",
+      "Children": [
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 0,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -16777216,
+          "FactorToVaryColours": "Parameter",
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 0,
+          "MarkerSize": 0,
+          "Line": 0,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "SobolMethodExampleStatistics",
+          "XFieldName": "Parameter",
+          "YFieldName": "LeachN.original",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Indices",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -2793984,
+          "FactorToVaryColours": "Parameter",
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 0,
+          "MarkerSize": 0,
+          "Line": 2,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "SobolMethodExampleStatistics",
+          "XFieldName": "Parameter",
+          "YFieldName": "LeachN.max. c.i.",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": true,
+          "IncludeSeriesNameInLegend": true,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "ConfidenceInterval",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -2793984,
+          "FactorToVaryColours": "Parameter",
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 0,
+          "MarkerSize": 0,
+          "Line": 2,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "SobolMethodExampleStatistics",
+          "XFieldName": "Parameter",
+          "YFieldName": "LeachN.min. c.i.",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "MinCI",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "<br>\n\n# Conclusion\n\nThe urine patch simulation was used to demonstrate the use of another sensitivity analysis method. The Sobol method provided quantitative sensitivity estimates for each input (i.e. total-effect indices). The total-effect indices provided more detailed sensitivity information, but largely aligned with the findings of the Morris method. `Load` was found to be the most influential input, however `SOC` and `DUL` were also of some importance. Temporal variability was not analysed in this example, but additional Sobol analyses could be carried out to do so.\n\n<br>",
+      "Name": "Conclusion",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

@@ -110,11 +110,11 @@ namespace Models.CLEM.Resources
                 {
                     if (MonthlyValues == null)
                     {
-                        html += "<td></td>";
+                        html += "<td><span class=\"errorlink\">?</span></td>";
                     }
                     else if (i > MonthlyValues.Count() - 1)
                     {
-                        html += "<td></td>";
+                        html += "<td><span class=\"errorlink\">?</span></td>";
                     }
                     else
                     {
