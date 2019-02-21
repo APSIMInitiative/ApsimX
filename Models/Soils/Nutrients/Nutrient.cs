@@ -13,32 +13,40 @@
     /// <summary>
     /// # [Name]
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
-    /// ## Structure of nutrient
+    /// ## Soil Nutrient Model Structure
+    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients.  These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independantly specified, and are described in each case in the documentation for each organic matter pool below.
+    /// 
+    /// Mineral nutrient pools (e.g. Nitrate, Ammonium, Urea) are described as solutes within the model.  Each pool captures the mass of the nutrient (e.g. N,P) and they may also contain nutrient flows to describe losses or transformations for that particular compound (e.g. denitrification of nitrate, hydrolysis of urea).
     /// [DocumentView]
     /// ## Pools
+    /// A nutrient pool class is used to encapsulate the carbon and nitrogen within each soil organic matter pool.  Child functions within these classes provide information for initialisation and flows of C and N to other pools, or losses from the system.
+    ///
+    /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occuring from them.
     /// [DocumentType NutrientPool]
-    /// ## Solutes:
+    /// ## Solutes
+    /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occuring from them.
     /// [DocumentType Solute]
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
+    public class Nutrient : ModelCollectionFromResource, INutrient, IVisualiseAsDirectedGraph
     {
-        private DirectedGraph _directedGraphInfo;
+        private DirectedGraph directedGraphInfo;
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
         {
             get
             {
-                CalculateDirectedGraph();
-                return _directedGraphInfo;
+                if (Children != null && Children.Count > 0)
+                    CalculateDirectedGraph();
+                return directedGraphInfo;
             }
             set
             {
-                _directedGraphInfo = value;
+                directedGraphInfo = value;
             }
         }
 
@@ -52,6 +60,10 @@
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>The surface organic matter</summary>
+        [Link]
+        private Soil Soil = null;
+
         [ChildLinkByName]
         NutrientPool FOMCellulose = null;
         [ChildLinkByName]
@@ -60,8 +72,10 @@
         NutrientPool FOMLignin = null;
         [ChildLinkByName]
         NutrientPool SurfaceResidue = null;
-        [Link]
-        private SoluteManager solutes = null;
+        [ScopedLinkByName]
+        private ISolute NO3 = null;
+        [ScopedLinkByName]
+        private ISolute NH4 = null;
 
         // Carbon content of FOM
         private double CinFOM = 0.4;
@@ -70,8 +84,17 @@
 
         /// <summary>
         /// Reset all pools
-        /// </summary>
-        public void Reset() { }
+        /// </summary> 
+        public void Reset()
+        {
+            List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+            foreach (NutrientPool P in Pools)
+                P.Reset();
+
+            List<IModel> Solutes = Apsim.Children(this, typeof(ISolute));
+            foreach (Solute S in Solutes)
+                S.Reset();
+        }
 
         /// <summary>
         /// Total C in each soil layer
@@ -90,6 +113,86 @@
             }
         }
 
+
+        /// <summary>
+        /// total C lost to the atmosphere
+        /// </summary>
+        public double[] Catm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+
+                foreach (CarbonFlow f in Flows)
+                    values = MathUtilities.Add(values, f.Catm);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// total N lost to the atmosphere
+        /// </summary>
+        public double[] Natm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
+
+                foreach (NFlow f in Flows)
+                    values = MathUtilities.Add(values, f.Natm);
+                return values;
+            }
+        }
+
+
+        /// <summary>
+        /// total N lost to the atmosphere
+        /// </summary>
+        public double[] N2Oatm
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
+
+                foreach (NFlow f in Flows)
+                    values = MathUtilities.Add(values, f.N2Oatm);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// total Net N Mineralisaed in each soil layer
+        /// </summary>
+        public double[] MineralisedN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+
+                foreach (CarbonFlow f in Flows)
+                    values = MathUtilities.Add(values, f.MineralisedN);
+                return values;
+            }
+        }
+        /// <summary>
+        /// total Net N Mineralisaed in each soil layer
+        /// </summary>
+        public double[] MineralN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                double[] nh4 = NH4.kgha;
+                double[] no3 = NO3.kgha;
+                values = MathUtilities.Add(values, nh4);
+                values = MathUtilities.Add(values, no3);
+                return values;
+            }
+        }
         /// <summary>
         /// Total C in each soil layer
         /// </summary>
@@ -113,13 +216,13 @@
         {
             get
             {
-                double[] NH4 = solutes.GetSolute("NH4");
-                double[] NO3 = solutes.GetSolute("NO3");
+                double[] nh4 = NH4.kgha;
+                double[] no3 = NO3.kgha;
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < FOMLignin.C.Length; i++)
                     values[i] = MathUtilities.Divide(FOMCarbohydrate.C[i] + FOMCellulose.C[i] + FOMLignin.C[i],
-                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + NH4[i] + NO3[i], 0.0);
+                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + nh4[i] + no3[i], 0.0);
 
                 return values;
             }
@@ -265,6 +368,7 @@
 
             SurfaceResidue.C[0] = 0;
             SurfaceResidue.N[0] = 0;
+            SurfaceResidue.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / Soil.Thickness[0]),0.0);
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
                 SurfaceResidue.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;
@@ -277,16 +381,17 @@
         /// <summary>Calculate / create a directed graph from model</summary>
         public void CalculateDirectedGraph()
         {
-            if (_directedGraphInfo == null)
-                _directedGraphInfo = new DirectedGraph();
+            if (directedGraphInfo == null)
+                directedGraphInfo = new DirectedGraph();
 
-            _directedGraphInfo.Begin();
+            directedGraphInfo.Begin();
 
             bool needAtmosphereNode = false;
 
             foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
             {
-                _directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+
                 foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
                 {
                     foreach (string destinationName in cFlow.destinationNames)
@@ -297,7 +402,7 @@
                             destName = "Atmosphere";
                             needAtmosphereNode = true;
                         }
-                        _directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+                        directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
 
                     }
                 }
@@ -305,7 +410,7 @@
 
             foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
             {
-                _directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
                 foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
                 {
                     string destName = nitrogenFlow.destinationName;
@@ -314,15 +419,15 @@
                         destName = "Atmosphere";
                         needAtmosphereNode = true;
                     }
-
-                    _directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
+                    directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
                 }
             }
 
             if (needAtmosphereNode)
-                _directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+                directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
 
-            _directedGraphInfo.End();
+            
+            directedGraphInfo.End();
         }
 
     }

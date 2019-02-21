@@ -37,6 +37,9 @@ namespace Models
             /// <summary>The incoming rs</summary>
             public double IncomingRs;
 
+            /// <summary>The shortwave radiation reaching the surface</summary>
+            public double SurfaceRs = 0;
+
 
             /// <summary>The delta z</summary>
             public double[] DeltaZ = new double[-1 + 1];
@@ -189,6 +192,7 @@ namespace Models
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
                 IncomingRs = 0;
+                SurfaceRs = 0.0;
                 numLayers = 0;
                 DeltaZ = new double[-1 + 1];
                 layerKtot = new double[-1 + 1];

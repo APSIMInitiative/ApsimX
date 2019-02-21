@@ -106,7 +106,7 @@ namespace Models.CLEM.Reporting
                             else
                             {
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss as Loss");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType as Resource");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity as Activity");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ActivityType as ActivityType");

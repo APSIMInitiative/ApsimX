@@ -91,9 +91,11 @@ namespace Models.WaterModel
         [Link]
         SoilNitrogen soilNitrogen = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
+        [ScopedLinkByName]
+        ISolute NO3 =  null;
+
         [Link]
-        private SoluteManager solutes = null;
+        ISolute NH4 = null;
 
         // --- Settable properties -------------------------------------------------------
 
@@ -237,14 +239,14 @@ namespace Models.WaterModel
             //  pond = Math.Min(Runoff, max_pond);
             MoveDown(Water, Flux);
 
-            double[] NO3 = soilNitrogen.NO3;
-            double[] NH4 = soilNitrogen.NH4;
+            double[] NO3Values = soilNitrogen.CalculateNO3();
+            double[] NH4Values = soilNitrogen.CalculateNH4();
 
             // Calcualte solute movement down with water.
-            double[] NO3Down = CalculateSoluteMovementDown(NO3, Water, Flux, SoluteFluxEfficiency);
-            double[] NH4Down = CalculateSoluteMovementDown(NH4, Water, Flux, SoluteFluxEfficiency);
-            MoveDown(NO3, NO3Down);
-            MoveDown(NH4, NH4Down);
+            double[] NO3Down = CalculateSoluteMovementDown(NO3Values, Water, Flux, SoluteFluxEfficiency);
+            double[] NH4Down = CalculateSoluteMovementDown(NH4Values, Water, Flux, SoluteFluxEfficiency);
+            MoveDown(NO3Values, NO3Down);
+            MoveDown(NH4Values, NH4Down);
 
             double es = evaporationModel.Calculate();
             Water[0] = Water[0] - es;
@@ -255,14 +257,14 @@ namespace Models.WaterModel
             CheckForErrors();
 
             double waterTableDepth = waterTableModel.Value();
-            double[] NO3Up = CalculateSoluteMovementUpDown(soilNitrogen.NO3, Water, Flow, SoluteFlowEfficiency);
-            double[] NH4Up = CalculateSoluteMovementUpDown(soilNitrogen.NH4, Water, Flow, SoluteFlowEfficiency);
-            MoveUp(NO3, NO3Up);
-            MoveUp(NH4, NH4Up);
+            double[] NO3Up = CalculateSoluteMovementUpDown(soilNitrogen.CalculateNO3(), Water, Flow, SoluteFlowEfficiency);
+            double[] NH4Up = CalculateSoluteMovementUpDown(soilNitrogen.CalculateNH4(), Water, Flow, SoluteFlowEfficiency);
+            MoveUp(NO3Values, NO3Up);
+            MoveUp(NH4Values, NH4Up);
 
             // Set deltas
-            solutes.Add("NO3", SoluteManager.SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.NO3, NO3));
-            solutes.Add("NH4", SoluteManager.SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.NH4, NH4));
+            NO3.SetKgHa(SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.CalculateNO3(), NO3Values));
+            NH4.SetKgHa(SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.CalculateNH4(), NH4Values));
 
             ResidueInterception = 0;
             CanopyInterception = 0;

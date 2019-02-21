@@ -124,9 +124,6 @@ namespace Models.CLEM
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             timestep++;
-//            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-//            List<Ruminant> herd = ruminantHerd.Herd;
-
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantFilterGroup filter in herdFilters)
             {

@@ -64,7 +64,7 @@ namespace Models.Soils
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model, ISolute, INutrient
+    public partial class SoilNitrogen : Model, INutrient
     {
 
         /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>
@@ -154,7 +154,6 @@ namespace Models.Soils
             FBiom = Soil.FBiom;
             FInert = Soil.FInert;
             HumusCNr = Soil.SoilOrganicMatter.SoilCN;
-            InitialFOMWt = Soil.SoilOrganicMatter.RootWt;
             InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
             enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
@@ -370,9 +369,9 @@ namespace Models.Soils
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = InitialFOMWt * FOMiniFraction[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[1] = InitialFOMWt * FOMiniFraction[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[2] = InitialFOMWt * FOMiniFraction[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[0] = Soil.InitialRootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = Soil.InitialRootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = Soil.InitialRootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)

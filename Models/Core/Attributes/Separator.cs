@@ -12,7 +12,7 @@ namespace Models.Core
     /// Specifies that the related class should use the user interface view
     /// that has the specified name.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
     public class SeparatorAttribute : System.Attribute
     {
         /// <summary>

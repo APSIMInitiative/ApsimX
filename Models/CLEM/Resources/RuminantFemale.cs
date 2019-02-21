@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
                 // Last pregnancy was successful
                 // Mother has suckling offspring OR
                 // Cow has been milked since weaning.
-                return (this.AgeAtLastBirth > this.AgeAtLastConception && (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays && SuccessfulPregnancy && (this.SucklingOffspring.Count() > 0 | this.MilkingPerformed));
+                return (this.AgeAtLastBirth > this.AgeAtLastConception & (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & SuccessfulPregnancy & (this.SucklingOffspring.Count() > 0 | this.MilkingPerformed));
             }            
         }
 

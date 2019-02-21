@@ -84,9 +84,9 @@ namespace Models.CLEM
         /// </summary>
         TradePurchase,
         /// <summary>
-        /// Heifer purchased
+        /// Breeder purchased
         /// </summary>
-        HeiferPurchase,
+        BreederPurchase,
         /// <summary>
         /// Breeding sire purchased
         /// </summary>
