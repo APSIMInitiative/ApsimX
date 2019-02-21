@@ -25,8 +25,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.CLEMFileSQLiteGRASPView")]
-    [PresenterName("UserInterface.Presenters.CLEMFileSQLiteGRASPPresenter")]
+    [ViewName("UserInterface.Views.GridView")] //CLEMFileSQLiteGRASPView
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileSQLiteGRASPPresenter
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]

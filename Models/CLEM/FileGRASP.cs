@@ -26,8 +26,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.CLEMFileGRASPView")]
-    [PresenterName("UserInterface.Presenters.CLEMFileGRASPPresenter")]
+    [ViewName("UserInterface.Views.GridView")] //CLEMFileGRASPView
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileGRASPPresenter
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]

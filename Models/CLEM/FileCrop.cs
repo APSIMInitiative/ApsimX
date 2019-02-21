@@ -27,8 +27,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.CLEMFileCropView")]
-    [PresenterName("UserInterface.Presenters.CLEMFileCropPresenter")]
+    [ViewName("UserInterface.Views.GridView")] //CLEMFileCropView
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileCropView
     [ValidParent(ParentType=typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
