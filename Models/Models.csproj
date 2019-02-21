@@ -70,7 +70,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\Bin\</OutputPath>
@@ -233,6 +233,13 @@
     <Compile Include="Functions\DailyMeanVPD.cs" />
     <Compile Include="Functions\DemandFunctions\StorageDMDemandFunction.cs" />
     <Compile Include="Functions\DemandFunctions\StorageNDemandFunction.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESDenitrificationWaterFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESDenitrificationTemperatureFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESMineralisationFOMCNRFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\DayCentN2OFractionModel.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESNitrificationpHFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESNitrificationWaterFactor.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESUreaHydrolysisModel.cs" />
     <Compile Include="Functions\SoilFunctions\CERESMineralisationWaterFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESMineralisationTemperatureFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESNitrificationModel.cs" />
