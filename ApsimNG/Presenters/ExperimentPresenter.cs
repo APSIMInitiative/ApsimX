@@ -166,7 +166,7 @@
                 disabledSims = disabledSims.Distinct().ToList();
             }
             ChangeProperty changeDisabledSims = new ChangeProperty(model, "DisabledSimNames", disabledSims);
-            changeDisabledSims.Do(presenter.CommandHistory);
+            presenter.CommandHistory.Add(changeDisabledSims);
         }
 
         /// <summary>
@@ -209,7 +209,8 @@
         /// </summary>
         private void UpdateView()
         {
-            if (maxSimsToDisplay < 0) maxSimsToDisplay = DefaultMaxSims; // doesn't hurt to double check
+            if (maxSimsToDisplay < 0)
+                maxSimsToDisplay = DefaultMaxSims;
             view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
             view.NumSims = model.AllCombinations().Count.ToString();
         }
