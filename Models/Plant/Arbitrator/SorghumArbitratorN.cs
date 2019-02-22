@@ -24,7 +24,7 @@ namespace Models.PMF
         /// <param name="BAT">The bat.</param>
         public void DoAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
-            double NotAllocated = TotalSupply;
+            double NotAllocated = TotalSupply * 0.1;
             //allocate structural first - will be a different order to biomass so need to hard code the order until an interface is created
             //roots
             //stem
@@ -42,7 +42,7 @@ namespace Models.PMF
             var demand = BAT.TotalPlantDemand;// - BAT.StructuralDemand[grainIndex];
             var supplyDemand = 0.0;
             if (demand > 0.0)
-                supplyDemand = Math.Min( (BAT.TotalUptakeSupply * 10.0) / demand, 1.0);
+                supplyDemand = Math.Min( (BAT.TotalUptakeSupply * 0.1) / demand, 1.0);
 
 
             double rootAllocation = supplyDemand * BAT.StructuralDemand[rootIndex];

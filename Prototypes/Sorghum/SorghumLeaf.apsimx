@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 451,
   "Version": 51,
   "Name": "Simulations",
   "Children": [
@@ -3116,7 +3116,6 @@
               "senThreshold": 0.25,
               "senWaterTimeConst": 10.0,
               "LossFromExpansionStress": 0.0,
-              "SenescedLeafSLN": 3.0,
               "SenescedLai": 0.0,
               "DltSenescedN": 0.0,
               "DltSenescedLai": 0.0,
@@ -3649,89 +3648,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "SlnDemandFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "Flowering",
-                      "Name": "BetweenEmergenceAndFlower",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "AddFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "NDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].LeafPartitioningCoefficient.Value()",
-                                  "Name": "LeafPartitioningCoefficient",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].TargetSLN.Value()",
-                                  "Name": "TargetSLN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "NewLeafDemandN",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].LeafPartitioningCoefficient.Value()",
-                                  "Name": "LeafPartitioningCoefficient",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NewLeafSLN.Value()",
-                                  "Name": "NewLeafSLN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": null,
@@ -4193,10 +4109,9 @@
                                           "Name": "MultiplyFunction",
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 8000.0,
-                                              "Units": null,
-                                              "Name": "slaMin",
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Leaf].SlaMin",
+                                              "Name": "SlaMin",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
                                               "Enabled": true,
@@ -4332,10 +4247,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "NewLeafSLN",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].NewLeafSLN",
+                                  "Name": "newLeafSLN",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4396,9 +4310,8 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.5,
-                                  "Units": null,
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].TargetSLN",
                                   "Name": "TargetSLN",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4712,6 +4625,66 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "StomatalConductanceCO2Modifier",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 8000.0,
+                  "Units": null,
+                  "Name": "SlaMin",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "NewLeafSLN",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.5,
+                  "Units": null,
+                  "Name": "TargetSLN",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.3,
+                  "Units": null,
+                  "Name": "SenescedLeafSLN",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0043,
+                  "Units": null,
+                  "Name": "NDilutionSlope",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.0017,
+                  "Units": null,
+                  "Name": "NDilutionIntercept",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
