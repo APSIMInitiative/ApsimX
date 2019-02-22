@@ -153,7 +153,19 @@
                 }
             }
             UpdateView();
-            ChangeProperty changeDisabledSims = new ChangeProperty(model, "DisabledSimNames", GetDisabledSimNames());
+            List<string> disabledSims = model.DisabledSimNames;
+            if (flag)
+                // If we're enabling the selected simulations,
+                // remove them from the list of disabled sims.
+                disabledSims = disabledSims.Except(names).ToList();
+            else
+            {
+                // If we're disabling the selected simulations,
+                // add them to the list of the disabled sims.
+                disabledSims.AddRange(names);
+                disabledSims = disabledSims.Distinct().ToList();
+            }
+            ChangeProperty changeDisabledSims = new ChangeProperty(model, "DisabledSimNames", disabledSims);
             changeDisabledSims.Do(presenter.CommandHistory);
         }
 
