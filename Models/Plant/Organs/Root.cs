@@ -717,11 +717,10 @@ namespace Models.PMF.Organs
                 double[] dulmm = myZone.soil.DULmm;
                 double[] bd = myZone.soil.BD;
 
-                var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
-                var wa = (parentPlant.Organs[2] as SorghumLeaf).WaterAllocation;
                 double accuDepth = 0;
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
+                    var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         var swdep = water[layer];
