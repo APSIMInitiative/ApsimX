@@ -47,7 +47,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        private Plant Plant = null;
+        public Plant Plant = null; //todo change back to private
 
         [Link]
         private SorghumArbitrator Arbitrator = null;
@@ -206,6 +206,11 @@ namespace Models.PMF.Organs
         /// <summary>Slope for N Dilutions</summary>
         [ChildLinkByName]
         IFunction NDilutionSlope = null;
+
+        /// <summary>Slope for N Dilutions</summary>
+        [ChildLinkByName]
+        IFunction MinPlantWt = null;
+        
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
@@ -527,56 +532,32 @@ namespace Models.PMF.Organs
             if (!Plant.IsAlive) return;
             if (!LeafInitialised) return;
 
-            // Derives seneseced plant dry matter (g/m^2) for the day
-            // calculate scenesced N
-            double laiToday = LAI + DltLAI;
-            double dmGreenLeafToday = Live.Wt;   // should be already calculated
-            double slaToday = dmGreenLeafToday > 0 ? laiToday / dmGreenLeafToday : 0.0;
+            calcSenescence();
 
-            if (Live.Wt > 0.0)
-            {
-                var DltSenescedBiomass = slaToday > 0.0 ? DltSenescedLai / slaToday : 0.0;
-                var SenescingProportion = DltSenescedBiomass / Live.Wt;
-
-                if (DltSenescedBiomass > 0)
-                {
-                    var structuralWtSenescing = Live.StructuralWt * SenescingProportion;
-                    Live.StructuralWt -= structuralWtSenescing;
-                    Dead.StructuralWt += structuralWtSenescing;
-                    Senesced.StructuralWt += structuralWtSenescing;
-
-                    var metabolicWtSenescing = Live.MetabolicWt * SenescingProportion;
-                    Live.MetabolicWt -= metabolicWtSenescing;
-                    Dead.MetabolicWt += metabolicWtSenescing;
-                    Senesced.StructuralWt += structuralWtSenescing;
-
-                    var storageWtSenescing = Live.StorageWt * SenescingProportion;
-                    Live.StorageWt -= storageWtSenescing;
-                    Dead.StorageWt += storageWtSenescing;
-                    Senesced.StructuralWt += structuralWtSenescing;
-                }
-            }
-
-            double slnToday = laiToday > 0.0 ? Live.N / laiToday : 0.0;
+            //double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
+            //DltSenescedN = DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+            //double slnToday = laiToday > 0.0 ? Live.N / laiToday : 0.0;
             //var DltSenescedN = DltSenescedLai * Math.Max((slnToday - senescedLeafSLN), 0.0);
 
             //UpdateVars
-            LAI += DltLAI;
+            SenescedLai += DltSenescedLai;
+            LAI += DltLAI - DltSenescedLai;
             SLN = Live.N / LAI;
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
-            calcSenescence();
+
         }
+
         /// <summary>sen_radn_crit.</summary>
         public double senRadnCrit { get; set; } = 2;
         /// <summary>sen_light_time_const.</summary>
         public double senLightTimeConst { get; set; } = 10;
         /// <summary>temperature threshold for leaf death.</summary>
-        public double frostKill { get; set; } = 10;
+        public double frostKill { get; set; } = 1.0;
 
         /// <summary>supply:demand ratio for onset of water senescence.</summary>
         public double senThreshold { get; set; } = 0.25;
         /// <summary>delay factor for water senescence.</summary>
-        public double senWaterTimeConst { get; set; } = 10;
+        public double senWaterTimeConst { get; set; } = 10.0;
 
 
         /// <summary>Only water stress at this stage.</summary>
@@ -586,9 +567,12 @@ namespace Models.PMF.Organs
         /// <summary>Total LAII as a result of senescence.</summary>
         public double SenescedLai { get; set; }
 
+        /// <summary>Delta of N retranslocated.</summary>
+        public double DltRetranslocatedN { get; set; }
         /// <summary>Delta of N removed due to Senescence.</summary>
         public double DltSenescedN { get; set; }
-
+        /// <summary>Delta of LAI removed due to N Senescence.</summary>
+        public double DltSenescedLaiN { get; set; }
         /// <summary>Delta of LAI removed due to Senescence.</summary>
         public double DltSenescedLai { get; set; }
         /// <summary>Delta of LAI removed due to Light Senescence.</summary>
@@ -644,6 +628,8 @@ namespace Models.PMF.Organs
         private void senesceArea()
         {
             DltSenescedLai = 0.0;
+            DltSenescedLaiN = 0.0;
+
             //sLai - is the running total of dltSLai
             //could be a stage issue here. should only be between fi and flag
             LossFromExpansionStress += (dltPotentialLAI - dltStressedLAI);
@@ -668,7 +654,17 @@ namespace Models.PMF.Organs
             //  calculate senecence due to frost
             double dltSlaiFrost = 0.0;
             if (MetData.MinT < frostKill)
-                dltSlaiFrost = LAI;
+            {
+                if(phenology.Between("Germination", "FloralInitiation"))
+                {
+                    dltSlaiFrost = Math.Max(0.0, LAI - 0.01);
+                }
+                else
+                {
+                    dltSlaiFrost = LAI;
+                }
+
+            }
 
             return dltSlaiFrost;
         }
@@ -741,22 +737,59 @@ namespace Models.PMF.Organs
             return dltSlaiLight;
         }
 
-        void calcSenescence()
+        private void calcSenescence()
         {
             // Derives seneseced plant dry matter (g/m^2) for the day
-            // calculate scenesced N
-            double laiToday = LAI;
-
-            double dmGreenLeafToday = Live.Wt;   // -ve
+            //Should not include any retranloocated biomass
+            double laiToday = LAI + DltLAI - DltSenescedLai;
+            double dmGreenLeafToday = Live.Wt;   // Live.Wt should be already calculated
             double slaToday = MathUtilities.Divide(laiToday, dmGreenLeafToday, 0.0);
 
-            var dltDmSenesced = MathUtilities.Divide(DltSenescedLai, slaToday, 0.0);
+            if (Live.Wt > 0.0)
+            {
+                var DltSenescedBiomass = MathUtilities.Divide(DltSenescedLai, slaToday, 0.0);
+                var SenescingProportion = DltSenescedBiomass / Live.Wt;
 
+                if (DltSenescedBiomass > 0)
+                {
+                    var structuralWtSenescing = Live.StructuralWt * SenescingProportion;
+                    Live.StructuralWt -= structuralWtSenescing;
+                    Dead.StructuralWt += structuralWtSenescing;
+                    Senesced.StructuralWt += structuralWtSenescing;
 
-            double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-            DltSenescedN = DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    var metabolicWtSenescing = Live.MetabolicWt * SenescingProportion;
+                    Live.MetabolicWt -= metabolicWtSenescing;
+                    Dead.MetabolicWt += metabolicWtSenescing;
+                    Senesced.StructuralWt += structuralWtSenescing;
 
+                    var storageWtSenescing = Live.StorageWt * SenescingProportion;
+                    Live.StorageWt -= storageWtSenescing;
+                    Dead.StorageWt += storageWtSenescing;
+                    Senesced.StructuralWt += structuralWtSenescing;
+
+                    double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+
+                    SenescingProportion = DltSenescedN / Live.N;
+                    var structuralNSenescing = Live.StructuralN * SenescingProportion;
+                    Live.StructuralN -= structuralNSenescing;
+                    Dead.StructuralN += structuralNSenescing;
+                    Senesced.StructuralN += structuralNSenescing;
+
+                    var metabolicNSenescing = Live.MetabolicN * SenescingProportion;
+                    Live.MetabolicN -= metabolicNSenescing;
+                    Dead.MetabolicN += metabolicNSenescing;
+                    Senesced.MetabolicN += metabolicNSenescing;
+
+                    var storageNSenescing = Live.StorageN * SenescingProportion;
+                    Live.StorageN -= storageNSenescing;
+                    Dead.StorageN += storageNSenescing;
+                    Senesced.StorageN += storageNSenescing;
+                }
+            }
         }
+        
+
         #endregion
 
         /// <summary>Tolerance for biomass comparisons</summary>
@@ -793,10 +826,10 @@ namespace Models.PMF.Organs
         //[ChildLinkByName]
         //private IFunction nitrogenDemandSwitch = null;
 
-        /// <summary>The DM retranslocation factor</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        private IFunction dmRetranslocationFactor = null;
+        ///// <summary>The DM retranslocation factor</summary>
+        //[ChildLinkByName]
+        //[Units("/d")]
+        //private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
         [ChildLinkByName]
@@ -958,10 +991,10 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
-            if (availableDM < -BiomassToleranceValue)
-                throw new Exception("Negative DM retranslocation value computed for " + Name);
+            var leafWt = startLive.Wt + potentialDMAllocation.Total;
+            var leafWtAvail = leafWt - MinPlantWt.Value() * SowingDensity;
 
+            double availableDM = Math.Max(0.0,  leafWtAvail);
             return availableDM;
         }
 
@@ -975,6 +1008,77 @@ namespace Models.PMF.Organs
             return availableDM;
         }
 
+        private double calcLAI()
+        {
+            return Math.Max(0.0, LAI + DltLAI - DltSenescedLai);
+        }
+        private double calcSLN(double laiToday, double nGreenToday)
+        {
+            return MathUtilities.Divide(nGreenToday, laiToday, 0.0);
+        }
+
+        /// <summary>Calculate the amount of N to retranslocate</summary>
+        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN)
+        {
+            int leafIndex = 2;
+
+            double laiToday = calcLAI();
+            //wether the retranslocation is added or removed is confusing
+            //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
+            double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] - DltRetranslocatedN;
+            //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
+            double slnToday = calcSLN(laiToday, nGreenToday);
+
+            var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
+            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * todaySln + NDilutionIntercept.Value());
+
+            if(phenology.Between("Germination", "Flowering"))
+            {
+                // pre anthesis, get N from dilution, decreasing dltLai and senescence
+                double nProvided = Math.Min(dilutionN, requiredN / 2.0);
+                requiredN -= nProvided;
+                nGreenToday += nProvided; //jkb
+                DltRetranslocatedN -= nProvided;
+                if (requiredN <= 0.0001) return nProvided;
+
+                // take from decreasing dltLai 
+                if (DltLAI > 0)
+                {
+                    double n = DltLAI * NewLeafSLN.Value();
+                    double laiN = Math.Min(n, requiredN / 2.0);
+                    DltLAI = (n - laiN) / NewLeafSLN.Value();
+                    requiredN -= laiN;
+                    nProvided += laiN;
+                }
+
+                // take from decreasing senescence
+                laiToday = calcLAI();
+                slnToday = calcSLN(laiToday, nGreenToday);
+
+                var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                requiredN = Math.Min(requiredN, maxN);
+
+                double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+                double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
+                DltRetranslocatedN -= newN;
+                nGreenToday += newN;
+                nProvided += newN;
+                DltSenescedLaiN += senescenceLAI;
+                DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
+                DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+                if (DltSenescedLai > 0.0)
+                {
+                    Console.WriteLine("DltSenescedLai is greater than 0: " + DltSenescedLai.ToString());
+                }
+                return nProvided;
+            }
+            else
+            {
+
+            }
+            return 0.0;
+        }
+
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
@@ -982,13 +1086,16 @@ namespace Models.PMF.Organs
             //NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
             //if (NSupply.Reallocation < -BiomassToleranceValue)
             //    throw new Exception("Negative N reallocation value computed for " + Name);
-
-            var availableLaiN = DltLAI * NewLeafSLN.Value();
-            var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total,LAI,0.0);
-
-            var dilutionN = phenology.thermalTime.Value() * ( NDilutionSlope.Value() * todaySln + NDilutionIntercept.Value());
             var availableNss = DltLAI * TargetSLN.Value();
             var availableNsss = DltLAI * SlaMin.Value();
+
+            var availableLaiN = DltLAI * NewLeafSLN.Value();
+
+            double laiToday = calcLAI();
+            double nGreenToday = Live.N;
+            double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
+            //var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total,LAI,0.0);
+            var dilutionN = phenology.thermalTime.Value() * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
             NSupply.Retranslocation = Math.Max(0, Math.Min(startLive.StorageN + startLive.MetabolicN, availableLaiN + dilutionN));
 
@@ -1040,17 +1147,14 @@ namespace Models.PMF.Organs
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             // Check retranslocation
-            if (dryMatter.Retranslocation - startLive.StorageWt > BiomassToleranceValue)
+            if (dryMatter.Retranslocation - startLive.StructuralWt > BiomassToleranceValue)
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-
 
             // allocate structural DM
             Allocated.StructuralWt = Math.Min(dryMatter.Structural, DMDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
+            Live.StructuralWt -= dryMatter.Retranslocation;
 
-            // allocate non structural DM
-            if ((dryMatter.Storage - DMDemand.Storage) > BiomassToleranceValue)
-                throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
 
         }
 
@@ -1067,20 +1171,35 @@ namespace Models.PMF.Organs
             Allocated.MetabolicN += nitrogen.Metabolic;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
-                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            Live.StorageN -= StorageNRetranslocation;
-            Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
-            Allocated.StorageN -= nitrogen.Retranslocation;
+            ////TODO check what this is guarding - not sure on the relationship between NSupply and nitrogen
+            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
+            //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
-            // Reallocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
-                throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
-            Live.StorageN -= StorageNReallocation;
-            Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
-            Allocated.StorageN -= nitrogen.Reallocation;
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN))
+                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+
+            if(nitrogen.Retranslocation > Live.StorageN)
+            {
+                var metabolic = nitrogen.Retranslocation - Live.StorageN;
+                Live.StorageN = 0.0;
+                Live.MetabolicN -= metabolic;
+                // Allocated.StorageN and MetabolicN should be 0?
+                Allocated.StorageN = 0;
+                Allocated.MetabolicN -= metabolic;
+            }
+            else
+            {
+                Live.StorageN -= nitrogen.Retranslocation;
+                Allocated.StorageN -= nitrogen.Retranslocation;
+            }
+
+            // No Reallocation at present
+            //if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
+            //    throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
+            //double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
+            //Live.StorageN -= StorageNReallocation;
+            //Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
+            //Allocated.StorageN -= nitrogen.Reallocation;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -1116,6 +1235,16 @@ namespace Models.PMF.Organs
                 Senesced.Clear();
                 Detached.Clear();
                 Removed.Clear();
+
+                //clear local variables
+                DltLAI = 0.0;
+                dltPotentialLAI = 0.0;
+                DltRetranslocatedN = 0.0;
+                DltSenescedLai = 0.0;
+                DltSenescedLaiN = 0.0;
+                DltSenescedN = 0.0;
+                dltStressedLAI = 0.0;
+                
             }
         }
 

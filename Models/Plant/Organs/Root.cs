@@ -749,24 +749,6 @@ namespace Models.PMF.Organs
                         //actual uptake needs to distinguish between massflow and diffusion
                         //sorghum calcs don't use nh4 - so using that temporarily
                     }
-                    //var proportion = rootProportionInLayer(currentLayer, myZone);
-                    //var proportion = Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
-                    //Diffusion[currentLayer] *= proportion;
-
-                    //var totalMassFlow = MathUtilities.Sum(MassFlow);
-                    //var totalDiffusion = MathUtilities.Sum(Diffusion);
-
-                    //var dltt = DltThermalTime.Value();
-                    //var maxDiffusion = totalDiffusion / MaxDiffusion.Value();
-                    //var maxUptakeRateFrac = Math.Min(1.0, (totalMassFlow + maxDiffusion) / NSupplyFraction.Value()) * MaxNUptakeRate.Value();
-                    //maxDiffusion = Math.Min(maxDiffusion, maxUptakeRateFrac * DltThermalTime.Value() - totalMassFlow);
-
-                    //var diffusionProportion = totalDiffusion > 0.0 ? maxDiffusion / totalDiffusion : 0.0;
-                    ////adjust diffusion values proportionally
-                    //for (int layer = 0; layer <= currentLayer; layer++)
-                    //{
-                    //    NO3Supply[layer] = MassFlow[layer] + (Diffusion[layer] * diffusionProportion);
-                    //}
                 }
                 else
                 {

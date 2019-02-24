@@ -381,6 +381,8 @@ namespace Models.PMF.Organs
             Live.StorageN -= StorageNRetranslocation;
             Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
             Allocated.StorageN -= nitrogen.Retranslocation;
+            //TODO why is it recalculating the storageN component? isn't it just Storage first then Metabolic?
+            //TODO should it also be updating Allocated.MetabolicN ?
 
             // Reallocation
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))

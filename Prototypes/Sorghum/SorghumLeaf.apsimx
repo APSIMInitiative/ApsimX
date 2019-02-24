@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 451,
-  "Version": 51,
+  "ExplorerWidth": 283,
+  "Version": 54,
   "Name": "Simulations",
   "Children": [
     {
@@ -3112,12 +3112,14 @@
               "PhosphorusStress": 1.0,
               "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
-              "frostKill": 10.0,
+              "frostKill": 1.0,
               "senThreshold": 0.25,
               "senWaterTimeConst": 10.0,
               "LossFromExpansionStress": 0.0,
               "SenescedLai": 0.0,
+              "DltRetranslocatedN": 0.0,
               "DltSenescedN": 0.0,
+              "DltSenescedLaiN": 0.0,
               "DltSenescedLai": 0.0,
               "DltSenescedLaiLight": 0.0,
               "DltSenescedLaiWater": 0.0,
@@ -4464,15 +4466,6 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "```\r\nif(stage >= endJuv && stage < maturity)\r\n      dltLAI = Min(dltStressedLAI,dltDmGreen * slaMax * smm2sm);\r\n   else dltLAI = dltStressedLAI;\r\n```",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -4652,16 +4645,6 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.5,
-                  "Units": null,
-                  "Name": "TargetSLN",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.3,
                   "Units": null,
                   "Name": "SenescedLeafSLN",
@@ -4686,6 +4669,133 @@
                   "Units": null,
                   "Name": "NDilutionIntercept",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "FlagLeaf",
+                  "ReSetEvent": null,
+                  "Name": "TargetSLN",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.5,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SLN",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "Start": "StartGrainFill",
+                  "End": "EndGrainFill",
+                  "Name": "MinPlantWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Flowering",
+                      "ReSetEvent": null,
+                      "Name": "OnFlowering",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "PostEventValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "DivideFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "Leaf.Live.Wt",
+                                  "Name": "LiveWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Plant].SowingData.Density",
+                                  "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "base",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.15,
+                                  "Units": null,
+                                  "Name": "RetranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6768,7 +6878,7 @@
             "[Sorghum].Phenology.LeafAppearance2._RemainingLeaves",
             "sum([Soil].SoilWater.ESW) as ESW",
             "[Sorghum].Phenology.Juvenile.Target.Value()",
-            "sum([Soil].SoilNitrogen.NO3) as NO3",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
             "sum([Soil].SoilWater.SW) as sw",
             "[Sorghum].Leaf.Fw as WaterSD",
             "[Sorghum].Leaf.Photosynthesis.FW.Value() as RUEStress",
@@ -7234,7 +7344,48 @@
                         0.9
                       ],
                       "Name": "SoilNitrogen",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "Name": "NO3",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "Name": "NH4",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "Name": "Urea",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                          "Name": "PlantAvailableNO3",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                          "Name": "PlantAvailableNH4",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -7242,7 +7393,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "RootWt": 1000.0,
                       "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
@@ -7306,6 +7456,18 @@
                         0.9,
                         0.9,
                         0.9
+                      ],
+                      "RootWt": [
+                        260.58740315916066,
+                        220.5824745109322,
+                        158.05424955092769,
+                        113.25081857248298,
+                        81.147757455295647,
+                        58.144908999566972,
+                        41.662647848653442,
+                        29.852591664969907,
+                        21.390316629725067,
+                        15.32683160828522
                       ],
                       "OCUnits": 0,
                       "Name": "SoilOrganicMatter",
@@ -7521,14 +7683,6 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.SoluteManager, Models",
-                  "Name": "SoluteManager",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -9526,6 +9680,36 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -990142,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Das",
+                  "YFieldName": "Arbitrator.N.Allocated",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "LivePMF1",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -9831,6 +10015,36 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Das",
+                  "YFieldName": "LeafGreenWt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "LeafGreenWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Das",
                   "YFieldName": "Sorghum.Leaf.Dead.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
@@ -9839,7 +10053,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "LeafDeadPMF",
+                  "Name": "LeafDead",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
