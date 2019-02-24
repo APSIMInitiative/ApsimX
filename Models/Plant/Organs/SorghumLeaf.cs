@@ -1066,17 +1066,64 @@ namespace Models.PMF.Organs
                 DltSenescedLaiN += senescenceLAI;
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                 DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
-                if (DltSenescedLai > 0.0)
-                {
-                    Console.WriteLine("DltSenescedLai is greater than 0: " + DltSenescedLai.ToString());
-                }
                 return nProvided;
             }
             else
             {
+                // if sln > 1, dilution then senescence
+                if(slnToday > 1.0)
+                {
+                    double nProvided = Math.Min(dilutionN, requiredN);
+                    requiredN -= nProvided;
+                    nGreenToday += nProvided; //jkb
+                    DltRetranslocatedN -= nProvided;
 
+                    if (requiredN <= 0.0001)
+                        return nProvided;
+
+                    // rest from senescence
+                    laiToday = calcLAI();
+                    slnToday = calcSLN(laiToday, nGreenToday);
+
+                    var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    requiredN = Math.Min(requiredN, maxN);
+
+                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
+                    DltRetranslocatedN -= newN;
+                    nGreenToday += newN;
+                    nProvided += newN;
+                    DltSenescedLaiN += senescenceLAI;
+                    DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
+                    DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+                    return nProvided;
+                }
+                else
+                {
+                    // half from dilution and half from senescence
+                    double nProvided = Math.Min(dilutionN, requiredN / 2.0);
+                    requiredN -= nProvided;
+                    nGreenToday += nProvided; //jkb
+                    DltRetranslocatedN -= nProvided;
+
+                    // rest from senescence
+                    laiToday = calcLAI();
+                    slnToday = calcSLN(laiToday, nGreenToday);
+
+                    var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    requiredN = Math.Min(requiredN, maxN);
+
+                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
+                    DltRetranslocatedN -= newN;
+                    nGreenToday += newN;
+                    nProvided += newN;
+                    DltSenescedLaiN += senescenceLAI;
+                    DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
+                    DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+                    return nProvided;
+                }
             }
-            return 0.0;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -1175,17 +1222,28 @@ namespace Models.PMF.Organs
             //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
             //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN))
-                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+            //sorghum can utilise structural as well
+            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN))
+            //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
-            if(nitrogen.Retranslocation > Live.StorageN)
+            if (nitrogen.Retranslocation > Live.StorageN + Live.MetabolicN)
             {
-                var metabolic = nitrogen.Retranslocation - Live.StorageN;
+                var strucuralNLost = nitrogen.Retranslocation - (Live.StorageN + Live.MetabolicN);
+                Live.StructuralN -= strucuralNLost;
+                Allocated.StructuralN -= strucuralNLost;
+
                 Live.StorageN = 0.0;
-                Live.MetabolicN -= metabolic;
-                // Allocated.StorageN and MetabolicN should be 0?
+                Live.MetabolicN = 0.0;
                 Allocated.StorageN = 0;
-                Allocated.MetabolicN -= metabolic;
+                Allocated.MetabolicN = 0.0;
+            }
+            else if (nitrogen.Retranslocation > Live.StorageN)
+            {
+                var metabolicNLost = nitrogen.Retranslocation - Live.StorageN;
+                Live.MetabolicN -= metabolicNLost;
+                Allocated.MetabolicN -= metabolicNLost;
+                Live.StorageN = 0.0;
+                Allocated.StorageN = 0;
             }
             else
             {
