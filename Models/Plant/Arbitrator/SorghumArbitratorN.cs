@@ -156,10 +156,10 @@ namespace Models.PMF
                 double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement);
                 BAT.StructuralAllocation[iSink] += providedN;
 
-                double sfterRetranslocatedN = leaf.DltRetranslocatedN;
+                double afterRetranslocatedN = leaf.DltRetranslocatedN;
                 //Leaf keeps track of retranslocation - the return value can include DltLAI which is not techncally retraslocated
                 //Let leaf handle the updating
-                BAT.Retranslocation[iSupply] += sfterRetranslocatedN - currentRetranslocatedN;
+                BAT.Retranslocation[iSupply] += Math.Abs(afterRetranslocatedN - currentRetranslocatedN);
             }
         }
 
