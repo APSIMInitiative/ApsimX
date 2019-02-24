@@ -141,20 +141,20 @@ namespace UserInterface.Views
                     do
                     {
                         ColourDropTypeEnum typeEnum = (ColourDropTypeEnum)comboModel.GetValue(iter, 2);
-                        if (typeEnum == ColourDropTypeEnum.Text)
+                        if (value.GetType() == typeof(Color))
                         {
-                            string entry = (string)comboModel.GetValue(iter, 0);
-                            if (entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase))
+                            Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
+                            Color rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
+                            if (rgb.Equals((Color)value))
                             {
                                 combobox1.SetActiveIter(iter);
                                 return;
                             }
                         }
-                        else if (value.GetType() == typeof(Color))
+                        else if (typeEnum == ColourDropTypeEnum.Text)
                         {
-                            Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            Color rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
-                            if (rgb.Equals((Color)value))
+                            string entry = (string)comboModel.GetValue(iter, 0);
+                            if (entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 combobox1.SetActiveIter(iter);
                                 return;

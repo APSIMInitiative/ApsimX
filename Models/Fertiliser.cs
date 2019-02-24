@@ -56,8 +56,14 @@ namespace Models
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link] private SoluteManager solutes = null;
+        /// <summary>NO3 solute</summary>
+        [ScopedLinkByName] private ISolute NO3 = null;
+
+        /// <summary>NO3 solute</summary>
+        [ScopedLinkByName] private ISolute NH4 = null;
+
+        /// <summary>NO3 solute</summary>
+        [ScopedLinkByName] private ISolute Urea = null;
 
         // Parameters
         /// <summary>Gets or sets the definitions.</summary>
@@ -148,17 +154,23 @@ namespace Models
 
                 if (fertiliserType.FractionNO3 != 0)
                 {
-                    solutes.AddToLayer(layer, "NO3", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNO3);
+                    var values = NO3.kgha;
+                    values[layer] += Amount * fertiliserType.FractionNO3;
+                    NO3.SetKgHa(SoluteSetterType.Fertiliser, values);
                     NitrogenApplied += Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
-                    solutes.AddToLayer(layer, "NH4", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionNH4);
+                    var values = NH4.kgha;
+                    values[layer] += Amount * fertiliserType.FractionNH4;
+                    NH4.SetKgHa(SoluteSetterType.Fertiliser, values);
                     NitrogenApplied += Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
-                    solutes.AddToLayer(layer, "Urea", SoluteManager.SoluteSetterType.Fertiliser, Amount * fertiliserType.FractionUrea);
+                    var values = Urea.kgha;
+                    values[layer] += Amount * fertiliserType.FractionUrea;
+                    Urea.SetKgHa(SoluteSetterType.Fertiliser, values);
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
                 if (doOutput)

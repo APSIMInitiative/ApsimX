@@ -590,15 +590,18 @@ namespace Models.PMF.Organs
         private void GetSenescingLeafBiomass(out Biomass Senescing)
         {
             Senescing = new Biomass();
+            double LRT = LeafResidenceTime.Value();
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= LeafResidenceTime.Value())
+                if (L.Age >= LRT)
                     Senescing.Add(L.Live);
         }
 
         private void SenesceLeaves()
         {
+            double LRT = LeafResidenceTime.Value();
+
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= LeafResidenceTime.Value())
+                if (L.Age >= LRT)
                 {
                     L.Dead.Add(L.Live);
                     L.AreaDead += L.Area;
@@ -609,9 +612,10 @@ namespace Models.PMF.Organs
 
         private void KillLeavesUniformly(double fraction)
         {
+            Biomass Loss = new Biomass();
+
             foreach (PerrenialLeafCohort L in Leaves)
-            {
-                Biomass Loss = new Biomass();
+            {            
                 Loss.SetTo(L.Live);
                 Loss.Multiply(fraction);
                 L.Dead.Add(Loss);
@@ -623,10 +627,13 @@ namespace Models.PMF.Organs
         private Biomass DetachLeaves()
         {
             Detached = new Biomass();
+            double LRT = LeafResidenceTime.Value();
+            double LDT = LeafDetachmentTime.Value();
+
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= (LeafResidenceTime.Value() + LeafDetachmentTime.Value()))
+                if (L.Age >= (LRT + LDT))
                     Detached.Add(L.Dead);
-            Leaves.RemoveAll(L => L.Age >= (LeafResidenceTime.Value() + LeafDetachmentTime.Value()));
+            Leaves.RemoveAll(L => L.Age >= (LRT + LDT));
             return Detached;
         }
 
@@ -805,7 +812,8 @@ namespace Models.PMF.Organs
             {
                 SenesceLeaves();
                 double LKF = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), (1 - MinimumLAI.Value() / LAI)));
-                KillLeavesUniformly(LKF);
+                if (LKF>0)
+                   KillLeavesUniformly(LKF);
                 Detached = DetachLeaves();
                 
                 if (Detached.Wt > 0.0)
