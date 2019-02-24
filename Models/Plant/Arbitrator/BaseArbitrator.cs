@@ -2,7 +2,6 @@
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
-using Models.PMF.Organs;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
@@ -195,7 +194,7 @@ namespace Models.PMF
             {
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             }
-            var tmp = (Plant.Organs[1] as Root).Zones[0].soil.Name;
+
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)

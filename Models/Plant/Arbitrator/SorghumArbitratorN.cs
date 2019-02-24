@@ -44,7 +44,6 @@ namespace Models.PMF
             var supplyDemand = 0.0;
             if (demand > 0.0)
                 supplyDemand = Math.Min( (BAT.TotalUptakeSupply * 0.1) / demand, 1.0);
-            var plant = (Organs[2] as SorghumLeaf).Plant;
 
             double rootAllocation = supplyDemand * BAT.StructuralDemand[rootIndex];
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
@@ -111,8 +110,6 @@ namespace Models.PMF
             var rachisIndex = 3;
             var stemIndex = 4;
             var grainIndex = 0;
-
-            var plant = (Organs[2] as SorghumLeaf).Plant;
 
             AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, stemIndex, BAT);
             AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, rachisIndex, BAT);
