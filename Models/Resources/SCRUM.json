@@ -1013,7 +1013,7 @@
       "Children": [
         {
           "$type": "Models.Functions.VariableReference, Models",
-          "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+          "VariableName": "[Stover].Photosynthesis.FCO2.Value()",
           "Name": "FCO2",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1022,7 +1022,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
-          "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+          "Expression": "([IWeather].CO2 - [Stover].CO2internal.Value())/(350 - [Stover].CO2internal.Value())",
           "Name": "RelativeCO2Gradient",
           "Children": [],
           "IncludeInDocumentation": true,
