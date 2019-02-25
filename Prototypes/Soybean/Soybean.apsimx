@@ -4801,19 +4801,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.5,
-                            0.8,
-                            1.0,
-                            2.0,
-                            3.0,
-                            4.0
+                            6.0
                           ],
                           "Y": [
-                            35000.0,
-                            35000.0,
-                            34500.0,
                             30000.0,
-                            25000.0,
-                            20000.0
+                            40000.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -4864,19 +4856,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.5,
-                            0.8,
-                            1.0,
-                            2.0,
-                            3.0,
-                            4.0
+                            6.0
                           ],
                           "Y": [
-                            40000.0,
-                            35000.0,
-                            30000.0,
-                            30000.0,
-                            30000.0,
-                            27000.0
+                            20000.0,
+                            30000.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -6641,6 +6625,7 @@
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
                 "[Phenology].Vegetative.Progression.PhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                 "[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 23000",
+                "[Leaf].LeafCohortParameters.MaxArea.RelativeArea.XYPairs.X = 2, 7, 13, 18",
                 "[Grain].MaximumNConc.FixedValue = 0.067"
               ],
               "Name": "Davis",
@@ -15162,7 +15147,7 @@
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Growing Season Mean Air Temperature",
           "Children": [
             {
@@ -15228,7 +15213,7 @@
             }
           ],
           "LegendPosition": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "Name": "Growing Season Photoperiod",
           "Children": [
             {
@@ -27161,7 +27146,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -27172,12 +27157,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -27257,7 +27242,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -27268,12 +27253,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "MainStemLeafNo",
                               "Children": [
                                 {
@@ -27353,7 +27338,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -27364,12 +27349,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "SpecificLeafArea",
                               "Children": [
                                 {
@@ -27723,7 +27708,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "Growing Season Mean Air Temperature",
                       "Children": [
                         {
