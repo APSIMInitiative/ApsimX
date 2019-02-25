@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs payment of a specified expense.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/finances/payexpenses.htm")]
     public class FinanceActivityPayExpense : CLEMActivityBase
     {
         /// <summary>

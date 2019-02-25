@@ -22,6 +22,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(IResourceType))]
     [Description("This Transmutation will convert any other resource into the current resource where there is a shortfall. This is placed under any resource type where you need to provide a transmutation. For example to convert Finance Type (money) into a Animal Food Store Type (Lucerne) or effectively purchase fodder when low.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/transmutation/transmutation.htm")]
     public class Transmutation: CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -120,6 +121,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/transmutation/transmutationcost.htm")]
     public class TransmutationCost : CLEMModel, IValidatableObject, ITransmutationCost
     {
         [XmlIgnore]
@@ -250,6 +252,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
+    [HelpUri(@"content/features/transmutation/transmutationcostlabour.htm")]
     public class TransmutationCostLabour : CLEMModel, IValidatableObject, ITransmutationCost
     {
         /// <summary>
