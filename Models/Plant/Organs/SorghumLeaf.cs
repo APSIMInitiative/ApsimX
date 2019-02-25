@@ -86,23 +86,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
         public double CoverGreen { get; set; }
-        //{
-        //    get
-        //    {
-        //        if (Plant.IsAlive)
-        //        {
-        //            double greenCover = 0.0;
-        //            if (CoverFunction == null)
-        //                greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI);
-        //            else
-        //                greenCover = CoverFunction.Value();
-        //            return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
-        //        }
-        //        else
-        //            return 0.0;
-
-        //    }
-        //}
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
@@ -127,17 +110,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Parameters
-        ///// <summary>The FRGR function</summary>
-        //[Link]
-        //IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
-
-        ///// <summary>The cover function</summary>
-        //[Link(IsOptional = true)]
-        //IFunction CoverFunction = null;
-
-        ///// <summary>The lai function</summary>
-        //[Link(IsOptional = true)]
-        //IFunction LAIFunction = null;
 
         /// <summary>The extinction coefficient function</summary>
         [Link(IsOptional = true)]
@@ -242,37 +214,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
-
-        ///// <summary>Potential Biomass limited by Transpiration Efficiency</summary>
-        //[Link(IsOptional = true)]
-        //IFunction PotentialBiomTEFunction = null;   
-
-        ///// <summary>Gets the fw.</summary>
-        //public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
-
-        ///// <summary>Gets the function.</summary>
-        //public double Fn
-        //{
-        //    get
-        //    {
-        //        if (Live != null)
-        //            return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
-        //        return 0;
-        //    }
-        //}
-
-        ///// <summary>Gets the metabolic N concentration factor.</summary>
-        //public double FNmetabolic
-        //{
-        //    get
-        //    {
-        //        double factor = 0.0;
-        //        if (Live != null)
-        //            factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
-        //        return Math.Min(1.0, factor);
-        //    }
-        //}
-
+        
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
 
@@ -464,41 +406,13 @@ namespace Models.PMF.Organs
                 startLive = Live;
             if (LeafInitialised)
             {
-
-                //FRGR = FRGRFunction.Value();
-                //if (CoverFunction == null && ExtinctionCoefficientFunction == null)
-                //    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                //if (CoverFunction != null)
-                //    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1));
-                //if (LAIFunction != null)
-                //    LAI = LAIFunction.Value(); //doesn't need to be calculated here as it is dne at the ed of the day
-
-                // var dltPotentialLAI = 0.0;
                 dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
-                //var tmp = Arbitrator.WatSupply;
-                //var waterFunction = WaterDemandFunction as TEWaterDemandFunction;
-                //var tmp3 = waterFunction.Value();
-                //var tmp2 = sdRatio.Value();
                 dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day
-                //BiomRUE = Photosynthesis.Value() * TemperatureStressFunction.Value() * NitrogenStress * PhosphorusStress;
                 BiomassRUE = Photosynthesis.Value();
-                //var tmp = (Photosynthesis as RUEModel).RueAct;
-                //var tmp2 = (Photosynthesis as RUEModel).RadnInt;
-                //var tmp3 = (Photosynthesis as RUEModel).FT.Value();
-                //var tmp4 = (Photosynthesis as RUEModel).FVPD.Value();
-                //var tmp5 = (Photosynthesis as RUEModel).FN.Value();
-
-
                 //var bimT = 0.009 / waterFunction.VPD / 0.001 * Arbitrator.WSupply;
                 BiomassTE = PotentialBiomassTEFunction.Value();
-
-                //i think wsupply is being calculated as enough for demand
-                if(BiomassTE - BiomassRUE > 0.5)
-                {
-                    Console.WriteLine("water supply is higher than demand");
-                }
 
                 Height = HeightFunction.Value();
 
@@ -1169,12 +1083,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
-            var dlt = dltStressedLAI;
-            var lai = LAI;
-            var N = Live.N;
-            var nreq = (lai + dlt) * 1.5;
-            var req = nreq - N;
-
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
