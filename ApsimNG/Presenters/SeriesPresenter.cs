@@ -484,9 +484,7 @@ namespace UserInterface.Presenters
 
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
-            {
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
-            }
         }
 
         /// <summary>Populate the line drop down.</summary>
