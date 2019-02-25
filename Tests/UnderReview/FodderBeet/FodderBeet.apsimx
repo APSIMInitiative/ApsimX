@@ -1447,7 +1447,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 1.0,
                       "Units": null,
-                      "Name": "FN",
+                      "Name": "FNconst",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1535,6 +1535,99 @@
                       "VariableName": "[Leaf].RadIntTot",
                       "Name": "RadnInt",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Leaf].Fn",
+                      "Name": "FN",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0,
+                            1.5
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Y",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": "X",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false
+                                }
+                              ],
+                              "LegendPosition": 3,
+                              "DisabledSeries": null,
+                              "Name": "Graph",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -65536,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": null,
+                                  "XFieldName": "[XYPairs].X",
+                                  "YFieldName": "[XYPairs].Y",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "FN",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4258,7 +4351,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "Emergence_Bolting",
                   "Children": [
                     {
@@ -4344,7 +4437,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "AppearedLeaves",
                   "Children": [
                     {
@@ -4420,7 +4513,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "GreenLeaves",
                   "Children": [
                     {
@@ -4496,7 +4589,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "LAI",
                   "Children": [
                     {
@@ -4572,7 +4665,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "LightInterception",
                   "Children": [
                     {
@@ -4974,7 +5067,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "Total_N",
                   "Children": [
                     {
@@ -5050,7 +5143,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "StorageRoot_N",
                   "Children": [
                     {
@@ -5126,7 +5219,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "Leaf_N",
                   "Children": [
                     {
@@ -5202,7 +5295,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "Petiole_N",
                   "Children": [
                     {
@@ -11994,16 +12087,16 @@
                                   "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Fodderbeet;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] SurfaceOrganicMatter SurfOM;\r\n        \r\n                \r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                Fodderbeet.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n                \r\n            }\r\n\r\n        }\r\n    }\r\n}\r\n                   \r\n",
                                   "Parameters": [
                                     {
+                                      "Key": "InitialRootDepth",
+                                      "Value": "5"
+                                    },
+                                    {
                                       "Key": "Cultivar",
                                       "Value": ""
                                     },
                                     {
                                       "Key": "SowingDate",
                                       "Value": "2014-10-17"
-                                    },
-                                    {
-                                      "Key": "InitialRootDepth",
-                                      "Value": "5"
                                     }
                                   ],
                                   "Name": "Sowing",
@@ -12325,11 +12418,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Stage",
                           "Children": [
                             {
@@ -12909,7 +13002,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
@@ -13008,11 +13101,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRootWt",
                           "Children": [
                             {
@@ -13102,11 +13195,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LeafWt",
                           "Children": [
                             {
@@ -13196,11 +13289,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PetioleWt",
                           "Children": [
                             {
@@ -16828,7 +16921,7 @@
                               "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -16842,7 +16935,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGround_N",
                           "Children": [
                             {
@@ -16936,7 +17029,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_N",
                           "Children": [
                             {
@@ -17030,7 +17123,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_N",
                           "Children": [
                             {
@@ -17124,7 +17217,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_N",
                           "Children": [
                             {
@@ -17319,7 +17412,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -17395,7 +17488,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -17471,7 +17564,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -17547,7 +17640,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -19068,7 +19161,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -19078,11 +19171,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SWC_L1",
                           "Children": [
                             {
@@ -19162,7 +19255,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -19172,11 +19265,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ProfileWater",
                           "Children": [
                             {
@@ -19256,7 +19349,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -19266,11 +19359,11 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ProfileMineralN",
                           "Children": [
                             {
@@ -19364,7 +19457,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "NLeaching",
                           "Children": [
                             {
@@ -20655,7 +20748,7 @@
                               "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false
+                              "DateTimeAxis": true
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -20669,7 +20762,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGround_N",
                           "Children": [
                             {
@@ -20763,7 +20856,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_N",
                           "Children": [
                             {
@@ -20857,7 +20950,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_N",
                           "Children": [
                             {
@@ -20951,7 +21044,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_N",
                           "Children": [
                             {
@@ -21065,7 +21158,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -21141,7 +21234,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "GreenLeaves",
                           "Children": [
                             {
@@ -21227,7 +21320,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalWt",
                           "Children": [
                             {
@@ -21303,7 +21396,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRootWt",
                           "Children": [
                             {
@@ -21379,7 +21472,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LeafWt",
                           "Children": [
                             {
@@ -21455,7 +21548,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PetioleWt",
                           "Children": [
                             {
@@ -21541,7 +21634,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Total_N",
                           "Children": [
                             {
@@ -21617,7 +21710,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_N",
                           "Children": [
                             {
@@ -21693,7 +21786,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_N",
                           "Children": [
                             {
@@ -21769,7 +21862,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_N",
                           "Children": [
                             {
