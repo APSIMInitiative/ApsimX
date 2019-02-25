@@ -86,39 +86,46 @@ namespace Models.CLEM.Groupings
         public override string ToString()
         {
             string str = "";
-
-            if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
+            if (Value == null)
             {
-                str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE")| (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
-                str += Parameter;
+                str = "FILTER NOT DEFINED";
             }
             else
             {
-                str += Parameter;
-                switch (Operator)
+
+                if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
                 {
-                    case FilterOperators.Equal:
-                        str += "=";
-                        break;
-                    case FilterOperators.NotEqual:
-                        str += "<>";
-                        break;
-                    case FilterOperators.LessThan:
-                        str += "<";
-                        break;
-                    case FilterOperators.LessThanOrEqual:
-                        str += "<=";
-                        break;
-                    case FilterOperators.GreaterThan:
-                        str += ">";
-                        break;
-                    case FilterOperators.GreaterThanOrEqual:
-                        str += ">=";
-                        break;
-                    default:
-                        break;
+                    str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") | (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
+                    str += Parameter;
                 }
-                str += Value;
+                else
+                {
+                    str += Parameter;
+                    switch (Operator)
+                    {
+                        case FilterOperators.Equal:
+                            str += "=";
+                            break;
+                        case FilterOperators.NotEqual:
+                            str += "<>";
+                            break;
+                        case FilterOperators.LessThan:
+                            str += "<";
+                            break;
+                        case FilterOperators.LessThanOrEqual:
+                            str += "<=";
+                            break;
+                        case FilterOperators.GreaterThan:
+                            str += ">";
+                            break;
+                        case FilterOperators.GreaterThanOrEqual:
+                            str += ">=";
+                            break;
+                        default:
+                            break;
+                    }
+                    str += Value;
+                }
             }
             return str;
         }
@@ -145,7 +152,14 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "<div class=\"filter\">"+this.ToString()+"</div>";
+            if (this.Value == null)
+            {
+                return "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
+            }
+            else
+            {
+                return "<div class=\"filter\">" + this.ToString() + "</div>";
+            }
         }
 
         /// <summary>

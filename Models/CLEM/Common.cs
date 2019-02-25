@@ -84,9 +84,9 @@ namespace Models.CLEM
         /// </summary>
         TradePurchase,
         /// <summary>
-        /// Heifer purchased
+        /// Breeder purchased
         /// </summary>
-        HeiferPurchase,
+        BreederPurchase,
         /// <summary>
         /// Breeding sire purchased
         /// </summary>
@@ -137,6 +137,25 @@ namespace Models.CLEM
         /// Value per kg live weight
         /// </summary>
         perKg
+    }
+
+    /// <summary>
+    /// Animal purchase or sale price style
+    /// </summary>
+    public enum PurchaseOrSalePricingStyleType
+    {
+        /// <summary>
+        /// Both purchase and sale price
+        /// </summary>
+        Both,
+        /// <summary>
+        /// Purchase price
+        /// </summary>
+        Purchase,
+        /// <summary>
+        /// Sale price
+        /// </summary>
+        Sale
     }
 
     /// <summary>

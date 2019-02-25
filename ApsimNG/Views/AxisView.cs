@@ -44,7 +44,12 @@ namespace UserInterface.Views
         /// Check button object
         /// </summary>
         private CheckButton checkbutton1 = null;
-        
+
+        /// <summary>
+        /// Crosses at checkbox.
+        /// </summary>
+        private CheckButton checkbutton2 = null;
+
         /// <summary>
         /// The constructor
         /// </summary>
@@ -58,12 +63,14 @@ namespace UserInterface.Views
             entryInterval = (Entry)builder.GetObject("entryInterval");
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
+            checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             _mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
             entryMin.FocusOutEvent += OnMinimumChanged;
             entryMax.FocusOutEvent += OnMaximumChanged;
             entryInterval.FocusOutEvent += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
+            checkbutton2.Toggled += OnCrossesAtZeroChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -91,7 +98,12 @@ namespace UserInterface.Views
         /// Invoked when the user has changed the interval field
         /// </summary>
         public event EventHandler IntervalChanged;
-
+       
+        /// <summary>
+        /// Invoked when the user has changed the crosses at zero field
+        /// </summary>
+        public event EventHandler CrossesAtZeroChanged;
+       
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
@@ -121,6 +133,23 @@ namespace UserInterface.Views
             set
             {
                 checkbutton1.Active = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the axis crosses the other axis at zero.
+        /// </summary>
+        public bool CrossesAtZero
+        {
+            get
+            {
+                return checkbutton2.Active;
+            }
+
+            set
+            {
+                checkbutton2.Active = value;
             }
         }
 
@@ -249,6 +278,7 @@ namespace UserInterface.Views
             entryMax.FocusOutEvent -= OnMaximumChanged;
             entryInterval.FocusOutEvent -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
+            checkbutton2.Toggled -= OnCheckedChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }
@@ -273,6 +303,17 @@ namespace UserInterface.Views
         {
             if (InvertedChanged != null)
                 InvertedChanged(this, e);
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the crosses at zero check box.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnCrossesAtZeroChanged(object sender, EventArgs e)
+        {
+            if (CrossesAtZeroChanged != null)
+                CrossesAtZeroChanged(this, e);
         }
 
         /// <summary>

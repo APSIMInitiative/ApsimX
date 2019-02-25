@@ -95,8 +95,8 @@
 
             view.Graph.Clear();
             view.Graph.DrawLineAndMarkers("", x, y, null, Axis.AxisType.Bottom, Axis.AxisType.Left, System.Drawing.Color.Blue, LineType.Solid, MarkerType.None, LineThicknessType.Normal, MarkerSizeType.Normal, true);
-            view.Graph.FormatAxis(Axis.AxisType.Bottom, "x", false, double.NaN, double.NaN, double.NaN);
-            view.Graph.FormatAxis(Axis.AxisType.Left, "y", false, double.NaN, double.NaN, double.NaN);
+            view.Graph.FormatAxis(Axis.AxisType.Bottom, "x", false, double.NaN, double.NaN, double.NaN, false);
+            view.Graph.FormatAxis(Axis.AxisType.Left, "y", false, double.NaN, double.NaN, double.NaN, false);
             view.Graph.BackColor = OxyPlot.OxyColors.White;
             view.Graph.FontSize = 10;
             view.Graph.Refresh();

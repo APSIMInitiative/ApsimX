@@ -7,7 +7,7 @@
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <Enabled>true</Enabled>
-      <FileName>WeatherFiles\Ingham.met</FileName>
+      <FileName>%root%\Examples\WeatherFiles\Ingham.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>

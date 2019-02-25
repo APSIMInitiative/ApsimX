@@ -8,6 +8,7 @@ using Models;
 using System.Xml.Serialization;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Soils
 {
@@ -33,8 +34,9 @@ namespace Models.Soils
         [Link]
         private Soil soil = null;
 
+        /// <summary>Link to NO3.</summary>
         [Link]
-        private SoluteManager soluteManager = null;
+        private List<ISolute> solutes = null;
 
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
@@ -2354,10 +2356,10 @@ namespace Models.Soils
 
         private void ReadSoluteParams()
         {
-            ResizeSoluteArrays(soluteManager.SoluteNames.Length);
-            for (int i = 0; i < soluteManager.SoluteNames.Length; i++)
+            ResizeSoluteArrays(solutes.Count);
+            for (int i = 0; i < solutes.Count; i++)
             {
-                solute_names[i] = soluteManager.SoluteNames[i];
+                solute_names[i] = solutes[i].Name;
                 SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
@@ -2712,7 +2714,7 @@ namespace Models.Soils
                         solute_n[node] = Ctot;
                         dlt_solute_s[node] = Ctot - cslstart[solnum][node];
                     }
-                    soluteManager.SetSolute(solute_names[solnum], SoluteManager.SoluteSetterType.Soil, solute_n);
+                    solutes[solnum].SetKgHa(SoluteSetterType.Soil, solute_n);
                 }
             }
         }
@@ -4450,7 +4452,7 @@ namespace Models.Soils
 
             if (solnum >= 0)
             {
-                solute_n = soluteManager.GetSolute(solute_names[solnum]);
+                solute_n = solutes[solnum].kgha;
 
                 for (int node = 0; node <= n; node++)
                 {

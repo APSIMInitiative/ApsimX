@@ -175,10 +175,22 @@ namespace Models.Utilities
                 File.Create(tempFile).Close();
             
             File.WriteAllText(tempFile, result);
-            DataTable table = ApsimTextFile.ToTable(tempFile);
-            Thread.Sleep(200);
-            if (File.Exists(tempFile))
-                File.Delete(tempFile);
+
+            DataTable table = null;
+            try
+            {
+                table = ApsimTextFile.ToTable(tempFile);
+            }
+            catch (Exception)
+            {
+                throw new Exception(File.ReadAllText(tempFile));
+            }
+            finally
+            {
+                Thread.Sleep(200);
+                if (File.Exists(tempFile))
+                    File.Delete(tempFile);
+            }
             return table;
         }
 
@@ -201,7 +213,7 @@ namespace Models.Utilities
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.GetPackage.R"))
                 using (StreamReader reader = new StreamReader(s))
                     script = reader.ReadToEnd();
-            string tempFileName = Path.GetTempFileName();
+            string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             File.Delete(tempFileName);
             string rFileName = Path.ChangeExtension(tempFileName, ".R");
             File.WriteAllText(rFileName, script);

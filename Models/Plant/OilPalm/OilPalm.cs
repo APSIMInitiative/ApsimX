@@ -132,9 +132,10 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
+        /// <summary>NO3 solute.</summary>
+        [ScopedLinkByName]
+        private ISolute NO3 = null;
+
 
         /// <summary>Aboveground mass</summary>
         public Biomass AboveGround { get { return new Biomass(); } }
@@ -774,8 +775,9 @@ namespace Models.PMF.OilPalm
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
+        /// <param name="rowConfig">The row configuration.</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = population;
@@ -1253,8 +1255,8 @@ namespace Models.PMF.OilPalm
                 double swaf = 0;
                 swaf = (Soil.Water[j] - Soil.LL15mm[j]) / (Soil.DULmm[j] - Soil.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = Soil.NO3N[j] * (100.0 / (Soil.BD[j] * Soil.Thickness[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * Soil.NO3N[j] * swaf);
+                double no3ppm = NO3.kgha[j] * (100.0 / (Soil.BD[j] * Soil.Thickness[j]));
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * NO3.kgha[j] * swaf);
             }
 
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
@@ -1262,7 +1264,7 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
                 NUptake[j] = PotNUptake[j] * Fr;
-            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NUptake);
+            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NUptake));
 
             Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
@@ -1682,19 +1684,19 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
-                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.NO3N[j]);
+                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * NO3.kgha[j]);
             }
 
             double TotUnderstoryPotNUptake = MathUtilities.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
-            double[] no3 = Soil.NO3N;
+            double[] no3 = NO3.kgha;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
                 no3[j] = no3[j] - UnderstoryNUptake[j];
             }
-            Soil.NO3N = no3;
+            NO3.kgha = no3;
 
             //UnderstoryNFixation += UnderstoryNdemand - MathUtilities.Sum(UnderstoryNUptake);
 

@@ -56,11 +56,17 @@ namespace Models.CLEM.Activities
             if (milkTotal > 0)
             {
                 // set these females to state milking perfomred so they switch to the non-suckling milk production curves.
-                herd.Select(a => a.MilkingPerformed == true);
-
+                foreach (RuminantFemale item in herd)
+                {
+                    item.MilkingPerformed = true;
+                }
                 // only provide what labour would allow
                 double labourLimit = this.LabourLimitProportion;
                 (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName);
+            }
+            else
+            {
+                this.Status = ActivityStatus.NotNeeded;
             }
         }
 

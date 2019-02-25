@@ -2,6 +2,7 @@
 using Models.Core;
 using System;
 using Models.Functions;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -12,8 +13,11 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil soil = null;
 
-        /// <summary>The solute manager in this zone</summary>
-        public SoluteManager solutes = null;
+        /// <summary>The NO3 solute.</summary>
+        public ISolute NO3 = null;
+
+        /// <summary>The NH4 solute.</summary>
+        public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
         private Plant plant = null;
@@ -77,6 +81,15 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get; set; }
 
+        /// <summary>Gets the RootFront</summary>
+        public double RootFront { get; set; }
+        /// <summary>Gets the RootFront</summary>
+        public double RootSpread { get; set; }
+        /// <summary>Gets the RootFront</summary>
+        public double LeftDist { get; set; }
+        /// <summary>Gets the RootFront</summary>
+        public double RightDist { get; set; }
+
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="Root">The parent root organ</param>
@@ -103,9 +116,8 @@ namespace Models.PMF.Organs
             Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            solutes = Apsim.Child(zone, typeof(SoluteManager)) as SoluteManager;
-            if (solutes == null)
-                throw new Exception("Cannot find solute manager in zone");
+            NO3 = Apsim.Find(zone, "NO3") as ISolute;
+            NH4 = Apsim.Find(zone, "NH4") as ISolute;
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
@@ -118,6 +130,7 @@ namespace Models.PMF.Organs
         public void Initialise(double depth, double initialDM, double population, double maxNConc)
         {
             Depth = depth;
+            RootFront = depth;
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
             double[] fromMass = new double[1] { initialDM };
@@ -128,6 +141,13 @@ namespace Models.PMF.Organs
                 LayerLive[layer].StructuralWt = toMass[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
             }
+            double mtomm = 1000.0;
+            if(plant.SowingData != null)
+            {
+                LeftDist = plant.SowingData.RowSpacing * mtomm * (plant.SowingData.SkipRow - 0.5);
+                RightDist = plant.SowingData.RowSpacing * mtomm * 0.5;
+            }
+
         }
 
 
@@ -167,14 +187,31 @@ namespace Models.PMF.Organs
         {
             // Do Root Front Advance
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
+            double[] xf = soil.XF(plant.Name);
+
+            //sorghum calc
+            var rootDepthWaterStress = 1.0;
+            if (root.RootDepthStressFactor != null)
+            {
+                //calc StressFactorLookup   
+                var extractable = soil.SoilWater.ESW[RootLayer];
+
+                var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
+                var capacity = soil.DULmm[RootLayer] - llDep;
+
+                var ratio = 0.0;
+                if(capacity > 0.0)
+                    ratio = extractable / capacity;
+
+                root.SWAvailabilityRatio = ratio;
+                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
+            }
 
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
-            double[] xf = soil.XF(plant.Name);
             if (soil.Weirdo == null)
-                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer];
+                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
             else
                 Depth = Depth + rootFrontVelocity.Value(RootLayer);
-
 
             // Limit root depth for impeded layers
             double MaxDepth = 0;
@@ -192,9 +229,17 @@ namespace Models.PMF.Organs
             }
             // Limit root depth for the crop specific maximum depth
             MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
-
             Depth = Math.Min(Depth, MaxDepth);
 
+            //RootFront - needed by sorghum
+            if(root.RootFrontCalcSwitch?.Value() == 1)
+            {
+                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
+
+                double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
+                dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
+                RootFront = RootFront + dltRootFront;
+            }
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen
