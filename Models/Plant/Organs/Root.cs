@@ -703,10 +703,6 @@ namespace Models.PMF.Organs
             {
                 if (RWC == null || RWC.Length != myZone.soil.Thickness.Length)
                     RWC = new double[myZone.soil.Thickness.Length];
-                if (MassFlow == null || MassFlow.Length != myZone.soil.Thickness.Length)
-                    MassFlow = new double[myZone.soil.Thickness.Length];
-                if (Diffusion == null || Diffusion.Length != myZone.soil.Thickness.Length)
-                    Diffusion = new double[myZone.soil.Thickness.Length];
 
                 double NO3Uptake = 0;
                 double NH4Uptake = 0;
@@ -720,6 +716,11 @@ namespace Models.PMF.Organs
                 double accuDepth = 0;
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
+                    if (MassFlow == null || MassFlow.Length != myZone.soil.Thickness.Length)
+                        MassFlow = new double[myZone.soil.Thickness.Length];
+                    if (Diffusion == null || Diffusion.Length != myZone.soil.Thickness.Length)
+                        Diffusion = new double[myZone.soil.Thickness.Length];
+
                     var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
@@ -847,34 +848,54 @@ namespace Models.PMF.Organs
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
-                double[] kl = myZone.soil.KL(parentPlant.Name);
-                double[] ll = myZone.soil.LL(parentPlant.Name);
-                var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
-
-                double[] lldep = new double[myZone.soil.Thickness.Length];
-                double[] available = new double[myZone.soil.Thickness.Length];
-
-                double[] supply = new double[myZone.soil.Thickness.Length];
-                LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
-                    available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
-                    if (currentLayer == layer)
-                    {
-                        var layerproportion = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
-                        available[layer] *= layerproportion;
-                    }
+                    double[] kl = myZone.soil.KL(parentPlant.Name);
+                    double[] ll = myZone.soil.LL(parentPlant.Name);
+                    var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
 
-                    if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                    double[] lldep = new double[myZone.soil.Thickness.Length];
+                    double[] available = new double[myZone.soil.Thickness.Length];
+
+                    double[] supply = new double[myZone.soil.Thickness.Length];
+                    LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                     {
-                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
-                            available[layer] * rootProportionInLayer(layer, myZone));
+                        lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
+                        available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
+                        if (currentLayer == layer)
+                        {
+                            var layerproportion = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
+                            available[layer] *= layerproportion;
+                        }
+
+                        if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                        {
+                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
+                                available[layer] * rootProportionInLayer(layer, myZone));
+                        }
                     }
-                }
-                if (MathUtilities.Sum(supply) < 0.0)
+                    if (MathUtilities.Sum(supply) < 0.0)
+                        return supply;
                     return supply;
-                return supply;
+                }
+                else
+                {
+                    double[] kl = myZone.soil.KL(parentPlant.Name);
+                    double[] ll = myZone.soil.LL(parentPlant.Name);
+
+                    double[] supply = new double[myZone.soil.Thickness.Length];
+                    LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    {
+                        if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                        {
+                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
+                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
+                        }
+                    }
+                    return supply;
+                }
             }            
         }
 
