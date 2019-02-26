@@ -104,7 +104,7 @@ namespace UserInterface.Views
                 string[] result = new string[numNames];
                 TreeIter iter;
                 int i = 0;
-                if (combobox1.GetActiveIter(out iter))
+                if (comboModel.GetIterFirst(out iter))
                     do
                         result[i++] = (string)comboModel.GetValue(iter, 0);
                     while (comboModel.IterNext(ref iter) && i < numNames);
@@ -167,7 +167,7 @@ namespace UserInterface.Views
                 if (comboModel.GetIterFirst(out iter))
                 {
                     string entry = (string)comboModel.GetValue(iter, 0);
-                    while (!entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
+                    while (entry != null && !entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
                         entry = (string)comboModel.GetValue(iter, 0);
                     if (entry == value)
                         combobox1.SetActiveIter(iter);

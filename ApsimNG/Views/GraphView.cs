@@ -827,6 +827,7 @@ namespace UserInterface.Views
             }
 
             if (axis is LinearAxis &&
+                !(axis is DateTimeAxis) &&
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
                 // We want the axis labels to always have a leading 0 when displaying decimal places.
