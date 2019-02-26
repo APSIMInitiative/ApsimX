@@ -138,7 +138,7 @@ namespace UserInterface.Views
                         if (value.GetType() == typeof(Color))
                         {
                             Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            Color rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
+                            Color rgb = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                             if (rgb.Equals((Color)value))
                             {
                                 combobox1.SetActiveIter(iter);
