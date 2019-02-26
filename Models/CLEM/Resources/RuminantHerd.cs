@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -20,6 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/ruminant/ruminantherd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -39,6 +41,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         [XmlIgnore]
         public object LastIndividualChanged { get; set; }
+
+        /// <summary>
+        /// The details of an individual for reporting
+        /// </summary>
+        [XmlIgnore]
+        public RuminantReportItemEventArgs ReportIndividual { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -163,6 +171,8 @@ namespace Models.CLEM.Resources
 
                         female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2)) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
+                        female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                        female.SuccessfulPregnancy = true;
                     }
                 }
             }
@@ -289,6 +299,31 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        #region weaning event
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public void OnWeanOccurred(EventArgs e)
+        {
+            ReportIndividual = e as RuminantReportItemEventArgs;
+            WeanOccurred?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public event EventHandler WeanOccurred;
+
+        private void Resource_WeanOccurred(object sender, EventArgs e)
+        {
+            OnWeanOccurred(e);
+        }
+
+        #endregion
+
+
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

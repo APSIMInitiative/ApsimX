@@ -18,6 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
+    [HelpUri(@"content/features/activities/activitiesholder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {

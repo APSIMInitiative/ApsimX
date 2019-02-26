@@ -22,6 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/filters/ruminantfilter.htm")]
     public class RuminantFilter: CLEMModel
     {
         /// <summary>
@@ -86,7 +87,7 @@ namespace Models.CLEM.Groupings
         public override string ToString()
         {
             string str = "";
-            if (Value is null)
+            if (Value == null)
             {
                 str = "FILTER NOT DEFINED";
             }
@@ -152,7 +153,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            if (this.Value is null)
+            if (this.Value == null)
             {
                 return "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
             }

@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmanage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -372,7 +373,8 @@ namespace Models.CLEM.Activities
                 // IAT-NABSA removes adjusts to account for the old animals that will be sold in the next year
                 // This is not required in CLEM as they have been sold in this method, and it wont be until this method is called again that the next lot are sold.
                 // Like IAT-NABSA we will account for mortality losses in the next year in our breeder purchases
-                int numberDyingInNextYear = Convert.ToInt32(numberFemaleBreedingInHerd * mortalityRate);
+                // Account for whole individuals only.
+                int numberDyingInNextYear = Convert.ToInt32(Math.Floor(numberFemaleBreedingInHerd * mortalityRate));
                 // adjust for future mortality
                 excessBreeders -= numberDyingInNextYear;
 
@@ -443,43 +445,73 @@ namespace Models.CLEM.Activities
                             // IAT-NABSA had buy mortality base% more to account for deaths before these individuals grow to breeding age
                             // These individuals are already of breeding age so we will ignore this in CLEM
                             // minimum of (max kept x prop in single purchase) and (the number needed + annual mortality)
-                            int numberToBuy = Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept));
-                            int numberPerPurchaseCohort = Convert.ToInt32(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses));
+                            int numberToBuy = Math.Min(excessBreeders,Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept)));
+                            int numberPerPurchaseCohort = Convert.ToInt32(Math.Ceiling(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses)));
 
-                            for (int j = 0; j < NumberOfBreederPurchaseAgeClasses; j++)
+                            int numberBought = 0;
+                            while(numberBought < numberToBuy)
                             {
-                                // ensure rounding errors allow total number to be purchase by upping cat 1 (12 month olds)
-                                int numberThisCohort = numberPerPurchaseCohort;
-                                if(j == 0)
-                                {
-                                    numberThisCohort = numberToBuy - ((NumberOfBreederPurchaseAgeClasses - 1) * numberPerPurchaseCohort);
-                                }
-                                ageOfBreeder = Convert.ToInt32(minBreedAge+(j*12));
-                                for (int i = 0; i < numberThisCohort; i++)
-                                {
-                                    RuminantFemale newBreeder = new RuminantFemale
-                                    {
-                                        Location = grazeStore,
-                                        Age = ageOfBreeder,
-                                        Breed = this.PredictedHerdBreed,
-                                        HerdName = this.PredictedHerdName,
-                                        BreedParams = breedParams,
-                                        Gender = Sex.Female,
-                                        ID = 0,
-                                        SaleFlag = HerdChangeReason.BreederPurchase
-                                    };
-                                    // calculate normalised weight based on age.
-                                    double weight = newBreeder.NormalisedAnimalWeight;
-                                    newBreeder.Weight = weight;
-                                    newBreeder.PreviousWeight = weight;
-                                    newBreeder.HighWeight = weight;
+                                int breederClass = Convert.ToInt32(numberBought / numberPerPurchaseCohort);
+                                ageOfBreeder = Convert.ToInt32(minBreedAge + (breederClass * 12));
 
-                                    // this individual must be weaned to be permitted to start breeding.
-                                    newBreeder.Wean();
-                                    // add to purchase request list and await purchase in Buy/Sell
-                                    ruminantHerd.PurchaseIndividuals.Add(newBreeder);
-                                }
+                                RuminantFemale newBreeder = new RuminantFemale
+                                {
+                                    Location = grazeStore,
+                                    Age = ageOfBreeder,
+                                    Breed = this.PredictedHerdBreed,
+                                    HerdName = this.PredictedHerdName,
+                                    BreedParams = breedParams,
+                                    Gender = Sex.Female,
+                                    ID = 0,
+                                    SaleFlag = HerdChangeReason.BreederPurchase
+                                };
+                                // calculate normalised weight based on age.
+                                double weight = newBreeder.NormalisedAnimalWeight;
+                                newBreeder.Weight = weight;
+                                newBreeder.PreviousWeight = weight;
+                                newBreeder.HighWeight = weight;
+
+                                // this individual must be weaned to be permitted to start breeding.
+                                newBreeder.Wean(false, "Initial");
+                                // add to purchase request list and await purchase in Buy/Sell
+                                ruminantHerd.PurchaseIndividuals.Add(newBreeder);
+                                numberBought++;
                             }
+
+                            //for (int j = 0; j < NumberOfBreederPurchaseAgeClasses; j++)
+                            //{
+                            //    // ensure rounding errors allow total number to be purchase by upping cat 1 (12 month olds)
+                            //    int numberThisCohort = numberPerPurchaseCohort;
+                            //    if(j == 0)
+                            //    {
+                            //        numberThisCohort = numberToBuy - ((NumberOfBreederPurchaseAgeClasses - 1) * numberPerPurchaseCohort);
+                            //    }
+                            //    ageOfBreeder = Convert.ToInt32(minBreedAge+(j*12));
+                            //    for (int i = 0; i < numberThisCohort; i++)
+                            //    {
+                            //        RuminantFemale newBreeder = new RuminantFemale
+                            //        {
+                            //            Location = grazeStore,
+                            //            Age = ageOfBreeder,
+                            //            Breed = this.PredictedHerdBreed,
+                            //            HerdName = this.PredictedHerdName,
+                            //            BreedParams = breedParams,
+                            //            Gender = Sex.Female,
+                            //            ID = 0,
+                            //            SaleFlag = HerdChangeReason.BreederPurchase
+                            //        };
+                            //        // calculate normalised weight based on age.
+                            //        double weight = newBreeder.NormalisedAnimalWeight;
+                            //        newBreeder.Weight = weight;
+                            //        newBreeder.PreviousWeight = weight;
+                            //        newBreeder.HighWeight = weight;
+
+                            //        // this individual must be weaned to be permitted to start breeding.
+                            //        newBreeder.Wean();
+                            //        // add to purchase request list and await purchase in Buy/Sell
+                            //        ruminantHerd.PurchaseIndividuals.Add(newBreeder);
+                            //    }
+                            //}
                         }
                     }
                 }

@@ -24,6 +24,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/reporting/resourcebalances.htm")]
     public class ReportResourceBalances: Models.Report.Report
     {
         [Link]

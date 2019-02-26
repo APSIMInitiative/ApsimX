@@ -56,7 +56,7 @@ namespace Models.Core.ApsimFile
         public static string Type(JToken node, bool withNamespace = false)
         {
             // If the node is not a JObject, it is not an apsim model.
-            if ( !(node is JObject) )
+            if (!(node is JObject))
                 return null;
 
             JProperty typeProperty = (node as JObject).Property("$type");
@@ -183,6 +183,20 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns a list of child managers recursively.
+        /// </summary>
+        /// <param name="node">The root node.</param>
+        /// <returns>Returns a list of manager models.</returns>
+        public static List<ManagerConverter> ChildManagers(JObject node)
+        {
+            var managers = new List<ManagerConverter>();
+
+            foreach (var manager in JsonUtilities.ChildrenOfType(node, "Manager"))
+                managers.Add(new ManagerConverter(manager));
+            return managers;
+        }
+
+        /// <summary>
         /// Return the parent APSIM model token for the specified model token.
         /// </summary>
         /// <param name="modelToken">The model token to find the parent for.</param>
@@ -219,6 +233,66 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Gets a list of property values.
+        /// </summary>
+        /// <param name="node">The model node to look under.</param>
+        /// <param name="propertyName">The property name to return.</param>
+        /// <returns>The values or null if not found.</returns>
+        public static List<string> Values(JObject node, string propertyName)
+        {
+            var variableNamesObject = node[propertyName];
+            if (variableNamesObject is JArray)
+            {
+                var array = variableNamesObject as JArray;
+                return array.Values<string>().ToList();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets a list of property values.
+        /// </summary>
+        /// <param name="node">The model node to look under.</param>
+        /// <param name="propertyName">The property name to return.</param>
+        /// <param name="values">New values</param>
+        /// <returns>The values or null if not found.</returns>
+        public static void SetValues<T>(JObject node, string propertyName, IEnumerable<T> values)
+        {
+            var variableNamesObject = node[propertyName];
+            if (variableNamesObject == null)
+            {
+                variableNamesObject = new JArray();
+                node[propertyName] = variableNamesObject;
+            }
+            if (variableNamesObject is JArray)
+            {
+                var array = variableNamesObject as JArray;
+                array.Clear();
+                foreach (var value in values)
+                    array.Add(value);
+            }
+        }
+
+        /// <summary>
+        /// Perform a search and replace in report variables.
+        /// </summary>
+        /// <param name="report">The report model.</param>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        public static void SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
+        {
+            var variableNames = Values(report, "VariableNames");
+
+            if (variableNames != null)
+            {
+                for (int i = 0; i < variableNames.Count; i++)
+                    variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
+
+                SetValues(report, "VariableNames", variableNames);
+            }
+        }
+
+        /// <summary>
         /// Add a constant function to the specified JSON model token.
         /// </summary>
         /// <param name="modelToken">The APSIM model token.</param>
@@ -242,6 +316,29 @@ namespace Models.Core.ApsimFile
                 children.Add(constantModel);
             }
         }
+
+        /// <summary>
+        /// Create and add a new child model node.
+        /// </summary>
+        /// <param name="parent">The parent model node.</param>
+        /// <param name="name">The model name.</param>
+        /// <param name="fullTypeName">The typespace name + model class name eg. Models.Clock</param>
+        public static JObject CreateNewChildModel(JToken parent, string name, string fullTypeName)
+        {
+            var children = parent["Children"] as JArray;
+            if (children == null)
+            {
+                children = new JArray();
+                parent["Children"] = children;
+            }
+
+            var newChild = new JObject();
+            newChild["$type"] = fullTypeName + ", Models";
+            newChild["Name"] = name;
+            children.Add(newChild);
+            return newChild;
+        }
+
 
         /// <summary>
         /// Helper method for <see cref="ChildrenRecursively(JObject)"/>.

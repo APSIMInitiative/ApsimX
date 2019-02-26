@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/labour/labouravailability.htm")]
     public class LabourAvailabilityList: LabourSpecifications
     {
 
@@ -29,7 +30,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if (this.Children.OfType<LabourAvailabilityItem>().Count() == 0)
+            if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() == 0)
             {
                 html += "\n<div class=\"errorlink\">";
                 html += "No labour availability has been defined";
@@ -65,7 +66,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.Children.OfType<LabourAvailabilityItem>().Count() > 0)
+            if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() > 0)
             {
                 html += "<table><tr><th>Filter</th><th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th><th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th></tr>";
             }

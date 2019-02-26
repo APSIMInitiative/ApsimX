@@ -472,8 +472,8 @@ namespace UserInterface.Presenters
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
                     // get GRASP file names
-                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -652,16 +652,38 @@ namespace UserInterface.Presenters
             List<string> result = new List<string>();
             ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
             ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
-            foreach (Type resGroupType in resourceNameResourceGroups)
+            if (resourceNameResourceGroups != null)
             {
-                IModel resGroup = Apsim.Child(resHolder, resGroupType);
-                if (resGroup != null)  //see if this group type is included in this particular simulation.
+                // resource groups specified (use them)
+                foreach (Type resGroupType in resourceNameResourceGroups)
+                {
+                    IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                    if (resGroup != null)  //see if this group type is included in this particular simulation.
+                    {
+                        foreach (IModel item in resGroup.Children)
+                        {
+                            if (item.GetType() != typeof(Memo))
+                            {
+                                result.Add(resGroup.Name + "." + item.Name);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // no resource groups specified so use all avaliable resources
+                foreach (IModel resGroup in Apsim.Children(resHolder, typeof(IModel)))
                 {
                     foreach (IModel item in resGroup.Children)
                     {
-                        result.Add(resGroup.Name + "." + item.Name);
+                        if (item.GetType() != typeof(Memo))
+                        {
+                            result.Add(resGroup.Name + "." + item.Name);
+                        }
                     }
                 }
+
             }
             return result.ToArray();
         }

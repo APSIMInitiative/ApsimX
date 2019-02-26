@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link]
@@ -117,7 +118,7 @@ namespace Models.CLEM.Resources
                 AnimalPriceGroup matchCriteria = null;
                 foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 & matchIndividual is null)
+                    if (animalList.Filter(item).Count() == 1 & matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
@@ -141,7 +142,7 @@ namespace Models.CLEM.Resources
                     }
                 }
 
-                if(matchCriteria is null)
+                if(matchCriteria == null)
                 {
                     // report specific criteria not found in price list
                     string warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]"+ (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
@@ -714,7 +715,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Rate at which twins are concieved")]
-        [Required]
+        [Required, Proportion]
         public double TwinRate { get; set; }
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate

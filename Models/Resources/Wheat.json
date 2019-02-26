@@ -3869,39 +3869,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MultiplyFunction, Models",
+              "$type": "Models.Functions.Constant, Models",
               "Name": "ShadeInducedSenescenceRate",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RatePerDegDay",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "1% per degree day means it takes one phyllochron for a shaded leaf to fully sceness\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
-                  "Name": "ThermalTime",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+			  "FixedValue": 0.0,
+              "Units": null,
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false

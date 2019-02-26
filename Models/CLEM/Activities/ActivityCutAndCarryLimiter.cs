@@ -17,6 +17,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This cut and carry limiter will limit the amount of cut and carry possible for all activities located at or below the UI level is it placed.")]
+    [HelpUri(@"content/features/limiters/cutandcarrylimiter.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityCutAndCarryLimiter: CLEMModel
     {

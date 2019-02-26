@@ -286,7 +286,8 @@ namespace Models.PMF
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        /// <param name="rowConfig">SkipRow configuration.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
             SowingDate = Clock.Today;
 
@@ -298,6 +299,7 @@ namespace Models.PMF
             SowingData.MaxCover = maxCover;
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
+            SowingData.SkipRow = rowConfig;
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
