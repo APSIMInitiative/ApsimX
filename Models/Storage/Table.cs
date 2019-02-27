@@ -22,6 +22,7 @@ namespace Models.Storage
             public string Name { get; private set; }
             public string Units { get; set; }
             public string DatabaseDataType { get; set; }
+            public List<string> simulationsThatHaveBeenCleanedUp = new List<string>();
 
             /// <summary>Constructor</summary>
             /// <param name="columnName">Name of column</param>
@@ -101,30 +102,7 @@ namespace Models.Storage
             Flatten(ref rowColumnNames, ref rowColumnUnits, ref rowValues);
 
             // Ensure the row's columns are in this table's columns.
-            for (int i = 0; i < rowColumnNames.Count(); i++)
-            {
-                lock (lockObject)
-                {
-                    if (!sortedColumnNames.Contains(rowColumnNames.ElementAt(i)))
-                    {
-                        object value = rowValues.ElementAt(i);
-                        string dataType = connection.GetDBDataTypeName(value);
-
-                        sortedColumnNames.Add(rowColumnNames.ElementAt(i));
-                        Columns.Add(new Column(rowColumnNames.ElementAt(i),
-                                                rowColumnUnits.ElementAt(i),
-                                                dataType));
-
-                        // Add extra column to all rows currently in table
-                        for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
-                        {
-                            object[] values = RowsToWrite[rowIndex];
-                            Array.Resize(ref values, values.Length + 1);
-                            RowsToWrite[rowIndex] = values;
-                        }
-                    }
-                }
-            }
+            EnsureColumnsAreCorrect(connection, rowColumnNames, rowColumnUnits, rowValues);
 
             // Add new row to our values in correct order.
             lock (lockObject)
@@ -148,6 +126,79 @@ namespace Models.Storage
                         Columns[columnIndex].DatabaseDataType = connection.GetDBDataTypeName(newRow[columnIndex]);
                 }
                 RowsToWrite.Add(newRow);
+            }
+        }
+
+        /// <summary>Add a row to our list of rows to write</summary>
+        /// <param name="connection"></param>
+        /// <param name="rowColumnNames">Column names of values</param>
+        /// <param name="rowColumnUnits">Units of values</param>
+        /// <param name="rowValues">The values</param>
+        public void AddRow(IDatabaseConnection connection, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
+        {
+            // We want all rows to be a normalised flat table. All rows must have the same number of values
+            // and be in correct order i.e. like a .NET DataTable.
+
+            // Firstly flatten our arrays and structures from the rowValues passed in.
+            Flatten(ref rowColumnNames, ref rowColumnUnits, ref rowValues);
+
+            // Ensure the row's columns are in this table's columns.
+            EnsureColumnsAreCorrect(connection, rowColumnNames, rowColumnUnits, rowValues);
+
+            // Add new row to our values in correct order.
+            lock (lockObject)
+            {
+                object[] newRow = new object[Columns.Count];
+                for (int i = 0; i < rowColumnNames.Count(); i++)
+                {
+                    // Get a column index for the column - use a cache (dictionary) to speed up lookups.
+                    string columnName = rowColumnNames.ElementAt(i);
+                    int columnIndex;
+                    if (!columnIndexes.TryGetValue(columnName, out columnIndex))
+                    {
+                        columnIndex = Columns.FindIndex(column => column.Name == columnName);
+                        columnIndexes.Add(columnName, columnIndex);
+                    }
+                    newRow[columnIndex] = rowValues.ElementAt(i);
+                    if (Columns[columnIndex].DatabaseDataType == null)
+                        Columns[columnIndex].DatabaseDataType = connection.GetDBDataTypeName(newRow[columnIndex]);
+                }
+                RowsToWrite.Add(newRow);
+            }
+        }
+
+        /// <summary>
+        /// Ensure our columns property is correct.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="rowColumnNames"></param>
+        /// <param name="rowColumnUnits"></param>
+        /// <param name="rowValues"></param>
+        private void EnsureColumnsAreCorrect(IDatabaseConnection connection, IEnumerable<string> rowColumnNames, IEnumerable<string> rowColumnUnits, IEnumerable<object> rowValues)
+        {
+            for (int i = 0; i < rowColumnNames.Count(); i++)
+            {
+                lock (lockObject)
+                {
+                    if (!sortedColumnNames.Contains(rowColumnNames.ElementAt(i)))
+                    {
+                        object value = rowValues.ElementAt(i);
+                        string dataType = connection.GetDBDataTypeName(value);
+
+                        sortedColumnNames.Add(rowColumnNames.ElementAt(i));
+                        Columns.Add(new Column(rowColumnNames.ElementAt(i),
+                                                rowColumnUnits.ElementAt(i),
+                                                dataType));
+
+                        // Add extra column to all rows currently in table
+                        for (int rowIndex = 0; rowIndex < RowsToWrite.Count; rowIndex++)
+                        {
+                            object[] values = RowsToWrite[rowIndex];
+                            Array.Resize(ref values, values.Length + 1);
+                            RowsToWrite[rowIndex] = values;
+                        }
+                    }
+                }
             }
         }
 
@@ -198,6 +249,10 @@ namespace Models.Storage
                     values.AddRange(RowsToWrite.GetRange(0, numRows));
                     RowsToWrite.RemoveRange(0, numRows);
                 }
+
+                // If we haven't already, delete existing rows for the 
+                // simulations we're about to write.
+                CleanupExistingRows(columnNames, values);
 
                 connection.InsertRows(Name, columnNames, values);
             }
@@ -426,6 +481,24 @@ namespace Models.Storage
                         ids.Add((int)rowValues[indexSimulationID]);
             }
             return ids;
+        }
+
+        /// <summary>
+        /// If we haven't already, delete existing rows for the 
+        /// simulations we're about to write.
+        /// </summary>
+        /// <param name="columnNames">Column names for each value.</param>
+        /// <param name="values">The values that are about to be written.</param>
+        private void CleanupExistingRows(List<string> columnNames, List<object[]> values)
+        {
+            int simulationIDIndex = columnNames.IndexOf("SimulationID");
+            if (simulationIDIndex != -1)
+            {
+                SortedSet<int> idsToCleanUp = new SortedSet<int>();
+                foreach (var row in values)
+                    idsToCleanUp.Add(Convert.ToInt32(row[simulationIDIndex]));
+
+            }
         }
     }
 }

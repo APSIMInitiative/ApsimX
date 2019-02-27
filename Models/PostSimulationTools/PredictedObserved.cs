@@ -4,6 +4,7 @@ namespace Models.PostSimulationTools
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Factorial;
     using Models.Storage;
     using System;
@@ -59,14 +60,12 @@ namespace Models.PostSimulationTools
         /// or
         /// Could not find observed data table:  + ObservedTableName
         /// </exception>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
-                dataStore.DeleteDataInTable(this.Name);
-
-                List<string> predictedDataNames = dataStore.GetTableColumns(PredictedTableName);
-                List<string> observedDataNames = dataStore.GetTableColumns(ObservedTableName);
+                IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
+                IEnumerable<string> observedDataNames = dataStore.Reader.ColumnNames(ObservedTableName);
 
                 if (predictedDataNames == null)
                     throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
@@ -94,7 +93,7 @@ namespace Models.PostSimulationTools
                 if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
                     query.Append(" AND I.'@match3' = R.'@match3'");
 
-                int checkpointID = dataStore.GetCheckpointID("Current");
+                int checkpointID = dataStore.Reader.GetCheckpointID("Current");
                 query.Append(" AND R.CheckpointID = " + checkpointID);
 
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
@@ -119,12 +118,12 @@ namespace Models.PostSimulationTools
                     {
                         if (simulationName != simulationNames[0])
                             query.Append(',');
-                        query.Append(dataStore.GetSimulationID(simulationName));
+                        query.Append(dataStore.Reader.GetSimulationID(simulationName));
                     }
                     query.Append(")");
                 }
 
-                DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
+                DataTable predictedObservedData = dataStore.Reader.GetDataUsingSql(query.ToString());
 
                 if (predictedObservedData != null)
                 {
@@ -149,7 +148,7 @@ namespace Models.PostSimulationTools
 
                     // Write table to datastore.
                     predictedObservedData.TableName = this.Name;
-                    dataStore.WriteTable(predictedObservedData);
+                    dataStore.Writer.WriteTable(predictedObservedData);
 
                     List<string> unitFieldNames = new List<string>();
                     List<string> unitNames = new List<string>();
@@ -157,7 +156,7 @@ namespace Models.PostSimulationTools
                     // write units to table.
                     foreach (string fieldName in commonCols)
                     {
-                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
+                        string units = dataStore.Reader.Units(PredictedTableName, fieldName);
                         if (units != null && units != "()")
                         {
                             string unitsMinusBrackets = units.Replace("(", "").Replace(")", "");
@@ -167,15 +166,15 @@ namespace Models.PostSimulationTools
                             unitNames.Add(unitsMinusBrackets);
                         }
                     }
-                    if (unitNames.Count > 0)
-                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
+                    throw new NotImplementedException("Need to work out units in predicted/observed table");
+                    //if (unitNames.Count > 0)
+                    //    dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
                 }
-
                 else
                 {
                     // Determine what went wrong.
-                    DataTable predictedData = dataStore.RunQuery("SELECT * FROM " + PredictedTableName);
-                    DataTable observedData = dataStore.RunQuery("SELECT * FROM " + ObservedTableName);
+                    DataTable predictedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM " + PredictedTableName);
+                    DataTable observedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM " + ObservedTableName);
                     if (predictedData == null || predictedData.Rows.Count == 0)
                         throw new Exception(Name + ": Cannot find any predicted data.");
                     else if (observedData == null || observedData.Rows.Count == 0)

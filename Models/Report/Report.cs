@@ -7,6 +7,9 @@ namespace Models.Report
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Newtonsoft.Json;
+    using Models.Core.Run;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -31,10 +34,10 @@ namespace Models.Report
         private List<IReportColumn> columns = null;
 
         /// <summary>An array of column names to write to storage.</summary>
-        private IEnumerable<string> columnNames = null;
+        private IList<string> columnNames = null;
 
         /// <summary>An array of columns units to write to storage.</summary>
-        private IEnumerable<string> columnUnits = null;
+        private IList<string> columnUnits = null;
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -46,7 +49,7 @@ namespace Models.Report
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        private IStorageWriter storage = null;
+        private IDataStore storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
@@ -128,18 +131,18 @@ namespace Models.Report
             object[] valuesToWrite = new object[columns.Count];
             for (int i = 0; i < columns.Count; i++)
                 valuesToWrite[i] = columns[i].GetValue();
-            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+            storage.Writer.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>
-        public static void WriteAllTables(IStorageReader storage, string fileName)
+        public static void WriteAllTables(IDataStore storage, string fileName)
         {
             // Write out each table for this simulation.
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                DataTable data = storage.GetData(tableName);
+                DataTable data = storage.Reader.GetData(tableName);
                 if (data != null && data.Rows.Count > 0)
                 {
                     SortColumnsOfDataTable(data);
@@ -189,10 +192,10 @@ namespace Models.Report
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
+                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
             }
-            columnNames = columns.Select(c => c.Name);
-            columnUnits = columns.Select(c => c.Units);
+            columnNames = columns.Select(c => c.Name).ToList();
+            columnUnits = columns.Select(c => c.Units).ToList();
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>

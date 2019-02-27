@@ -127,7 +127,7 @@ namespace Models.Core
             filesReferenced.AddRange(FindAllReferencedFiles());
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
         }
 
         /// <summary>
@@ -137,9 +137,9 @@ namespace Models.Core
         /// <returns>A new simulations object that represents the file on disk</returns>
         public Simulations RevertCheckpoint(string checkpointName)
         {
-            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.RevertCheckpoint(checkpointName);
+                storage.Writer.RevertCheckpoint(checkpointName);
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
@@ -261,7 +261,7 @@ namespace Models.Core
         private void CreateLinks()
         {
             List<object> services = new List<object>();
-            IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
+            var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
             if (storage != null)
                 services.Add(storage);
             services.Add(this);

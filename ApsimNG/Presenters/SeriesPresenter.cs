@@ -413,7 +413,7 @@ namespace UserInterface.Presenters
             warnings.AddRange(PopulateColourDropDown());
 
             // Populate the checkpoint drop down.
-            List<string> checkpoints = storage.Checkpoints().ToList();
+            List<string> checkpoints = storage.CheckpointNames;
             if (!checkpoints.Contains(series.Checkpoint) && !string.IsNullOrEmpty(series.Checkpoint))
             {
                 checkpoints.Add(series.Checkpoint);

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Models.Core;
+using Models.Storage;
+using System;
 using System.Collections.Generic;
-using Models.Report;
-using Models.Core;
 using System.Data;
 
 namespace UnitTests
 {
     [Serializable]
-    internal class MockStorage : Model, IStorageReader, IStorageWriter
+    internal class MockStorage : Model, IDataStore, IStorageWriter
     {
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();
@@ -36,6 +36,12 @@ namespace UnitTests
             }
         }
 
+        string IDataStore.FileName { get; }
+
+        public IStorageReader Reader => throw new NotImplementedException();
+
+        public IStorageWriter Writer { get { return this; } }
+
         [Serializable]
         internal class Row
         {
@@ -48,7 +54,7 @@ namespace UnitTests
         /// <param name="columnNames">Column names</param>
         /// <param name="columnUnits">Column units</param>
         /// <param name="valuesToWrite">Values of row to write</param>
-        public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
+        public void WriteRow(string simulationName, string tableName, IList<string> columnNames, IList<string> columnUnits, IList<object> valuesToWrite)
         {
             this.columnNames.Clear();
             this.columnNames.AddRange(columnNames);
@@ -139,6 +145,39 @@ namespace UnitTests
         public List<string> GetTableColumns(string tableName)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Empty()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddCheckpoint(string name, IEnumerable<string> filesToStore = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteCheckpoint(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RevertCheckpoint(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WaitForIdle()
+        {
+        }
+
+        public void Stop()
+        {
         }
     }
 }

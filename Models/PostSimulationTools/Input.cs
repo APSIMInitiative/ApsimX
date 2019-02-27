@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.IO;
-using System.Data;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using Models.Storage;
-
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
-
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Run;
+    using Models.Storage;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -64,19 +61,18 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
-                dataStore.DeleteDataInTable(Name);
                 DataTable data = GetTable();
                 if (data != null)
                 {
                     data.TableName = this.Name;
-                    dataStore.WriteTable(data);
+                    dataStore.Writer.WriteTable(data);
                 }
             }
         }

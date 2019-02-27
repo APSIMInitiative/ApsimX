@@ -6,6 +6,7 @@
 namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -19,8 +20,8 @@ namespace Models.Core.Runners
     public class JobRunnerMultiProcess : IJobRunner
     {
         private SocketServer server;
-        private IStorageWriter storageWriter = null;
         private IJobManager jobs;
+        private bool allStopped;
 
         /// <summary>A token for cancelling running of jobs</summary>
         private CancellationTokenSource cancelToken;
@@ -53,11 +54,9 @@ namespace Models.Core.Runners
         public void Run(IJobManager jobManager, bool wait = false, int numberOfProcessors = -1)
         {
             jobs = jobManager;
-
+            allStopped = false;
             // If the job manager is a RunExternal, then we don't need to worry about storage - 
             // each ApsimRunner will launch its own Models.exe which will manage storage itself.
-            if (jobs is RunOrganiser)
-                storageWriter = (jobs as RunOrganiser).Storage;
 
             // Determine number of threads to use
             if (numberOfProcessors == -1)
@@ -77,26 +76,7 @@ namespace Models.Core.Runners
             server.AddCommand("EndJob", OnEndJob);
 
             // Tell server to start listening.
-            Task t = Task.Run(() =>
-            {
-                server.StartListening(2222);
-                try
-                {
-                    jobs.Completed();
-                }
-                catch (Exception err)
-                {
-                    errors += Environment.NewLine + err.ToString();
-                }
-
-                if (AllJobsCompleted != null)
-                {
-                    AllCompletedArgs args = new AllCompletedArgs();
-                    if (errors != null)
-                        args.exceptionThrown = new Exception(errors);
-                    AllJobsCompleted.Invoke(this, args);
-                }
-            });
+            Task t = Task.Run(() => server.StartListening(2222));
 
             DeleteRunners();
             CreateRunners(numberOfProcessors);
@@ -104,7 +84,7 @@ namespace Models.Core.Runners
             AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
             if (wait)
-                while (!t.IsCompleted)
+                while (!allStopped)
                     Thread.Sleep(200);
         }
 
@@ -120,8 +100,16 @@ namespace Models.Core.Runners
                     server = null;
                     DeleteRunners();
                     runningJobs.Clear();
+                    if (AllJobsCompleted != null)
+                    {
+                        AllCompletedArgs args = new AllCompletedArgs();
+                        if (errors != null)
+                            args.exceptionThrown = new Exception(errors);
+                        AllJobsCompleted.Invoke(this, args);
+                    }
                 }
             }
+            allStopped = true;
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
@@ -167,7 +155,7 @@ namespace Models.Core.Runners
             try
             {
                 IRunnable jobToRun;
-                Guid jobKey;
+                Guid jobKey = Guid.Empty;
                 lock (this)
                 {
                     jobToRun = jobs.GetNextJobToRun();
@@ -214,10 +202,15 @@ namespace Models.Core.Runners
             try
             {
                 List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
-                foreach (TransferRowInTable row in rows)
+                if (rows.Count > 0)
                 {
-                    storageWriter.WriteRow(row.simulationName, row.tableName,
-                                           row.columnNames, row.columnUnits, row.values);
+                    foreach (TransferRowInTable row in rows)
+                    {
+                        throw new NotImplementedException("Cannot find datastore in JobRunnerMultiProcess");
+                        //var dataStore = runningJobs[row.key].DataStore;
+                        //dataStore.Writer.WriteRow(row.SimulationName, row.TableName,
+                        //                          row.ColumnNames, row.columnUnits, row.Values);
+                    }
                 }
                 server.Send(args.socket, "OK");
             }
@@ -237,8 +230,8 @@ namespace Models.Core.Runners
                 EndJobArguments arguments = args.obj as EndJobArguments;
                 JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
                 jobCompleteArguments.job = runningJobs[arguments.key];
-                if (arguments.Error != null)
-                    jobCompleteArguments.exceptionThrowByJob = arguments.Error;
+                if (arguments.errorMessage != null)
+                    jobCompleteArguments.exceptionThrowByJob = new Exception(arguments.errorMessage);
                 lock (this)
                 {
                     if (JobCompleted != null)
@@ -272,7 +265,7 @@ namespace Models.Core.Runners
             public Guid key;
 
             /// <summary>Error message</summary>
-            public Exception Error;
+            public string errorMessage;
 
             /// <summary>Simulation name of job completed</summary>
             public string simulationName;
@@ -282,16 +275,18 @@ namespace Models.Core.Runners
         [Serializable]
         public class TransferRowInTable
         {
+            /// <summary>Key to the job</summary>
+            public Guid key;
             /// <summary>Simulation name</summary>
-            public string simulationName;
+            public string SimulationName;
             /// <summary>Table name</summary>
-            public string tableName;
+            public string TableName;
             /// <summary>Column names</summary>
-            public IEnumerable<string> columnNames;
+            public IList<string> ColumnNames;
             /// <summary>Column units</summary>
-            public IEnumerable<string> columnUnits;
+            public IList<string> columnUnits;
             /// <summary>Row values for each column</summary>
-            public IEnumerable<object> values;
+            public IList<object> Values;
         }
     }
 }

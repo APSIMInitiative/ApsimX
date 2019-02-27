@@ -25,7 +25,7 @@
     {
         /// <summary>A link to a storage service</summary>
         [Link]
-        private IStorageWriter storage = null;
+        private IDataStore storage = null;
 
         /// <summary>A link to the clock in the simulation</summary>
         [Link]
@@ -101,7 +101,7 @@
                 string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
                 object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
-                storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+                storage.Writer.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
             }
         }
 
@@ -118,7 +118,7 @@
                 string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
                 object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
-                storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+                storage.Writer.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
             }
         }
 
@@ -135,7 +135,7 @@
                 string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
 
                 object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Error) };
-                storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
+                storage.Writer.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
             }
         }
 
@@ -146,13 +146,13 @@
         {
             string simulationPath = Apsim.FullPath(simulation);
             object[] values = new object[] { simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
-            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+            storage.Writer.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
 
             values = new object[] { simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
-            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+            storage.Writer.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
 
             values = new object[] { simulationPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
-            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+            storage.Writer.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
 
             // Get all model properties and store in 'initialConditionsTable'
             foreach (Model model in Apsim.FindAll(simulation))
@@ -179,7 +179,7 @@
                             property.Units = string.Empty;
                        
                         values = new object[] { thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
-                        storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
+                        storage.Writer.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
                     }
                 }
             }
@@ -192,11 +192,11 @@
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
         /// <param name="fileName">The file name to write</param>
-        public static void WriteSummaryToTextFiles(IStorageReader storage, string fileName)
+        public static void WriteSummaryToTextFiles(IDataStore storage, string fileName)
         {
             using (StreamWriter report = new StreamWriter(fileName))
             {
-                foreach (string simulationName in storage.SimulationNames)
+                foreach (string simulationName in storage.Reader.SimulationNames)
                 {
                     Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html);
                     report.WriteLine();
@@ -215,7 +215,7 @@
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         public static void WriteReport(
-            IStorageReader storage,
+            IDataStore storage,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
@@ -285,7 +285,7 @@
             }
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = storage.GetData(simulationName: simulationName, tableName:"_InitialConditions");
+            DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
             if (initialConditionsTable != null)
             {
                 // Convert the '_InitialConditions' table in the DataStore to a series of
@@ -351,10 +351,10 @@
         /// <param name="storage">The data store</param>
         /// <param name="simulationName">The simulation name to get messages for</param>
         /// <returns>The filled message table</returns>
-        private static DataTable GetMessageTable(IStorageReader storage, string simulationName)
+        private static DataTable GetMessageTable(IDataStore storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
-            DataTable messages = storage.GetData(simulationName: simulationName, tableName: "_Messages");
+            DataTable messages = storage.Reader.GetData(simulationName: simulationName, tableName: "_Messages");
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));

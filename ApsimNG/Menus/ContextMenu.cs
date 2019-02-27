@@ -19,6 +19,7 @@ namespace UserInterface.Presenters
     using Models.Storage;
     using Models.Report;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -26,7 +27,7 @@ namespace UserInterface.Presenters
     public class ContextMenu
     {
         [Link(IsOptional = true)]
-        IStorageReader storage = null;
+        IDataStore storage = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -56,7 +57,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.EmptyDataStore();
+            storage.Writer.Empty();
         }
 
         /// <summary>
@@ -371,9 +372,9 @@ namespace UserInterface.Presenters
         {
             explorerPresenter.MainPresenter.ShowWaitCursor(true);
             List<DataTable> tables = new List<DataTable>();
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                using (DataTable table = storage.GetData(tableName))
+                using (DataTable table = storage.Reader.GetData(tableName))
                 {
                     table.TableName = tableName;
                     tables.Add(table);
