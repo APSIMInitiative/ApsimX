@@ -38,9 +38,11 @@ namespace Models.PMF
             var leafIndex = 2;
             var rachisIndex = 3;
             var stemIndex = 4;
+            var tmp = (Organs[2] as SorghumLeaf).Plant.Phenology.DaysAfterSowing;
+            var clock = (Organs[2] as SorghumLeaf).Plant.Clock;
 
             //var demand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand;// - BAT.StructuralDemand[grainIndex];
-            var demand = BAT.TotalPlantDemand;// - BAT.StructuralDemand[grainIndex];
+            var demand = BAT.TotalPlantDemand - BAT.StructuralDemand[leafIndex]; // calcNDemand in old sorghum did not include new leaf
             var supplyDemand = 0.0;
             if (demand > 0.0)
                 supplyDemand = Math.Min( (BAT.TotalUptakeSupply * 0.1) / demand, 1.0);
@@ -111,10 +113,17 @@ namespace Models.PMF
             var stemIndex = 4;
             var grainIndex = 0;
 
-            AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, stemIndex, BAT);
-            AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, rachisIndex, BAT);
-            AllocateStructuralFromOrgan(stemIndex, leafIndex, BAT);
-            AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, BAT);
+            var tmp = (Organs[2] as SorghumLeaf).Plant.Phenology.DaysAfterSowing;
+            var clock = (Organs[2] as SorghumLeaf).Plant.Clock;
+
+            var stemDemand = BAT.StructuralDemand[stemIndex];
+            var rachisDemand = BAT.StructuralDemand[rachisIndex];
+            var leafDemand = BAT.StructuralDemand[leafIndex];
+
+            var forStem = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, stemIndex, BAT);
+            var forRachis = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, rachisIndex, BAT);
+            var forLeaffromStem = AllocateStructuralFromOrgan(stemIndex, leafIndex, BAT);
+            var forLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, BAT);
 
             AllocateStructuralFromOrgan(rachisIndex, grainIndex, BAT);
             AllocateStructuralFromOrgan(stemIndex, grainIndex, BAT);
@@ -125,7 +134,7 @@ namespace Models.PMF
         /// <param name="iSupply">The organs.</param>
         /// <param name="iSink">The organs.</param>
         /// <param name="BAT">The organs.</param>
-        public void AllocateStructuralFromOrgan(int iSupply, int iSink, BiomassArbitrationType BAT)
+        public double AllocateStructuralFromOrgan(int iSupply, int iSink, BiomassArbitrationType BAT)
         {
             var tmp1 = BAT.StructuralDemand[iSink];
             var tmp2 = BAT.StructuralAllocation[iSink];
@@ -137,7 +146,9 @@ namespace Models.PMF
                 double StructuralAllocation = Math.Min(StructuralRequirement, BAT.RetranslocationSupply[iSupply] - BAT.Retranslocation[iSupply]);
                 BAT.StructuralAllocation[iSink] += StructuralAllocation;
                 BAT.Retranslocation[iSupply] += StructuralAllocation;
+                return StructuralAllocation;
             }
+            return 0.0;
         }
 
         /// <summary>Relatives the allocation.</summary>
@@ -145,7 +156,7 @@ namespace Models.PMF
         /// <param name="iSupply">The organs.</param>
         /// <param name="iSink">The organs.</param>
         /// <param name="BAT">The organs.</param>
-        public void AllocateStructuralFromLeaf(SorghumLeaf leaf, int iSupply, int iSink, BiomassArbitrationType BAT)
+        public double AllocateStructuralFromLeaf(SorghumLeaf leaf, int iSupply, int iSink, BiomassArbitrationType BAT)
         {
             //leaf called
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
@@ -159,8 +170,11 @@ namespace Models.PMF
                 double afterRetranslocatedN = leaf.DltRetranslocatedN;
                 //Leaf keeps track of retranslocation - the return value can include DltLAI which is not techncally retraslocated
                 //Let leaf handle the updating
+
                 BAT.Retranslocation[iSupply] += Math.Abs(afterRetranslocatedN - currentRetranslocatedN);
+                return providedN;
             }
+            return 0.0;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
