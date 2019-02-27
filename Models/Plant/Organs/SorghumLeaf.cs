@@ -944,7 +944,7 @@ namespace Models.PMF.Organs
             double slnToday = calcSLN(laiToday, nGreenToday);
 
             var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
-            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * todaySln + NDilutionIntercept.Value());
+            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value());
 
             if(phenology.Between("Germination", "Flowering"))
             {
