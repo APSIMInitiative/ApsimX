@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/pasture/managepasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]

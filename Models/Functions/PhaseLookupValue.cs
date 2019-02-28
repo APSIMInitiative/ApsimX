@@ -24,6 +24,10 @@ namespace Models.Functions
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
+        private int startStageIndex;
+
+        private int endStageIndex;
+
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -49,7 +53,7 @@ namespace Models.Functions
             if (End == "")
                 throw new Exception("Phase end name not set:" + Name);
 
-            if (Phenology != null && Phenology.Between(Start, End) && ChildFunctions.Count > 0)
+            if (Phenology != null && Phenology.Between(startStageIndex, endStageIndex) && ChildFunctions.Count > 0)
             {
                 IFunction Lookup = ChildFunctions[0] as IFunction;
                 return Lookup.Value(arrayIndex);
@@ -64,7 +68,7 @@ namespace Models.Functions
         {
             get
             {
-                return Phenology.Between(Start, End);
+                return Phenology.Between(startStageIndex, endStageIndex);
             }
         }
 
@@ -95,6 +99,16 @@ namespace Models.Functions
                     tags.Add(new AutoDocumentation.Paragraph(this.Value() + " between " + Start + " and " + End + " and a value of zero outside of this period", indent));
                 }
             }
+        }
+        
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            startStageIndex = Phenology.StartStagePhaseIndex(Start);
+            endStageIndex = Phenology.EndStagePhaseIndex(End);
         }
 
     }

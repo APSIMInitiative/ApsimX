@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmustering.htm")]
     public class RuminantActivityMuster: CLEMRuminantActivityBase
     {
         /// <summary>

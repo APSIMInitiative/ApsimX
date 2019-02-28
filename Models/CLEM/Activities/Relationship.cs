@@ -19,6 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/relationships/relationship.htm")]
     public class Relationship: Model, IValidatableObject
     {
         /// <summary>

@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all products store types (e.g. wool, timber, manure) for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/products/productstore.htm")]
     public class ProductStore : ResourceBaseWithTransactions
     {
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

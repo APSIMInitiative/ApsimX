@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/ruminant/ruminantadvancedconception.htm")]
     public class RuminantConceptionAdvanced: CLEMModel
     {
         /// <summary>

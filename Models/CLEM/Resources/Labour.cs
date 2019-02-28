@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all labour types (people) for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/labour/labour.htm")]
     public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
         /// <summary>

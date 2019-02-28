@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
     [Description("This resource represents an animal food store (e.g. Lucerne).")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/animalfoodstore/animalfoodstoretype.htm")]
     public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeedType, IResourceType
     {
         /// <summary>
