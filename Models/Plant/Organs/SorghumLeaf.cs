@@ -1109,7 +1109,7 @@ namespace Models.PMF.Organs
             Allocated.StructuralWt = Math.Min(dryMatter.Structural, DMDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
             Live.StructuralWt -= dryMatter.Retranslocation;
-
+            Allocated.StructuralWt -= dryMatter.Retranslocation;
 
         }
 

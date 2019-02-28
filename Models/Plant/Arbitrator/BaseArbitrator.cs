@@ -411,10 +411,10 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                AllocateFixation(Organs.ToArray(), N, NArbitrator);               //Allocate supply of fixable Nitrogen to each organ
-                Retranslocation(Organs.ToArray(), N, NArbitrator);      //Allocate supply of retranslocatable N to each organ
-                SetDryMatterAllocations(Organs.ToArray());                               //Tell each organ how DM they are getting folling allocation
-                SetNitrogenAllocations(Organs.ToArray());                         //Tell each organ how much nutrient they are getting following allocaition
+                AllocateFixation(Organs.ToArray(), N, NArbitrator);    //Allocate supply of fixable Nitrogen to each organ
+                Retranslocation(Organs.ToArray(), N, NArbitrator);     //Allocate supply of retranslocatable N to each organ
+                SetDryMatterAllocations(Organs.ToArray());             //Tell each organ how DM they are getting folling allocation
+                SetNitrogenAllocations(Organs.ToArray());              //Tell each organ how much nutrient they are getting following allocaition
             }
         }
 

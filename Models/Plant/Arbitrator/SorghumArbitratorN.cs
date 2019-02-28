@@ -60,9 +60,9 @@ namespace Models.PMF
             AllocateMetabolic(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
             AllocateMetabolic(stemIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
-            AllocateStorage(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            AllocateStorage(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            AllocateStorage(stemIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            //AllocateStorage(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            //AllocateStorage(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            //AllocateStorage(stemIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
         }
         private void AllocateStructural(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
@@ -81,7 +81,7 @@ namespace Models.PMF
             double MetabolicRequirement = Math.Max(0.0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
             if ((MetabolicRequirement) > 0.0)
             {
-                double MetabolicAllocation = Math.Min(MetabolicRequirement, NotAllocated * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
+                double MetabolicAllocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
                 BAT.MetabolicAllocation[i] += MetabolicAllocation;
                 NotAllocated -= (MetabolicAllocation);
                 TotalAllocated += (MetabolicAllocation);
@@ -138,11 +138,12 @@ namespace Models.PMF
         {
             var tmp1 = BAT.StructuralDemand[iSink];
             var tmp2 = BAT.StructuralAllocation[iSink];
-
             var tmpcheck = BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink];
+
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
             if ((StructuralRequirement) > 0.0)
             {
+                //only allocate as much structural as demanded - cyclical process so allow for any amounts already allocated to Retranslocation
                 double StructuralAllocation = Math.Min(StructuralRequirement, BAT.RetranslocationSupply[iSupply] - BAT.Retranslocation[iSupply]);
                 BAT.StructuralAllocation[iSink] += StructuralAllocation;
                 BAT.Retranslocation[iSupply] += StructuralAllocation;
