@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 350,
+  "ExplorerWidth": 283,
   "Version": 54,
   "Name": "Simulations",
   "Children": [
@@ -5618,7 +5618,7 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specifications": [],
               "Name": "Sowing",
               "Children": [
                 {
@@ -5676,7 +5676,7 @@
             },
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specifications": [],
               "Name": "Population",
               "Children": [
                 {
@@ -14638,7 +14638,7 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specifications": [],
               "Name": "Sowing",
               "Children": [
                 {
@@ -14696,7 +14696,7 @@
             },
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specifications": [],
               "Name": "Population",
               "Children": [
                 {
@@ -19523,7 +19523,7 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specifications": [],
               "Name": "NFert",
               "Children": [
                 {
