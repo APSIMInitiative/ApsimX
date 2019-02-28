@@ -45,7 +45,7 @@ namespace Models.PMF
             var demand = BAT.TotalPlantDemand - BAT.StructuralDemand[leafIndex]; // calcNDemand in old sorghum did not include new leaf
             var supplyDemand = 0.0;
             if (demand > 0.0)
-                supplyDemand = Math.Min( (BAT.TotalUptakeSupply * 0.1) / demand, 1.0);
+                BAT.SupplyDemandRatioN = Math.Min( (BAT.TotalUptakeSupply * 0.1) / demand, 1.0);
 
             double rootAllocation = supplyDemand * BAT.StructuralDemand[rootIndex];
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
