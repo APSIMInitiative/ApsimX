@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 47,
+  "Version": 52,
   "Name": "Simulations",
   "Children": [
     {
@@ -376,7 +376,6 @@
                 {
                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                   "RootCN": 40.0,
-                  "RootWt": 10.0,
                   "SoilCN": 14.5,
                   "EnrACoeff": 7.4,
                   "EnrBCoeff": 0.2,
@@ -470,6 +469,24 @@
                     0.99,
                     0.99,
                     0.99
+                  ],
+                  "RootWt": [
+                    1.8429940397237832,
+                    1.5186823100179569,
+                    1.2514397274486826,
+                    1.0312238320721043,
+                    0.84975933599413633,
+                    0.70022715403914981,
+                    0.57700815570345243,
+                    0.47547200908704707,
+                    0.39180318196656694,
+                    0.32285756146587991,
+                    0.26604430436858767,
+                    0.21922847823542707,
+                    0.18065083476786425,
+                    0.14886170065587973,
+                    0.12266650165572733,
+                    0.1010808727977556
                   ],
                   "OCUnits": 0,
                   "Name": "SoilOrganicMatter",
@@ -672,7 +689,7 @@
                   "NO3": null,
                   "NH4": null,
                   "SW": [
-                    0.43,
+                    0.434,
                     0.43,
                     0.48,
                     0.47,
@@ -726,7 +743,7 @@
                   "VC": true,
                   "DTMin": 0.0,
                   "DTMax": 1440.0,
-                  "MaxWaterIncrement": 10.0,
+                  "MaxWaterIncrement": 5.0,
                   "SpaceWeightingFactor": 0.0,
                   "SoluteSpaceWeightingFactor": 1.0,
                   "Dis": 0.0,
@@ -1211,6 +1228,8 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Wheat",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -1394,7 +1413,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1403,11 +1424,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Biomass",
               "Children": [
                 {
@@ -1516,7 +1539,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1525,11 +1550,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Yield",
               "Children": [
                 {
@@ -1638,7 +1665,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1647,11 +1676,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "LAI",
               "Children": [
                 {
@@ -1770,7 +1801,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1779,11 +1812,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "SW110cm",
               "Children": [
                 {
@@ -1862,7 +1897,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1871,11 +1908,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "SW210cm",
               "Children": [
                 {
@@ -1954,7 +1993,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -1963,11 +2004,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "SW310cm",
               "Children": [
                 {
@@ -2056,7 +2099,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2065,11 +2110,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Chloride110cm",
               "Children": [
                 {
@@ -2148,7 +2195,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2157,11 +2206,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Chloride210cm",
               "Children": [
                 {
@@ -2240,7 +2291,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -2249,11 +2302,13 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Chloride310cm",
               "Children": [
                 {

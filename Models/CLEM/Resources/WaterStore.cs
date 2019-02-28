@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all water store types (e.g. tank, dam, bore) for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/water/waterstore.htm")]
     public class WaterStore : ResourceBaseWithTransactions
     {
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

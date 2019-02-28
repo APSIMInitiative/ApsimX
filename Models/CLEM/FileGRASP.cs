@@ -26,14 +26,15 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.CLEMFileGRASPView")]
-    [PresenterName("UserInterface.Presenters.CLEMFileGRASPPresenter")]
+    [ViewName("UserInterface.Views.GridView")] //CLEMFileGRASPView
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileGRASPPresenter
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/datareaders/graspdatareader.htm")]
     public class FileGRASP : CLEMModel, IFileGRASP
     {
         /// <summary>

@@ -22,6 +22,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]
     [Version(1, 0, 3, "Purchase and sales identifier used")]
+    [HelpUri(@"content/features/resources/ruminants/animalpricing.htm")]
     public class AnimalPricing: CLEMModel, IValidatableObject
     {
         /// <summary>
