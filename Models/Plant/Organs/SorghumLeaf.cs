@@ -726,15 +726,15 @@ namespace Models.PMF.Organs
         [Units("/d")]
         protected IFunction senescenceRate = null;
 
-        /// <summary>The N retranslocation factor</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        protected IFunction nRetranslocationFactor = null;
+        ///// <summary>The N retranslocation factor</summary>
+        //[ChildLinkByName]
+        //[Units("/d")]
+        //protected IFunction nRetranslocationFactor = null;
 
-        /// <summary>The N reallocation factor</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        protected IFunction nReallocationFactor = null;
+        ///// <summary>The N reallocation factor</summary>
+        //[ChildLinkByName]
+        //[Units("/d")]
+        //protected IFunction nReallocationFactor = null;
 
         // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
         //[ChildLinkByName]
