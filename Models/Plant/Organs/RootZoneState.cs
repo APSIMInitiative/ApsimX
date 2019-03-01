@@ -188,6 +188,12 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
             double[] xf = soil.XF(plant.Name);
+            var rootDepthRate = rootFrontVelocity.Value();
+            var rootDepthRate2 = rootFrontVelocity.Value(RootLayer);
+
+            var clock = (root.Parent as Plant).Clock.Today;
+            var das = (root.Parent as Plant).Phenology.DaysAfterSowing;
+            var cstage = (root.Parent as Plant).Phenology.Stage;
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
@@ -204,12 +210,15 @@ namespace Models.PMF.Organs
                     ratio = extractable / capacity;
 
                 root.SWAvailabilityRatio = ratio;
-                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
+                rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             if (soil.Weirdo == null)
+            {
+                var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
                 Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
+            }
             else
                 Depth = Depth + rootFrontVelocity.Value(RootLayer);
 
