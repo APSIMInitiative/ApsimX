@@ -561,35 +561,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
-                      "Name": "ThermalTimeNew",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            5.0,
-                            20.0,
-                            30.0,
-                            40.0
-                          ],
-                          "Y": [
-                            0.0,
-                            10.0,
-                            20.0,
-                            0.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime.Value()",
                       "Name": "Progression",
@@ -641,7 +612,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 100.0,
+                      "FixedValue": 45.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -651,7 +622,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Vegetative.Progression",
+                      "VariableName": "[Phenology].ThermalTime.Value()",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3202,7 +3173,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.5,
                   "Units": null,
                   "Name": "NReallocationFactor",
                   "Children": [
@@ -3241,36 +3212,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
-                  "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        5.0,
-                        8.0
-                      ],
-                      "Y": [
-                        0.04,
-                        0.02
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.02,
+                  "FixedValue": 0.045,
                   "Units": null,
-                  "Name": "CriticalNConc",
+                  "Name": "MaximumNConc",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -3287,8 +3232,17 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Shell].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.02,
+                  "FixedValue": 0.01,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [
@@ -3414,11 +3368,85 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
+                  "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "SenescenceRate",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "StartPodDevelopment",
+                      "End": "Maturity",
+                      "Name": "ReproductivePhase",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "Rate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "Fraction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
+                                      "Name": "ReproductiveTT",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Expression": "[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
+                                      "Name": "ReproductiveTT1Complete",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "One",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4832,11 +4860,9 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     3.0,
-                                    4.0,
                                     7.0
                                   ],
                                   "Y": [
-                                    0.0,
                                     0.0,
                                     1.0
                                   ],
@@ -6393,31 +6419,11 @@
                           "Name": "StemGrowthPhase",
                           "Children": [
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[AboveGround].Wt",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.4,
+                              "Units": null,
                               "Name": "StemFraction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    200.0,
-                                    201.0,
-                                    400.0
-                                  ],
-                                  "Y": [
-                                    0.4,
-                                    0.4,
-                                    0.4,
-                                    0.4
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -6868,14 +6874,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.FixedValue = 500",
-                "[Phenology].EarlyFlowering.Target.FixedValue = 50",
+                "[Phenology].Vegetative.Target.FixedValue = 480",
+                "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
                 "[Phenology].PhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                 "[Leaf].LeafCohortParameters.MaxArea.LargestLeaf.FixedValue = 23000",
                 "[Leaf].LeafCohortParameters.MaxArea.RelativeArea.XYPairs.X = 2, 7, 13, 18",
-                "[Grain].MaximumNConc.FixedValue = 0.067"
+                "[Grain].MaximumNConc.FixedValue = 0.067",
+                "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
               ],
               "Name": "Davis",
               "Children": [
@@ -6994,7 +7002,7 @@
             "[Weather].MaxT",
             "[Weather].MinT",
             "[Soybean].Arbitrator.DM.TotalFixationSupply",
-            "[Soybean].Arbitrator.N.TotalFixationSupply",
+            "sum([Soybean].Arbitrator.N.Fixation) as NFixed",
             "[Soybean].Arbitrator.DM.TotalPlantDemand",
             "[Soybean].Arbitrator.WDemand",
             "[Soybean].Arbitrator.WSupply",
@@ -7035,6 +7043,7 @@
             "[Soybean].Stem.N",
             "[Soybean].Stem.Nconc",
             "[Soybean].Shell.Wt",
+            "[Soybean].Shell.Live.Wt",
             "[Soybean].Shell.N",
             "[Soybean].Shell.Nconc",
             "[Soybean].Grain.Wt",
@@ -9382,7 +9391,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Leaf.DeadCohortNo",
+                                  "YFieldName": "Soybean.Leaf.GreenCohortNo",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -12480,9 +12489,49 @@
                                   "Line": 0,
                                   "LineThickness": 0,
                                   "Checkpoint": "Current",
-                                  "TableName": "FACTSReport",
+                                  "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Nodule.FixationRate",
+                                  "YFieldName": "NFixed",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": true,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Predicted",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                                      "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                      "Name": "EventNamesOnGraph",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "Sow",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Observed",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Nfixed",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -12490,7 +12539,7 @@
                                   "Cumulative": false,
                                   "CumulativeX": false,
                                   "Filter": null,
-                                  "Name": "Predicted",
+                                  "Name": "Observed",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14926,7 +14975,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Leaf.DeadCohortNo",
+                                  "YFieldName": "Soybean.Leaf.GreenCohortNo",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -19966,6 +20015,122 @@
                                   "TableName": "Observed",
                                   "XFieldName": "Clock.Today",
                                   "YFieldName": "Soybean.Shell.PodNumber",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Observed",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "Fixation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "FixationRate",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "Sow",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "DailyReport",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "NFixed",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": true,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Predicted",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                                      "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                      "Name": "EventNamesOnGraph",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "Sow",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Observed",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Nfixed",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -35517,82 +35682,6 @@
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowPageOfGraphs": true,
-                          "Name": "Fixation",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "DisabledSeries": [],
-                              "Name": "FixationRate",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "N",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "FACTSReport",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Nodule.FixationRate",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Predicted",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Folder, Models",
-                          "ShowPageOfGraphs": true,
                           "Name": "Roots",
                           "Children": [
                             {
@@ -36267,6 +36356,122 @@
                                   "CumulativeX": false,
                                   "Filter": null,
                                   "Name": "Series1",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "Fixation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "FixationRate",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "N",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "DailyReport",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "NFixed",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": true,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Predicted",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                                      "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                      "Name": "EventNamesOnGraph",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "N",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Observed",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Nfixed",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Observed",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -39949,82 +40154,6 @@
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowPageOfGraphs": true,
-                          "Name": "Fixation",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "DisabledSeries": [],
-                              "Name": "FixationRate",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "N",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "FACTSReport",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Nodule.FixationRate",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Predicted",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Folder, Models",
-                          "ShowPageOfGraphs": true,
                           "Name": "Roots",
                           "Children": [
                             {
@@ -40567,6 +40696,122 @@
                                   "CumulativeX": false,
                                   "Filter": null,
                                   "Name": "Predicted1",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "Fixation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "FixationRate",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "N",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "DailyReport",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "NFixed",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": true,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Predicted",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                                      "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                      "Name": "EventNamesOnGraph",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "N",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Observed",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Nfixed",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Observed",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -44414,6 +44659,36 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 1,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soybean.Shell.Live.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted1",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -45956,7 +46231,17 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Predicted",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                                  "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
