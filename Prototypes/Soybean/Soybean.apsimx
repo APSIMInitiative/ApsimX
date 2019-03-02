@@ -4736,22 +4736,58 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AddFunction, Models",
+                      "$type": "Models.Functions.SubtractFunction, Models",
                       "Name": "FirstLeafDuration",
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Vegetative.Target",
-                          "Name": "Vegetative",
-                          "Children": [],
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "TTtoEndCanopy",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Vegetative.Target",
+                              "Name": "Vegetative",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].EarlyFlowering.Target",
+                              "Name": "EarlyFlowering",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].EarlyPodDevelopment.Target",
+                              "Name": "EarlyPod",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].EarlyGrainFilling.Target",
+                              "Name": "EarlyGrain",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].EarlyFlowering.Target",
-                          "Name": "EarlyFlowering",
+                          "VariableName": "[Leaf].LeafCohortParameters.GrowthDuration",
+                          "Name": "GrowthDuraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
