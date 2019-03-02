@@ -4852,21 +4852,41 @@
                           "Name": "DeltaDuration",
                           "Children": [
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].Stage",
-                              "Name": "AgeFactor",
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "Factor",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    3.0,
-                                    7.0
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "AgeFactor",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Expression": "[Phenology].Vegetative.ProgressThroughPhase+[Phenology].EarlyFlowering.ProgressThroughPhase+[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase",
+                                      "Name": "TTComplete",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Expression": "[Phenology].Vegetative.Target+[Phenology].EarlyFlowering.Target+[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target",
+                                      "Name": "TTtoStartPod",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
                                   ],
-                                  "Y": [
-                                    0.0,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "One",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
