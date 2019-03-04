@@ -39,5 +39,25 @@ namespace Utility
         {
             return ColorTranslator.ToHtml(Color.FromArgb(colour.ToArgb()));
         }
+
+        /// <summary>
+        /// Translates a System.Drawing.Color to a Cairo.Color.
+        /// </summary>
+        /// <param name="colour">Colour to be translated.</param>
+        /// <returns>The same colour as a Cairo.Color.</returns>
+        public static Cairo.Color ToCairo(Color colour)
+        {
+            return new Cairo.Color(colour.A, colour.R, colour.G, colour.B);
+        }
+
+        /// <summary>
+        /// Translates a System.Drawing.Color to an OxyColor.
+        /// </summary>
+        /// <param name="colour">Colour to be translated.</param>
+        /// <returns>The same colour as a Cairo.Color.</returns>
+        public static OxyColor ToOxy(Color colour)
+        {
+            return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+        }
     }
 }
