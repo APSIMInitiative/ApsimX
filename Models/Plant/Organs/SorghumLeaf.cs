@@ -403,7 +403,7 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (parentPlant.IsEmerged)
-                startLive = Live;
+                StartLive = Live;
             if (LeafInitialised)
             {
                 dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
@@ -724,12 +724,12 @@ namespace Models.PMF.Organs
         /// <summary>The senescence rate function</summary>
         [ChildLinkByName]
         [Units("/d")]
-        protected IFunction senescenceRate = null;
+        protected IFunction SenescenceRate = null;
 
         ///// <summary>The N retranslocation factor</summary>
         //[ChildLinkByName]
         //[Units("/d")]
-        //protected IFunction nRetranslocationFactor = null;
+        //protected IFunction NRetranslocationFactor = null;
 
         ///// <summary>The N reallocation factor</summary>
         //[ChildLinkByName]
@@ -798,7 +798,7 @@ namespace Models.PMF.Organs
 //#pragma warning restore 414
 
         /// <summary>The live biomass state at start of the computation round</summary>
-        protected Biomass startLive = null;
+        public Biomass StartLive = null;
 
         /// <summary>The dry matter supply</summary>
         public BiomassSupplyType DMSupply { get; set; }
@@ -905,7 +905,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            var leafWt = startLive.Wt + potentialDMAllocation.Total;
+            var leafWt = StartLive.Wt + potentialDMAllocation.Total;
             var leafWtAvail = leafWt - MinPlantWt.Value() * SowingDensity;
 
             double availableDM = Math.Max(0.0,  leafWtAvail);
@@ -915,7 +915,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for reallocation.</summary>
         public double AvailableDMReallocation()
         {
-            double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
+            double availableDM = StartLive.StorageWt * SenescenceRate.Value() * dmReallocationFactor.Value();
             if (availableDM < -BiomassToleranceValue)
                 throw new Exception("Negative DM reallocation value computed for " + Name);
 
@@ -1044,7 +1044,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            //NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
+            //NSupply.Reallocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * SenescenceRate.Value() * nReallocationFactor.Value());
             //if (NSupply.Reallocation < -BiomassToleranceValue)
             //    throw new Exception("Negative N reallocation value computed for " + Name);
             var availableNss = DltLAI * TargetSLN.Value();
@@ -1058,9 +1058,9 @@ namespace Models.PMF.Organs
             //var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total,LAI,0.0);
             var dilutionN = phenology.thermalTime.Value() * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
-            NSupply.Retranslocation = Math.Max(0, Math.Min(startLive.StorageN + startLive.MetabolicN, availableLaiN + dilutionN));
+            NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.StorageN + StartLive.MetabolicN, availableLaiN + dilutionN));
 
-            //NSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            //NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
             if (NSupply.Retranslocation < -BiomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
@@ -1102,7 +1102,7 @@ namespace Models.PMF.Organs
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             // Check retranslocation
-            if (dryMatter.Retranslocation - startLive.StructuralWt > BiomassToleranceValue)
+            if (dryMatter.Retranslocation - StartLive.StructuralWt > BiomassToleranceValue)
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // allocate structural DM
@@ -1127,11 +1127,11 @@ namespace Models.PMF.Organs
 
             // Retranslocation
             ////TODO check what this is guarding - not sure on the relationship between NSupply and nitrogen
-            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
+            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN + StartLive.MetabolicN - NSupply.Retranslocation))
             //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
             //sorghum can utilise structural as well
-            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN))
+            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN + StartLive.MetabolicN))
             //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
             if (nitrogen.Retranslocation > Live.StorageN + Live.MetabolicN)
@@ -1160,9 +1160,9 @@ namespace Models.PMF.Organs
             }
 
             // No Reallocation at present
-            //if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
+            //if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN + StartLive.MetabolicN))
             //    throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            //double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
+            //double StorageNReallocation = Math.Min(nitrogen.Reallocation, StartLive.StorageN * SenescenceRate.Value() * nReallocationFactor.Value());
             //Live.StorageN -= StorageNReallocation;
             //Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
             //Allocated.StorageN -= nitrogen.Reallocation;
@@ -1179,7 +1179,7 @@ namespace Models.PMF.Organs
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
-            startLive = new Biomass();
+            StartLive = new Biomass();
             Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
