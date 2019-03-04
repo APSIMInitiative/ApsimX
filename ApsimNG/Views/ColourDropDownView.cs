@@ -147,8 +147,8 @@ namespace UserInterface.Views
                         }
                         else if (typeEnum == ColourDropTypeEnum.Text)
                         {
-                            Color rgb = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
-                            if (rgb.Equals((Color)value))
+                            string entry = (string)comboModel.GetValue(iter, 0);
+                            if (string.Equals(value as string, entry, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 combobox1.SetActiveIter(iter);
                                 return;
