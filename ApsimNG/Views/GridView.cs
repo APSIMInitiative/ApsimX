@@ -1080,7 +1080,7 @@
                 if (keyName == "ISO_Left_Tab")
                     keyName = "Tab";
                 bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                if (keyName == "Return" || keyName == "Tab" || IsArrowKey(key))
+                if (keyName == "Return" || keyName == "Tab" || (IsArrowKey(key) && !userEditingCell))
                 {
                     int nextRow = rowIdx;
                     int numCols = DataSource != null ? DataSource.Columns.Count : 0;
