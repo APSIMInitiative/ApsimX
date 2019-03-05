@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 51,
+  "Version": 54,
   "Name": "Simulations",
   "Children": [
     {
@@ -856,84 +856,6 @@
                 },
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartFlowering",
-                  "ReSetEvent": "never",
-                  "Name": "NFF",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Vegetative.CompletionNodeNumber.Value()",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartGrainFilling",
-                  "ReSetEvent": "never",
-                  "Name": "FN",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "PostEventValue",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].LeafTipsAppeared",
-                          "Name": "PostEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].NFF.Value()",
-                          "Name": "PostEventValue1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "Emergence",
                   "ReSetEvent": "never",
                   "Name": "EmergenceDAS",
@@ -1702,7 +1624,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[Grain].DMDemandFunction.Value()",
                       "Name": "DMDemand",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1981,6 +1903,8 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootAngle": 45.0,
+              "SWAvailabilityRatio": 0.0,
               "Name": "Root",
               "Children": [
                 {
@@ -7046,14 +6970,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "canola",
                           "IsEnding": false,
@@ -7286,7 +7202,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -7294,7 +7251,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 33.0,
-                              "RootWt": 100.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -7343,6 +7299,15 @@
                                 0.93,
                                 0.93,
                                 0.93
+                              ],
+                              "RootWt": [
+                                34.712903231275646,
+                                27.034436219199371,
+                                16.397214434990104,
+                                9.9454132887040636,
+                                6.0321980831124673,
+                                3.6587130828674876,
+                                2.21912165985086
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -8581,14 +8546,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "canola",
                           "IsEnding": false,
@@ -8821,7 +8778,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -8829,7 +8827,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 33.0,
-                              "RootWt": 100.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -8878,6 +8875,15 @@
                                 0.93,
                                 0.93,
                                 0.93
+                              ],
+                              "RootWt": [
+                                34.712903231275646,
+                                27.034436219199371,
+                                16.397214434990104,
+                                9.9454132887040636,
+                                6.0321980831124673,
+                                3.6587130828674876,
+                                2.21912165985086
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -10316,14 +10322,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "canola",
                           "IsEnding": false,
@@ -10556,7 +10554,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -10564,7 +10603,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 33.0,
-                              "RootWt": 100.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -10613,6 +10651,15 @@
                                 0.93,
                                 0.93,
                                 0.93
+                              ],
+                              "RootWt": [
+                                34.712903231275646,
+                                27.034436219199371,
+                                16.397214434990104,
+                                9.9454132887040636,
+                                6.0321980831124673,
+                                3.6587130828674876,
+                                2.21912165985086
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -12025,14 +12072,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "canola",
                           "IsEnding": false,
@@ -12265,7 +12304,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -12273,7 +12353,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 33.0,
-                              "RootWt": 100.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -12322,6 +12401,15 @@
                                 0.93,
                                 0.93,
                                 0.93
+                              ],
+                              "RootWt": [
+                                34.712903231275646,
+                                27.034436219199371,
+                                16.397214434990104,
+                                9.9454132887040636,
+                                6.0321980831124673,
+                                3.6587130828674876,
+                                2.21912165985086
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
