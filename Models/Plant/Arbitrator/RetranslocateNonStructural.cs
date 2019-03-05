@@ -5,12 +5,16 @@ using Models.PMF.Organs;
 using System;
 using System.Collections.Generic;
 
-namespace Models.Plant.Arbitrator
+namespace Models.PMF
 {
     /// <summary>
     /// Process Retranslocation of BiomassType using Storage First and then Metabolic
     /// </summary>
-    public class RetranslocateNonStructural : Model, IRetranslocateMethod
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(IOrgan))]
+    public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation
     {
 
         /// <summary>Allocate the retranslocated material</summary>
