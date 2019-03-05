@@ -366,7 +366,7 @@ namespace Models.CLEM.Activities
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
                 // if reportErrorAndStop or SkipActivity do not perform Activity
-                if (tookRequestedResources | (ResourceRequestList.Count == 0))
+                if (tookRequestedResources || (ResourceRequestList.Count == 0))
                 {
                     DoActivity();
                 }
@@ -557,7 +557,7 @@ namespace Models.CLEM.Activities
             while (current != null && amountProvided < amountNeeded)
             {
                 List<LabourType> items = (resourceHolder.GetResourceGroupByType(request.ResourceType) as Labour).Items;
-                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) | (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
+                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
                 items = items.Filter(current as Model);
 
                 // search for people who can do whole task first

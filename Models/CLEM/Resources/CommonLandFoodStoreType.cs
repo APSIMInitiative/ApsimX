@@ -236,7 +236,7 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
-            if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) | resourceAmount.GetType() != typeof(FoodResourcePacket)))
+            if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) || resourceAmount.GetType() != typeof(FoodResourcePacket)))
             {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
@@ -260,7 +260,7 @@ namespace Models.CLEM.Resources
                 // need to check the follwoing code is no longer needed.
 
                 // allow decaying or no pools currently available
-                //if (PastureDecays | Pools.Count() == 0)
+                //if (PastureDecays || Pools.Count() == 0)
                 //{
                 //    Pools.Insert(0, pool);
                 //}

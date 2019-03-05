@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
                 this.InitialiseHerd(true, true);
                 // create activity for each pasture type (and common land) and breed at startup
                 // do not include common land pasture..
-                foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) | a.GetType() == typeof(CommonLandFoodStoreType)))
+                foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
                     RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
                     ragp.GrazeFoodStoreModel = pastureType;

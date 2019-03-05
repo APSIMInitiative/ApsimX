@@ -358,7 +358,7 @@ namespace Models.CLEM.Activities
             ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
-                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) | model.Parent.GetType() == typeof(ActivitiesHolder))
+                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
                 {
                     limiterFound = LocateCutAndCarryLimiter(model.Parent);
                 }
