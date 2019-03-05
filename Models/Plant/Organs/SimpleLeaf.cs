@@ -32,6 +32,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class SimpleLeaf : Model, ICanopy, ILeaf, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
         /// <summary>The plant</summary>
@@ -115,6 +116,7 @@ namespace Models.PMF.Organs
         public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [XmlIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
