@@ -232,6 +232,9 @@ namespace Models.PMF.Organs
             }
         }
 
+
+
+
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="amountToRemove">The fractions of biomass to remove</param>
