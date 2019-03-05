@@ -162,7 +162,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (ResourceTypeName != null & ResourceTypeName != "")
+            if (ResourceTypeName != null && ResourceTypeName != "")
             {
                 if (!ResourceTypeName.Contains("."))
                 {
@@ -209,7 +209,7 @@ namespace Models.CLEM
             {
                 html += "<div class=\"activityentry\">";
                 html += "<span class=\"setvalue\">"+CostPerUnit.ToString("#,##0.##") + "</span> x ";
-                html += (ResourceTypeName!=null & ResourceTypeName!="")? "<span class=\"resourcelink\">" + ResourceTypeName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
+                html += (ResourceTypeName!=null && ResourceTypeName!="")? "<span class=\"resourcelink\">" + ResourceTypeName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
                 html += "</div>";
             }
             else

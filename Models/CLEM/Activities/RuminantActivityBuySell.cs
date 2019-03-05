@@ -257,7 +257,7 @@ namespace Models.CLEM.Activities
                     {
                         value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
                     }
-                    if (cost + value <= fundsAvailable & fundsexceeded == false)
+                    if (cost + value <= fundsAvailable && fundsexceeded == false)
                     {
                         ruminantHerd.PurchaseIndividuals.Remove(newind);
                         newind.ID = ruminantHerd.NextUniqueID;
@@ -358,7 +358,7 @@ namespace Models.CLEM.Activities
                                 {
                                     value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
                                 }
-                                if (cost + value <= fundsAvailable & fundsexceeded == false)
+                                if (cost + value <= fundsAvailable && fundsexceeded == false)
                                 {
                                     ind.ID = ruminantHerd.NextUniqueID;
                                     ruminantHerd.AddRuminant(ind);
@@ -394,7 +394,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // create trucking emissions
-                if(trucking != null & trucks > 0 )
+                if(trucking != null && trucks > 0 )
                 {
                     trucking.ReportEmissions(trucks, false);
                     SetStatusSuccess();
@@ -466,7 +466,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") | a.SaleFlag.ToString().Contains("Sale")) & a.Breed == this.PredictedHerdBreed).ToList();
+            List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") | a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
             int head = herd.Count();
             double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;

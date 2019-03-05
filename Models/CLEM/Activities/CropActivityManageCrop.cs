@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
         private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
         {
-            if (Area == 0 & UseAreaAvailable)
+            if (Area == 0 && UseAreaAvailable)
             {
                 Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
             }
@@ -176,7 +176,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (LinkedLandItem != null & UseAreaAvailable)
+            if (LinkedLandItem != null && UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
             }

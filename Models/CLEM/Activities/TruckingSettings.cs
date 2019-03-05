@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
                             break;
                     }
 
-                    if (gasstore != null & emissions > 0)
+                    if (gasstore != null && emissions > 0)
                     {
                         gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(isSales?"sales":"purchases"));
                     }

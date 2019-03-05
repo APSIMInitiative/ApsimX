@@ -197,7 +197,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            if(Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+            if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
             {
                 Status = ActivityStatus.NoTask;
             }

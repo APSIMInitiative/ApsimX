@@ -400,7 +400,7 @@ namespace Models.CLEM.Resources
             foreach (ResourceRequest request in shortfallRequests)
             {
                 // Check if transmutation would be successful 
-                if (request.AllowTransmutation & (queryOnly || request.TransmutationPossible))
+                if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
                     // get resource type
                     IModel model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
@@ -447,7 +447,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType && a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
                                     if (transmutationCost + activityCost <= transResource.Amount)
                                     {
                                         request.TransmutationPossible = true;

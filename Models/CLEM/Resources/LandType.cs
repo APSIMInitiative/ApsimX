@@ -256,7 +256,7 @@ namespace Models.CLEM.Resources
             else
             {
                 // if resource was removed by activity it is added to the activty 
-                if(!added & amountChanged > 0)
+                if(!added && amountChanged > 0)
                 {
                     AllocatedActivitiesList.Add(new LandActivityAllocation()
                     {

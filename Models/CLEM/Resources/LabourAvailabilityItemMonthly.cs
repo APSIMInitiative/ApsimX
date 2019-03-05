@@ -36,7 +36,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override double GetAvailability(int month)
         {
-            if(month<=12 & month>0 & month<=MonthlyValues.Count())
+            if(month<=12 && month>0 && month<=MonthlyValues.Count())
             {
                 return MonthlyValues[month - 1];
             }

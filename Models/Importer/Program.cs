@@ -33,7 +33,7 @@ namespace Importer
 
                         importer.ApsimPath = apsimPath;
                         //detect whether its a directory or file
-                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                        if ((attr && FileAttributes.Directory) == FileAttributes.Directory)
                             importer.ProcessDir(filename);
                         else
                             importer.ProcessFile(filename);

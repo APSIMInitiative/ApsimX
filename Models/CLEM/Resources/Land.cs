@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
                     }
                     total = childModel.AllocatedActivitiesList.Sum(a => a.LandAllocated);
                 }
-                if (ChangeOccurred & childModel.LandArea - total > 0)
+                if (ChangeOccurred && childModel.LandArea - total > 0)
                 {
                     ReportedLandAllocation = new LandActivityAllocation()
                     {
