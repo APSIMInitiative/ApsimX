@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel & GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel)
+                if (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel && GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel)
                 {
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs

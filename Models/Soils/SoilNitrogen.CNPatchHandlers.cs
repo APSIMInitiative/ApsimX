@@ -803,13 +803,13 @@ namespace Models.Soils
 
                         // 3.2- get the solute amounts for each patch in this layer
                         if ((PartitionType == "BasedOnLayerConcentration".ToLower()) ||
-                            (PartitionType == "BasedOnConcentrationAndDelta".ToLower() & incomingDelta[layer] < epsilon))
+                            (PartitionType == "BasedOnConcentrationAndDelta".ToLower() && incomingDelta[layer] < epsilon))
                         {
                             for (int k = 0; k < nPatches; k++)
                                 thisLayerPatchSolute[k] = existingSoluteAmount[k][layer] * Patch[k].RelativeArea;
                         }
                         else if ((PartitionType == "BasedOnSoilConcentration".ToLower()) ||
-                            (PartitionType == "BasedOnConcentrationAndDelta".ToLower() & incomingDelta[layer] >= epsilon))
+                            (PartitionType == "BasedOnConcentrationAndDelta".ToLower() && incomingDelta[layer] >= epsilon))
                         {
                             for (int k = 0; k < nPatches; k++)
                             {

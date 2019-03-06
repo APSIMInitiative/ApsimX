@@ -169,7 +169,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             if (this.TimingOK)
             {
-                if ((this.Status == ActivityStatus.Success | this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+                if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                 {
                     Muster();
                 }
