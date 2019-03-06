@@ -125,6 +125,12 @@ namespace Models.CLEM.Activities
         [XmlIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
+        /// <summary>
+        /// Flag for first timestep in a rotation for checks
+        /// </summary>
+        [XmlIgnore]
+        public int FirstTimeStepOfRotation { get; set; }
+
         private ActivityCutAndCarryLimiter limiter;
 
         /// <summary>
@@ -180,12 +186,7 @@ namespace Models.CLEM.Activities
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
-            object pma = this.Parent;
-            while(pma.GetType() != typeof(CropActivityManageCrop))
-            {
-                pma = (pma as Model).Parent;
-            }
-            parentManagementActivity = pma as CropActivityManageCrop;
+            parentManagementActivity = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
 
             // Retrieve harvest data from the forage file for the entire run. 
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
@@ -221,6 +222,7 @@ namespace Models.CLEM.Activities
                 HarvestData.RemoveAt(0);
             }
             NextHarvest = HarvestData.FirstOrDefault();
+
         }
 
         /// <summary>
