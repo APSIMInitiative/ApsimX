@@ -255,7 +255,7 @@ namespace Models.CLEM
             foreach (var child in model.Children)
             {
                 bool result = Validate(child, modelPath);
-                if (valid & !result)
+                if (valid && !result)
                 {
                     valid = false;
                 }
@@ -334,7 +334,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public bool IsEcologicalIndicatorsCalculationMonth()
         {
-            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year & this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
         }
 
         /// <summary>Data stores to clear at start of month</summary>

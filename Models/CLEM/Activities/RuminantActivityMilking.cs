@@ -96,7 +96,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true && a.SucklingOffspring.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)

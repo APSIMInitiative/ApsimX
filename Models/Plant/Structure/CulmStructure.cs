@@ -177,7 +177,7 @@ namespace Models.PMF.Struct
             {
                 //tiller emergence is more closely aligned with tip apearance, but we don't track tip, so will use ligule appearance
                 //could also use Thermal Time calcs if needed
-                //Environmental & Genotypic Control of Tillering in Sorghum ppt - Hae Koo Kim
+                //Environmental && Genotypic Control of Tillering in Sorghum ppt - Hae Koo Kim
                 //T2=L3, T3=L4, T4=L5, T5=L6
 
                 //logic to add new tillers depends on which tiller, which is defined by FTN (fertileTillerNo)
@@ -192,7 +192,7 @@ namespace Models.PMF.Struct
                 {
                     //tiller 2 emergences with leaf 3, and then adds 1 each time
                     //not sure what I'm supposed to do with tiller 1
-                    //if there are only 2 tillers, then t2 is not present - T3 & T4 are
+                    //if there are only 2 tillers, then t2 is not present - T3 && T4 are
                     //if there is a fraction - between 2 and 3, 
                     //this can be interpreted as a proportion of plants that have 2 and a proportion that have 3. 
                     //to keep it simple, the fraction will be applied to the 2nd tiller
@@ -212,7 +212,7 @@ namespace Models.PMF.Struct
 
                     //bell curve distribution is adjusted horizontally by moving the curve to the left.
                     //This will cause the first leaf to have the same value as the nth leaf on the main culm.
-                    //T3&T4 were defined during dicussion at initial tillering meeting 27/06/12
+                    //T3&&T4 were defined during dicussion at initial tillering meeting 27/06/12
                     //all others are an assumption
                     //T2 = 3 Leaves
                     //T3 = 4 Leaves
@@ -247,7 +247,7 @@ namespace Models.PMF.Struct
 
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.
                 //This will cause the first leaf to have the same value as the nth leaf on the main culm.
-                //T3&T4 were defined during dicussion at initial tillering meeting 27/06/12
+                //T3&&T4 were defined during dicussion at initial tillering meeting 27/06/12
                 //all others are an assumption
                 //T2 = 3 Leaves
                 //T3 = 4 Leaves

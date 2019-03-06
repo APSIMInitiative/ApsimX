@@ -555,8 +555,8 @@ namespace Models.CLEM.Activities
             // and before breeding, trading, culling etc (See Clock event order)
 
             // Calculated by
-            // critical weight &
-            // juvenile (unweaned) death based on mothers weight &
+            // critical weight &&
+            // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
 
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
@@ -605,7 +605,7 @@ namespace Models.CLEM.Activities
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
             List<RuminantFemale> mothersWithCalf = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspring.Count() > 0).ToList();
-            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspring.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating && a.SucklingOffspring.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Count() > 0)
             {

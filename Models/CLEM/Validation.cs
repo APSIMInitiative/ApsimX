@@ -84,7 +84,7 @@ namespace Models.CLEM
             double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((maxvalue >= 0)&(maxvalue<=100))
+            if ((maxvalue >= 0)&&(maxvalue<=100))
             {
                 return ValidationResult.Success;
             }
@@ -123,7 +123,7 @@ namespace Models.CLEM
             double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((maxvalue >= 0) & (maxvalue <= 1))
+            if ((maxvalue >= 0) && (maxvalue <= 1))
             {
                 return ValidationResult.Success;
             }
@@ -162,7 +162,7 @@ namespace Models.CLEM
             int monthvalue = Convert.ToInt32(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((monthvalue >= 1) & (monthvalue <= 12))
+            if ((monthvalue >= 1) && (monthvalue <= 12))
             {
                 return ValidationResult.Success;
             }

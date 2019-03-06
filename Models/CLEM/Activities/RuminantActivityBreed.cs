@@ -105,9 +105,9 @@ namespace Models.CLEM.Activities
                     // grouped by location
                     var breeders = from ind in herd
                                    where
-                                   (ind.Gender == Sex.Male & ind.Age + i >= ind.BreedParams.MinimumAge1stMating) ||
-                                   (ind.Gender == Sex.Female &
-                                   ind.Age + i >= ind.BreedParams.MinimumAge1stMating //&
+                                   (ind.Gender == Sex.Male && ind.Age + i >= ind.BreedParams.MinimumAge1stMating) ||
+                                   (ind.Gender == Sex.Female &&
+                                   ind.Age + i >= ind.BreedParams.MinimumAge1stMating //&&
                                                                                       // ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
                                    )
                                    group ind by ind.Location into grp
@@ -191,9 +191,9 @@ namespace Models.CLEM.Activities
             // grouped by location
             var breeders = from ind in herd
                             where
-                            (ind.Gender == Sex.Male & ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
-                            (ind.Gender == Sex.Female &
-                            ind.Age >= ind.BreedParams.MinimumAge1stMating &
+                            (ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
+                            (ind.Gender == Sex.Female &&
+                            ind.Age >= ind.BreedParams.MinimumAge1stMating &&
                             ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
                             )
                             group ind by ind.Location into grp
@@ -204,14 +204,14 @@ namespace Models.CLEM.Activities
             int numberPossible = breedersCount;
             int numberServiced = 1;
             double limiter = 1;
-            if (UseAI & TimingOK)
+            if (UseAI && TimingOK)
             {
                 // attempt to get required resources
                 List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal();
                 CheckResources(resourcesneeded, Guid.NewGuid());
                 bool tookRequestedResources = TakeResources(resourcesneeded, true);
                 // get all shortfalls
-                if (tookRequestedResources & (ResourceRequestList != null))
+                if (tookRequestedResources && (ResourceRequestList != null))
                 {
                     //TODO: fix this to account for perHead payments and labour and not fixed expenses
                     double amountCashNeeded = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).Sum(a => a.Required);
@@ -410,7 +410,7 @@ namespace Models.CLEM.Activities
                                 // interpolate, not just average
                                 double propOfYear = (female.Age - 12) / 12;
                                 rate = rate12 + ((rate24-rate12)*propOfYear);
-                                //Concep_rate = ((730 - Anim_concep(rumcat)) * temp1 + (Anim_concep(rumcat) - 365) * temp2) / 365 ' interpolate between 12 & 24 months
+                                //Concep_rate = ((730 - Anim_concep(rumcat)) * temp1 + (Anim_concep(rumcat) - 365) * temp2) / 365 ' interpolate between 12 && 24 months
                             }
                             else
                             {
@@ -452,8 +452,8 @@ namespace Models.CLEM.Activities
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             // get only breeders for labour calculations
-            List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &
-                            a.Age >= a.BreedParams.MinimumAge1stMating & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
+            List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &&
+                            a.Age >= a.BreedParams.MinimumAge1stMating && a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 

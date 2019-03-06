@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
             if (ResourceRequestList == null)
             {
                 ResourceRequestList = new List<ResourceRequest>();
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.HerdName == this.RuminantTypeModel.Name).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
                 if (herd.Count() > 0)
                 {
                     double amount = 0;
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
                         );
                     }
 
-                    if ( GrazeFoodStoreTypeName != null & GrazeFoodStoreModel != null)
+                    if ( GrazeFoodStoreTypeName != null && GrazeFoodStoreModel != null)
                     {
                         // Stand alone model has not been set by parent RuminantActivityGrazePasture
                         SetupPoolsAndLimits(1.0);
@@ -258,7 +258,7 @@ namespace Models.CLEM.Activities
             //Go through amount received and put it into the animals intake with quality measures.
             if (ResourceRequestList != null)
             {
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name & a.HerdName == this.RuminantTypeModel.Name).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
                 if (herd.Count() > 0)
                 {
                     //Get total amount
@@ -324,7 +324,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+                if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 {
                     Status = ActivityStatus.NotNeeded;
                 }

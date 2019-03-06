@@ -89,7 +89,7 @@ namespace Models.CLEM.Groupings
                 return str;
             }
 
-            if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
+            if (Value.ToUpper() == "TRUE" || Value.ToUpper() == "FALSE")
             {
                 str += (Operator == FilterOperators.NotEqual) ? "Not " : "";
                 str += Parameter;
