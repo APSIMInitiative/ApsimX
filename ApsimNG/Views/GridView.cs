@@ -281,7 +281,7 @@
         {
             get
             {
-                return DataSource.Columns.Count;
+                return GetNumCols(DataSource);
             }
         }
 
@@ -389,7 +389,8 @@
             int colNo = -1;
             string text = string.Empty;
             CellRendererText textRenderer = cell as CellRendererText;
-            if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
+            Grid.TooltipColumn = 0;
+            if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < ColumnCount)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
                 if (IsSeparator(rowNo))
@@ -1083,7 +1084,7 @@
                 if (keyName == "Return" || keyName == "Tab" || IsArrowKey(key))
                 {
                     int nextRow = rowIdx;
-                    int numCols = DataSource != null ? DataSource.Columns.Count : 0;
+                    int numCols = ColumnCount;
                     int nextCol = colIdx;
                     if (shifted || key == Gdk.Key.Left || key == Gdk.Key.Up)
                     {
@@ -1445,7 +1446,7 @@
 
             // Begin by creating a new ListStore with the appropriate number of
             // columns. Use the string column type for everything.
-            int numCols = DataSource != null ? DataSource.Columns.Count : 0;
+            int numCols = ColumnCount;
             Type[] colTypes = new Type[numCols];
             for (int i = 0; i < numCols; i++)
                 colTypes[i] = typeof(string);
@@ -1454,7 +1455,7 @@
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-            
+            Grid.QueryTooltip += OnQueryTooltip;
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
@@ -1556,6 +1557,64 @@
         }
 
         /// <summary>
+        /// Invoked when the view needs a tooltip.
+        /// </summary>
+        /// <param name="o">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnQueryTooltip(object o, QueryTooltipArgs args)
+        {
+            try
+            {
+                if (DataSource == null)
+                    return;
+
+                TreePath path;
+                TreeViewColumn column;
+                int x, y;
+                Gtk.TreeView view = o as Gtk.TreeView ?? Grid;
+
+                // args.RetVal determines whether or not the tooltip will be shown.
+                args.RetVal = false;
+
+                // coordinates from event args are relative to the tree view's window,
+                // but GetPathAtPos expects coords relative to the BinWindow.
+                view.ConvertWidgetToBinWindowCoords(args.X, args.Y, out x, out y);
+                if (view.GetPathAtPos(x, y, out path, out column))
+                {
+                    int col = GetIndexOfTooltipColumn(DataSource);
+                    int row = path.Indices[0];
+                    if (row >= 0 && row < DataSource.Rows.Count && col >= 0 && col < DataSource.Columns.Count)
+                    {
+                        args.Tooltip.Text = DataSource.Rows[row][col]?.ToString();
+                        args.RetVal = true;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Fetches the index of the column containing tooltips. Returns -1 if
+        /// no such column exists.
+        /// </summary>
+        /// <param name="table">Table to search.</param>
+        /// <returns>Tooltip column index, or -1 if no column found.</returns>
+        private int GetIndexOfTooltipColumn(DataTable table)
+        {
+            object tooltip;
+            for (int i = 0; i < table?.Columns?.Count; i++)
+            {
+                tooltip = table.Columns[i].ExtendedProperties["tooltip"];
+                if (tooltip is bool && (bool)tooltip)
+                    return i;
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// Event handler for when the user clicks on a column header.
         /// </summary>
         /// <param name="sender">Sender object.</param>
@@ -1629,6 +1688,28 @@
         }
 
         /// <summary>
+        /// Gets the number of columns which are not tooltip columns.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <remarks>
+        /// Tooltips are stored as a column in the data table, but we don't
+        /// want to display this information in the grid.
+        /// </remarks>
+        private int GetNumCols(DataTable table)
+        {
+            if (table == null)
+                return 0;
+            int numCols = 0;
+            foreach (DataColumn column in table.Columns)
+            {
+                object tooltip = column.ExtendedProperties["tooltip"];
+                if (tooltip == null || (tooltip is bool && !(bool)tooltip))
+                    numCols++;
+            }
+            return numCols;
+        }
+
+        /// <summary>
         /// Modify the settings of all column headers
         /// We apply center-justification to all the column headers, just for the heck of it
         /// Note that "justification" here refers to justification of wrapped lines, not 
@@ -1639,7 +1720,7 @@
         /// <param name="view">The treeview for which headings are to be modified.</param>
         private void SetColumnHeaders(Gtk.TreeView view)
         {
-            int numCols = DataSource != null ? DataSource.Columns.Count : 0;
+            int numCols = GetNumCols(DataSource);
             for (int i = 0; i < numCols; i++)
             {
                 Label newLabel = new Label();

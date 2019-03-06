@@ -152,7 +152,8 @@ namespace UserInterface.Presenters
             bool hasData = properties.Count > 0;
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
-
+            table.Columns.Add("tooltip", typeof(string));
+            table.Columns[2].ExtendedProperties["tooltip"] = true;
             FillTable(table);
             grid.DataSource = table;
             FormatGrid();
@@ -355,11 +356,11 @@ namespace UserInterface.Presenters
             foreach (IVariable property in properties)
             {
                 if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value , null });
+                    table.Rows.Add(new object[] { property.Value , null, property.Description });
                 else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
+                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Description });
                 else
-                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, property.Description });
             }
         }
 
