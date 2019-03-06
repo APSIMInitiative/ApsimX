@@ -55,6 +55,7 @@ namespace Models.CLEM.Resources
 
         private IModel GetGroupByType(Type type)
         {
+            ResourceGroupList = Apsim.Children(this, typeof(IModel));
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
 
