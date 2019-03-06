@@ -313,7 +313,7 @@ namespace Models.CLEM.Resources
             weaned = true;
             if (this.Mother != null)
             {
-                this.Mother.SucklingOffspring.Remove(this);
+                this.Mother.SucklingOffspringList.Remove(this);
             }
             if(report)
             {
@@ -355,15 +355,8 @@ namespace Models.CLEM.Resources
                     // same location as mother and not isolated
                     if (this.Location == this.Mother.Location)
                     {
-                        if (this.Mother.CarryingTwins)
-                        {
-                            // distribute milk between offspring
-                            milk = this.Mother.MilkProduction / 2;
-                        }
-                        else
-                        {
-                            milk = this.Mother.MilkProduction;
-                        }
+                        // distribute milk between offspring
+                        milk = this.Mother.MilkProduction / this.Mother.CarryingCount;
                     }
                 }
                 return milk;

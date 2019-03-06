@@ -100,6 +100,7 @@ namespace Models.CLEM.Resources
 
                     // assign calves to cows
                     int sucklingCount = 0;
+                    int numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
                     foreach (var suckling in sucklingList)
                     {
                         sucklingCount++;
@@ -113,7 +114,7 @@ namespace Models.CLEM.Resources
                             // need to calculate normalised animal weight here for milk production
                             double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
                             breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
-                            breedFemales[0].MilkAmount = milkProduction * 30.4;
+                            breedFemales[0].MilkCurrentlyAvailable = milkProduction * 30.4;
 
                             // generalised curve
                             // previously * 30.64
@@ -140,13 +141,18 @@ namespace Models.CLEM.Resources
                             // suckling mother set
                             suckling.Mother = breedFemales[0];
                             // add suckling to suckling offspring of mother.
-                            suckling.Mother.SucklingOffspring.Add(suckling);
+                            suckling.Mother.SucklingOffspringList.Add(suckling);
 
                             // check if a twin and if so apply next individual to same mother.
                             // otherwise remove this mother from the list
-                            if (ZoneCLEM.RandomGenerator.NextDouble() >= breedFemales[0].BreedParams.TwinRate)
+                            if (numberThisPregnancy == 1)
                             {
                                 breedFemales.RemoveAt(0);
+                                numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
+                            }
+                            else
+                            {
+                                numberThisPregnancy--;
                             }
                         }
                         else
@@ -215,7 +221,7 @@ namespace Models.CLEM.Resources
             // Remove mother ID from any suckling offspring
             if (ind.Gender == Sex.Female)
             {
-                foreach (var offspring in (ind as RuminantFemale).SucklingOffspring)
+                foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
                 {
                     offspring.Mother = null;
                 }
