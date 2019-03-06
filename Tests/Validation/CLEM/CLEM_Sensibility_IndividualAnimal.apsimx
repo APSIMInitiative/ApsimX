@@ -57,10 +57,12 @@
           "Children": [
             {
               "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "SelectedTab": null,
               "Name": "Resources",
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.RuminantHerd, Models",
+                  "SelectedTab": null,
                   "Name": "Ruminants",
                   "Children": [
                     {
@@ -80,6 +82,7 @@
                       "GrowthEnergyIntercept1": 6.7,
                       "GrowthEnergyIntercept2": 20.3,
                       "GrowthEfficiency": 1.09,
+                      "NaturalWeaningAge": 0.0,
                       "SRWFemale": 500.0,
                       "SRWMaleMultiplier": 1.2,
                       "SRWBirth": 0.08,
@@ -129,7 +132,7 @@
                       "MinimumAge1stMating": 24.0,
                       "MinimumSize1stMating": 0.5,
                       "MinimumDaysBirthToConception": 61.0,
-                      "TwinRate": 0.0,
+                      "MultipleBirthRate": null,
                       "CriticalCowWeight": 0.5,
                       "ConceptionRateCoefficent": -14.247,
                       "ConceptionRateIntercept": 5.182,
@@ -139,10 +142,12 @@
                       "MaximumConceptionUncontrolledBreeding": 0.7,
                       "MethaneProductionCoefficient": 35.16,
                       "Units": null,
+                      "SelectedTab": null,
                       "Name": "Bos indicus",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
+                          "SelectedTab": null,
                           "Name": "Initial cohorts",
                           "Children": [
                             {
@@ -154,6 +159,7 @@
                               "WeightSD": 0.0,
                               "Suckling": false,
                               "Sire": false,
+                              "SelectedTab": null,
                               "Name": "WeanerF",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -177,6 +183,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                  "SelectedTab": null,
                   "Name": "AnimalFoodStore",
                   "Children": [
                     {
@@ -185,11 +192,13 @@
                       "Nitrogen": 0.75,
                       "StartingAmount": 10000.0,
                       "Units": null,
+                      "SelectedTab": null,
                       "Name": "RiceStraw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Transmutation, Models",
                           "AmountPerUnitPurchase": 10000.0,
+                          "SelectedTab": null,
                           "Name": "Purchase",
                           "Children": [
                             {
@@ -197,6 +206,7 @@
                               "ResourceType": null,
                               "ResourceTypeName": "Finances.General account",
                               "CostPerUnit": 100.0,
+                              "SelectedTab": null,
                               "Name": "Money",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -221,6 +231,7 @@
                 {
                   "$type": "Models.CLEM.Resources.Finance, Models",
                   "CurrencyName": "Dollars",
+                  "SelectedTab": null,
                   "Name": "Finances",
                   "Children": [
                     {
@@ -231,6 +242,7 @@
                       "InterestRateCharged": 7.5,
                       "InterestRatePaid": 2.0,
                       "Units": null,
+                      "SelectedTab": null,
                       "Name": "General account",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -251,11 +263,13 @@
               "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
               "LastShortfallResourceRequest": null,
               "LastActivityPerformed": null,
+              "SelectedTab": null,
               "Name": "Activities",
               "Children": [
                 {
                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                   "OnPartialResourcesAvailableAction": 0,
+                  "SelectedTab": null,
                   "Name": "Manage herd",
                   "Children": [
                     {
@@ -267,11 +281,13 @@
                       "PredictedHerdName": null,
                       "PredictedHerdBreed": null,
                       "OnPartialResourcesAvailableAction": 2,
+                      "SelectedTab": null,
                       "Name": "Feed rice straw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                           "Value": 1.0,
+                          "SelectedTab": null,
                           "Name": "Feed all",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -287,6 +303,7 @@
                       "$type": "Models.CLEM.Activities.RuminantActivityGrow, Models",
                       "EnergyGross": 18.8,
                       "OnPartialResourcesAvailableAction": 0,
+                      "SelectedTab": null,
                       "Name": "Grow all ruminants",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -301,6 +318,7 @@
                 {
                   "$type": "Models.CLEM.SummariseRuminantHerd, Models",
                   "HerdFilters": null,
+                  "SelectedTab": null,
                   "Name": "SummariseHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -309,6 +327,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
+                  "SelectedTab": null,
                   "Name": "ReportHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,

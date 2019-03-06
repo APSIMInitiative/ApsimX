@@ -59,6 +59,7 @@
               "$type": "Models.CLEM.FileCrop, Models",
               "FileName": "Crop_new_format(Burkina 20130222).prn",
               "ExcelWorkSheetName": null,
+              "SelectedTab": null,
               "Name": "FileCrop",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -69,6 +70,7 @@
               "$type": "Models.CLEM.FileCrop, Models",
               "FileName": "CropResidue_new_format(Burkina 20130222).prn",
               "ExcelWorkSheetName": null,
+              "SelectedTab": "Summary",
               "Name": "FileCropResidue",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -77,12 +79,14 @@
             },
             {
               "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "SelectedTab": null,
               "Name": "Resources",
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.Land, Models",
                   "UnitsOfArea": "hectares",
                   "UnitsOfAreaToHaConversion": 1.0,
+                  "SelectedTab": null,
                   "Name": "Land",
                   "Children": [
                     {
@@ -92,6 +96,7 @@
                       "ProportionOfTotalArea": 1.0,
                       "SoilType": 3,
                       "Units": null,
+                      "SelectedTab": null,
                       "Name": "Field",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -105,6 +110,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                  "SelectedTab": null,
                   "Name": "AnimalFoodStore",
                   "Children": [
                     {
@@ -113,6 +119,7 @@
                       "Nitrogen": 1.5,
                       "StartingAmount": 0.0,
                       "Units": null,
+                      "SelectedTab": null,
                       "Name": "Maize grain",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -125,6 +132,7 @@
                       "Nitrogen": 1.0,
                       "StartingAmount": 0.0,
                       "Units": null,
+                      "SelectedTab": null,
                       "Name": "Maize residue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -145,6 +153,7 @@
               "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
               "LastShortfallResourceRequest": null,
               "LastActivityPerformed": null,
+              "SelectedTab": null,
               "Name": "Activities",
               "Children": [
                 {
@@ -153,6 +162,7 @@
                   "AreaRequested": 1.0,
                   "UseAreaAvailable": true,
                   "OnPartialResourcesAvailableAction": 0,
+                  "SelectedTab": null,
                   "Name": "Manage maize",
                   "Children": [
                     {
@@ -164,6 +174,7 @@
                       "TreesPerHa": 0.0,
                       "UnitsToHaConverter": 0.0,
                       "OnPartialResourcesAvailableAction": 0,
+                      "SelectedTab": null,
                       "Name": "Manage grain",
                       "Children": [
                         {
@@ -175,6 +186,7 @@
                           "TreesPerHa": 0.0,
                           "UnitsToHaConverter": 0.0,
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Manage residue",
                           "Children": [],
                           "IncludeInDocumentation": true,
