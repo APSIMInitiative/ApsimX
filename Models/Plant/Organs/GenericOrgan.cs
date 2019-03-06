@@ -122,6 +122,11 @@ namespace Models.PMF.Organs
         [Link]
         IFunction CarbonConcentration = null;
 
+        /// <summary>The photosynthesis</summary>
+        /// [Units("g/m2")]
+        [Link(IsOptional = true)]
+        IFunction Photosynthesis = null;
+
 
         /// <summary>The live biomass state at start of the computation round</summary>
         protected Biomass startLive = null;
@@ -261,7 +266,7 @@ namespace Models.PMF.Organs
         {
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();         
-            DMSupply.Fixation = 0;
+            DMSupply.Fixation = (Photosynthesis == null) ? 0: Photosynthesis.Value();
             DMSupply.Uptake = 0;
         }
 

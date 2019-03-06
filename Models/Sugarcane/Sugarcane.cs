@@ -461,9 +461,13 @@ namespace Models
         [Link]
         private ISummary Summary = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
+        /// <summary>Link to NO3 solute.</summary>
+        [ScopedLinkByName]
+        private ISolute NO3 = null;
+        
+        /// <summary>Link to NH4 solute.</summary>
+        [ScopedLinkByName]
+        private ISolute NH4 = null;
 
         #endregion
 
@@ -12287,7 +12291,7 @@ namespace Models
             //todays value of NO3, NO3_min, NH4, NH4_min should have been read in from the SoilN module before the Prepare Event is fired.
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_no3gsm[layer] = Soil.NO3N[layer] * kg2gm / ha2sm;
+                o_no3gsm[layer] = NO3.kgha[layer] * kg2gm / ha2sm;
                 }
 
             for (int layer = 0; layer < num_layers; layer++)
@@ -12297,7 +12301,7 @@ namespace Models
 
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_nh4gsm[layer] = Soil.NH4N[layer] * kg2gm / ha2sm; ;
+                o_nh4gsm[layer] = NH4.kgha[layer] * kg2gm / ha2sm; ;
                 }
 
             for (int layer = 0; layer < num_layers; layer++)
@@ -14218,8 +14222,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
+                NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
 
 
 
@@ -14245,8 +14249,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
+                NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
             }
             else
                 {

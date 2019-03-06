@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 47,
+  "Version": 54,
   "Name": "Simulations",
   "Children": [
     {
@@ -66,7 +66,7 @@
             "[Soil].SoilWater.Runoff",
             "[Soil].SoilWater.pond",
             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-            "[Soil].NO3N",
+            "[Soil].SoilNitrogen.NO3.kgha",
             "[MicroClimate].net_radn",
             "[MicroClimate].peta",
             "[MicroClimate].petr",
@@ -127,6 +127,8 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Chickpea",
+          "IsEnding": false,
+          "DaysAfterEnding": 0,
           "ResourceName": null,
           "Name": "Chickpea",
           "Children": [
@@ -260,83 +262,6 @@
                   "End": "Germination",
                   "Name": "Germinating",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "Emergence",
-                  "End": "StartFlowering",
-                  "Name": "Emerging_test",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 6.0,
-                      "Units": "Degree Days",
-                      "Name": "Target",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Progression",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "Name": "EmergeTT",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "\r\nFrom Soltani (2006)",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                4.5,
-                                20.0,
-                                29.0,
-                                40.0
-                              ],
-                              "Y": [
-                                0.0,
-                                16.0,
-                                24.5,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\r\nPhenology model as per work of Soltani. Shape of curve can  be modified by changing the 'Critical' or 'Optimum' photoperiod parameters, or the target TT.\n\nFor an unmodified variety, photoperiod less than the optimum photoperiod (21) means the target TT increases by 1/Photoperiod function.\n\nSee documentation for explanatory graph.\n\n***INSERT LINK TO GRAPH IMAGE FOR EXPLANATION HERE***",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -996,7 +921,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -1005,7 +932,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 3,
@@ -1058,7 +987,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -1067,7 +998,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 3,
@@ -1120,7 +1053,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -1129,7 +1064,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 3,
@@ -1182,7 +1119,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             },
                             {
                               "$type": "Models.Graph.Axis, Models",
@@ -1191,7 +1130,9 @@
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
-                              "Interval": "NaN"
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 3,
@@ -2261,7 +2202,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartGrainFilling",
+                      "Start": "EndFlowering",
                       "End": "EndGrainFill",
                       "Name": "GrainFilling",
                       "Children": [
@@ -2534,6 +2475,8 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootAngle": 45.0,
+              "SWAvailabilityRatio": 0.0,
               "Name": "Root",
               "Children": [
                 {
@@ -3984,7 +3927,7 @@
               "NDemand": null,
               "potentialDMAllocation": null,
               "Albedo": 0.2,
-              "Gsmax": 0.0122,
+              "Gsmax350": 0.0122,
               "R50": 200.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
@@ -5194,7 +5137,9 @@
                                   "Inverted": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
-                                  "Interval": "NaN"
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 },
                                 {
                                   "$type": "Models.Graph.Axis, Models",
@@ -5203,7 +5148,9 @@
                                   "Inverted": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
-                                  "Interval": "NaN"
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5285,7 +5232,9 @@
                                   "Inverted": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
-                                  "Interval": "NaN"
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 },
                                 {
                                   "$type": "Models.Graph.Axis, Models",
@@ -5294,7 +5243,9 @@
                                   "Inverted": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
-                                  "Interval": "NaN"
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5376,7 +5327,9 @@
                                   "Inverted": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
-                                  "Interval": "NaN"
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 },
                                 {
                                   "$type": "Models.Graph.Axis, Models",
@@ -5385,7 +5338,9 @@
                                   "Inverted": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
-                                  "Interval": "NaN"
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5652,6 +5607,16 @@
                   "FixedValue": 0.4,
                   "Units": null,
                   "Name": "CarbonConcentration",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "StomatalConductanceCO2Modifier",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7764,7 +7729,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -7773,7 +7740,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -7838,7 +7807,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -7847,7 +7818,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -7912,7 +7885,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -7921,7 +7896,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -7986,7 +7963,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -7995,7 +7974,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8060,7 +8041,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -8069,7 +8052,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8134,7 +8119,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -8143,7 +8130,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8208,7 +8197,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -8217,7 +8208,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8282,7 +8275,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -8291,7 +8286,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8356,7 +8353,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -8365,7 +8364,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8430,7 +8431,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -8439,7 +8442,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -8509,7 +8514,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8518,7 +8525,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -8583,7 +8592,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8592,7 +8603,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -8657,7 +8670,9 @@
                   "Inverted": false,
                   "Minimum": 0.0,
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8666,7 +8681,9 @@
                   "Inverted": false,
                   "Minimum": 0.0,
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -8731,7 +8748,9 @@
                   "Inverted": false,
                   "Minimum": 0.0,
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8740,7 +8759,9 @@
                   "Inverted": false,
                   "Minimum": 0.0,
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -8805,7 +8826,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8814,7 +8837,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -8879,7 +8904,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8888,7 +8915,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -8971,7 +9000,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -8980,7 +9011,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -9063,7 +9096,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9072,7 +9107,9 @@
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -9155,7 +9192,9 @@
                   "Inverted": false,
                   "Minimum": 0.0,
                   "Maximum": 500.0,
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -9164,7 +9203,9 @@
                   "Inverted": false,
                   "Minimum": 0.0,
                   "Maximum": 500.0,
-                  "Interval": "NaN"
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 3,
@@ -9482,7 +9523,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr",
@@ -9728,7 +9769,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -9736,7 +9818,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -9795,6 +9876,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -10000,6 +10092,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -10044,14 +10138,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -10074,7 +10160,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10083,7 +10171,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 1400.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10166,7 +10256,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10175,7 +10267,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10258,7 +10352,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10267,7 +10363,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10360,7 +10458,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10369,7 +10469,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": 1.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10422,7 +10524,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10431,7 +10535,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10484,7 +10590,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -10493,7 +10601,9 @@
                       "Inverted": false,
                       "Minimum": 980.0,
                       "Maximum": 1045.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -10874,7 +10984,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr",
@@ -11109,7 +11219,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -11117,7 +11268,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -11176,6 +11326,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -11380,6 +11541,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -11424,14 +11587,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -11454,7 +11609,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11463,7 +11620,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11556,7 +11715,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11565,7 +11726,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11648,7 +11811,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11657,7 +11822,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11710,7 +11877,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11719,7 +11888,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11772,7 +11943,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11781,7 +11954,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11864,7 +12039,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11873,7 +12050,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -11956,7 +12135,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -11965,7 +12146,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12058,7 +12241,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12067,7 +12252,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 1400.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12150,7 +12337,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12159,7 +12348,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 500.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12252,7 +12443,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12261,7 +12454,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 500.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12354,7 +12549,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12363,7 +12560,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12416,7 +12615,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12425,7 +12626,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12508,7 +12711,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12517,7 +12722,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12570,7 +12777,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12579,7 +12788,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12752,7 +12963,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12761,7 +12974,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12844,7 +13059,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12853,7 +13070,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -12936,7 +13155,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -12945,7 +13166,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13028,7 +13251,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13037,7 +13262,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13120,7 +13347,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13129,7 +13358,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13212,7 +13443,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13221,7 +13454,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13304,7 +13539,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13313,7 +13550,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13426,7 +13665,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13435,7 +13676,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13548,7 +13791,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13557,7 +13802,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": 2000.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13610,7 +13857,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13619,7 +13868,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": 1000.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13672,7 +13923,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13681,7 +13934,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -13734,7 +13989,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -13743,7 +14000,9 @@
                       "Inverted": false,
                       "Minimum": 690.0,
                       "Maximum": 765.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -14235,7 +14494,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr",
@@ -14464,7 +14723,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -14472,7 +14772,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -14531,6 +14830,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -14735,6 +15045,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -14771,14 +15083,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -14801,7 +15105,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -14810,7 +15116,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -14903,7 +15211,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -14912,7 +15222,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 1400.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -14995,7 +15307,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15004,7 +15318,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15087,7 +15403,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15096,7 +15414,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 2.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15149,7 +15469,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15158,7 +15480,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15211,7 +15535,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15220,7 +15546,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -15273,7 +15601,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15282,7 +15612,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -15335,7 +15667,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15344,7 +15678,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15427,7 +15763,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15436,7 +15774,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15519,7 +15859,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15528,7 +15870,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15611,7 +15955,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15620,7 +15966,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15673,7 +16021,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15682,7 +16032,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15735,7 +16087,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15744,7 +16098,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15797,7 +16153,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15806,7 +16164,9 @@
                       "Inverted": false,
                       "Minimum": 690.0,
                       "Maximum": 765.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -15859,7 +16219,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -15868,7 +16230,9 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": 1000.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -16187,7 +16551,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr"
@@ -16414,7 +16778,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -16422,7 +16827,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -16481,6 +16885,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -16685,16 +17100,10 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -16721,7 +17130,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -16730,7 +17141,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 1400.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -16813,7 +17226,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -16822,7 +17237,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -16905,7 +17322,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -16914,7 +17333,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -16997,7 +17418,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -17006,7 +17429,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -17089,7 +17514,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -17098,7 +17525,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -17196,7 +17625,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17205,7 +17636,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17288,7 +17721,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17297,7 +17732,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17380,7 +17817,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17389,7 +17828,9 @@
                           "Inverted": false,
                           "Minimum": 0.15,
                           "Maximum": 0.5,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17472,7 +17913,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17481,7 +17924,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17564,7 +18009,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17573,7 +18020,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17656,7 +18105,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17665,7 +18116,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -17748,7 +18201,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -17757,7 +18212,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -18176,7 +18633,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr"
@@ -18403,7 +18860,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": false,
                               "ReadOnly": false
@@ -18411,7 +18909,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -18470,6 +18967,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -18674,6 +19182,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -18718,14 +19228,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -18748,7 +19250,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -18757,7 +19261,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -18810,7 +19316,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -18819,7 +19327,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -19199,7 +19709,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr"
@@ -19426,7 +19936,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": false,
                               "ReadOnly": false
@@ -19434,7 +19985,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -19493,6 +20043,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -19697,6 +20258,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -19741,14 +20304,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -19771,7 +20326,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -19780,7 +20337,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -19833,7 +20392,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -19842,7 +20403,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -20138,7 +20701,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr"
@@ -20365,7 +20928,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": false,
                               "ReadOnly": false
@@ -20373,7 +20977,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -20432,6 +21035,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -20636,6 +21250,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -20680,14 +21296,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -20710,7 +21318,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -20719,7 +21329,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -20772,7 +21384,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -20781,7 +21395,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21037,7 +21653,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr",
@@ -21085,6 +21701,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -21313,7 +21931,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": false,
                               "ReadOnly": false
@@ -21321,7 +21980,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 80.0,
-                              "RootWt": 500.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -21370,6 +22028,15 @@
                                 0.8,
                                 0.99,
                                 0.99
+                              ],
+                              "RootWt": [
+                                173.5645161563782,
+                                135.17218109599685,
+                                81.986072174950522,
+                                49.727066443520314,
+                                30.160990415562338,
+                                18.293565414337436,
+                                11.0956082992543
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -21529,14 +22196,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -21559,7 +22218,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -21568,7 +22229,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21651,7 +22314,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -21660,7 +22325,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -21743,7 +22410,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -21752,7 +22421,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22102,7 +22773,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr",
@@ -22150,6 +22821,8 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
                           "Children": [],
@@ -22183,14 +22856,6 @@
                             }
                           ],
                           "Name": "SowingRule",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22372,7 +23037,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 40.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 12.0,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -22421,6 +23085,15 @@
                                 0.6,
                                 0.7,
                                 0.8
+                              ],
+                              "RootWt": [
+                                347.12903231275641,
+                                270.3443621919937,
+                                163.97214434990104,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
+                                22.1912165985086
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -22611,7 +23284,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -22650,7 +23364,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22659,7 +23375,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 1400.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22772,7 +23490,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22781,7 +23501,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22864,7 +23586,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22873,7 +23597,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -22956,7 +23682,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -22965,7 +23693,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -23018,7 +23748,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -23027,7 +23759,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -23110,7 +23844,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -23119,7 +23855,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -23237,7 +23975,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23246,7 +23986,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -23329,7 +24071,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23338,7 +24082,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -23421,7 +24167,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23430,7 +24178,9 @@
                           "Inverted": false,
                           "Minimum": 0.15,
                           "Maximum": 0.5,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -23513,7 +24263,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23522,7 +24274,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -23605,7 +24359,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23614,7 +24370,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -23697,7 +24455,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23706,7 +24466,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -23789,7 +24551,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -23798,7 +24562,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -24152,7 +24918,7 @@
                             "[Soil].SoilWater.Runoff",
                             "[Soil].SoilWater.pond",
                             "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                            "[Soil].NO3N",
+                            "[Soil].SoilNitrogen.NO3.kgha",
                             "[MicroClimate].net_radn",
                             "[MicroClimate].peta",
                             "[MicroClimate].petr"
@@ -24379,7 +25145,48 @@
                                 0.9
                               ],
                               "Name": "SoilNitrogen",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -24387,7 +25194,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "RootWt": 1000.0,
                               "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
@@ -24446,6 +25252,17 @@
                                 0.95,
                                 0.95,
                                 0.95
+                              ],
+                              "RootWt": [
+                                268.21632818076296,
+                                219.59695635924723,
+                                179.79078145363917,
+                                120.51736490078699,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
+                                24.33203633136019,
+                                16.310251713778211
                               ],
                               "OCUnits": 0,
                               "Name": "SoilOrganicMatter",
@@ -24650,16 +25467,10 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsEnding": false,
+                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Chickpea",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.SoluteManager, Models",
-                          "Name": "SoluteManager",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -24686,7 +25497,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -24695,7 +25508,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": 1400.0,
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -24778,7 +25593,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -24787,7 +25604,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -24870,7 +25689,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -24879,7 +25700,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -24962,7 +25785,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -24971,7 +25796,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 3,
@@ -25054,7 +25881,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
                     {
                       "$type": "Models.Graph.Axis, Models",
@@ -25063,7 +25892,9 @@
                       "Inverted": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
-                      "Interval": "NaN"
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     }
                   ],
                   "LegendPosition": 0,
@@ -25161,7 +25992,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25170,7 +26003,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -25253,7 +26088,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25262,7 +26099,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -25345,7 +26184,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25354,7 +26195,9 @@
                           "Inverted": false,
                           "Minimum": 0.15,
                           "Maximum": 0.5,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -25437,7 +26280,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25446,7 +26291,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -25529,7 +26376,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25538,7 +26387,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -25621,7 +26472,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25630,7 +26483,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,
@@ -25713,7 +26568,9 @@
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         },
                         {
                           "$type": "Models.Graph.Axis, Models",
@@ -25722,7 +26579,9 @@
                           "Inverted": false,
                           "Minimum": 0.2,
                           "Maximum": 0.45,
-                          "Interval": "NaN"
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 3,

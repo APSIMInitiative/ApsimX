@@ -4,8 +4,8 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.SoluteManager, Models",
-      "Name": "SoluteManager"
+      "$type": "Models.Fertiliser, Models",
+      "Name": "Fertiliser"
     }
   ]
 }

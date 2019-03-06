@@ -453,6 +453,11 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostLabour.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FactorialAnova.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNH4.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNO3.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenUrea.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenNH4.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenNO3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionAdvanced.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItem.png" />
@@ -650,7 +655,6 @@
     <EmbeddedResource Include="Resources\Delete.png" />
     <EmbeddedResource Include="Resources\Delete16.png" />
     <EmbeddedResource Include="Resources\Cloud.png" />
-    <EmbeddedResource Include="Resources\ArbitrationDiagram.PNG" />
     <EmbeddedResource Include="Resources\CurveNumberCover.png" />
     <EmbeddedResource Include="Resources\Jigsaw.jpg" />
     <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
@@ -695,6 +699,7 @@
     <EmbeddedResource Include="Resources\MorrisGrid4.png" />
     <EmbeddedResource Include="Resources\SobolParameterDistributions.png" />
     <EmbeddedResource Include="Resources\AnovaSampleGrid.png" />
+    <EmbeddedResource Include="Resources\ArbitratorSequenceDiagram.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
