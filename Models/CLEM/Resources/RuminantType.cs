@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
@@ -115,15 +115,15 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 AnimalPriceGroup matchIndividual = null;
                 AnimalPriceGroup matchCriteria = null;
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 & matchIndividual == null)
+                    if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() & a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {

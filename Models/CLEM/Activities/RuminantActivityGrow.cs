@@ -565,8 +565,8 @@ namespace Models.CLEM.Activities
             // and before breeding, trading, culling etc (See Clock event order)
 
             // Calculated by
-            // critical weight &
-            // juvenile (unweaned) death based on mothers weight &
+            // critical weight &&
+            // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
 
             RuminantHerd ruminantHerd = Resources.RuminantHerd();

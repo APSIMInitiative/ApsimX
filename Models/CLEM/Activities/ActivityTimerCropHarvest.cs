@@ -97,12 +97,12 @@ namespace Models.CLEM.Activities
 
                 DateTime harvestDate;
 
-                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0)
+                if (ManageProductActivity.PreviousHarvest != null && OffsetMonthHarvestStop > 0)
                 {
                     // compare with previous harvest
                     harvestDate = ManageProductActivity.PreviousHarvest.HarvestDate;
                 }
-                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
+                else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart <= 0)
                 {
                     // compare with next harvest 
                     harvestDate = ManageProductActivity.NextHarvest.HarvestDate;
@@ -209,14 +209,14 @@ namespace Models.CLEM.Activities
                 html += "\n<div class=\"filter\">At harvest";
                 html += "\n</div>";
             }
-            else if (OffsetMonthHarvestStop == 0 & OffsetMonthHarvestStart < 0)
+            else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
             {
                 html += "\n<div class=\"filter\">";
                 html += "All <span class=\"setvalueextra\">";
                 html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest";
                 html += "</div>";
             }
-            else if (OffsetMonthHarvestStop > 0 & OffsetMonthHarvestStart == 0)
+            else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
             {
                 html += "\n<div class=\"filter\">";
                 html += "All <span class=\"setvalueextra\">";

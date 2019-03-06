@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
             {
                 if(SuccessfulPregnancy)
                 {
-                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength & this.AgeAtLastConception > this.AgeAtLastBirth;
+                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength && this.AgeAtLastConception > this.AgeAtLastBirth;
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength & this.SuccessfulPregnancy);
+                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength && this.SuccessfulPregnancy);
             }
         }
 
