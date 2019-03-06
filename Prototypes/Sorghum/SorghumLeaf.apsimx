@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 51,
+  "Version": 54,
   "Name": "Simulations",
   "Children": [
     {
@@ -5983,7 +5983,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Grain].DMDemands.Structural.DMDemandFunction.Value()",
+                  "VariableName": "[Grain].DMDemand",
                   "Name": "GrainDemand",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6269,7 +6269,7 @@
             "[Sorghum].Phenology.LeafAppearance2._RemainingLeaves",
             "sum([Soil].SoilWater.ESW) as ESW",
             "[Sorghum].Phenology.Juvenile.Target.Value()",
-            "sum([Soil].SoilNitrogen.NO3) as NO3",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
             "sum([Soil].SoilWater.SW) as sw",
             "[Sorghum].Leaf.Fw as WaterSD",
             "[Sorghum].Leaf.Photosynthesis.FW.Value() as RUEStress",
@@ -6731,7 +6731,48 @@
                         0.9
                       ],
                       "Name": "SoilNitrogen",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "Name": "NO3",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "Name": "NH4",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "Name": "Urea",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                          "Name": "PlantAvailableNO3",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                          "Name": "PlantAvailableNH4",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6739,7 +6780,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "RootWt": 1000.0,
                       "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
@@ -6803,6 +6843,18 @@
                         0.9,
                         0.9,
                         0.9
+                      ],
+                      "RootWt": [
+                        260.58740315916066,
+                        220.5824745109322,
+                        158.05424955092769,
+                        113.25081857248298,
+                        81.147757455295647,
+                        58.144908999566972,
+                        41.662647848653442,
+                        29.852591664969907,
+                        21.390316629725067,
+                        15.32683160828522
                       ],
                       "OCUnits": 0,
                       "Name": "SoilOrganicMatter",
@@ -7018,14 +7070,6 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.SoluteManager, Models",
-                  "Name": "SoluteManager",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
