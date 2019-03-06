@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
+  "ExplorerWidth": 300,
   "Version": 54,
   "Name": "Simulations",
   "Children": [
@@ -72,7 +72,7 @@
                 {
                   "$type": "Models.CLEM.FileSQLiteGRASP, Models",
                   "FileName": "FilePasture_ExampleDB.db",
-                  "SelectedTab": null,
+                  "SelectedTab": "Summary",
                   "Name": "FileSQLiteGRASP",
                   "Children": [],
                   "IncludeInDocumentation": true,
