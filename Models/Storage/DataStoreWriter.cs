@@ -363,28 +363,31 @@
             {
                 IEnumerable<string> simsNeedingCleaning;
 
-                // Have we written anything to this table yet?
-                if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
+                lock (lockObject)
                 {
-                    // No - create a empty list of simulation names that we've cleaned up.
-                    simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
-                    simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
-                }
-                else
-                {
-                    // Get a list of simulations that haven't been cleaned up for this table.
-                    simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
-                }
-
-                simulationIds = new List<int>();
-                if (simsNeedingCleaning.Any())
-                {
-                    // Add the simulations we're about to clean to our list so
-                    // that they aren't cleaned again. Also get id's for each one.
-                    foreach (var simulationName in simsNeedingCleaning)
+                    // Have we written anything to this table yet?
+                    if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
                     {
-                        simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
-                        simulationIds.Add(GetSimulationID(simulationName));
+                        // No - create a empty list of simulation names that we've cleaned up.
+                        simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
+                        simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
+                    }
+                    else
+                    {
+                        // Get a list of simulations that haven't been cleaned up for this table.
+                        simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
+                    }
+
+                    simulationIds = new List<int>();
+                    if (simsNeedingCleaning.Any())
+                    {
+                        // Add the simulations we're about to clean to our list so
+                        // that they aren't cleaned again. Also get id's for each one.
+                        foreach (var simulationName in simsNeedingCleaning)
+                        {
+                            simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
+                            simulationIds.Add(GetSimulationID(simulationName));
+                        }
                     }
                 }
             }

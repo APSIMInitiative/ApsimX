@@ -131,6 +131,8 @@
         /// <param name="storage">The data store.</param>
         public static void RunPostSimulationTools(IModel rootModel, IDataStore storage)
         {
+            storage.Writer.Stop();
+
             // Call all post simulation tools.
             foreach (IPostSimulationTool tool in Apsim.FindAll(rootModel, typeof(IPostSimulationTool)))
             {
@@ -140,6 +142,8 @@
                     storage.Writer.WaitForIdle();
                 }
             }
+
+            storage.Writer.Stop();
         }
     }
 }

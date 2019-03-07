@@ -74,12 +74,6 @@
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            messages = new DataTable("_Messages");
-            messages.Columns.Add("SimulationName", typeof(string));
-            messages.Columns.Add("ComponentName", typeof(string));
-            messages.Columns.Add("Date", typeof(DateTime));
-            messages.Columns.Add("Message", typeof(string));
-            messages.Columns.Add("MessageType", typeof(int));
             if (CaptureSummaryText)
                 CreateInitialConditionsTable();
         }
@@ -93,6 +87,20 @@
             storage.Writer.WriteTable(messages);
         }
 
+        /// <summary>Initialise the summary messages table.</summary>
+        private void Initialise()
+        {
+            if (messages == null)
+            {
+                messages = new DataTable("_Messages");
+                messages.Columns.Add("SimulationName", typeof(string));
+                messages.Columns.Add("ComponentName", typeof(string));
+                messages.Columns.Add("Date", typeof(DateTime));
+                messages.Columns.Add("Message", typeof(string));
+                messages.Columns.Add("MessageType", typeof(int));
+            }
+        }
+
         /// <summary>Write a message to the summary</summary>
         /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
@@ -100,6 +108,8 @@
         {
             if (CaptureSummaryText)
             {
+                Initialise();
+
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
                 string modelPath = Apsim.FullPath(model);
@@ -122,6 +132,8 @@
         {
             if (CaptureWarnings)
             {
+                Initialise();
+
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
                 string modelPath = Apsim.FullPath(model);
@@ -144,6 +156,8 @@
         {
             if (CaptureErrors)
             {
+                Initialise();
+
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
                 string modelPath = Apsim.FullPath(model);
