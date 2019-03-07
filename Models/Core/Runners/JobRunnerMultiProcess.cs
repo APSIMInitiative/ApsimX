@@ -9,6 +9,7 @@ namespace Models.Core.Runners
     using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
@@ -100,6 +101,7 @@ namespace Models.Core.Runners
                     server = null;
                     DeleteRunners();
                     runningJobs.Clear();
+                    jobs.Completed();
                     if (AllJobsCompleted != null)
                     {
                         AllCompletedArgs args = new AllCompletedArgs();
@@ -201,17 +203,21 @@ namespace Models.Core.Runners
         {
             try
             {
-                List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
-                if (rows.Count > 0)
+                if (args.obj is TransferReportData)
                 {
-                    foreach (TransferRowInTable row in rows)
-                    {
-                        throw new NotImplementedException("Cannot find datastore in JobRunnerMultiProcess");
-                        //var dataStore = runningJobs[row.key].DataStore;
-                        //dataStore.Writer.WriteRow(row.SimulationName, row.TableName,
-                        //                          row.ColumnNames, row.columnUnits, row.Values);
-                    }
+                    var transferData = args.obj as TransferReportData;
+                    var runSimulation = runningJobs[transferData.key] as RunSimulation;
+                    runSimulation.DataStore.Writer.WriteTable(transferData.data);
                 }
+                else if (args.obj is TransferDataTable)
+                {
+                    var transferData = args.obj as TransferDataTable;
+                    var runSimulation = runningJobs[transferData.key] as RunSimulation;
+                    runSimulation.DataStore.Writer.WriteTable(transferData.data);
+                }
+                else
+                    throw new Exception("Invalid socket transfer method.");
+
                 server.Send(args.socket, "OK");
             }
             catch (Exception err)
@@ -287,6 +293,29 @@ namespace Models.Core.Runners
             public IList<string> columnUnits;
             /// <summary>Row values for each column</summary>
             public IList<object> Values;
+        }
+
+
+        /// <summary>An class for encapsulating a ReportData</summary>
+        [Serializable]
+        public class TransferReportData
+        {
+            /// <summary>Key to the job</summary>
+            public Guid key;
+            /// <summary>Simulation name</summary>
+            public ReportData data;
+        }
+
+
+        /// <summary>An class for encapsulating a DataTable</summary>
+        [Serializable]
+        public class TransferDataTable
+        {
+            /// <summary>Key to the job</summary>
+            public Guid key;
+
+            /// <summary>Simulation name</summary>
+            public DataTable data;
         }
     }
 }

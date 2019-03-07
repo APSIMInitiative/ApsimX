@@ -13,6 +13,9 @@
     /// </summary>
     public class DataStoreWriter : IJobManager, IStorageWriter
     {
+        /// <summary>Lock object.</summary>
+        private object lockObject = new object();
+
         /// <summary>A list of all write commands.</summary>
         private List<IRunnable> commands = new List<IRunnable>();
 
@@ -28,24 +31,21 @@
         /// <summary>Has something been written to the db?</summary>
         private bool somethingHasBeenWriten = false;
 
-        /// <summary>A cache of prepared INSERT queries for each table.</summary>
-        private List<InsertQuery> insertQueries = new List<InsertQuery>();
-
         /// <summary>The IDS for all simulations</summary>
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
         private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>The units for all fields in all tables.</summary>
-        private Dictionary<string, List<ColumnUnits>> units = new Dictionary<string, List<ColumnUnits>>();
-
         /// <summary>A list of simulation names that have been cleaned up for each table.</summary>
         private Dictionary<string, List<string>> simulationNamesThatHaveBeenCleanedUp = new Dictionary<string, List<string>>();
 
-        /// <summary>Number of write commands in the current transaction.</summary>
-        private int numCommandsInTransaction = 0;
+        /// <summary>A list of units for each table.</summary>
+        private Dictionary<string, List<ColumnUnits>> units = new Dictionary<string, List<ColumnUnits>>();
 
+        /// <summary>A list of names of tables that don't have checkpointid or simulatoinid columns.</summary>
+        private static string[] tablesNotNeedingIndexColumns = new string[] { "_Simulations", "_Checkpoints", "_Units" };
+        
         /// <summary>Default constructor.</summary>
         public DataStoreWriter()
         {
@@ -83,29 +83,57 @@
         }
 
         /// <summary>
-        /// Add a row to a table in the db file.
+        /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
-        /// <param name="simulationName">Name of simulation the values correspond to.</param>
-        /// <param name="tableName">Name of the table to write to.</param>
-        /// <param name="columnNames">The column names relating to the values.</param>
-        /// <param name="columnUnits">The units of each of the values.</param>
-        /// <param name="rowValues">The values making up the row to write.</param>
-        public void WriteRow(string simulationName, string tableName, 
-                            IList<string> columnNames, IList<string> columnUnits, IList<object> rowValues)
+        /// <param name="data">Name of simulation the values correspond to.</param>
+        public void WriteTable(ReportData data)
         {
             // NOTE: This can be called from many threads. Don't actually
             // write to the database on these threads. We have a single worker
             // thread to do that.
-            lock (commands)
-            {
-                Start();
-                CleanupOldRowsInTable(tableName, "Current", simulationName);
 
-                commands.Add(new AddRowCommand(this, insertQueries,
-                                               "Current", simulationName, tableName,
-                                               columnNames,
-                                               columnUnits,
-                                               rowValues));
+            Start();
+            var table = data.ToTable();
+            AddIndexColumns(table, "Current", data.SimulationName);
+
+            // Add units
+            AddUnits(data.TableName, data.ColumnNames, data.ColumnUnits);
+
+            // Delete old rows in table.
+            DeleteOldRowsInTable(data.TableName, "Current", new string[] { data.SimulationName });
+
+            lock (lockObject)
+            {
+                commands.Add(new WriteTableCommand(Connection, table));
+            }
+        }
+
+        /// <summary>
+        /// Write a table of data. Uses the TableName property of the specified DataTable.
+        /// </summary>
+        /// <param name="table">The data to write.</param>
+        public void WriteTable(DataTable table)
+        {
+            // NOTE: This can be called from many threads. Don't actually
+            // write to the database on these threads. We have a single worker
+            // thread to do that.
+
+            Start();
+
+            // Delete old rows in table.
+            if (table.Columns.Contains("SimulationName"))
+            {
+                var simulationNames = DataTableUtilities.GetColumnAsStrings(table, "SimulationName").ToList().Distinct();
+                DeleteOldRowsInTable(table.TableName, simulationNamesThatMayNeedCleaning: simulationNames);
+            }
+            else
+                DeleteOldRowsInTable(table.TableName);
+
+            AddIndexColumns(table, "Current", null);
+
+            lock (lockObject)
+            {
+                commands.Add(new WriteTableCommand(Connection, table));
             }
         }
 
@@ -117,9 +145,6 @@
                 // Make sure all existing writing has completed.
                 while (commands.Count > 0 || !idle)
                     Thread.Sleep(100);
-
-                // Write all units
-                WriteAllUnits();
 
                 // Make sure all existing writing has completed.
                 while (commands.Count > 0 || !idle)
@@ -134,24 +159,24 @@
             {
                 WaitForIdle();
 
-                if (numCommandsInTransaction > 0)
-                {
-                    Connection.EndTransaction();
-                    numCommandsInTransaction = 0;
-                }
+                WriteSimulationIDs();
+                WriteCheckpointIDs();
+                WriteAllUnits();
+
+                WaitForIdle();
 
                 commandRunner.Stop();
                 commandRunner = null;
-                foreach (var query in insertQueries)
-                    query.Close(Connection);
                 commands.Clear();
-                insertQueries.Clear();
                 simulationIDs.Clear();
                 checkpointIDs.Clear();
-                units.Clear();
                 simulationNamesThatHaveBeenCleanedUp.Clear();
+                units.Clear();
             }
         }
+
+        /// <summary>Called by the job runner when all jobs completed</summary>
+        public void Completed() { }
 
         /// <summary>Return the next command to run.</summary>
         public IRunnable GetNextJobToRun()
@@ -160,7 +185,7 @@
 
             // Try and get a command to execute.
             IRunnable command = null;
-            lock (commands)
+            lock (lockObject)
             {
                 if (commands.Count > 0)
                 {
@@ -180,21 +205,74 @@
             {
                 idle = false;
                 somethingHasBeenWriten = true;
-
-                // Create DB transaction. We group commands in batches of 100
-                // This leads to much quicker writes to the db.
-                if (numCommandsInTransaction == 0)
-                    Connection.BeginTransaction();
-                else if (numCommandsInTransaction == 100)
-                {
-                    numCommandsInTransaction = 0;
-                    Connection.EndTransaction();
-                    Connection.BeginTransaction();
-                }
-                numCommandsInTransaction++;
             }
 
             return command;
+        }
+
+        /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
+        public void Empty()
+        {
+            Start();
+            commands.Add(new EmptyCommand(Connection));
+            Stop();
+        }
+
+        /// <summary>Save the current data to a checkpoint.</summary>
+        /// <param name="name">Name of checkpoint.</param>
+        /// <param name="filesToStore">Files to store the contents of.</param>
+        public void AddCheckpoint(string name, IEnumerable<string> filesToStore = null)
+        {
+            Start();
+            commands.Add(new AddCheckpointCommand(this, name, filesToStore));
+            Stop();
+        }
+
+        /// <summary>Delete a checkpoint.</summary>
+        /// <param name="name">Name of checkpoint to delete.</param>
+        public void DeleteCheckpoint(string name)
+        {
+            Start();
+            lock (lockObject)
+            {
+                commands.Add(new DeleteCheckpointCommand(this, GetCheckpointID(name)));
+                checkpointIDs.Remove(name);
+            }
+            Stop();
+        }
+
+        /// <summary>Revert a checkpoint.</summary>
+        /// <param name="name">Name of checkpoint to revert to.</param>
+        public void RevertCheckpoint(string name)
+        {
+            Start();
+            commands.Add(new RevertCheckpointCommand(this, GetCheckpointID(name)));
+            Stop();
+        }
+
+        /// <summary>
+        /// Add a list of column units for the specified table.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnNames">A collection of column names.</param>
+        /// <param name="columnUnits">A corresponding collection of column units.</param>
+        public void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)
+        {
+            for (int i = 0; i < columnNames.Count(); i++)
+            {
+                var columnName = columnNames.ElementAt(i);
+                var columnUnit = columnUnits.ElementAt(i);
+                if (columnUnit != null && columnUnit != string.Empty)
+                {
+                    if (!units.TryGetValue(tableName, out var tableUnits))
+                    {
+                        tableUnits = new List<ColumnUnits>();
+                        units.Add(tableName, tableUnits);
+                    }
+                    if (tableUnits.Find(unit => unit.Name == columnName) == null)
+                        tableUnits.Add(new ColumnUnits() { Name = columnName, Units = columnUnits.ElementAt(i) });
+                }
+            }
         }
 
         /// <summary>
@@ -203,29 +281,24 @@
         /// </summary>
         /// <param name="simulationName">The name of the simulation to look for.</param>
         /// <returns>Always returns a number.</returns>
-        public int GetSimulationID(string simulationName)
+        private int GetSimulationID(string simulationName)
         {
             if (simulationName == null)
                 return 0;
 
-            if (!simulationIDs.TryGetValue(simulationName, out int id))
+            lock (lockObject)
             {
-                // Not found so create a new ID, add it to our collection of ids
-                // and write it to the database.
-                if (simulationIDs.Count > 0)
-                    id = simulationIDs.Values.Max() + 1;
-                else
-                    id = 1;
-                simulationIDs.Add(simulationName, id);
-
-                commands.Add(new AddRowCommand(this, insertQueries,
-                                               null, null, "_Simulations",
-                                               new string[] { "ID", "Name", "FolderName" },
-                                               null,
-                                               new object[] { id, simulationName, string.Empty }));
+                if (!simulationIDs.TryGetValue(simulationName, out int id))
+                {
+                    // Not found so create a new ID, add it to our collection of ids
+                    if (simulationIDs.Count > 0)
+                        id = simulationIDs.Values.Max() + 1;
+                    else
+                        id = 1;
+                    simulationIDs.Add(simulationName, id);
+                }
+                return id;
             }
-
-            return id;
         }
 
         /// <summary>
@@ -238,123 +311,20 @@
         {
             if (checkpointName == null)
                 return 0;
-            if (!checkpointIDs.TryGetValue(checkpointName, out int id))
+
+            lock (lockObject)
             {
-                // Not found so create a new ID, add it to our collection of ids
-                // and write it to the database.
-                if (checkpointIDs.Count > 0)
-                    id = simulationIDs.Values.Max() + 1;
-                else
-                    id = 1;
-                checkpointIDs.Add(checkpointName, id);
-                commands.Add(new AddRowCommand(this, insertQueries,
-                               null, null, "_Checkpoints",
-                               new string[] { "ID", "Name", "Version", "Date" },
-                               null,
-                               new object[] { id, checkpointName, string.Empty, string.Empty }));
+                if (!checkpointIDs.TryGetValue(checkpointName, out int id))
+                {
+                    // Not found so create a new ID, add it to our collection of ids
+                    if (checkpointIDs.Count > 0)
+                        id = checkpointIDs.Values.Max() + 1;
+                    else
+                        id = 1;
+                    checkpointIDs.Add(checkpointName, id);
+                }
+                return id;
             }
-
-            return id;
-        }
-
-        /// <summary>Ensure the specified table matches our columns and row values.</summary>
-        /// <param name="tableName">Name of the table to write to.</param>
-        /// <param name="columnNames">The column names relating to the values.</param>
-        /// <param name="columnUnits">The units of each of the values.</param>
-        /// <param name="rowValues">The values making up the row to write.</param>
-        public void EnsureTableHasColumnNames(string tableName,
-                                              IEnumerable<string> columnNames,
-                                              IEnumerable<string> columnUnits,
-                                              IEnumerable<object> rowValues)
-        {
-            // Check to make sure the table exists and has our columns.
-            if (Connection.TableExists(tableName))
-                AlterTable(tableName, columnNames, columnUnits, rowValues);
-            else
-                CreateTable(tableName, columnNames, columnUnits, rowValues);
-        }
-
-        /// <summary>
-        /// Write a table of data. Uses the TableName property of the specified DataTable.
-        /// </summary>
-        /// <param name="data">The data to write.</param>
-        public void WriteTable(DataTable data)
-        {
-            Start();
-
-            // Get a list of column names.
-            List<string> columnNames = new List<string>();
-            List<string> columnUnits = new List<string>();
-            foreach (DataColumn column in data.Columns)
-            {
-                var columnName = column.ColumnName;
-                string columnUnit = null;
-                if (column.ColumnName.Contains("("))
-                    columnUnit = StringUtilities.SplitOffBracketedValue(ref columnName, '(', ')');
-                
-                columnNames.Add(columnName);
-                columnUnits.Add(columnUnit);
-            }
-
-            DeleteRowsInTable(data.TableName);
-
-            // For each row in data, call AddRow method.
-            foreach (DataRow row in data.Rows)
-            {
-                object[] values = new object[columnNames.Count];
-                string simulationName = null;
-                if (data.Columns.Contains("SimulationName"))
-                    simulationName = row["SimulationName"].ToString();
-                for (int colIndex = 0; colIndex < data.Columns.Count; colIndex++)
-                    values[colIndex] = row[colIndex];
-                WriteRow(simulationName, data.TableName, columnNames, columnUnits, values);
-            }
-        }
-
-        /// <summary>
-        /// Delete rows for the specified table, checkpoint and simulation.
-        /// </summary>
-        /// <param name="tableName">The table name to delete from.</param>
-        /// <param name="checkpointName">The checkpoint name to use to match rows to delete.</param>
-        /// <param name="simulationName">The simulation name to use to match rows to delete.</param>
-        public void DeleteRowsInTable(string tableName, string checkpointName = null, string simulationName = null)
-        {
-            if (Connection.TableExists(tableName))
-                commands.Add(new DeleteRowsCommand(Connection, tableName,
-                                                    GetCheckpointID(checkpointName),
-                                                    GetSimulationID(simulationName)));
-        }
-
-        /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
-        public void Empty()
-        {
-            Start();
-            commands.Add(new EmptyCommand(Connection));
-        }
-
-        /// <summary>Save the current data to a checkpoint.</summary>
-        /// <param name="name">Name of checkpoint.</param>
-        /// <param name="filesToStore">Files to store the contents of.</param>
-        public void AddCheckpoint(string name, IEnumerable<string> filesToStore = null)
-        {
-            Start();
-            commands.Add(new AddCheckpointCommand(this, name, filesToStore));
-        }
-
-        /// <summary>Delete a checkpoint.</summary>
-        /// <param name="name">Name of checkpoint to delete.</param>
-        public void DeleteCheckpoint(string name)
-        {
-            Start();
-            commands.Add(new DeleteCheckpointCommand(this, GetCheckpointID(name)));
-        }
-
-        /// <summary>Revert a checkpoint.</summary>
-        /// <param name="name">Name of checkpoint to revert to.</param>
-        public void RevertCheckpoint(string name)
-        {
-            Start();
-            commands.Add(new RevertCheckpointCommand(this, GetCheckpointID(name)));
         }
 
         /// <summary>
@@ -380,143 +350,58 @@
             }
         }
 
-        /// <summary>Create a table that matches our columns and row values.</summary>
-        /// <param name="tableName">Name of the table to write to.</param>
-        /// <param name="columnNames">The column names relating to the values.</param>
-        /// <param name="columnUnits">The units of each of the values.</param>
-        /// <param name="rowValues">The values making up the row to write.</param>
-        private void CreateTable(string tableName,
-                                 IEnumerable<string> columnNames,
-                                 IEnumerable<string> columnUnits,
-                                 IEnumerable<object> rowValues)
-        {
-            List<string> colNames = new List<string>();
-            List<string> colTypes = new List<string>();
-
-            colNames.AddRange(columnNames);
-            foreach (var value in rowValues)
-                colTypes.Add(Connection.GetDBDataTypeName(value));
-
-            Connection.CreateTable(tableName, colNames, colTypes);
-
-            StoreUnits(tableName, columnNames, columnUnits);
-        }
-
-        /// <summary>Alter an existing table ensuring all columns exist.</summary>
-        /// <param name="tableName">Name of the table to write to.</param>
-        /// <param name="columnNames">The column names relating to the values.</param>
-        /// <param name="columnUnits">The units of each of the values.</param>
-        /// <param name="rowValues">The values making up the row to write.</param>
-        private void AlterTable(string tableName,
-                                IEnumerable<string> columnNames,
-                                IEnumerable<string> columnUnits,
-                                IEnumerable<object> rowValues)
-        {
-            // Get a list of column names from the database file.
-            List<string> existingColumns = Connection.GetTableColumns(tableName);
-
-            List<string> columnNamesToWriteUnitsFor = null;
-            List<string> columnUnitsToWrite = null;
-            for (int i = 0; i < columnNames.Count(); i++)
-            {
-                string columnName = columnNames.ElementAt(i);
-                if (!existingColumns.Contains(columnName, StringComparer.CurrentCultureIgnoreCase))
-                {
-                    // Column is missing from database file - write it.
-                    Connection.AddColumn(tableName, columnName, Connection.GetDBDataTypeName(rowValues.ElementAt(i)));
-
-                    // Store units if not null.
-                    if (columnUnits != null && columnUnits.ElementAt(i) != null)
-                    {
-                        if (columnNamesToWriteUnitsFor == null)
-                        {
-                            columnNamesToWriteUnitsFor = new List<string>();
-                            columnUnitsToWrite = new List<string>();
-                        }
-                        columnNamesToWriteUnitsFor.Add(columnName);
-                        columnUnitsToWrite.Add(columnUnits.ElementAt(i));
-                    }
-                }
-            }
-
-            // If we found some units then store them for later writing.
-            if (columnNamesToWriteUnitsFor != null)
-                StoreUnits(tableName, columnNamesToWriteUnitsFor, columnUnitsToWrite);
-        }
-
         /// <summary>
         /// Delete old rows for the specified table, checkpoint and simulation.
         /// </summary>
         /// <param name="tableName">The table name to delete from.</param>
         /// <param name="checkpointName">The checkpoint name to use to match rows to delete.</param>
-        /// <param name="simulationName">The simulation name to use to match rows to delete.</param>
-        private void CleanupOldRowsInTable(string tableName, string checkpointName, string simulationName)
+        /// <param name="simulationNamesThatMayNeedCleaning">Simulation names that may need cleaning up.</param>
+        private void DeleteOldRowsInTable(string tableName, string checkpointName = null, IEnumerable<string> simulationNamesThatMayNeedCleaning = null)
         {
-            // Have we written anything to this table yet?
-            if (!simulationNamesThatHaveBeenCleanedUp.ContainsKey(tableName))
+            List<int> simulationIds = null;
+            if (simulationNamesThatMayNeedCleaning != null)
             {
-                // No - create a empty list of simulation names that we've cleaned up.
-                simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
-            }
+                IEnumerable<string> simsNeedingCleaning;
 
-            // Have we cleaned up this simulation in this table?
-            if (simulationName != null &&
-                !simulationNamesThatHaveBeenCleanedUp[tableName].Contains(simulationName))
-            {
-                simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
-                DeleteRowsInTable(tableName, checkpointName, simulationName);
-            }
-        }
-
-        /// <summary>
-        /// Add units to our list of units for later writing to the database.
-        /// </summary>
-        /// <param name="tableName">The name of the table the units relate to.</param>
-        /// <param name="columnNames">The column names.</param>
-        /// <param name="columnUnits">The column units.</param>
-        private void StoreUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)
-        {
-            // Do we have any units to write?
-            if (columnUnits != null)
-            {
-                // Yes - Have we already registered units for this table?
-                List<ColumnUnits> unitsForTable;
-                if (!units.TryGetValue(tableName, out unitsForTable))
+                // Have we written anything to this table yet?
+                if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
                 {
-                    // No - Create a units table.
-                    unitsForTable = new List<ColumnUnits>();
-                    units.Add(tableName, unitsForTable);
+                    // No - create a empty list of simulation names that we've cleaned up.
+                    simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
+                    simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
+                }
+                else
+                {
+                    // Get a list of simulations that haven't been cleaned up for this table.
+                    simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
                 }
 
-                // Go through all units and store the non null ones.
-                for (int i = 0; i < columnUnits.Count(); i++)
+                simulationIds = new List<int>();
+                if (simsNeedingCleaning.Any())
                 {
-                    if (columnUnits.ElementAt(i) != null)
+                    // Add the simulations we're about to clean to our list so
+                    // that they aren't cleaned again. Also get id's for each one.
+                    foreach (var simulationName in simsNeedingCleaning)
                     {
-                        // Not null - have we already got units for this column?
-                        var foundColumnUnits = unitsForTable.Find(u => u.Name == columnNames.ElementAt(i));
-                        if (foundColumnUnits == null)
-                        {
-                            // No so store the units for this column.
-                            unitsForTable.Add(new ColumnUnits() { Name = columnNames.ElementAt(i), Units = columnUnits.ElementAt(i) });
-                        }
+                        simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
+                        simulationIds.Add(GetSimulationID(simulationName));
                     }
                 }
             }
-        }
 
-        /// <summary>Write all units to the database.</summary>
-        private void WriteAllUnits()
-        {
-            foreach (var tableUnits in units)
+            if (simulationNamesThatMayNeedCleaning == null || simulationIds.Any())
             {
-                foreach (var column in tableUnits.Value)
+                // Get a checkpoint id.
+                var checkpointID = 0;
+                if (checkpointName != null)
+                    checkpointID = GetCheckpointID(checkpointName);
+
+                // Create a delete row command to remove the rows.
+                lock (lockObject)
                 {
-                    commands.Add(new AddRowCommand(this, insertQueries,
-                                                   null, null, "_Units",
-                                                   new string[] { "TableName", "ColumnHeading", "Units" },
-                                                   null,
-                                                   new object[] { tableUnits.Key, column.Name, column.Units }));
+                    commands.Add(new DeleteRowsCommand(Connection, tableName,
+                                        checkpointID,
+                                        simulationIds));
                 }
             }
         }
@@ -526,12 +411,151 @@
         {
             if (commandRunner == null)
             {
-                commandRunner = new JobRunnerSync();
-                commandRunner.Run(this);
-                ReadExistingDatabase(Connection);
+                lock (lockObject)
+                {
+                    if (commandRunner == null)
+                    {
+                        commandRunner = new JobRunnerSync();
+                        commandRunner.Run(this);
+                        ReadExistingDatabase(Connection);
+                    }
+                }
             }
         }
 
+        /// <summary>
+        /// Add in checkpoint and simulation ID columns.
+        /// </summary>
+        /// <param name="table">The table to add the columns to.</param>
+        /// <param name="checkpointName">The name of the checkpoint.</param>
+        /// <param name="simulationName">The simulation name.</param>
+        private void AddIndexColumns(DataTable table, string checkpointName, string simulationName)
+        {
+            if (!tablesNotNeedingIndexColumns.Contains(table.TableName))
+            {
+                if (!table.Columns.Contains("CheckpointID"))
+                {
+                    var checkpointColumn = table.Columns.Add("CheckpointID", typeof(int));
+                    int checkpointNameColumnIndex = table.Columns.IndexOf("CheckpointName");
+                    if (checkpointNameColumnIndex != -1)
+                    {
+                        // A checkpoint name column exists.
+                        foreach (DataRow row in table.Rows)
+                        {
+                            checkpointName = row[checkpointNameColumnIndex].ToString();
+                            row[checkpointColumn] = GetCheckpointID(checkpointName); ;
+                        }
+                        table.Columns.RemoveAt(checkpointNameColumnIndex);
+                    }
+                    else
+                    {
+                        var id = GetCheckpointID(checkpointName);
+                        foreach (DataRow row in table.Rows)
+                            row[checkpointColumn] = id;
+                    }
+                    checkpointColumn.SetOrdinal(0);
+                }
+
+                if (!table.Columns.Contains("SimulationID"))
+                {
+                    DataColumn simulationColumn = null;
+                    int simulationNameColumnIndex = table.Columns.IndexOf("SimulationName");
+                    if (simulationNameColumnIndex != -1)
+                    {
+                        simulationColumn = table.Columns.Add("SimulationID", typeof(int));
+                        foreach (DataRow row in table.Rows)
+                        {
+                            simulationName = row[simulationNameColumnIndex].ToString();
+                            row[simulationColumn] = GetSimulationID(simulationName); ;
+                        }
+                        table.Columns.RemoveAt(simulationNameColumnIndex);
+                    }
+                    else if (simulationName != null)
+                    {
+                        simulationColumn = table.Columns.Add("SimulationID", typeof(int));
+                        var id = GetSimulationID(simulationName);
+                        foreach (DataRow row in table.Rows)
+                            row[simulationColumn] = id;
+                    }
+                    if (simulationColumn != null)
+                        simulationColumn.SetOrdinal(1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Write all units to our list of units for later writing to the database.
+        /// </summary>
+        private void WriteAllUnits()
+        {
+            if (units.Any())
+            {
+                var unitTable = new DataTable("_Units");
+                unitTable.Columns.Add("TableName", typeof(string));
+                unitTable.Columns.Add("ColumnHeading", typeof(string));
+                unitTable.Columns.Add("Units", typeof(string));
+
+                foreach (var tableUnit in units)
+                {
+                    foreach (var unit in tableUnit.Value)
+                    {
+                        var unitRow = unitTable.NewRow();
+                        unitRow[0] = tableUnit.Key;
+                        unitRow[1] = unit.Name;
+                        unitRow[2] = unit.Units;
+                        unitTable.Rows.Add(unitRow);
+                    }
+                }
+                WriteTable(unitTable);
+            }
+        }
+
+        /// <summary>Write the simulations table.</summary>
+        private void WriteSimulationIDs()
+        {
+            // If there are no tables in the database then they must have been emptied.
+            // Don't write a simulations table in this case.
+            if (simulationIDs.Count > 0 && Connection.GetTableNames().Count > 0)
+            {
+                var simulationsTable = new DataTable("_Simulations");
+                simulationsTable.Columns.Add("ID", typeof(int));
+                simulationsTable.Columns.Add("Name", typeof(string));
+                simulationsTable.Columns.Add("FolderName", typeof(string));
+
+                foreach (var simulation in simulationIDs)
+                {
+                    var row = simulationsTable.NewRow();
+                    row[0] = simulation.Value;
+                    row[1] = simulation.Key;
+                    simulationsTable.Rows.Add(row);
+                }
+                WriteTable(simulationsTable);
+            }
+        }
+
+        /// <summary>Write the checkpoints table.</summary>
+        private void WriteCheckpointIDs()
+        {
+            // If there are no tables in the database then they must have been emptied.
+            // Don't write a checkpoints table in this case.
+            if (checkpointIDs.Count > 0 && Connection.GetTableNames().Count > 0)
+            {
+                var checkpointsTable = new DataTable("_Checkpoints");
+                checkpointsTable.Columns.Add("ID", typeof(int));
+                checkpointsTable.Columns.Add("Name", typeof(string));
+                checkpointsTable.Columns.Add("Version", typeof(string));
+                checkpointsTable.Columns.Add("Date", typeof(DateTime));
+
+                foreach (var checkpoint in checkpointIDs)
+                {
+                    var row = checkpointsTable.NewRow();
+                    row[0] = checkpoint.Value;
+                    row[1] = checkpoint.Key;
+                    checkpointsTable.Rows.Add(row);
+                }
+                WriteTable(checkpointsTable);
+            }
+        }
 
         /// <summary>
         /// A class for encapsulating column units.
@@ -544,7 +568,5 @@
             /// <summary>Units of column.</summary>
             public string Units { get; set; }
         }
-
-
     }
 }

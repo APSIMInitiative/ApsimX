@@ -338,8 +338,7 @@
         /// <param name="dataStore">The data store.</param>
         public void Run(IDataStore dataStore)
         {
-            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
-            DataTable predictedData = dataStore.Reader.GetDataUsingSql(sql);
+            DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {
                 IndexedDataTable variableValues = new IndexedDataTable(null);

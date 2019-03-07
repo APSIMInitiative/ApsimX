@@ -80,24 +80,24 @@ namespace Models.PostSimulationTools
                 foreach (string s in commonCols)
                 {
                     if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
-                        query.Append("I.'@field', ");
+                        query.Append("O.'@field', ");
                     else
-                        query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
+                        query.Append("O.'@field' AS 'Observed.@field', P.'@field' AS 'Predicted.@field', ");
 
                     query.Replace("@field", s);
                 }
 
-                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
+                query.Append("FROM " + ObservedTableName + " O INNER JOIN " + PredictedTableName + " P USING (SimulationID) WHERE O.'@match1' = P.'@match1'");
                 if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
-                    query.Append(" AND I.'@match2' = R.'@match2'");
+                    query.Append(" AND O.'@match2' = P.'@match2'");
                 if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
-                    query.Append(" AND I.'@match3' = R.'@match3'");
+                    query.Append(" AND O.'@match3' = P.'@match3'");
 
-                int checkpointID = dataStore.Reader.GetCheckpointID("Current");
-                query.Append(" AND R.CheckpointID = " + checkpointID);
+                int checkpointID = dataStore.Writer.GetCheckpointID("Current");
+                query.Append(" AND P.CheckpointID = " + checkpointID);
 
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
-                query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
+                query.Replace("O.'SimulationID' AS 'Observed.SimulationID', P.'SimulationID' AS 'Predicted.SimulationID'", "O.'SimulationID' AS 'SimulationID'");
 
                 query = query.Replace("@match1", FieldNameUsedForMatch);
                 query = query.Replace("@match2", FieldName2UsedForMatch);
@@ -113,7 +113,7 @@ namespace Models.PostSimulationTools
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
-                    query.Append(" AND I.SimulationID in (");
+                    query.Append(" AND O.SimulationID in (");
                     foreach (string simulationName in simulationNames)
                     {
                         if (simulationName != simulationNames[0])
@@ -166,9 +166,8 @@ namespace Models.PostSimulationTools
                             unitNames.Add(unitsMinusBrackets);
                         }
                     }
-                    throw new NotImplementedException("Need to work out units in predicted/observed table");
-                    //if (unitNames.Count > 0)
-                    //    dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
+                    if (unitNames.Count > 0)
+                        dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
                 }
                 else
                 {

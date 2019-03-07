@@ -30,13 +30,10 @@ namespace Models.CLEM.Reporting
     public class ReportResourceLedger : Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
+        [NonSerialized]
         private List<IReportColumn> columns = null;
-
-        /// <summary>An array of column names to write to storage.</summary>
-        private IList<string> columnNames = null;
-
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IList<string> columnUnits = null;
+        [NonSerialized]
+        private ReportData dataToWriteToDb = null;
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -70,6 +67,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
             variableNames.Add("Parent.Name as Zone");
@@ -141,8 +139,6 @@ namespace Models.CLEM.Reporting
                     this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
                 }
             }
-            columnNames = columns.Select(c => c.Name).ToList();
-            columnUnits = columns.Select(c => c.Units).ToList();
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
@@ -157,6 +153,45 @@ namespace Models.CLEM.Reporting
             }
         }
 
+        /// <summary>Invoked when a simulation is completed.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (dataToWriteToDb != null)
+                storage.Writer.WriteTable(dataToWriteToDb);
+            dataToWriteToDb = null;
+        }
+
+        /// <summary>A method that can be called by other models to perform a line of output.</summary>
+        public new void DoOutput()
+        {
+            if (dataToWriteToDb == null)
+                dataToWriteToDb = new ReportData()
+                {
+                    SimulationName = simulation.Name,
+                    TableName = Name,
+                    ColumnNames = columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                };
+
+            // Create a row ready for writing.
+            List<object> valuesToWrite = new List<object>();
+            for (int i = 0; i < columns.Count; i++)
+                valuesToWrite.Add(columns[i].GetValue());
+
+            // Add row to our table that will be written to the db file
+            dataToWriteToDb.Rows.Add(valuesToWrite);
+
+            // Write the table if we reach our threshold number of rows.
+            if (dataToWriteToDb.Rows.Count == 100)
+            {
+                storage.Writer.WriteTable(dataToWriteToDb);
+                dataToWriteToDb = null;
+            }
+        }
+		
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>
@@ -209,16 +244,6 @@ namespace Models.CLEM.Reporting
             DoOutput();
         }
 
-        /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public new void DoOutput()
-        {
-            object[] valuesToWrite = new object[columns.Count];
-            for (int i = 0; i < columns.Count; i++)
-            {
-                valuesToWrite[i] = columns[i].GetValue();
-            }
 
-            storage.Writer.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
-        }
     }
 }

@@ -1,0 +1,1319 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 54,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# The APSIM Chicory Model\r\n\r\n\r\n_Rogerio Cichota, AgResearch, New Zealand_\r\n\r\n\r\n##Preamble\r\nChicory (*Cichorium intybus* L.) is a perennial herb of the family Asteraceae native of Europe and Asia, but which can now be found in meadows worldwide ([Garnock-Jones_1987]; [HareEtAl_1990]; [AlloushEtAl_2003]; [LiKemp_2005]).  Two main varieties have been selected for agricultural uses, leaf chicory (var. *foliosum*), which has been cultivated for salads as well as a forage for livestock, and root chicory (var. *sativum*), grown for the taproots, which are used as a coffee substitute and more recently as dietary supplement ([DielenEtAl_2005]; [ErnstEtAl_1995]; [JurgonskiEtAl_2011]).  Wild varieties are considered a weed in many countries.  \r\nThe chicory plant has large shiny hairless leaves that grow from a basal rosette ([HareEtAl_1990]; [ErnstEtAl_1995]; [ReaumePanflet2010]), it has a thick deep taproot which holds carbohydrate reserves that allow prompt re-growth after winter or defoliation.  When vernalised, chicory will produce stems which contain several bright blue flowers, the stems become woody when flower buds start to appear.  Leaves do grow on stems but are quite small and decrease in size from the base to apex.  Flower buds form sequentially in the axils of the upper leaves of the main stem and branches.  Seeds reach maturity rapidly so the same plant will have young flowers and ripe seeds at the same time ([HareEtAl_1990]; [MoloneyMilne_1993]; [ClaphamEtAl_2001]; [ReaumePanflet2010]).  \r\nForage chicory is considered a moderately persistent herb under grazing conditions, its initial rosette can split into multiple crowns after the first growing season ([MoloneyMilne_1993]; [LiEtAl_1997c]; [ClaphamEtAl_2001]; [LiKemp_2005]).  Rapid establishment during spring/summer months provides a great competitive advantage for forage chicory over weeds, and it can be used as a monoculture or in mixed swards.  Chicory has shown resilience and potential to produce high yields at a wide range of management strategies ([ClarkEtAl_1990a]; [JungEtAl_1996]; [LiEtAl_1997b]; [LabreveuxEtAl_2004]), and is highly palatable to ruminants ([ClarkEtAl_1990b]; [JungEtAl_1996]).  The palatability of forage chicory will lead to preferential grazing and result in a competitive disadvantage for chicory in mixed swards, compromising its persistence.  Although it is classified as a perennial plant, the population in a chicory sward will decrease over time due to a variety of reasons, such as disease, selective grazing, and physical damage by trampling.  \r\n\r\n\r\n**Objective:**  The model presented here has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage chicory crop.  Currently, the focus is mainly on describing biomass accumulation and regrowth after harvest on monocultural swards.  As part of APSIM's PMF, using chicory for multicropping is possible, but this has not been fully tested.  Likewise, describing the effect of population decrease on plant growth was not attempted; for swards free of weeds and within typical population ranges, the changes in plant size (number of crowns) and LAI should compensate for loss of population (e.g. [LiEtAl_1997b]), but competition with weeds would alter this pattern significantly.  \r\nSimulating variations in plant N concentration (seasonal or due to changes in soil status)  is not a focus of the current model.  Further development of PMF's supply/demand processes are needed for capturing the variations in N content typically seen in perennial species.  \r\n\r\n\r\n## Generic background  \r\n",
+      "Name": "TitlePage",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Replacements, Models",
+      "Name": "Replacements",
+      "Children": [
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "// Defoliates on a regular cycle or one-off via a schedule\r\n// currently defoliates by the amount specified spread evenly over the specified period\r\n\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Clock Clock;\r\n        [Link] Plant Chicory;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] ISummary summary = null;\r\n\r\n        [Description(\"Choose the crop to harvest:\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Enter the date to start the rotation (dd/mm/yyyy):\")]\r\n        public DateTime cutPasture_StartDate { get; set; }\r\n\r\n        [Description(\"Enter the date to end the rotation (dd/mm/yyyy):\")]\r\n        public DateTime cutPasture_EndDate { get; set; }\r\n\r\n        [Description(\"Select type of defoliation:\")]\r\n        public defoliationTypes defoliateType { get; set; }\r\n\r\n        [Description(\"Enter the interval between defoliations (days):\")]\r\n        public int interval2Cut { get; set; }\r\n\r\n        [Description(\"Enter the number of days to defoliate over (days):\")]\r\n        public int durationOfCut { get; set; }\r\n\r\n        [Description(\"Choose what amount is being defined:\")]\r\n        public removeAmountTypes removeAmountType { get; set; }\r\n\r\n        [Description(\"Enter the amount to use (kgDM/ha):\")]\r\n        public double herbageAmount { get; set; }\r\n\r\n        [Description(\"Enter the fraction of DM that is removed from the field (0-1):\")]\r\n        public double fracDM2Remove { get; set; }\r\n\r\n        [Description(\"Enter the fraction of N that is removed from the field (0-1):\")]\r\n        public double fracN2Remove { get; set; }\r\n\r\n        [Description(\"Enter the depth down to which urine will applied (mm):\")]\r\n        public double urineDepth { get; set; }\r\n\r\n        [Description(\"Enter the proportion of N returned in dung (0-1):\")]\r\n        public double fracN2Dung { get; set; }\r\n\r\n        [Description(\"Enter the fraction of population decline due to defoliation (0-1):\")]\r\n        public double fracPopDecline { get; set; }\r\n\r\n        //fraction of each plant part returned as residue (0-1), wastage\r\n        private double leafResidueFrac = 0.01;\r\n        private double stemResidueFrac = 0.01;\r\n        private double flowerResidueFrac = 0.01;\r\n        private double minLeafAmount = 5.0;\r\n\r\n        //Outputs\r\n        //Pasture DM defoliated today (kg/ha)\r\n        [XmlIgnore] public double DefoliatedDM{ get; set; }\r\n        //N defoliate today\r\n        [XmlIgnore] public double DefoliatedN{ get; set; }\r\n        //Pasture DM harvested today (kg/ha)\r\n        [XmlIgnore] public double HarvestedDM{ get; set; }\r\n        //N harvested today\r\n        [XmlIgnore] public double HarvestedN{ get; set; }\r\n        //DM removed from the paddock\r\n        [XmlIgnore] public double RemovedDM{ get; set; }\r\n        //N removed from the paddock\r\n        [XmlIgnore] public double RemovedN{ get; set; }\r\n        //DM returned to the paddock\r\n        [XmlIgnore] public double ReturnedDM{ get; set; }\r\n        //N returned to the paddock\r\n        [XmlIgnore] public double ReturnedN{ get; set; }\r\n        //N returned as dung (SurfaceOM)\r\n        [XmlIgnore] public double NReturnedInDung{ get; set; }\r\n        //N returned as urine (urea)\r\n        [XmlIgnore] public double NReturnedInUrine{ get; set; }\r\n        //Number of days after last harvest\r\n        [XmlIgnore] public int DaysAfterCut{ get; set; }\r\n        //Total standing DM (Leaf + Stem/Sheath) before cut\r\n        [XmlIgnore] public double PreHarvestDM{ get; set; }\r\n        //Total standing DM (Leaf + Stem/Sheath) after cut\r\n        [XmlIgnore] public double PostHarvestDM{ get; set; }\r\n\r\n        //Pasture DM harvested this rotation (kg/ha)\r\n        [XmlIgnore] public double RotationHarvestedDM{ get; set; }\r\n        //Pasture DM to be harvested this rotation (kg/ha)\r\n        [XmlIgnore] public double RotationHarvestingDM{ get; set; }\r\n\r\n        //Internal variables\r\n        private RemovalFractions removalFractions;\r\n        //The fraction of urine to be applied in each layer\r\n        private double[] FracLayer;\r\n        // total herbage to remove in g/m2 per day\r\n        private double herbageToRemove;\r\n        // counter\r\n        private int daysCutting = 0;\r\n        // type of defoliation (Cut or Graze)\r\n        private string defoliationType;\r\n        // type of DM amount (ResidualDM or DMToRemove)\r\n        private string amountType;\r\n        // auxiliary\r\n        private bool aCutHasHappened = false;\r\n        private bool isStillCutting = false;\r\n        private double cumAmountHarvested;\r\n\r\n        // event to add residue / dung to surface OM\r\n        public event BiomassRemovedDelegate BiomassRemoved;\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            removalFractions = new RemovalFractions();\r\n            DaysAfterCut = 0;\r\n            resetVariables();\r\n            if (defoliateType == defoliationTypes.Cut)\r\n                defoliationType = \"Cut\";\r\n            else\r\n                defoliationType = \"Graze\";\r\n\r\n            if (removeAmountType == removeAmountTypes.ResidualDM)\r\n                amountType = \"ResidualDM\";\r\n            else\r\n                amountType = \"DMToRemove\";\r\n\r\n            // make sure that rotation start when startDate<simulationStartDay\r\n            if ((Clock.Today > cutPasture_StartDate) && (Clock.Today < cutPasture_EndDate))\r\n                cutPasture_StartDate = Clock.Today;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today == cutPasture_StartDate)\r\n                DaysAfterCut = interval2Cut;\r\n\r\n            if ((Clock.Today >= cutPasture_StartDate) && (Clock.Today <= cutPasture_EndDate))\r\n            {\r\n                // Check whether we should start cutting\r\n                if ((Chicory.IsEmerged) && (DaysAfterCut > 0) && (DaysAfterCut == interval2Cut))\r\n                {\r\n                    Defoliate(defoliationType, herbageAmount * 0.1, amountType, durationOfCut);\r\n                }\r\n            }\r\n\r\n            // Check whether we need to continue cutting\r\n            //if ((daysCutting > 0) && (daysCutting <= durationOfCut))\r\n            if (isStillCutting)\r\n            {\r\n                // reset outputs\r\n                resetVariables();\r\n\r\n                removeDM(herbageToRemove, defoliationType);\r\n                returnExcreta();\r\n                cumAmountHarvested += HarvestedDM;\r\n                daysCutting += 1;\r\n            }\r\n\r\n            // reset outputs\r\n            if (daysCutting < 0)\r\n            {\r\n                resetVariables();\r\n                daysCutting = 0;\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((daysCutting > 0) && (daysCutting < durationOfCut))\r\n                isStillCutting = true;\r\n\r\n            if (daysCutting == durationOfCut)\r\n            {\r\n                PostHarvestDM = (double)zone.Get(\"Chicory.AboveGround.Wt\");\r\n                RotationHarvestedDM = cumAmountHarvested;\r\n                aCutHasHappened = true;\r\n                isStillCutting = false;\r\n                daysCutting = -1;\r\n                Chicory.Population = Chicory.Population * (1.0 - fracPopDecline);\r\n            }\r\n\r\n            if (aCutHasHappened && (daysCutting == 0))\r\n                DaysAfterCut += 1;\r\n        }\r\n\r\n        public enum removeAmountTypes\r\n        {\r\n            /// <summary>Setting DM amount to remove</summary>\r\n            DMToRemove,\r\n            /// <summary>Setting residual DM amount</summary>\r\n            ResidualDM\r\n        }\r\n\r\n        public enum defoliationTypes\r\n        {\r\n            /// <summary>Cut</summary>\r\n            Cut,\r\n            /// <summary>Graze</summary>\r\n            Graze\r\n        }\r\n\r\n        // resets the values of all outputs\r\n        private void resetVariables()\r\n        {\r\n            DefoliatedDM = 0.0;\r\n            DefoliatedN = 0.0;\r\n            HarvestedDM = 0.0;\r\n            HarvestedN = 0.0;\r\n            RemovedDM = 0.0;\r\n            RemovedN = 0.0;\r\n            ReturnedDM = 0.0;\r\n            ReturnedN = 0.0;\r\n            NReturnedInDung = 0.0;\r\n            NReturnedInUrine = 0.0;\r\n            RotationHarvestedDM = 0.0;\r\n            RotationHarvestingDM = 0.0;\r\n        }\r\n\r\n        // Perform the basic calculations for defoliation\r\n        public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)\r\n        {\r\n            // get the existing plant amount\r\n            PreHarvestDM = (double)zone.Get(\"Chicory.AboveGround.Wt\");\r\n\r\n            // check duration\r\n            if (duration <= 0)\r\n                throw new Exception(\"Duration of graze/cut rotation is zero or negative\");\r\n            \r\n            // check amount to remove\r\n            if ((amountType == \"DMToRemove\") && (PreHarvestDM > 0.0))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating \" + (10.0 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n                herbageToRemove = amountDM / duration;\r\n            }\r\n            else if ((amountType == \"ResidualDM\") && (PreHarvestDM > amountDM))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating down to approximately \" + (10.0 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n                herbageToRemove = (PreHarvestDM - amountDM) / duration;\r\n            }\r\n            else\r\n            {\r\n                herbageToRemove = 0.0;\r\n                summary.WriteMessage(this, \"   Defoliation will not happend because there is not enough plant material\");\r\n                return;\r\n            }\r\n\r\n            RotationHarvestingDM = herbageToRemove * duration;\r\n            durationOfCut = duration;\r\n            // first defoliation\r\n            removeDM(herbageToRemove, defoliationType);\r\n            returnExcreta();\r\n            cumAmountHarvested = HarvestedDM;\r\n            daysCutting = 1;\r\n            DaysAfterCut = 0;\r\n        }\r\n\r\n        private void removeDM(double removeAmount, string removeType)\r\n        {\r\n            // get the existing biomass\r\n            double leafLiveWt = (double)zone.Get(\"Chicory.Leaf.Live.Wt\");\r\n            double stemLiveWt = (double)zone.Get(\"Chicory.Stem.Live.Wt\");\r\n            double flowerLiveWt = (double)zone.Get(\"Chicory.Inflorescence.Live.Wt\");\r\n            double leafDeadWt = (double)zone.Get(\"Chicory.Leaf.Dead.Wt\");\r\n            double stemDeadWt = (double)zone.Get(\"Chicory.Stem.Dead.Wt\");\r\n            double flowerDeadWt = (double)zone.Get(\"Chicory.Inflorescence.Dead.Wt\");\r\n            double leafLiveN = (double)zone.Get(\"Chicory.Leaf.Live.N\");\r\n            double stemLiveN = (double)zone.Get(\"Chicory.Stem.Live.N\");\r\n            double flowerLiveN = (double)zone.Get(\"Chicory.Inflorescence.Live.N\");\r\n            double leafDeadN = (double)zone.Get(\"Chicory.Leaf.Dead.N\");\r\n            double stemDeadN = (double)zone.Get(\"Chicory.Stem.Dead.N\");\r\n            double flowerDeadN = (double)zone.Get(\"Chicory.Inflorescence.Dead.N\");\r\n\r\n            double existingWt = leafLiveWt + leafDeadWt + stemLiveWt + stemDeadWt + flowerLiveWt + flowerDeadWt;\r\n            double existingN = leafLiveN + leafDeadN + stemLiveN + stemDeadN + flowerLiveN + flowerDeadN;\r\n\r\n            // Can we harvest anything?\r\n            double removingWt = Math.Min(existingWt, removeAmount);\r\n            if (removingWt > 0.0)\r\n            {\r\n                // get the fractions to remove for each organ (will override the default values)\r\n                // the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent\r\n                // >> double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;\r\n                double fracToRemove = removingWt / existingWt;\r\n                double leafFracToRemove = 0.0;\r\n                if ((leafLiveWt + leafDeadWt) > 0.0)\r\n                {\r\n                    if (leafLiveWt < minLeafAmount)\r\n                    {\r\n                        // leafWt cannot go below a minimum\r\n                        leafFracToRemove = (removingWt + leafLiveWt - minLeafAmount) / existingWt;\r\n                    }\r\n                    else\r\n                        leafFracToRemove = fracToRemove;\r\n                }\r\n\r\n                double stemFracToRemove = ((stemLiveWt + stemDeadWt) > 0.0) ? fracToRemove : 0.0;\r\n                double flowerFracToRemove = ((flowerLiveWt + flowerDeadWt) > 0.0) ? fracToRemove : 0.0;\r\n\r\n                // get the fractions to residue (i.e. wastage - will override the default values)\r\n                // the default is [Chicory].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent\r\n                double leafFracToResidue = leafResidueFrac * leafFracToRemove;\r\n                double stemFracToResidue = stemResidueFrac * stemFracToRemove;\r\n                double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;\r\n\r\n                // correct the values to defoliate (so our removing = remove + residue)\r\n                leafFracToRemove -= leafFracToResidue;\r\n                stemFracToRemove -= stemFracToResidue;\r\n                flowerFracToRemove -= flowerFracToResidue;\r\n\r\n                // set removal fractions (these overrides the default removals in the plant)\r\n                removalFractions.SetFractionToRemove(\"Leaf\", leafFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Leaf\", leafFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Leaf\", leafFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Leaf\", leafFracToResidue, \"Dead\");\r\n                removalFractions.SetFractionToRemove(\"Stem\", stemFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Stem\", stemFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Stem\", stemFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Stem\", stemFracToResidue, \"Dead\");\r\n                removalFractions.SetFractionToRemove(\"Inflorescence\", flowerFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Inflorescence\", flowerFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Inflorescence\", flowerFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Inflorescence\", flowerFracToResidue, \"Dead\");\r\n\r\n                removalFractions.SetFractionToRemove(\"Root\", 0.0);\r\n                removalFractions.SetFractionToResidue(\"Root\", 0.0);\r\n                removalFractions.SetFractionToRemove(\"Taproot\", 0.0);\r\n                removalFractions.SetFractionToResidue(\"Taproot\", 0.0);\r\n\r\n                // Actually do the biomass removal\r\n                Chicory.RemoveBiomass(removeType, removalFractions);\r\n\r\n                // get the new existing plant amount\r\n                double postHarvestWt = (double)zone.Get(\"Chicory.AboveGround.Wt\");\r\n                double postHarvestN = (double)zone.Get(\"Chicory.AboveGround.N\");\r\n\r\n                // get total defoliation (total plant stuff lost)\r\n                DefoliatedDM = existingWt - postHarvestWt;\r\n                DefoliatedN = existingN - postHarvestN;\r\n\r\n                // get total harvested (plant stuff removed from plants)\r\n                HarvestedDM = (double)zone.Get(\"Chicory.Leaf.Removed.Wt\")\r\n                + (double)zone.Get(\"Chicory.Stem.Removed.Wt\")\r\n                + (double)zone.Get(\"Chicory.Inflorescence.Removed.Wt\");\r\n                HarvestedN = (double)zone.Get(\"Chicory.Leaf.Removed.N\")\r\n                + (double)zone.Get(\"Chicory.Stem.Removed.N\")\r\n                + (double)zone.Get(\"Chicory.Inflorescence.Removed.N\");\r\n\r\n                // get amounts actually removed from field and that to be returned (residue or dung/urine)\r\n                RemovedDM = HarvestedDM * fracDM2Remove;\r\n                RemovedN = HarvestedN * fracN2Remove;\r\n                ReturnedDM = HarvestedDM - RemovedDM;\r\n                ReturnedN = HarvestedN - RemovedN;\r\n                NReturnedInDung = ReturnedN * fracN2Dung;\r\n                NReturnedInUrine = ReturnedN - NReturnedInDung;\r\n            }\r\n            else\r\n            {\r\n            }\r\n        }\r\n\r\n        // Return dung and urine\r\n        private void returnExcreta()\r\n        {\r\n            if ((ReturnedDM > 0.0) || (NReturnedInDung > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\r\n                float[] dltdm = new float[] { (Single)ReturnedDM };\r\n                float[] dltn = new float[] { (Single)NReturnedInDung };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n\r\n            if (NReturnedInUrine > 0.0)\r\n            {\r\n                fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, urineDepth);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "Crop",
+              "Value": ""
+            },
+            {
+              "Key": "cutPasture_StartDate",
+              "Value": "2050-05-20"
+            },
+            {
+              "Key": "cutPasture_EndDate",
+              "Value": "2100-12-31"
+            },
+            {
+              "Key": "defoliateType",
+              "Value": "Graze"
+            },
+            {
+              "Key": "interval2Cut",
+              "Value": "21"
+            },
+            {
+              "Key": "durationOfCut",
+              "Value": "1"
+            },
+            {
+              "Key": "removeAmountType",
+              "Value": "DMToRemove"
+            },
+            {
+              "Key": "herbageAmount",
+              "Value": "500"
+            },
+            {
+              "Key": "fracDM2Remove",
+              "Value": "1"
+            },
+            {
+              "Key": "fracN2Remove",
+              "Value": "1"
+            },
+            {
+              "Key": "urineDepth",
+              "Value": "10"
+            },
+            {
+              "Key": "fracN2Dung",
+              "Value": "0.4"
+            },
+            {
+              "Key": "fracPopDecline",
+              "Value": "0.05"
+            }
+          ],
+          "Name": "Defoliate",
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant Chicory;\r\n        [Link] private Zone zone;\r\n        [Link] private ISummary summary;\r\n        private DateTime YearStartDate;\r\n        [ScopedLinkByName]\r\n        private ISolute Urea;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n        [ScopedLinkByName]\r\n        private ISolute NH4;\r\n        [ScopedLinkByName]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n    \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [XmlIgnore] public double LeafFraction { get; set; }\r\n        [XmlIgnore] public double StemFraction { get; set; }\r\n        [XmlIgnore] public double InflorescenceFraction { get; set; }\r\n        \r\n        [XmlIgnore] public double ShootRootRatio { get; set; }\r\n\r\n        [XmlIgnore] public double Leaf_DMSupply { get; set; }\r\n        [XmlIgnore] public double Stem_DMSupply { get; set; }\r\n        [XmlIgnore] public double Inflorescence_DMSupply { get; set; }\r\n        [XmlIgnore] public double Root_DMSupply { get; set; }\r\n        [XmlIgnore] public double Taproot_DMSupply { get; set; }\r\n        [XmlIgnore] public double Leaf_DMDemand { get; set; }\r\n        [XmlIgnore] public double Stem_DMDemand { get; set; }\r\n        [XmlIgnore] public double Inflorescence_DMDemand { get; set; }\r\n        [XmlIgnore] public double Root_DMDemand { get; set; }\r\n        [XmlIgnore] public double Taproot_DMDemand { get; set; }\r\n        \r\n        [XmlIgnore] public double Leaf_NSupply { get; set; }\r\n        [XmlIgnore] public double Stem_NSupply { get; set; }\r\n        [XmlIgnore] public double Inflorescence_NSupply { get; set; }\r\n        [XmlIgnore] public double Taproot_NSupply { get; set; }\r\n        [XmlIgnore] public double Root_NSupply { get; set; }\r\n        [XmlIgnore] public double Leaf_NDemand { get; set; }\r\n        [XmlIgnore] public double Stem_NDemand { get; set; }\r\n        [XmlIgnore] public double Inflorescence_NDemand { get; set; }\r\n        [XmlIgnore] public double Taproot_NDemand { get; set; }\r\n        [XmlIgnore] public double Root_NDemand { get; set; }\r\n        \r\n        [XmlIgnore] public double Leaf_NSupplyReallocation { get; set; }\r\n        [XmlIgnore] public double Stem_NSupplyReallocation { get; set; }\r\n        [XmlIgnore] public double Root_NSupplyReallocation { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumHarvestedWt { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n\r\n                // check whether we're in the north or south hemisphere\r\n                if (Met.Latitude >= 0.0)\r\n                    YearStartDate = DateTime.Parse(\"01/01/2000\");\r\n                else\r\n                    YearStartDate = DateTime.Parse(\"01/07/2000\");\r\n            }\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"Chicory.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumRainfall += Met.Rain;\r\n            //AccumEP -= (double)zone.Get(\"[Chicory].Leaf.Transpiration\");\r\n            AccumEP -= (double)zone.Get(\"Chicory.Root.WaterUptake\");\r\n            SoilWaterDeficit = (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n            \r\n            //!!!!!! Stem and leaf fraction !!!!!!\r\n            if ((double)zone.Get(\"Chicory.AboveGround.Wt\") > 0)\r\n            {\r\n                LeafFraction = (double)zone.Get(\"Chicory.Leaf.Wt\") / (double)zone.Get(\"Chicory.AboveGround.Wt\");\r\n                StemFraction = (double)zone.Get(\"Chicory.Stem.Wt\") / (double)zone.Get(\"Chicory.AboveGround.Wt\");\r\n                InflorescenceFraction = (double)zone.Get(\"Chicory.Inflorescence.Wt\") / (double)zone.Get(\"Chicory.AboveGround.Wt\");\r\n            }\r\n            else\r\n            {\r\n                LeafFraction = 0;\r\n                StemFraction = 0;\r\n            }\r\n            \r\n            //!!!!!! Plant DM components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n            ShootRootRatio = MathUtilities.Divide((double)zone.Get(\"Chicory.AboveGroundLive.Wt\"), (double)zone.Get(\"Chicory.BelowGroundLive.Wt\"), 0.0);\r\n            PMF.Interfaces.BiomassSupplyType Leaf_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Leaf.DMSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Stem_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Stem.DMSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Inflorescence_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Inflorescence.DMSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Root_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Root.DMSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Taproot_DMSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Taproot.DMSupply\");\r\n            PMF.Interfaces.BiomassPoolType Leaf_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Leaf.DMDemand\");\r\n            PMF.Interfaces.BiomassPoolType Stem_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Stem.DMDemand\");\r\n            PMF.Interfaces.BiomassPoolType Inflorescence_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Inflorescence.DMDemand\");\r\n            PMF.Interfaces.BiomassPoolType Root_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Root.DMDemand\");\r\n            PMF.Interfaces.BiomassPoolType Taproot_DMDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Taproot.DMDemand\");\r\n\r\n            PMF.Interfaces.BiomassSupplyType Leaf_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Leaf.NSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Stem_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Stem.NSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Inflorescence_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Inflorescence.NSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Taproot_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Taproot.NSupply\");\r\n            PMF.Interfaces.BiomassSupplyType Root_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get(\"Chicory.Root.NSupply\");\r\n            \r\n            PMF.Interfaces.BiomassPoolType Leaf_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Leaf.NDemand\");\r\n            PMF.Interfaces.BiomassPoolType Stem_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Stem.NDemand\");\r\n            PMF.Interfaces.BiomassPoolType Inflorescence_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Inflorescence.NDemand\");\r\n            PMF.Interfaces.BiomassPoolType Taproot_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Taproot.NDemand\");\r\n            PMF.Interfaces.BiomassPoolType Root_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get(\"Chicory.Root.NDemand\");\r\n            \r\n            Leaf_DMSupply = Leaf_DMSupplies.Fixation + Leaf_DMSupplies.Uptake + Leaf_DMSupplies.Reallocation + Leaf_DMSupplies.Retranslocation;\r\n            Stem_DMSupply = Stem_DMSupplies.Fixation + Stem_DMSupplies.Uptake + Stem_DMSupplies.Reallocation + Stem_DMSupplies.Retranslocation;\r\n            Inflorescence_DMSupply = Inflorescence_DMSupplies.Fixation + Inflorescence_DMSupplies.Uptake + Inflorescence_DMSupplies.Reallocation + Inflorescence_DMSupplies.Retranslocation;\r\n            Root_DMSupply = Root_DMSupplies.Fixation + Root_DMSupplies.Uptake + Root_DMSupplies.Reallocation + Root_DMSupplies.Retranslocation;\r\n            Taproot_DMSupply = Taproot_DMSupplies.Fixation + Taproot_DMSupplies.Uptake + Taproot_DMSupplies.Reallocation + Taproot_DMSupplies.Retranslocation;\r\n            Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.Storage + Leaf_DMDemands.Metabolic;\r\n            Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.Storage + Stem_DMDemands.Metabolic;\r\n            Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.Storage + Inflorescence_DMDemands.Metabolic;\r\n            Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.Storage + Root_DMDemands.Metabolic;\r\n            Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.Storage + Taproot_DMDemands.Metabolic;\r\n            \r\n            Leaf_NSupply = Leaf_NSupplies.Fixation + Leaf_NSupplies.Uptake + Leaf_NSupplies.Reallocation + Leaf_NSupplies.Retranslocation;\r\n            Stem_NSupply = Stem_NSupplies.Fixation + Stem_NSupplies.Uptake + Stem_NSupplies.Reallocation + Stem_NSupplies.Retranslocation;\r\n            Inflorescence_NSupply = Inflorescence_NSupplies.Fixation + Inflorescence_NSupplies.Uptake + Inflorescence_NSupplies.Reallocation + Inflorescence_NSupplies.Retranslocation;\r\n            Taproot_NSupply = Taproot_NSupplies.Fixation + Taproot_NSupplies.Uptake + Taproot_NSupplies.Reallocation + Taproot_NSupplies.Retranslocation;\r\n            Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;\r\n\r\n            Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.Storage + Leaf_NDemands.Metabolic;\r\n            Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.Storage + Stem_NDemands.Metabolic;\r\n            Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.Storage + Inflorescence_NDemands.Metabolic;\r\n            Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.Storage + Taproot_NDemands.Metabolic;\r\n            Root_NDemand = Root_NDemands.Structural + Root_NDemands.Storage + Root_NDemands.Metabolic;\r\n\r\n            Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;\r\n            Stem_NSupplyReallocation = Stem_NSupplies.Reallocation;\r\n            Root_NSupplyReallocation = Root_NSupplies.Reallocation;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            AccumFert += Fert.NitrogenApplied;\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n            \r\n            //!!!!!! Plant Harvest !!!!!!\r\n            if (Clock.Today.DayOfYear == YearStartDate.DayOfYear)\r\n                AccumHarvestedWt = (double)zone.Get(\"[Defoliate].Script.DefoliatedDM\");\r\n            else\r\n                AccumHarvestedWt += (double)zone.Get(\"[Defoliate].Script.DefoliatedDM\");            \r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": null,
+          "Name": "ExtraVariables",
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "ExperimentFactorNames": null,
+          "ExperimentFactorValues": null,
+          "VariableNames": [
+            "[Clock].Today as Date",
+            "[MicroClimate].net_radn",
+            "[Weather].Radn as SolarRadiation",
+            "[Chicory].Leaf.RadIntTot as InterceptedRadiation",
+            "[Weather].Rain as Rainfall",
+            "[Irrigation].IrrigationApplied as IrrigationApplied",
+            "",
+            "[Soil].SoilWater.Eo as Eo",
+            "[Soil].SoilWater.Es as Evaporation",
+            "[Chicory].Leaf.Transpiration as Transpiration",
+            "[Soil].SoilWater.pond as PondedWater",
+            "[Soil].SoilWater.Drainage as Drainage",
+            "[Soil].SoilWater.Runoff as Runoff",
+            "sum([Soil].SoilWater.LateralOutflow) as LateralFlow",
+            "sum([Soil].SoilWater.SWmm) as TotalSWC",
+            "sum([Soil].DULmm) as TotalDUL",
+            "sum([Soil].LL15mm) as TotalLL15",
+            "[Fertiliser].NitrogenApplied as FertiliserN",
+            "sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN",
+            "([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN",
+            "(-1*[Chicory].Root.NUptake) as UptakeN",
+            "sum([Soil].SoilNitrogen.MineralisedN) as MineralisedSoilN",
+            "sum([Soil].SoilNitrogen.dlt_n_min_res) as MineralisedSurfOMN",
+            "([Chicory].Leaf.Detached.N+[Chicory].Stem.Detached.N+[Chicory].Inflorescence.Detached.N) as DetachedAGN",
+            "([Chicory].Taproot.Detached.N+[Chicory].Root.Detached.N) as DetachedBGN",
+            "(sum([Soil].SoilNitrogen.Urea.kgha) + sum([Soil].SoilNitrogen.NH4.kgha) + sum([Soil].SoilNitrogen.NO3.kgha)) as SoilNContent",
+            "sum([Soil].SoilNitrogen.Urea.kgha) as SoilUrea",
+            "sum([Soil].SoilNitrogen.NH4.kgha) as SoilNH4",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as SoilNO3",
+            "(sum([Soil].SoilNitrogen.NH4.kgha[1:3])+sum([Soil].SoilNitrogen.NO3.kgha[1:3])) as TopSoilN",
+            "[SurfaceOrganicMatter].N as TotalSurfOMN",
+            "sum([Soil].SoilNitrogen.FOMN) as TotalFOMN",
+            "sum([Soil].SoilNitrogen.HumicN) as TotalHumicN",
+            "sum([Soil].SoilNitrogen.MicrobialN as TotalMicrobialN",
+            "([Chicory].Total.N) as TotalPlantN",
+            "",
+            "[Defoliate].Script.RotationHarvestingDM",
+            "[Defoliate].Script.RotationHarvestedDM as RotationHarvestedWt",
+            "[Defoliate].Script.PreHarvestDM",
+            "[Defoliate].Script.PostHarvestDM",
+            "[Defoliate].Script.DefoliatedDM",
+            "[Defoliate].Script.HarvestedDM",
+            "[Defoliate].Script.RemovedDM",
+            "[Defoliate].Script.DefoliatedN",
+            "[Defoliate].Script.HarvestedN",
+            "[Defoliate].Script.RemovedN",
+            "[Defoliate].Script.NReturnedInDung",
+            "[Defoliate].Script.NReturnedInUrine",
+            "[Defoliate].Script.DefoliatedDM as HarvestedWt",
+            "[Defoliate].Script.DaysAfterCut",
+            "[ExtraVariables].Script.AccumHarvestedWt as CumulativeHarvestedWt",
+            "",
+            "[Chicory].Phenology.ThermalTime.Value()",
+            "[Chicory].Phenology.Photoperiod.Value()",
+            "[Chicory].Phenology.Vernalisation.TodaysVernalisation",
+            "[Chicory].Phenology.Vernalisation.DaysVernalised",
+            "[Chicory].Population",
+            "[Chicory].Phenology.CurrentPhaseName",
+            "[Chicory].Phenology.Stage",
+            "[Chicory].Root.LengthDensity",
+            "[Chicory].Leaf.ExtinctionCoefficientFunction.Value()",
+            "",
+            "([Chicory].Leaf.Live.Wt / ([Chicory].AboveGroundLive.Wt + 0.000001)) as Chicory.LeafFraction",
+            "([Chicory].Stem.Live.Wt / ([Chicory].AboveGroundLive.Wt + 0.000001)) as Chicory.StemFraction",
+            "([Chicory].Inflorescence.Live.Wt / ([Chicory].AboveGroundLive.Wt + 0.000001)) as FlowerFraction",
+            "([Chicory].Taproot.Live.Wt / ([Chicory].BelowGround.Wt + 0.000001)) as TaprootFraction",
+            "([Chicory].Root.Live.Wt / ([Chicory].BelowGround.Wt + 0.000001)) as RootFraction",
+            "",
+            "[Chicory].Arbitrator.DM.TotalFixationSupply",
+            "[Chicory].Arbitrator.DM.TotalPlantDemand",
+            "[Chicory].Arbitrator.DM.Allocated",
+            "[Chicory].Arbitrator.DM.SinkLimitation",
+            "[Chicory].Arbitrator.DM.NutrientLimitation",
+            "[Chicory].Arbitrator.FDM",
+            "[ExtraVariables].Script.Leaf_DMSupply",
+            "[ExtraVariables].Script.Stem_DMSupply",
+            "[ExtraVariables].Script.Inflorescence_DMSupply",
+            "[ExtraVariables].Script.Root_DMSupply",
+            "[ExtraVariables].Script.Taproot_DMSupply",
+            "[ExtraVariables].Script.Leaf_DMDemand",
+            "[ExtraVariables].Script.Stem_DMDemand",
+            "[ExtraVariables].Script.Inflorescence_DMDemand",
+            "[ExtraVariables].Script.Root_DMDemand",
+            "[ExtraVariables].Script.Taproot_DMDemand",
+            "",
+            "[Chicory].Arbitrator.N.TotalPlantSupply",
+            "[Chicory].Arbitrator.N.TotalPlantDemand",
+            "[Chicory].Arbitrator.N.Allocated",
+            "[Chicory].Arbitrator.FN",
+            "[Chicory].Arbitrator.WSupply",
+            "[Chicory].Arbitrator.WDemand",
+            "[Chicory].Arbitrator.WAllocated",
+            "[Chicory].Arbitrator.FW",
+            "[Chicory].Root.NSupplyUptake",
+            "[Chicory].Root.NTakenUp",
+            "[Chicory].Root.NSupply.Uptake",
+            "[Chicory].Root.NUptake",
+            "[ExtraVariables].Script.LeafN_Supply",
+            "[ExtraVariables].Script.Stem_NSupply",
+            "[ExtraVariables].Script.Inflorescence_NSupply",
+            "[ExtraVariables].Script.Root_NSupply",
+            "[ExtraVariables].Script.Taproot_NSupply",
+            "[ExtraVariables].Script.Leaf_NDemand",
+            "[ExtraVariables].Script.Stem_NDemand",
+            "[ExtraVariables].Script.Inflorescence_NDemand",
+            "[ExtraVariables].Script.Root_NDemand",
+            "[ExtraVariables].Script.Taproot_NDemand",
+            "",
+            "[Chicory].ShootRootRatio.Value()",
+            "[Chicory].TargetShootRootRatio.Value()",
+            "[Chicory].AdjustedShootRootRatio.Value()",
+            "[Chicory].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Stem.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Inflorescence.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Taproot.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Root.PartitionFraction.Value()",
+            "[Chicory].StemsLeafRatio.Value()",
+            "[Chicory].FlowerStemRatio.Value()",
+            "[Chicory].TaprootRootRatio.Value()",
+            "[Chicory].TargetStemsLeafRatio.Value()",
+            "[Chicory].TargetFlowerStemRatio.Value()",
+            "[Chicory].TargetTaprootRootRatio.Value()",
+            "",
+            "[Chicory].Total.Wt",
+            "[Chicory].Total.N",
+            "[Chicory].Total.NConc",
+            "[Chicory].AboveGround.Wt",
+            "[Chicory].BelowGround.Wt",
+            "[Chicory].AboveGround.N",
+            "[Chicory].BelowGround.N",
+            "[Chicory].AboveGround.NConc",
+            "[Chicory].BelowGround.NConc",
+            "[Chicory].AboveGroundLive.NConc",
+            "[Chicory].BelowGroundLive.NConc",
+            "[Chicory].Leaf.Wt",
+            "[Chicory].Leaf.Live.Wt",
+            "[Chicory].Leaf.Live.N",
+            "[Chicory].Leaf.Live.NConc",
+            "[Chicory].Leaf.Dead.Wt",
+            "[Chicory].Leaf.Dead.NConc",
+            "[Chicory].Leaf.CoverTotal",
+            "[Chicory].Leaf.CoverGreen",
+            "[Chicory].Leaf.CoverDead",
+            "[Chicory].Leaf.LAITotal",
+            "[Chicory].Leaf.LAI",
+            "[Chicory].Leaf.LAIDead",
+            "[Chicory].Leaf.Height",
+            "[Chicory].Leaf.PotentialBiomass.Value()",
+            "[Chicory].Leaf.Transpiration",
+            "[Chicory].Leaf.Fw",
+            "[Chicory].Leaf.Fn",
+            "[Chicory].Leaf.Photosynthesis.FCO2",
+            "[Chicory].Leaf.Photosynthesis.FN",
+            "[Chicory].Leaf.Photosynthesis.FT",
+            "[Chicory].Leaf.Photosynthesis.FW",
+            "[Chicory].Leaf.Photosynthesis.FVPD",
+            "[Chicory].Leaf.FRGR",
+            "",
+            "[Chicory].Stem.Live.Wt",
+            "[Chicory].Stem.Live.N",
+            "[Chicory].Stem.Live.NConc",
+            "[Chicory].Stem.Dead.Wt",
+            "[Chicory].Stem.Dead.NConc",
+            "",
+            "[Chicory].Inflorescence.Live.Wt",
+            "[Chicory].Inflorescence.Live.N",
+            "[Chicory].Inflorescence.Live.NConc",
+            "[Chicory].Inflorescence.Dead.Wt",
+            "[Chicory].Inflorescence.Dead.NConc",
+            "",
+            "[Chicory].Taproot.Live.Wt",
+            "[Chicory].Taproot.Live.N",
+            "[Chicory].Taproot.Live.NConc",
+            "[Chicory].Taproot.Dead.Wt",
+            "[Chicory].Taproot.Dead.NConc",
+            "",
+            "[Chicory].Root.Live.Wt",
+            "[Chicory].Root.Live.N",
+            "[Chicory].Root.Live.NConc",
+            "[Chicory].Root.Dead.Wt",
+            "[Chicory].Root.Dead.NConc",
+            "[Chicory].Root.Depth",
+            "[Chicory].Root.WaterDemand",
+            "[Chicory].Root.WaterUptake",
+            "",
+            "[Chicory].Leaf.Live.StructuralWt",
+            "[Chicory].Leaf.Live.StorageWt",
+            "[Chicory].Leaf.Live.MetabolicWt",
+            "[Chicory].Leaf.Live.StructuralN",
+            "[Chicory].Leaf.Live.StorageN",
+            "[Chicory].Leaf.Live.MetabolicN",
+            "",
+            "[Chicory].Leaf.Dead.StructuralWt",
+            "[Chicory].Leaf.Dead.StorageWt",
+            "[Chicory].Leaf.Dead.MetabolicWt",
+            "[Chicory].Leaf.Dead.StructuralN",
+            "[Chicory].Leaf.Dead.StorageN",
+            "[Chicory].Leaf.Dead.MetabolicN",
+            "",
+            "[Chicory].Stem.Live.StructuralWt",
+            "[Chicory].Stem.Live.StorageWt",
+            "[Chicory].Stem.Live.MetabolicWt",
+            "[Chicory].Stem.Live.StructuralN",
+            "[Chicory].Stem.Live.StorageN",
+            "[Chicory].Inflorescence.Live.StructuralWt",
+            "[Chicory].Inflorescence.Live.StorageWt",
+            "[Chicory].Inflorescence.Live.StructuralN",
+            "[Chicory].Inflorescence.Live.StorageN",
+            "[Chicory].Root.Live.StructuralWt",
+            "[Chicory].Root.Live.StorageWt",
+            "[Chicory].Root.Live.StructuralN",
+            "[Chicory].Root.Live.StorageN",
+            "[Chicory].Taproot.Live.StructuralWt",
+            "[Chicory].Taproot.Live.StorageWt",
+            "[Chicory].Taproot.Live.StructuralN",
+            "[Chicory].Taproot.Live.StorageN",
+            "[Chicory].Leaf.Live.StructuralNConc",
+            "[Chicory].Leaf.Live.StorageNConc",
+            "[Chicory].Root.Live.StructuralNConc",
+            "[Chicory].Root.Live.StorageNConc",
+            "",
+            "[Chicory].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Stem.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Inflorescence.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "[Chicory].Root.PartitionFraction.Value()",
+            "[Chicory].Taproot.DMDemands.Structural.DMDemandFunction.PartitionFraction.Value()",
+            "",
+            "[Chicory].Leaf.Allocated.Wt",
+            "[Chicory].Stem.Allocated.Wt",
+            "[Chicory].Inflorescence.Allocated.Wt",
+            "[Chicory].Taproot.Allocated.Wt",
+            "[Chicory].Root.Allocated.Wt",
+            "[Chicory].Leaf.Senesced.Wt",
+            "[Chicory].Stem.Senesced.Wt",
+            "[Chicory].Inflorescence.Senesced.Wt",
+            "[Chicory].Taproot.Senesced.Wt",
+            "[Chicory].Root.Senesced.Wt",
+            "[Chicory].Leaf.Detached.Wt",
+            "[Chicory].Stem.Detached.Wt",
+            "[Chicory].Inflorescence.Detached.Wt",
+            "[Chicory].Taproot.Detached.Wt",
+            "[Chicory].Root.Detached.Wt",
+            "[Chicory].Leaf.Removed.Wt",
+            "[Chicory].Stem.Removed.Wt",
+            "[Chicory].Inflorescence.Removed.Wt",
+            "[Chicory].Taproot.Removed.Wt",
+            "[Chicory].Root.Removed.Wt"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "ScottFarmC17a",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "StartDate": "2008-09-01T00:00:00",
+          "EndDate": "2010-05-30T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "Ruakura.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "Soil Arbitrator",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": false,
+              "Name": "Management",
+              "Children": [
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2008-10-23",
+                      "Action": " [Chicory].Sow(population: 200, cultivar: \"Choice\", depth: 10, rowSpacing: 150)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2008-10-23",
+                      "Action": "[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.UreaN, Depth: 10)",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "Sowing",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-01-19",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-02-23",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-04-01",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-05-08",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-09-14",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-10-22",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-11-25",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-12-21",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-01-15",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-02-12",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-03-22",
+                      "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "DefoliationSchedule",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-01-19",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-01-19",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-02-23",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-02-23",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-04-01",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-04-01",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-05-08",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-05-08",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-09-14",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-09-14",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-10-22",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-10-22",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-11-25",
+                      "Action": " [SurfaceOrganicMatter].Add(mass: 67.0, N: 12.0, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-11-25",
+                      "Action": "[Fertiliser].Apply(Amount: 18.0, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-12-21",
+                      "Action": "[SurfaceOrganicMatter].Add(mass: 32.2, N: 5.8, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2009-12-21",
+                      "Action": "[Fertiliser].Apply(Amount: 8.6, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-01-15",
+                      "Action": "[SurfaceOrganicMatter].Add(mass: 32.2, N: 5.8, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-01-15",
+                      "Action": "[Fertiliser].Apply(Amount: 8.6, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-02-12",
+                      "Action": "[SurfaceOrganicMatter].Add(mass: 32.2, N: 5.8, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-02-12",
+                      "Action": "[Fertiliser].Apply(Amount: 8.6, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-03-22",
+                      "Action": "[SurfaceOrganicMatter].Add(mass: 32.2, N: 5.8, P: 0.0, type: \"RuminantDung_PastureFed\", name \"dung\")",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-03-22",
+                      "Action": "[Fertiliser].Apply(Amount: 8.6, Type: Fertiliser.Types.UreaN, Depth: 30)",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "ExcretaSchedule",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"This script is set in 'Replacements':\")]\r\n        public string Message { get; set; }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "Message",
+                      "Value": ""
+                    }
+                  ],
+                  "Name": "Defoliate",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        //Communication to other modules\r\n        [Link] ISummary summary = null;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link(IsOptional = true)] Plant existingCrop;\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public answerType allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n       \r\n        public enum answerType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        //Class members\r\n        [XmlIgnore] public double TopSWdeficit { get; set; }\r\n        [XmlIgnore] public double TopSWC { get; set; }\r\n        [XmlIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [XmlIgnore] public double AmountToApply { get; set; }\r\n        [XmlIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation == answerType.yes)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = Soil.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);\r\n                TopLL += Soil.LL15mm[layer] * fracLayer;\r\n                TopDUL += Soil.DULmm[layer] * fracLayer;\r\n                depthFromSurface += Soil.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);\r\n                TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;\r\n                depthFromSurface += Soil.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                //AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = maximumAmount;\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "allowIrrigation",
+                      "Value": "yes"
+                    },
+                    {
+                      "Key": "seasonStart",
+                      "Value": "15-Sep"
+                    },
+                    {
+                      "Key": "seasonEnd",
+                      "Value": "30-Jul"
+                    },
+                    {
+                      "Key": "seasonsAllocation",
+                      "Value": "10000"
+                    },
+                    {
+                      "Key": "triggerDeficit",
+                      "Value": "75"
+                    },
+                    {
+                      "Key": "targetDeficit",
+                      "Value": "90"
+                    },
+                    {
+                      "Key": "returndays",
+                      "Value": "3"
+                    },
+                    {
+                      "Key": "maximumAmount",
+                      "Value": "15"
+                    },
+                    {
+                      "Key": "depthPAWC",
+                      "Value": "300"
+                    }
+                  ],
+                  "Name": "AutomaticIrrigation",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\r\n\r\nusing System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "ExtraVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.23,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "InitialResidueName": "grass",
+              "InitialResidueType": "grass",
+              "InitialResidueMass": 500.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 40.0,
+              "FractionFaecesAdded": 0.5,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "surface organic matter",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "Weirdo": null,
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "Typic Udivitrand (US), Typic Orthic\r\n Allophanic Soil (NZ)",
+              "LocalName": "Horotiu silt loam\r\n",
+              "Site": "Ruakura\r\n",
+              "NearestTown": "Hamilton\r\n",
+              "Region": "Waikato",
+              "State": null,
+              "Country": "New Zealand",
+              "NaturalVegetation": null,
+              "ApsoilNumber": null,
+              "Latitude": 0.0,
+              "Longitude": 0.0,
+              "LocationAccuracy": null,
+              "DataSource": "Based primarily on data from Close et al, 2003",
+              "Comments": null,
+              "Name": "HorotiuSoil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Analysis, Models",
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    130.0,
+                    140.0,
+                    380.0,
+                    230.0,
+                    220.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    2.0,
+                    5.0,
+                    5.0,
+                    19.0,
+                    33.0
+                  ],
+                  "RocksMetadata": null,
+                  "Texture": null,
+                  "TextureMetadata": null,
+                  "MunsellColour": null,
+                  "MunsellMetadata": null,
+                  "EC": null,
+                  "ECMetadata": null,
+                  "PH": [
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0
+                  ],
+                  "PHMetadata": null,
+                  "CL": null,
+                  "CLMetadata": null,
+                  "Boron": null,
+                  "BoronMetadata": null,
+                  "CEC": [
+                    23.1,
+                    17.2,
+                    12.4,
+                    10.0,
+                    7.2,
+                    3.1,
+                    1.6
+                  ],
+                  "CECMetadata": null,
+                  "Ca": null,
+                  "CaMetadata": null,
+                  "Mg": null,
+                  "MgMetadata": null,
+                  "Na": null,
+                  "NaMetadata": null,
+                  "K": null,
+                  "KMetadata": null,
+                  "ESP": null,
+                  "ESPMetadata": null,
+                  "Mn": null,
+                  "MnMetadata": null,
+                  "Al": null,
+                  "AlMetadata": null,
+                  "ParticleSizeSand": [
+                    47.0,
+                    65.0,
+                    76.0,
+                    84.0,
+                    88.0,
+                    91.0,
+                    94.0
+                  ],
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSilt": [
+                    33.0,
+                    17.0,
+                    13.0,
+                    10.0,
+                    8.0,
+                    6.0,
+                    5.0
+                  ],
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClay": [
+                    20.0,
+                    19.0,
+                    11.0,
+                    7.0,
+                    5.0,
+                    3.0,
+                    1.0
+                  ],
+                  "ParticleSizeClayMetadata": null,
+                  "PHUnits": 0,
+                  "BoronUnits": 0,
+                  "Name": "Analysis",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    130.0,
+                    140.0,
+                    380.0,
+                    230.0,
+                    220.0
+                  ],
+                  "BD": [
+                    0.88,
+                    0.85,
+                    1.03,
+                    1.11,
+                    1.11,
+                    1.03,
+                    1.03
+                  ],
+                  "AirDry": [
+                    0.114,
+                    0.209,
+                    0.182,
+                    0.15,
+                    0.142,
+                    0.103,
+                    0.084
+                  ],
+                  "LL15": [
+                    0.228,
+                    0.22,
+                    0.182,
+                    0.15,
+                    0.142,
+                    0.103,
+                    0.084
+                  ],
+                  "DUL": [
+                    0.373,
+                    0.34,
+                    0.323,
+                    0.282,
+                    0.2,
+                    0.16,
+                    0.13
+                  ],
+                  "SAT": [
+                    0.581,
+                    0.609,
+                    0.54,
+                    0.5,
+                    0.5,
+                    0.446,
+                    0.37
+                  ],
+                  "KS": [
+                    553.0,
+                    5083.0,
+                    8353.0,
+                    13589.0,
+                    38963.0,
+                    45280.0,
+                    53606.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Water",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.23,
+                        0.22,
+                        0.18,
+                        0.15,
+                        0.14,
+                        0.1,
+                        0.08
+                      ],
+                      "KL": [
+                        0.1,
+                        0.08,
+                        0.05,
+                        0.02,
+                        0.01,
+                        0.01,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.5
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "ChicorySoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilWater, Models",
+                  "SummerDate": "21-Sep",
+                  "SummerU": 6.0,
+                  "SummerCona": 3.5,
+                  "WinterDate": "23-Mar",
+                  "WinterU": 6.0,
+                  "WinterCona": 2.5,
+                  "DiffusConst": 88.0,
+                  "DiffusSlope": 35.0,
+                  "Salb": 0.2,
+                  "CN2Bare": 0.7,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "slope": "NaN",
+                  "discharge_width": "NaN",
+                  "catchment_area": "NaN",
+                  "max_pond": 0.0,
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    130.0,
+                    140.0,
+                    380.0,
+                    230.0,
+                    220.0
+                  ],
+                  "SWCON": [
+                    0.55,
+                    0.6,
+                    0.7,
+                    0.7,
+                    0.75,
+                    0.8,
+                    0.8
+                  ],
+                  "KLAT": null,
+                  "ResidueInterception": 0.0,
+                  "Name": "SoilWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogen, Models",
+                  "fom_types": [
+                    "default",
+                    "manure",
+                    "mucuna",
+                    "lablab",
+                    "shemp",
+                    "stable"
+                  ],
+                  "fract_carb": [
+                    0.2,
+                    0.3,
+                    0.54,
+                    0.57,
+                    0.45,
+                    0.0
+                  ],
+                  "fract_cell": [
+                    0.7,
+                    0.3,
+                    0.37,
+                    0.37,
+                    0.47,
+                    0.1
+                  ],
+                  "fract_lign": [
+                    0.1,
+                    0.4,
+                    0.09,
+                    0.06,
+                    0.08,
+                    0.9
+                  ],
+                  "Name": "SoilNitrogen",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Name": "NO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Name": "NH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Name": "Urea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                      "Name": "PlantAvailableNO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                      "Name": "PlantAvailableNH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilOrganicMatter, Models",
+                  "RootCN": 40.0,
+                  "SoilCN": 12.5,
+                  "EnrACoeff": 7.4,
+                  "EnrBCoeff": 0.2,
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    130.0,
+                    140.0,
+                    380.0,
+                    230.0,
+                    220.0
+                  ],
+                  "Depth": [
+                    "0-20",
+                    "20-40",
+                    "40-53",
+                    "53-67",
+                    "67-105",
+                    "105-128",
+                    "128-150"
+                  ],
+                  "OC": [
+                    8.0,
+                    1.88,
+                    0.93,
+                    0.43,
+                    0.13,
+                    0.1,
+                    0.07
+                  ],
+                  "OCMetadata": null,
+                  "FBiom": [
+                    0.08,
+                    0.04,
+                    0.02,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.57,
+                    0.6,
+                    0.62,
+                    0.65,
+                    0.7,
+                    0.8,
+                    0.85
+                  ],
+                  "RootWt": [
+                    338.97369296836524,
+                    227.22086147542524,
+                    175.19900556827909,
+                    132.4125599277165,
+                    61.92490879263066,
+                    39.092182170295764,
+                    25.176789097287475
+                  ],
+                  "OCUnits": 0,
+                  "Name": "SoilOrganicMatter",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 1,
+                  "FractionFull": 0.9,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "Initial water",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    600.0,
+                    500.0
+                  ],
+                  "NO3": [
+                    26.4,
+                    17.0,
+                    32.8,
+                    5.2
+                  ],
+                  "NH4": [
+                    0.9,
+                    0.3,
+                    0.6,
+                    0.5
+                  ],
+                  "SW": null,
+                  "OC": null,
+                  "EC": null,
+                  "CL": null,
+                  "ESP": null,
+                  "PH": null,
+                  "NO3Units": 1,
+                  "NH4Units": 1,
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "Initial nitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "CropType": "Chicory",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
+              "ResourceName": "Chicory",
+              "Name": "Chicory",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "ExperimentFactorNames": null,
+              "ExperimentFactorValues": null,
+              "VariableNames": [
+                ""
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

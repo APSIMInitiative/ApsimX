@@ -36,7 +36,7 @@
         /// <summary>
         /// Selector for the database type. Set in the constructors.
         /// </summary>
-        private bool useFirebird = false;
+        public bool useFirebird { get; set; } = false;
 
         /// <summary>Returns the file name of the .db file</summary>
         [XmlIgnore]
@@ -144,17 +144,17 @@
         /// <summary>Open the database.</summary>
         public void Open()
         {
-            useFirebird= string.Equals(Path.GetExtension(FileName), ".fdb", StringComparison.CurrentCultureIgnoreCase);
 
             if (FileName == null)
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null)
                 {
-                    if (!useFirebird)
-                        FileName = Path.ChangeExtension(simulations.FileName, ".db");
-                    else
+                    FileName = simulations.FileName;
+                    if (useFirebird)
                         FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+                    else
+                        FileName = Path.ChangeExtension(simulations.FileName, ".db");
                 }
             }
 

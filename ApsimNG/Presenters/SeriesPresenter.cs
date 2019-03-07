@@ -17,6 +17,8 @@ namespace UserInterface.Presenters
     using Models.Graph;
     using Views;
     using Commands;
+    using Models.Storage;
+
     /// <summary>
     /// A presenter class for graph series.
     /// </summary>
@@ -26,7 +28,7 @@ namespace UserInterface.Presenters
         /// The storage
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
 
         /// <summary>The graph model to work with.</summary>
         private Series series;
@@ -392,7 +394,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, seriesView.DataSource.SelectedValue, storage))
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, seriesView.DataSource.SelectedValue, storage.Reader))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)
@@ -413,7 +415,7 @@ namespace UserInterface.Presenters
             warnings.AddRange(PopulateColourDropDown());
 
             // Populate the checkpoint drop down.
-            List<string> checkpoints = storage.CheckpointNames;
+            List<string> checkpoints = storage.Reader.CheckpointNames;
             if (!checkpoints.Contains(series.Checkpoint) && !string.IsNullOrEmpty(series.Checkpoint))
             {
                 checkpoints.Add(series.Checkpoint);
@@ -464,7 +466,7 @@ namespace UserInterface.Presenters
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
 
             // Populate data source drop down.
-            List<string> dataSources = storage.TableNames.ToList();
+            List<string> dataSources = storage.Reader.TableNames.ToList();
             if (!dataSources.Contains(series.TableName))
             {
                 dataSources.Add(series.TableName);
@@ -581,7 +583,7 @@ namespace UserInterface.Presenters
             if (this.seriesView.DataSource != null && !string.IsNullOrEmpty(this.seriesView.DataSource.SelectedValue))
             {
                 fieldNames.Add("SimulationName");
-                fieldNames.AddRange(storage.ColumnNames(seriesView.DataSource.SelectedValue));
+                fieldNames.AddRange(storage.Reader.ColumnNames(seriesView.DataSource.SelectedValue));
                 fieldNames.Sort();
             }
             return fieldNames;

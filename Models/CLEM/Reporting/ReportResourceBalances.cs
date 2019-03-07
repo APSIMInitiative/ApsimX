@@ -33,13 +33,10 @@ namespace Models.CLEM.Reporting
         private ResourcesHolder Resources = null;
 
         /// <summary>The columns to write to the data store.</summary>
+        [NonSerialized]
         private List<IReportColumn> columns = null;
-
-        /// <summary>An array of column names to write to storage.</summary>
-        private IList<string> columnNames = null;
-
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IList<string> columnUnits = null;
+        [NonSerialized]
+        private ReportData dataToWriteToDb = null;
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -67,11 +64,12 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
             variableNames.Add("Parent.Name as Zone");
 
-            if(VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
+            if (VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
             {
                 variableNames.Add("[Clock].Today as Date");
             }
@@ -150,14 +148,36 @@ namespace Models.CLEM.Reporting
             }
         }
 
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (dataToWriteToDb != null)
+                storage.Writer.WriteTable(dataToWriteToDb);
+            dataToWriteToDb = null;
+        }
+
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public new void DoOutput()
         {
-            object[] valuesToWrite = new object[columns.Count];
+            if (dataToWriteToDb == null)
+                dataToWriteToDb = new ReportData()
+                {
+                    SimulationName = simulation.Name,
+                    TableName = Name,
+                    ColumnNames = columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                };
+            List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
-                valuesToWrite[i] = columns[i].GetValue();
+                valuesToWrite.Add(columns[i].GetValue());
 
-            storage.Writer.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+            dataToWriteToDb.Rows.Add(valuesToWrite);
+
+            if (dataToWriteToDb.Rows.Count == 100)
+            {
+                storage.Writer.WriteTable(dataToWriteToDb);
+                dataToWriteToDb = null;
+            }
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
@@ -228,8 +248,6 @@ namespace Models.CLEM.Reporting
                     this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
                 }
             }
-            columnNames = columns.Select(c => c.Name).ToList();
-            columnUnits = columns.Select(c => c.Units).ToList();
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>

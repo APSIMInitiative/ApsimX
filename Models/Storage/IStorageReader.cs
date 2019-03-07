@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace Models.Core
+namespace Models.Storage
 {
     /// <summary>
     /// Interface for reading and writing data to/from permanent storage.

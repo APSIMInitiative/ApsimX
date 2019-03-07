@@ -22,25 +22,35 @@
         }
 
         /// <summary>Write to permanent storage.</summary>
-        /// <param name="simulationName">Name of simulation</param>
-        /// <param name="tableName">Name of table</param>
-        /// <param name="columnNames">Column names</param>
-        /// <param name="columnUnits">Column units</param>
-        /// <param name="valuesToWrite">Values of row to write</param>
-        public void WriteRow(string simulationName, string tableName, IList<string> columnNames, IList<string> columnUnits, IList<object> valuesToWrite)
+        /// <param name="tableData">Table data to write.</param>
+        public void WriteTable(ReportData data)
         {
-            JobRunnerMultiProcess.TransferRowInTable rowData = new JobRunnerMultiProcess.TransferRowInTable()
+            var rowData = new JobRunnerMultiProcess.TransferReportData()
             {
                 key = jobKey,
-                SimulationName = simulationName,
-                TableName = tableName,
-                ColumnNames = columnNames.ToArray(),
-                Values = valuesToWrite
+                data = data 
             };
 
-            data.Add(rowData);
-            if (data.Count == 100)
-                WriteAllData();
+            if (data.Rows.Count > 0)
+            {
+                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
+                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+            }
+        }
+
+        public void WriteTable(DataTable data)
+        {
+            var rowData = new JobRunnerMultiProcess.TransferDataTable()
+            {
+                key = jobKey,
+                data = data
+            };
+
+            if (data.Rows.Count > 0)
+            {
+                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
+                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
+            }
         }
 
         /// <summary>Write all the data we stored</summary>
@@ -60,10 +70,6 @@
 
         public IStorageWriter Writer { get { return this; } }
 
-        public void WriteTable(DataTable data)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public void Empty()
         {
@@ -96,6 +102,16 @@
         }
 
         public void Stop()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetCheckpointID(string checkpointName)
         {
             throw new NotImplementedException();
         }

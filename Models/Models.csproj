@@ -214,6 +214,8 @@
     <Compile Include="Core\ITest.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
+    <Compile Include="Storage\WriteTableCommand.cs" />
+    <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
     <Compile Include="Storage\IStorageWriter.cs" />
     <Compile Include="Core\IReferenceExternalFiles.cs" />
@@ -447,10 +449,9 @@
     <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Storage\DataStoreWriter.cs" />
-    <Compile Include="Storage\AddRowCommand.cs" />
     <Compile Include="Storage\InsertQuery.cs" />
     <Compile Include="Storage\Row.cs" />
-    <Compile Include="Storage\Table.cs" />
+    <Compile Include="Storage\ReportData.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />

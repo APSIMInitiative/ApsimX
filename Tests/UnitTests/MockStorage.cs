@@ -179,5 +179,15 @@ namespace UnitTests
         public void Stop()
         {
         }
+
+        public void WriteTable(ReportData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

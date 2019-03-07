@@ -27,9 +27,6 @@ namespace Models.Core
     [ScopedModel]
     public class Simulations : Model, ISimulationEngine
     {
-        /// <summary>The _ file name</summary>
-        private string _FileName;
-
         [NonSerialized]
         private Links links;
 
@@ -46,23 +43,7 @@ namespace Models.Core
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
         [XmlIgnore]
-        public string FileName
-        {
-            get
-            {
-                return _FileName;
-            }
-            set
-            {
-                _FileName = value;
-                DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
-                if (storage != null)
-                {
-                    storage.Close();
-                    storage.FileName = null;
-                }
-            }
-        }
+        public string FileName { get; set; }
 
         /// <summary>Returns an instance of a links service</summary>
         [XmlIgnore]

@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The data storage
         /// </summary>
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
 
         /// <summary>
         /// The data store presenter object
@@ -86,7 +86,7 @@ namespace UserInterface.Presenters
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
+                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
             }
             
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");

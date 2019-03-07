@@ -71,13 +71,7 @@
                 {
                     // checkpoint doesn't already exist find a unique ID we can use.
                     checkpointData.RowFilter = null;
-                    var checkpointIDs = DataTableUtilities.GetColumnAsDoubles(checkpointData, "ID");
-                    newCheckId = Convert.ToInt32(MathUtilities.Max(checkpointIDs)) + 1;
-
-                    var sql = string.Format("INSERT INTO [_Checkpoints] (ID, Name, Version, Date) " +
-                                            " VALUES ({0}, '{1}', '{2}', '')",
-                                            newCheckId, newCheckpointName, version, now);
-                    writer.Connection.ExecuteNonQuery(sql);
+                    newCheckId = writer.GetCheckpointID(newCheckpointName);
                 }
 
                 // Go through all tables and copy the current data rows to new rows with
@@ -109,22 +103,25 @@
                 // Add in all referenced files.
                 if (namesOfFilesToStore != null)
                 {
-                    List<object[]> valueList = new List<object[]>();
+                    DataTable checkpointFiles = new DataTable("_CheckpointFiles");
+                    checkpointFiles.Columns.Add("CheckpointID", typeof(int));
+                    checkpointFiles.Columns.Add("FileName", typeof(string));
+                    checkpointFiles.Columns.Add("Contents", typeof(object));
+
                     foreach (string fileName in namesOfFilesToStore)
                     {
-                        object[] values = new object[3];
                         if (File.Exists(fileName))
                         {
-                            values[0] = newCheckId;
-                            values[1] = fileName;
-                            values[2] = File.ReadAllBytes(fileName);
-                            valueList.Add(values);
+                            var row = checkpointFiles.NewRow();
+                            row[0] = newCheckId;
+                            row[1] = fileName;
+                            row[2] = File.ReadAllBytes(fileName);
+                            checkpointFiles.Rows.Add(row);
                         }
                     }
 
-                    List<string> colNames = new List<string>(new string[] { "CheckpointID", "FileName", "Contents" });
-                    writer.EnsureTableHasColumnNames("_CheckpointFiles", colNames, null, valueList[0]);
-                    writer.Connection.InsertRows("_CheckpointFiles", colNames, valueList);
+                    if (checkpointFiles.Rows.Count > 0)
+                        writer.WriteTable(checkpointFiles);
                 }
             }
         }

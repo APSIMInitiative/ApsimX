@@ -20,6 +20,7 @@ namespace UserInterface.Presenters
     using Models.Report;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
+    using Models.Core.Runners;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -72,9 +73,7 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (IPostSimulationTool tool in Apsim.FindAll(explorerPresenter.ApsimXFile, typeof(IPostSimulationTool)))
-                    if ((tool as IModel).Enabled)
-                        tool.Run(storage);
+                RunOrganiser.RunPostSimulationTools(explorerPresenter.ApsimXFile, storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)

@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-
-namespace Models.Core
+﻿namespace Models.Storage
 {
+    using System.Collections.Generic;
+    using System.Data;
+
     /// <summary>
     /// Interface for reading and writing data to/from permanent storage.
     /// </summary>
     public interface IStorageWriter
     {
-
-        /// <summary>Write to permanent storage.</summary>
-        /// <param name="simulationName">Name of simulation</param>
-        /// <param name="tableName">Name of table</param>
-        /// <param name="columnNames">Column names</param>
-        /// <param name="columnUnits">Column units</param>
-        /// <param name="valuesToWrite">Values of row to write</param>
-        void WriteRow(string simulationName, string tableName, IList<string> columnNames, IList<string> columnUnits, IList<object> valuesToWrite);
+        /// <summary>
+        /// Add rows to a table in the db file. Note that the data isn't written immediately.
+        /// </summary>
+        /// <param name="data">Name of simulation the values correspond to.</param>
+        void WriteTable(ReportData data);
 
         /// <summary>
         /// Write a table of data. Uses the TableName property of the specified DataTable.
@@ -45,5 +41,21 @@ namespace Models.Core
 
         /// <summary>Stop all writing to database.</summary>
         void Stop();
+
+        /// <summary>
+        /// Add a list of column units for the specified table.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnNames">A collection of column names.</param>
+        /// <param name="columnUnits">A corresponding collection of column units.</param>
+        void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits);
+
+        /// <summary>
+        /// Get a checkpoint ID for the specified name. Will
+        /// create an ID if the Name is unknown.
+        /// </summary>
+        /// <param name="checkpointName">The name of the checkpoint to look for.</param>
+        /// <returns>Always returns a number.</returns>
+        int GetCheckpointID(string checkpointName);
     }
 }

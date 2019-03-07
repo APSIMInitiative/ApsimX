@@ -13,21 +13,7 @@
     public class DataStoreWriterTests
     {
         private IDatabaseConnection database;
-        //private string sqliteFileName;
         private string savedDirectoryName;
-
-        private class Pair
-        {
-            public int a { get; set; }
-            public int b { get; set; }
-        }
-
-        private class Record
-        {
-            public DateTime c { get; set; }
-            public List<double> d { get; set; }
-            public Pair[] e { get; set; }
-        }
 
         /// <summary>Find and return the file name of SQLite runtime .dll</summary>
         public static string FindSqlite3DLL()
@@ -61,11 +47,6 @@
             string sqliteSourceFileName = FindSqlite3DLL();
             savedDirectoryName = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-            //sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
-            //if (!File.Exists(sqliteFileName))
-            //{
-            //    File.Copy(sqliteSourceFileName, sqliteFileName, overwrite:true);
-            //}
         }
 
         [TearDown]
@@ -78,13 +59,34 @@
         [Test]
         public void WriteReportDataForTwoSimulations()
         {
-            DataStoreWriter writer = new DataStoreWriter(database);
+            // Setup first report data.
+            var data1 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1", "Col2" },
+                ColumnUnits = new string[] {   null,    "g" }
+            };
+            data1.Rows.Add(new List<object>() { 1.0, 11 });
+            data1.Rows.Add(new List<object>() { 2.0, 12 });
 
-            string[] columnNames1 = new string[] { "Col1", "Col2" };
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { 1.0, 11.0 });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { 2.0, 12.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { 3.0, 13.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { 4.0, 14.0 });
+            // Setup second report data.
+            var data2 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim2",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1", "Col3" },
+                ColumnUnits = new string[] {   null, "kg/ha" }
+            };
+            data2.Rows.Add(new List<object>() { 3.0, 13 });
+            data2.Rows.Add(new List<object>() { 4.0, 14 });
+
+            // Write both data tables to writer.
+            DataStoreWriter writer = new DataStoreWriter(database);
+            writer.WriteTable(data1);
+            writer.WriteTable(data2);
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "_Simulations"),
@@ -98,137 +100,77 @@
 
             Assert.AreEqual(Utilities.TableToString(database, "_Units"),
                "TableName,ColumnHeading,Units\r\n" +
-               "  Report1,         Col2,    g\r\n");
+               "   Report,         Col2,    g\r\n" +
+               "   Report,         Col3,kg/ha\r\n");
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                           "CheckpointID,SimulationID, Col1,  Col2\r\n" +
-                           "           1,           1,1.000,11.000\r\n" +
-                           "           1,           1,2.000,12.000\r\n" +
-                           "           1,           2,3.000,13.000\r\n" +
-                           "           1,           2,4.000,14.000\r\n");
-        }
-
-        /// <summary>Write data for 2 simulations, each with different columns, into one table. Ensure data was written correctly.</summary>
-        [Test]
-        public void WriteReportDataForTwoSimulationsDifferentCols()
-        {
-            DataStoreWriter writer = new DataStoreWriter(database);
-
-            string[] columnNames1 = new string[] { "Col1", "Col2" };
-            string[] columnNames2 = new string[] { "Col3", "Col4" };
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 1.0, 11.0 });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
-            writer.Stop();
-
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                           "CheckpointID,SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
-                           "           1,           1,1.000,11.000,     ,      \r\n" +
-                           "           1,           1,2.000,12.000,     ,      \r\n" +
-                           "           1,           2,     ,      ,3.000,13.000\r\n" +
-                           "           1,           2,     ,      ,4.000,14.000\r\n");
-        }
-
-        /// <summary>Write array data that changes size into a table. Ensure data was written correctly</summary>
-        [Test]
-        public void WriteArrayDataThatChangesSize()
-        {
-            DataStoreWriter writer = new DataStoreWriter(database);
-
-            string[] columnNames1 = new string[] { "Col" };
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 1.0 } });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 2.0, 2.1 } });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 3.0, 3.1, 3.2 } });
-            writer.Stop();
-
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                           "CheckpointID,SimulationID,Col(1),Col(2),Col(3)\r\n" +
-                           "           1,           1, 1.000,      ,      \r\n" +
-                           "           1,           1, 2.000, 2.100,      \r\n" +
-                           "           1,           1, 3.000, 3.100, 3.200\r\n");
-        }
-
-        /// <summary>Write array of structure data into a table. Ensure data was written correctly</summary>
-        [Test]
-        public void WriteStructureData()
-        {
-            Record record1 = new Record()
-            {
-                c = new DateTime(2017, 1, 1),
-                d = new List<double> { 100, 101 },
-                e = new Pair[] { new Pair() { a = 10, b = 11 },
-                                     new Pair() { a = 12, b = 13 } }
-            };
-            Record record2 = new Record()
-            {
-                c = new DateTime(2017, 1, 2),
-                d = new List<double> { 102, 103 },
-                e = new Pair[] { new Pair() { a = 16, b = 17 },
-                                     new Pair() { a = 18, b = 19 },
-                                     new Pair() { a = 20, b = 21 } }
-            };
-
-            DataStoreWriter writer = new DataStoreWriter(database);
-
-            string[] columnNames1 = new string[] { "Col" };
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record1 });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record2 });
-            writer.Stop();
-
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                            "CheckpointID,SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
-                            "           1,           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
-                            "           1,           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
+            Assert.AreEqual(Utilities.TableToString(database, "Report"),
+                           "CheckpointID,SimulationID, Col1,Col2,Col3\r\n" +
+                           "           1,           1,1.000,  11,    \r\n" +
+                           "           1,           1,2.000,  12,    \r\n" +
+                           "           1,           2,3.000,    ,  13\r\n" +
+                           "           1,           2,4.000,    ,  14\r\n");
         }
 
         /// <summary>When writing simulation data to a table, ensure that old rows are removed.</summary>
         [Test]
         public void RemoveOldRowsWhenWritingSimulationData()
         {
-            string[] columnNames1 = new string[] { "Col" };
+            // Write first report data.
+            var data1 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col" },
+                ColumnUnits = new string[] {  null }
+            };
+            data1.Rows.Add(new List<object>() { 1 });
+            data1.Rows.Add(new List<object>() { 2 });
             DataStoreWriter writer = new DataStoreWriter(database);
-
-            writer.WriteRow("Sim1", "Report1", columnNames1, null, new object[] { 1 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, null, new object[] { 2 });
-            writer.WriteRow("Sim3", "Report1", columnNames1, null, new object[] { 3 });
+            writer.WriteTable(data1);
             writer.Stop();
 
-            // Now do it again this time deleting sim2 and sim3 and adding sim4
+            // Now do it again this time writing different data for the same sim.
+            var data2 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col" },
+                ColumnUnits = new string[] {  null }
+            };
+            data2.Rows.Add(new List<object>() { 3 });
             writer = new DataStoreWriter(database);
-            writer.WriteRow("Sim1", "Report1", columnNames1, null, new object[] { 5 });
-            writer.WriteRow("Sim4", "Report1", columnNames1, null, new object[] { 4 });
+            writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM Report1 ORDER BY Col"),
+            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM Report ORDER BY Col"),
                            "CheckpointID,SimulationID,Col\r\n" +
-                           "           1,           2,  2\r\n" +
-                           "           1,           3,  3\r\n" +
-                           "           1,           4,  4\r\n" +
-                           "           1,           1,  5\r\n");
+                           "           1,           1,  3\r\n");
         }
 
         /// <summary>Write a table of data with no simulation name.</summary>
         [Test]
-        public void WriteATableOfData()
+        public void WriteATableOfDataWithUnits()
         {
-            DataTable data = new DataTable("Report1");
-            data.Columns.Add("Col1(g)", typeof(int));
+            DataTable data = new DataTable("Report");
+            data.Columns.Add("Col1", typeof(int));
             data.Columns.Add("Col2", typeof(int));
             DataRow row = data.NewRow();
-            row["Col1(g)"] = 10;
+            row["Col1"] = 10;
             row["Col2"] = 20;
             data.Rows.Add(row);
             row = data.NewRow();
-            row["Col1(g)"] = 11;
+            row["Col1"] = 11;
             row["Col2"] = 21;
             data.Rows.Add(row);
 
             DataStoreWriter writer = new DataStoreWriter(database);
             writer.WriteTable(data);
+            writer.AddUnits("Report", new string[] { "Col1" }, new string[] { "g" });
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
+            Assert.AreEqual(Utilities.TableToString(database, "Report"),
                                         "CheckpointID,Col1,Col2\r\n" +
                                         "           1,  10,  20\r\n" +
                                         "           1,  11,  21\r\n");
@@ -236,7 +178,50 @@
             // Make sure units were extracted from the column names and written.
             Assert.AreEqual(Utilities.TableToString(database, "_Units"),
                "TableName,ColumnHeading,Units\r\n" +
-               "  Report1,         Col1,    g\r\n");
+               "   Report,         Col1,    g\r\n");
+        }
+
+
+        /// <summary>Write to a table twice. This is what report does.</summary>
+        [Test]
+        public void WriteToATableTwice()
+        {
+            // Setup first report data.
+            var data1 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1" },
+                ColumnUnits = new string[] { null, null }
+            };
+            data1.Rows.Add(new List<object>() { 1.0 });
+            data1.Rows.Add(new List<object>() { 2.0 });
+
+            // Setup second report data.
+            var data2 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1" },
+                ColumnUnits = new string[] { null }
+            };
+            data2.Rows.Add(new List<object>() { 3.0 });
+            data2.Rows.Add(new List<object>() { 4.0 });
+
+            // Write both data tables to writer.
+            DataStoreWriter writer = new DataStoreWriter(database);
+            writer.WriteTable(data1);
+            writer.WriteTable(data2);
+            writer.Stop();
+
+            Assert.AreEqual(Utilities.TableToString(database, "Report"),
+                           "CheckpointID,SimulationID, Col1\r\n" +
+                           "           1,           1,1.000\r\n" +
+                           "           1,           1,2.000\r\n" +
+                           "           1,           1,3.000\r\n" +
+                           "           1,           1,4.000\r\n");
         }
 
         /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
@@ -244,15 +229,15 @@
         public void CleanupOldTableData()
         {
             DataTable data = new DataTable("Report1");
-            data.Columns.Add("Col1(g)", typeof(int));
-            data.Columns.Add("Col2(kg)", typeof(int));
+            data.Columns.Add("Col1", typeof(int));
+            data.Columns.Add("Col2", typeof(int));
             DataRow row = data.NewRow();
-            row["Col1(g)"] = 10;
-            row["Col2(kg)"] = 20;
+            row["Col1"] = 10;
+            row["Col2"] = 20;
             data.Rows.Add(row);
             row = data.NewRow();
-            row["Col1(g)"] = 11;
-            row["Col2(kg)"] = 21;
+            row["Col1"] = 11;
+            row["Col2"] = 21;
             data.Rows.Add(row);
 
             DataStoreWriter writer = new DataStoreWriter(database);
@@ -260,10 +245,10 @@
             writer.Stop();
 
             // Change the data.
-            data.Rows[0][0] = 100;
-            data.Rows[0][1] = 200;
-            data.Rows[1][0] = 110;
-            data.Rows[1][1] = 210;
+            data.Rows[0]["Col1"] = 100;
+            data.Rows[0]["Col2"] = 200;
+            data.Rows[1]["Col1"] = 110;
+            data.Rows[1]["Col2"] = 210;
 
             // Write the table a second time.
             writer = new DataStoreWriter(database);
@@ -277,44 +262,41 @@
                                         "           1, 110, 210\r\n");
         }
 
-        /// <summary>Delete all rows in a table.</summary>
+        /// <summary>Empty the datastore.</summary>
         [Test]
-        public void DeleteAllRowsInTable()
+        public void EmptyDataStore()
         {
-            DataStoreWriter writer = new DataStoreWriter(database);
-            string[] columnNames1 = new string[] { "Col1", "Col2" };
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 1.0 });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 2.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 11.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 12.0 });
-            writer.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 21.0 });
-            writer.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 22.0 });
-            writer.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 31.0 });
-            writer.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
-            writer.WaitForIdle();
+            // Setup first report data.
+            var data1 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1", "Col2" },
+                ColumnUnits = new string[] { null, "g" }
+            };
+            data1.Rows.Add(new List<object>() { 1.0, 11 });
+            data1.Rows.Add(new List<object>() { 2.0, 12 });
 
-            writer.DeleteRowsInTable("Report1");
+            // Setup second report data.
+            var data2 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim2",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1", "Col3" },
+                ColumnUnits = new string[] { null, "kg/ha" }
+            };
+            data2.Rows.Add(new List<object>() { 3.0, 13 });
+            data2.Rows.Add(new List<object>() { 4.0, 14 });
+
+            // Write two sims of data.
+            DataStoreWriter writer = new DataStoreWriter(database);
+            writer.WriteTable(data1);
+            writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.IsFalse(database.GetTableNames().Contains("Report1"));
-        }
-
-        /// <summary>Delete all data for current checkpoint.</summary>
-        [Test]
-        public void DeleteCurrentCheckpoint()
-        {
-            DataStoreWriter writer = new DataStoreWriter(database);
-            string[] columnNames1 = new string[] { "Col1", "Col2" };
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 1.0 });
-            writer.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 2.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 11.0 });
-            writer.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 12.0 });
-            writer.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 21.0 });
-            writer.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 22.0 });
-            writer.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 31.0 });
-            writer.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
-            writer.Stop();
-
+            // Now empty the datastore.
             writer = new DataStoreWriter(database);
             writer.Empty();
             writer.Stop();
@@ -392,17 +374,22 @@
         {
             DataStoreReaderTests.CreateTable(database);
 
-            var writer = new DataStoreWriter(database);
-
             // Write some new current data.
-            // Create a database with 3 sims.
-            string[] columnNames1 = new string[] { "Col1", "Col2" };
-            writer.WriteRow("Sim1", "Report", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 3), 100.0 });
-            writer.WriteRow("Sim1", "Report", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 4), 200.0 });
+            var data1 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1", "Col2" },
+                ColumnUnits = new string[] { null, "g" }
+            };
+            data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 3), 100.0 });
+            data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 4), 200.0 });
+            var writer = new DataStoreWriter(database);
+            writer.WriteTable(data1);
 
             // Now revert back to checkpoint1
             writer.RevertCheckpoint("Saved1");
-
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
@@ -428,13 +415,21 @@
         {
             DataStoreReaderTests.CreateTable(database);
 
-            var writer = new DataStoreWriter(database);
-
             // Write new rows for sim2. Should get rid of old sim2 data and replace 
             // with these 2 new rows.
-            string[] columnNames1 = new string[] { "Col1", "Col2" };
-            writer.WriteRow("Sim2", "Report", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 3.0 });
-            writer.WriteRow("Sim2", "Report", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 4.0 });
+            // Write some new current data.
+            var data1 = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim2",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col1", "Col2" },
+                ColumnUnits = new string[] { null, "g" }
+            };
+            data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 1), 3.0 });
+            data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 2), 4.0 });
+            var writer = new DataStoreWriter(database);
+            writer.WriteTable(data1);
 
             // Add a checkpoint - overwrite existing one.
             writer.AddCheckpoint("Saved1");
@@ -457,20 +452,27 @@
         public void ForeignCharacterTest()
         {
             string path = Path.Combine(Path.GetTempPath(), "文档.db");
+            File.Delete(path);
 
             database = new SQLite();
             database.OpenDatabase(path, readOnly: false);
 
             var writer = new DataStoreWriter(database);
-            writer.WriteRow("Sim", "Report",
-                            new string[] { "Col1" },
-                            null,
-                            new object[] { 1 });
+
+            DataTable data = new DataTable("Report");
+            data.Columns.Add("SimulationName", typeof(string));
+            data.Columns.Add("Col1", typeof(int));
+            DataRow row = data.NewRow();
+            row["SimulationName"] = "Sim1";
+            row["Col1"] = 10;
+            data.Rows.Add(row);
+
+            writer.WriteTable(data);
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
                 "CheckpointID,SimulationID,Col1\r\n" +
-                "           1,           1,   1\r\n");
+                "           1,           1,  10\r\n");
 
             database.CloseDatabase();
             File.Delete(path);
