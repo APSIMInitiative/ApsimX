@@ -57,5 +57,13 @@
         /// <param name="checkpointName">The name of the checkpoint to look for.</param>
         /// <returns>Always returns a number.</returns>
         int GetCheckpointID(string checkpointName);
+
+        /// <summary>
+        /// Get a simulation ID for the specified simulation name. Will
+        /// create an ID if the simulationName is unknown.
+        /// </summary>
+        /// <param name="simulationName">The name of the simulation to look for.</param>
+        /// <returns>Always returns a number.</returns>
+        int GetSimulationID(string simulationName);
     }
 }

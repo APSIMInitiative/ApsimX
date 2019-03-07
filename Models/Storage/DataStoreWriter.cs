@@ -258,19 +258,23 @@
         /// <param name="columnUnits">A corresponding collection of column units.</param>
         public void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)
         {
-            for (int i = 0; i < columnNames.Count(); i++)
+            // Can be called by many threads simultaneously.
+            lock (lockObject)
             {
-                var columnName = columnNames.ElementAt(i);
-                var columnUnit = columnUnits.ElementAt(i);
-                if (columnUnit != null && columnUnit != string.Empty)
+                for (int i = 0; i < columnNames.Count(); i++)
                 {
-                    if (!units.TryGetValue(tableName, out var tableUnits))
+                    var columnName = columnNames.ElementAt(i);
+                    var columnUnit = columnUnits.ElementAt(i);
+                    if (columnUnit != null && columnUnit != string.Empty)
                     {
-                        tableUnits = new List<ColumnUnits>();
-                        units.Add(tableName, tableUnits);
+                        if (!units.TryGetValue(tableName, out var tableUnits))
+                        {
+                            tableUnits = new List<ColumnUnits>();
+                            units.Add(tableName, tableUnits);
+                        }
+                        if (tableUnits.Find(unit => unit.Name == columnName) == null)
+                            tableUnits.Add(new ColumnUnits() { Name = columnName, Units = columnUnits.ElementAt(i) });
                     }
-                    if (tableUnits.Find(unit => unit.Name == columnName) == null)
-                        tableUnits.Add(new ColumnUnits() { Name = columnName, Units = columnUnits.ElementAt(i) });
                 }
             }
         }
@@ -281,7 +285,7 @@
         /// </summary>
         /// <param name="simulationName">The name of the simulation to look for.</param>
         /// <returns>Always returns a number.</returns>
-        private int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName)
         {
             if (simulationName == null)
                 return 0;
@@ -358,6 +362,8 @@
         /// <param name="simulationNamesThatMayNeedCleaning">Simulation names that may need cleaning up.</param>
         private void DeleteOldRowsInTable(string tableName, string checkpointName = null, IEnumerable<string> simulationNamesThatMayNeedCleaning = null)
         {
+            // Can be called by many threads simultaneously.
+
             List<int> simulationIds = null;
             if (simulationNamesThatMayNeedCleaning != null)
             {

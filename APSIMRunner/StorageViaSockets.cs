@@ -115,6 +115,11 @@
         {
             throw new NotImplementedException();
         }
+
+        public int GetSimulationID(string simulationName)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

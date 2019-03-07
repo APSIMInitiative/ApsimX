@@ -118,7 +118,7 @@ namespace Models.PostSimulationTools
                     {
                         if (simulationName != simulationNames[0])
                             query.Append(',');
-                        query.Append(dataStore.Reader.GetSimulationID(simulationName));
+                        query.Append(dataStore.Writer.GetSimulationID(simulationName));
                     }
                     query.Append(")");
                 }
