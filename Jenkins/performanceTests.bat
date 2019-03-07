@@ -36,13 +36,13 @@ echo Running performance tests collector...
 bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 
 set err=%errorlevel%
+type PerformanceCollector.txt
 if errorlevel 1 (
 	echo APSIM.PerformanceTests.Collector did not run succecssfully!
 	echo Pull request ID: 	"%PULL_ID%"
 	echo DateTime stamp: 	"%DATETIMESTAMP%"
 	echo Commit author:		"%COMMIT_AUTHOR%"
 	echo Log file:
-	type PerformanceCollector.txt
 ) else (
 	echo Done.
 )
