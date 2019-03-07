@@ -155,7 +155,7 @@ namespace Models.CLEM.Activities
                 html += endDate.ToString("d MMM yyyy");
             }
             html += "</span>";
-            if(StartDate!=startDate | EndDate != endDate)
+            if(StartDate!=startDate || EndDate != endDate)
             {
                 html += " (modified for monthly timestep)";
             }

@@ -233,7 +233,7 @@ namespace Models.CLEM.Activities
             // SellFemalesLikeMales will grow out excess heifers until age/weight rather than sell immediately.
             if (this.TimingOK || ContinuousMaleSales)
             {
-                foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= MaleSellingAge || a.Weight >= MaleSellingWeight)))
+                foreach (var ind in herd.Where(a => a.Weaned && (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) && (a.Age >= MaleSellingAge || a.Weight >= MaleSellingWeight)))
                 {
                     bool sell = true;
                     if (ind.GetType() == typeof(RuminantMale))
@@ -272,17 +272,17 @@ namespace Models.CLEM.Activities
 
                 // MALES
                 // check for breeder bulls after sale of old individuals and buy/sell
-                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
+                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
 
                 // Number of females
-                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating && a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are females that will exceed max age and be sold in next 12 months
-                int numberFemaleOldInHerd = herd.Where(a => a.Gender == Sex.Female & (a.Age + 12 >= MaximumBreederAge) & a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleOldInHerd = herd.Where(a => a.Gender == Sex.Female && (a.Age + 12 >= MaximumBreederAge) && a.SaleFlag == HerdChangeReason.None).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
-                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && a.Weaned && ((a.Age - a.BreedParams.MinimumAge1stMating < 0) && (a.Age - a.BreedParams.MinimumAge1stMating > -12)) & a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && a.Weaned && ((a.Age - a.BreedParams.MinimumAge1stMating < 0) && (a.Age - a.BreedParams.MinimumAge1stMating > -12)) && a.SaleFlag == HerdChangeReason.None).Count();
 
                 if (numberMaleSiresInHerd > MaximumSiresKept)
                 {
@@ -309,7 +309,7 @@ namespace Models.CLEM.Activities
                         if (AllowSireReplacement)
                         {
                             // remove young bulls from sale herd to replace breed bulls (not those sold because too old)
-                            foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
+                            foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
                             {
                                 male.SaleFlag = HerdChangeReason.None;
                                 male.BreedingSire = true;
@@ -427,7 +427,7 @@ namespace Models.CLEM.Activities
                         }
 
                         // remove young females from sale herd to replace breeders (not those sold because too old)
-                        foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & (a.SaleFlag == HerdChangeReason.AgeWeightSale | a.SaleFlag == HerdChangeReason.ExcessHeiferSale)).OrderByDescending(a => a.Age))
+                        foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && (a.SaleFlag == HerdChangeReason.AgeWeightSale || a.SaleFlag == HerdChangeReason.ExcessHeiferSale)).OrderByDescending(a => a.Age))
                         {
                             female.SaleFlag = HerdChangeReason.None;
                             excessBreeders--;
@@ -438,7 +438,7 @@ namespace Models.CLEM.Activities
                         }
 
                         // if still insufficient buy breeders.
-                        if (excessBreeders > 0 & (MaximumProportionBreedersPerPurchase > 0))
+                        if (excessBreeders > 0 && (MaximumProportionBreedersPerPurchase > 0))
                         {
                             int ageOfBreeder = 0;
 

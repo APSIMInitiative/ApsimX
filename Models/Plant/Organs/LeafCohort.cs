@@ -392,7 +392,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+            get { return Age > GrowthDuration + LagDuration && Age < GrowthDuration + LagDuration + SenescenceDuration; }
 
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
@@ -923,7 +923,7 @@ namespace Models.PMF.Organs
             //Senessing leaf area
             double areaSenescing = LiveArea*SenescedFrac;
             double areaSenescingN = 0;
-            if ((Live.MetabolicNConc <= MinimumNConc) & (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
+            if ((Live.MetabolicNConc <= MinimumNConc) && (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
                 areaSenescingN = LeafStartArea*(MetabolicNRetranslocated - MetabolicNAllocation)/LiveStart.MetabolicN;
 
             double leafAreaLoss = Math.Max(areaSenescing, areaSenescingN);
@@ -1109,7 +1109,7 @@ namespace Models.PMF.Organs
                         _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                     }
 
-                    if (Age >= 0 & Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
+                    if (Age >= 0 && Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
                     {
                         lsn += ApexCohort.GroupSize[i];
                     }

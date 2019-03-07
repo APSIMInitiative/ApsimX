@@ -115,7 +115,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned & Age<12);
+                return (Weaned && Age<12);
             }
         }
 

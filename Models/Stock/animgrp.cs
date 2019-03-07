@@ -1157,7 +1157,7 @@ namespace Models.GrazPlan
         /// <param name="SuppRI"></param>
         /// <param name="timeStepState"></param>
         protected void DescribeTheDiet(ref double[] HerbageRI,      // "Relative intakes" of each herbage       
-                                   ref double[,] SeedRI,            //   digestibility class, seeds &           
+                                   ref double[,] SeedRI,            //   digestibility class, seeds &
                                    ref double SuppRI,               //   supplement                             
                                    ref AnimalOutput timeStepState)
         {

@@ -135,7 +135,7 @@ namespace UserInterface.Presenters
                                 msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
                             }
                         }
-                        if (msgStr.IndexOf(':') >= 0 & msgStr.StartsWith("@"))
+                        if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
                         {
                             switch (msgStr.Substring(0, msgStr.IndexOf(':')))
                             {

@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
-            if (Area == 0 & AreaRequested > 0)
+            if (Area == 0 && AreaRequested > 0)
             {
                 ResourceRequestList = new List<ResourceRequest>();
                 ResourceRequestList.Add(new ResourceRequest()
@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (LinkedLandItem != null & UseAreaAvailable)
+            if (LinkedLandItem != null && UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
             }

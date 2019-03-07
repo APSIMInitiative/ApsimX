@@ -177,10 +177,10 @@ namespace Models.CLEM.Activities
             foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName & !a.ReadyForSale).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
                 herd = herd.Filter(item);
                 int cnt = 0;
-                while (cnt < herd.Count() & animalEquivalentsforSale > 0)
+                while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {
                     this.Status = ActivityStatus.Success;
                     animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
