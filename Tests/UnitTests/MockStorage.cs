@@ -48,19 +48,6 @@ namespace UnitTests
             public IEnumerable<object> values;
         }
 
-        /// <summary>Write to permanent storage.</summary>
-        /// <param name="simulationName">Name of simulation</param>
-        /// <param name="tableName">Name of table</param>
-        /// <param name="columnNames">Column names</param>
-        /// <param name="columnUnits">Column units</param>
-        /// <param name="valuesToWrite">Values of row to write</param>
-        public void WriteRow(string simulationName, string tableName, IList<string> columnNames, IList<string> columnUnits, IList<object> valuesToWrite)
-        {
-            this.columnNames.Clear();
-            this.columnNames.AddRange(columnNames);
-            rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(valuesToWrite) as IEnumerable<object> });
-        }
-
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string groupBy = null)
         {
             return null;
@@ -182,7 +169,11 @@ namespace UnitTests
 
         public void WriteTable(ReportData data)
         {
-            throw new NotImplementedException();
+            this.columnNames.Clear();
+            this.columnNames.AddRange(data.ColumnNames);
+            foreach (var dataRow in data.Rows)
+                rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(dataRow) as IEnumerable<object> });
+
         }
 
         public void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)

@@ -35,9 +35,9 @@
             data.Rows.Add(new List<object>() { new DateTime(2017, 1, 2), 2.0, 2, "def" });
 
             Assert.AreEqual(Utilities.TableToString(data.ToTable()),
-            "      Col1, Col2,Col3(g/m2),Col4(mm)\r\n" +
-            "2017-01-01,1.000,         1,     abc\r\n" +
-            "2017-01-02,2.000,         2,     def\r\n");
+            "      Col1, Col2,Col3,Col4\r\n" +
+            "2017-01-01,1.000,   1, abc\r\n" +
+            "2017-01-02,2.000,   2, def\r\n");
         }
 
         /// <summary>Convert an array to a table.</summary>
@@ -57,9 +57,9 @@
             data.Rows.Add(new List<object>() { new int[] { 3, 4, 5 }, 20 });
 
             Assert.AreEqual(Utilities.TableToString(data.ToTable()),
-            "Col1(1)(mm),Col1(2)(mm),Col2(g),Col1(3)(mm)\r\n" +
-            "          1,          2,     10,           \r\n" +
-            "          3,          4,     20,          5\r\n");
+            "Col1(1),Col1(2),Col2,Col1(3)\r\n" +
+            "      1,      2,  10,       \r\n" +
+            "      3,      4,  20,      5\r\n");
         }
 
         /// <summary>Convert an array of structures to a table.</summary>
