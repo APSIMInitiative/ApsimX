@@ -317,7 +317,7 @@ namespace UserInterface.Presenters
 
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
                     {
-                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        IEnumerator enumerator = definition.y.GetEnumerator();
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.yFieldName;
