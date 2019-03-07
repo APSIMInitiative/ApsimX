@@ -55,9 +55,13 @@ namespace Models.PMF
             AllocateStructural(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
             AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
-            AllocateMetabolic(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            AllocateMetabolic(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            AllocateMetabolic(stemIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            //old sorghum didn't serparate structural and metabolic demands for stem and rachis - metabolic included the structural amount
+            var nTotalDemand = BAT.StructuralDemand[stemIndex] + BAT.StructuralDemand[rachisIndex] +
+                BAT.MetabolicDemand[leafIndex] + BAT.MetabolicDemand[stemIndex] + BAT.MetabolicDemand[rachisIndex];
+
+            AllocateMetabolic(leafIndex, ref TotalAllocated, ref NotAllocated, BAT, BAT.MetabolicDemand[leafIndex], nTotalDemand);
+            AllocateMetabolic(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT, BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex], nTotalDemand);
+            AllocateMetabolic(stemIndex, ref TotalAllocated, ref NotAllocated, BAT, BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex], nTotalDemand);
 
             //AllocateStorage(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
             //AllocateStorage(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
@@ -75,15 +79,26 @@ namespace Models.PMF
                 TotalAllocated += (StructuralAllocation);
             }
         }
-        private void AllocateMetabolic(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
+        private void AllocateMetabolic(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT, double organDemand, double nTotalDemand)
         {
             double MetabolicRequirement = Math.Max(0.0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
-            if ((MetabolicRequirement) > 0.0)
+            if (organDemand > 0.0)
             {
-                double MetabolicAllocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
-                BAT.MetabolicAllocation[i] += MetabolicAllocation;
+                //double MetabolicAllocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(BAT.MetabolicDemand[i], nTotalDemand, 0));
+                double Allocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(organDemand, nTotalDemand, 0));
+                double MetabolicAllocation = Math.Min(MetabolicRequirement, Allocation);
+
+                //to stop it from givig it too much metabolic - push the flowover from metabolic into storage
+                BAT.MetabolicAllocation[i] += MetabolicAllocation; 
                 NotAllocated -= (MetabolicAllocation);
                 TotalAllocated += (MetabolicAllocation);
+
+                //do storage if there is any leftover
+                double storageAllocation = Allocation - MetabolicAllocation;
+                BAT.StorageAllocation[i] += storageAllocation;
+                NotAllocated -= (storageAllocation);
+                TotalAllocated += (storageAllocation);
+
             }
         }
         private void AllocateStorage(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
