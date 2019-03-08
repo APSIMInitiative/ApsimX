@@ -105,11 +105,13 @@ namespace Models.PMF
                 //this function is called 4 times as part of estimates
                 //shouldn't set public variables in here
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                var grainDemand = N.StructuralDemand[0] + N.MetabolicDemand[0];
+                var leafStructuralDemand = N.StructuralDemand[2];
                 var structuralDemand = MathUtilities.Sum(N.StructuralDemand);
-                var metabolicDemand = MathUtilities.Sum(N.MetabolicDemand) - N.StructuralDemand[2];
+                var metabolicDemand = MathUtilities.Sum(N.MetabolicDemand);
 
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
-                double nDemand = (structuralDemand + metabolicDemand - N.TotalReallocation) * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double nDemand = (structuralDemand + metabolicDemand - grainDemand - leafStructuralDemand - N.TotalReallocation) * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
@@ -133,9 +135,13 @@ namespace Models.PMF
                     root.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
 
                     //new code
+                    double[] diffnAvailable = new double[root.Diffusion.Length];
+                    for(var i = 0; i < root.Diffusion.Length; ++i)
+                    {
+                        diffnAvailable[i] = root.Diffusion[i] - root.MassFlow[i];
+                    }
                     var totalMassFlow = MathUtilities.Sum(root.MassFlow);
-                    var totalDiffusion = MathUtilities.Sum(root.Diffusion);
-                    
+                    var totalDiffusion = MathUtilities.Sum(diffnAvailable);
 
                     var potentialSupply = totalMassFlow + totalDiffusion;
                     var dltt = root.DltThermalTime.Value();
@@ -152,7 +158,8 @@ namespace Models.PMF
                         var maxRate = root.MaxNUptakeRate.Value();
 
                         var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
-                        actualDiffusion = Math.Min(actualDiffusion, maxUptakeRateFrac * dltt - totalMassFlow);
+                        var maxUptake = maxUptakeRateFrac * dltt - actualMassFlow;
+                        actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                     }
 
                     nSupply = 0.0;
@@ -160,7 +167,7 @@ namespace Models.PMF
                     for (int layer = 0; layer < organNO3Supply.Length; layer++)
                     {
                         var massFlowLayerFraction = MathUtilities.Divide(root.MassFlow[layer], totalMassFlow, 0.0);
-                        var diffusionLayerFraction = MathUtilities.Divide(root.Diffusion[layer], totalDiffusion, 0.0);
+                        var diffusionLayerFraction = MathUtilities.Divide(diffnAvailable[layer], totalDiffusion, 0.0);
                         organNH4Supply[layer] = massFlowLayerFraction * root.MassFlow[layer];
                         organNO3Supply[layer] = massFlowLayerFraction * root.MassFlow[layer] +
                             diffusionLayerFraction * actualDiffusion;
