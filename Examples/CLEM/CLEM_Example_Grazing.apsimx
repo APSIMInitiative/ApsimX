@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 382,
   "Version": 54,
   "Name": "Simulations",
   "Children": [
@@ -41,8 +41,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2000-01-01T00:00:00",
-              "EndDate": "2009-12-31T00:00:00",
+              "StartDate": "1970-01-01T00:00:00",
+              "EndDate": "1993-12-31T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -70,12 +70,13 @@
               "Name": "CLEM",
               "Children": [
                 {
-                  "$type": "Models.CLEM.FileSQLiteGRASP, Models",
-                  "FileName": "FilePasture_ExampleDB.db",
-                  "SelectedTab": "Summary",
-                  "Name": "FileSQLiteGRASP",
+                  "$type": "Models.CLEM.FileCrop, Models",
+                  "FileName": "FileForage.prn",
+                  "ExcelWorkSheetName": null,
+                  "SelectedTab": null,
+                  "Name": "FileForage",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -96,9 +97,9 @@
                           "LandArea": 100.0,
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
-                          "SoilType": 0,
+                          "SoilType": 2,
                           "Units": null,
-                          "SelectedTab": null,
+                          "SelectedTab": "Properties",
                           "Name": "Paddock1",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -626,8 +627,8 @@
                           "Children": [
                             {
                               "$type": "Models.CLEM.Transmutation, Models",
-                              "AmountPerUnitPurchase": 100.0,
-                              "SelectedTab": null,
+                              "AmountPerUnitPurchase": 1000.0,
+                              "SelectedTab": "Properties",
                               "Name": "Purchase",
                               "Children": [
                                 {
@@ -670,66 +671,32 @@
                   "Name": "Activities",
                   "Children": [
                     {
-                      "$type": "Models.CLEM.Activities.PastureActivityManage, Models",
-                      "LandTypeNameToUse": "Land.Paddock1",
-                      "FeedTypeName": "GrazeFoodStore.NativePasture",
-                      "ModelNameFileGRASP": "FileSQLiteGRASP",
-                      "StartingAmount": 2500.0,
-                      "StartingStockingRate": 16.0,
+                      "$type": "Models.CLEM.Activities.CropActivityManageCrop, Models",
+                      "LandItemNameToUse": "Land.Paddock1",
                       "AreaRequested": 100.0,
                       "UseAreaAvailable": true,
                       "OnPartialResourcesAvailableAction": 0,
                       "SelectedTab": null,
-                      "Name": "Manage pasture",
+                      "Name": "Native Pasture on farm",
                       "Children": [
                         {
-                          "$type": "Models.CLEM.Activities.Relationship, Models",
-                          "StartingValue": 3.0,
-                          "Minimum": 1.0,
-                          "Maximum": 11.0,
-                          "XValues": [
-                            0.0,
-                            20.0,
-                            30.0,
-                            100.0
-                          ],
-                          "YValues": [
-                            -0.625,
-                            -0.125,
-                            0.0,
-                            0.75
-                          ],
-                          "Name": "LandConditionIndex",
+                          "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                          "ModelNameFileCrop": "FileForage",
+                          "CropName": "Native",
+                          "StoreItemName": "GrazeFoodStore.NativePasture",
+                          "ProportionKept": 1.0,
+                          "TreesPerHa": 0.0,
+                          "UnitsToHaConverter": 0.0,
+                          "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
+                          "Name": "Native Pasture to GrazeFoodStore",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.CLEM.Activities.Relationship, Models",
-                          "StartingValue": 3.0,
-                          "Minimum": 1.0,
-                          "Maximum": 5.0,
-                          "XValues": [
-                            0.0,
-                            20.0,
-                            30.0,
-                            100.0
-                          ],
-                          "YValues": [
-                            -0.95,
-                            -0.15,
-                            0.0,
-                            1.05
-                          ],
-                          "Name": "GrassBasalArea",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1425,7 +1392,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Growth\"",
+                          "Filter": "Reason = \"Harvest\"",
                           "Name": "Native Pasture Growth",
                           "Children": [],
                           "IncludeInDocumentation": true,
