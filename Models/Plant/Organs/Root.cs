@@ -1306,18 +1306,30 @@ namespace Models.PMF.Organs
             {
                 foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
-
-                // Do Root Senescence
-                RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
-
-                // Do maintenance respiration
-                MaintenanceRespiration = 0;
-                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                    double senescedFrac = senescenceRate.Value();
+                    if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                        senescedFrac = 1.0;  // remaining amount too small, senesce all
+                    Biomass Loss = Live * senescedFrac;
+                    Live.Subtract(Loss);
+                    Dead.Add(Loss);
+                    Senesced.Add(Loss);
                 }
-                needToRecalculateLiveDead = true;
+                else
+                {
+                    // Do Root Senescence
+                    RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
+
+                    // Do maintenance respiration
+                    MaintenanceRespiration = 0;
+                    if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                    {
+                        MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                        MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                    }
+                    needToRecalculateLiveDead = true;
+                }
             }
         }
 
