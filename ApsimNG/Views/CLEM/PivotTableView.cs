@@ -8,6 +8,7 @@ using Models.Core;
 using Models.CLEM;
 using Models.CLEM.Reporting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Data;
 using Gtk;
@@ -32,6 +33,9 @@ namespace ApsimNG.Views.CLEM
         private ComboBox expressionbox = null;
         private ComboBox valuebox = null;
         private ComboBox pivotbox = null;
+
+        private Button leftbutton = null;
+        private Button rightbutton = null;
 
         /// <summary>
         /// Custom gridview added post-reading the glade file
@@ -105,8 +109,17 @@ namespace ApsimNG.Views.CLEM
         }
 
         public event EventHandler OnUpdateData;
+        public event EventHandler<ChangePivotArgs> OnChangePivot;
 
-        private EventHandler<ChangedArgs> changed;
+        public class ChangePivotArgs : EventArgs
+        {            
+            public bool Increase { get; }
+
+            public ChangePivotArgs(bool increase)
+            {
+                Increase = increase;
+            }
+        }
 
         /// <summary>
         /// Instantiate the View
@@ -127,6 +140,9 @@ namespace ApsimNG.Views.CLEM
             columnbox = (ComboBox)builder.GetObject("columnbox");            
             pivotbox = (ComboBox)builder.GetObject("pivotbox");
 
+            leftbutton = (Button)builder.GetObject("leftbutton");
+            rightbutton = (Button)builder.GetObject("rightbutton");
+
             // Add text renderers to the boxes
             AddRenderer(ledgerbox);
             AddRenderer(expressionbox);
@@ -146,31 +162,26 @@ namespace ApsimNG.Views.CLEM
             valuebox.AppendText("Loss");
             valuebox.Active = 0;
 
-            rowbox.AppendText("Resource");
-            rowbox.AppendText("Activity");
-            rowbox.AppendText("ActivityType");
-            rowbox.AppendText("Reason");
-            rowbox.Active = 0;
+            AddOptions(rowbox);
+            rowbox.Active = 4;
 
-            columnbox.AppendText("Resource");
-            columnbox.AppendText("Activity");
-            columnbox.AppendText("ActivityType");
-            columnbox.AppendText("Reason");
-            columnbox.Active = 1;
+            AddOptions(columnbox);
+            columnbox.Active = 5;
 
-            pivotbox.AppendText("Resource");
-            pivotbox.AppendText("Activity");
-            pivotbox.AppendText("ActivityType");
-            pivotbox.AppendText("Reason");
-            pivotbox.Active = 2;
+            AddOptions(pivotbox);
+            pivotbox.Active = 7;
 
-            // Update when box options are changed
+            // Update table when box options are changed
             ledgerbox.Changed += InvokeUpdate;
             rowbox.Changed += InvokeUpdate;
             columnbox.Changed += InvokeUpdate;
             expressionbox.Changed += InvokeUpdate;
             valuebox.Changed += InvokeUpdate;
-            pivotbox.Changed += InvokeUpdate;           
+            pivotbox.Changed += InvokeUpdate;
+
+            // 
+            leftbutton.Clicked += ChangePivot;
+            rightbutton.Clicked += ChangePivot;
 
             // Add the custom gridview (external to glade)
             gridview = new GridView(owner);
@@ -179,9 +190,7 @@ namespace ApsimNG.Views.CLEM
 
             // Let the viewbase know which widget is the main widget
             _mainWidget = vbox1;
-        }       
-
-        
+        }      
 
         /// <summary>
         /// Adds a text CellRenderer to a combo box
@@ -201,7 +210,28 @@ namespace ApsimNG.Views.CLEM
             ListStore store = new ListStore(typeof(string));
             combo.Model = store;
         }
-              
+           
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="combo"></param>
+        private static void AddOptions(ComboBox combo)
+        {
+            List<string> options = new List<string>()
+            {
+                "CheckpointID",
+                "SimulationID",
+                "Zone",
+                "Clock.Today",
+                "Resource",
+                "Activity",
+                "ActivityType",
+                "Reason"
+            };
+
+            foreach (string option in options) combo.AppendText(option);
+        }
+
         private void BlockOptions(object sender, EventArgs e)
         {
             //int pos = 0;
@@ -236,7 +266,20 @@ namespace ApsimNG.Views.CLEM
         /// <param name="e"></param>
         private void InvokeUpdate(object sender, EventArgs e)
         {
-            OnUpdateData.Invoke(this, EventArgs.Empty);
+            OnUpdateData.Invoke(sender, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangePivot(object sender, EventArgs e)
+        {            
+            ChangePivotArgs args = new ChangePivotArgs(sender == rightbutton);
+
+            OnChangePivot.Invoke(((Button)sender).Name, args);
+            InvokeUpdate(sender, EventArgs.Empty);
         }
 
         /// <summary>
@@ -246,7 +289,8 @@ namespace ApsimNG.Views.CLEM
         public void AddLedger(string ledger)
         {
             ledgerbox.AppendText(ledger);
-            ledgerbox.Active = 0;
+
+            if (ledgerbox.Active < 0) ledgerbox.Active = 0;
         }
 
         /// <summary>
@@ -260,6 +304,9 @@ namespace ApsimNG.Views.CLEM
             expressionbox.Changed -= InvokeUpdate;
             valuebox.Changed -= InvokeUpdate;
             pivotbox.Changed -= InvokeUpdate;
+
+            leftbutton.Clicked -= ChangePivot;
+            rightbutton.Clicked -= ChangePivot;
         }
     }
 

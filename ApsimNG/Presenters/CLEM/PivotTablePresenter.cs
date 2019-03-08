@@ -22,7 +22,7 @@ namespace ApsimNG.Presenters.CLEM
         /// <summary>
         /// The CustomQuery object
         /// </summary>
-        private PivotTable pivot = null;
+        private PivotTable table = null;
 
         /// <summary>
         /// The CustomQueryView used
@@ -42,13 +42,14 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="explorerPresenter">The presenter to attach to</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.pivot = model as PivotTable;
+            this.table = model as PivotTable;
             this.view = view as PivotTableView;
             this.explorer = explorerPresenter;
 
             this.view.OnUpdateData += UpdateData;
+            this.view.OnChangePivot += ChangePivot;
 
-            GetLedgers();
+            SetLedgers();                                   
         }
 
         /// <summary>
@@ -56,21 +57,18 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GetLedgers()
+        private void SetLedgers()
         {
             CLEMFolder folder = new CLEMFolder();
-            folder = Apsim.Find(pivot, typeof(CLEMFolder)) as CLEMFolder;
+            folder = Apsim.Find(table, typeof(CLEMFolder)) as CLEMFolder;
 
             foreach (var child in folder.Children)
             {
-                if (child.GetType() == typeof(ReportResourceLedger))
-                {
-                    ReportResourceLedger ledger = child as ReportResourceLedger;
-
-                    view.AddLedger(ledger.Name);
-                }
+                if (child.GetType() != typeof(ReportResourceLedger)) continue;
+                
+                ReportResourceLedger ledger = child as ReportResourceLedger;
+                view.AddLedger(ledger.Name);                
             }
-
         }
 
         /// <summary>
@@ -80,24 +78,37 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="e"></param>
         private void UpdateData(object sender, EventArgs e)
         {
-            IStorageReader reader = Apsim.Find(pivot, typeof(IStorageReader)) as IStorageReader;
-
+            IStorageReader reader = Apsim.Find(table, typeof(IStorageReader)) as IStorageReader;
             DataTable input = reader.GetData(view.Ledger);
-            DataTable output = new DataTable($"{view.Expression}Of{view.Value}");
 
-            var rows = input.AsEnumerable().Select(r => r.Field<string>(view.Row)).Distinct();
-            var cols = input.AsEnumerable().Select(r => r.Field<string>(view.Column)).Distinct();
+            table.Pivots = new List<string>(
+                input
+                .AsEnumerable()
+                .Select(r => r.Field<object>(view.Pivot).ToString())
+                .Distinct()
+                .ToList());
 
-            output.Columns.Add(new DataColumn(view.Row, typeof(string)));
-            foreach(var col in cols)
-            {
-                output.Columns.Add(new DataColumn(col.ToString(), typeof(double)));
+            if (table.Pivots.Count <= table.Id) table.Id = 0;
+            
+            var rows = input.AsEnumerable().Select(r => r.Field<object>(view.Row)).Distinct();
+            var cols = input.AsEnumerable().Select(r => r.Field<object>(view.Column)).Distinct();
+
+            DataTable output = new DataTable($"{view.Expression}Of{table.GetPivot()}{view.Value}");
+
+            // Attach columns to the output table          
+            foreach (var col in cols)
+            {  
+                output.Columns.Add(col.ToString(), typeof(double));
             }
 
-            foreach(var row in rows)
+            string name = "Pivot: " + table.GetPivot();
+            output.Columns.Add(name, typeof(string)).SetOrdinal(0);
+
+            // Populate the table with rows
+            foreach (var row in rows)
             {
                 DataRow data = output.NewRow();
-                data[view.Row] = row;
+                data[name] = row;
 
                 foreach(var col in cols)
                 {
@@ -105,8 +116,9 @@ namespace ApsimNG.Presenters.CLEM
 
                     var values =
                         from item in input.AsEnumerable()
-                        where item.Field<string>(view.Column) == col
-                        where item.Field<string>(view.Row) == row
+                        where item.Field<object>(view.Column).ToString() == col.ToString()
+                        where item.Field<object>(view.Row).ToString() == row.ToString()
+                        where item.Field<object>(view.Pivot).ToString() == table.GetPivot()
                         select item.Field<double>(view.Value);
 
                     if (values.Count() > 0) switch (view.Expression)
@@ -131,13 +143,32 @@ namespace ApsimNG.Presenters.CLEM
                             break;
                     }
 
-                    data[col] = value;                    
+                    data[col.ToString()] = value;                    
                 }
                 output.Rows.Add(data);
                 output.AcceptChanges();
             }            
 
             view.gridview.DataSource = output;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangePivot(object sender, PivotTableView.ChangePivotArgs args)
+        {
+            if (args.Increase)
+            {
+                if (table.Id < table.Pivots.Count() - 1) table.Id += 1;
+                else table.Id = 0;                
+            }
+            else
+            {
+                if (table.Id > 0) table.Id -= 1;
+                else table.Id = table.Pivots.Count() - 1;
+            }
         }
 
         /// <summary>
