@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
                     aESum += ind.AdultEquivalent;
                     saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     saleWeight += ind.Weight;
-                    ruminantHerd.RemoveRuminant(ind);
+                    ruminantHerd.RemoveRuminant(ind, this);
                 }
             }
             else
@@ -156,7 +156,7 @@ namespace Models.CLEM.Activities
                                 load450kgs += ind.Weight / 450.0;
                                 saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                                 saleWeight += ind.Weight;
-                                ruminantHerd.RemoveRuminant(ind);
+                                ruminantHerd.RemoveRuminant(ind, this);
 
                                 //TODO: work out what to do with suckling calves still with mothers if mother sold.
                             }
@@ -262,7 +262,7 @@ namespace Models.CLEM.Activities
                     {
                         ruminantHerd.PurchaseIndividuals.Remove(newind);
                         newind.ID = ruminantHerd.NextUniqueID;
-                        ruminantHerd.AddRuminant(newind);
+                        ruminantHerd.AddRuminant(newind, this);
                         cost += value;
                     }
                     else
@@ -275,7 +275,7 @@ namespace Models.CLEM.Activities
                 {
                     ruminantHerd.PurchaseIndividuals.Remove(newind);
                     newind.ID = ruminantHerd.NextUniqueID;
-                    ruminantHerd.AddRuminant(newind);
+                    ruminantHerd.AddRuminant(newind, this);
                 }
             }
 
@@ -362,7 +362,7 @@ namespace Models.CLEM.Activities
                                 if (cost + value <= fundsAvailable && fundsexceeded == false)
                                 {
                                     ind.ID = ruminantHerd.NextUniqueID;
-                                    ruminantHerd.AddRuminant(ind);
+                                    ruminantHerd.AddRuminant(ind, this);
                                     ruminantHerd.PurchaseIndividuals.Remove(ind);
                                     cost += value;
                                 }
@@ -375,7 +375,7 @@ namespace Models.CLEM.Activities
                             else // no financial transactions
                             {
                                 ind.ID = ruminantHerd.NextUniqueID;
-                                ruminantHerd.AddRuminant(ind);
+                                ruminantHerd.AddRuminant(ind, this);
                                 ruminantHerd.PurchaseIndividuals.Remove(ind);
                             }
 

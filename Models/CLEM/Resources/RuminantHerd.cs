@@ -67,7 +67,7 @@ namespace Models.CLEM.Resources
                     foreach (var ind in ruminantCohorts.CreateIndividuals())
                     {
                         ind.SaleFlag = HerdChangeReason.InitialHerd;
-                        AddRuminant(ind);
+                        AddRuminant(ind, this);
                     }
                 }
             }
@@ -188,7 +188,8 @@ namespace Models.CLEM.Resources
         /// Add individual/cohort to the the herd
         /// </summary>
         /// <param name="ind">Individual Ruminant to add</param>
-        public void AddRuminant(Ruminant ind)
+        /// <param name="model">Model adding individual</param>
+        public void AddRuminant(Ruminant ind, IModel model)
         {
             if (ind.ID == 0)
             {
@@ -199,9 +200,9 @@ namespace Models.CLEM.Resources
 
             ResourceTransaction details = new ResourceTransaction();
             details.Gain = 1;
-            details.Activity = "Unknown";
-            details.ActivityType = "Unknown";
-            details.Reason = "Unknown";
+            details.Activity = model.Name; // "Unknown";
+            details.ActivityType = model.GetType().Name; // "Unknown";
+            details.Reason = ind.SaleFlag.ToString(); // "Unknown";
             details.ResourceType = this.Name;
             details.ExtraInformation = ind;
             LastTransaction = details;
@@ -216,7 +217,8 @@ namespace Models.CLEM.Resources
         /// Remove individual/cohort from the herd
         /// </summary>
         /// <param name="ind">Individual Ruminant to remove</param>
-        public void RemoveRuminant(Ruminant ind)
+        /// <param name="model">Model removing individual</param>
+        public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
             if (ind.Gender == Sex.Female)
@@ -231,9 +233,9 @@ namespace Models.CLEM.Resources
 
             ResourceTransaction details = new ResourceTransaction();
             details.Loss = 1;
-            details.Activity = "Unknown";
-            details.ActivityType = "Unknown";
-            details.Reason = "Unknown";
+            details.Activity = model.Name; // "Unknown";
+            details.ActivityType = model.GetType().Name; // "Unknown";
+            details.Reason = ind.SaleFlag.ToString(); // "Unknown";
             details.ResourceType = this.Name;
             details.ExtraInformation = ind;
             LastTransaction = details;
@@ -266,12 +268,13 @@ namespace Models.CLEM.Resources
         /// Remove list of Ruminants from the herd
         /// </summary>
         /// <param name="list">List of Ruminants to remove</param>
-        public void RemoveRuminant(List<Ruminant> list)
+        /// <param name="model">Model removing individuals</param>
+        public void RemoveRuminant(List<Ruminant> list, IModel model)
         {
             foreach (var ind in list)
             {
                 // report removal
-                RemoveRuminant(ind);
+                RemoveRuminant(ind, model);
             }
         }
 

@@ -297,7 +297,7 @@ namespace Models.CLEM.Activities
                             newCalfRuminant.Weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                             newCalfRuminant.HighWeight = newCalfRuminant.Weight;
                             newCalfRuminant.SaleFlag = HerdChangeReason.Born;
-                            Resources.RuminantHerd().AddRuminant(newCalfRuminant);
+                            Resources.RuminantHerd().AddRuminant(newCalfRuminant, this);
 
                             // add to sucklings
                             female.SucklingOffspringList.Add(newCalfRuminant);

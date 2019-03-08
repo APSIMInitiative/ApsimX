@@ -576,7 +576,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * (1.0 - a.BreedParams.ProportionOfMaxWeightToSurvive))).ToList();
             // set died flag
             died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
-            ruminantHerd.RemoveRuminant(died);
+            ruminantHerd.RemoveRuminant(died, this);
 
             // base mortality adjusted for condition
             foreach (var ind in ruminantHerd.Herd)
@@ -640,7 +640,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            ruminantHerd.RemoveRuminant(died);
+            ruminantHerd.RemoveRuminant(died, this);
         }
 
         /// <summary>
