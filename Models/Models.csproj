@@ -214,7 +214,10 @@
     <Compile Include="Core\ITest.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
-    <Compile Include="Core\IStorageWriter.cs" />
+    <Compile Include="Storage\WriteTableCommand.cs" />
+    <Compile Include="Storage\DatabaseTableDetails.cs" />
+    <Compile Include="Storage\IDataStore.cs" />
+    <Compile Include="Storage\IStorageWriter.cs" />
     <Compile Include="Core\IReferenceExternalFiles.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
@@ -274,6 +277,12 @@
     <Compile Include="Plant\Structure\BudNumberFunction.cs" />
     <Compile Include="Soils\Nutrients\Chloride.cs" />
     <Compile Include="Plant\Structure\ApexBase.cs" />
+    <Compile Include="Storage\DataStoreReader.cs" />
+    <Compile Include="Storage\RevertCheckpointCommand.cs" />
+    <Compile Include="Storage\DeleteCheckpointCommand.cs" />
+    <Compile Include="Storage\AddCheckpointCommand.cs" />
+    <Compile Include="Storage\EmptyCommand.cs" />
+    <Compile Include="Storage\DeleteRowsCommand.cs" />
     <Compile Include="Soils\SoilNitrogenPlantAvailableNH4.cs" />
     <Compile Include="Soils\SoilNitrogenPlantAvailableNO3.cs" />
     <Compile Include="Soils\SoilNitrogenUrea.cs" />
@@ -388,7 +397,7 @@
     <Compile Include="Core\IEvent.cs" />
     <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
-    <Compile Include="Core\IStorageReader.cs" />
+    <Compile Include="Storage\IStorageReader.cs" />
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
@@ -440,8 +449,10 @@
     <Compile Include="Stock\stock_vars.cs" />
     <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
+    <Compile Include="Storage\DataStoreWriter.cs" />
+    <Compile Include="Storage\InsertQuery.cs" />
     <Compile Include="Storage\Row.cs" />
-    <Compile Include="Storage\Table.cs" />
+    <Compile Include="Storage\ReportData.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />

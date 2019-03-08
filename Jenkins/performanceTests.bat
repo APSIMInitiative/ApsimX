@@ -31,7 +31,7 @@ nuget restore -verbosity quiet
 
 echo Compiling APSIM.PerformanceTests.Collector...
 msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
-
+copy /y "%apsimx%\DeploymentSupport\Windows\Bin\sqlite3.dll" bin\Release\
 echo Running performance tests collector...
 bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 
@@ -42,7 +42,7 @@ if errorlevel 1 (
 	echo DateTime stamp: 	"%DATETIMESTAMP%"
 	echo Commit author:		"%COMMIT_AUTHOR%"
 	echo Log file:
-	type PerformanceCollector.txt
+	type bin\Release\PerformanceCollector.txt
 ) else (
 	echo Done.
 )

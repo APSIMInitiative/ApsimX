@@ -19,6 +19,8 @@ namespace UserInterface.Presenters
     using Models.Storage;
     using Models.Report;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
+    using Models.Core.Runners;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -26,7 +28,7 @@ namespace UserInterface.Presenters
     public class ContextMenu
     {
         [Link(IsOptional = true)]
-        IStorageReader storage = null;
+        IDataStore storage = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -56,7 +58,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.EmptyDataStore();
+            storage.Writer.Empty();
         }
 
         /// <summary>
@@ -71,9 +73,7 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (IPostSimulationTool tool in Apsim.FindAll(explorerPresenter.ApsimXFile, typeof(IPostSimulationTool)))
-                    if ((tool as IModel).Enabled)
-                        tool.Run(storage);
+                RunOrganiser.RunPostSimulationTools(explorerPresenter.ApsimXFile, storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -371,9 +371,9 @@ namespace UserInterface.Presenters
         {
             explorerPresenter.MainPresenter.ShowWaitCursor(true);
             List<DataTable> tables = new List<DataTable>();
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                using (DataTable table = storage.GetData(tableName))
+                using (DataTable table = storage.Reader.GetData(tableName))
                 {
                     table.TableName = tableName;
                     tables.Add(table);

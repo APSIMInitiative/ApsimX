@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models.Core;
     using Models.Graph;
+    using Models.Storage;
     using Views;
     
     /// <summary>
@@ -29,7 +30,7 @@ namespace UserInterface.Presenters
         /// The storage object
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
         
         /// <summary>The graph view</summary>
         private IGraphView graphView;

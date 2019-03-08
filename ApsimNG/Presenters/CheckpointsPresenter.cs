@@ -29,7 +29,7 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>Storage model</summary>
-        private DataStore storage = null;
+        private IDataStore storage = null;
 
         /// <summary>Attach the specified Model and View.</summary>
         /// <param name="model">The axis model</param>
@@ -44,7 +44,7 @@ namespace UserInterface.Presenters
             storage = Apsim.Find(this.model, typeof(DataStore)) as DataStore;
 
             this.view.List.IsModelList = false;
-            this.view.List.Values = storage.Checkpoints().ToArray();
+            this.view.List.Values = storage.Reader.CheckpointNames.ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
             this.view.AddButton("Delete", null, this.OnDeleteButtonClicked);
             this.view.AddButton("RevertTo", null, this.OnRevertToButtonClicked);
@@ -59,7 +59,7 @@ namespace UserInterface.Presenters
         /// <summary>Populate.</summary>
         private void PopulateList()
         {
-            view.List.Values = storage.Checkpoints().ToArray();
+            view.List.Values = storage.Reader.CheckpointNames.ToArray();
         }
 
         /// <summary>The user has clicked the add button.</summary>
@@ -71,7 +71,7 @@ namespace UserInterface.Presenters
                                                                        "Enter new checkpoint name:", null);
             if (checkpointName != null)
             {
-                bool checkpointExists = storage.Checkpoints().Contains(checkpointName);
+                bool checkpointExists = storage.Reader.CheckpointNames.Contains(checkpointName);
                 bool addCheckpoint = !checkpointExists ||
                                      explorerPresenter.MainPresenter.AskQuestion("A checkpoint with this name already exists. Do you want to overwrite previous checkpoint?") == QuestionResponseEnum.Yes;
                 if (addCheckpoint)
@@ -104,7 +104,7 @@ namespace UserInterface.Presenters
                 {
                     try
                     {
-                        storage.DeleteCheckpoint(checkpointName);
+                        storage.Writer.DeleteCheckpoint(checkpointName);
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }
