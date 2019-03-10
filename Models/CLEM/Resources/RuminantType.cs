@@ -57,7 +57,6 @@ namespace Models.CLEM.Resources
             if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
             {
                 PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
-//                SirePrice = PriceList.BreedingSirePrice;
             }
 
             // get advanced conception parameters
@@ -346,6 +345,7 @@ namespace Models.CLEM.Resources
         [Description("Parameter for energy for growth #2")]
         [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept2 { get; set; }
+
         /// <summary>
         /// Growth efficiency
         /// </summary>
@@ -353,6 +353,14 @@ namespace Models.CLEM.Resources
         [Description("Growth efficiency")]
         [Required, GreaterThanValue(0)]
         public double GrowthEfficiency { get; set; }
+
+        /// <summary>
+        /// Natural weaning age
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Natural weaning age (0 to use gestation length)")]
+        [Required]
+        public double NaturalWeaningAge { get; set; }
 
         /// <summary>
         /// Standard Reference Weight of female
@@ -711,12 +719,12 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MinimumDaysBirthToConception { get; set; }
         /// <summary>
-        /// Rate at which twins are concieved
+        /// Rate at which multiple births are concieved (twins, triplets, ...)
         /// </summary>
         [Category("Basic", "Breeding")]
-        [Description("Rate at which twins are concieved")]
-        [Required, Proportion]
-        public double TwinRate { get; set; }
+        [Description("Rate at which multiple births occur (twins,triplets,...")]
+        [Proportion]
+        public double[] MultipleBirthRate { get; set; }
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>

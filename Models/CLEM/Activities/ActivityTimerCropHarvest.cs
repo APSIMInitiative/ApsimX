@@ -83,7 +83,7 @@ namespace Models.CLEM.Activities
 
             return results;
         }
-
+        
         /// <summary>
         /// Method to determine whether the activity is due based on harvest details form parent.
         /// </summary>
@@ -135,6 +135,45 @@ namespace Models.CLEM.Activities
                     return true;
                 }
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Method to determine whether the activity has past based on current dateand harvest details form parent.
+        /// </summary>
+        /// <returns>Whether the activity is past</returns>
+        public bool ActivityPast
+        {
+            get
+            {
+                int[] range = new int[2] { OffsetMonthHarvestStart, OffsetMonthHarvestStop };
+                int[] month = new int[2];
+
+                DateTime harvestDate;
+
+                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0)
+                {
+                    // compare with previous harvest
+                    harvestDate = ManageProductActivity.PreviousHarvest.HarvestDate;
+                }
+                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
+                {
+                    // compare with next harvest 
+                    harvestDate = ManageProductActivity.NextHarvest.HarvestDate;
+                }
+                else
+                {
+                    // no harvest to compare with
+                    return false;
+                }
+
+                for (int i = 0; i < 2; i++)
+                {
+                    DateTime checkDate = harvestDate.AddMonths(range[i]);
+                    month[i] = (checkDate.Year * 100 + checkDate.Month);
+                }
+                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                return (month[0] < today && month[1] < today);
             }
         }
 

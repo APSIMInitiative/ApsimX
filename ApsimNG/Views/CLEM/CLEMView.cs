@@ -40,8 +40,14 @@ namespace UserInterface.Views
         /// <param name="control"></param>
         void AddTabView(string tabName, object control);
 
-        /// <summary>Invoked when summary tab is selected</summary>
-        event EventHandler<EventArgs> SummaryTabSelected;
+        /// <summary>
+        /// selects the tab view to the display
+        /// </summary>
+        /// <param name="tabName"></param>
+        void SelectTabView(string tabName);
+
+        /// <summary>Invoked when tab is selected</summary>
+        event EventHandler<EventArgs> TabSelected;
     }
 
     public class CLEMView : ViewBase, Views.ICLEMView
@@ -56,8 +62,8 @@ namespace UserInterface.Views
         private Label versionsLabel = null;
         private Viewport versionsView = null;
 
-        /// <summary>Invoked when summary tab selected</summary>
-        public event EventHandler<EventArgs> SummaryTabSelected;
+        /// <summary>Invoked when tab selected</summary>
+        public event EventHandler<EventArgs> TabSelected;
 
         private bool setupComplete = false;
 
@@ -111,6 +117,8 @@ namespace UserInterface.Views
                 Text = "Versions"
             };
 
+            nbook.CurrentPage = 0;
+
             _mainWidget = nbook;
             setupComplete = true;
         }
@@ -122,13 +130,10 @@ namespace UserInterface.Views
                 if (setupComplete && nbook.CurrentPage >= 0)
                 {
                     string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
-                    if (selectedLabel != null && selectedLabel.Contains("Summary"))
+                    TabChangedEventArgs  tabEArgs = new TabChangedEventArgs(selectedLabel);
+                    if (TabSelected != null)
                     {
-                        EventArgs eargs = new EventArgs();
-                        if (SummaryTabSelected != null)
-                        {
-                            SummaryTabSelected.Invoke(this, eargs);
-                        }
+                        TabSelected.Invoke(this, tabEArgs);
                     }
                 }
             }
@@ -162,6 +167,20 @@ namespace UserInterface.Views
         public void Detach()
         {
             nbook.SwitchPage -= NotebookSwitchPage;
+        }
+
+        public void SelectTabView(string tabName)
+        {
+            int page = 0;
+            for (int i = 0; i < nbook.Children.Count(); i++)
+            {
+                if(nbook.GetTabLabelText(nbook.GetNthPage(i))==tabName)
+                {
+                    page = i;
+                    break;
+                }
+            }
+            nbook.CurrentPage = page;
         }
 
         public void AddTabView(string tabName, object control)
@@ -207,6 +226,16 @@ namespace UserInterface.Views
                 tab.Add(view.MainWidget);
                 tab.ShowAll();
             }
+        }
+    }
+
+    public class TabChangedEventArgs : EventArgs
+    {
+        public string TabName { get; set; }
+
+        public TabChangedEventArgs(string myString)
+        {
+            this.TabName = myString;
         }
     }
 }

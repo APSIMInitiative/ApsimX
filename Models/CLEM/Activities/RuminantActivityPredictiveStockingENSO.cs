@@ -353,7 +353,7 @@ namespace Models.CLEM.Activities
             {
                 // remove wet cows
                 // find wet cows not already marked for sale
-                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true && a.SucklingOffspring.Count() == 0).ToList();
+                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
                 int cnt = 0;
                 while (cnt < wetbreeders.Count() && aEforSale > 0)
                 {

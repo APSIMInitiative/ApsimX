@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
+            html += "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
             return html;
         }
 

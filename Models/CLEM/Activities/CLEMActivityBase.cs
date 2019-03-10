@@ -939,6 +939,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         NotNeeded,
         /// <summary>
+        /// Indicates activity cuased a warning and was not perfromed
+        /// </summary>
+        Warning,
+        /// <summary>
         /// Indicates activity was place holder or parent activity
         /// </summary>
         NoTask

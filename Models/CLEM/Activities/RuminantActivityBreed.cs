@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
                                         conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                                         if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                         {
-                                            female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate, i);
+                                            female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                         }
                                     }
                                 }
@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
                                         {
                                             if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                             {
-                                                female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate, i);
+                                                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                             }
                                             numberServiced++;
                                         }
@@ -268,7 +268,7 @@ namespace Models.CLEM.Activities
                     if (female.BirthDue)
                     {
                         female.WeightLossDueToCalf = 0;
-                        int numberOfNewborn = (female.CarryingTwins) ? 2 : 1;
+                        int numberOfNewborn = female.CarryingCount;
                         for (int i = 0; i < numberOfNewborn; i++)
                         {
                             // Foetal mortality is now performed each timestep at base of this method
@@ -297,10 +297,10 @@ namespace Models.CLEM.Activities
                             newCalfRuminant.Weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                             newCalfRuminant.HighWeight = newCalfRuminant.Weight;
                             newCalfRuminant.SaleFlag = HerdChangeReason.Born;
-                            Resources.RuminantHerd().AddRuminant(newCalfRuminant);
+                            Resources.RuminantHerd().AddRuminant(newCalfRuminant, this);
 
                             // add to sucklings
-                            female.SucklingOffspring.Add(newCalfRuminant);
+                            female.SucklingOffspringList.Add(newCalfRuminant);
                             // remove calf weight from female
                             female.WeightLossDueToCalf += newCalfRuminant.Weight;
                         }
@@ -328,7 +328,7 @@ namespace Models.CLEM.Activities
                                 conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                                 if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                 {
-                                    female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.TwinRate, conceptionRate, 0);
+                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
                                 }
                             }
                         }
@@ -350,7 +350,7 @@ namespace Models.CLEM.Activities
                                 {
                                     if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                     {
-                                        female.UpdateConceptionDetails(ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.TwinRate, conceptionRate, 0);
+                                        female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
                                     }
                                     numberServiced++;
                                 }

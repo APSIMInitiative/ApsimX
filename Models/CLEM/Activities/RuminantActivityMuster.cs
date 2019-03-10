@@ -90,9 +90,9 @@ namespace Models.CLEM.Activities
                     {
                         RuminantFemale female = ind as RuminantFemale;
                         // check if mother with sucklings
-                        if (female.SucklingOffspring.Count > 0)
+                        if (female.SucklingOffspringList.Count > 0)
                         {
-                            foreach (var suckling in female.SucklingOffspring)
+                            foreach (var suckling in female.SucklingOffspringList)
                             {
                                 suckling.Location = pastureName;
                             }

@@ -67,17 +67,24 @@ namespace Models.CLEM.Activities
         {
             // take all milk
             List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList();
-            double milkTotal = herd.Sum(a => a.MilkAmount);
+            double milkTotal = herd.Sum(a => a.MilkCurrentlyAvailable);
             if (milkTotal > 0)
             {
-                // only provide what labour would allow
                 double labourLimit = this.LabourLimitProportion;
+                // only provide what labour would allow
                 (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName);
+
+                // record milk taken with female for accounting
+                foreach (RuminantFemale female in herd)
+                {
+                    female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
+                }
             }
             else
             {
                 this.Status = ActivityStatus.NotNeeded;
             }
+
         }
 
         /// <summary>
@@ -96,7 +103,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true && a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)

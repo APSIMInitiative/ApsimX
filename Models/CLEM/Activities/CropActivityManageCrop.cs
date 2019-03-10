@@ -25,6 +25,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"content/features/activities/crop/managecrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
+        [Link]
+        Clock Clock = null;
+
         /// <summary>
         /// Land type where crop is to be grown
         /// </summary>
@@ -132,7 +135,8 @@ namespace Models.CLEM.Activities
             int i = 0;
             foreach (var item in this.Children.OfType<CropActivityManageProduct>())
             {
-                item.ActivityEnabled = i == CurrentCropIndex;
+                item.ActivityEnabled = (i == CurrentCropIndex);
+                item.FirstTimeStepOfRotation = Clock.StartDate.Year*100 + Clock.StartDate.Month;
                 i++;
             }
         }
@@ -165,7 +169,15 @@ namespace Models.CLEM.Activities
                 int i = 0;
                 foreach (var item in this.Children.OfType<CropActivityManageProduct>())
                 {
-                    item.ActivityEnabled = i == CurrentCropIndex;
+                    item.ActivityEnabled = (i == CurrentCropIndex);
+                    if (item.ActivityEnabled)
+                    {
+                        item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = Clock.Today.AddDays(1).Year * 100 + Clock.Today.AddDays(1).Month;
+                    }
+                    else
+                    {
+                        item.FirstTimeStepOfRotation = 0;
+                    }
                     i++;
                 }
             }
