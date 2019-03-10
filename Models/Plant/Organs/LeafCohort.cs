@@ -762,6 +762,8 @@ namespace Models.PMF.Organs
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
+            // FunctionalNConc = (CriticalNConc * (DM.Structural + DM.Metabolic) - MinimumNConc * DM.Structural)) / DM.Metabolic
+            //                 = (CriticalNConc - MinimumNConc * (DM.Structural / (DM.Structural + DM.Metabolic))) / (DM.Metabolic / (DM.Structural + DM.Metabolic))
             FunctionalNConc = (leafCohortParameters.CriticalNConc.Value() -
                                leafCohortParameters.MinimumNConc.Value() * StructuralFraction) *
                               (1 / (1 - StructuralFraction));
