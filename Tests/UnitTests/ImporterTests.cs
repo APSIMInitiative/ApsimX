@@ -280,7 +280,7 @@
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var r = sims.Children[0].Children[0] as Report;
+            var r = sims.Children[0].Children[0] as Models.Report.Report;
             Assert.IsNotNull(r);
             Assert.AreEqual(r.VariableNames[0], "[Clock].Today");
             Assert.AreEqual(r.VariableNames[1], "biomass");

@@ -1,27 +1,17 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="APITest.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace UnitTests
+﻿namespace UnitTests.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using Importer;
+    using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Graph;
     using Models.Soils;
     using NUnit.Framework;
-    using APSIM.Shared.Utilities;
-    using UserInterface.Interfaces;
-    using UserInterface.Views;
-    using UserInterface.Commands;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
     using UserInterface;
-    using UserInterface.Presenters;
-    using System.Reflection;
-    using Models.Core.ApsimFile;
+    using UserInterface.Commands;
     using System.Linq;
 
     /// <summary> 
@@ -29,7 +19,7 @@ namespace UnitTests
     /// to contain all SystemComponentTest Unit Tests
     /// </summary>
     [TestFixture]
-    public class APITest
+    public class ApsimTests
     {
         /// <summary>
         /// A simulations instance
@@ -54,15 +44,6 @@ namespace UnitTests
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.APITest.xml");
             List<Exception> creationExceptions;
             simulations = FileFormat.ReadFromString<Simulations>(xml, out creationExceptions);
-
-            //string sqliteSourceFileName = TestDataStore.FindSqlite3DLL();
-
-            //string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
-            //if (!File.Exists(sqliteFileName))
-            //{
-            //    File.Copy(sqliteSourceFileName, sqliteFileName);
-            //}
-
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 

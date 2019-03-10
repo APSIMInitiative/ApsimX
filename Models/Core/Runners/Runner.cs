@@ -1,4 +1,4 @@
-﻿namespace Models.Core
+﻿namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
     using Runners;

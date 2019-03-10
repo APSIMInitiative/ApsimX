@@ -1,4 +1,4 @@
-﻿namespace UnitTests
+﻿namespace UnitTests.Storage
 {
     using APSIM.Shared.Utilities;
     using Models.Storage;

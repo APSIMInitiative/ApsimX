@@ -1,4 +1,4 @@
-﻿namespace UnitTests
+﻿namespace UnitTests.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
     using Models.Core.ApsimFile;
