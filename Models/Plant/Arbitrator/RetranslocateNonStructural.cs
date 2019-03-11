@@ -17,16 +17,28 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation
     {
-        /// <summary>The senescence rate function</summary>
+        /// <summary>The calculation for N retranslocation function</summary>
         [ChildLinkByName]
         [Units("/d")]
         public IFunction RetranslocateFunction = null;
+
+        /// <summary>The calculation for DM retranslocation function</summary>
+        [ChildLinkByName]
+        [Units("/d")]
+        public IFunction RetranslocateDMFunction = null;
 
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
         public double Calculate(IOrgan organ)
         {
             return RetranslocateFunction.Value();
+        }
+
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        public double CalculateBiomass(IOrgan organ)
+        {
+            return 0.0;
         }
 
         /// <summary>Allocate the retranslocated material</summary>
@@ -47,6 +59,14 @@ namespace Models.PMF
             double metabolicRetranslocation = nitrogen.Retranslocation - storageRetranslocation;
             genOrgan.Live.MetabolicN -= metabolicRetranslocation;
             genOrgan.Allocated.MetabolicN -= metabolicRetranslocation;
+
+        }
+
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        /// <param name="biomass"></param>
+        public void AllocateBiomass(IOrgan organ, BiomassAllocationType biomass)
+        {
 
         }
 

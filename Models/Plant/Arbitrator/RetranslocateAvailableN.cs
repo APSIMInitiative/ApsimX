@@ -21,10 +21,15 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RetranslocateAvailableN : Model, IRetranslocateMethod, ICustomDocumentation
     {
-        /// <summary>The senescence rate function</summary>
+        /// <summary>The calculation for N retranslocation function</summary>
         [ChildLinkByName]
         [Units("/d")]
         public IFunction RetranslocateFunction = null;
+
+        /// <summary>The calculation for DM retranslocation function</summary>
+        [ChildLinkByName]
+        [Units("/d")]
+        public IFunction RetranslocateDMFunction = null;
 
         /// <summary>The parent plant</summary>
         [Link]
@@ -42,6 +47,43 @@ namespace Models.PMF
             return RetranslocateFunction.Value();
         }
 
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        public double CalculateBiomass(IOrgan organ)
+        {
+            return RetranslocateDMFunction.Value();
+        }
+
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        /// <param name="biomass"></param>
+        public void AllocateBiomass(IOrgan organ, BiomassAllocationType biomass)
+        {
+            //doing all non-structural allocation here for sorghum, as well as retranslocation
+            //TODO JB refactor metabolic and storage allocation
+            var genOrgan = organ as GenericOrgan;
+            genOrgan.Live.StorageWt += biomass.Storage;
+            genOrgan.Live.MetabolicWt += biomass.Metabolic;
+
+            genOrgan.Allocated.StorageWt += biomass.Storage;
+            genOrgan.Allocated.MetabolicWt += biomass.Metabolic;
+
+            var remainingBiomass = biomass.Retranslocation;
+            double storageRetranslocation = Math.Min(genOrgan.Live.StorageWt, remainingBiomass);
+            genOrgan.Live.StorageWt -= storageRetranslocation;
+            genOrgan.Allocated.StorageWt -= storageRetranslocation;
+            remainingBiomass -= storageRetranslocation;
+
+            double metabolicRetranslocation = Math.Min(genOrgan.Live.MetabolicWt, remainingBiomass);
+            genOrgan.Live.MetabolicWt -= metabolicRetranslocation;
+            genOrgan.Allocated.MetabolicWt -= metabolicRetranslocation;
+            remainingBiomass -= metabolicRetranslocation;
+
+            double structuralRetranslocation = Math.Min(genOrgan.Live.StructuralWt, remainingBiomass);
+            genOrgan.Live.StructuralWt -= structuralRetranslocation;
+            genOrgan.Allocated.StructuralWt -= structuralRetranslocation;
+            remainingBiomass -= structuralRetranslocation;
+        }
 
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>

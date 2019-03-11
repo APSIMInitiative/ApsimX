@@ -4998,6 +4998,16 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "RetranslocateDMFunction",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -6106,6 +6116,195 @@
                                   "ReadOnly": false
                                 }
                               ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "RetranslocateDMFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "StemWtAvail",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "DMToday",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stem].potentialDMAllocation.Structural",
+                                      "Name": "dltDmGreen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stem].Live.Wt",
+                                      "Name": "dmGreen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "MultiplyFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.OnEventFunction, Models",
+                                      "SetEvent": "Flowering",
+                                      "ReSetEvent": null,
+                                      "Name": "PlantMinDM",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.0,
+                                          "Units": null,
+                                          "Name": "PreEventValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.3,
+                                          "Units": null,
+                                          "Name": "PostEventValue",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.MultiplyFunction, Models",
+                                              "Name": "PlantMinDM",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.DivideFunction, Models",
+                                                  "Name": "dmPlantStem",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Stem].Live.Wt",
+                                                      "Name": "dmGreen",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Plant].SowingData.Density",
+                                                      "Name": "density",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                                  "Name": "SubtractFunction",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.Constant, Models",
+                                                      "FixedValue": 1.0,
+                                                      "Units": null,
+                                                      "Name": "One",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.Constant, Models",
+                                                      "FixedValue": 0.2,
+                                                      "Units": null,
+                                                      "Name": "translocFrac",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Plant].SowingData.Density",
+                                      "Name": "density",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.15,
+                              "Units": null,
+                              "Name": "retransRate",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
