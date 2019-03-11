@@ -128,7 +128,7 @@ namespace Models.PMF.Organs
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
-        [Link(IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IRetranslocateMethod RetranslocateNitrogen = null;
 
         /// <summary>The live biomass state at start of the computation round</summary>
@@ -281,9 +281,17 @@ namespace Models.PMF.Organs
             if (NSupply.Reallocation < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
-            if (NSupply.Retranslocation < -BiomassToleranceValue)
-                throw new Exception("Negative N retranslocation value computed for " + Name);
+            if (RetranslocateNitrogen != null)
+            {
+                NSupply.Retranslocation = RetranslocateNitrogen.Calculate(this);
+            }
+            else
+            {
+                NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
+                if (NSupply.Retranslocation < -BiomassToleranceValue)
+                    throw new Exception("Negative N retranslocation value computed for " + Name);
+            }
+
 
             NSupply.Fixation = 0;
             NSupply.Uptake = 0;

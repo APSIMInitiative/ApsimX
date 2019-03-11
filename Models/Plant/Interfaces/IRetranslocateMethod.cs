@@ -16,5 +16,10 @@ namespace Models.PMF.Interfaces
         /// <param name="organ"></param>
         /// <param name="allocationType"></param>
         void Allocate(IOrgan organ, BiomassAllocationType allocationType);
+
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        double Calculate(IOrgan organ);
+
     }
 }

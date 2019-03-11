@@ -218,6 +218,7 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
+    <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />

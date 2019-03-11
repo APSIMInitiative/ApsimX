@@ -4766,6 +4766,245 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.RetranslocateAvailableN, Models",
+                  "Name": "RetranslocateAvailableN",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "RetranslocateFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinimumFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "availableDilnN",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "DivideFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "dltStemNConc",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.AddFunction, Models",
+                                          "Name": "AddFunction",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.MultiplyFunction, Models",
+                                              "Name": "MultiplyFunction",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 0.0062,
+                                                  "Units": null,
+                                                  "Name": "dilnNSlope",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "stemNConc",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.DivideFunction, Models",
+                                                      "Name": "divide",
+                                                      "Children": [
+                                                        {
+                                                          "$type": "Models.Functions.VariableReference, Models",
+                                                          "VariableName": "[Rachis].Live.N",
+                                                          "Name": "nGreen",
+                                                          "Children": [],
+                                                          "IncludeInDocumentation": true,
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        },
+                                                        {
+                                                          "$type": "Models.Functions.AddFunction, Models",
+                                                          "Name": "DMToday",
+                                                          "Children": [
+                                                            {
+                                                              "$type": "Models.Functions.VariableReference, Models",
+                                                              "VariableName": "[Rachis].potentialDMAllocation.Structural",
+                                                              "Name": "dltDmGreen",
+                                                              "Children": [],
+                                                              "IncludeInDocumentation": true,
+                                                              "Enabled": true,
+                                                              "ReadOnly": false
+                                                            },
+                                                            {
+                                                              "$type": "Models.Functions.VariableReference, Models",
+                                                              "VariableName": "[Rachis].Live.Wt",
+                                                              "Name": "dmGreen",
+                                                              "Children": [],
+                                                              "IncludeInDocumentation": true,
+                                                              "Enabled": true,
+                                                              "ReadOnly": false
+                                                            }
+                                                          ],
+                                                          "IncludeInDocumentation": true,
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        }
+                                                      ],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.Constant, Models",
+                                                      "FixedValue": 100.0,
+                                                      "Units": null,
+                                                      "Name": "Percentage",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": -0.001,
+                                              "Units": null,
+                                              "Name": "dilnNInt",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].ThermalTime",
+                                          "Name": "ThermalTime",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 100.0,
+                                      "Units": null,
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "DMToday",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Rachis].potentialDMAllocation.Structural",
+                                      "Name": "dltDmGreen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Rachis].Live.Wt",
+                                      "Name": "dmGreen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Rachis].Live.N",
+                                  "Name": "NGreen",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Rachis].NDemands.Structural",
+                                  "Name": "StructuralN",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "NRetranslocationFactor",
                   "Children": [
@@ -5622,9 +5861,276 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "$type": "Models.PMF.RetranslocateAvailableN, Models",
                   "Name": "RetranslocateNitrogen",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "RetranslocateFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinimumFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "availableDilnN",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "DivideFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "dltStemNConc",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.AddFunction, Models",
+                                          "Name": "AddFunction",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.MultiplyFunction, Models",
+                                              "Name": "MultiplyFunction",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 0.0062,
+                                                  "Units": null,
+                                                  "Name": "dilnNSlope",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "stemNConcPct",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.DivideFunction, Models",
+                                                      "Name": "divide",
+                                                      "Children": [
+                                                        {
+                                                          "$type": "Models.Functions.VariableReference, Models",
+                                                          "VariableName": "[Stem].Live.N",
+                                                          "Name": "nGreen",
+                                                          "Children": [],
+                                                          "IncludeInDocumentation": true,
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        },
+                                                        {
+                                                          "$type": "Models.Functions.AddFunction, Models",
+                                                          "Name": "DMToday",
+                                                          "Children": [
+                                                            {
+                                                              "$type": "Models.Functions.VariableReference, Models",
+                                                              "VariableName": "[Stem].potentialDMAllocation.Structural",
+                                                              "Name": "dltDmGreen",
+                                                              "Children": [],
+                                                              "IncludeInDocumentation": true,
+                                                              "Enabled": true,
+                                                              "ReadOnly": false
+                                                            },
+                                                            {
+                                                              "$type": "Models.Functions.VariableReference, Models",
+                                                              "VariableName": "[Stem].Live.Wt",
+                                                              "Name": "dmGreen",
+                                                              "Children": [],
+                                                              "IncludeInDocumentation": true,
+                                                              "Enabled": true,
+                                                              "ReadOnly": false
+                                                            }
+                                                          ],
+                                                          "IncludeInDocumentation": true,
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        }
+                                                      ],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.Constant, Models",
+                                                      "FixedValue": 100.0,
+                                                      "Units": null,
+                                                      "Name": "Percentage",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": -0.001,
+                                              "Units": null,
+                                              "Name": "dilnNInt",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].ThermalTime",
+                                          "Name": "ThermalTime",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 100.0,
+                                      "Units": null,
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "DMToday",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stem].potentialDMAllocation.Structural",
+                                      "Name": "dltDmGreen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stem].Live.Wt",
+                                      "Name": "dmGreen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Stem].Live.N",
+                                  "Name": "NGreen",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "MultiplyFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.AddFunction, Models",
+                                      "Name": "DMToday",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Stem].potentialDMAllocation.Structural",
+                                          "Name": "dltDmGreen",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Stem].Live.Wt",
+                                          "Name": "dmGreen",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stem].CriticalNconc.Value",
+                                      "Name": "StructuralN",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7167,6 +7673,7 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
       "Name": "DataStore",
       "Children": [
         {
