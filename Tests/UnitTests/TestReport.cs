@@ -66,44 +66,56 @@
             // The simulation starts in 2017 January 1, which is a Sunday (start of week).
             List<int> weeklyNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27 };
 
-            Report report = new Report();
-            report.VariableNames = new string[]
+            var sims = new Simulations()
             {
-                "[Clock].Today.DayOfYear as n",
-                "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
-                "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test"
+                FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
+                Children = new List<Model>()
+                {
+                    new DataStore(),
+                    new Simulation()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2017, 1, 10) // January 10
+                            },
+                            new Summary(),
+                            new Zone()
+                            {
+                                Area = 1,
+                                Children = new List<Model>()
+                                {
+                                    new Report()
+                                    {
+                                        VariableNames = new string[]
+                                        {
+                                            "[Clock].Today.DayOfYear as n",
+                                            "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
+                                            "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test"
+                                        },
+                                        EventNames = new string[]
+                                        {
+                                            "[Clock].DoReport"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             };
-            report.EventNames = new string[]
-            {
-                "[Clock].DoReport"
-            };
-            Zone field = new Zone();
-            field.Area = 1;
-            field.Children = new List<Model>() { report };
-            report.Parent = field;
 
-            Clock clock = new Clock()
-            {
-                StartDate = new DateTime(2017, 1, 1),
-                EndDate = new DateTime(2017, 1, 10) // January 10
-            };
-            Summary summary = new Summary();
-
-            Simulation sim = new Simulation();
-            sim. Children = new List<Model>() { clock, summary, field };
-            clock.Parent = sim;
-            summary.Parent = sim;
-            field.Parent = sim;
-
-            DataStore storage = new DataStore();
-            Simulations sims = Simulations.Create(new List<IModel> { sim, storage });
-            sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
-
+            Apsim.ParentAllChildren(sims);
+            Apsim.ChildrenRecursively(sims).ForEach(m => m.OnCreated());
             IJobManager jobManager = Runner.ForSimulations(sims, sims, false);
             IJobRunner jobRunner = new JobRunnerSync();
             jobRunner.Run(jobManager, wait: true);
 
-            DataTable data = storage.GetData("Report", fieldNames: new List<string>() { "n", "TriangularNumbers", "test" });
+			var storage = sims.Children[0] as IDataStore;
+            storage.Writer.Stop();
+            DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "n", "TriangularNumbers", "test" });
             List<int> predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["TriangularNumbers"])).ToList();
             Assert.AreEqual(triangularNumbers, predicted, "Error in report aggregation involving [Clock].Today");
 

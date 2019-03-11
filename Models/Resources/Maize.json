@@ -2226,16 +2226,42 @@
       "FractionDied": 0.0,
       "Name": "Leaf",
       "Children": [
+    {
+      "$type": "Models.Functions.ExpressionFunction, Models",
+      "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
+      "Name": "CO2internal",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.DivideFunction, Models",
+      "Name": "StomatalConductanceCO2Modifier",
+      "Children": [
         {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 1.0,
-          "Units": "",
-          "Name": "StomatalConductanceCO2Modifier",
+          "$type": "Models.Functions.VariableReference, Models",
+          "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+          "Name": "FCO2",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
+        {
+          "$type": "Models.Functions.ExpressionFunction, Models",
+          "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+          "Name": "RelativeCO2Gradient",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
         {
           "$type": "Models.PMF.Organs.LeafCohort, Models",
           "ApexCohort": null,

@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
     [Description("An individual labour availability with the same days available every month")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/labour/labouravailabilityitem.htm")]
     public class LabourAvailabilityItem : LabourSpecificationItem
     {
         /// <summary>

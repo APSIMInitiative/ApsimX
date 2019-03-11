@@ -20,6 +20,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(TransmutationCostLabour))]
     [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/filters/labourfiltergroup.htm")]
     public class LabourFilterGroup: CLEMModel
     {
 

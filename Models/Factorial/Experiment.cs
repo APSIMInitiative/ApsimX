@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Runners;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -21,7 +22,7 @@
     public class Experiment : Model, ISimulationGenerator, ICustomDocumentation
     {
         [Link]
-        IStorageReader storage = null;
+        IDataStore storage = null;
 
         private List<List<FactorValue>> allCombinations;
         private Stream serialisedBase;
@@ -221,7 +222,7 @@
                     row[4] = values[i];
                     factorTable.Rows.Add(row);
                 }
-                storage.WriteTable(factorTable);
+                storage.Writer.WriteTable(factorTable);
             }
         }
 

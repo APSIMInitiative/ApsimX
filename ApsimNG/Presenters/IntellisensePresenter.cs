@@ -19,6 +19,7 @@
     using System.Xml;
     using ICSharpCode.NRefactory.TypeSystem;
     using APSIM.Shared.Utilities;
+    using Models.Storage;
 
     /// <summary>
     /// Responsible for handling intellisense operations.

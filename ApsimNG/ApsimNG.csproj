@@ -449,6 +449,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityIncome.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostLabour.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FactorialAnova.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNH4.png" />
@@ -642,7 +644,7 @@
     <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="ApsimLogo.ico" />
     <EmbeddedResource Include="Resources\MenuImages\Critical.png" />
-    <EmbeddedResource Include="Resources\MenuImages\Ignore.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Ignored.png" />
     <EmbeddedResource Include="Resources\MenuImages\Partial.png" />
     <EmbeddedResource Include="Resources\MenuImages\Success.png" />
     <EmbeddedResource Include="Resources\MenuImages\Timer.png" />
@@ -653,7 +655,6 @@
     <EmbeddedResource Include="Resources\Delete.png" />
     <EmbeddedResource Include="Resources\Delete16.png" />
     <EmbeddedResource Include="Resources\Cloud.png" />
-    <EmbeddedResource Include="Resources\ArbitrationDiagram.PNG" />
     <EmbeddedResource Include="Resources\CurveNumberCover.png" />
     <EmbeddedResource Include="Resources\Jigsaw.jpg" />
     <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
@@ -698,6 +699,7 @@
     <EmbeddedResource Include="Resources\MorrisGrid4.png" />
     <EmbeddedResource Include="Resources\SobolParameterDistributions.png" />
     <EmbeddedResource Include="Resources\AnovaSampleGrid.png" />
+    <EmbeddedResource Include="Resources\ArbitratorSequenceDiagram.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

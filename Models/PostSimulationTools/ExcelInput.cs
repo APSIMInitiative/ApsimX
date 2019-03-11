@@ -1,19 +1,14 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ExcelInput.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using System;
     using System.Data;
     using System.IO;
     using ExcelDataReader;
     using Models.Core;
-    using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
     using Storage;
     using System.Collections.Generic;
+    using Models.Core.Run;
 
     /// <summary>
     /// # [Name]
@@ -119,7 +114,7 @@ namespace Models.PostSimulationTools
         /// Main run method for performing our calculations and storing data.
         /// </summary>
         /// <param name="dataStore">The data store to store the data</param>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
@@ -154,9 +149,7 @@ namespace Models.PostSimulationTools
                     if (keep)
                     {
                         TruncateDates(table);
-
-                        dataStore.DeleteDataInTable(table.TableName);
-                        dataStore.WriteTable(table);
+                        dataStore.Writer.WriteTable(table);
                     }
                 }
 

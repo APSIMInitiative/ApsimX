@@ -22,6 +22,7 @@ namespace UserInterface.Presenters
     using Commands;
     using System.Drawing;
     using Models.CLEM.Resources;
+    using Models.Storage;
 
     /// <summary>
     /// <para>
@@ -43,7 +44,7 @@ namespace UserInterface.Presenters
         /// Linked storage reader
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
 
         /// <summary>
         /// The model we're going to examine for properties.
@@ -395,7 +396,7 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = storage.TableNames.ToArray();
+                    cell.DropDownStrings = storage.Reader.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.CultivarName)
@@ -472,8 +473,8 @@ namespace UserInterface.Presenters
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
                     // get GRASP file names
-                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.Children(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -586,8 +587,8 @@ namespace UserInterface.Presenters
                     {
                         string tableName = cell.Value.ToString();
                         DataTable data = null;
-                        if (storage.TableNames.Contains(tableName))
-                            data = storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
+                        if (storage.Reader.TableNames.Contains(tableName))
+                            data = storage.Reader.GetDataUsingSql("SELECT * FROM " + tableName + " LIMIT 1");
                         if (data != null)
                         {
                             fieldNames = DataTableUtilities.GetColumnNames(data).ToList();

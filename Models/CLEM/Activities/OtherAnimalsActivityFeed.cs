@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the feeding of a specified type of other animal based on a feeding style.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/otheranimals/otheranimalsactivityfeed.htm")]
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]

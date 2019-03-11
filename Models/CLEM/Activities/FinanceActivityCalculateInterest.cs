@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity peforms monthly interest transactions.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/finances/calculateinterest.htm")]
     public class FinanceActivityCalculateInterest : CLEMActivityBase
     {
         /// <summary>
@@ -177,8 +178,42 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component";
-            
+            string html = "";
+            ZoneCLEM clemParent = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+            ResourcesHolder resHolder;
+            Finance finance = null;
+            if (clemParent != null)
+            {
+                resHolder = Apsim.Children(clemParent, typeof(ResourcesHolder)).FirstOrDefault() as ResourcesHolder;
+                finance = resHolder.FinanceResource();
+            }
+
+            if (finance == null)
+            {
+                html += "\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>";
+            }
+            else
+            {
+                html += "\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>";
+                foreach (FinanceType accnt in Apsim.Children(finance, typeof(FinanceType)))
+                {
+                    if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
+                    {
+                        html += "\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>";
+                    }
+                    else
+                    {
+                        if (accnt.InterestRateCharged > 0)
+                        {
+                            html += "\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%].</div>";
+                        }
+                        else
+                        {
+                            html += "\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%].</div>";
+                        }
+                    }
+                }
+            }
             return html;
         }
 

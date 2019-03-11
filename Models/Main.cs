@@ -178,8 +178,7 @@ namespace Models
             foreach (string file in files)
             {
                 string fileName = Path.ChangeExtension(file, ".db");
-                Storage.DataStore storage = new Storage.DataStore(fileName);
-                storage.Open(true);
+                Storage.IDataStore storage = new Storage.DataStore(fileName);
                 Report.Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }

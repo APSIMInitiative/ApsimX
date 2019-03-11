@@ -12,6 +12,7 @@ namespace Models.Report
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Models.Storage;
 
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 

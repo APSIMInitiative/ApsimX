@@ -17,6 +17,8 @@ namespace UserInterface.Presenters
     using Models.Graph;
     using Views;
     using Commands;
+    using Models.Storage;
+
     /// <summary>
     /// A presenter class for graph series.
     /// </summary>
@@ -26,7 +28,7 @@ namespace UserInterface.Presenters
         /// The storage
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
 
         /// <summary>The graph model to work with.</summary>
         private Series series;
@@ -341,7 +343,12 @@ namespace UserInterface.Presenters
             if (series.TableName != this.seriesView.DataSource.SelectedValue)
             {
                 this.SetModelProperty("TableName", this.seriesView.DataSource.SelectedValue);
-                PopulateFieldNames();
+                List<string> warnings = PopulateFieldNames();
+                if (warnings != null && warnings.Count > 0)
+                {
+                    explorerPresenter.MainPresenter.ClearStatusPanel();
+                    explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
+                }
             }
         }
 
@@ -387,7 +394,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, seriesView.DataSource.SelectedValue, storage))
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, seriesView.DataSource.SelectedValue, storage.Reader))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)
@@ -401,142 +408,229 @@ namespace UserInterface.Presenters
         /// <summary>Populate the views series editor with the current selected series.</summary>
         private void PopulateView()
         {
-            // Populate the editor with a list of data sources.
-            List<string> dataSources = new List<string>();
-            foreach (string tableName in storage.TableNames)
-            {
-                dataSources.Add(tableName);
-            }
+            List<string> warnings = new List<string>();
 
-            dataSources.Sort();
-            this.seriesView.DataSource.Values = dataSources.ToArray();
-
-            PopulateMarkerDropDown();
-            PopulateLineDropDown();
-            PopulateColourDropDown();
+            warnings.AddRange(PopulateMarkerDropDown());
+            warnings.AddRange(PopulateLineDropDown());
+            warnings.AddRange(PopulateColourDropDown());
 
             // Populate the checkpoint drop down.
-            seriesView.Checkpoint.Values = storage.Checkpoints().ToArray();
+            List<string> checkpoints = storage.Reader.CheckpointNames;
+            if (!checkpoints.Contains(series.Checkpoint) && !string.IsNullOrEmpty(series.Checkpoint))
+            {
+                checkpoints.Add(series.Checkpoint);
+                warnings.Add(string.Format("WARNING: {0}: Selected Checkpoint '{1}' is invalid. Have the simulations been run?", Apsim.FullPath(series), series.Checkpoint));
+            }
+            seriesView.Checkpoint.Values = checkpoints.ToArray();
             seriesView.Checkpoint.SelectedValue = series.Checkpoint;
 
             // Populate line thickness drop down.
             List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));
-            seriesView.LineThickness.Values = thicknesses.ToArray();
-            seriesView.LineThickness.SelectedValue = series.LineThickness.ToString();
+            if (!thicknesses.Contains(series.LineThickness.ToString()) && !string.IsNullOrEmpty(series.LineThickness.ToString()))
+            {
+                // This should never happen...if one of these values is ever removed, a converter should be written.
+                thicknesses.Add(series.LineThickness.ToString());
+                warnings.Add(string.Format("WARNING: {0}: Selected line thickness '{1}' is invalid. This could be a relic from an older version of APSIM.", Apsim.FullPath(series), series.LineThickness.ToString()));
+            }
+            this.seriesView.LineThickness.Values = thicknesses.ToArray();
+            this.seriesView.LineThickness.SelectedValue = series.LineThickness.ToString();
 
             // Populate marker size drop down.
             List<string> sizes = new List<string>(Enum.GetNames(typeof(MarkerSizeType)));
-            seriesView.MarkerSize.Values = sizes.ToArray();
-            seriesView.MarkerSize.SelectedValue = series.MarkerSize.ToString();
+            if (!sizes.Contains(series.MarkerSize.ToString()) && !string.IsNullOrEmpty(series.MarkerSize.ToString()))
+            {
+                // This should never happen...if one of these values is ever removed, a converter should be written.
+                sizes.Add(series.MarkerSize.ToString());
+                warnings.Add(string.Format("WARNING: {0}: Selected marker size '{1}' is invalid. This could be a relic from an older version of APSIM.", Apsim.FullPath(series), series.MarkerSize));
+            }
+            this.seriesView.MarkerSize.Values = sizes.ToArray();
+            this.seriesView.MarkerSize.SelectedValue = series.MarkerSize.ToString();
 
-            this.seriesView.SeriesType.Values = new string[] { "Scatter", "Bar", "Area" };
-
-            // Populate other controls.
+            // Populate series type drop down.
+            List<string> seriesTypes = new List<string>(Enum.GetNames(typeof(SeriesType)));
+            if (!seriesTypes.Contains(series.Type.ToString()) && !string.IsNullOrEmpty(series.Type.ToString()))
+            {
+                // This should never happen...if one of these values is ever removed, a converter should be written.
+                seriesTypes.Add(series.Type.ToString());
+                warnings.Add(string.Format("WARNING: {0}: Selected series type '{1}' is invalid. This could be a relic from an older version of APSIM.", Apsim.FullPath(series), series.Type));
+            }
+            this.seriesView.SeriesType.Values = seriesTypes.ToArray();
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
+
+            // Populate checkboxes.
             this.seriesView.XOnTop.IsChecked = series.XAxis == Axis.AxisType.Top;
             this.seriesView.YOnRight.IsChecked = series.YAxis == Axis.AxisType.Right;
             this.seriesView.ShowInLegend.IsChecked = series.ShowInLegend;
             this.seriesView.IncludeSeriesNameInLegend.IsChecked = series.IncludeSeriesNameInLegend;
             this.seriesView.XCumulative.IsChecked = series.CumulativeX;
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
+
+            // Populate data source drop down.
+            List<string> dataSources = storage.Reader.TableNames.ToList();
+            if (!dataSources.Contains(series.TableName))
+            {
+                dataSources.Add(series.TableName);
+                warnings.Add(string.Format("WARNING: {0}: Selected Data Source '{1}' does not exist in the datastore. Have the simulations been run?", Apsim.FullPath(series), series.TableName));
+            }
+            dataSources.Sort();
+            this.seriesView.DataSource.Values = dataSources.ToArray();
             this.seriesView.DataSource.SelectedValue = series.TableName;
+
+            // Populate field name drop downs.
+            warnings.AddRange(PopulateFieldNames());
+
+            // Populate filter textbox.
             this.seriesView.Filter.Value = series.Filter;
 
-            PopulateFieldNames();
-
-            this.seriesView.X.SelectedValue = series.XFieldName;
-            this.seriesView.Y.SelectedValue = series.YFieldName;
-            this.seriesView.X2.SelectedValue = series.X2FieldName;
-            this.seriesView.Y2.SelectedValue = series.Y2FieldName;
-
             this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+
+            explorerPresenter.MainPresenter.ClearStatusPanel();
+            if (warnings != null && warnings.Count > 0)
+                explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
         }
 
         /// <summary>Populate the line drop down.</summary>
-        private void PopulateLineDropDown()
+        private List<string> PopulateLineDropDown()
         {
+            List<string> warnings = new List<string>();
+
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
             if (series.FactorNamesForVarying != null)
-            {
                 values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
-            }
 
-            this.seriesView.LineType.Values = values.ToArray();
+            string selectedValue;
             if (series.FactorToVaryLines == null)
-            {
-                this.seriesView.LineType.SelectedValue = series.Line.ToString();
-            }
+                selectedValue = series.Line.ToString();
             else
+                selectedValue = "Vary by " + series.FactorToVaryLines;
+
+            if (!values.Contains(selectedValue) && !string.IsNullOrEmpty(selectedValue))
             {
-                this.seriesView.LineType.SelectedValue = "Vary by " + series.FactorToVaryLines;
+                values.Add(selectedValue);
+                warnings.Add(string.Format("WARNING: {0}: Selected line type '{1}' is invalid.", Apsim.FullPath(series), selectedValue));
             }
+            this.seriesView.LineType.Values = values.ToArray();
+            this.seriesView.LineType.SelectedValue = selectedValue;
+
+            return warnings;
         }
 
         /// <summary>Populate the marker drop down.</summary>
-        private void PopulateMarkerDropDown()
+        private List<string> PopulateMarkerDropDown()
         {
+            List<string> warnings = new List<string>();
+
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
             if (series.FactorNamesForVarying != null)
-            {
                 values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+
+            string selectedValue;
+            if (series.FactorToVaryMarkers == null)
+                selectedValue = series.Marker.ToString();
+            else
+                selectedValue = "Vary by " + series.FactorToVaryMarkers;
+
+            if (!values.Contains(selectedValue) && !string.IsNullOrEmpty(selectedValue))
+            {
+                values.Add(selectedValue);
+                warnings.Add(string.Format("WARNING: {0}: Selected marker type '{1}' is invalid.", Apsim.FullPath(series), selectedValue));
             }
 
             this.seriesView.MarkerType.Values = values.ToArray();
-            if (series.FactorToVaryMarkers == null)
-            {
-                this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
-            }
-            else
-            {
-                this.seriesView.MarkerType.SelectedValue = "Vary by " + series.FactorToVaryMarkers;
-            }
+            this.seriesView.MarkerType.SelectedValue = selectedValue;
+
+            return warnings;
         }
 
         /// <summary>Populate the colour drop down in the view.</summary>
-        private void PopulateColourDropDown()
+        private List<string> PopulateColourDropDown()
         {
+            List<string> warnings = new List<string>();
             List<object> colourOptions = new List<object>();
             foreach (Color colour in ColourUtilities.Colours)
-            {
                 colourOptions.Add(colour);
-            }
 
             // Send colour options to view.
             if (series.FactorNamesForVarying != null)
-            {
                 colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+
+            object selectedValue;
+            if (series.FactorToVaryColours == null)
+                selectedValue = series.Colour;
+            else
+                selectedValue = "Vary by " + series.FactorToVaryColours;
+
+            if (!colourOptions.Contains(selectedValue) && selectedValue != null)
+            {
+                colourOptions.Add(selectedValue);
+                // If selectedValue is not a string, then it is probably a custom colour.
+                // In such a scenario, we don't show a warning, as we can display it with no problems.
+                if (selectedValue is string)
+                    warnings.Add(string.Format("WARNING: {0}: Selected colour '{1}' is invalid.", Apsim.FullPath(series), selectedValue));
             }
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
-            if (series.FactorToVaryColours == null)
-            {
-                this.seriesView.Colour.SelectedValue = series.Colour;
-            }
-            else
-            {
-                this.seriesView.Colour.SelectedValue = "Vary by " + series.FactorToVaryColours;
-            }
+            this.seriesView.Colour.SelectedValue = selectedValue;
+
+            return warnings;
         }
 
-        /// <summary>Populates the field names in the view.</summary>
-        private void PopulateFieldNames()
+        /// <summary>Gets a list of valid field names for the view.</summary>
+        private List<string> GetFieldNames()
         {
-            Graph parentGraph = series.Parent as Graph;
-            if (this.seriesView.DataSource != null && 
-                this.seriesView.DataSource.SelectedValue != string.Empty && 
-                this.seriesView.DataSource.SelectedValue != null &&
-                parentGraph != null)
-            {
-                List<string> fieldNames = new List<string>();
-                fieldNames.Add("SimulationName");
-                fieldNames.AddRange(storage.ColumnNames(seriesView.DataSource.SelectedValue));
-                fieldNames.Sort();
+            List<string> fieldNames = new List<string>();
 
-                this.seriesView.X.Values = fieldNames.ToArray();
-                this.seriesView.Y.Values = fieldNames.ToArray();
-                this.seriesView.X2.Values = fieldNames.ToArray();
-                this.seriesView.Y2.Values = fieldNames.ToArray();
+            if (this.seriesView.DataSource != null && !string.IsNullOrEmpty(this.seriesView.DataSource.SelectedValue))
+            {
+                fieldNames.Add("SimulationName");
+                fieldNames.AddRange(storage.Reader.ColumnNames(seriesView.DataSource.SelectedValue));
+                fieldNames.Sort();
             }
+            return fieldNames;
+        }
+
+        /// <summary>
+        /// Populates the field names in the view, and returns a list of warnings.
+        /// </summary>
+        /// <returns>List of warning messages.</returns>
+        private List<string> PopulateFieldNames()
+        {
+            List<string> fieldNames = GetFieldNames();
+            List<string> warnings = new List<string>();
+            this.seriesView.X.Values = fieldNames.ToArray();
+            this.seriesView.Y.Values = fieldNames.ToArray();
+            this.seriesView.X2.Values = fieldNames.ToArray();
+            this.seriesView.Y2.Values = fieldNames.ToArray();
+
+            if (!this.seriesView.X.Values.Contains(series.XFieldName) && !string.IsNullOrEmpty(series.XFieldName))
+            {
+                this.seriesView.X.Values = this.seriesView.X.Values.Concat(new string[] { series.XFieldName }).ToArray();
+                warnings.Add(string.Format("WARNING: {0}: Selected X field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.XFieldName, series.TableName));
+            }
+            this.seriesView.X.SelectedValue = series.XFieldName;
+
+            if (!this.seriesView.Y.Values.Contains(series.YFieldName) && !string.IsNullOrEmpty(series.YFieldName))
+            {
+                this.seriesView.Y.Values = this.seriesView.Y.Values.Concat(new string[] { series.YFieldName }).ToArray();
+                warnings.Add(string.Format("WARNING: {0}: Selected Y field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.YFieldName, series.TableName));
+            }
+            this.seriesView.Y.SelectedValue = series.YFieldName;
+
+            if (!this.seriesView.X2.Values.Contains(series.X2FieldName) && !string.IsNullOrEmpty(series.X2FieldName))
+            {
+                this.seriesView.X2.Values = this.seriesView.X2.Values.Concat(new string[] { series.X2FieldName }).ToArray();
+                warnings.Add(string.Format("WARNING: {0}: Selected X2 field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.X2FieldName, series.TableName));
+            }
+            this.seriesView.X2.SelectedValue = series.X2FieldName;
+
+            if (!this.seriesView.Y2.Values.Contains(series.Y2FieldName) && !string.IsNullOrEmpty(series.Y2FieldName))
+            {
+                this.seriesView.Y2.Values = this.seriesView.Y2.Values.Concat(new string[] { series.Y2FieldName }).ToArray();
+                warnings.Add(string.Format("WARNING: {0}: Selected Y2 field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.Y2FieldName, series.TableName));
+            }
+            this.seriesView.Y2.SelectedValue = series.Y2FieldName;
+
+            return warnings;
         }
     }
 }

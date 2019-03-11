@@ -16,7 +16,7 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel: Model
+    public abstract class CLEMModel: Model, ICLEMUI
     {
         /// <summary>
         /// Link to summary
@@ -25,6 +25,11 @@ namespace Models.CLEM
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
+
+        /// <summary>
+        /// Identifies the last selected tab for display
+        /// </summary>
+        public string SelectedTab { get; set; }
 
         /// <summary>
         /// Allows unique id of activity to be set 
@@ -38,6 +43,7 @@ namespace Models.CLEM
         /// <summary>
         /// Model identifier
         /// </summary>
+        [XmlIgnore]
         public string UniqueID { get { return id.ToString(); } }
 
         /// <summary>
