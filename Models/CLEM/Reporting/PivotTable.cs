@@ -31,15 +31,45 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// The id of the current pivot
         /// </summary>
-        public int Id { get; set; } = 0;
+        public int ID { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Ledger { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Expression { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Value { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Row { get; set; } = 5;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Column { get; set; } = 7;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Pivot { get; set; } = 4;
 
         /// <summary>
         /// Returns the current pivot
         /// </summary>
         public string GetPivot()
         {
-            if (Pivots.Count > Id) return Pivots[Id];
-            else throw new IndexOutOfRangeException(Id.ToString());
+            if (Pivots.Count > ID) return Pivots[ID];
+            else throw new IndexOutOfRangeException(ID.ToString());
         }
 
         /// <summary>

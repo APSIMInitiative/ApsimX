@@ -27,89 +27,44 @@ namespace ApsimNG.Views.CLEM
         // Taken from PivotTableView.glade
         private VBox vbox1 = null;
 
-        private ComboBox ledgerbox = null;
-        private ComboBox rowbox = null;
-        private ComboBox columnbox = null;
-        private ComboBox expressionbox = null;
-        private ComboBox valuebox = null;
-        private ComboBox pivotbox = null;
+        //private ComboBox ledgerbox = null;
+        //private ComboBox rowbox = null;
+        //private ComboBox columnbox = null;
+        //private ComboBox expressionbox = null;
+        //private ComboBox valuebox = null;
+        //private ComboBox pivotbox = null;
 
         private Button leftbutton = null;
         private Button rightbutton = null;
+        private Button storebutton = null;
 
         /// <summary>
         /// Custom gridview added post-reading the glade file
         /// </summary>
-        public GridView gridview { get; set; } = null;      
+        public GridView gridview { get; set; } = null;    
 
-        /// <summary>
-        /// Public access to the current ledgerbox text
-        /// </summary>
-        public string Ledger
+        public event EventHandler UpdateData;
+        public event EventHandler StoreData;
+        public event EventHandler<TrackChangesArgs> TrackChanges;
+        public event EventHandler<ChangePivotArgs> ChangePivot;
+
+        public class TrackChangesArgs : EventArgs
         {
-            get
+            public string Name { get; }
+            public object Value { get;  }
+
+            public TrackChangesArgs(string name, object value)
             {
-                return ledgerbox.ActiveText;
+                Name = name;
+                Value = value;
+            }
+
+            public TrackChangesArgs(ViewBox box)
+            {
+                Name = box.Name;
+                Value = box.ID;
             }
         }
-
-        /// <summary>
-        /// Public access to the current expressionbox text
-        /// </summary>
-        public string Expression
-        {
-            get
-            {
-                return expressionbox.ActiveText;
-            }
-        }
-
-        /// <summary>
-        /// Public access to the current valuebox text
-        /// </summary>
-        public string Value
-        {
-            get
-            {
-                return valuebox.ActiveText;
-            }
-        }
-
-        /// <summary>
-        /// Public access to the current rowbox text
-        /// </summary>
-        public string Row
-        {
-            get
-            {
-                return rowbox.ActiveText;
-            }
-        }
-
-        /// <summary>
-        /// Public access to the current columnbox text
-        /// </summary>
-        public string Column
-        {
-            get
-            {
-                return columnbox.ActiveText;
-            }
-        }
-
-        /// <summary>
-        /// Public access to the current pivotbox text
-        /// </summary>
-        public string Pivot
-        {
-            get
-            {
-                return pivotbox.ActiveText;
-            }
-        }
-
-        public event EventHandler OnUpdateData;
-        public event EventHandler<ChangePivotArgs> OnChangePivot;
 
         public class ChangePivotArgs : EventArgs
         {            
@@ -120,6 +75,100 @@ namespace ApsimNG.Views.CLEM
                 Increase = increase;
             }
         }
+
+        /// <summary>
+        /// Used to simplify interaction with the GtkComboBox objects in a PivotTableView
+        /// </summary>
+        /// <remarks>
+        /// GtkComboBox.Changed does not have the necessary EventArgs, nor
+        /// does the sender object have all the required information. We
+        /// wrap the ComboBox in this class and invoke the event here so 
+        /// that data can be transmitted when the event triggers.
+        /// 
+        /// The class also simplifies the setup process for each ComboBox.
+        /// </remarks>
+        public class ViewBox
+        {
+            public event EventHandler Changed;
+
+            public string Name { get; set; }
+
+            public string Text
+            {
+                get
+                {
+                    return box.ActiveText;
+                }
+            }
+
+            public int ID
+            {
+                get
+                {
+                    return box.Active;
+                }
+                set
+                {
+                    box.Active = value;
+                }
+            }
+                             
+            private ComboBox box;
+
+            private PivotTableView parent;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="parent"></param>
+            /// <param name="builder"></param>
+            public ViewBox(string name, PivotTableView parent, Builder builder)
+            {
+                Name = name;
+                this.parent = parent;
+                box = (ComboBox)builder.GetObject($"{name.ToLower()}box");
+                AddRenderer(box);
+
+                Changed += parent.OnInvokeUpdate;
+                box.Changed += OnChanged;                
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="text"></param>
+            public void AddText(string text)
+            {
+                box.AppendText(text);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void OnChanged(object sender, EventArgs e)
+            {
+                Changed?.Invoke(this, e);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public void Detach()
+            {
+                Changed -= parent.OnInvokeUpdate;
+                box.Changed -= OnChanged;                
+            }
+        }
+
+        public ViewBox Ledger;
+        public ViewBox Expression;
+        public ViewBox Value;
+        public ViewBox Row;
+        public ViewBox Column;
+        public ViewBox Pivot;
 
         /// <summary>
         /// Instantiate the View
@@ -133,55 +182,67 @@ namespace ApsimNG.Views.CLEM
             // Assign the interactable objects from glade
             vbox1 = (VBox)builder.GetObject("vbox1");
 
-            ledgerbox = (ComboBox)builder.GetObject("ledgerbox");
-            expressionbox = (ComboBox)builder.GetObject("expressionbox");
-            valuebox = (ComboBox)builder.GetObject("valuebox");
-            rowbox = (ComboBox)builder.GetObject("rowbox");
-            columnbox = (ComboBox)builder.GetObject("columnbox");            
-            pivotbox = (ComboBox)builder.GetObject("pivotbox");
+            //ledgerbox = (ComboBox)builder.GetObject("ledgerbox");            
+            //expressionbox = (ComboBox)builder.GetObject("expressionbox");
+            //valuebox = (ComboBox)builder.GetObject("valuebox");
+            //rowbox = (ComboBox)builder.GetObject("rowbox");
+            //columnbox = (ComboBox)builder.GetObject("columnbox");            
+            //pivotbox = (ComboBox)builder.GetObject("pivotbox");
+
+            // Setup the structs
+            Ledger = new ViewBox("Ledger", this, builder);
+            Expression = new ViewBox("Expression", this, builder);
+            Value = new ViewBox("Value", this, builder);
+            Row = new ViewBox("Row", this, builder);
+            Column = new ViewBox("Column", this, builder);
+            Pivot = new ViewBox("Pivot", this, builder);
 
             leftbutton = (Button)builder.GetObject("leftbutton");
             rightbutton = (Button)builder.GetObject("rightbutton");
+            storebutton = (Button)builder.GetObject("storebutton");            
 
             // Add text renderers to the boxes
-            AddRenderer(ledgerbox);
-            AddRenderer(expressionbox);
-            AddRenderer(valuebox);
-            AddRenderer(rowbox);
-            AddRenderer(columnbox);            
-            AddRenderer(pivotbox);
+            //AddRenderer(ledgerbox);
+            //AddRenderer(expressionbox);
+            //AddRenderer(valuebox);
+            //AddRenderer(rowbox);
+            //AddRenderer(columnbox);            
+            //AddRenderer(pivotbox);
 
-            // Add options to the ComboBoxes           
-            expressionbox.AppendText("Sum");
-            expressionbox.AppendText("Average");
-            expressionbox.AppendText("Max");
-            expressionbox.AppendText("Min");
-            expressionbox.Active = 0;
+            // Add text options to the ComboBoxes           
+            Expression.AddText("Sum");
+            Expression.AddText("Average");
+            Expression.AddText("Max");
+            Expression.AddText("Min");
+            Expression.ID = 0;
 
-            valuebox.AppendText("Gain");
-            valuebox.AppendText("Loss");
-            valuebox.Active = 0;
+            Value.AddText("Gain");
+            Value.AddText("Loss");
+            Value.ID = 0;
 
-            AddOptions(rowbox);
-            rowbox.Active = 4;
+            AddOptions(Row);
+            Row.ID = 4;
 
-            AddOptions(columnbox);
-            columnbox.Active = 5;
+            AddOptions(Column);
+            Column.ID = 5;
 
-            AddOptions(pivotbox);
-            pivotbox.Active = 7;
+            AddOptions(Pivot);
+            Pivot.ID = 7;            
 
-            // Update table when box options are changed
-            ledgerbox.Changed += InvokeUpdate;
-            rowbox.Changed += InvokeUpdate;
-            columnbox.Changed += InvokeUpdate;
-            expressionbox.Changed += InvokeUpdate;
-            valuebox.Changed += InvokeUpdate;
-            pivotbox.Changed += InvokeUpdate;
+            // Invoke update event when box options are changed
+            //ledgerbox.Changed += OnInvokeUpdate;
+            //rowbox.Changed += OnInvokeUpdate;
+            //columnbox.Changed += OnInvokeUpdate;
+            //expressionbox.Changed += OnInvokeUpdate;
+            //valuebox.Changed += OnInvokeUpdate;
+            //pivotbox.Changed += OnInvokeUpdate;            
 
-            // 
-            leftbutton.Clicked += ChangePivot;
-            rightbutton.Clicked += ChangePivot;
+            // Invoke the change pivot event when left/right buttons are clicked 
+            leftbutton.Clicked += OnChangePivot;
+            rightbutton.Clicked += OnChangePivot;
+
+            // Invoke the store data event when the store button is clicked
+            storebutton.Clicked += OnStoreData;
 
             // Add the custom gridview (external to glade)
             gridview = new GridView(owner);
@@ -196,7 +257,7 @@ namespace ApsimNG.Views.CLEM
         /// Adds a text CellRenderer to a combo box
         /// </summary>
         /// <param name="combo">The box to add the renderer to</param>
-        private void AddRenderer(ComboBox combo)
+        private static void AddRenderer(ComboBox combo)
         {
             // Remove any existing list
             combo.Clear();
@@ -215,7 +276,7 @@ namespace ApsimNG.Views.CLEM
         /// 
         /// </summary>
         /// <param name="combo"></param>
-        private static void AddOptions(ComboBox combo)
+        private static void AddOptions(ViewBox box)
         {
             List<string> options = new List<string>()
             {
@@ -229,34 +290,7 @@ namespace ApsimNG.Views.CLEM
                 "Reason"
             };
 
-            foreach (string option in options) combo.AppendText(option);
-        }
-
-        private void BlockOptions(object sender, EventArgs e)
-        {
-            //int pos = 0;
-            int active = ((ComboBox)sender).Active;
-
-            if (sender != rowbox)
-            {
-                //rowbox.Cells[pos].Sensitive = true;
-                rowbox.Cells[active].Sensitive = false;
-            }
-
-            if (sender != columnbox)
-            {
-                //rowbox.Cells[pos].Sensitive = true;
-                //throw new Exception(active.ToString());
-                columnbox.Cells[active].Sensitive = false;
-            }
-
-            if (sender != pivotbox)
-            {
-                //pivotbox.Cells[pos].Sensitive = true;
-                pivotbox.Cells[active].Sensitive = false;
-            }
-
-            OnUpdateData.Invoke(this, EventArgs.Empty);
+            foreach (string option in options) box.AddText(option);
         }
 
         /// <summary>
@@ -264,9 +298,18 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void InvokeUpdate(object sender, EventArgs e)
+        private void OnInvokeUpdate(object sender, EventArgs e)
         {
-            OnUpdateData.Invoke(sender, EventArgs.Empty);
+            // Invoke the UpdateData event
+            UpdateData?.Invoke(sender, EventArgs.Empty);
+
+            // Invoke the TrackChanges event
+            if (sender.GetType() == typeof(ViewBox))
+            {
+                TrackChangesArgs args = new TrackChangesArgs((ViewBox)sender);
+
+                TrackChanges?.Invoke(sender, args);
+            }
         }
 
         /// <summary>
@@ -274,12 +317,20 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ChangePivot(object sender, EventArgs e)
+        private void OnChangePivot(object sender, EventArgs e)
         {            
             ChangePivotArgs args = new ChangePivotArgs(sender == rightbutton);
 
-            OnChangePivot.Invoke(((Button)sender).Name, args);
-            InvokeUpdate(sender, EventArgs.Empty);
+            ChangePivot.Invoke(((Button)sender).Name, args);
+            OnInvokeUpdate(sender, EventArgs.Empty);
+        }
+
+        private void OnStoreData(object sender, EventArgs e)
+        {
+            if (StoreData != null)
+            {
+                StoreData.Invoke(sender, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -288,9 +339,9 @@ namespace ApsimNG.Views.CLEM
         /// <param name="ledger"></param>
         public void AddLedger(string ledger)
         {
-            ledgerbox.AppendText(ledger);
+            Ledger.AddText(ledger);
 
-            if (ledgerbox.Active < 0) ledgerbox.Active = 0;
+            if (Ledger.ID < 0) Ledger.ID = 0;
         }
 
         /// <summary>
@@ -298,15 +349,15 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         public void Detach()
         {
-            ledgerbox.Changed -= InvokeUpdate;
-            rowbox.Changed -= InvokeUpdate;
-            columnbox.Changed -= InvokeUpdate;
-            expressionbox.Changed -= InvokeUpdate;
-            valuebox.Changed -= InvokeUpdate;
-            pivotbox.Changed -= InvokeUpdate;
+            Ledger.Detach();
+            Row.Detach();
+            Column.Detach();
+            Expression.Detach();
+            Value.Detach();
+            Pivot.Detach();
 
-            leftbutton.Clicked -= ChangePivot;
-            rightbutton.Clicked -= ChangePivot;
+            leftbutton.Clicked -= OnChangePivot;
+            rightbutton.Clicked -= OnChangePivot;
         }
     }
 

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 
@@ -46,10 +47,23 @@ namespace ApsimNG.Presenters.CLEM
             this.view = view as PivotTableView;
             this.explorer = explorerPresenter;
 
-            this.view.OnUpdateData += UpdateData;
-            this.view.OnChangePivot += ChangePivot;
+            SetLedgers();
 
-            SetLedgers();                                   
+            // Attach events to handlers
+            this.view.UpdateData += OnUpdateData;
+            this.view.StoreData += OnStoreData;
+            this.view.ChangePivot += OnChangePivot;
+            this.view.TrackChanges += OnTrackChanges;
+
+            // Update the boxes based on the tracked changes
+            this.view.Ledger.ID = table.Ledger;
+            this.view.Expression.ID = table.Expression;
+            this.view.Value.ID = table.Value;
+            this.view.Row.ID = table.Row;
+            this.view.Column.ID = table.Column;
+            this.view.Pivot.ID = table.Pivot;
+
+            OnUpdateData(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -76,24 +90,26 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UpdateData(object sender, EventArgs e)
+        private void OnUpdateData(object sender, EventArgs e)
         {
             IStorageReader reader = Apsim.Find(table, typeof(IStorageReader)) as IStorageReader;
-            DataTable input = reader.GetData(view.Ledger);
+            DataTable input = reader.GetData(view.Ledger.Text);
 
+            // Find distinct values in the chosen pivot
             table.Pivots = new List<string>(
                 input
                 .AsEnumerable()
-                .Select(r => r.Field<object>(view.Pivot).ToString())
+                .Select(r => r.Field<object>(view.Pivot.Text).ToString())
                 .Distinct()
                 .ToList());
 
-            if (table.Pivots.Count <= table.Id) table.Id = 0;
+            if (table.Pivots.Count <= table.ID) table.ID = 0;
             
-            var rows = input.AsEnumerable().Select(r => r.Field<object>(view.Row)).Distinct();
-            var cols = input.AsEnumerable().Select(r => r.Field<object>(view.Column)).Distinct();
+            // Determine the row/column values
+            var rows = input.AsEnumerable().Select(r => r.Field<object>(view.Row.Text)).Distinct();
+            var cols = input.AsEnumerable().Select(r => r.Field<object>(view.Column.Text)).Distinct();
 
-            DataTable output = new DataTable($"{view.Expression}Of{table.GetPivot()}{view.Value}");
+            DataTable output = new DataTable($"{view.Expression.Text}Of{table.GetPivot()}{view.Value.Text}");
 
             // Attach columns to the output table          
             foreach (var col in cols)
@@ -114,14 +130,16 @@ namespace ApsimNG.Presenters.CLEM
                 {
                     double value = 0;
 
+                    // Search DataTable for all values that match the current row/column/pivot
                     var values =
                         from item in input.AsEnumerable()
-                        where item.Field<object>(view.Column).ToString() == col.ToString()
-                        where item.Field<object>(view.Row).ToString() == row.ToString()
-                        where item.Field<object>(view.Pivot).ToString() == table.GetPivot()
-                        select item.Field<double>(view.Value);
+                        where item.Field<object>(view.Column.Text).ToString() == col.ToString()
+                        where item.Field<object>(view.Row.Text).ToString() == row.ToString()
+                        where item.Field<object>(view.Pivot.Text).ToString() == table.GetPivot()
+                        select item.Field<double>(view.Value.Text);
 
-                    if (values.Count() > 0) switch (view.Expression)
+                    // Evaluate the expression on selected values
+                    if (values.Count() > 0) switch (view.Expression.Text)
                     {
                         case "Sum":
                             value = values.Sum();
@@ -152,23 +170,33 @@ namespace ApsimNG.Presenters.CLEM
             view.gridview.DataSource = output;
         }
 
+        private void OnStoreData(object sender, EventArgs e)
+        {
+            DataTable data = view.gridview.DataSource;
+            IStorageReader reader = Apsim.Find(table, typeof(IStorageReader)) as IStorageReader;
+            reader.DeleteDataInTable(data.TableName);
+            reader.WriteTable(data);
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ChangePivot(object sender, PivotTableView.ChangePivotArgs args)
+        private void OnChangePivot(object sender, PivotTableView.ChangePivotArgs args)
         {
             if (args.Increase)
             {
-                if (table.Id < table.Pivots.Count() - 1) table.Id += 1;
-                else table.Id = 0;                
+                if (table.ID < table.Pivots.Count() - 1) table.ID += 1;
+                else table.ID = 0;                
             }
             else
             {
-                if (table.Id > 0) table.Id -= 1;
-                else table.Id = table.Pivots.Count() - 1;
+                if (table.ID > 0) table.ID -= 1;
+                else table.ID = table.Pivots.Count() - 1;
             }
+
+            OnTrackChanges(sender, new PivotTableView.TrackChangesArgs("ID", table.ID));
         }
 
         /// <summary>
@@ -176,18 +204,25 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         public void Detach()
         {
-            view.OnUpdateData -= UpdateData;
+            view.UpdateData -= OnUpdateData;
+            view.StoreData -= OnStoreData;
+            view.ChangePivot -= OnChangePivot;
+            view.TrackChanges -= OnTrackChanges;
 
-            TrackChanges();
+            view.Detach();
+            view.gridview.Dispose();
         }
 
         /// <summary>
         /// Track changes made to the view
         /// </summary>
-        private void TrackChanges()
+        private void OnTrackChanges(object sender, PivotTableView.TrackChangesArgs args)
         {
-            //ChangeProperty sqlcom = new ChangeProperty(this.query, "Sql", view.Sql);
-            //explorer.CommandHistory.Add(sqlcom);
+            var p = table.GetType().GetProperty(args.Name);
+            p.SetValue(table, args.Value);
+            
+            ChangeProperty command = new ChangeProperty(table, args.Name, args.Value);
+            explorer.CommandHistory.Add(command);
         }
 
     }
