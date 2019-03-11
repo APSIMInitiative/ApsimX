@@ -24,7 +24,7 @@ namespace Models.CLEM
     [HelpUri(@"content/features/CLEMComponent.htm")]
     [Version(1,0,1,"")]
     [ScopedModel]
-    public class ZoneCLEM: Zone, IValidatableObject
+    public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI
     {
         [Link]
         ISummary Summary = null;
@@ -32,6 +32,12 @@ namespace Models.CLEM
         Clock Clock = null;
         [Link]
         Simulation Simulation = null;
+
+        /// <summary>
+        /// Identifies the last selected tab for display
+        /// </summary>
+        [XmlIgnore]
+        public string SelectedTab { get; set; }
 
         /// <summary>
         /// Seed for random number generator (0 uses clock)
@@ -255,7 +261,7 @@ namespace Models.CLEM
             foreach (var child in model.Children)
             {
                 bool result = Validate(child, modelPath);
-                if (valid & !result)
+                if (valid && !result)
                 {
                     valid = false;
                 }
@@ -334,7 +340,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public bool IsEcologicalIndicatorsCalculationMonth()
         {
-            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year & this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
         }
 
         /// <summary>Data stores to clear at start of month</summary>

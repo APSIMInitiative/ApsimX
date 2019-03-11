@@ -105,6 +105,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStoreReaderTests.cs" />
+    <Compile Include="ReportDataTests.cs" />
     <Compile Include="JsonUtilitiesTests.cs" />
     <Compile Include="ManagerTests.cs" />
     <Compile Include="MorrisTests.cs" />
@@ -116,7 +118,6 @@
     <Compile Include="XMLToJSONTests.cs" />
     <Compile Include="DocumentationTests.cs" />
     <Compile Include="ManagerConverterTests.cs" />
-    <Compile Include="StorageTests.cs" />
     <Compile Include="TestIndexedDataTable.cs" />
     <Compile Include="TrackerFunctionTests.cs" />
     <Compile Include="RunnerTests.cs" />
@@ -143,7 +144,7 @@
     <Compile Include="FileFormatTests.cs" />
     <Compile Include="LinksTests.cs" />
     <Compile Include="TestModelNode.cs" />
-    <Compile Include="TestDataStore.cs" />
+    <Compile Include="DataStoreWriterTests.cs" />
     <Compile Include="TestLocator.cs" />
     <Compile Include="TestReport.cs" />
     <Compile Include="TestSoils.cs" />

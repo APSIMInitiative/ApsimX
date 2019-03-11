@@ -106,7 +106,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if ((date.Month >= EndMonth) | (date.Month <= StartMonth))
+                if ((date.Month >= EndMonth) || (date.Month <= StartMonth))
                 {
                     due = true;
                 }

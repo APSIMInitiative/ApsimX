@@ -11,7 +11,7 @@ namespace Models.GrazPlan
     using Models.PMF.Interfaces;
 
     /*
-     GRAZPLAN animal biology model for AusFarm - PaddockList & ForageList classes                                                                   
+     GRAZPLAN animal biology model for AusFarm - PaddockList && ForageList classes                                                                   
                                                                                
      * PaddockList contains information about paddocks within the animal      
        biology model. Paddocks have the following attributes:                  

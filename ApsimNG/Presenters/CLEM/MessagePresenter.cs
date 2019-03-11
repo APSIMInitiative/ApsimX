@@ -1,5 +1,6 @@
 using Models;
 using Models.Core;
+using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -74,8 +75,8 @@ namespace UserInterface.Presenters
             // find IStorageReader of simulation
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
             IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
-            IStorageReader ds = Apsim.Children(simulations, typeof(IStorageReader)).FirstOrDefault() as IStorageReader;
-            DataRow[] dataRows = ds.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+            IDataStore ds = Apsim.Children(simulations, typeof(IDataStore)).FirstOrDefault() as IDataStore;
+            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
             foreach (DataRow dr in dataRows)
             {
                 // convert invalid parameter warnings to errors
@@ -134,7 +135,7 @@ namespace UserInterface.Presenters
                                 msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
                             }
                         }
-                        if (msgStr.IndexOf(':') >= 0 & msgStr.StartsWith("@"))
+                        if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
                         {
                             switch (msgStr.Substring(0, msgStr.IndexOf(':')))
                             {
@@ -157,7 +158,7 @@ namespace UserInterface.Presenters
                         {
                             type = "Ok";
                             title = "Success";
-                            DataTable dataRows2 = ds.GetData(simulationName: simulation.Name, tableName: "_InitialConditions");
+                            DataTable dataRows2 = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_InitialConditions");
                             DateTime lastrun = DateTime.Parse(dataRows2.Rows[2][11].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }

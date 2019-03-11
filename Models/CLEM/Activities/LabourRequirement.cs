@@ -189,7 +189,7 @@ namespace Models.CLEM.Activities
             {
                 html += "\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString()+"</span> day"+((MinimumPerPerson==1)?"":"s")+" is required</div>" ;
             }
-            if (MaximumPerPerson > 0 & MaximumPerPerson<30)
+            if (MaximumPerPerson > 0 && MaximumPerPerson<30)
             {
                 html += "\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>";
             }
