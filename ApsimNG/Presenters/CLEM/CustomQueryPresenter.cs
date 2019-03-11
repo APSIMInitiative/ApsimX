@@ -11,6 +11,7 @@ using System;
 using System.Data;
 using UserInterface.Commands;
 using UserInterface.Presenters;
+using Models.Storage;
 
 namespace ApsimNG.Presenters.CLEM
 {
@@ -92,8 +93,8 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="e"></param>
         private void RunQuery(object sender, EventArgs e)
         {
-            IStorageReader reader = Apsim.Find(query, typeof(IStorageReader)) as IStorageReader;
-            view.gridview1.DataSource = reader.RunQuery(view.Sql);
+            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            view.gridview1.DataSource = store.Reader.GetDataUsingSql(view.Sql);
 
             SaveData();
         }
@@ -108,9 +109,8 @@ namespace ApsimNG.Presenters.CLEM
             DataTable data = view.gridview1.DataSource;
             data.TableName = args.tablename;
 
-            IStorageReader reader = Apsim.Find(query, typeof(IStorageReader)) as IStorageReader;
-            reader.DeleteDataInTable(args.tablename);
-            reader.WriteTable(data);
+            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            store.Writer.WriteTable(data);
 
             SaveData();
         }

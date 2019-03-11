@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
                         {
                             if (filter.Parameter == RuminantFilterParameters.Breed)
                             {
-                                if (PredictedHerdBreed != "N/A" & PredictedHerdBreed != filter.Value & !allowMultipleBreeds)
+                                if (PredictedHerdBreed != "N/A" && PredictedHerdBreed != filter.Value && !allowMultipleBreeds)
                                 {
                                     // multiple breeds in filter.
                                     throw new ApsimXException(this, "@error:Multiple breeds are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed for this activity.");
@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
                             }
                             if (filter.Parameter == RuminantFilterParameters.HerdName)
                             {
-                                if (PredictedHerdName != "N/A" & !allowMultipleHerds)
+                                if (PredictedHerdName != "N/A" && !allowMultipleHerds)
                                 {
                                     // multiple breeds in filter.
                                     throw new ApsimXException(this, "@error:Multiple herd names are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single herd for this activity.");
@@ -189,7 +189,7 @@ namespace Models.CLEM.Activities
                 }
                 // check for filter limited herd and set warning
                 List<Ruminant> fullHerd = Resources.RuminantHerd().Herd.Where(a => a.Breed == PredictedHerdBreed).ToList();
-                if (fullHerd.Count() != herd.Count() & !reportedRestrictedBreed)
+                if (fullHerd.Count() != herd.Count() && !reportedRestrictedBreed)
                 {
                     Summary.WriteWarning(this, String.Format("The herd being used for Manage Activity [a=" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."));
                     reportedRestrictedHerd = true;
@@ -204,7 +204,7 @@ namespace Models.CLEM.Activities
                 }
                 // check for filter limited herd and set warning
                 List<Ruminant> fullHerd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == PredictedHerdName).ToList();
-                if (fullHerd.Count() != herd.Count() & !reportedRestrictedHerd)
+                if (fullHerd.Count() != herd.Count() && !reportedRestrictedHerd)
                 {
                     Summary.WriteWarning(this, String.Format("The herd being used for Manage Activity [a=" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."));
                     reportedRestrictedHerd = true;

@@ -589,7 +589,7 @@ namespace Models.PMF.Organs
                 int count = 0;
                 foreach (LeafCohort l in Leaves)
                 {
-                    if (l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2)
+                    if (l.Age >= 0 && l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2)
                         count++;
                 }
                 return count;
@@ -621,7 +621,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves.Where(l => l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / parentPlant.Population;
+                return Leaves.Where(l => l.Age >= 0 && l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / parentPlant.Population;
             }
         }
 

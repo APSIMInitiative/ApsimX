@@ -30,7 +30,7 @@ namespace APSIMRunner
                     Exception error = null;
                     string simulationName = null;
                     RunSimulation simulationRunner = null;
-                    StorageViaSockets storage = new StorageViaSockets();
+                    StorageViaSockets storage = new StorageViaSockets(job.key);
                     try
                     {
                         IRunnable jobToRun = job.job;
@@ -59,7 +59,8 @@ namespace APSIMRunner
                     // Signal end of job.
                     JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();
                     endJobArguments.key = job.key;
-                    endJobArguments.Error = error;
+                    if (error != null)
+                        endJobArguments.errorMessage = error.ToString();
                     endJobArguments.simulationName = simulationName;
                     SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
                     SocketServer.Send("127.0.0.1", 2222, endJobCommand);

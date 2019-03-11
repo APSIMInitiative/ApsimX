@@ -218,7 +218,7 @@
                     if (remainingRemoveApex > 0.0)
                         throw new Exception("There are not enough apex to remove from plant.");
                 }
-                if (phenology.Stage > 4 & !SenescenceByAge)
+                if (phenology.Stage > 4 && !SenescenceByAge)
                 {
                     double senescenceNum = NumByAge(stemSenescenceAge.Value());
                     Number -= senescenceNum;

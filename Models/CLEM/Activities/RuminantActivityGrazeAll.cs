@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantgraze.htm")]
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]
@@ -49,7 +50,7 @@ namespace Models.CLEM.Activities
                 this.InitialiseHerd(true, true);
                 // create activity for each pasture type (and common land) and breed at startup
                 // do not include common land pasture..
-                foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) | a.GetType() == typeof(CommonLandFoodStoreType)))
+                foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
                     RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
                     ragp.GrazeFoodStoreModel = pastureType;
@@ -197,7 +198,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            if(Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+            if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
             {
                 Status = ActivityStatus.NoTask;
             }

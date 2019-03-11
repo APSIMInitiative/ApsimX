@@ -21,6 +21,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This component will generate a report of individual ruminant details. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/reporting/ruminantherdreport.htm")]
     public class ReportRuminantHerd : CLEMModel
     {
         [Link]
@@ -129,5 +130,9 @@ namespace Models.CLEM.Reporting
         /// Individual ruminant to report as Male
         /// </summary>
         public RuminantMale Male { get { return RumObj as RuminantMale; } }
+        /// <summary>
+        /// Reason string
+        /// </summary>
+        public string Reason { get; set; }
     }
 }

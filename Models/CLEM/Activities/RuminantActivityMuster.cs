@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmustering.htm")]
     public class RuminantActivityMuster: CLEMRuminantActivityBase
     {
         /// <summary>
@@ -89,9 +90,9 @@ namespace Models.CLEM.Activities
                     {
                         RuminantFemale female = ind as RuminantFemale;
                         // check if mother with sucklings
-                        if (female.SucklingOffspring.Count > 0)
+                        if (female.SucklingOffspringList.Count > 0)
                         {
-                            foreach (var suckling in female.SucklingOffspring)
+                            foreach (var suckling in female.SucklingOffspringList)
                             {
                                 suckling.Location = pastureName;
                             }
@@ -168,7 +169,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             if (this.TimingOK)
             {
-                if ((this.Status == ActivityStatus.Success | this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+                if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                 {
                     Muster();
                 }
