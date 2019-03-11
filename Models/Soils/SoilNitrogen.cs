@@ -64,7 +64,7 @@ namespace Models.Soils
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model, ISolute, INutrient
+    public partial class SoilNitrogen : Model, INutrient
     {
 
         /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>

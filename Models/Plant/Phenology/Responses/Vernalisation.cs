@@ -28,7 +28,10 @@ namespace Models.PMF.Phen
         [Link]
         Constant DaysToStabilise = null;
 
-        
+        private int startStageIndex;
+
+        private int endStageIndex;
+
         /// <summary>Record of vernalising days during stabilisation period</summary>
         private double[] vernalisingRecord;
 
@@ -111,12 +114,14 @@ namespace Models.PMF.Phen
 
             vernalisingRecord = new double[(int)DaysToStabilise.FixedValue];
             DaysVernalised = 0.0;
+            startStageIndex = phenology.StartStagePhaseIndex(StartStage);
+            endStageIndex = phenology.EndStagePhaseIndex(EndStage);
         }
 
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (phenology.Between(StartStage, EndStage))
+            if (phenology.Between(startStageIndex, endStageIndex))
                 DoVernalisation();
         }
 

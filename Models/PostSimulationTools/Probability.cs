@@ -1,9 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="Probability.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using System;
     using System.Data;
@@ -11,8 +6,8 @@ namespace Models.PostSimulationTools
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Storage;
-    using System.Collections.Generic;
     using System.Linq;
+    using Models.Core.Run;
 
     /// <summary>
     /// # [Name]
@@ -49,11 +44,9 @@ namespace Models.PostSimulationTools
         /// The main run method called to fill tables in the specified DataStore.
         /// </summary>
         /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
-            dataStore.DeleteDataInTable(this.Name);
-
-            DataTable simulationData = dataStore.GetData(TableName, fieldNames: dataStore.GetTableColumns(TableName));
+            DataTable simulationData = dataStore.Reader.GetData(TableName, fieldNames: dataStore.Reader.ColumnNames(TableName));
             if (simulationData != null)
             {
                 IndexedDataTable simData = new IndexedDataTable(simulationData, new string[] { FieldToSplitOn });
@@ -93,7 +86,7 @@ namespace Models.PostSimulationTools
                 // Write the stats data to the DataStore
                 DataTable t = probabilityData.ToTable();
                 t.TableName = this.Name;
-                dataStore.WriteTable(t);
+                dataStore.Writer.WriteTable(t);
             }
         }
     }

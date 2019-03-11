@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/pasture/managepasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
@@ -184,7 +185,7 @@ namespace Models.CLEM.Activities
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
-            if (Area == 0 & AreaRequested > 0)
+            if (Area == 0 && AreaRequested > 0)
             {
                 ResourceRequestList = new List<ResourceRequest>();
                 ResourceRequestList.Add(new ResourceRequest()
@@ -244,7 +245,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (LinkedLandItem != null & UseAreaAvailable)
+            if (LinkedLandItem != null && UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
             }

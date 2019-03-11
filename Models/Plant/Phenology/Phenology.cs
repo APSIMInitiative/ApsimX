@@ -144,6 +144,38 @@ namespace Models.PMF.Phen
             return -1;
         }
 
+        /// <summary>Look for a particular stage and return it's index or -1 if not found.</summary>
+        public int StartStagePhaseIndex(string stageName)
+        {
+            int startPhaseIndex = -1;
+            int i = 0;
+            while (startPhaseIndex == -1 && i < phases.Count())
+            {
+                if (phases[i].Start == stageName)
+                    startPhaseIndex = i;
+                i += 1;
+            }
+            if (startPhaseIndex == -1)
+                throw new Exception("Cannot find phase beginning with: " + stageName);
+            return startPhaseIndex;
+        }
+
+        /// <summary>Look for a particular stage and return it's index or -1 if not found.</summary>
+        public int EndStagePhaseIndex(string stageName)
+        {
+            int endPhaseIndex = -1;
+            int i = 0;
+            while (endPhaseIndex == -1 && i < phases.Count())
+            {
+                if (phases[i].End == stageName)
+                    endPhaseIndex = i;
+                i += 1;
+            }
+            if (endPhaseIndex == -1)
+                throw new Exception("Cannot find phase ending with: " + stageName);
+            return endPhaseIndex;
+        }
+
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
@@ -233,6 +265,18 @@ namespace Models.PMF.Phen
             return String.Equals(CurrentPhase.Name, phaseName, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary> A utility function to return true if the simulation is currently between the specified start and end stages. </summary>
+        public bool Between(int startPhaseIndex, int endPhaseIndex)
+        {
+            if (phases == null)
+                return false;
+            
+            if (startPhaseIndex > endPhaseIndex)
+                throw new Exception("Start phase " + startPhaseIndex + " is after phase " + endPhaseIndex);
+
+            return currentPhaseIndex >= startPhaseIndex && currentPhaseIndex <= endPhaseIndex;
+        }
+
         /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
         public bool Between(String start, String end)
         {
@@ -241,8 +285,8 @@ namespace Models.PMF.Phen
 
             int startPhaseIndex = -1;
             int endPhaseIndex = -1;
-            int i= 0;
-            while (endPhaseIndex == -1 || i<phases.Count())
+            int i = 0;
+            while (endPhaseIndex == -1 && i < phases.Count())
             {
                 if (phases[i].Start == start)
                     startPhaseIndex = i;
@@ -250,7 +294,7 @@ namespace Models.PMF.Phen
                     endPhaseIndex = i;
                 i += 1;
             }
-            
+
             if (startPhaseIndex == -1)
                 throw new Exception("Cannot find phase: " + start);
             if (endPhaseIndex == -1)
@@ -334,7 +378,7 @@ namespace Models.PMF.Phen
 
                     currentPhaseIndex = currentPhaseIndex + 1;
 
-                        PhaseChangedType PhaseChangedData = new PhaseChangedType();
+                    PhaseChangedType PhaseChangedData = new PhaseChangedType();
                         PhaseChangedData.StageName = CurrentPhase.Start;
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 

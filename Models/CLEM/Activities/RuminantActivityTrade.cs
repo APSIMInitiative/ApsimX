@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminanttrade.htm")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -109,7 +110,7 @@ namespace Models.CLEM.Activities
             if(TimingOK)
             {
                 // remove any old potential sales from list as these will be updated here
-                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed & a.SaleFlag == HerdChangeReason.TradePurchase);
+                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
                 foreach (RuminantTypeCohort purchasetype in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
                 {
@@ -166,7 +167,7 @@ namespace Models.CLEM.Activities
             // sale details any timestep when conditions are met.
             foreach (Ruminant ind in this.CurrentHerd(true))
             {
-                if (ind.Age - ind.PurchaseAge >= MinMonthsKept & ind.Weight >= TradeWeight)
+                if (ind.Age - ind.PurchaseAge >= MinMonthsKept && ind.Weight >= TradeWeight)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
                 }

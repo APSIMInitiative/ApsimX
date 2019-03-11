@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Interfaces;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -15,6 +16,8 @@
     [Serializable]
     public class RunSimulation : IRunnable, IComputationalyTimeConsuming
     {
+        private IDataStore storage = null;
+
         /// <summary>The arguments for a commence event.</summary>
         public class CommenceArgs
         {
@@ -38,6 +41,17 @@
 
         /// <summary>An array of services that can be used to resolve links in the simulation</summary>
         public object[] Services { get; set; }
+
+        /// <summary>Gets the data store for this simulation.</summary>
+        public IDataStore DataStore
+        {
+            get
+            {
+                if (storage == null)
+                    storage = Apsim.Find(simulationEngine as IModel, typeof(DataStore)) as IDataStore;
+                return storage;
+            }
+        }
 
         /// <summary>A timer to record how long it takes to run</summary>
         [NonSerialized]

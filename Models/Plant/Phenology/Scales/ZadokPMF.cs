@@ -64,7 +64,8 @@ namespace Models.PMF.Phen
                     zadok_stage = 5.0f * fracInCurrent;
                 else if (Phenology.InPhase("Emerging"))
                     zadok_stage = 5.0f + 5 * fracInCurrent;
-                else if (Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
+                else if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
+                    || (!Phenology.InPhase("ReadyForHarvesting")&&Phenology.Stage<4.3))
                 {
                     if (Structure.BranchNumber <= 0.0)
                         zadok_stage = 10.0f + Structure.LeafTipsAppeared;

@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a date range to perfrom activities.")]
+    [HelpUri(@"content/features/timers/daterange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -154,7 +155,7 @@ namespace Models.CLEM.Activities
                 html += endDate.ToString("d MMM yyyy");
             }
             html += "</span>";
-            if(StartDate!=startDate | EndDate != endDate)
+            if(StartDate!=startDate || EndDate != endDate)
             {
                 html += " (modified for monthly timestep)";
             }

@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantpredictivestocking.htm")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
@@ -176,10 +177,10 @@ namespace Models.CLEM.Activities
             foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName & !a.ReadyForSale).ToList();
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
                 herd = herd.Filter(item);
                 int cnt = 0;
-                while (cnt < herd.Count() & animalEquivalentsforSale > 0)
+                while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {
                     this.Status = ActivityStatus.Success;
                     animalEquivalentsforSale -= herd[cnt].AdultEquivalent;

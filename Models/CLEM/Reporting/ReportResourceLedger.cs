@@ -2,7 +2,9 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Core.Run;
 using Models.Report;
+using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,16 +26,14 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/reporting/ledgers.htm")]
     public class ReportResourceLedger : Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
+        [NonSerialized]
         private List<IReportColumn> columns = null;
-
-        /// <summary>An array of column names to write to storage.</summary>
-        private IEnumerable<string> columnNames = null;
-
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IEnumerable<string> columnUnits = null;
+        [NonSerialized]
+        private ReportData dataToWriteToDb = null;
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -45,7 +45,7 @@ namespace Models.CLEM.Reporting
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        private IStorageWriter storage = null;
+        private IDataStore storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
@@ -67,6 +67,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
             variableNames.Add("Parent.Name as Zone");
@@ -135,11 +136,9 @@ namespace Models.CLEM.Reporting
             {
                 if (fullVariableName != string.Empty)
                 {
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
+                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
                 }
             }
-            columnNames = columns.Select(c => c.Name);
-            columnUnits = columns.Select(c => c.Units);
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
@@ -154,15 +153,54 @@ namespace Models.CLEM.Reporting
             }
         }
 
+        /// <summary>Invoked when a simulation is completed.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (dataToWriteToDb != null)
+                storage.Writer.WriteTable(dataToWriteToDb);
+            dataToWriteToDb = null;
+        }
+
+        /// <summary>A method that can be called by other models to perform a line of output.</summary>
+        public new void DoOutput()
+        {
+            if (dataToWriteToDb == null)
+                dataToWriteToDb = new ReportData()
+                {
+                    SimulationName = simulation.Name,
+                    TableName = Name,
+                    ColumnNames = columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                };
+
+            // Create a row ready for writing.
+            List<object> valuesToWrite = new List<object>();
+            for (int i = 0; i < columns.Count; i++)
+                valuesToWrite.Add(columns[i].GetValue());
+
+            // Add row to our table that will be written to the db file
+            dataToWriteToDb.Rows.Add(valuesToWrite);
+
+            // Write the table if we reach our threshold number of rows.
+            if (dataToWriteToDb.Rows.Count == 100)
+            {
+                storage.Writer.WriteTable(dataToWriteToDb);
+                dataToWriteToDb = null;
+            }
+        }
+		
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IStorageReader storage, string fileName)
+        public static new void WriteAllTables(IDataStore storage, string fileName)
         {
             // Write out each table for this simulation.
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                DataTable data = storage.GetData(tableName);
+                DataTable data = storage.Reader.GetData(tableName);
                 if (data != null && data.Rows.Count > 0)
                 {
                     SortColumnsOfDataTable(data);
@@ -206,16 +244,6 @@ namespace Models.CLEM.Reporting
             DoOutput();
         }
 
-        /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public new void DoOutput()
-        {
-            object[] valuesToWrite = new object[columns.Count];
-            for (int i = 0; i < columns.Count; i++)
-            {
-                valuesToWrite[i] = columns[i].GetValue();
-            }
 
-            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
-        }
     }
 }

@@ -6,6 +6,7 @@ namespace Models.Soils.Nutrients
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
+    using Interfaces;
     using System.Data;
     /// <summary>
     /// # [Name]
@@ -25,8 +26,12 @@ namespace Models.Soils.Nutrients
         [ChildLinkByName]
         private IFunction CO2Efficiency = null;
 
-        [Link]
-        private SoluteManager solutes = null;
+        [ScopedLinkByName]
+        ISolute NO3 = null;
+
+        [ScopedLinkByName]
+        ISolute NH4 = null;
+
 
         /// <summary>
         /// Net N Mineralisation
@@ -75,8 +80,6 @@ namespace Models.Soils.Nutrients
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             NutrientPool source = Parent as NutrientPool;
-            double[] NH4 = solutes.GetSolute("NH4");
-            double[] NO3 = solutes.GetSolute("NO3");
 
             for (int i = 0; i < source.C.Length; i++)
             {
@@ -95,10 +98,10 @@ namespace Models.Soils.Nutrients
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
                 // some pools do not fully occupy a layer (e.g. residue decomposition) and so need to incorporate fraction of layer
-                double MineralNSupply = (NO3[i] + NH4[i]) * source.LayerFraction[i];
+                double MineralNSupply = (NO3.kgha[i] + NH4.kgha[i]) * source.LayerFraction[i];
                 double NSupply = nitrogenFlowFromSource + MineralNSupply;
 
-                if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
+                if (TotalNitrogenFlowToDestinations > NSupply)
                 {
                     double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(MineralNSupply, TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
 
@@ -126,17 +129,17 @@ namespace Models.Soils.Nutrients
                 if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
                 {
                     MineralisedN[i] = nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
-                    NH4[i] += MineralisedN[i];
+                    NH4.kgha[i] += MineralisedN[i];
                 }
                 else
                 {
                     double NDeficit = TotalNitrogenFlowToDestinations - nitrogenFlowFromSource;
-                    double NH4Immobilisation = Math.Min(NH4[i], NDeficit);
-                    NH4[i] -= NH4Immobilisation;
+                    double NH4Immobilisation = Math.Min(NH4.kgha[i], NDeficit);
+                    NH4.kgha[i] -= NH4Immobilisation;
                     NDeficit -= NH4Immobilisation;
 
-                    double NO3Immobilisation = Math.Min(NO3[i], NDeficit);
-                    NO3[i] -= NO3Immobilisation;
+                    double NO3Immobilisation = Math.Min(NO3.kgha[i], NDeficit);
+                    NO3.kgha[i] -= NO3Immobilisation;
                     NDeficit -= NO3Immobilisation;
 
                     MineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
@@ -146,8 +149,6 @@ namespace Models.Soils.Nutrients
                 }
 
             }
-            solutes.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, NH4);
-            solutes.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, NO3);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

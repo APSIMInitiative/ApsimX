@@ -5,6 +5,7 @@ namespace Models.Soils.Nutrients
     using Models.Functions;
     using System;
     using System.Reflection;
+    using Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -25,8 +26,8 @@ namespace Models.Soils.Nutrients
         [Link]
         private IFunction N2OFraction = null;
 
-        [Link]
-        private SoluteManager solutes = null;
+        private ISolute sourceSolute = null;
+        private ISolute destinationSolute = null;
 
         /// <summary>
         /// Value of total N flow into destination
@@ -54,6 +55,16 @@ namespace Models.Soils.Nutrients
         [Description("Name of destination pool")]
         public string destinationName { get; set; }
 
+        /// <summary>Invoked when the simulation starts.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            sourceSolute = Apsim.Find(this, Parent.Name) as ISolute;
+            destinationSolute = Apsim.Find(this, destinationName) as ISolute;
+        }
+
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
@@ -62,7 +73,7 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {            
-            double[] source = solutes.GetSolute(Parent.Name);
+            double[] source = sourceSolute.kgha;
             if (Value == null)
                 Value = new double[source.Length];
             if (Natm == null)
@@ -73,13 +84,24 @@ namespace Models.Soils.Nutrients
 
             double[] destination = null;
             if (destinationName !=null)
-                destination = solutes.GetSolute(destinationName);
+                destination = destinationSolute.kgha;
 
             for (int i= 0; i < source.Length; i++)
             {
-                double nitrogenFlow = rate.Value(i) * source[i];
-                Natm[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
-                N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
+                double nitrogenFlow = 0;
+                if (source[i]>0)
+                    nitrogenFlow = rate.Value(i) * source[i];
+
+                if (nitrogenFlow > 0)
+                    Natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                else
+                    Natm[i] = 0;
+
+                if (Natm[i] > 0)
+                    N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
+                else
+                    N2Oatm[i] = 0;
+
                 double nitrogenFlowToDestination = nitrogenFlow - Natm[i];
 
                 if (destination == null && NLoss.Value(i) != 1)
@@ -90,9 +112,9 @@ namespace Models.Soils.Nutrients
                 if (destination != null)
                     destination[i] += nitrogenFlowToDestination;
             }
-            solutes.SetSolute(sourceName, SoluteManager.SoluteSetterType.Soil, source);
+            sourceSolute.SetKgHa(SoluteSetterType.Soil, source);
             if (destination != null)
-                solutes.SetSolute(destinationName, SoluteManager.SoluteSetterType.Soil, destination);
+                destinationSolute.SetKgHa(SoluteSetterType.Soil, destination);
         }
 
 

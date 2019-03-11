@@ -22,6 +22,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/resourcesholder.htm")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
         // Scoping rules of Linking in Apsim means that you can only link to 
@@ -54,6 +55,7 @@ namespace Models.CLEM.Resources
 
         private IModel GetGroupByType(Type type)
         {
+            ResourceGroupList = Apsim.Children(this, typeof(IModel));
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
 
@@ -400,7 +402,7 @@ namespace Models.CLEM.Resources
             foreach (ResourceRequest request in shortfallRequests)
             {
                 // Check if transmutation would be successful 
-                if (request.AllowTransmutation & (queryOnly || request.TransmutationPossible))
+                if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
                     // get resource type
                     IModel model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
@@ -447,7 +449,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType && a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
                                     if (transmutationCost + activityCost <= transResource.Amount)
                                     {
                                         request.TransmutationPossible = true;
