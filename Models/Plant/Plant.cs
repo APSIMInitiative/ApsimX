@@ -75,7 +75,7 @@ namespace Models.PMF
 
         /// <summary>The sowing data</summary>
         [XmlIgnore]
-        public SowPlant2Type SowingData { get; set; }
+        public SowPlant2Type SowingData { get; set; } = new SowPlant2Type();
 
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
@@ -291,7 +291,6 @@ namespace Models.PMF
         {
             SowingDate = Clock.Today;
 
-            SowingData = new SowPlant2Type();
             SowingData.Plant = this;
             SowingData.Population = population;
             SowingData.Depth = depth;
@@ -387,7 +386,7 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-            SowingData = null;
+            SowingData = new SowPlant2Type();
             plantPopulation = 0.0;
         }
         #endregion
