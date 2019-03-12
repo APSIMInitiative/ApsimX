@@ -26,6 +26,10 @@
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     public class Manager : Model, IOptionallySerialiseChildren
     {
+        private static bool haveTrappedAssemblyResolveEvent = false;
+
+        private static object haveTrappedAssemblyResolveEventLock = new object();
+
         /// <summary>The compiled code</summary>
         private string CompiledCode;
 
@@ -77,6 +81,26 @@
         /// </summary>
         public override void OnCreated()
         {
+            // This looks weird but I'm trying to avoid having to call lock
+            // everytime we come through here.
+            if (!haveTrappedAssemblyResolveEvent)
+            {
+                lock (haveTrappedAssemblyResolveEventLock)
+                {
+                    if (!haveTrappedAssemblyResolveEvent)
+                    {
+                        haveTrappedAssemblyResolveEvent = true;
+
+                        // Trap the assembly resolve event.
+                        AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+                        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+
+                        // Clean up apsimx manager .dll files.
+                        CleanupOldAssemblies();
+                    }
+                }
+            }
+
             isCreated = true;
             RebuildScriptModel();
         }
@@ -134,7 +158,7 @@
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".dll");
+            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), "ApsimXManager" + Guid.NewGuid().ToString()), ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
@@ -143,22 +167,40 @@
         /// <remarks>
         /// Seems like it will only look for DLL's in the bin folder. We can't put the manager DLLs in there
         /// because when ApsimX is installed, the bin folder will be under c:\program files and we won't have
-        /// permission to save the manager dlls there. Instead we put them in %TEMP%\ApsimX and use this 
+        /// permission to save the manager dlls there. Instead we put them in %TEMP% and use this 
         /// event handler to resolve the assemblies to that location.
         /// </remarks>
         /// <returns></returns>
         public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
         {
-            string tempDLLPath = Path.GetTempPath();
-            if (!Path.GetTempPath().Contains("ApsimX"))
-                tempDLLPath = Path.Combine(tempDLLPath, "ApsimX");
-            if (Directory.Exists(tempDLLPath))
-            {
-                foreach (string fileName in Directory.GetFiles(tempDLLPath, "*.dll"))
-                    if (args.Name.Split(',')[0] == Path.GetFileNameWithoutExtension(fileName))
-                        return Assembly.LoadFrom(fileName);
-            }
+            foreach (string fileName in Directory.GetFiles(Path.GetTempPath(), "ApsimXManager*.dll"))
+                if (args.Name.Split(',')[0] == Path.GetFileNameWithoutExtension(fileName))
+                    return Assembly.LoadFrom(fileName);
             return null;
+        }
+
+        /// <summary>
+        /// Cleanup old assemblies in the TEMP folder.
+        /// </summary>
+        private void CleanupOldAssemblies()
+        {
+            var filesToCleanup = new List<string>();
+            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), "ApsimXManager*.dll"));
+            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), "ApsimXManager*.cs"));
+
+            foreach (string fileName in filesToCleanup)
+            {
+                try
+                {
+                    TimeSpan timeSinceLastAccess = DateTime.Now - File.GetLastAccessTime(fileName);
+                    if (timeSinceLastAccess.Hours > 1)
+                        File.Delete(fileName);
+                }
+                catch (Exception)
+                {
+                    // File locked?
+                }                
+            }
         }
 
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
