@@ -425,12 +425,15 @@ namespace Models.Core
                                 if (newValue != null)
                                 {
                                     IList list = value as IList;
-                                    if ((i - 1) < list.Count)
-                                        newValue = list[i - 1];
-                                    else if (list.Count == 1)
-                                        newValue = list[0];
-                                    else
-                                        throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
+                                    if (list != null)
+                                    {
+                                        if ((i - 1) < list.Count)
+                                            newValue = list[i - 1];
+                                        else if (list.Count == 1)
+                                            newValue = list[0];
+                                        else
+                                            throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
+                                    }
                                 }
 
                                 array[i - 1] = newValue; // this will modify obj as well
