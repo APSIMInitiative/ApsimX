@@ -145,6 +145,7 @@
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Reporting\PivotTable.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
