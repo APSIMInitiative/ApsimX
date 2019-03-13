@@ -148,7 +148,7 @@
                         // Add the units, if they're available
                         if (units != null)
                         {
-                            column.ColumnName = column.ColumnName + " " + units;
+                            column.ColumnName = column.ColumnName + " (" + units + ")";
                         }
                     }
 

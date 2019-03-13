@@ -90,7 +90,7 @@
         }
 
         /// <summary>Returns a list of table names</summary>
-        public List<string> TableNames { get { return connection.GetTableNames(); } }
+        public List<string> TableNames { get { return connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
 
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         public void Refresh()
