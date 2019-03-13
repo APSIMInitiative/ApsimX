@@ -401,7 +401,7 @@ namespace Models.PMF.Organs
                 // Required the nitrogen content
                 double requiredMinNContent = (Live.Wt + dmAllocation) * MinimumNConc.Value();
                 // Current total nitrogen
-                double minNConc = Math.Max(0, (requiredMinNContent - Live.N) / dmAllocation);
+                double minNConc = Math.Max(0.00001, (requiredMinNContent - Live.N) / dmAllocation);
                 return minNConc;
             }
         }
