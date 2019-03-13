@@ -6,13 +6,11 @@
 
 using ApsimNG.Views.CLEM;
 using Models.Core;
-using Models.CLEM;
 using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 
@@ -21,12 +19,12 @@ namespace ApsimNG.Presenters.CLEM
     class PivotTablePresenter : IPresenter
     {
         /// <summary>
-        /// The CustomQuery object
+        /// The PivotTable object
         /// </summary>
         private PivotTable table = null;
 
         /// <summary>
-        /// The CustomQueryView used
+        /// The PivotTableView used
         /// </summary>
         private PivotTableView view = null;
 
@@ -47,7 +45,8 @@ namespace ApsimNG.Presenters.CLEM
             this.view = view as PivotTableView;
             this.explorer = explorerPresenter;
 
-            SetLedgers();
+            // Find ledgers to source data from
+            this.view.SetLedgers(table);
 
             // Attach events to handlers
             this.view.UpdateData += OnUpdateData;
@@ -62,34 +61,17 @@ namespace ApsimNG.Presenters.CLEM
             this.view.Row.ID = table.Row;
             this.view.Column.ID = table.Column;
             this.view.Pivot.ID = table.Pivot;
+            this.view.Time.ID = table.ID;
 
+            // Update gridview data (i.e. initial load of data)
             OnUpdateData(null, EventArgs.Empty);
-        }
+        }        
 
         /// <summary>
-        /// 
+        /// Refreshes the data in the gridview when a change is made to the view
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SetLedgers()
-        {
-            CLEMFolder folder = new CLEMFolder();
-            folder = Apsim.Find(table, typeof(CLEMFolder)) as CLEMFolder;
-
-            foreach (var child in folder.Children)
-            {
-                if (child.GetType() != typeof(ReportResourceLedger)) continue;
-                
-                ReportResourceLedger ledger = child as ReportResourceLedger;
-                view.AddLedger(ledger.Name);                
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnUpdateData(object sender, EventArgs e)
         {
             IStorageReader reader = Apsim.Find(table, typeof(IStorageReader)) as IStorageReader;
@@ -103,6 +85,7 @@ namespace ApsimNG.Presenters.CLEM
                 .Distinct()
                 .ToList());
 
+            // Reset the table ID if the new pivot list is too short
             if (table.Pivots.Count <= table.ID) table.ID = 0;
             
             // Determine the row/column values
@@ -116,7 +99,8 @@ namespace ApsimNG.Presenters.CLEM
             {  
                 output.Columns.Add(col.ToString(), typeof(double));
             }
-
+            
+            // Attach a column for the row titles
             string name = "Pivot: " + table.GetPivot();
             output.Columns.Add(name, typeof(string)).SetOrdinal(0);
 
@@ -128,48 +112,63 @@ namespace ApsimNG.Presenters.CLEM
 
                 foreach(var col in cols)
                 {
-                    double value = 0;
-
-                    // Search DataTable for all values that match the current row/column/pivot
-                    var values =
+                    // Search DataTable for all values that match the current row/column
+                    var items =
                         from item in input.AsEnumerable()
                         where item.Field<object>(view.Column.Text).ToString() == col.ToString()
                         where item.Field<object>(view.Row.Text).ToString() == row.ToString()
+                        select item;
+
+                    // Selects the values based on the current pivot
+                    var values =
+                        from item in items
                         where item.Field<object>(view.Pivot.Text).ToString() == table.GetPivot()
                         select item.Field<double>(view.Value.Text);
 
-                    // Evaluate the expression on selected values
-                    if (values.Count() > 0) switch (view.Expression.Text)
-                    {
-                        case "Sum":
-                            value = values.Sum();
-                            break;
-
-                        case "Average":
-                            value = values.Average();
-                            break;
-
-                        case "Max":
-                            value = values.Max();
-                            break;
-
-                        case "Min":
-                            value = values.Min();
-                            break;
-
-                        default:                            
-                            break;
-                    }
-
-                    data[col.ToString()] = value;                    
+                    // Evaluate the expression on selected values                   
+                    data[col.ToString()] = Aggregate(values);                    
                 }
                 output.Rows.Add(data);
                 output.AcceptChanges();
             }            
 
             view.gridview.DataSource = output;
+        }        
+
+        /// <summary>
+        /// Takes a collection of values from a set of rows and aggregates them
+        /// </summary>
+        /// <param name="values">The collection of values</param>
+        private double Aggregate(EnumerableRowCollection<double> values)
+        {
+            if (values.Count() > 0)
+            {
+                switch (view.Expression.Text)
+                {
+                    case "Sum":
+                        return values.Sum();
+
+                    case "Average":
+                        return values.Average();
+
+                    case "Max":
+                        return values.Max();
+
+                    case "Min":
+                        return values.Min();
+
+                    default:
+                        return 0;
+                }
+            }
+            else return 0;
         }
 
+        /// <summary>
+        /// Stores the current gridview in the DataStore
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnStoreData(object sender, EventArgs e)
         {
             DataTable data = view.gridview.DataSource;
@@ -179,10 +178,10 @@ namespace ApsimNG.Presenters.CLEM
         }
 
         /// <summary>
-        /// 
+        /// Switches the current pivot focus
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnChangePivot(object sender, PivotTableView.ChangePivotArgs args)
         {
             if (args.Increase)
