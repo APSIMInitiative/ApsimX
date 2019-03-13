@@ -1066,10 +1066,13 @@ namespace Models.PMF.Organs
                 needToRecalculateLiveDead = false;
                 liveBiomass.Clear();
                 deadBiomass.Clear();
-                foreach (Biomass b in PlantZone.LayerLive)
-                    liveBiomass.Add(b);
-                foreach (Biomass b in PlantZone.LayerDead)
-                    deadBiomass.Add(b);
+                if (PlantZone != null)
+                {
+                    foreach (Biomass b in PlantZone.LayerLive)
+                        liveBiomass.Add(b);
+                    foreach (Biomass b in PlantZone.LayerDead)
+                        deadBiomass.Add(b);
+                }
             }
         }
 
