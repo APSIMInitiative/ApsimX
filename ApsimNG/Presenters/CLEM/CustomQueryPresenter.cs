@@ -11,9 +11,10 @@ using System;
 using System.Data;
 using UserInterface.Commands;
 using UserInterface.Presenters;
+using Models.Storage;
 
 namespace ApsimNG.Presenters.CLEM
-{    
+{
     class CustomQueryPresenter : IPresenter
     {
         /// <summary>
@@ -43,7 +44,7 @@ namespace ApsimNG.Presenters.CLEM
             this.view = view as CustomQueryView;
             this.explorer = explorerPresenter;
 
-            this.view.OnRunQuery += ExecuteQuery;
+            this.view.OnRunQuery += RunQuery;
             this.view.OnLoadFile += LoadFile;
             this.view.OnWriteTable += WriteTable;
 
@@ -53,7 +54,7 @@ namespace ApsimNG.Presenters.CLEM
                 this.view.Sql = query.Sql;
                 this.view.Filename = query.Filename;
                 this.view.Tablename = query.Tablename;
-                ExecuteQuery(this, EventArgs.Empty);
+                RunQuery(this, EventArgs.Empty);
             }
         }        
 
@@ -62,7 +63,7 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         public void Detach()
         {
-            view.OnRunQuery -= ExecuteQuery;
+            view.OnRunQuery -= RunQuery;
             view.OnLoadFile -= LoadFile;
             view.OnWriteTable -= WriteTable;
             view.gridview1.Dispose();
@@ -90,13 +91,10 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ExecuteQuery(object sender, EventArgs e)
-        {                      
-            IStorageWriter writer = Apsim.Find(query, typeof(IStorageWriter)) as IStorageWriter;
-            view.gridview1.DataSource = writer.ExecuteQuery(view.Sql);
-
-            WriteTableEventArgs args = new WriteTableEventArgs();
-            args.tablename = view.Tablename;
+        private void RunQuery(object sender, EventArgs e)
+        {
+            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            view.gridview1.DataSource = store.Reader.GetDataUsingSql(view.Sql);
 
             SaveData();
         }
@@ -106,14 +104,13 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void WriteTable(object sender, WriteTableEventArgs args)
+        private void WriteTable(object sender, CustomQueryView.WriteTableEventArgs args)
         {
             DataTable data = view.gridview1.DataSource;
             data.TableName = args.tablename;
 
-            IStorageReader reader = Apsim.Find(query, typeof(IStorageReader)) as IStorageReader;
-            reader.DeleteDataInTable(args.tablename);
-            reader.WriteTable(data);            
+            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            store.Writer.WriteTable(data);
 
             SaveData();
         }

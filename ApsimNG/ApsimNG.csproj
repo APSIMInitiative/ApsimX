@@ -119,7 +119,6 @@
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <EmbeddedResource Include="Resources\Glade\CustomQueryView.glade" />
-    <EmbeddedResource Include="Resources\Glade\PivotTableView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -225,7 +224,6 @@
     <Compile Include="Presenters\CLEM\LabourAllocationPresenter.cs" />
     <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
     <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
-    <Compile Include="Presenters\CLEM\PivotTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
@@ -238,7 +236,6 @@
     <Compile Include="Views\CLEM\CLEMView.cs" />
     <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
-    <Compile Include="Views\CLEM\PivotTableView.cs" />
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
