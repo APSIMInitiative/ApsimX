@@ -124,10 +124,11 @@
             if (table.Columns.Contains("SimulationName"))
             {
                 var simulationNames = DataTableUtilities.GetColumnAsStrings(table, "SimulationName").ToList().Distinct();
-                DeleteOldRowsInTable(table.TableName, simulationNamesThatMayNeedCleaning: simulationNames);
+                DeleteOldRowsInTable(table.TableName, "Current",
+                                     simulationNamesThatMayNeedCleaning: simulationNames);
             }
             else
-                DeleteOldRowsInTable(table.TableName);
+                DeleteOldRowsInTable(table.TableName, "Current");
 
             AddIndexColumns(table, "Current", null);
 
@@ -365,52 +366,65 @@
             // Can be called by many threads simultaneously.
 
             List<int> simulationIds = null;
-            if (simulationNamesThatMayNeedCleaning != null)
+            if (tablesNotNeedingIndexColumns.Contains(tableName))
             {
-                IEnumerable<string> simsNeedingCleaning;
-
-                lock (lockObject)
-                {
-                    // Have we written anything to this table yet?
-                    if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
-                    {
-                        // No - create a empty list of simulation names that we've cleaned up.
-                        simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
-                        simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
-                    }
-                    else
-                    {
-                        // Get a list of simulations that haven't been cleaned up for this table.
-                        simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
-                    }
-
-                    simulationIds = new List<int>();
-                    if (simsNeedingCleaning.Any())
-                    {
-                        // Add the simulations we're about to clean to our list so
-                        // that they aren't cleaned again. Also get id's for each one.
-                        foreach (var simulationName in simsNeedingCleaning)
-                        {
-                            simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
-                            simulationIds.Add(GetSimulationID(simulationName));
-                        }
-                    }
-                }
-            }
-
-            if (simulationNamesThatMayNeedCleaning == null || simulationIds.Any())
-            {
-                // Get a checkpoint id.
-                var checkpointID = 0;
-                if (checkpointName != null)
-                    checkpointID = GetCheckpointID(checkpointName);
-
                 // Create a delete row command to remove the rows.
                 lock (lockObject)
                 {
+                    // This will drop the table.
                     commands.Add(new DeleteRowsCommand(Connection, tableName,
-                                        checkpointID,
-                                        simulationIds));
+                                        0, simulationIds));
+                }
+            }
+            else 
+            {
+                if (simulationNamesThatMayNeedCleaning != null)
+                {
+                    IEnumerable<string> simsNeedingCleaning;
+
+                    lock (lockObject)
+                    {
+                        // Have we written anything to this table yet?
+                        if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
+                        {
+                            // No - create a empty list of simulation names that we've cleaned up.
+                            simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
+                            simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
+                        }
+                        else
+                        {
+                            // Get a list of simulations that haven't been cleaned up for this table.
+                            simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
+                        }
+
+                        simulationIds = new List<int>();
+                        if (simsNeedingCleaning.Any())
+                        {
+                            // Add the simulations we're about to clean to our list so
+                            // that they aren't cleaned again. Also get id's for each one.
+                            foreach (var simulationName in simsNeedingCleaning)
+                            {
+                                simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
+                                simulationIds.Add(GetSimulationID(simulationName));
+                            }
+                        }
+                    }
+                }
+
+                if (simulationNamesThatMayNeedCleaning == null || simulationIds.Any())
+                {
+                    // Get a checkpoint id.
+                    var checkpointID = 0;
+                    if (checkpointName != null)
+                        checkpointID = GetCheckpointID(checkpointName);
+
+                    // Create a delete row command to remove the rows.
+                    lock (lockObject)
+                    {
+                        commands.Add(new DeleteRowsCommand(Connection, tableName,
+                                            checkpointID,
+                                            simulationIds));
+                    }
                 }
             }
         }
