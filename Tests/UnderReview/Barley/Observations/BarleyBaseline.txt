@@ -1,0 +1,220 @@
+SimulationName	Country	TrialLocation	Clock.Today	Barley.Leaf.Live.Wt	Barley.Stem.Wt	Barley.Ear.Wt	Barley.Grain.Wt	TotalAboveGroundWt	Barley.Leaf.LAI	Barley.Leaf.CoverGreen	Barley.Phenology.Zadok.Stage	Barley.Phenology.FlagLeafDAS.Value()	Barley.Phenology.FloweringDAS.Value()	Barley.Structure.LeafTipsAppeared	ProfileWater
+()	()	()	()	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(m2/m2)	(0-1)	()	()	()	()	()
+RS95_96_Fulldrought	NZ	RS	1995-11-21					8.8125							
+RS95_96_Fullirrigation	NZ	RS	1995-11-21					4.8625							
+RS95_96_Fulldrought	NZ	RS	1995-11-28	101.3713971	97.0200315			200.8	2.385255209						
+RS95_96_Fullirrigation	NZ	RS	1995-11-28	82.33041105	46.80856806			129.85	1.711157474						
+RS95_96_Fulldrought	NZ	RS	1995-12-05					27.425							
+RS95_96_Fullirrigation	NZ	RS	1995-12-05					19.8							
+RS95_96_Fulldrought	NZ	RS	1995-12-12	97.09741288	269.2436322			376.65	1.19958353						
+RS95_96_Fullirrigation	NZ	RS	1995-12-12	138.715804	267.7383264			415.35	1.733639655						
+RS95_96_Fulldrought	NZ	RS	1995-12-18	99.68601483	308.7537295	115.2825048		548.875	2.198719739						
+RS95_96_Fullirrigation	NZ	RS	1995-12-18	126.114249	336.1532416	81.413181		562.125	3.122347707						
+RS95_96_Fulldrought	NZ	RS	1995-12-27	91.6413649	402.3978792	254.9979291		785.725	1.577398577						
+RS95_96_Fullirrigation	NZ	RS	1995-12-27	141.0819079	480.9572918	160.9827311		800	3.29221738						
+RS95_96_Fulldrought	NZ	RS	1996-01-05	43.39462866	390.4910476	396.3861534	300.7331871	898.5	0.875439401						
+RS95_96_Fullirrigation	NZ	RS	1996-01-05	112.6688597	499.7238935	396.8123275	232.0537965	1043.75	2.845143357						
+RS95_96_Fulldrought	NZ	RS	1996-01-15	4.450258291	259.6779956	572.757403		928.1	0.095442747						
+RS95_96_Fullirrigation	NZ	RS	1996-01-15	85.59551986	437.2855771	647.2616119		1200.65	1.794758333						
+RS95_96_Fulldrought	NZ	RS	1996-01-24	0	249.954935	587.7575333	519.338204	923.075							
+RS95_96_Fullirrigation	NZ	RS	1996-01-24	30.8900791	387.9847581	777.1969925	663.5006316	1269.975	0.890333548						
+RS95_96_Fullirrigation	NZ	RS	1996-02-07	0	315.5588445	873.9628794	748.3661006	1272.95							
+RS95_96_Fulldrought	NZ	RS	1995-11-15												400.75
+RS95_96_Fulldrought	NZ	RS	1995-11-28												405.33
+RS95_96_Fulldrought	NZ	RS	1995-12-05												356.19
+RS95_96_Fulldrought	NZ	RS	1995-12-12												340.17
+RS95_96_Fulldrought	NZ	RS	1995-12-19												321.72
+RS95_96_Fulldrought	NZ	RS	1996-01-09												287.26
+RS95_96_Fulldrought	NZ	RS	1996-01-16												281.98
+RS95_96_Fulldrought	NZ	RS	1996-01-23												282.29
+RS95_96_Fulldrought	NZ	RS	1996-01-30												282.41
+RS95_96_Fulldrought	NZ	RS	1996-01-03												292.02
+RS95_96_Fullirrigation	NZ	RS	1995-11-15												461.72
+RS95_96_Fullirrigation	NZ	RS	1995-11-28												477.82
+RS95_96_Fullirrigation	NZ	RS	1995-12-05												437.62
+RS95_96_Fullirrigation	NZ	RS	1995-12-12												442.81
+RS95_96_Fullirrigation	NZ	RS	1995-12-19												442.65
+RS95_96_Fullirrigation	NZ	RS	1996-01-09												447.84
+RS95_96_Fullirrigation	NZ	RS	1996-01-16												449.5
+RS95_96_Fullirrigation	NZ	RS	1996-01-23												429.82
+RS95_96_Fullirrigation	NZ	RS	1996-01-30												421.98
+RS95_96_Fullirrigation	NZ	RS	1996-02-07												420.76
+RS95_96_Fullirrigation	NZ	RS	1996-02-13												430.69
+RS95_96_Fullirrigation	NZ	RS	1996-01-03												427.73
+Dash09_10_N0_Dry	NZ	Field	2009-11-04	36.81	8.89			46.52	0.82						
+Dash09_10_N150_Irrig	NZ	Field	2009-11-04	31.09	6.91			38.67	0.67						
+Omaka09_10_N0_Dry	NZ	Field	2009-11-04	54.58	14.72			70.4	1.1						
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-04	37.18	11.22			48.91	0.51						
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-04	48.18	8.52			57.63	0.93						
+Dash09_10_N150_Dry	NZ	Field	2009-11-10	64.45	21.35			87.33	1.53						
+Dash09_10_N0_Dry	NZ	Field	2009-11-10	72.94	14.8			89.51	1.78						
+Dash09_10_N150_Irrig	NZ	Field	2009-11-10	82.91	16.19			101.23	2.13						
+Dash09_10_N0_Irrig	NZ	Field	2009-11-10	63.17	21.43			86.3	1.7						
+Omaka09_10_N150_Dry	NZ	Field	2009-11-10	95.72	17.08			114.7	1.9						
+Omaka09_10_N0_Dry	NZ	Field	2009-11-10	71.13	15.67			88.55	1.75						
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-10	87.43	16.47			105.96	2.06						
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-10	71.77	18.29			91.57	1.51						
+Dash09_10_N150_Dry	NZ	Field	2009-11-16	109.78	31.82			144.05	2.45						
+Dash09_10_N0_Dry	NZ	Field	2009-11-16	106.65	58.22			167.07	2.2						
+Dash09_10_N150_Irrig	NZ	Field	2009-11-16	115.93	32.07			150.38	2.38						
+Dash09_10_N0_Irrig	NZ	Field	2009-11-16	103.96	42.21			148.99	2.82						
+Omaka09_10_N150_Dry	NZ	Field	2009-11-16	137.72	42.08			182.49	2.69						
+Omaka09_10_N0_Dry	NZ	Field	2009-11-16	121.15	38.08			161.59	2.36						
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-16	103.7	42.5			148.2	2						
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-16	114.65	29.05			146.11	2.41						
+Dash09_10_N150_Dry	NZ	Field	2009-11-20	180.75	60.25			245.72	4.72						
+Dash09_10_N0_Dry	NZ	Field	2009-11-20	147.75	95.25			246.27	3.27						
+Dash09_10_N150_Irrig	NZ	Field	2009-11-20	162	54			219.07	3.07						
+Dash09_10_N0_Irrig	NZ	Field	2009-11-20	137.18	100.15			241.12	3.79						
+Omaka09_10_N150_Dry	NZ	Field	2009-11-20	151.67	121.33			276.25	3.25						
+Omaka09_10_N0_Dry	NZ	Field	2009-11-20	173.96	93.37			271.79	4.45						
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-20	134.29	100.71			238.29	3.29						
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-20	117.32	67.35			187.32	2.65						
+Dash09_10_N150_Dry	NZ	Field	2009-11-24	150.67	104.43			259.95	4.85						
+Dash09_10_N0_Dry	NZ	Field	2009-11-24	122.28	121.12			246.24	2.84						
+Dash09_10_N150_Irrig	NZ	Field	2009-11-24	122.88	145.22			270.85	2.75						
+Dash09_10_N0_Irrig	NZ	Field	2009-11-24	138.73	142.17			284.9	4						
+Omaka09_10_N150_Dry	NZ	Field	2009-11-24	171.42	191.48			367.71	4.81						
+Omaka09_10_N0_Dry	NZ	Field	2009-11-24	128.1	130.47			262.02	3.46						
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-24	138.35	138.35			280.66	3.96						
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-24	129.07	121.76			254.3	3.47						
+Dash09_10_N150_Dry	NZ	Field	2009-11-27	182.64	176.26			365.02	6.12						
+Dash09_10_N0_Dry	NZ	Field	2009-11-27	139.69	229.11			372.72	3.92						
+Dash09_10_N150_Irrig	NZ	Field	2009-11-27	149.04	218.96			372.24	4.24						
+Dash09_10_N0_Irrig	NZ	Field	2009-11-27	165.83	232.47			403.18	4.88						
+Omaka09_10_N150_Dry	NZ	Field	2009-11-27	167.82	269.78			441.88	4.28						
+Omaka09_10_N0_Dry	NZ	Field	2009-11-27	155.32	237.85			397.47	4.31						
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-27	134.1	235.1			372.66	3.46						
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-27	139.45	177.55			320.8	3.8						
+Dash09_10_N150_Dry	NZ	Field	2009-12-04	159.75	344.2			508.3	4.35						
+Dash09_10_N0_Dry	NZ	Field	2009-12-04	128.18	289.02			420.51	3.31						
+Dash09_10_N150_Irrig	NZ	Field	2009-12-04	162.09	316.76			483.67	4.82						
+Dash09_10_N0_Irrig	NZ	Field	2009-12-04	140.48	322.19			466.52	3.85						
+Omaka09_10_N150_Dry	NZ	Field	2009-12-04	133.84	326.61			464.15	3.7						
+Omaka09_10_N0_Dry	NZ	Field	2009-12-04	153.92	357.98			515.89	3.99						
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-04	162.64	324.61			491.68	4.43						
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-04	144.1	326.13			473.9	3.67						
+Dash09_10_N150_Dry	NZ	Field	2009-12-12	128	560.77			692.27	3.5						
+Dash09_10_N0_Dry	NZ	Field	2009-12-12	123.81	486.27			613.9	3.83						
+Dash09_10_N150_Irrig	NZ	Field	2009-12-12	143.18	584.47			732.04	4.39						
+Dash09_10_N0_Irrig	NZ	Field	2009-12-12	116.94	581.86			701.99	3.19						
+Omaka09_10_N150_Dry	NZ	Field	2009-12-12	107.85	537.08			647.12	2.19						
+Omaka09_10_N0_Dry	NZ	Field	2009-12-12	129.63	613.35			745.35	2.38						
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-12	136.06	557.94			697.74	3.74						
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-12	108.84	539.76			651.24	2.64						
+Dash09_10_N150_Dry	NZ	Field	2009-12-18	133.53	523.11	164.55	44.97	824.7	3.5						
+Dash09_10_N0_Dry	NZ	Field	2009-12-18	136.58	557.12	156.8	57.95	853.88	3.38						
+Dash09_10_N150_Irrig	NZ	Field	2009-12-18	148.38	558.31	163.41	67.25	874.49	4.39						
+Dash09_10_N0_Irrig	NZ	Field	2009-12-18	109.35	522.36	147.87	53.89	782.4	2.82						
+Omaka09_10_N150_Dry	NZ	Field	2009-12-18	118.21	493.18	161.88	36.28	775.41	2.14						
+Omaka09_10_N0_Dry	NZ	Field	2009-12-18	122.19	522.5	157.79	33.9	804.79	2.32						
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-18	134.32	551.24	164.8	54.15	853.34	2.98						
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-18	121.19	557.67	159.11	52.7	840.82	2.84						
+Dash09_10_N150_Dry	NZ	Field	2009-12-28	149.43	722.21	400.17	280.58	1275.6	3.79						
+Dash09_10_N0_Dry	NZ	Field	2009-12-28	107.8	672.76	315.6	216.75	1098.76	2.6						
+Dash09_10_N150_Irrig	NZ	Field	2009-12-28	136.94	695.63	346.86	250.7	1183.37	3.95						
+Dash09_10_N0_Irrig	NZ	Field	2009-12-28	96.6	601.66	271.67	177.68	972.36	2.43						
+Omaka09_10_N150_Dry	NZ	Field	2009-12-28	128.4	654.9	382.37	256.71	1167.9	2.23						
+Omaka09_10_N0_Dry	NZ	Field	2009-12-28	116.49	642.46	369.55	245.66	1130.63	2.13						
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-28	134.3	679.42	316.88	206.24	1133.5	2.9						
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-28	97.21	638.58	285.23	178.81	1023.23	2.21						
+Dash09_10_N150_Dry	NZ	Field	2010-01-06	96.73	627.34	571.19	451.61	1297.6	2.34						
+Dash09_10_N0_Dry	NZ	Field	2010-01-06	69.91	642.15	531.03	432.18	1244.7	1.61						
+Dash09_10_N150_Irrig	NZ	Field	2010-01-06	114.57	684.56	631.23	535.07	1433.47	3.11						
+Dash09_10_N0_Irrig	NZ	Field	2010-01-06	64.72	595.25	529.33	435.34	1190.82	1.53						
+Omaka09_10_N150_Dry	NZ	Field	2010-01-06	50.16	587.61	557.81	432.15	1196.4	0.81						
+Omaka09_10_N0_Dry	NZ	Field	2010-01-06	67.19	597.46	566.65	442.76	1232.46	1.17						
+Omaka09_10_N150_Irrig	NZ	Field	2010-01-06	100.85	605.81	522.15	411.5	1230.86	2.05						
+Omaka09_10_N0_Irrig	NZ	Field	2010-01-06	80.11	604.75	498.23	391.81	1184.8	1.72						
+Dash09_10_N150_Dry	NZ	Field	2010-01-18	49.22	572.72	772.33	652.74	1395.3	1.04						
+Dash09_10_N0_Dry	NZ	Field	2010-01-18	25.43	598.06	742.31	643.46	1366.57	0.76						
+Dash09_10_N150_Irrig	NZ	Field	2010-01-18	69.03	611.43	793.86	697.7	1476.17	1.85						
+Dash09_10_N0_Irrig	NZ	Field	2010-01-18	40.88	548.96	733.96	639.97	1324.69	0.88						
+Omaka09_10_N150_Dry	NZ	Field	2010-01-18	13.73	520.61	642.27	516.61	1176.78	0.18						
+Dash09_10_N0_Dry	NZ	Field	2009-11-04							0.28					
+Dash09_10_N0_Dry	NZ	Field	2009-11-10							0.54					
+Dash09_10_N0_Dry	NZ	Field	2009-11-16							0.61					
+Dash09_10_N0_Dry	NZ	Field	2009-12-04							0.78					
+Dash09_10_N0_Dry	NZ	Field	2009-12-12							0.71					
+Dash09_10_N0_Dry	NZ	Field	2009-12-18							0.7					
+Dash09_10_N0_Dry	NZ	Field	2009-12-29							0.63					
+Dash09_10_N0_Dry	NZ	Field	2010-01-05							0.3					
+Dash09_10_N0_Dry	NZ	Field	2010-01-20							0.03					
+Dash09_10_N0_Dry	NZ	Field	2010-01-28												
+Dash09_10_N0_Irrig	NZ	Field	2009-10-30							0.5					
+Dash09_10_N0_Irrig	NZ	Field	2009-11-04							0.28					
+Dash09_10_N0_Irrig	NZ	Field	2009-11-10							0.57					
+Dash09_10_N0_Irrig	NZ	Field	2009-11-16							0.67					
+Dash09_10_N0_Irrig	NZ	Field	2009-12-04							0.78					
+Dash09_10_N0_Irrig	NZ	Field	2009-12-12							0.77					
+Dash09_10_N0_Irrig	NZ	Field	2009-12-18							0.72					
+Dash09_10_N0_Irrig	NZ	Field	2009-12-29							0.71					
+Dash09_10_N0_Irrig	NZ	Field	2010-01-05							0.6					
+Dash09_10_N0_Irrig	NZ	Field	2010-01-20							0.28					
+Dash09_10_N0_Irrig	NZ	Field	2010-01-28							0.15					
+Omaka09_10_N0_Dry	NZ	Field	2009-10-30							0.65					
+Omaka09_10_N0_Dry	NZ	Field	2009-11-04							0.54					
+Omaka09_10_N0_Dry	NZ	Field	2009-11-10							0.72					
+Omaka09_10_N0_Dry	NZ	Field	2009-11-16							0.79					
+Omaka09_10_N0_Dry	NZ	Field	2009-12-04							0.88					
+Omaka09_10_N0_Dry	NZ	Field	2009-12-12							0.72					
+Omaka09_10_N0_Dry	NZ	Field	2009-12-18							0.7					
+Omaka09_10_N0_Dry	NZ	Field	2009-12-29							0.61					
+Omaka09_10_N0_Dry	NZ	Field	2010-01-05							0.31					
+Omaka09_10_N0_Dry	NZ	Field	2010-01-20							0					
+Omaka09_10_N0_Dry	NZ	Field	2010-01-28												
+Omaka09_10_N0_Irrig	NZ	Field	2009-10-30							0.66					
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-04							0.54					
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-10							0.68					
+Omaka09_10_N0_Irrig	NZ	Field	2009-11-16							0.81					
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-04							0.89					
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-12							0.79					
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-18							0.72					
+Omaka09_10_N0_Irrig	NZ	Field	2009-12-29							0.71					
+Omaka09_10_N0_Irrig	NZ	Field	2010-01-05							0.56					
+Omaka09_10_N0_Irrig	NZ	Field	2010-01-20							0.21					
+Omaka09_10_N0_Irrig	NZ	Field	2010-01-28							0.15					
+Dash09_10_N150_Dry	NZ	Field	2009-10-30												
+Dash09_10_N150_Dry	NZ	Field	2009-11-04												
+Dash09_10_N150_Dry	NZ	Field	2009-11-10												
+Dash09_10_N150_Dry	NZ	Field	2009-11-16												
+Dash09_10_N150_Dry	NZ	Field	2009-12-04							0.81					
+Dash09_10_N150_Dry	NZ	Field	2009-12-12							0.81					
+Dash09_10_N150_Dry	NZ	Field	2009-12-18							0.8					
+Dash09_10_N150_Dry	NZ	Field	2009-12-29							0.81					
+Dash09_10_N150_Dry	NZ	Field	2010-01-05							0.47					
+Dash09_10_N150_Dry	NZ	Field	2010-01-20							0.17					
+Dash09_10_N150_Dry	NZ	Field	2010-01-28												
+Dash09_10_N150_Irrig	NZ	Field	2009-10-30												
+Dash09_10_N150_Irrig	NZ	Field	2009-11-04												
+Dash09_10_N150_Irrig	NZ	Field	2009-11-10												
+Dash09_10_N150_Irrig	NZ	Field	2009-11-16												
+Dash09_10_N150_Irrig	NZ	Field	2009-12-04							0.83					
+Dash09_10_N150_Irrig	NZ	Field	2009-12-12							0.86					
+Dash09_10_N150_Irrig	NZ	Field	2009-12-18							0.87					
+Dash09_10_N150_Irrig	NZ	Field	2009-12-29							0.86					
+Dash09_10_N150_Irrig	NZ	Field	2010-01-05							0.77					
+Dash09_10_N150_Irrig	NZ	Field	2010-01-20							0.69					
+Dash09_10_N150_Irrig	NZ	Field	2010-01-28							0.62					
+Omaka09_10_N150_Dry	NZ	Field	2009-10-30												
+Omaka09_10_N150_Dry	NZ	Field	2009-11-04												
+Omaka09_10_N150_Dry	NZ	Field	2009-11-10												
+Omaka09_10_N150_Dry	NZ	Field	2009-11-16												
+Omaka09_10_N150_Dry	NZ	Field	2009-12-04							0.91					
+Omaka09_10_N150_Dry	NZ	Field	2009-12-12							0.76					
+Omaka09_10_N150_Dry	NZ	Field	2009-12-18							0.79					
+Omaka09_10_N150_Dry	NZ	Field	2009-12-29							0.78					
+Omaka09_10_N150_Dry	NZ	Field	2010-01-05							0.42					
+Omaka09_10_N150_Dry	NZ	Field	2010-01-20							0.13					
+Omaka09_10_N150_Dry	NZ	Field	2010-01-28												
+Omaka09_10_N150_Irrig	NZ	Field	2009-10-30												
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-04												
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-10												
+Omaka09_10_N150_Irrig	NZ	Field	2009-11-16												
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-04							0.91					
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-12							0.82					
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-18							0.86					
+Omaka09_10_N150_Irrig	NZ	Field	2009-12-29							0.89					
+Omaka09_10_N150_Irrig	NZ	Field	2010-01-05							0.9					
+Omaka09_10_N150_Irrig	NZ	Field	2010-01-20							0.72					
+Omaka09_10_N150_Irrig	NZ	Field	2010-01-28							0.54					

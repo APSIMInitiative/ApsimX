@@ -634,13 +634,14 @@ namespace Models.Agroforestry
             {
                 foreach (Zone SearchZ in forestryZones)
                 {
+                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        var NO3Solute = Apsim.Find(SearchZ, "NO3") as ISolute;
+                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
-                            NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
-                        NO3Solute.kgha = NewNO3;
+                            NewNO3[i] = ThisSoil.NO3N[i] - ZI.NO3N[i];
+                        ThisSoil.NO3N = NewNO3;
                     }
                 }
             }

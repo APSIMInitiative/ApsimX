@@ -454,11 +454,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostLabour.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FactorialAnova.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNH4.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNO3.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenUrea.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenNH4.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenNO3.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionAdvanced.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourcePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAvailabilityItem.png" />

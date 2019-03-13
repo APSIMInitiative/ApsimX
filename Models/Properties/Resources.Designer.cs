@@ -63,33 +63,6 @@ namespace Models.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Barley&quot;,
-        ///  &quot;IsEnding&quot;: false,
-        ///  &quot;DaysAfterEnding&quot;: 0,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Barley&quot;,
-        ///  &quot;Children&quot;: [
-        ///    {
-        ///      &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
-        ///      &quot;Name&quot;: &quot;Arbitrator&quot;,
-        ///      &quot;Children&quot;: [
-        ///        {
-        ///          &quot;$type&quot;: &quot;Models.PMF.RelativeAllocation, Models&quot;,
-        ///          &quot;Name&quot;: &quot;NArbitrator&quot;,
-        ///          &quot;Children&quot;: [],
-        ///          &quot;IncludeInDocumentation&quot;: false,
-        ///          &quot;Enabled&quot;: true,
-        ///          &quot;ReadOnl [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Barley {
-            get {
-                return ResourceManager.GetString("Barley", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
         ///  &quot;CropType&quot;: &quot;Chicory&quot;,
         ///  &quot;ResourceName&quot;: null,
         ///  &quot;Name&quot;: &quot;Chicory&quot;,
@@ -146,36 +119,6 @@ namespace Models.Properties {
         internal static string Maize {
             get {
                 return ResourceManager.GetString("Maize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.Soils.Nutrients.Nutrient, Models&quot;,
-        ///  &quot;DirectedGraphInfo&quot;: {
-        ///	&quot;$type&quot;: &quot;Models.Graph.DirectedGraph, Models&quot;,
-        ///	&quot;Nodes&quot;: [
-        ///	  {
-        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
-        ///		&quot;Name&quot;: &quot;Inert&quot;,
-        ///		&quot;Location&quot;: &quot;50, 50&quot;,
-        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
-        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
-        ///	  },
-        ///	  {
-        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
-        ///		&quot;Name&quot;: &quot;SurfaceResidue&quot;,
-        ///		&quot;Location&quot;: &quot;200, 50&quot;,
-        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
-        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
-        ///	  },
-        ///	  {
-        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
-        ///	 [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Nutrient {
-            get {
-                return ResourceManager.GetString("Nutrient", resourceCulture);
             }
         }
         

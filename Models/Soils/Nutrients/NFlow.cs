@@ -5,7 +5,6 @@ namespace Models.Soils.Nutrients
     using Models.Functions;
     using System;
     using System.Reflection;
-    using Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -24,10 +23,7 @@ namespace Models.Soils.Nutrients
         private IFunction NLoss = null;
 
         [Link]
-        private IFunction N2OFraction = null;
-
-        private ISolute sourceSolute = null;
-        private ISolute destinationSolute = null;
+        private SoluteManager solutes = null;
 
         /// <summary>
         /// Value of total N flow into destination
@@ -36,12 +32,7 @@ namespace Models.Soils.Nutrients
         /// <summary>
         /// Value of total loss
         /// </summary>
-        public double[] Natm { get; set; }
-        
-        /// <summary>
-        /// Value of N2O lost
-        /// </summary>
-        public double[] N2Oatm { get; set; }
+        public double[] Loss { get; set; }
 
         /// <summary>
         /// Name of source pool
@@ -55,16 +46,6 @@ namespace Models.Soils.Nutrients
         [Description("Name of destination pool")]
         public string destinationName { get; set; }
 
-        /// <summary>Invoked when the simulation starts.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            sourceSolute = Apsim.Find(this, Parent.Name) as ISolute;
-            destinationSolute = Apsim.Find(this, destinationName) as ISolute;
-        }
-
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
@@ -73,36 +54,21 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {            
-            double[] source = sourceSolute.kgha;
+            double[] source = solutes.GetSolute(Parent.Name);
             if (Value == null)
                 Value = new double[source.Length];
-            if (Natm == null)
-                Natm = new double[source.Length];
-            if (N2Oatm == null)
-                N2Oatm = new double[source.Length];
-
+            if (Loss == null)
+                Loss = new double[source.Length];
 
             double[] destination = null;
             if (destinationName !=null)
-                destination = destinationSolute.kgha;
+                destination = solutes.GetSolute(destinationName);
 
             for (int i= 0; i < source.Length; i++)
             {
-                double nitrogenFlow = 0;
-                if (source[i]>0)
-                    nitrogenFlow = rate.Value(i) * source[i];
-
-                if (nitrogenFlow > 0)
-                    Natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
-                else
-                    Natm[i] = 0;
-
-                if (Natm[i] > 0)
-                    N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
-                else
-                    N2Oatm[i] = 0;
-
-                double nitrogenFlowToDestination = nitrogenFlow - Natm[i];
+                double nitrogenFlow = rate.Value(i) * source[i];
+                Loss[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                double nitrogenFlowToDestination = nitrogenFlow - Loss[i];
 
                 if (destination == null && NLoss.Value(i) != 1)
                     throw new Exception("N loss fraction for N flow must be 1 if no destination is specified.");
@@ -112,9 +78,9 @@ namespace Models.Soils.Nutrients
                 if (destination != null)
                     destination[i] += nitrogenFlowToDestination;
             }
-            sourceSolute.SetKgHa(SoluteSetterType.Soil, source);
+            solutes.SetSolute(sourceName, SoluteManager.SoluteSetterType.Soil, source);
             if (destination != null)
-                destinationSolute.SetKgHa(SoluteSetterType.Soil, destination);
+                solutes.SetSolute(destinationName, SoluteManager.SoluteSetterType.Soil, destination);
         }
 
 

@@ -65,14 +65,7 @@ namespace UserInterface.Presenters
                 graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
             }
 
-            try
-            {
-                PopulateView();
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
+            PopulateView();
 
             ConnectViewEvents();
         }
