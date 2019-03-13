@@ -7,6 +7,14 @@ if "%apsimx%"=="" (
 	popd>nul
 )
 set COMMIT_AUTHOR=%ghprbActualCommitAuthor%
+if "%COMMIT_AUTHOR%"=="" (
+	rem ----- Seems to be a bug in the Jenkins extension "GitHub Pull Request Builder".
+	rem ----- Somtimes this environment variable is not set. In this scenario, we have
+	rem ----- a look at the git logs and set it manually ourselves. 😠
+	git log -n 1 --pretty=%%an>"%tmp%\ghprbActualCommitAuthor.txt"
+	set /p COMMIT_AUTHOR=<"%tmp%\ghprbActualCommitAuthor.txt"
+	echo WARNING: Using COMMIT_AUTHOR Fallback; COMMIT_AUTHOR='!COMMIT_AUTHOR!'
+)
 set PULL_ID=%ghprbPullId%
 curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
 for /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
@@ -31,7 +39,7 @@ nuget restore -verbosity quiet
 
 echo Compiling APSIM.PerformanceTests.Collector...
 msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
-
+copy /y "%apsimx%\DeploymentSupport\Windows\Bin\sqlite3.dll" bin\Release\
 echo Running performance tests collector...
 bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 
@@ -42,7 +50,7 @@ if errorlevel 1 (
 	echo DateTime stamp: 	"%DATETIMESTAMP%"
 	echo Commit author:		"%COMMIT_AUTHOR%"
 	echo Log file:
-	type PerformanceCollector.txt
+	type bin\Release\PerformanceCollector.txt
 ) else (
 	echo Done.
 )

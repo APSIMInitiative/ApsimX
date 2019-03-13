@@ -97,7 +97,7 @@ namespace UnitTests
     class ModelWithServices : Model
     {
         [Link]
-        public IStorageReader storage = null;
+        public IDataStore storage = null;
 
         [Link]
         public ILocator locator = null;

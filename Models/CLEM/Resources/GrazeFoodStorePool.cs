@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // adjust DMD and N% based on incoming if needed
-                if (DMD != pool.DMD | Nitrogen != pool.Nitrogen)
+                if (DMD != pool.DMD || Nitrogen != pool.Nitrogen)
                 {
                     //TODO: run calculation passed others.
                     DMD = ((DMD * Amount) + (pool.DMD * pool.Amount)) / (Amount + pool.Amount);

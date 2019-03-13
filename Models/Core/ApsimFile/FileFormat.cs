@@ -63,7 +63,7 @@
                 throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             string contents = File.ReadAllText(fileName);
-            T newModel = ReadFromString<T>(contents, out creationExceptions);
+            T newModel = ReadFromString<T>(contents, out creationExceptions, fileName);
 
             // Set the filename
             if (newModel is Simulations)
@@ -87,6 +87,8 @@
                 TypeNameHandling = TypeNameHandling.Auto
             };
             newModel = serializer.Deserialize<T>(converter.Root.CreateReader());
+            if (newModel is Simulations)
+                (newModel as Simulations).FileName = fileName;
 
             // Parent all models.
             newModel.Parent = null;

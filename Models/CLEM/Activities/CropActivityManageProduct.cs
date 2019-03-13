@@ -125,6 +125,12 @@ namespace Models.CLEM.Activities
         [XmlIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
+        /// <summary>
+        /// Flag for first timestep in a rotation for checks
+        /// </summary>
+        [XmlIgnore]
+        public int FirstTimeStepOfRotation { get; set; }
+
         private ActivityCutAndCarryLimiter limiter;
 
         /// <summary>
@@ -143,14 +149,14 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (this.Parent.GetType() != typeof(CropActivityManageCrop) & this.Parent.GetType() != typeof(CropActivityManageProduct))
+            if (this.Parent.GetType() != typeof(CropActivityManageCrop) && this.Parent.GetType() != typeof(CropActivityManageProduct))
             {
                 string[] memberNames = new string[] { "Parent model" };
                 results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", memberNames));
             }
 
             // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
-            if(!((this.Parent.GetType() == typeof(CropActivityManageCrop) || (this.Parent.GetType() == typeof(CropActivityManageProduct) & this.Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
+            if(!((this.Parent.GetType() == typeof(CropActivityManageCrop) || (this.Parent.GetType() == typeof(CropActivityManageProduct) && this.Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
             {
                 string[] memberNames = new string[] { "Invalid nesting" };
                 results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
@@ -180,12 +186,7 @@ namespace Models.CLEM.Activities
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
-            object pma = this.Parent;
-            while(pma.GetType() != typeof(CropActivityManageCrop))
-            {
-                pma = (pma as Model).Parent;
-            }
-            parentManagementActivity = pma as CropActivityManageCrop;
+            parentManagementActivity = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
 
             // Retrieve harvest data from the forage file for the entire run. 
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
@@ -221,6 +222,7 @@ namespace Models.CLEM.Activities
                 HarvestData.RemoveAt(0);
             }
             NextHarvest = HarvestData.FirstOrDefault();
+
         }
 
         /// <summary>
@@ -282,7 +284,7 @@ namespace Models.CLEM.Activities
             ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
-                if(model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) | model.Parent.GetType() == typeof(ActivitiesHolder))
+                if(model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
                 {
                     limiterFound = LocateCutAndCarryLimiter(model.Parent);
                 }

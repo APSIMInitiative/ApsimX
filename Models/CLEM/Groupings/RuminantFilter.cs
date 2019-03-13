@@ -94,9 +94,9 @@ namespace Models.CLEM.Groupings
             else
             {
 
-                if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
+                if (Value.ToUpper() == "TRUE" || Value.ToUpper() == "FALSE")
                 {
-                    str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") | (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
+                    str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") || (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
                     str += Parameter;
                 }
                 else

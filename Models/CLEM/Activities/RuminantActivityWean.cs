@@ -234,6 +234,8 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>";
             }
             html += "</div>";
+            // warn if natural weaning will take place
+
             return html;
         }
     }

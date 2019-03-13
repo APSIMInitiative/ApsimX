@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Models.Core;
+using Models.Storage;
+using System;
 using System.Collections.Generic;
-using Models.Report;
-using Models.Core;
 using System.Data;
 
 namespace UnitTests
 {
     [Serializable]
-    internal class MockStorage : Model, IStorageReader, IStorageWriter
+    internal class MockStorage : Model, IDataStore, IStorageWriter
     {
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();
@@ -36,23 +36,16 @@ namespace UnitTests
             }
         }
 
+        string IDataStore.FileName { get; }
+
+        public IStorageReader Reader => throw new NotImplementedException();
+
+        public IStorageWriter Writer { get { return this; } }
+
         [Serializable]
         internal class Row
         {
             public IEnumerable<object> values;
-        }
-
-        /// <summary>Write to permanent storage.</summary>
-        /// <param name="simulationName">Name of simulation</param>
-        /// <param name="tableName">Name of table</param>
-        /// <param name="columnNames">Column names</param>
-        /// <param name="columnUnits">Column units</param>
-        /// <param name="valuesToWrite">Values of row to write</param>
-        public void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite)
-        {
-            this.columnNames.Clear();
-            this.columnNames.AddRange(columnNames);
-            rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(valuesToWrite) as IEnumerable<object> });
         }
 
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string groupBy = null)
@@ -137,6 +130,53 @@ namespace UnitTests
         /// <param name="tableName">The table name</param>
         /// <returns></returns>
         public List<string> GetTableColumns(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Empty()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddCheckpoint(string name, IEnumerable<string> filesToStore = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteCheckpoint(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RevertCheckpoint(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WaitForIdle()
+        {
+        }
+
+        public void Stop()
+        {
+        }
+
+        public void WriteTable(ReportData data)
+        {
+            this.columnNames.Clear();
+            this.columnNames.AddRange(data.ColumnNames);
+            foreach (var dataRow in data.Rows)
+                rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(dataRow) as IEnumerable<object> });
+
+        }
+
+        public void AddUnits(string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits)
         {
             throw new NotImplementedException();
         }
