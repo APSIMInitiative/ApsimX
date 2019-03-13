@@ -395,12 +395,19 @@ namespace Models.PMF.Organs
         {
             get
             {
+                // Biomass allocation today
                 double dmAllocation = potentialDMAllocation.Storage +
                     potentialDMAllocation.Structural +
                     potentialDMAllocation.Metabolic;
-                // Required the nitrogen content
+                // Required the minimum nitrogen content according to biomass at the end of day 
+                //     and minimum nitrogen concentration
                 double requiredMinNContent = (Live.Wt + dmAllocation) * MinimumNConc.Value();
-                // Current total nitrogen
+                // "requiredMinNContent - Live.N" is the deficit of nitrogen in grain.
+                // Negative: enough nitrogen for grain 
+                // Positive: no enough nitrogen for grain
+                // (requiredMinNContent - Live.N) / dmAllocation: Convert to nitrogen concentration
+                // 0.00001: A small value for minimum nitrogen concentration which cannot 
+                //          be zero in the arbitration model
                 double minNConc = Math.Max(0.00001, (requiredMinNContent - Live.N) / dmAllocation);
                 return minNConc;
             }
