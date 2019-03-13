@@ -74,10 +74,17 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="e">The event arguments</param>
         private void OnUpdateData(object sender, EventArgs e)
         {
+            // The process of setting up the view will trigger this event several times.
+            // This statement catches early triggers to prevent errors
+            if (view.Pivot.Text == null) return;
+
             IStorageReader reader = Apsim.Find(table, typeof(IStorageReader)) as IStorageReader;
             DataTable input = reader.GetData(view.Ledger.Text);
 
-            // Find distinct values in the chosen pivot
+            // Don't try to update if data source isn't found            
+            if (input == null) return;
+
+            // Find distinct values in the chosen pivot            
             table.Pivots = new List<string>(
                 input
                 .AsEnumerable()
@@ -172,6 +179,7 @@ namespace ApsimNG.Presenters.CLEM
         private void OnStoreData(object sender, EventArgs e)
         {
             DataTable data = view.gridview.DataSource;
+            if (data == null) return;
             IStorageReader reader = Apsim.Find(table, typeof(IStorageReader)) as IStorageReader;
             reader.DeleteDataInTable(data.TableName);
             reader.WriteTable(data);
