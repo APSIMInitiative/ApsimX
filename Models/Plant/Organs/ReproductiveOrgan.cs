@@ -395,7 +395,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MinimumNConc.Value();
+                double dmAllocation = potentialDMAllocation.Storage +
+                    potentialDMAllocation.Structural +
+                    potentialDMAllocation.Metabolic;
+                // Required the nitrogen content
+                double requiredMinNContent = (Live.Wt + dmAllocation) * MinimumNConc.Value();
+                // Current total nitrogen
+                double minNConc = Math.Max(0, (requiredMinNContent - Live.N) / dmAllocation);
+                return minNConc;
             }
         }
 
