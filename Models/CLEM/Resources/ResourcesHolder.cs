@@ -22,7 +22,6 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/resourcesholder.htm")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
         // Scoping rules of Linking in Apsim means that you can only link to 

@@ -51,14 +51,6 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Reset();
-        }
-
-        /// <summary>
-        /// Set nutrient pool to initialisation state
-        /// </summary>
-        public void Reset()
-        {
             C = new double[soil.Thickness.Length];
             for (int i = 0; i < C.Length; i++)
                 C[i] = InitialCarbon.Value(i);
@@ -71,8 +63,8 @@
             LayerFraction = new double[soil.Thickness.Length];
             for (int i = 0; i < LayerFraction.Length; i++)
                 LayerFraction[i] = 1.0;
-        }
 
+        }
         /// <summary>
         /// Add C and N into nutrient pool
         /// </summary>

@@ -915,7 +915,6 @@ namespace Models.GrazPlan
                     {
                         double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
                         double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
-                        prpnToRemove = Math.Min(prpnToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;

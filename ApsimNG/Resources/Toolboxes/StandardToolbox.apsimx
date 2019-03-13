@@ -614,13 +614,6 @@
   </Folder>
   <Folder>
     <Name>Crops</Name>
-    <Plant>
-      <Name>Barley</Name>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <ResourceName>Barley</ResourceName>
-      <CropType>Barley</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
-    </Plant>
 	<Plant>
 	  <Name>Wheat</Name>
 	  <IncludeInDocumentation>false</IncludeInDocumentation>

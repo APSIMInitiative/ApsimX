@@ -132,10 +132,9 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
-        /// <summary>NO3 solute.</summary>
-        [ScopedLinkByName]
-        private ISolute NO3 = null;
-
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         /// <summary>Aboveground mass</summary>
         public Biomass AboveGround { get { return new Biomass(); } }
@@ -1255,8 +1254,8 @@ namespace Models.PMF.OilPalm
                 double swaf = 0;
                 swaf = (Soil.Water[j] - Soil.LL15mm[j]) / (Soil.DULmm[j] - Soil.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = NO3.kgha[j] * (100.0 / (Soil.BD[j] * Soil.Thickness[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * NO3.kgha[j] * swaf);
+                double no3ppm = Soil.NO3N[j] * (100.0 / (Soil.BD[j] * Soil.Thickness[j]));
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * Soil.NO3N[j] * swaf);
             }
 
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
@@ -1264,7 +1263,7 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
                 NUptake[j] = PotNUptake[j] * Fr;
-            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NUptake));
+            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NUptake);
 
             Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
@@ -1684,19 +1683,19 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
-                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * NO3.kgha[j]);
+                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.NO3N[j]);
             }
 
             double TotUnderstoryPotNUptake = MathUtilities.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
-            double[] no3 = NO3.kgha;
+            double[] no3 = Soil.NO3N;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
                 no3[j] = no3[j] - UnderstoryNUptake[j];
             }
-            NO3.kgha = no3;
+            Soil.NO3N = no3;
 
             //UnderstoryNFixation += UnderstoryNdemand - MathUtilities.Sum(UnderstoryNUptake);
 

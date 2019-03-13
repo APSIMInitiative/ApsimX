@@ -25,13 +25,6 @@ namespace Models.PMF
         public void DoAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
-
-            // Save Totals for use inside the for loops below
-            double totalStructuralDemand = BAT.TotalStructuralDemand;
-            double totalMetabolicDemand = BAT.TotalMetabolicDemand;
-            double totalStorageDemand = BAT.TotalStorageDemand;
-
-
             ////allocate to structural and metabolic Biomass first
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -39,9 +32,9 @@ namespace Models.PMF
                 double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement) > 0.0)
                 {
-                    double StructuralFraction = totalStructuralDemand / (totalStructuralDemand + totalMetabolicDemand);
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * MathUtilities.Divide(BAT.StructuralDemand[i], totalStructuralDemand, 0));
-                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * (1 - StructuralFraction) * MathUtilities.Divide(BAT.MetabolicDemand[i], totalMetabolicDemand, 0));
+                    double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand);
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * MathUtilities.Divide(BAT.StructuralDemand[i], BAT.TotalStructuralDemand, 0));
+                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * (1 - StructuralFraction) * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
                     NotAllocated -= (StructuralAllocation + MetabolicAllocation);
@@ -55,7 +48,7 @@ namespace Models.PMF
                 double StorageRequirement = Math.Max(0.0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (StorageRequirement > 0.0)
                 {
-                    double StorageAllocation = Math.Min(FirstPassNotAllocated * MathUtilities.Divide(BAT.StorageDemand[i], totalStorageDemand, 0), StorageRequirement);
+                    double StorageAllocation = Math.Min(FirstPassNotAllocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
                     BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
                     NotAllocated -= StorageAllocation;
                     TotalAllocated += StorageAllocation;

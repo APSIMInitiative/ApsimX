@@ -91,13 +91,9 @@ namespace Models.PMF
         [Link]
         Soils.Soil Soil = null;
 
-        /// <summary>NO3 solute.</summary>
-        [ScopedLinkByName]
-        private ISolute NO3 = null;
-
-        /// <summary>NH4 solute.</summary>
-        [ScopedLinkByName]
-        private ISolute NH4 = null;
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         /// <summary>
         /// Is the plant alive?
@@ -235,10 +231,10 @@ namespace Models.PMF
                 if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
-            double[] PotNO3Uptake = new double[MyZone.NO3N.Length];
-            double[] PotNH4Uptake = new double[MyZone.NH4N.Length];
-            NO3Uptake = new double[MyZone.NO3N.Length];
-            NH4Uptake = new double[MyZone.NH4N.Length];
+            double[] PotNO3Uptake = new double[Soil.NO3N.Length];
+            double[] PotNH4Uptake = new double[Soil.NH4N.Length];
+            NO3Uptake = new double[Soil.NO3N.Length];
+            NH4Uptake = new double[Soil.NH4N.Length];
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
             {
@@ -247,7 +243,7 @@ namespace Models.PMF
             }
             double TotPotNUptake = MathUtilities.Sum(PotNO3Uptake) + MathUtilities.Sum(PotNH4Uptake);
 
-            for (int j = 0; j < MyZone.NO3N.Length; j++)
+            for (int j = 0; j < Soil.NO3N.Length; j++)
             {
                 NO3Uptake[j] = PotNO3Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
                 NH4Uptake[j] = PotNH4Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
@@ -281,8 +277,8 @@ namespace Models.PMF
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NO3Uptake));
-            NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NH4.kgha, NH4Uptake));
+            solutes.Subtract("NO3", SoluteManager.SoluteSetterType.Plant, NO3Uptake);
+            solutes.Subtract("NH4", SoluteManager.SoluteSetterType.Plant, NH4Uptake);
         }
 
 

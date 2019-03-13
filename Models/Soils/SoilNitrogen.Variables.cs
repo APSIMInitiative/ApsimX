@@ -40,7 +40,7 @@ namespace Models.Soils
 
         /// <summary>Link to the soil.</summary>
         [Link]
-        public Soil Soil = null;
+        private Soil Soil = null;
 
         #endregion
 
@@ -1738,8 +1738,9 @@ namespace Models.Soils
         #endregion soil organic matter data
 
         #region Values for soil mineral N
+
         /// <summary>
-        /// 
+        /// Soil urea nitrogen content (ppm).
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
@@ -1753,10 +1754,11 @@ namespace Models.Soils
                 {
                     result = new double[nLayers];
                     for (int layer = 0; layer < nLayers; ++layer)
-                        result[layer] = CalculateUrea()[layer] * convFactor[layer];
+                        result[layer] = urea[layer] * convFactor[layer];
                 }
                 else
                     result = reset_ureappm;
+
                 return result;
             }
             set
@@ -1767,8 +1769,9 @@ namespace Models.Soils
                     mySummary.WriteMessage(this, "An external module attempted to change the value of urea during simulation, the command will be ignored");
             }
         }
+
         /// <summary>
-        /// 
+        /// Soil ammonium nitrogen content (ppm).
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
@@ -1782,10 +1785,11 @@ namespace Models.Soils
                 {
                     result = new double[nLayers];
                     for (int layer = 0; layer < nLayers; ++layer)
-                        result[layer] = CalculateNH4()[layer] * convFactor[layer];
+                        result[layer] = NH4[layer] * convFactor[layer];
                 }
                 else
                     result = reset_nh4ppm;
+
                 return result;
             }
             set
@@ -1796,8 +1800,9 @@ namespace Models.Soils
                     mySummary.WriteMessage(this, "An external module attempted to change the value of NH4 during simulation, the command will be ignored");
             }
         }
+
         /// <summary>
-        /// 
+        /// Soil nitrate nitrogen content (ppm).
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
@@ -1811,10 +1816,11 @@ namespace Models.Soils
                 {
                     result = new double[nLayers];
                     for (int layer = 0; layer < nLayers; ++layer)
-                        result[layer] = CalculateNO3()[layer] * convFactor[layer];
+                        result[layer] = NO3[layer] * convFactor[layer];
                 }
                 else
                     result = reset_no3ppm;
+
                 return result;
             }
             set
@@ -1825,7 +1831,9 @@ namespace Models.Soils
                     mySummary.WriteMessage(this, "An external module attempted to change the value of NO3 during simulation, the command will be ignored");
             }
         }
+
         #endregion  mineral N data
+
         #region Soil loss data
 
         //// NOTE: it is assumed any changes in soil profile are due to erosion
@@ -2418,19 +2426,24 @@ namespace Models.Soils
         /// <summary>
         /// Soil urea nitrogen amount (kgN/ha)
         /// </summary>
-        public double[] CalculateUrea()
+        [Units("kg/ha")]
+        [Solute]
+        public double[] urea
         {
-            if (dlayer != null)
+            get
             {
-                double[] result = new double[nLayers];
-                for (int k = 0; k < Patch.Count; k++)
-                    for (int layer = 0; layer < nLayers; ++layer)
-                        result[layer] += Patch[k].urea[layer] * Patch[k].RelativeArea;
+                if (dlayer != null)
+                {
+                    double[] result = new double[nLayers];
+                    for (int k = 0; k < Patch.Count; k++)
+                        for (int layer = 0; layer < nLayers; ++layer)
+                            result[layer] += Patch[k].urea[layer] * Patch[k].RelativeArea;
 
-                return result;
+                    return result;
+                }
+
+                return null;
             }
-
-            return null;
         }
         /// <summary>Setter for urea</summary>
         /// <remarks>
@@ -2439,40 +2452,24 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        public void Seturea(SoluteSetterType callingModelType, double[] value)
-        {
-            // get the delta N
-            var currentUrea = CalculateUrea();
-            double[] deltaN = new double[value.Length];
-            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                deltaN[layer] = value[layer] - currentUrea[layer];
-
-            SetureaDelta(callingModelType, deltaN);
-        }
-
-        /// <summary>Setter for urea delta</summary>
-        /// <remarks>
-        /// This is necessary to allow the use of the SoilCNPatch capability
-        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
-        /// </remarks>
-        /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="deltaN">New values</param>
-        public void SetureaDelta(SoluteSetterType callingModelType, double[] deltaN)
+        public void Seturea(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
             // get the sender module (this is for report/testing only)
-            if (callingModelType == SoluteSetterType.Soil)
+            if (callingModelType == SoluteManager.SoluteSetterType.Soil)
                 senderModule = "WaterModule";
-            else if (callingModelType == SoluteSetterType.Plant)
+            else if (callingModelType == SoluteManager.SoluteSetterType.Plant)
                 senderModule = "Plant";
-            else if (callingModelType == SoluteSetterType.Fertiliser)
+            else if (callingModelType == SoluteManager.SoluteSetterType.Fertiliser)
                 senderModule = "Fertiliser";
             else
                 senderModule = "Other";
 
             // get the delta N
+            double[] deltaN = new double[value.Length];
             bool hasChanges = false;
-            for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
             {
+                deltaN[layer] = value[layer] - urea[layer];
                 if (Math.Abs(deltaN[layer]) > epsilon)
                     hasChanges = true;
             }
@@ -2481,8 +2478,8 @@ namespace Models.Soils
             if (hasChanges)
             {
                 if ((Patch.Count > 1) &&
-                ((callingModelType == SoluteSetterType.Soil) ||
-                (callingModelType == SoluteSetterType.Plant)))
+                ((callingModelType == SoluteManager.SoluteSetterType.Soil) ||
+                (callingModelType == SoluteManager.SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
                     double[][] newDelta = partitionDelta(deltaN, "Urea", patchNPartitionApproach.ToLower());
@@ -2498,17 +2495,24 @@ namespace Models.Soils
                 }
             }
         }
+
         /// <summary>
         /// Soil ammonium nitrogen amount (kgN/ha)
         /// </summary>
-        public double[] CalculateNH4()
+        [Units("kg/ha")]
+        [XmlIgnore]
+        [Solute]
+        public double[] NH4
         {
-            double[] result = new double[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
-                for (int k = 0; k < Patch.Count; k++)
-                    result[layer] += (Patch[k].nh4[layer] + Patch[k].nh3[layer]) * Patch[k].RelativeArea;
+            get
+            {
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        result[layer] += (Patch[k].nh4[layer] + Patch[k].nh3[layer]) * Patch[k].RelativeArea;
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>Setter for NH4</summary>
@@ -2518,40 +2522,24 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        public void SetNH4(SoluteSetterType callingModelType, double[] value)
-        {
-            // get the delta N
-            var nh4 = CalculateNH4();
-            double[] deltaN = new double[value.Length];
-            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                deltaN[layer] = value[layer] - nh4[layer];
-            
-            SetNH4Delta(callingModelType, deltaN);
-        }
-
-        /// <summary>Setter for NH4 delta.</summary>
-        /// <remarks>
-        /// This is necessary to allow the use of the SoilCNPatch capability
-        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
-        /// </remarks>
-        /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="deltaN">New values</param>
-        public void SetNH4Delta(SoluteSetterType callingModelType, double[] deltaN)
+        public void SetNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
             // get the sender module (this is for report/testing only)
-            if (callingModelType == SoluteSetterType.Soil)
+            if (callingModelType == SoluteManager.SoluteSetterType.Soil)
                 senderModule = "WaterModule";
-            else if (callingModelType == SoluteSetterType.Plant)
+            else if (callingModelType == SoluteManager.SoluteSetterType.Plant)
                 senderModule = "Plant";
-            else if (callingModelType == SoluteSetterType.Fertiliser)
+            else if (callingModelType == SoluteManager.SoluteSetterType.Fertiliser)
                 senderModule = "Fertiliser";
             else
                 senderModule = "Other";
 
             // get the delta N
+            double[] deltaN = new double[value.Length];
             bool hasChanges = false;
-            for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
             {
+                deltaN[layer] = value[layer] - NH4[layer];
                 if (Math.Abs(deltaN[layer]) > epsilon)
                     hasChanges = true;
             }
@@ -2560,8 +2548,8 @@ namespace Models.Soils
             if (hasChanges)
             {
                 if ((Patch.Count > 1) &&
-                ((callingModelType == SoluteSetterType.Soil) ||
-                (callingModelType == SoluteSetterType.Plant)))
+                ((callingModelType == SoluteManager.SoluteSetterType.Soil) ||
+                (callingModelType == SoluteManager.SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
                     double[][] newDelta = partitionDelta(deltaN, "NH4", patchNPartitionApproach.ToLower());
@@ -2581,19 +2569,25 @@ namespace Models.Soils
         /// <summary>
         /// Soil nitrate nitrogen amount (kgN/ha)
         /// </summary>
-        public double[] CalculateNO3()
+        [Units("kg/ha")]
+        [XmlIgnore]
+        [Solute]
+        public double[] NO3
         {
-            if (dlayer != null)
+            get
             {
-                double[] result = new double[nLayers];
-                for (int layer = 0; layer < nLayers; ++layer)
-                    for (int k = 0; k < Patch.Count; k++)
-                        result[layer] += Patch[k].no3[layer] * Patch[k].RelativeArea;
+                if (dlayer != null)
+                {
+                    double[] result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
+                        for (int k = 0; k < Patch.Count; k++)
+                            result[layer] += Patch[k].no3[layer] * Patch[k].RelativeArea;
 
-                return result;
+                    return result;
+                }
+
+                return null;
             }
-
-            return null;
         }
 
         /// <summary>Setter for NO3</summary>
@@ -2603,39 +2597,24 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        public void SetNO3(SoluteSetterType callingModelType, double[] value)
-        {
-            // get the delta N
-            double[] no3 = CalculateNO3();
-            double[] deltaN = new double[value.Length];
-            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
-                deltaN[layer] = value[layer] - no3[layer];
-            SetNO3Delta(callingModelType, deltaN);
-         }
-
-        /// <summary>Setter for delta NO3</summary>
-        /// <remarks>
-        /// This is necessary to allow the use of the SoilCNPatch capability
-        /// The values passed, or in fact the deltas, need to be partitioned appropriately when there is more than one CNPatch
-        /// </remarks>
-        /// <param name="callingModelType">Type of calling model</param>
-        /// <param name="deltaN">New values</param>
-        public void SetNO3Delta(SoluteSetterType callingModelType, double[] deltaN)
+        public void SetNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
             // get the sender module (this is for report/testing only)
-            if (callingModelType == SoluteSetterType.Soil)
+            if (callingModelType == SoluteManager.SoluteSetterType.Soil)
                 senderModule = "WaterModule";
-            else if (callingModelType == SoluteSetterType.Plant)
+            else if (callingModelType == SoluteManager.SoluteSetterType.Plant)
                 senderModule = "Plant";
-            else if (callingModelType == SoluteSetterType.Fertiliser)
+            else if (callingModelType == SoluteManager.SoluteSetterType.Fertiliser)
                 senderModule = "Fertiliser";
             else
                 senderModule = "Other";
 
             // get the delta N
+            double[] deltaN = new double[value.Length];
             bool hasChanges = false;
-            for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
+            for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
             {
+                deltaN[layer] = value[layer] - NO3[layer];
                 if (Math.Abs(deltaN[layer]) > epsilon)
                     hasChanges = true;
             }
@@ -2644,8 +2623,8 @@ namespace Models.Soils
             if (hasChanges)
             {
                 if ((Patch.Count > 1) &&
-                ((callingModelType == SoluteSetterType.Soil) ||
-                (callingModelType == SoluteSetterType.Plant)))
+                ((callingModelType == SoluteManager.SoluteSetterType.Soil) ||
+                (callingModelType == SoluteManager.SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
                     double[][] newDelta = partitionDelta(deltaN, "NO3", patchNPartitionApproach.ToLower());
@@ -2665,21 +2644,26 @@ namespace Models.Soils
         /// <summary>
         /// Soil ammonium nitrogen amount available to plants, limited per patch (kgN/ha)
         /// </summary>
-        public double[] CalculatePlantAvailableNH4()
+        [Units("kg/ha")]
+        [XmlIgnore]
+        [Solute]
+        public double[] PlantAvailableNH4
         {
-            double[] result = new double[nLayers];
-            if (initDone)
+            get
             {
-                for (int k = 0; k < Patch.Count; k++)
+                double[] result = new double[nLayers];
+                if (initDone)
                 {
-                    Patch[k].CalcTotalMineralNInRootZone();
-                    var nh4 = Patch[k].nh4AvailableToPlants;
-                    for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] += nh4[layer] * Patch[k].RelativeArea;
+                    for (int k = 0; k < Patch.Count; k++)
+                    {
+                        Patch[k].CalcTotalMineralNInRootZone();
+                        for (int layer = 0; layer < nLayers; layer++)
+                            result[layer] += Patch[k].nh4AvailableToPlants[layer] * Patch[k].RelativeArea;
+                    }
                 }
-            }
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>Setter for Plant Available NH4</summary>
@@ -2688,7 +2672,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        public void SetPlantAvailableNH4(SoluteSetterType callingModelType, double[] value)
+        public void SetPlantAvailableNH4(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
             // this variable should not actually be set but needed for SoluteManager to find it
             throw new ApsimXException(this, "should not be trying to set plant available nh4");
@@ -2697,21 +2681,26 @@ namespace Models.Soils
         /// <summary>
         /// Soil nitrate nitrogen amount available to plants, limited per patch (kgN/ha)
         /// </summary>
-        public double[] CalculatePlantAvailableNO3()
+        [Units("kg/ha")]
+        [XmlIgnore]
+        [Solute]
+        public double[] PlantAvailableNO3
         {
-            double[] result = new double[nLayers];
-            if (initDone)
+            get
             {
-                for (int k = 0; k < Patch.Count; k++)
+                double[] result = new double[nLayers];
+                if (initDone)
                 {
-                    Patch[k].CalcTotalMineralNInRootZone();
-                    var no3 = Patch[k].no3AvailableToPlants;
-                    for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] += no3[layer] * Patch[k].RelativeArea;
+                    for (int k = 0; k < Patch.Count; k++)
+                    {
+                        Patch[k].CalcTotalMineralNInRootZone();
+                        for (int layer = 0; layer < nLayers; layer++)
+                            result[layer] += Patch[k].no3AvailableToPlants[layer] * Patch[k].RelativeArea;
+                    }
                 }
-            }
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>Setter for Plant Available NO3</summary>
@@ -2720,7 +2709,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        public void SetPlantAvailableNO3(SoluteSetterType callingModelType, double[] value)
+        public void SetPlantAvailableNO3(SoluteManager.SoluteSetterType callingModelType, double[] value)
         {
             // this variable should not actually be set but needed for SoluteManager to find it
             throw new ApsimXException(this, "should not be trying to set plant available no3");

@@ -24,7 +24,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantgraze.htm")]
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]

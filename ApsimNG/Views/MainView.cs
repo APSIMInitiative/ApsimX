@@ -711,6 +711,7 @@
                         tagName = "normal";
                     }
                     message = message.TrimEnd(Environment.NewLine.ToCharArray());
+                    //message = message.Replace("\n", "\n                      ");
                     message += Environment.NewLine;
                     TextIter insertIter;
                     if (overwrite)

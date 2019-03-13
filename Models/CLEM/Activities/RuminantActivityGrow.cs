@@ -25,7 +25,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantgrow.htm")]
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
@@ -88,7 +87,7 @@ namespace Models.CLEM.Activities
 
                 if (ind.Age >= weaningAge)
                 {
-                    ind.Wean(true, "Natural");
+                    ind.Wean();
                 }
             }
         }
@@ -227,14 +226,11 @@ namespace Models.CLEM.Activities
             double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
             double milkTime = ind.DaysLactating;
             double milkCurve = 0;
-            // determine milk production curve to use
-            // if milking is taking place use the non-suckling curve for duration of lactation
-            // otherwise use the suckling curve where there is a larger drop off in milk production
-            if (ind.MilkingPerformed)
+            if (ind.SucklingOffspring.Count == 0 && ind.MilkingPerformed) // no suckling calf and milking has been performed
             {
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             }
-            else // no milking
+            else // suckling calf
             {
                 milkCurve = ind.BreedParams.MilkCurveSuckling;
             }
@@ -243,10 +239,9 @@ namespace Models.CLEM.Activities
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.MilkProductionPotential * 3.2 / kl;
             // adjust last time step's energy balance
-            double adjustedEnergyBalance = ind.EnergyBalance;
-            if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
+            if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
             {
-                adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
+                ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
             }
 
             // set milk production in lactating females for consumption.
