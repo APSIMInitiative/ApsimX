@@ -18,7 +18,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/trucking.htm")]
     public class TruckingSettings : CLEMModel
     {
         [Link]

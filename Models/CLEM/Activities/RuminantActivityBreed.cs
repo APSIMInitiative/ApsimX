@@ -24,7 +24,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantbreed.htm")]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]

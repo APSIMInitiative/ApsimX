@@ -20,7 +20,6 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(LabourSpecificationItem))]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/filters/labourfilter.htm")]
     public class LabourFilter: CLEMModel
     {
         /// <summary>

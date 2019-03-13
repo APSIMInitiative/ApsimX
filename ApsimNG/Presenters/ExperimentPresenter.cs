@@ -153,20 +153,8 @@
                 }
             }
             UpdateView();
-            List<string> disabledSims = model.DisabledSimNames;
-            if (flag)
-                // If we're enabling the selected simulations,
-                // remove them from the list of disabled sims.
-                disabledSims = disabledSims.Except(names).ToList();
-            else
-            {
-                // If we're disabling the selected simulations,
-                // add them to the list of the disabled sims.
-                disabledSims.AddRange(names);
-                disabledSims = disabledSims.Distinct().ToList();
-            }
-            ChangeProperty changeDisabledSims = new ChangeProperty(model, "DisabledSimNames", disabledSims);
-            presenter.CommandHistory.Add(changeDisabledSims);
+            ChangeProperty changeDisabledSims = new ChangeProperty(model, "DisabledSimNames", GetDisabledSimNames());
+            changeDisabledSims.Do(presenter.CommandHistory);
         }
 
         /// <summary>
@@ -209,8 +197,7 @@
         /// </summary>
         private void UpdateView()
         {
-            if (maxSimsToDisplay < 0)
-                maxSimsToDisplay = DefaultMaxSims;
+            if (maxSimsToDisplay < 0) maxSimsToDisplay = DefaultMaxSims; // doesn't hurt to double check
             view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
             view.NumSims = model.AllCombinations().Count.ToString();
         }

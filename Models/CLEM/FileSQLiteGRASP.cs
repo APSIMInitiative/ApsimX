@@ -25,15 +25,14 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileSQLiteGRASPView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileSQLiteGRASPPresenter
+    [ViewName("UserInterface.Views.CLEMFileSQLiteGRASPView")]
+    [PresenterName("UserInterface.Presenters.CLEMFileSQLiteGRASPPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/datareaders/graspdatareadersql.htm")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>

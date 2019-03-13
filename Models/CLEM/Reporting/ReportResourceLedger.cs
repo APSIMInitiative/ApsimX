@@ -24,7 +24,6 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/ledgers.htm")]
     public class ReportResourceLedger : Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>

@@ -22,7 +22,6 @@ namespace Models.CLEM.Activities
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
-    [HelpUri(@"content/features/activities/crop/managecrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         /// <summary>

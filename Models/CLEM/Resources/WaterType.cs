@@ -19,7 +19,6 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(WaterStore))]
     [Description("This resource represents a water store type (e.g. dam, bore, tank).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/water/waterstoretype.htm")]
     public class WaterType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
