@@ -317,21 +317,11 @@ namespace Models.PMF
         virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
-    
-            foreach (IOrgan organ in Plant.Organs)
-            {
-                if (organ is IArbitration)
-                    organsToArbitrate.Add(organ as IArbitration);
-             }
+           List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 
-            List<IHasWaterDemand> LWaterdemand = new List<IHasWaterDemand>();
+            foreach (Model Can in Apsim.FindAll(Plant, typeof(IHasWaterDemand)))
+                Waterdemands.Add(Can as IHasWaterDemand);
 
-            for (int i = 0; i < Organs.Count; i++)
-               if ((Organs[i] as IHasWaterDemand) ==  true)
-
-
-            foreach (IHasWaterDemand WD in Plant.ChildrenChildren(this, typeof(IHasWaterDemand)))
-                LWaterdemand.Add(WD);
 
 
             Organs = organsToArbitrate;
