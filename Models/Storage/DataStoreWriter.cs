@@ -66,6 +66,11 @@
         {
             Connection = dbConnection;
             ReadExistingDatabase(dbConnection);
+            if (dbConnection is SQLite)
+            {
+                dbConnection.ExecuteQuery("PRAGMA journal_mode=WAL");
+                dbConnection.ExecuteQuery("PRAGMA synchronous=NORMAL");
+            }
         }
 
         /// <summary>The database connection to write to.</summary>
