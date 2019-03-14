@@ -112,7 +112,6 @@ namespace Models.Report
                 }
             }
             this.VariableNames = variableNames.ToArray();
-            this.FindVariableMembers();
 
             // Subscribe to events.
             if (EventNames != null)
@@ -139,6 +138,9 @@ namespace Models.Report
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
+            if (columns == null)
+                this.FindVariableMembers();
+
             if (dataToWriteToDb == null)
                 dataToWriteToDb = new ReportData()
                 {
