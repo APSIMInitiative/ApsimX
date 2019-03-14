@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="CustomQueryView.cs"  company="APSIM Initiative">
+// <copyright file="PivotTableView.cs"  company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -15,7 +15,7 @@ using UserInterface.Views;
 namespace ApsimNG.Views.CLEM
 {
     /// <summary>
-    /// Allows simple pivoting of resource ledger data
+    /// UI for simple pivoting of resource ledger data
     /// </summary>
     class PivotTableView : ViewBase
     {

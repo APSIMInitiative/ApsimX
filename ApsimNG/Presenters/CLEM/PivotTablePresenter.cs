@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="CustomQueryPresenter.cs"  company="APSIM Initiative">
+// <copyright file="PivotTablePresenter.cs"  company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -17,6 +17,9 @@ using UserInterface.Presenters;
 
 namespace ApsimNG.Presenters.CLEM
 {
+    /// <summary>
+    /// Connects the PivotTableView and the PivotTable model together
+    /// </summary>
     class PivotTablePresenter : IPresenter
     {
         /// <summary>
@@ -64,19 +67,19 @@ namespace ApsimNG.Presenters.CLEM
             this.view.Pivot.ID = table.Pivot;
             this.view.Time.ID = table.ID;
 
-            // Update gridview data (i.e. initial load of data)
+            // Update gridview data (initial loading of data)
             OnUpdateData(null, EventArgs.Empty);
         }
 
         /// <summary>
-        /// Refreshes the data in the gridview when a change is made to the view
+        /// Refreshes the data in the gridview when a change is made to one of the view options
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
         private void OnUpdateData(object sender, EventArgs e)
         {
-            // The process of setting up the view will trigger this event several times.
-            // This statement catches early triggers to prevent errors
+            // The process of initially setting up the view will trigger the event early.
+            // This statement catches early triggers to prevent errors/needless computation
             if (view.Pivot.Text == null) return;
 
             var store = Apsim.Find(table, typeof(IDataStore)) as IDataStore;
@@ -149,6 +152,7 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="values">The collection of values</param>
         private double Aggregate(EnumerableRowCollection<double> values)
         {
+            // If there are no values, default to 0
             if (values.Count() > 0)
             {
                 switch (view.Expression.Text)
@@ -179,9 +183,11 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="e">The event arguments</param>
         private void OnStoreData(object sender, EventArgs e)
         {
+            // Check that data exists
             DataTable data = view.gridview.DataSource;
             if (data == null) return;
             
+            // Store the data
             var store = Apsim.Find(table, typeof(IDataStore)) as IDataStore;
             store.Writer.WriteTable(data);
         }
@@ -226,9 +232,11 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         private void OnTrackChanges(object sender, PivotTableView.TrackChangesArgs args)
         {
+            // Change the information of the property in the model
             var p = table.GetType().GetProperty(args.Name);
             p.SetValue(table, args.Value);
 
+            // Track this change in the command history 
             ChangeProperty command = new ChangeProperty(table, args.Name, args.Value);
             explorer.CommandHistory.Add(command);
         }

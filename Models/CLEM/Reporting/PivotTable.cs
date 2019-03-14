@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="CustomQuery.cs"  company="APSIM Initiative">
+// <copyright file="PivotTable.cs"  company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace Models.CLEM.Reporting
 {
     /// <summary>
-    /// A class for custom SQL queries
+    /// A class for performing basic pivot operations on a resource ledger
     /// </summary>
     [Serializable]
     [ViewName("ApsimNG.Views.CLEM.PivotTableView")]
@@ -29,42 +29,42 @@ namespace Models.CLEM.Reporting
         public List<string> Pivots { get; set; } = null;
 
         /// <summary>
-        /// The id of the current pivot
+        /// Tracks the id of the current pivot
         /// </summary>
         public int ID { get; set; } = 0;
 
         /// <summary>
-        /// The active ledger
+        /// Tracks the active selection in the ledger box
         /// </summary>
         public int Ledger { get; set; } = 0;
 
         /// <summary>
-        /// The active expression
+        /// Tracks the active selection in the expression box
         /// </summary>
         public int Expression { get; set; } = 0;
 
         /// <summary>
-        /// The active value
+        /// Tracks the active selection in the value box
         /// </summary>
         public int Value { get; set; } = 0;
 
         /// <summary>
-        /// The active row
+        /// Tracks the active selection in the row box
         /// </summary>
         public int Row { get; set; } = 5;
 
         /// <summary>
-        /// The active column
+        /// Tracks the active selection in the column box
         /// </summary>
         public int Column { get; set; } = 7;
 
         /// <summary>
-        /// The active pivot
+        /// Tracks the active selection in the pivot box
         /// </summary>
         public int Pivot { get; set; } = 4;
 
         /// <summary>
-        /// The active time
+        /// Tracks the active selection in the time box
         /// </summary>
         public int Time { get; set; } = 0;
 
