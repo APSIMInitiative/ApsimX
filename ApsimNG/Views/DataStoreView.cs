@@ -26,6 +26,9 @@ namespace UserInterface.Views
 
         /// <summary>Editable row filter.</summary>
         IEditView RowFilter { get; }
+
+        /// <summary>Filename textbox.</summary>
+        IEditView FileName { get; }
     }
 
     /// <summary>
@@ -45,6 +48,11 @@ namespace UserInterface.Views
         private Table table1 = null;
         private HBox hbox1 = null;
 
+        /// <summary>
+        /// Filename textbox.
+        /// </summary>
+        private EditView fileName;
+
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)
         {
@@ -60,12 +68,14 @@ namespace UserInterface.Views
             };
             vbox1.PackStart(gridView.MainWidget, true, true, 0);
             vbox1.ReorderChild(hbox1, 2);
+            fileName = new EditView(this);
             dropDownView1 = new DropDownView(this);
             editView1 = new EditView(this);
             rowFilter = new EditView(this);
-            table1.Attach(dropDownView1.MainWidget, 1, 2, 0, 1);
-            table1.Attach(editView1.MainWidget, 1, 2, 1, 2);
-            table1.Attach(rowFilter.MainWidget, 1, 2, 2, 3);
+            table1.Attach(fileName.MainWidget, 1, 2, 0, 1);
+            table1.Attach(dropDownView1.MainWidget, 1, 2, 1, 2);
+            table1.Attach(editView1.MainWidget, 1, 2, 2, 3);
+            table1.Attach(rowFilter.MainWidget, 1, 2, 3, 4);
             editView2 = new EditView(this);
             hbox1.PackStart(editView2.MainWidget, false, false, 0);
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -107,5 +117,8 @@ namespace UserInterface.Views
 
         /// <summary>Editable row filter.</summary>
         public IEditView RowFilter { get { return rowFilter; } }
+
+        /// <summary>Filename textbox.</summary>
+        public IEditView FileName { get { return fileName; } }
     }
 }

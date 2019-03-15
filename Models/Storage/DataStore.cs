@@ -39,7 +39,6 @@
         public bool useFirebird { get; set; } = false;
 
         /// <summary>Returns the file name of the .db file</summary>
-        [XmlIgnore]
         public string FileName { get; set; }
 
         /// <summary>Get a reader to perform read operations on the datastore.</summary>
