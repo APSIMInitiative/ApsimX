@@ -67,6 +67,9 @@ namespace Models.PMF
         /// <summary>The list of organs</summary>
         protected List<IArbitration> Organs = new List<IArbitration>();
 
+        /// <summary>A list of organs or suborgans that have watardemands</summary>
+        protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
+
         /// <summary>The variables for DM</summary>
         [XmlIgnore]
         public BiomassArbitrationType DM { get; private set; }
@@ -153,9 +156,14 @@ namespace Models.PMF
 
                 // Calculate total water demand.
                 double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+                /*
                 foreach (IArbitration o in Organs)
                     if (o is IHasWaterDemand)
                         waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+                */
+                
+                foreach(IHasWaterDemand WD in WaterDemands)
+                    waterDemand += WD.CalculateWaterDemand() * Plant.Zone.Area;
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
@@ -208,12 +216,22 @@ namespace Models.PMF
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
+            /*
             foreach (IArbitration o in Organs)
                 if (o is IHasWaterDemand)
                 {
                     double demand = (o as IHasWaterDemand).CalculateWaterDemand();
                     double allocation = fraction * demand;
                     (o as IHasWaterDemand).WaterAllocation = allocation;
+                    WAllocated += allocation;
+                }
+                            */
+
+            foreach (IHasWaterDemand WD in WaterDemands)
+                {
+                    double demand = WD.CalculateWaterDemand();
+                    double allocation = fraction * demand;
+                    WD.WaterAllocation = allocation;
                     WAllocated += allocation;
                 }
 
@@ -322,10 +340,13 @@ namespace Models.PMF
             foreach (Model Can in Apsim.FindAll(Plant, typeof(IHasWaterDemand)))
                 Waterdemands.Add(Can as IHasWaterDemand);
 
+            foreach (IOrgan organ in Plant.Organs)
+                if (organ is IArbitration)
+                    organsToArbitrate.Add(organ as IArbitration);
 
-
+            
             Organs = organsToArbitrate;
-
+            WaterDemands = Waterdemands;
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
         }
