@@ -19,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IRunnable, IReferenceExternalFiles
+    public class ExcelInput : Model, IRunnable, IReferenceExternalFiles, IComputationalyTimeConsuming
     {
         private string _filename;
 
