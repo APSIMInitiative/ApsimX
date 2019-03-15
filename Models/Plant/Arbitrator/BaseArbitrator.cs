@@ -156,13 +156,8 @@ namespace Models.PMF
 
                 // Calculate total water demand.
                 double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-                /*
-                foreach (IArbitration o in Organs)
-                    if (o is IHasWaterDemand)
-                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
-                */
-                
-                foreach(IHasWaterDemand WD in WaterDemands)
+
+                foreach (IHasWaterDemand WD in WaterDemands)
                     waterDemand += WD.CalculateWaterDemand() * Plant.Zone.Area;
 
                 // Calculate demand / supply ratio.
@@ -216,17 +211,7 @@ namespace Models.PMF
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
-            /*
-            foreach (IArbitration o in Organs)
-                if (o is IHasWaterDemand)
-                {
-                    double demand = (o as IHasWaterDemand).CalculateWaterDemand();
-                    double allocation = fraction * demand;
-                    (o as IHasWaterDemand).WaterAllocation = allocation;
-                    WAllocated += allocation;
-                }
-                            */
-
+  
             foreach (IHasWaterDemand WD in WaterDemands)
                 {
                     double demand = WD.CalculateWaterDemand();
