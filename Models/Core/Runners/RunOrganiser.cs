@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>A job manager that looks after running all simulations</summary>
     public class RunOrganiser : IJobManager
@@ -14,6 +15,7 @@
         private IModel modelSelectedByUser;
         private bool runTests;
         private IEnumerator<Simulation> simulationEnumerator;
+        private List<IRunnable> toolsToRun = new List<IRunnable>();
 
         /// <summary>Simulation names being run</summary>
         public List<string> SimulationNamesBeingRun { get; private set; }
@@ -62,6 +64,9 @@
             // First time through there. Get a list of things to run.
             if (simulationEnumerator == null)
             {
+                // Find runnable objects that aren't simulations e.g. ExcelInput
+                toolsToRun = Apsim.FindAll(simulations, typeof(IRunnable)).Cast<IRunnable>().ToList();
+
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);
                 events.Publish("BeginRun", null);
@@ -82,6 +87,14 @@
                         simAndFolderNames.Add(simulationName, folderName);
                     }
                 }
+            }
+
+            // Are there any runnable things?
+            if (toolsToRun.Count > 0)
+            {
+                var toolToRun = toolsToRun[0];
+                toolsToRun.RemoveAt(0);
+                return toolToRun;
             }
 
             // If we didn't find anything to run then return null to tell job runner to exit.
@@ -145,5 +158,6 @@
 
             storage.Writer.Stop();
         }
+
     }
 }
