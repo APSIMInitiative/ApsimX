@@ -7,6 +7,7 @@ namespace UserInterface.Views
 {
     using Interfaces;
     using Gtk;
+    using System;
 
 
     /// <summary>The interface for a data store view</summary>
@@ -29,6 +30,12 @@ namespace UserInterface.Views
 
         /// <summary>Filename textbox.</summary>
         IEditView FileName { get; }
+
+        /// <summary>
+        /// Invoked when the user changes the filename, either via text input,
+        /// or via the file choose dialog.
+        /// </summary>
+        event EventHandler FileNameChanged;
     }
 
     /// <summary>
@@ -49,9 +56,21 @@ namespace UserInterface.Views
         private HBox hbox1 = null;
 
         /// <summary>
+        /// Button which can be used to select a new file name, via a file
+        /// chooser dialog.
+        /// </summary>
+        private Button chooseFile = null;
+
+        /// <summary>
         /// Filename textbox.
         /// </summary>
         private EditView fileName;
+
+        /// <summary>
+        /// Invoked when the user changes the filename, either via text input,
+        /// or via the file choose dialog.
+        /// </summary>
+        public event EventHandler FileNameChanged;
 
         /// <summary>Initializes a new instance of the <see cref="DataStoreView" /> class.</summary>
         public DataStoreView(ViewBase owner) : base(owner)
@@ -68,11 +87,19 @@ namespace UserInterface.Views
             };
             vbox1.PackStart(gridView.MainWidget, true, true, 0);
             vbox1.ReorderChild(hbox1, 2);
+
             fileName = new EditView(this);
+            fileName.Changed += OnFileNameChanged;
+            chooseFile = new Button("...");
+            chooseFile.Clicked += OnChooseFile;
+            HBox fileNameContainer = new HBox();
+            fileNameContainer.PackStart(fileName.MainWidget, true, true, 0);
+            fileNameContainer.PackStart(chooseFile, false, false, 0);
+
             dropDownView1 = new DropDownView(this);
             editView1 = new EditView(this);
             rowFilter = new EditView(this);
-            table1.Attach(fileName.MainWidget, 1, 2, 0, 1);
+            table1.Attach(fileNameContainer, 1, 2, 0, 1);
             table1.Attach(dropDownView1.MainWidget, 1, 2, 1, 2);
             table1.Attach(editView1.MainWidget, 1, 2, 2, 3);
             table1.Attach(rowFilter.MainWidget, 1, 2, 3, 4);
@@ -89,6 +116,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
+            fileName.Changed -= OnFileNameChanged;
             gridView.Dispose();
             gridView = null;
             dropDownView1.MainWidget.Destroy();
@@ -100,7 +128,33 @@ namespace UserInterface.Views
             rowFilter.MainWidget.Destroy();
             rowFilter = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            chooseFile.Clicked -= OnChooseFile;
             _owner = null;
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks on the chose file '...' button.
+        /// Prompts the user to choose a file name via the file chooser dialog,
+        /// then signals to the presenter that the file name has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore]
+        private void OnChooseFile(object sender, EventArgs e)
+        {
+            FileName.Value = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db) | *.db | All Files (*.*) | *.*");
+            FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the filename by typing into the textbox.
+        /// Signals to the presenter that the file name has changed.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnFileNameChanged(object sender, EventArgs e)
+        {
+            FileNameChanged?.Invoke(FileName, EventArgs.Empty);
         }
 
         /// <summary>List of all tables.</summary>

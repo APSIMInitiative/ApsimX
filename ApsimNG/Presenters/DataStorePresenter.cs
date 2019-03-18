@@ -66,7 +66,7 @@ namespace UserInterface.Presenters
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             this.view.RowFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
-            this.view.FileName.Changed += OnFileNameChanged;
+            this.view.FileNameChanged += OnFileNameChanged;
             PopulateGrid();
         }
 
@@ -78,7 +78,7 @@ namespace UserInterface.Presenters
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.RowFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
-            view.FileName.Changed -= OnFileNameChanged;
+            view.FileNameChanged -= OnFileNameChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
