@@ -73,7 +73,7 @@
                   "$type": "Models.CLEM.FileCrop, Models",
                   "FileName": "FileForage.prn",
                   "ExcelWorkSheetName": null,
-                  "SelectedTab": null,
+                  "SelectedTab": "Properties",
                   "Name": "FileForage",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -94,7 +94,7 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.LandType, Models",
-                          "LandArea": 100.0,
+                          "LandArea": -1.0,
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
                           "SoilType": 2,

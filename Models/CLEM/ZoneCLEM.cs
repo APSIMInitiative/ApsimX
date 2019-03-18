@@ -5,6 +5,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,8 @@ namespace Models.CLEM
         Clock Clock = null;
         [Link]
         Simulation Simulation = null;
+        [Link]
+        IStorageReader DataStore = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -146,6 +149,16 @@ namespace Models.CLEM
             if (!Validate(Simulation, ""))
             {
                 string error = "@i:Invalid parameters in model";
+
+                // find IStorageReader of simulation
+                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IStorageReader ds = DataStore;
+                DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+                // all all current errors and validation problems to error string.
+                foreach (DataRow dr in dataRows)
+                {
+                    error += "\n" + dr[7].ToString();
+                }
                 throw new ApsimXException(this, error);
             }
 
@@ -299,33 +312,35 @@ namespace Models.CLEM
             // get clock
             IModel parentSim = Apsim.Parent(this, typeof(Simulation));
             Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
-
-            html += "\n<div class=\"clearfix defaultbanner\">";
-            html += "<div class=\"namediv\">" + clk.Name + "</div>";
-            html += "<div class=\"typediv\">Clock</div>";
-            html += "</div>";
-            html += "\n<div class=\"defaultcontent\">";
-            html += "\n<div class=\"activityentry\">This simulation runs from ";
-            if (clk.StartDate == null)
+            if (clk != null)
             {
-                html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+                html += "\n<div class=\"clearfix defaultbanner\">";
+                html += "<div class=\"namediv\">" + clk.Name + "</div>";
+                html += "<div class=\"typediv\">Clock</div>";
+                html += "</div>";
+                html += "\n<div class=\"defaultcontent\">";
+                html += "\n<div class=\"activityentry\">This simulation runs from ";
+                if (clk.StartDate == null)
+                {
+                    html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
+                }
+                html += " to ";
+                if (clk.EndDate == null)
+                {
+                    html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
+                }
+                html += "\n</div>";
+                html += "\n</div>";
+                html += "\n</div>";
             }
-            else
-            {
-                html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
-            }
-            html += " to ";
-            if (clk.EndDate == null)
-            {
-                html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
-            }
-            html += "\n</div>";
-            html += "\n</div>";
-            html += "\n</div>";
 
             foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
             {
