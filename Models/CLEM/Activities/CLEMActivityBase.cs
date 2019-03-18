@@ -939,7 +939,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         NotNeeded,
         /// <summary>
-        /// Indicates activity cuased a warning and was not perfromed
+        /// Indicates activity caused a warning and was not performed
         /// </summary>
         Warning,
         /// <summary>

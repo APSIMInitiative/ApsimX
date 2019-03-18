@@ -117,31 +117,32 @@ namespace Models.CLEM.Activities
                     for (int i = 0; i < purchasetype.Number; i++)
                     {
                         object ruminantBase = null;
-                        if (purchasetype.Gender == Sex.Male)
-                        {
-                            ruminantBase = new RuminantMale();
-                        }
-                        else
-                        {
-                            ruminantBase = new RuminantFemale();
-                        }
-
-                        Ruminant ruminant = ruminantBase as Ruminant;
-                        ruminant.ID = 0;
-                        ruminant.BreedParams = herdToUse;
-                        ruminant.Breed = this.PredictedHerdBreed;
-                        ruminant.HerdName = this.PredictedHerdName;
-                        ruminant.Gender = purchasetype.Gender;
-                        ruminant.Age = purchasetype.Age;
-                        ruminant.PurchaseAge = purchasetype.Age;
-                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
-                        ruminant.Location = "";
 
                         double u1 = ZoneCLEM.RandomGenerator.NextDouble();
                         double u2 = ZoneCLEM.RandomGenerator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                      Math.Sin(2.0 * Math.PI * u2);
-                        ruminant.Weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+                        double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+
+                        if (purchasetype.Gender == Sex.Male)
+                        {
+                            ruminantBase = new RuminantMale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        }
+                        else
+                        {
+                            ruminantBase = new RuminantFemale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        }
+
+                        Ruminant ruminant = ruminantBase as Ruminant;
+                        ruminant.ID = 0;
+                        //ruminant.BreedParams = herdToUse;
+                        ruminant.Breed = this.PredictedHerdBreed;
+                        ruminant.HerdName = this.PredictedHerdName;
+                        //ruminant.Gender = purchasetype.Gender;
+                        //ruminant.Age = purchasetype.Age;
+                        ruminant.PurchaseAge = purchasetype.Age;
+                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
+                        ruminant.Location = "";
                         ruminant.PreviousWeight = ruminant.Weight;
 
                         switch (purchasetype.Gender)

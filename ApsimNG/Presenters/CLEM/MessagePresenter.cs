@@ -75,6 +75,11 @@ namespace UserInterface.Presenters
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
             IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
             IStorageReader ds = Apsim.Children(simulations, typeof(IStorageReader)).FirstOrDefault() as IStorageReader;
+            if (ds == null)
+            {
+                return htmlString;
+            }
+
             DataRow[] dataRows = ds.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
             foreach (DataRow dr in dataRows)
             {

@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
             // now calculated in Ruminant
             // ind.NormalisedAnimalWeight = standardReferenceWeight - ((1 - ind.BreedParams.SRWBirth) * standardReferenceWeight) * Math.Exp(-(ind.BreedParams.AgeGrowthRateCoefficient * (ind.Age * 30.4)) / (Math.Pow(standardReferenceWeight, ind.BreedParams.SRWGrowthScalar)));
             double liveWeightForIntake = ind.NormalisedAnimalWeight;
-            ind.HighWeight = Math.Max(ind.HighWeight, ind.Weight);
+            // now performed at allocation of weight in Ruminant
             if (ind.HighWeight < ind.NormalisedAnimalWeight)
             {
                 liveWeightForIntake = ind.HighWeight;
@@ -406,7 +406,6 @@ namespace Models.CLEM.Activities
                 // dum = potential milk intake daily
                 // dumshort = potential intake. check that it isnt monthly
 
-
                 // recalculate milk intake based on mothers updated milk production for the time step
                 double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
                 ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
@@ -550,7 +549,7 @@ namespace Models.CLEM.Activities
             // grow all individuals
             foreach (Ruminant ind in ruminantHerd.Herd)
             {
-                ind.Age++;
+                ind.IncrementAge();
             }
         }
 
