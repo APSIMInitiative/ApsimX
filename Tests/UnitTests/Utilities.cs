@@ -46,6 +46,14 @@ namespace UnitTests
         {
             SQLite database = new SQLite();
             database.OpenDatabase(fileName, true);
+            var st = TableToString(database, tableName, fieldNames);
+            database.CloseDatabase();
+            return st;
+        }
+
+        /// <summary>Convert a SQLite table to a string.</summary>
+        public static string TableToString(IDatabaseConnection database, string tableName, IEnumerable<string> fieldNames = null)
+        {
             string sql = "SELECT ";
             if (fieldNames == null)
                 sql += "*";
@@ -62,10 +70,23 @@ namespace UnitTests
                 }
             }
             sql += " FROM " + tableName;
+            var orderByFieldNames = new List<string>();
             if (database.GetColumnNames(tableName).Contains("CheckpointID"))
-                sql += " ORDER BY CheckpointID";
+                orderByFieldNames.Add("[CheckpointID]");
+            if (database.GetColumnNames(tableName).Contains("SimulationID"))
+                orderByFieldNames.Add("[SimulationID]");
+            if (database.GetColumnNames(tableName).Contains("Clock.Today"))
+                orderByFieldNames.Add("[Clock.Today]");
+            if (orderByFieldNames.Count > 0)
+                sql += " ORDER BY " + StringUtilities.BuildString(orderByFieldNames.ToArray(), ",");
             DataTable data = database.ExecuteQuery(sql);
-            database.CloseDatabase();
+            return TableToString(data);
+        }
+
+        /// <summary>Convert a SQLite query to a string.</summary>
+        public static string TableToStringUsingSQL(IDatabaseConnection database, string sql)
+        {
+            var data = database.ExecuteQuery(sql);
             return TableToString(data);
         }
 

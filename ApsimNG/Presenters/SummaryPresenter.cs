@@ -10,6 +10,7 @@
     using global::UserInterface.Views;
     using global::EventArguments;
     using global::UserInterface.Commands;
+    using Models.Storage;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -25,7 +26,7 @@
 
         /// <summary>Our data store</summary>
         [Link]
-        private IStorageReader dataStore = null;
+        private IDataStore dataStore = null;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
@@ -88,7 +89,7 @@
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(this.dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
+            Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
             summaryView.HtmlView.SetContents(writer.ToString(), false);
             writer.Close();
         }

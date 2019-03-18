@@ -18,6 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/trucking.htm")]
     public class TruckingSettings : CLEMModel
     {
         [Link]
@@ -149,7 +150,7 @@ namespace Models.CLEM.Activities
                             break;
                     }
 
-                    if (gasstore != null & emissions > 0)
+                    if (gasstore != null && emissions > 0)
                     {
                         gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(isSales?"sales":"purchases"));
                     }
@@ -171,7 +172,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">Each truck load can carry <span class=\"setvalue\">" + Number450kgPerTruck.ToString("#.###") + "</span> 450 kg individuals ";
             html += "</div>";
 
-            if(MinimumLoadBeforeSelling>0 | MinimumTrucksBeforeSelling>0)
+            if(MinimumLoadBeforeSelling>0 || MinimumTrucksBeforeSelling>0)
             {
                 html += "\n<div class=\"activityentry\">";
                 if(MinimumTrucksBeforeSelling>0)
@@ -194,7 +195,7 @@ namespace Models.CLEM.Activities
                 html += "</div>";
             }
 
-            if (TruckMethaneEmissions > 0 | TruckN2OEmissions > 0)
+            if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
             {
                 html += "\n<div class=\"activityentry\">Each truck will emmit <span class=\"setvalue\">";
                 if (TruckMethaneEmissions > 0)

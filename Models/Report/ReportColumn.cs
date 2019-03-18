@@ -12,6 +12,7 @@ namespace Models.Report
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Models.Storage;
 
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 
@@ -100,9 +101,6 @@ namespace Models.Report
         /// </summary>
         private DateTime lastStoreDate;
 
-        /// <summary>Have we tried to get units yet?</summary>
-        private bool haveGotUnits = false;
-
         /// <summary>Variable containing a reference to the aggregation start date.</summary>
         private IVariable fromVariable = null;
 
@@ -183,6 +181,17 @@ namespace Models.Report
             this.locator = locator;
             this.events = events;
             this.clock = clock;
+            try
+            {
+                IVariable var = locator.GetObject(variableName);
+                if (var != null)
+                {
+                    Units = var.UnitsLabel;
+                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                        Units = Units.Substring(1, Units.Length - 2);
+                }
+            }
+            catch (Exception) { }
         }
 
         /// <summary>
@@ -445,18 +454,6 @@ namespace Models.Report
                         }
                     }
 
-                    if (!haveGotUnits)
-                    {
-                        IVariable var = locator.GetObject(variableName);
-                        if (var != null)
-                        {
-                            Units = var.UnitsLabel;
-                            if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
-                                Units = Units.Substring(1, Units.Length - 2);
-                        }
-                        haveGotUnits = true;
-                    }
-
                     Values.Add(value);
                 }
             }
@@ -495,7 +492,12 @@ namespace Models.Report
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
             {
                 if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
-                    result = MathUtilities.Sum(this.valuesToAggregate);
+                    if (this.valuesToAggregate[0].GetType() == typeof(double))
+                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
+                    else if (this.valuesToAggregate[0].GetType() == typeof(int))
+                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
+                    else
+                        throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
                 else if (this.aggregationFunction.Equals("avg", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Average(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
@@ -507,7 +509,7 @@ namespace Models.Report
                 else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
                     result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture);
                 else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
-                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) - 
+                    result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) -
                                     Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
 
                 //if (!double.IsNaN(result))

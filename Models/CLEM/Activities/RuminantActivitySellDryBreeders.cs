@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantdrybreeders.htm")]
     public class RuminantActivitySellDryBreeders : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -62,13 +63,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalMilking")]
         private void OnCLEMAnimalMilking(object sender, EventArgs e)
         {
-            if (this.TimingOK & this.Status != ActivityStatus.Ignored)
+            if (this.TimingOK && this.Status != ActivityStatus.Ignored)
             {
                 if (ProportionToRemove > 0)
                 {
                     // get labour shortfall
                     double labourLimiter = 1.0;
-                    if(this.Status == ActivityStatus.Partial & this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+                    if(this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
                     {
                         double labourLimit = 1;
                         double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
@@ -84,7 +85,7 @@ namespace Models.CLEM.Activities
                     List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList();
 
                     // get dry breeders from females
-                    foreach (RuminantFemale female in herd.Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth & a.PreviousConceptionRate >= MinimumConceptionBeforeSell & a.AgeAtLastBirth > 0))
+                    foreach (RuminantFemale female in herd.Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth && a.PreviousConceptionRate >= MinimumConceptionBeforeSell && a.AgeAtLastBirth > 0))
                     {
                         if (ZoneCLEM.RandomGenerator.NextDouble() <= ProportionToRemove * labourLimiter)
                         {
@@ -123,7 +124,7 @@ namespace Models.CLEM.Activities
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all potential dry breeders
-            List<RuminantFemale> herd = this.CurrentHerd(false).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth & a.PreviousConceptionRate >= MinimumConceptionBeforeSell & a.AgeAtLastBirth > 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(false).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth && a.PreviousConceptionRate >= MinimumConceptionBeforeSell && a.AgeAtLastBirth > 0).ToList();
             int head = herd.Count();
             double adultEquivalent = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;

@@ -23,6 +23,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. Multiple filters will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/filters/ruminantfiltergroup.htm")]
     public class RuminantFilterGroup : CLEMModel
     {
         /// <summary>

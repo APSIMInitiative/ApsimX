@@ -119,6 +119,7 @@
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <EmbeddedResource Include="Resources\Glade\CustomQueryView.glade" />
+    <EmbeddedResource Include="Resources\Glade\PivotTableView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -224,6 +225,7 @@
     <Compile Include="Presenters\CLEM\LabourAllocationPresenter.cs" />
     <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
     <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
+    <Compile Include="Presenters\CLEM\PivotTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="Views\CLEM\CLEMView.cs" />
     <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
+    <Compile Include="Views\CLEM\PivotTableView.cs" />
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
@@ -449,6 +452,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityIncome.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostLabour.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FactorialAnova.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogenPlantAvailableNH4.png" />
@@ -642,7 +647,7 @@
     <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="ApsimLogo.ico" />
     <EmbeddedResource Include="Resources\MenuImages\Critical.png" />
-    <EmbeddedResource Include="Resources\MenuImages\Ignore.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Ignored.png" />
     <EmbeddedResource Include="Resources\MenuImages\Partial.png" />
     <EmbeddedResource Include="Resources\MenuImages\Success.png" />
     <EmbeddedResource Include="Resources\MenuImages\Timer.png" />
@@ -653,7 +658,6 @@
     <EmbeddedResource Include="Resources\Delete.png" />
     <EmbeddedResource Include="Resources\Delete16.png" />
     <EmbeddedResource Include="Resources\Cloud.png" />
-    <EmbeddedResource Include="Resources\ArbitrationDiagram.PNG" />
     <EmbeddedResource Include="Resources\CurveNumberCover.png" />
     <EmbeddedResource Include="Resources\Jigsaw.jpg" />
     <EmbeddedResource Include="Resources\RunoffRainfallCurves.png" />
@@ -698,6 +702,7 @@
     <EmbeddedResource Include="Resources\MorrisGrid4.png" />
     <EmbeddedResource Include="Resources\SobolParameterDistributions.png" />
     <EmbeddedResource Include="Resources\AnovaSampleGrid.png" />
+    <EmbeddedResource Include="Resources\ArbitratorSequenceDiagram.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

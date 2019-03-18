@@ -9492,7 +9492,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Baudin",
@@ -9504,7 +9505,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Buloke",
@@ -9516,7 +9518,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Capstan",
@@ -9528,7 +9531,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 6",
+                "[Phenology].PpSensitivity.FixedValue = 3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Commander",
@@ -9540,7 +9544,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Fleet",
@@ -9565,7 +9570,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Hindmarsh",
@@ -9577,7 +9583,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].PpSensitivity.FixedValue = 2",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Keel",
@@ -9589,7 +9596,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                 "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
               ],
               "Name": "Oxford",

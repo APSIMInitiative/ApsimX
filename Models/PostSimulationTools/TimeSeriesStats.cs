@@ -1,9 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="TimeSeriesStats.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +6,7 @@ namespace Models.PostSimulationTools
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Storage;
+    using Models.Core.Run;
 
     /// <summary>
     /// # [Name]
@@ -33,10 +29,8 @@ namespace Models.PostSimulationTools
         /// The main run method called to fill tables in the specified DataStore.
         /// </summary>
         /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
-            dataStore.DeleteDataInTable(this.Name);
-
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
             statsData.Columns.Add("VariableName", typeof(string));
@@ -50,7 +44,7 @@ namespace Models.PostSimulationTools
             statsData.Columns.Add("SDSD", typeof(double));
             statsData.Columns.Add("LCS", typeof(double));
 
-            DataTable simulationData = dataStore.GetData(this.TableName);
+            DataTable simulationData = dataStore.Reader.GetData(this.TableName);
             if (simulationData != null)
             {
                 DataView view = new DataView(simulationData);
@@ -69,7 +63,7 @@ namespace Models.PostSimulationTools
                                 observedColumn.DataType == typeof(double))
                             {
                                 // Calculate stats for each simulation and store them in a rows in our stats table.
-                                string[] simulationNames = dataStore.SimulationNames;
+                                var simulationNames = dataStore.Reader.SimulationNames;
                                 foreach (string simulationName in simulationNames)
                                 {
                                     string seriesName = simulationName;
@@ -88,7 +82,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 statsData.TableName = this.Name;
-                dataStore.WriteTable(statsData);
+                dataStore.Writer.WriteTable(statsData);
             }
         }
 

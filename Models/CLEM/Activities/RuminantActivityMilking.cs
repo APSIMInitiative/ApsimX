@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs milking based upon the current herd filtering.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmilking.htm")]
     public class RuminantActivityMilking: CLEMRuminantActivityBase
     {
         private object milkStore;
@@ -47,27 +48,43 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to call for all herd management activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalMilkProduction")]
+        private void OnCLEMMilkProduction(object sender, EventArgs e)
+        {
+            // this method will ensure the milking status is defined for females after births when lactation is set and before milk production is determined
+            foreach (RuminantFemale item in this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList())
+            {
+                // set these females to state milking performed so they switch to the non-suckling milk production curves.
+                item.MilkingPerformed = true;
+            }
+        }
+
+        /// <summary>An event handler to call for all herd management activities</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalMilking")]
         private void OnCLEMMilking(object sender, EventArgs e)
         {
             // take all milk
             List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList();
-            double milkTotal = herd.Sum(a => a.MilkAmount);
+            double milkTotal = herd.Sum(a => a.MilkCurrentlyAvailable);
             if (milkTotal > 0)
             {
-                // set these females to state milking perfomred so they switch to the non-suckling milk production curves.
-                foreach (RuminantFemale item in herd)
-                {
-                    item.MilkingPerformed = true;
-                }
-                // only provide what labour would allow
                 double labourLimit = this.LabourLimitProportion;
+                // only provide what labour would allow
                 (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName);
+
+                // record milk taken with female for accounting
+                foreach (RuminantFemale female in herd)
+                {
+                    female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
+                }
             }
             else
             {
                 this.Status = ActivityStatus.NotNeeded;
             }
+
         }
 
         /// <summary>
@@ -86,7 +103,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)

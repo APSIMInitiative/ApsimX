@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models.Core;
     using Models.Graph;
+    using Models.Storage;
     using Views;
     
     /// <summary>
@@ -29,7 +30,7 @@ namespace UserInterface.Presenters
         /// The storage object
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
         
         /// <summary>The graph view</summary>
         private IGraphView graphView;
@@ -317,7 +318,7 @@ namespace UserInterface.Presenters
 
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
                     {
-                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        IEnumerator enumerator = definition.y.GetEnumerator();
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.yFieldName;

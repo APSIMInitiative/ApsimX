@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages labour supplied and income derived from an off-farm task.")]
+    [HelpUri(@"content/features/activities/labour/offfarmwork.htm")]
     [Version(1, 0, 1, "")]
     public class LabourActivityOffFarm: CLEMActivityBase
     {

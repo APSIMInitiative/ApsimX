@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link]
@@ -56,7 +57,6 @@ namespace Models.CLEM.Resources
             if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
             {
                 PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
-//                SirePrice = PriceList.BreedingSirePrice;
             }
 
             // get advanced conception parameters
@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
@@ -115,15 +115,15 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 AnimalPriceGroup matchIndividual = null;
                 AnimalPriceGroup matchCriteria = null;
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 & matchIndividual == null)
+                    if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() & a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -345,6 +345,7 @@ namespace Models.CLEM.Resources
         [Description("Parameter for energy for growth #2")]
         [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept2 { get; set; }
+
         /// <summary>
         /// Growth efficiency
         /// </summary>
@@ -352,6 +353,14 @@ namespace Models.CLEM.Resources
         [Description("Growth efficiency")]
         [Required, GreaterThanValue(0)]
         public double GrowthEfficiency { get; set; }
+
+        /// <summary>
+        /// Natural weaning age
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Natural weaning age (0 to use gestation length)")]
+        [Required]
+        public double NaturalWeaningAge { get; set; }
 
         /// <summary>
         /// Standard Reference Weight of female
@@ -710,12 +719,12 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MinimumDaysBirthToConception { get; set; }
         /// <summary>
-        /// Rate at which twins are concieved
+        /// Rate at which multiple births are concieved (twins, triplets, ...)
         /// </summary>
         [Category("Basic", "Breeding")]
-        [Description("Rate at which twins are concieved")]
-        [Required]
-        public double TwinRate { get; set; }
+        [Description("Rate at which multiple births occur (twins,triplets,...")]
+        [Proportion]
+        public double[] MultipleBirthRate { get; set; }
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>

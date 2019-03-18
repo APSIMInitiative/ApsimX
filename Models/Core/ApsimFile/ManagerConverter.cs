@@ -154,7 +154,8 @@ namespace Models.Core.ApsimFile
                     decl.TypeName = match.Groups["TypeName"].Value;
                     decl.InstanceName = match.Groups["InstanceName"].Value;
                     decl.Attributes = new List<string>();
-                    decl.IsPrivate = match.Groups["Access"].Value.TrimEnd() != "public";
+                    decl.IsEvent = lines[i].Contains("event");
+                    decl.IsPrivate = !decl.IsEvent && match.Groups["Access"].Value.TrimEnd() != "public";
                     if (match.Groups["Link"].Success)
                     {
                         decl.Attributes.Add(match.Groups["Link"].Value);
@@ -246,6 +247,8 @@ namespace Models.Core.ApsimFile
                     declarationLineBuilder.Append("private ");
                 else
                     declarationLineBuilder.Append("public ");
+                if (newDeclaration.IsEvent)
+                    declarationLineBuilder.Append(" event ");
                 declarationLineBuilder.Append(newDeclaration.TypeName);
                 declarationLineBuilder.Append(' ');
                 declarationLineBuilder.Append(newDeclaration.InstanceName);
@@ -386,6 +389,25 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Remove a declaration.
+        /// </summary>
+        /// <param name="instanceName">The instance name of the declaration.</param>
+        /// <returns>true if link was inserted.</returns>
+        public bool RemoveDeclaration(string instanceName)
+        {
+            var declarations = GetDeclarations();
+            var declaration = declarations.Find(d => d.InstanceName == instanceName);
+            if (declaration != null)
+            {
+                declarations.Remove(declaration);
+                SetDeclarations(declarations);
+                return true;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
         /// Find a line with the matching string
         /// </summary>
         /// <param name="stringToFind">String to find.</param>
@@ -476,6 +498,9 @@ namespace Models.Core.ApsimFile
 
         /// <summary>Is declaration private?</summary>
         public bool IsPrivate { get; set; } = true;
+
+        /// <summary>Is declaration an event?</summary>
+        public bool IsEvent { get; set; }
     }
         
 

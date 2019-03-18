@@ -33,6 +33,11 @@ namespace UnitTests
                 parentSoil = parent;
                 Name = "NO3";
             }
+            public MockSoilSolute(MockSoil parent, string name)
+            {
+                parentSoil = parent;
+                Name = name;
+            }
             public double[] kgha { get { return parentSoil.NO3; } set { parentSoil.NO3 = value; } }
 
             public double[] ppm => throw new NotImplementedException();
@@ -69,8 +74,9 @@ namespace UnitTests
             soil.Thickness = new double[] { 100, 100, 100 };
             soil.NO3 = new double[] { 1, 2, 3 };
             simulation.Children.Add(soil);
-            soil.Children.Add(new MockSoilSolute(soil));
-
+            soil.Children.Add(new MockSoilSolute(soil, "NO3"));
+            soil.Children.Add(new MockSoilSolute(soil, "NH4"));
+            soil.Children.Add(new MockSoilSolute(soil, "Urea"));
             Fertiliser fertiliser = new Fertiliser();
             fertiliser.Name = "Fertilise";
             simulation.Children.Add(fertiliser);
@@ -82,8 +88,6 @@ namespace UnitTests
             operations.Operation = new List<Operation>();
             operations.Operation.Add(fertiliseOperation);
             simulation.Children.Add(operations);
-
-            simulation.Children.Add(new SoluteManager());
 
             ISimulationEngine simulationEngine = Simulations.Create(new Model[] { simulation });
             simulationEngine.Run(simulation, doClone:false);
