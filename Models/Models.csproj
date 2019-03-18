@@ -145,6 +145,8 @@
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
+    <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -247,6 +249,7 @@
     <Compile Include="Functions\SoilFunctions\CERESNitrificationModel.cs" />
     <Compile Include="Functions\StringComparisonFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="IConceptionModel.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
