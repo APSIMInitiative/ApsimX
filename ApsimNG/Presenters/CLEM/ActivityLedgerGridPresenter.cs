@@ -14,12 +14,13 @@ namespace UserInterface.Presenters
     using Views;
     using global::UserInterface.Interfaces;
     using System.Collections.Generic;
+    using Models.Storage;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class ActivityLedgerGridPresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
 
         /// <summary>The display grid store view to work with.</summary>
         public IActivityLedgerGridView Grid { get; set; }
@@ -40,7 +41,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            dataStore = model as IStorageReader;
+            dataStore = model as IDataStore;
             this.Grid = view as ActivityLedgerGridView;
             this.explorerPresenter = explorerPresenter;
             this.Grid.ReadOnly = true;
@@ -104,7 +105,7 @@ namespace UserInterface.Presenters
                 try
                 {
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-                    data = dataStore.GetData(
+                    data = dataStore.Reader.GetData(
                                             tableName: ModelName,
                                             count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
 

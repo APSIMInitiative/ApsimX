@@ -54,6 +54,7 @@ iscc /Q %setup%\apsimx.iss
 set "file_name=ApsimSetup%ISSUE_NUMBER%.exe"
 rename "%setup%\Output\ApsimSetup.exe" "!file_name!"
 set "file_name=%output%\%file_name%"
+if exist C:\signapsimx call C:\signapsimx\sign.bat "%file_name%"
 goto :upload
 
 :debian

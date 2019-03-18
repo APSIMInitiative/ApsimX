@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DataStorePresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Data;
@@ -13,12 +8,14 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Views;
     using EventArguments;
+    using Models.Core.Run;
+    using Models.Storage;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
 
         /// <summary>The data store view to work with.</summary>
         private IDataStoreView view;
@@ -43,7 +40,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            dataStore = model as IStorageReader;
+            dataStore = model as IDataStore;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
             intellisense = new IntellisensePresenter(this.view as ViewBase);
@@ -54,7 +51,7 @@ namespace UserInterface.Presenters
             this.view.Grid.NumericFormat = "N3";
             if (dataStore != null)
             {
-                this.view.TableList.Values = dataStore.TableNames.ToArray();
+                this.view.TableList.Values = dataStore.Reader.TableNames.ToArray();
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
                     this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
@@ -139,7 +136,7 @@ namespace UserInterface.Presenters
                         // Try to obtain units
                         if (dataStore != null && simulationId != 0)
                         {
-                            units = dataStore.GetUnits(view.TableList.SelectedValue, column.ColumnName);
+                            units = dataStore.Reader.Units(view.TableList.SelectedValue, column.ColumnName);
                         }
 
                         int posLastDot = column.ColumnName.LastIndexOf('.');
@@ -151,7 +148,7 @@ namespace UserInterface.Presenters
                         // Add the units, if they're available
                         if (units != null)
                         {
-                            column.ColumnName = column.ColumnName + " " + units;
+                            column.ColumnName = column.ColumnName + " (" + units + ")";
                         }
                     }
 
@@ -177,11 +174,11 @@ namespace UserInterface.Presenters
                         string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
                         if (!string.IsNullOrEmpty(view.RowFilter.Value))
                             filter += " AND " + view.RowFilter.Value;
-                        data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
+                        data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)
                     {
-                        data = dataStore.GetData(
+                        data = dataStore.Reader.GetData(
                                                  simulationName: SimulationFilter.Name,
                                                  tableName: view.TableList.SelectedValue,
                                                  from: start, 
@@ -189,7 +186,7 @@ namespace UserInterface.Presenters
                     }
                     else
                     {
-                        data = dataStore.GetData(
+                        data = dataStore.Reader.GetData(
                                                 tableName: view.TableList.SelectedValue,
                                                 count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
                     }
@@ -232,7 +229,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore))
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore.Reader))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)

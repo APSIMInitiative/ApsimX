@@ -14,31 +14,10 @@
         [STAThread]
         public static int Main(string[] args)
         {
-
             Gtk.Application.Init();
             Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
             MainView mainForm = new MainView();
             MainPresenter mainPresenter = new MainPresenter();
-
-            // Clean up temporary files.
-            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            if (Directory.Exists(tempFolder))
-                // This may fail if another ApsimX instance is running. If so,
-                // we just ignore the exception and leave the cleanup for another day.
-                try
-                {
-                    Directory.Delete(tempFolder, true);
-                }
-                catch (Exception)
-                {
-                }
-            // Ensure the system has time to complete the deletion before we go ahead and recreate the folder
-            while (Gtk.Application.EventsPending())
-                Gtk.Application.RunIteration();
-            Directory.CreateDirectory(tempFolder);
-            if (!Path.GetTempPath().Contains("ApsimX"))
-                Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             try
             {

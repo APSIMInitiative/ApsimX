@@ -72,6 +72,9 @@ namespace Models.PMF.Struct
         [Link]
         public IFunction finalLeafNumber = null;
 
+        /// <summary>FertileTillerNumber</summary>
+        public double FinalLeafNo { get; set; }
+
         /// <summary>Number of leaves at emergence</summary>
         [Link]
         public IFunction LeafNumAtEmergence = null;
@@ -89,10 +92,22 @@ namespace Models.PMF.Struct
 
         /// <summary>FertileTillerNumber</summary>
         public double FertileTillerNumber { get; set; }
+
+        /// <summary>Used to match NLeaves in old sorghum which is updated with dltLeafNo at the end of the day</summary>
+        public double NLeaves
+        {
+            get
+            {
+                if(leaf?.Culms.Count > 0)
+                    return leaf.Culms[0].CurrentLeafNumber - leaf.Culms[0].DltNewLeafAppeared;
+                return 0;
+            }
+        } 
+
         /// <summary>CurrentLeafNo</summary>
         public double CurrentLeafNo { get; set; }
         /// <summary>Remaining Leaves</summary>
-        public double remainingLeaves { get { return finalLeafNumber.Value() - CurrentLeafNo; } }
+        public double remainingLeaves { get { return FinalLeafNo - CurrentLeafNo; } }
 
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
@@ -137,6 +152,16 @@ namespace Models.PMF.Struct
             dltTTDayBefore = thermalTime.Value();
         }
 
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            //hack to get finalleafnumber to be finalised a day later
+            FinalLeafNo = finalLeafNumber.Value();
+        }
+
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
@@ -161,7 +186,7 @@ namespace Models.PMF.Struct
             {
                 calcCulmAppearance((int)Math.Floor(newLeafNo));
             }
-            var updatedFinalLeaf = finalLeafNumber.Value();
+            var updatedFinalLeaf = FinalLeafNo;
             CurrentLeafNo = newLeafNo;
             for (var i = 0; i < leaf.Culms.Count; ++i)
             {

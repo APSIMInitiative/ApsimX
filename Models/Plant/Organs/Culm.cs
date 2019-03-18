@@ -79,9 +79,9 @@ namespace Models.PMF.Organs
             var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
             double leafNoEffective = Math.Min(CurrentLeafNumber + leafNoCorrection, FinalLeafNumber - LeafAtAppearance);
-            var leafArea = calcIndividualLeafSize(leafNoEffective);
+            var leafsize = calcIndividualLeafSize(leafNoEffective);
 
-            leafArea = leafArea * smm2sm * Density * DltNewLeafAppeared; // in dltLai
+            double leafArea = leafsize * smm2sm * Density * DltNewLeafAppeared; // in dltLai
             // TotalLAI += leafArea;
             return (leafArea * Proportion);
         }

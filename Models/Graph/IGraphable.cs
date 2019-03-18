@@ -1,19 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGraphable.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Graph
+﻿namespace Models.Graph
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Drawing;
+    using Models.Storage;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Drawing;
     using System.Xml.Serialization;
-    using Core;
 
     /// <summary>
     /// An interface for a model that can graph itself.
@@ -23,7 +15,7 @@ namespace Models.Graph
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions);
+        void GetSeriesToPutOnGraph(IDataStore storage, List<SeriesDefinition> definitions);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
         /// <param name="annotations">A list of annotations to add to.</param>
