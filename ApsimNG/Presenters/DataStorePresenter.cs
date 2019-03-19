@@ -287,7 +287,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments.</param>
         private void OnFileNameChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(dataStore, "FileName", view.FileName.Value);
+            ChangeProperty command = new ChangeProperty(dataStore, "CustomFileName", view.FileName.Value);
             explorerPresenter.CommandHistory.Add(command);
             dataStore.Close();
             dataStore.Open();
