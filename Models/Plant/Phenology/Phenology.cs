@@ -201,8 +201,8 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase))
-                        { throw new Exception("Can not rewind over phase of type " + phases[currentPhaseIndex].GetType()); }
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase))
+                        { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
                         IPhaseWithTarget rewindingPhase = phase as IPhaseWithTarget;
@@ -210,6 +210,8 @@ namespace Models.PMF.Phen
                         AccumulatedEmergedTT -= rewindingPhase.ProgressThroughPhase;
                         phase.ResetPhase();
                     }
+                    else
+                        phase.ResetPhase();
                 }
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
 
@@ -244,7 +246,7 @@ namespace Models.PMF.Phen
                 if (currentPhase.ProgressThroughPhase == 0)
                     stagesPassedToday.Add(currentPhase.Start);
             }
-            if (phases[currentPhaseIndex] is PhotoperiodPhase)
+            if ((phases[currentPhaseIndex] is PhotoperiodPhase) || (phases[currentPhaseIndex] is LeafDeathPhase))
                 stagesPassedToday.Add(phases[currentPhaseIndex].Start);
 
             StageWasReset?.Invoke(this, new EventArgs());
