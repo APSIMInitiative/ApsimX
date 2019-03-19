@@ -924,7 +924,8 @@ namespace UserInterface.Views
         private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
         {
             List<double> dataPointValues = new List<double>();
-
+            double x; // Used only as an out parameter, to maintain backward
+                      // compatibility with older versions VS/C#.
             enumerator.MoveNext();
 
             if (enumerator.Current.GetType() == typeof(DateTime))
@@ -941,7 +942,7 @@ namespace UserInterface.Views
                 }
                 while (enumerator.MoveNext());
             }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
