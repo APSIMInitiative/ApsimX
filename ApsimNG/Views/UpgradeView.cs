@@ -255,7 +255,10 @@ namespace UserInterface.Views
         {
             int selIndex = GetSelIndex();
             if (selIndex >= 0)
-                Process.Start(upgrades[selIndex].IssueURL);
+            {
+                Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                Process.Start(upgradeList[selIndex].IssueURL);
+            }
         }
 
         Gtk.MessageDialog waitDlg = null;
@@ -287,7 +290,8 @@ namespace UserInterface.Views
                         String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.Text))
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
-                    Upgrade upgrade = upgrades[selIndex];
+                    Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                    Upgrade upgrade = upgradeList[selIndex];
                     versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
