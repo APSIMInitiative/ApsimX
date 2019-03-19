@@ -35,7 +35,7 @@ namespace Models.CLEM
         [Link]
         Simulation Simulation = null;
         [Link]
-        IStorageReader DataStore = null;
+        IDataStore DataStore = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -153,7 +153,7 @@ namespace Models.CLEM
 
                 // find IStorageReader of simulation
                 IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
-                IStorageReader ds = DataStore;
+                IStorageReader ds = DataStore.Reader;
                 DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
                 // all all current errors and validation problems to error string.
                 foreach (DataRow dr in dataRows)
