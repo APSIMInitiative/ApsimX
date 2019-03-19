@@ -226,9 +226,7 @@
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
-    <Compile Include="Core\ModelNode.cs" />
     <Compile Include="Core\ModelTypes.cs" />
-    <Compile Include="Core\Property.cs" />
     <Compile Include="Core\Runners\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
     <Compile Include="Core\Runners\RunSimulation.cs" />

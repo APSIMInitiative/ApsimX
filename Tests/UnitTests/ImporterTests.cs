@@ -83,7 +83,7 @@
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            Weather w = sims.Children[0].Children[0] as Weather;
+            var w = sims.Children[0].Children[0] as Models.Weather;
             Assert.AreEqual(w.FileName, @"\Examples\MetFiles\Goond.met");
         }
 
@@ -111,7 +111,7 @@
         [Test]
         public void ImporterTests_SoilImports()
         {
-            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ImporterTests_SoilImports.xml");
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsSoilImports.xml");
 
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);

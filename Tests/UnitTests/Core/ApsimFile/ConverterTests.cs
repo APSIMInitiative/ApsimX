@@ -335,10 +335,10 @@
         }
 
         [Test]
-        public void ConverterTests_Version32()
+        public void Version32()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ConverterTests_Version32 before.xml");
-            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ConverterTests_Version32 after.xml");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion32 before.xml");
+            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion32 after.xml");
 
             var converter = Converter.DoConvert(xml, 33);
             Assert.IsTrue(converter.DidConvert);
