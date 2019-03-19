@@ -24,7 +24,7 @@ namespace UnitTests
         public void TestManagerWithError()
         {
             List<Exception> errors = null;
-            Simulations sims = sims = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("UnitTests.Resources.FaultyManager.apsimx"), out errors);
+            Simulations sims = sims = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("UnitTests.ManagerTestsFaultyManager.apsimx"), out errors);
             DataStore storage = Apsim.Find(sims, typeof(DataStore)) as DataStore;
             sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
             
