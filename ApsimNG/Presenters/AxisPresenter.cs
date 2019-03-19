@@ -53,6 +53,7 @@ namespace UserInterface.Presenters
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
             this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
+            this.view.IsDateAxis = axis.DateTimeAxis;
 
             // Tell the view to populate the axis.
             PopulateView();
