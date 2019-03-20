@@ -731,27 +731,7 @@ namespace Models.CLEM.Resources
         [Description("Proportion of SRW for zero Calving/lambing rate")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
-        ///// <summary>
-        ///// Conception rate coefficient of breeder PW
-        ///// </summary>
-        //[Category("Advanced", "Breeding")]
-        //[Description("Conception rate coefficient of breeder")]
-        //[Required]
-        //public double ConceptionRateCoefficent { get; set; }
-        ///// <summary>
-        ///// Conception rate intercept of breeder PW
-        ///// </summary>
-        //[Category("Advanced", "Breeding")]
-        //[Description("Conception rate intercept of breeder")]
-        //[Required, GreaterThanValue(0)]
-        //public double ConceptionRateIntercept { get; set; }
-        ///// <summary>
-        ///// Conception rate assymtote
-        ///// </summary>
-        //[Category("Advanced", "Breeding")]
-        //[Description("Conception rate assymtote")]
-        //[Required, GreaterThanValue(0)]
-        //public double ConceptionRateAsymptote { get; set; }
+
         /// <summary>
         /// Maximum number of matings per male per day
         /// </summary>

@@ -13,6 +13,10 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class Ruminant
     {
+        private RuminantFemale mother;
+
+
+
         /// <summary>
         /// Reference to the Breed Parameters.
         /// </summary>
@@ -33,7 +37,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public int ID { get; set; }
 
-        private RuminantFemale mother;
         /// <summary>
         /// Link to individual's mother
         /// </summary>
@@ -48,16 +51,14 @@ namespace Models.CLEM.Resources
                 mother = value;
                 if (mother != null)
                 {
-                    motherID = value.ID;
+                    MotherID = value.ID;
                 }
             }
         }
-
-        private int motherID;
         /// <summary>
         /// Link to individual's mother
         /// </summary>
-        public int MotherID { get { return motherID; }  }
+        public int MotherID { get; private set; }
 
         /// <summary>
         /// Gender
@@ -69,19 +70,17 @@ namespace Models.CLEM.Resources
         /// </summary>
         public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
 
-        private double age = 0;
         /// <summary>
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
-        public double Age { get { return age; } }
+        public double Age { get; private set; }
 
-        private double ageEnteredSimulation = 0;
         /// <summary>
         /// The age (months) this individual entered the simulation.
         /// </summary>
         /// <units>Months</units>
-        public double AgeEnteredSimulation { get { return ageEnteredSimulation; } }
+        public double AgeEnteredSimulation { get; private set; }
 
         /// <summary>
         /// Purchase age (Months)
@@ -460,7 +459,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void IncrementAge()
         {
-            age++;
+            Age++;
         }
 
         /// <summary>
@@ -468,8 +467,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
         {
-            this.age = setAge;
-            this.ageEnteredSimulation = setAge;
+            this.Age = setAge;
+            this.AgeEnteredSimulation = setAge;
             this.Gender = setGender;
             this.BreedParams = setParams;
 

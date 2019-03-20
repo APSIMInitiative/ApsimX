@@ -135,11 +135,8 @@ namespace Models.CLEM.Activities
 
                         Ruminant ruminant = ruminantBase as Ruminant;
                         ruminant.ID = 0;
-                        //ruminant.BreedParams = herdToUse;
                         ruminant.Breed = this.PredictedHerdBreed;
                         ruminant.HerdName = this.PredictedHerdName;
-                        //ruminant.Gender = purchasetype.Gender;
-                        //ruminant.Age = purchasetype.Age;
                         ruminant.PurchaseAge = purchasetype.Age;
                         ruminant.SaleFlag = HerdChangeReason.TradePurchase;
                         ruminant.Location = "";
