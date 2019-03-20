@@ -314,12 +314,13 @@
             eventbox.TooltipText = text;
             eventbox.ButtonPressEvent += on_eventbox1_button_press_event;
             eventbox.Add(headerBox);
-            eventbox.ShowAll();
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
             // Attach an icon to the context menu
             Widget iconLabel = LabelWithIcon(tabLabel.Text, null);
             notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, iconLabel);
-
+            // For reasons that I do not understand at all, with Release builds we must delay calling ShowAll until
+            // after the page has been added. This is not the case with Debug builds.
+            eventbox.ShowAll();
         }
 
         /// <summary>

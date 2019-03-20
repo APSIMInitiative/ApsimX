@@ -16,5 +16,5 @@ namespace Models.PMF.Interfaces
 
         /// <summary> Flag to test is Microclimate is setting PotentialEP value </summary>
         bool MicroClimatePresent {get; set;}
-    }
+    }  
 }
