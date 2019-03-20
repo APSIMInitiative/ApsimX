@@ -66,6 +66,12 @@
         {
             Connection = dbConnection;
             ReadExistingDatabase(dbConnection);
+            if (dbConnection is SQLite && !(dbConnection as SQLite).IsInMemory)
+            {
+                // For disk-based databases, these pragmas greatly improve performance
+                dbConnection.ExecuteQuery("PRAGMA journal_mode=WAL");
+                dbConnection.ExecuteQuery("PRAGMA synchronous=NORMAL");
+            }
         }
 
         /// <summary>The database connection to write to.</summary>
@@ -143,10 +149,6 @@
         {
             if (commandRunner != null)
             {
-                // Make sure all existing writing has completed.
-                while (commands.Count > 0 || !idle)
-                    Thread.Sleep(100);
-
                 // Make sure all existing writing has completed.
                 while (commands.Count > 0 || !idle)
                     Thread.Sleep(100);
@@ -590,6 +592,7 @@
 
             /// <summary>Units of column.</summary>
             public string Units { get; set; }
+
         }
     }
 }
