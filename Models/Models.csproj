@@ -249,6 +249,7 @@
     <Compile Include="Functions\SoilFunctions\CERESMineralisationTemperatureFactor.cs" />
     <Compile Include="Functions\SoilFunctions\CERESNitrificationModel.cs" />
     <Compile Include="Functions\StringComparisonFunction.cs" />
+    <Compile Include="Functions\SupplyFunctions\MaximumHourlyTrModel.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
