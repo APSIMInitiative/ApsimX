@@ -1,4 +1,6 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.Commands;
+
+namespace UserInterface.Presenters
 {
     using System;
     using System.Data;
@@ -57,12 +59,14 @@
                     this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
             }
+            this.view.FileName.Value = dataStore.FileName;
 
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             this.view.RowFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
+            this.view.FileNameChanged += OnFileNameChanged;
             PopulateGrid();
         }
 
@@ -74,6 +78,7 @@
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.RowFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            view.FileNameChanged -= OnFileNameChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
@@ -273,6 +278,19 @@
             }
 
             PopulateGrid();
+        }
+
+        /// <summary>
+        /// Invoked when the user modifies the contents of the filename textbox.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnFileNameChanged(object sender, EventArgs e)
+        {
+            ChangeProperty command = new ChangeProperty(dataStore, "CustomFileName", view.FileName.Value);
+            explorerPresenter.CommandHistory.Add(command);
+            dataStore.Close();
+            dataStore.Open();
         }
     }
 }
