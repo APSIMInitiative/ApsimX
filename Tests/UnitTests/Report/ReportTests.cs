@@ -99,6 +99,10 @@
             Assert.AreEqual(weeklyNumbers, predicted);
         }
 
+        /// <summary>
+        /// This test reproduces a bug where aggregation from 1-Jan to 31-Dec doesn't work properly;
+        /// values don't reset after 31-dec, they instead continue aggregating.
+        /// </summary>
         [Test]
         public void EnsureYearlyAggregationWorks()
         {
@@ -114,7 +118,7 @@
             int finalValFirstYear = int.Parse(data.AsEnumerable().Where(x => int.Parse(x["Year"].ToString()) == 2017).Select(x => x["SigmaDay"]).Last().ToString());
             int firstValSecondYear = int.Parse(data.AsEnumerable().Where(x => int.Parse(x["Year"].ToString()) == 2018).Select(x => x["SigmaDay"]).First().ToString());
             Console.WriteLine($"finalValFirstYear={finalValFirstYear}, firstValSecondYear={firstValSecondYear}");
-            Assert.That(finalValFirstYear > firstValSecondYear, $"Error: Report aggregation does not work from a dd-MMM date to another dd-MMM date. finalValFirstYear={finalValFirstYear}, firstValSecondYear={firstValSecondYear}");
+            Assert.That(finalValFirstYear > firstValSecondYear, $"Error: Report aggregation from 01-Jan to 31-Dec did not reset after the end date. Final value in first year: {finalValFirstYear}, first value in second year: {firstValSecondYear}");
         }
     }
 }
