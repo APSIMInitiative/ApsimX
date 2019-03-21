@@ -242,9 +242,9 @@ namespace Models.CLEM.Resources
 
             ResourceTransaction details = new ResourceTransaction();
             details.Gain = 1;
-            details.Activity = model.Name; // "Unknown";
-            details.ActivityType = model.GetType().Name; // "Unknown";
-            details.Reason = ind.SaleFlag.ToString(); // "Unknown";
+            details.Activity = model.Name; 
+            details.ActivityType = model.GetType().Name; 
+            details.Reason = ind.SaleFlag.ToString(); 
             details.ResourceType = this.Name;
             details.ExtraInformation = ind;
             LastTransaction = details;

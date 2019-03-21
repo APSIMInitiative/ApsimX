@@ -122,11 +122,8 @@ namespace Models.CLEM.Resources
 
                     Ruminant ruminant = ruminantBase as Ruminant;
                     ruminant.ID = ruminantHerd.NextUniqueID;
-                    //ruminant.BreedParams = parent;
                     ruminant.Breed = parent.Breed;
                     ruminant.HerdName = parent.Name;
-                    //ruminant.Gender = Gender;
-                    //ruminant.Age = Age;
                     ruminant.SaleFlag = HerdChangeReason.None;
                     if (Suckling)
                     {

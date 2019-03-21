@@ -579,7 +579,6 @@ namespace Models.CLEM.Activities
 
                     amountProvided += amount;
                     removeRequest.Required = amount;
-//                    removeRequest.ResourceType = lt;
                     if (removeFromResource)
                     {
                         lt.LastActivityRequestID = request.ActivityID;

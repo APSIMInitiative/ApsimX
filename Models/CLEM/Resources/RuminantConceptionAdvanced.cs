@@ -108,7 +108,6 @@ namespace Models.CLEM.Resources
                             // interpolate, not just average
                             double propOfYear = (female.Age - 12) / 12;
                             rate = rate12 + ((rate24 - rate12) * propOfYear);
-                            //Concep_rate = ((730 - Anim_concep(rumcat)) * temp1 + (Anim_concep(rumcat) - 365) * temp2) / 365 ' interpolate between 12 && 24 months
                         }
                         else
                         {
