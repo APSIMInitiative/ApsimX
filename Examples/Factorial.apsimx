@@ -22,7 +22,7 @@
       <Name>Base</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>WeatherFiles\Lincoln.met</FileName>
+        <FileName>WeatherFiles\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
