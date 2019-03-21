@@ -14,8 +14,7 @@ namespace Models.CLEM.Resources
     public class Ruminant
     {
         private RuminantFemale mother;
-
-
+        private double weight;
 
         /// <summary>
         /// Reference to the Breed Parameters.
@@ -95,7 +94,6 @@ namespace Models.CLEM.Resources
         public double AgeZeroCorrected
         {  get { return ((Age == 0) ? 0.1 : Age); } }
 
-        private double weight;
         /// <summary>
         /// Weight (kg)
         /// </summary>
@@ -109,7 +107,7 @@ namespace Models.CLEM.Resources
             set
             {
                 weight = value;
-                highWeight = Math.Max(highWeight, weight);
+                HighWeight = Math.Max(HighWeight, weight);
             }
         }
 
@@ -131,18 +129,11 @@ namespace Models.CLEM.Resources
         public double AdultEquivalent { get { return Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75); } }
         // Needs to include ind.Number*weight if ever added to this model
 
-        private double highWeight = 0;
         /// <summary>
         /// Highest previous weight
         /// </summary>
         /// <units>kg</units>
-        public double HighWeight
-        {
-            get
-            {
-                return highWeight;
-            }
-        }
+        public double HighWeight { get; private set; }
 
         /// <summary>
         /// The current weight as a proportion of High weight achieved
