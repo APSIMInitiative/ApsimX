@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.PMF.Organs;
-
-using Models.Soils;
+using System.Xml.Serialization;
 using System.Linq;
-using System.Threading.Tasks;
 using Models.PMF;
 using Models.PMF.Interfaces;
 
@@ -131,6 +127,22 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>Photosynthesis Pathway</summary>
         [Description("Photosynthesis pathway C3/C4")]
         public string Pathway { get; set; } = "C3";
+
+        //------------------------------------------------------------------------------------------------
+        /// <summary>The maximum hourly VPD without capping (kPa)</summary>
+        [XmlIgnore]
+        [Units("kPa")]
+        public double MaxHrVPD { get; set; } = 0;
+
+        /// <summary>The mean VPD during day time (kPa)</summary>
+        [XmlIgnore]
+        [Units("kPa")]
+        public double MeanDayVPD { get; set; } = 0;
+
+        /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
+        [XmlIgnore]
+        [Units("-")]
+        private double DmStressFactor { get; set; } = 0;
         //------------------------------------------------------------------------------------------------
 
         private double latR;
@@ -141,7 +153,7 @@ namespace Models.Functions.SupplyFunctions
         private List<double> hourlyRad;
         private List<double> hourlySVP;
         private List<double> hourlyVPD;
-        private List<double> hourlyRUE; 
+        private List<double> hourlyRUE;
         private List<double> hourlyPotTr;
         private List<double> hourlyPotTr_VPDLimited;
         private List<double> hourlyPotTr_Limited;
@@ -155,11 +167,9 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>Total daily assimilation in g/m2</summary>    
         private double dailyActDM;
 
-        /// <summary>Growth stress factor (actual biomass assimilate / potential biomass assimilate)</summary>
-        private double stressFactor;
-
         /// <summary>The ratio of TEC of gross assimilate to TEC of net assimilate</summary>
         private double TECGrossToNet;
+
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>
@@ -209,7 +219,7 @@ namespace Models.Functions.SupplyFunctions
                 }
                 CalcPotAssimilate();
                 CalcPotTr();
-                CalcVPDCappedTr();
+                CalcVPDLimitedTr();
                 CalcTrCappedTr();
                 CalcSoilLimitedTr();
                 CalcActAssimilate();
@@ -223,6 +233,9 @@ namespace Models.Functions.SupplyFunctions
                 Leaf.PotentialEP = 0;
                 Leaf.WaterDemand = 0;
                 dailyActDM = 0;
+                MeanDayVPD = 0;
+                MaxHrVPD = 0;
+                DmStressFactor = 0;
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -241,7 +254,7 @@ namespace Models.Functions.SupplyFunctions
             {
                 // A Model for Diurnal Variation in Soil and Air Temperature.
                 // William J. Parton and Jesse A. Logan : Agricultural Meteorology, 23 (1991) 205-216.
-                // Developed by Greg McLean and adapted by Behnam (Ben) Ababaei.
+                // Developed by Greg McLean and adapted/modified by Behnam (Ben) Ababaei.
 
                 double minLag = 1.0;        // 0.17;  // c, Greg=1.0
                 double maxLag = 1.5;        // 1.86;  // a, Greg=1.5
@@ -253,6 +266,10 @@ namespace Models.Functions.SupplyFunctions
                 double setHour = riseHour + DayL;                               // determine if the hour is during the day or night
                 double tTmin = riseHour - minLag;                               // time of daily min temperature
                 List<double> hrWeights = HourlyWeights(riseHour, setHour);
+
+                // To make sure maximum temperature is alwasy larger than minimum temperature.
+                double AddTemp = 0;
+                if (Weather.MaxT - Weather.MinT <= 0) AddTemp = Math.Max(Math.Abs(Weather.MaxT - Weather.MinT) - 1, 0) + 1;
 
                 for (int t = 1; t <= 24; t++)
                 {
@@ -267,7 +284,7 @@ namespace Models.Functions.SupplyFunctions
                         {
                             double m = 0; // the number of hours after the minimum temperature occurs
                             m = hr - tTmin;
-                            tempr = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
+                            tempr = (Weather.MaxT - Weather.MinT + AddTemp) * Math.Sin((Math.PI * m) / (DayL + 2 * maxLag)) + Weather.MinT;
                         }
                         else  // night
                         {
@@ -275,14 +292,14 @@ namespace Models.Functions.SupplyFunctions
                             if (hr > setHour) n = hr - setHour;
                             if (hr < tTmin) n = (24.0 - setHour) + hr;
                             double ddy = DayL - minLag;         // time of setHour after minimum temperature occurs
-                            double tsn = (Weather.MaxT - Weather.MinT) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
+                            double tsn = (Weather.MaxT - Weather.MinT + AddTemp) * Math.Sin((Math.PI * ddy) / (DayL + 2 * maxLag)) + Weather.MinT;
                             tempr = Weather.MinT + (tsn - Weather.MinT) * Math.Exp(-nightCoef * n / nightL);
                         }
                         hourlyTemp[t - 1] = tempr;
                     }
                 }
 
-                double MeanTemp = hourlyTemp.Average();
+                double MeanDayTemp = hourlyTemp.Average();
                 // for (int i = 0; i < 24; i++) hourlyTemp[i] = hourlyTemp[i] / MeanTemp * Weather.MeanT;
             }
         }
@@ -327,7 +344,7 @@ namespace Models.Functions.SupplyFunctions
                 double SinHeight2 = Math.Max(0.0, Sin + Cos * Math.Cos(2.0 * PI * (Hour2 - 12.0) / 24.0));
                 double SinHeight = 0.5 * (SinHeight1 + SinHeight2);
                 hourlyRad[t - 1] = Math.Max(0, GlobalRadiation * SinHeight * (1.0 + 0.4 * SinHeight) / DailySinE);
-                hourlyRad[t - 1] *= hrWeights[t-1];
+                hourlyRad[t - 1] *= hrWeights[t - 1];
             }
 
             // scale to today's radiation
@@ -355,6 +372,8 @@ namespace Models.Functions.SupplyFunctions
                 hourlyVPD.Add(vpd);
                 if (vpd > 0 && minVPD == 0) minVPD = vpd;
             }
+            MeanDayVPD = hourlyVPD.Where(v => v > 0).Average();
+            MaxHrVPD = hourlyVPD.Max();
         }
         //------------------------------------------------------------------------------------------------
 
@@ -413,7 +432,7 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private void CalcVPDCappedTr()
+        private void CalcVPDLimitedTr()
         {
             // Calculates hourlyVPDCappedTr as the product of hourlyRUE, capped hourlyVPD and transpEffCoef
 
@@ -444,7 +463,6 @@ namespace Models.Functions.SupplyFunctions
             {
                 hourlyPotTr_VPDLimited = new List<double>(hourlyPotTr);
             }
-
         }
         //------------------------------------------------------------------------------------------------
 
@@ -466,13 +484,14 @@ namespace Models.Functions.SupplyFunctions
             double maxHourlyT = hourlyActTr.Max();
             double minPercError = 0.5;
             double sumTr = hourlyActTr.Sum();
+            double dailyActTr = hourlyActTr.Sum();
 
             // It's assumed that total extractable water is evenly distributed over the day time.
             // Maximum hourly transpiration cannot exceed the maximum hourly supply.
             // double maxUptake = rootWaterSupp / DayLength();
             // for (int i = 0; i < 24; i++) hourlyActTr[i] = Math.Min(maxUptake, hourlyActTr[i]);
 
-            if (hourlyActTr.Sum() - rootWaterSupp > 1e-5)
+            if (dailyActTr - rootWaterSupp > 1e-5)
             {
                 if (string.Equals(SWType, "daily"))
                 {
@@ -581,7 +600,7 @@ namespace Models.Functions.SupplyFunctions
                 }
             }
 
-            stressFactor = MathUtilities.Round(MathUtilities.Divide(dailyActDM, dailyPotDM, 0), 3);
+            DmStressFactor = MathUtilities.Round(MathUtilities.Divide(dailyActDM, dailyPotDM, 0), 3);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -677,7 +696,7 @@ namespace Models.Functions.SupplyFunctions
                     if (MaximumTempWeight > 1)
                         throw new Exception("MaximumTempWeight fraction should be between 0 and 1, or negative to be ignored");
 
-                    if (MaximumTempWeight>0)
+                    if (MaximumTempWeight > 0)
                         Temp = MaximumTempWeight * Weather.MaxT + (1 - MaximumTempWeight) * Weather.MinT;
                     else
                         Temp = hourlyTemp[t];
@@ -689,7 +708,9 @@ namespace Models.Functions.SupplyFunctions
                     //Canopy gross photosynthesis
                     GrossPs = HourlyGrossPhotosythesis(PgMax, LUE, LAI, Latitude, Day, SinHeight, PARDIR, PARDIF);
                     GrossPs *= hrWeights[t];
-                } else
+
+                }
+                else
                     GrossPs = 0;
 
                 HourlyGrossB.Add(GrossPs * 30 / 44 * 0.1);
@@ -894,7 +915,7 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private double WangEngelTempFunction(double Temp, double MinTemp=0, double OptTemp=27.5, double MaxTemp=40, double RefTemp=27.5)
+        private double WangEngelTempFunction(double Temp, double MinTemp = 0, double OptTemp = 27.5, double MaxTemp = 40, double RefTemp = 27.5)
         {
             double RelEff = 0.0;
             double RelEffRefTemp = 1.0;
@@ -912,12 +933,6 @@ namespace Models.Functions.SupplyFunctions
                 RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
             return RelEff / RelEffRefTemp;
-        }
-        //------------------------------------------------------------------------------------------------
-
-        private double CalcSolarDeclination(int doy)
-        {
-            return (23.45 * (Math.PI / 180)) * Math.Sin(2 * Math.PI * (284.0 + doy) / 365.0);
         }
         //------------------------------------------------------------------------------------------------
 
@@ -940,24 +955,6 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private double CalcSolarRadn(double ratio, double dayLR, double latR, double solarDec)
-        {
-            return (24.0 * 3600.0 * 1360.0 * (dayLR * Math.Sin(latR) * Math.Sin(solarDec) +
-                     Math.Cos(latR) * Math.Cos(solarDec) * Math.Sin(dayLR)) / (Math.PI * 1000000.0)) * ratio;
-        }
-        //------------------------------------------------------------------------------------------------
-
-        private double HourluGlobalRadiation(double oTime, double latitude, double solarDec, double dayLH, double solar)
-        {
-            double Alpha = Math.Asin(Math.Sin(latitude) * Math.Sin(solarDec) +
-                  Math.Cos(latitude) * Math.Cos(solarDec) * Math.Cos((Math.PI / 12.0) * dayLH * (oTime - 0.5)));
-            double ITot = solar * (1.0 + Math.Sin(2.0 * Math.PI * oTime + 1.5 * Math.PI)) / (dayLH * 60.0 * 60.0);
-            double IDiff = 0.17 * 1360.0 * Math.Sin(Alpha) / 1000000.0;
-            if (IDiff > ITot) IDiff = ITot;
-            return ITot - IDiff;
-        }
-        //------------------------------------------------------------------------------------------------  
-
         private List<double> HourlyWeights(double riseHour, double setHour)
         {
             List<double> weights = new List<double>(24);
@@ -972,5 +969,29 @@ namespace Models.Functions.SupplyFunctions
             return weights;
         }
         //------------------------------------------------------------------------------------------------
+
+        //private double CalcSolarDeclination(int doy)
+        //{
+        //    return (23.45 * (Math.PI / 180)) * Math.Sin(2 * Math.PI * (284.0 + doy) / 365.0);
+        //}
+        //------------------------------------------------------------------------------------------------
+
+        //private double CalcSolarRadn(double ratio, double dayLR, double latR, double solarDec)
+        //{
+        //    return (24.0 * 3600.0 * 1360.0 * (dayLR * Math.Sin(latR) * Math.Sin(solarDec) +
+        //             Math.Cos(latR) * Math.Cos(solarDec) * Math.Sin(dayLR)) / (Math.PI * 1000000.0)) * ratio;
+        //}
+        //------------------------------------------------------------------------------------------------
+
+        //private double HourluGlobalRadiation(double oTime, double latitude, double solarDec, double dayLH, double solar)
+        //{
+        //    double Alpha = Math.Asin(Math.Sin(latitude) * Math.Sin(solarDec) +
+        //          Math.Cos(latitude) * Math.Cos(solarDec) * Math.Cos((Math.PI / 12.0) * dayLH * (oTime - 0.5)));
+        //    double ITot = solar * (1.0 + Math.Sin(2.0 * Math.PI * oTime + 1.5 * Math.PI)) / (dayLH * 60.0 * 60.0);
+        //    double IDiff = 0.17 * 1360.0 * Math.Sin(Alpha) / 1000000.0;
+        //    if (IDiff > ITot) IDiff = ITot;
+        //    return ITot - IDiff;
+        //}
+        //------------------------------------------------------------------------------------------------  
     }
 }
