@@ -77,7 +77,7 @@
         {
             Clock clock = Apsim.Find(sims, typeof(Clock)) as Clock;
             clock.StartDate = new DateTime(2017, 1, 1);
-            clock.EndDate = new DateTime(2017, 10, 1);
+            clock.EndDate = new DateTime(2017, 1, 10);
 
             // To test aggregation to [Clock].Today, we generate the first 10
             // triangular numbers by summing [Clock].Today over the first 10 days of the year.
