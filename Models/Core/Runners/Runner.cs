@@ -128,12 +128,12 @@
                     currentSimulation = null;
                     if (modelsToRun.Count > 0)
                     {
-                        currentSimulation = modelsToRun[0].NextSimulationToRun(false);
+                        currentSimulation = modelsToRun[0].NextSimulationToRun();
                         while (currentSimulation == null && modelsToRun.Count > 0)
                         {
                             modelsToRun.RemoveAt(0);
                             if (modelsToRun.Count > 0)
-                                currentSimulation = modelsToRun[0].NextSimulationToRun(false);
+                                currentSimulation = modelsToRun[0].NextSimulationToRun();
                         }
                     }
                     if (currentSimulation != null)

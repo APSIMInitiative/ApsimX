@@ -35,8 +35,7 @@ namespace UnitTests.Core.Runner
             Experiment experiment = new Experiment();
             Factors factors = new Factors();
             Factor factor1 = new Factor();
-            factor1.Specifications = new List<string>();
-            factor1.Specifications.Add("[Clock].StartDate = 2003-11-01, 2003-12-20");
+            factor1.Specification = "[Clock].StartDate = 2003-11-01, 2003-12-20";
             experiment.Children.Add(simulation);
             factors.Children.Add(factor1);
             experiment.Children.Add(factors);

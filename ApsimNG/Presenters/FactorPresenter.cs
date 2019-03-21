@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
             this.factorView = view as IEditorView;
             this.presenter = explorerPresenter;
             intellisense = new IntellisensePresenter(factorView as ViewBase);
-            this.factorView.Lines = this.factor.Specifications?.ToArray() ?? new string[0];
+            this.factorView.Lines = new string[] { this.factor.Specification };
 
             this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
@@ -158,7 +158,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            factorView.Lines = factor.Specifications.ToArray();
+            factorView.Lines = new string[] { factor.Specification };
         }
 
         /// <summary>

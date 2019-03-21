@@ -159,7 +159,7 @@ namespace Models.Core
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool doFullFactorial = true)
+        public Simulation NextSimulationToRun()
         {
             if (Parent is ISimulationGenerator || hasRun)
                 return null;

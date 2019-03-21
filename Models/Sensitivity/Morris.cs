@@ -30,7 +30,7 @@
     public class Morris : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
         /// <summary>A list of factors that we are to run</summary>
-        private List<List<FactorValue>> allCombinations = new List<List<FactorValue>>();
+        private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
         /// <summary>A number of the currently running sim</summary>
         private int simulationNumber;
@@ -84,7 +84,7 @@
         public Morris()
         {
             Parameters = new List<Parameter>();
-            allCombinations = new List<List<FactorValue>>();
+            allCombinations = new List<List<CompositeFactor>>();
             simulationNames = new List<string>();
         }
 
@@ -178,7 +178,7 @@
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool fullFactorial = true)
+        public Simulation NextSimulationToRun()
         {
             hasRun = true;
             if (allCombinations.Count == 0)
@@ -196,8 +196,8 @@
             // Make substitutions.
             parentSimulations.MakeSubsAndLoad(newSimulation);
 
-            foreach (FactorValue value in combination)
-                value.ApplyToSimulation(newSimulation);
+            foreach (var value in combination)
+                value.Replacement.Replace(newSimulation);
 
             PushFactorsToReportModels(newSimulation, combination);
 
@@ -208,7 +208,7 @@
         /// <summary>Find all report models and give them the factor values.</summary>
         /// <param name="factorValues">The factor values to send to each report model.</param>
         /// <param name="simulation">The simulation to search for report models.</param>
-        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
+        private void PushFactorsToReportModels(Simulation simulation, List<CompositeFactor> factorValues)
         {
             List<string> names = new List<string>();
             List<string> values = new List<string>();
@@ -220,7 +220,7 @@
             names.Add("Path");
             values.Add(path.ToString());
 
-            foreach (FactorValue factor in factorValues)
+            foreach (var factor in factorValues)
             {
                 names.Add(factor.Name);
                 values.Add(factor.Values[0].ToString());
@@ -306,11 +306,11 @@
                 simulationNames.Clear();
                 foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
-                    List<FactorValue> factors = new List<FactorValue>();
+                    var factors = new List<CompositeFactor>();
                     foreach (Parameter param in Parameters)
                     {
                         object value = Convert.ToDouble(parameterRow[param.Name]);
-                        FactorValue f = new FactorValue(null, param.Name, param.Path, value);
+                        CompositeFactor f = new CompositeFactor(param.Name, param.Path, value);
                         factors.Add(f);
                     }
 

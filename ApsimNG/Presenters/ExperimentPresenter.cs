@@ -76,7 +76,7 @@
             view.SetMaxSims += OnSetMaxNumSims;
 
             maxSimsToDisplay = DefaultMaxSims;
-            List<List<FactorValue>> allCombinations = model.AllCombinations();
+            var allCombinations = model.AllCombinations;
             if (allCombinations == null || !allCombinations.Any())
                 throw new Exception(string.Format("Unable to generate a list of factors for experiment {0}.", model.Name));
 
@@ -192,7 +192,7 @@
                     else if (n < 0)
                         throw new Exception("Unable to display a negative number of simulations.");
                     maxSimsToDisplay = n;
-                    simulations = GetTableData(model.AllCombinations());
+                    simulations = GetTableData(model.AllCombinations);
                     UpdateView();
                 }
                 else
@@ -212,7 +212,7 @@
             if (maxSimsToDisplay < 0)
                 maxSimsToDisplay = DefaultMaxSims;
             view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
-            view.NumSims = model.AllCombinations().Count.ToString();
+            view.NumSims = model.AllCombinations.Count.ToString();
         }
 
         /// <summary>
@@ -259,7 +259,7 @@
         /// </summary>
         /// <param name="factors"></param>
         /// <returns></returns>
-        private string GetName(List<FactorValue> factors)
+        private string GetName(List<CompositeFactor> factors)
         {
             return factors.Select(f => f.Name).Aggregate((a, b) => a + b);
         }
@@ -267,19 +267,16 @@
         /// <summary>
         /// Generates a list of column headers to be displayed.
         /// </summary>
-        /// <param name="simulation">A single simulation's factors.</param>
+        /// <param name="combination">A single simulation's factors.</param>
         /// <returns>List containing the column header names.</returns>
-        private List<string> GetHeaderNames(List<FactorValue> simulation)
+        private List<string> GetHeaderNames(List<CompositeFactor> combination)
         {
             // First column will always be simulation name.
             List<string> headers = new List<string> { "Simulation Name" };
 
             // The next columns will contain the factor names.
-            foreach (Factor factor in simulation.Select(x => x.Factor))
-            {
-                string name = factor.Parent is Factors ? factor.Name : factor.Parent.Name;
-                headers.Add(name);
-            }
+            foreach (var factor in combination)
+                headers.Add(factor.Name);
 
             // The final column shows whether the specific simulation is enabled.
             headers.Add("Enabled");
@@ -292,13 +289,13 @@
         /// </summary>
         /// <param name="allSims">List of 'simulations', where each simulation is a list of factor values. Typically, this.model.AllCombinations() is passed in here.</param>
         /// <returns>List of tuples, where each tuple contains the name of the simulations, the factor levels/values, and a boolean indicating whether it should be run or not.</returns>
-        private List<Tuple<string, List<string>, bool>> GetTableData(List<List<FactorValue>> allSims, bool getAllData = false)
+        private List<Tuple<string, List<string>, bool>> GetTableData(List<List<CompositeFactor>> allSims, bool getAllData = false)
         {
             try
             {
                 List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
                 int i = 0;
-                foreach (List<FactorValue> factors in allSims)
+                foreach (var factors in allSims)
                 {
                     if (!getAllData && i > maxSimsToDisplay)
                         break;
@@ -326,13 +323,13 @@
         /// This function is currently unused, but may be useful in the future.
         /// </summary>
         /// <returns></returns>
-        private List<List<FactorValue>> GetEnabledSimulations()
+        private List<List<CompositeFactor>> GetEnabledSimulations()
         {
             // Names of the disabled simulations.
             List<string> disabledSimNames = GetDisabledSimNames();
 
             // To generate this list, a full factorial experiment is generated, and the results filtered based on the name of the simulation.
-            return model.AllCombinations().Where(x => (!disabledSimNames.Contains(GetName(x)))).ToList();
+            return model.AllCombinations.Where(x => (!disabledSimNames.Contains(GetName(x)))).ToList();
         }
 
         /// <summary>
@@ -376,7 +373,7 @@
                 data.AppendLine(currentLine);
 
                 // The rest of the file contains the factor information.
-                foreach (Tuple<string, List<string>, bool> sim in GetTableData(model.AllCombinations(), true))
+                foreach (Tuple<string, List<string>, bool> sim in GetTableData(model.AllCombinations, true))
                 {
                     // The first item on each line is the simulation name.
                     currentLine = sim.Item1 + ",";

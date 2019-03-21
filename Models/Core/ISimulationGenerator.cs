@@ -7,7 +7,7 @@
     public interface ISimulationGenerator
     {
         /// <summary>Gets the next simulation to run</summary>
-        Simulation NextSimulationToRun(bool fullFactorial = true);
+        Simulation NextSimulationToRun();
 
         /// <summary>Gets a list of simulation names</summary>
         IEnumerable<string> GetSimulationNames(bool fullFactorial = true);

@@ -25,9 +25,11 @@
         [Link]
         IDataStore storage = null;
 
-        private List<List<FactorValue>> allCombinations;
         private Stream serialisedBase;
         private Simulations parentSimulations;
+
+        /// <summary>A list of all fctorial combinations.</summary>
+        public List<List<CompositeFactor>> AllCombinations { get; private set; }
 
         /// <summary>
         /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.
@@ -42,19 +44,35 @@
         }
 
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool fullFactorial = true)
+        public Simulation NextSimulationToRun()
         {
-            if (serialisedBase == null)
-                Initialise(fullFactorial);
+		 //   // NEW BIT
+			//// If index is out of bounds then return null to indicate we don't 
+   //         // have any more simulations to return.
+   //         if (allCombinations == null || simulationIndex >= allCombinations.Count)
+   //             return null;
 
-            if (allCombinations == null || allCombinations.Count == 0)
+   //         // Create a simulation.
+   //         var sim = new RunnableSimulation(BaseSimulation, GetName(allCombinations[simulationIndex]), true);
+
+   //         // Add an experiment descriptor.
+   //         sim.Descriptors.Add(new Tuple<string, string>("Experiment", Name));
+
+   //         // Apply factor overrides for this combination / simulation.
+   //         allCombinations[simulationIndex].ForEach(c => c.ApplyToSimulation(sim));
+   //         return sim;
+		
+		
+		
+            if (serialisedBase == null)
+                Initialise();
+
+            if (AllCombinations == null || AllCombinations.Count == 0)
                 return null;
 
-            var combination = allCombinations[0];
-            allCombinations.RemoveAt(0);
-            string newSimulationName = Name;
-            foreach (FactorValue value in combination)
-                newSimulationName += value.Name;
+            var combination = AllCombinations[0];
+            AllCombinations.RemoveAt(0);
+            string newSimulationName = GetName(combination);
 
             Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
             newSimulation.Name = newSimulationName;
@@ -65,8 +83,7 @@
             // Make substitutions and issue Loaded event
             parentSimulations.MakeSubsAndLoad(newSimulation);
 
-            foreach (FactorValue value in combination)
-                value.ApplyToSimulation(newSimulation);
+            combination.ForEach(c => c.Replacement.Replace(newSimulation));
 
             PushFactorsToReportModels(newSimulation, combination);
             StoreFactorsInDataStore(newSimulation, combination);
@@ -80,8 +97,8 @@
         /// <returns>Empty string if successful, error message if it fails.</returns>
         public void GenerateApsimXFile(string path)
         {
-            if (allCombinations == null || allCombinations.Count < 1)
-                allCombinations = EnabledCombinations();
+            if (AllCombinations == null || AllCombinations.Count < 1)
+                AllCombinations = EnabledCombinations();
             Simulation sim = NextSimulationToRun();
             while (sim != null)
             {
@@ -96,18 +113,10 @@
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
-            List<string> names = new List<string>();
-            List<List<FactorValue>> allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
-            foreach (List<FactorValue> combination in allCombinations)
-            {
-                string newSimulationName = Name;
-
-                foreach (FactorValue value in combination)
-                    newSimulationName += value.Name;
-
-                names.Add(newSimulationName);
-            }
-            return names;
+            var simulationNames = new List<string>();
+            foreach (var combination in AllCombinations)
+                simulationNames.Add(GetName(combination));
+            return simulationNames;
         }
 
         /// <summary>Gets a list of factors</summary>
@@ -116,24 +125,17 @@
             List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
 
             List<string> simulationNames = new List<string>();
-            foreach (List<FactorValue> combination in AllCombinations())
+            foreach (var combination in AllCombinations)
             {
                 // Work out a simulation name for this combination
-                string simulationName = Name;
-                foreach (FactorValue value in combination)
-                    simulationName += value.Name;
+                string simulationName = GetName(combination);
+
                 SimulationGeneratorFactors simulationFactors = new SimulationGeneratorFactors("SimulationName", simulationName);
                 factors.Add(simulationFactors);
                 simulationFactors.AddFactor("Experiment", Name);
 
-                foreach (FactorValue value in combination)
-                {
-                    string factorName = value.Factor.Name;
-                    if (value.Factor.Parent is Factor)
-                        factorName = value.Factor.Parent.Name;
-                    string factorValue = value.Name.Replace(factorName, "");
-                    simulationFactors.AddFactor(factorName, factorValue);
-                }
+                foreach (var value in combination)
+                    simulationFactors.AddFactor(value.Descriptor.Item1, value.Descriptor.Item2);
             }
             return factors;
         }
@@ -141,23 +143,23 @@
         /// <summary>
         /// Initialise the experiment ready for creating simulations.
         /// </summary>
-        private void Initialise(bool fullFactorial = false)
+        private void Initialise()
         {            
             parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            allCombinations = fullFactorial ? AllCombinations() : EnabledCombinations();
+            CalculateAllCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
             serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
         }
 
         /// <summary>Find all report models and give them the factor values.</summary>
-        /// <param name="factorValues">The factor values to send to each report model.</param>
+        /// <param name="combination">The factor values to send to each report model.</param>
         /// <param name="simulation">The simulation to search for report models.</param>
-        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
+        private void PushFactorsToReportModels(Simulation simulation, List<CompositeFactor> combination)
         {
             List<string> names = new List<string>();
             List<string> values = new List<string>();
 
-            GetFactorNamesAndValues(factorValues, names, values);
+            GetFactorNamesAndValues(combination, names, values);
 
             foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
             {
@@ -167,32 +169,22 @@
         }
 
         /// <summary>Get a list of factor names and values.</summary>
-        /// <param name="factorValues">The factor value instances</param>
+        /// <param name="combination">The factor value instances</param>
         /// <param name="names">The return list of factor names</param>
         /// <param name="values">The return list of factor values</param>
-        public static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
+        public static void GetFactorNamesAndValues(List<CompositeFactor> combination, List<string> names, List<string> values)
         {
-            foreach (FactorValue factorValue in factorValues)
+            foreach (var factorValue in combination)
             {
-                Factor topLevelFactor = factorValue.Factor;
-                if (topLevelFactor.Parent is Factor)
-                    topLevelFactor = topLevelFactor.Parent as Factor;
-                string name = topLevelFactor.Name;
-                string value = factorValue.Name.Replace(topLevelFactor.Name, "");
-                if (value == string.Empty)
-                {
-                    name = "Factors";
-                    value = factorValue.Name;
-                }
-                names.Add(name);
-                values.Add(value);
+                names.Add(factorValue.Descriptor.Item1);
+                values.Add(factorValue.Descriptor.Item2);
             }
         }
 
         /// <summary>Find all report models and give them the factor values.</summary>
         /// <param name="factorValues">The factor values to send to each report model.</param>
         /// <param name="simulation">The simulation to search for report models.</param>
-        private void StoreFactorsInDataStore(Simulation simulation, List<FactorValue> factorValues)
+        private void StoreFactorsInDataStore(Simulation simulation, List<CompositeFactor> factorValues)
         {
             if (storage != null)
             {
@@ -243,15 +235,12 @@
         /// </summary>
         public Simulation CreateSpecificSimulation(string name)
         {
-            List<List<FactorValue>> allCombinations = AllCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
             Simulations parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
-            foreach (List<FactorValue> combination in allCombinations)
+            foreach (var combination in AllCombinations)
             {
-                string newSimulationName = Name;
-                foreach (FactorValue value in combination)
-                    newSimulationName += value.Name;
+                string newSimulationName = GetName(combination);
 
                 if (newSimulationName == name)
                 {
@@ -264,8 +253,8 @@
                     // Make substitutions
                     parentSimulations.MakeSubsAndLoad(newSimulation);
 
-                    foreach (FactorValue value in combination)
-                        value.ApplyToSimulation(newSimulation);
+                    foreach (var value in combination)
+                        value.Replacement.Replace(newSimulation);
 
                     PushFactorsToReportModels(newSimulation, combination);
 
@@ -279,42 +268,25 @@
         /// <summary>
         /// Return a list of list of factorvalue objects for all permutations.
         /// </summary>
-        public List<List<FactorValue>> AllCombinations()
+        public void CalculateAllCombinations()
         {
-            Factors Factors = Apsim.Child(this, typeof(Factors)) as Factors;
+           Factors Factors = Apsim.Child(this, typeof(Factors)) as Factors;
 
             // Create a list of list of factorValues so that we can do permutations of them.
-            List<List<FactorValue>> allValues = new List<List<FactorValue>>();
+            List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
             if (Factors != null)
             {
-                bool doFullFactorial = true;
                 foreach (Factor factor in Factors.factors)
                 {
                     if (factor.Enabled)
-                    {
-                        List<FactorValue> factorValues = factor.CreateValues();
-
-                        // Iff any of the factors modify the same model (e.g. have a duplicate path), then we do not want to do a full factorial.
-                        // This code should check if there are any such duplicates by checking each path in each factor value in the list of factor
-                        // values for the current factor against each path in each list of factor values in the list of all factors which we have
-                        // already added to the global list of list of factor values.
-                        foreach (FactorValue currentFactorValue in factorValues)
-                            foreach (string currentFactorPath in currentFactorValue.Paths)
-                                foreach (List<FactorValue> allFactorValues in allValues)
-                                    foreach (FactorValue globalValue in allFactorValues)
-                                        foreach (string globalPath in globalValue.Paths)
-                                            if (string.Equals(globalPath, currentFactorPath, StringComparison.CurrentCulture))
-                                                doFullFactorial = false;
-
-                        allValues.Add(factorValues);
-                    }
+                        allValues.Add(factor.GetCompositeFactors());
                 }
-                if (doFullFactorial)
-                    return MathUtilities.AllCombinationsOf<FactorValue>(allValues.ToArray());
-                else
-                    return allValues;
+                AllCombinations =  MathUtilities.AllCombinationsOf<CompositeFactor>(allValues.ToArray());
+
+                // Remove disabled simulations.
+                if (DisabledSimNames != null)
+                    AllCombinations.RemoveAll(comb => DisabledSimNames.Contains(GetName(comb)));
             }
-            return null;
         }
 
         /// <summary>
@@ -322,13 +294,13 @@
         /// If this list is empty, this function will return a full factorial list of simulations.
         /// </summary>
         /// <returns></returns>
-        public List<List<FactorValue>> EnabledCombinations()
+        public List<List<CompositeFactor>> EnabledCombinations()
         {
             if (DisabledSimNames == null || DisabledSimNames.Count < 1)
-                return AllCombinations();
+                return AllCombinations;
 
             // easy but inefficient method (for testing purposes)
-            return AllCombinations().Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
+            return AllCombinations.Where(x => (DisabledSimNames.IndexOf(GetName(x)) < 0)).ToList();
         }
 
         /// <summary>
@@ -336,14 +308,11 @@
         /// </summary>
         /// <param name="factors"></param>
         /// <returns></returns>
-        private string GetName(List<FactorValue> factors)
+        private string GetName(List<CompositeFactor> factors)
         {
-            string str = Name;
-            foreach (FactorValue factor in factors)
-            {
-                str += factor.Name;
-            }
-            return str;
+            string newName = Name;
+            factors.ForEach(factor => newName += factor.Parent.Name + factor.Name);
+            return newName;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

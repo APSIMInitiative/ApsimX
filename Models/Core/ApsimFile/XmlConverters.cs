@@ -893,6 +893,11 @@ namespace Models.Core.ApsimFile
             public bool FactorParentIsFactor { get; set; }
         }
 
+        private class PathValuesPair
+        {
+            public string path;
+            public object value;
+        }
         private static List<FValue> CreateValues(XmlNode factorNode)
         {
             List<FValue> factorValues = new List<FValue>();

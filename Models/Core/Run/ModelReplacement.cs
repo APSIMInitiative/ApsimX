@@ -1,0 +1,59 @@
+﻿namespace Models.Core.Run
+{
+    using System;
+
+    /// <summary>
+    /// This class encapsulates an instruction to replace a model.
+    /// </summary>
+    public class ModelReplacement : IReplacement
+    {
+        /// <summary>
+        /// Model path to use to find the model to replace. If null, then
+        /// multiple replacements are made using the model name for matching.
+        /// </summary>
+        private string path;
+
+        /// <summary>The value to Model path to use to find the model to replace.</summary>
+        private IModel replacement;
+
+        /// <summary>Constructor</summary>
+        /// <param name="pathOfModel">Model path to use to find the model to replace. If null, then multiple replacements are made using the model name for matching.</param>
+        /// <param name="modelReplacement">The value to Model path to use to find the model to replace.</param>
+        public ModelReplacement(string pathOfModel, IModel modelReplacement)
+        {
+            path = pathOfModel;
+            replacement = modelReplacement;
+        }
+
+        /// <summary>Perform the actual replacement.</summary>
+        /// <param name="simulation">The simulation to perform the replacements on.</param>
+        public void Replace(IModel simulation)
+        {
+            if (path == null)
+            {
+                foreach (IModel match in Apsim.ChildrenRecursively(simulation))
+                    if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                        ReplaceModel(match);
+            }
+            else
+            {
+                IModel match = Apsim.Get(simulation, path) as IModel;
+                if (match == null)
+                    throw new Exception("Cannot find a model on path: " + path);
+                ReplaceModel(match);
+            }
+        }
+
+        /// <summary>Perform the actual replacement.</summary>
+        private void ReplaceModel(IModel match)
+        {
+            IModel newModel = Apsim.Clone(replacement);
+            int index = match.Parent.Children.IndexOf(match as Model);
+            match.Parent.Children.Insert(index, newModel as Model);
+            newModel.Parent = match.Parent;
+            match.Parent.Children.Remove(match as Model);
+            newModel.OnCreated();
+        }
+    }
+
+}
