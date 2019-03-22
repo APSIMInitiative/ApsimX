@@ -112,10 +112,10 @@
                 if (newView != null && this.currentLowerPresenter != null)
                 {
                     this.View.AddLowerView(newView);
-                    this.currentLowerPresenter.Attach(model, newView, ExplorerPresenter);
+
                     // Resolve links in presenter.
-                    // Not sure if this is needed AL
-                    // ApsimXFile.Links.Resolve(currentLowerPresenter);
+                    this.ExplorerPresenter.ApsimXFile.Links.Resolve(currentLowerPresenter);
+                    this.currentLowerPresenter.Attach(model, newView, ExplorerPresenter);
                 }
             }
             catch (Exception err)
