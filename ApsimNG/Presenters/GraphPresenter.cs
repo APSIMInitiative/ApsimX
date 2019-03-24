@@ -87,6 +87,8 @@ namespace UserInterface.Presenters
         public void DrawGraph()
         {
             graphView.Clear();
+            if (storage == null)
+                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
             if (graph != null && graph.Series != null)
             {
                 // Get a list of series definitions.
