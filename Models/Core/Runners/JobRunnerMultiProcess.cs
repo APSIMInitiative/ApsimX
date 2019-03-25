@@ -62,10 +62,12 @@ namespace Models.Core.Runners
             // Determine number of threads to use
             if (numberOfProcessors == -1)
             {
+                int number;
                 string numOfProcessorsString = Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS");
-                if (numOfProcessorsString != null)
-                    numberOfProcessors = Convert.ToInt32(numOfProcessorsString);
-                numberOfProcessors = System.Math.Max(numberOfProcessors, 1);
+                if (numOfProcessorsString != null && Int32.TryParse(numOfProcessorsString, out number))
+                    numberOfProcessors = System.Math.Max(number, 1);
+                else
+                    numberOfProcessors = System.Math.Max(Environment.ProcessorCount - 1, 1);
             }
 
             cancelToken = new CancellationTokenSource();

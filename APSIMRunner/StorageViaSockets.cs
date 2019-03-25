@@ -120,6 +120,16 @@
         {
             throw new NotImplementedException();
         }
+
+        public void Open()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

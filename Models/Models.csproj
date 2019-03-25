@@ -145,6 +145,7 @@
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Reporting\PivotTable.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Core\Interfaces\IOptionallySerialiseChildren.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ITest.cs" />
+    <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
@@ -224,10 +226,8 @@
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
-    <Compile Include="Core\ModelNode.cs" />
     <Compile Include="Core\ModelTypes.cs" />
-    <Compile Include="Core\Property.cs" />
-    <Compile Include="Core\Runner.cs" />
+    <Compile Include="Core\Runners\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
     <Compile Include="Core\Runners\RunSimulation.cs" />
     <Compile Include="Core\Runners\RunExternal.cs" />
