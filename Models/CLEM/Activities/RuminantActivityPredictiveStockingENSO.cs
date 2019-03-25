@@ -390,20 +390,16 @@ namespace Models.CLEM.Activities
 
                 for (int i = 0; i < Convert.ToInt32(numberToBuy); i++)
                 {
-                    Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale()
+                    Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale(192, Sex.Male, weight, exampleRuminant.BreedParams)
                     {
-                        Age = 192, // 16 months
-                        Gender = Sex.Male,
+                        // Age = 192, or 16 months
                         HerdName = exampleRuminant.HerdName,
-                        HighWeight = weight,
                         Number = 1,
                         SaleFlag = HerdChangeReason.RestockPurchase,
                         Breed = exampleRuminant.Breed,
-                        BreedParams = exampleRuminant.BreedParams,
                         BreedingSire = false,
                         Draught = false,
                         Location = paddockName,
-                        Weight = weight
                     }
                     );
                 }

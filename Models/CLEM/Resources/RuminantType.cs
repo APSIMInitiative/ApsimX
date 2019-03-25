@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
@@ -59,12 +60,8 @@ namespace Models.CLEM.Resources
                 PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
             }
 
-            // get advanced conception parameters
-            List<RuminantConceptionAdvanced> concepList = Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList();
-            if(concepList.Count == 1)
-            {
-                AdvancedConceptionParameters = concepList.FirstOrDefault();
-            }
+            // get conception parameters and rate calculation method
+            ConceptionModel = Apsim.Children(this, typeof(Model)).Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
         }
 
         /// <summary>
@@ -216,10 +213,12 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            if (Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList().Count() > 1)
+            // ensure at least one conception model is associated
+            int conceptionModelCount = Apsim.Children(this, typeof(Model)).Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            if (conceptionModelCount > 1)
             {
-                string[] memberNames = new string[] { "RuminantType.RuminantConceptionAdvanced" };
-                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [{0}]", Name), memberNames));
+                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
             }
 
             if (Apsim.Children(this, typeof(AnimalPricing)).Count() > 1)
@@ -632,7 +631,7 @@ namespace Models.CLEM.Resources
         /// Advanced conception parameters if present
         /// </summary>
         [XmlIgnore]
-        public RuminantConceptionAdvanced AdvancedConceptionParameters { get; set; }
+        public IConceptionModel ConceptionModel { get; set; }
 
         /// <summary>
         /// Milk curve shape suckling
@@ -732,27 +731,7 @@ namespace Models.CLEM.Resources
         [Description("Proportion of SRW for zero Calving/lambing rate")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
-        /// <summary>
-        /// Conception rate coefficient of breeder PW
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Conception rate coefficient of breeder")]
-        [Required]
-        public double ConceptionRateCoefficent { get; set; }
-        /// <summary>
-        /// Conception rate intercept of breeder PW
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Conception rate intercept of breeder")]
-        [Required, GreaterThanValue(0)]
-        public double ConceptionRateIntercept { get; set; }
-        /// <summary>
-        /// Conception rate assymtote
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Conception rate assymtote")]
-        [Required, GreaterThanValue(0)]
-        public double ConceptionRateAsymptote { get; set; }
+
         /// <summary>
         /// Maximum number of matings per male per day
         /// </summary>

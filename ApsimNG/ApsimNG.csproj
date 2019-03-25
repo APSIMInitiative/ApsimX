@@ -452,6 +452,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionByCondition.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionCurve.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityIncome.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityFee.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostLabour.png" />

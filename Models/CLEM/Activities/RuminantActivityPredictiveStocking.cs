@@ -289,11 +289,25 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
-            html += "<span class=\"setvalue\">";
-            html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+            if (AssessmentMonth > 0 & AssessmentMonth <= 12)
+            {
+                html += "<span class=\"setvalue\">";
+                html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">No month set";
+            }
             html += "</span> for a dry season of ";
-            html += "<span class=\"setvalue\">";
-            html += DrySeasonLength.ToString("#0");
+            if (DrySeasonLength <= 0)
+            {
+                html += "<span class=\"setvalue\">";
+                html += DrySeasonLength.ToString("#0");
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">No length";
+            }
             html += "</span> months ";
             html += "</div>";
             html += "\n<div class=\"activityentry\">The herd will be sold to maintain ";
