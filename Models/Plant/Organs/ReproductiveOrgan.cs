@@ -408,7 +408,11 @@ namespace Models.PMF.Organs
                 // (requiredMinNContent - Live.N) / dmAllocation: Convert to nitrogen concentration
                 // 0.00001: A small value for minimum nitrogen concentration which cannot 
                 //          be zero in the arbitration model
-                double minNConc = Math.Max(0.00001, (requiredMinNContent - Live.N) / dmAllocation);
+                double minNConc = 0.00001;
+                if (dmAllocation > 0)
+                {
+                    minNConc = Math.Max(0.00001, (requiredMinNContent - Live.N) / dmAllocation);
+                }
                 return minNConc;
             }
         }
