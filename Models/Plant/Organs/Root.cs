@@ -725,9 +725,10 @@ namespace Models.PMF.Organs
                     var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
-                        var swdep = water[layer];
+                        var swdep = water[layer]; //mm
                         var flow = myZone.WaterUptake[layer];
                         var yest_swdep = swdep - flow;
+                        //NO3N is in kg/ha - old sorghum used g/m^2
                         var no3conc = zone.NO3N[layer] * kgha2gsm / yest_swdep; //to equal old sorghum
                         var no3massFlow = no3conc * (-flow);
                         MassFlow[layer] = no3massFlow;

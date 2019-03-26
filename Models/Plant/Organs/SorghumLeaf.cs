@@ -165,7 +165,7 @@ namespace Models.PMF.Organs
         
         /// <summary>Input for TargetSLN</summary>
         [ChildLinkByName]
-        IFunction TargetSLN = null;
+        public IFunction TargetSLN = null;
 
         /// <summary>Input for SenescedLeafSLN.</summary>
         [ChildLinkByName]
@@ -922,13 +922,39 @@ namespace Models.PMF.Organs
             return availableDM;
         }
 
-        private double calcLAI()
+        /// <summary>
+        /// calculates todays LAI values - can change during retranslocation calculations
+        /// </summary>
+        /// <returns></returns>
+        public double calcLAI()
         {
             return Math.Max(0.0, LAI + DltLAI - DltSenescedLai);
         }
         private double calcSLN(double laiToday, double nGreenToday)
         {
             return MathUtilities.Divide(nGreenToday, laiToday, 0.0);
+        }
+
+        /// <summary>
+        /// Adjustment function for calculating leaf demand
+        /// </summary>
+        public double calculateClassicDemandDelta()
+        {
+            //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
+            var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
+            //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
+            var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
+
+            var structural = nDemands.Structural.Value();
+            var diff = classicLeafDemand - pmfLeafDemand;
+            var diffdiff = structural + diff;
+            if (Math.Abs(diffdiff) > 0.0001)
+            {
+                double tmp = diffdiff;
+            }
+                
+
+            return classicLeafDemand - pmfLeafDemand;
         }
 
         /// <summary>Calculate the amount of N to retranslocate</summary>
