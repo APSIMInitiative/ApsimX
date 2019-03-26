@@ -241,7 +241,7 @@
         /// Write a single sumary file for all simulations.
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
-        /// <param name="fileName">The file name to write</param>
+        /// <param name="fileName">The file name to write</param>           
         /// <param name="darkTheme">Whether or not the dark theme should be used.</param>
         public static void WriteSummaryToTextFiles(IDataStore storage, string fileName, bool darkTheme)
         {
