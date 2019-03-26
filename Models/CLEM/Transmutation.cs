@@ -48,7 +48,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (this.Children.Where(a => a.GetType() == typeof(TransmutationCost) | a.GetType() == typeof(TransmutationCostLabour)).Count() == 0) //   Apsim.Children (this, typeof(TransmutationCost)).Count() == 0)
+            if (this.Children.Where(a => a.GetType() == typeof(TransmutationCost) || a.GetType() == typeof(TransmutationCostLabour)).Count() == 0) //   Apsim.Children (this, typeof(TransmutationCost)).Count() == 0)
             {
                 string[] memberNames = new string[] { "TransmutationCosts" };
                 results.Add(new ValidationResult("No costs provided under this transmutation", memberNames));
@@ -164,7 +164,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (ResourceTypeName != null & ResourceTypeName != "")
+            if (ResourceTypeName != null && ResourceTypeName != "")
             {
                 if (!ResourceTypeName.Contains("."))
                 {
@@ -211,7 +211,7 @@ namespace Models.CLEM
             {
                 html += "<div class=\"activityentry\">";
                 html += "<span class=\"setvalue\">"+CostPerUnit.ToString("#,##0.##") + "</span> x ";
-                html += (ResourceTypeName!=null & ResourceTypeName!="")? "<span class=\"resourcelink\">" + ResourceTypeName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
+                html += (ResourceTypeName!=null && ResourceTypeName!="")? "<span class=\"resourcelink\">" + ResourceTypeName+"</span>.": "<span class=\"errorlink\">Unknown Resource</span>.";
                 html += "</div>";
             }
             else

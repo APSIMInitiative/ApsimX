@@ -27,9 +27,6 @@ namespace Models.Core
     [ScopedModel]
     public class Simulations : Model, ISimulationEngine
     {
-        /// <summary>The _ file name</summary>
-        private string _FileName;
-
         [NonSerialized]
         private Links links;
 
@@ -46,23 +43,7 @@ namespace Models.Core
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
         [XmlIgnore]
-        public string FileName
-        {
-            get
-            {
-                return _FileName;
-            }
-            set
-            {
-                _FileName = value;
-                DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
-                if (storage != null)
-                {
-                    storage.Close();
-                    storage.FileName = null;
-                }
-            }
-        }
+        public string FileName { get; set; }
 
         /// <summary>Returns an instance of a links service</summary>
         [XmlIgnore]
@@ -127,7 +108,7 @@ namespace Models.Core
             filesReferenced.AddRange(FindAllReferencedFiles());
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
         }
 
         /// <summary>
@@ -137,9 +118,9 @@ namespace Models.Core
         /// <returns>A new simulations object that represents the file on disk</returns>
         public Simulations RevertCheckpoint(string checkpointName)
         {
-            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.RevertCheckpoint(checkpointName);
+                storage.Writer.RevertCheckpoint(checkpointName);
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
@@ -261,7 +242,7 @@ namespace Models.Core
         private void CreateLinks()
         {
             List<object> services = new List<object>();
-            IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
+            var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
             if (storage != null)
                 services.Add(storage);
             services.Add(this);

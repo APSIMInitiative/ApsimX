@@ -62,10 +62,13 @@ namespace Models.PMF
         protected IArbitrationMethod DMArbitrator = null;
 
         /// <summary>The kgha2gsm</summary>
-        private const double kgha2gsm = 0.1;
+        protected const double kgha2gsm = 0.1;
 
         /// <summary>The list of organs</summary>
         protected List<IArbitration> Organs = new List<IArbitration>();
+
+        /// <summary>A list of organs or suborgans that have watardemands</summary>
+        protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
 
         /// <summary>The variables for DM</summary>
         [XmlIgnore]
@@ -153,16 +156,14 @@ namespace Models.PMF
 
                 // Calculate total water demand.
                 double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-                foreach (IArbitration o in Organs)
-                    if (o is IHasWaterDemand)
-                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+
+                foreach (IHasWaterDemand WD in WaterDemands)
+                    waterDemand += WD.CalculateWaterDemand() * Plant.Zone.Area;
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
                 if (waterSupply > 0)
                     fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
-
-                WSupply = waterSupply;
 
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
@@ -189,12 +190,14 @@ namespace Models.PMF
         /// </summary>
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
+
             // Calculate the total water supply across all zones.
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
+            {
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+            }
 
-            WSupply = waterSupply;
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
@@ -208,12 +211,12 @@ namespace Models.PMF
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
-            foreach (IArbitration o in Organs)
-                if (o is IHasWaterDemand)
+  
+            foreach (IHasWaterDemand WD in WaterDemands)
                 {
-                    double demand = (o as IHasWaterDemand).CalculateWaterDemand();
+                    double demand = WD.CalculateWaterDemand();
                     double allocation = fraction * demand;
-                    (o as IHasWaterDemand).WaterAllocation = allocation;
+                    WD.WaterAllocation = allocation;
                     WAllocated += allocation;
                 }
 
@@ -223,10 +226,11 @@ namespace Models.PMF
                 Plant.Root.DoWaterUptake(Z.Water, Z.Zone.Name);
         }
 
+
         /// <summary>
-        /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
+        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
         /// </summary>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
+        public virtual List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             if (Plant.IsEmerged)
             {
@@ -281,7 +285,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
+        public virtual void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
             if (Plant.IsEmerged)
             {
@@ -316,12 +320,18 @@ namespace Models.PMF
         virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
+           List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
+
+            foreach (Model Can in Apsim.FindAll(Plant, typeof(IHasWaterDemand)))
+                Waterdemands.Add(Can as IHasWaterDemand);
+
             foreach (IOrgan organ in Plant.Organs)
                 if (organ is IArbitration)
                     organsToArbitrate.Add(organ as IArbitration);
 
+            
             Organs = organsToArbitrate;
-
+            WaterDemands = Waterdemands;
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
         }
@@ -410,10 +420,10 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                AllocateFixation(Organs.ToArray(), N, NArbitrator);               //Allocate supply of fixable Nitrogen to each organ
-                Retranslocation(Organs.ToArray(), N, NArbitrator);      //Allocate supply of retranslocatable N to each organ
-                SetDryMatterAllocations(Organs.ToArray());                               //Tell each organ how DM they are getting folling allocation
-                SetNitrogenAllocations(Organs.ToArray());                         //Tell each organ how much nutrient they are getting following allocaition
+                AllocateFixation(Organs.ToArray(), N, NArbitrator);    //Allocate supply of fixable Nitrogen to each organ
+                Retranslocation(Organs.ToArray(), N, NArbitrator);     //Allocate supply of retranslocatable N to each organ
+                SetDryMatterAllocations(Organs.ToArray());             //Tell each organ how DM they are getting folling allocation
+                SetNitrogenAllocations(Organs.ToArray());              //Tell each organ how much nutrient they are getting following allocaition
             }
         }
 

@@ -88,9 +88,12 @@
         {
             lock (this)
             {
-                numSimulationsRun++;
-                if (e.exceptionThrowByJob != null)
-                    errors.Add(e.exceptionThrowByJob);
+                if (e.job is RunSimulation)
+                {
+                    numSimulationsRun++;
+                    if (e.exceptionThrowByJob != null)
+                        errors.Add(e.exceptionThrowByJob);
+                }
             }
         }
 

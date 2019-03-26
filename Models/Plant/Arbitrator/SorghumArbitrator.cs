@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using Models.PMF.Organs;
 
 namespace Models.PMF
 {
@@ -60,9 +61,24 @@ namespace Models.PMF
         #region Main outputs
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
-        [XmlIgnore]
         public double WatSupply { get; set; }
 
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
+        public double NDemand { get; private set; }
+
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
+        public double NSupply { get; private set; }
+
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
+        public double NMassFlowSupply { get; private set; }
+
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
+        public double NDiffusionSupply { get; private set; }
+        
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
@@ -78,54 +94,141 @@ namespace Models.PMF
         }
 
         #region IUptake interface
-        [EventSubscribe("DoWaterArbitration")]
-        private void OnDoWaterArbitration(object sender, EventArgs e)
+
+        /// <summary>
+        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
+        /// </summary>
+        public override List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            //SoilState InitialSoilState = new SoilState(this.Parent);
-            //InitialSoilState.Initialise(zones);
-            //GetWaterUptake(InitialSoilState);
+            if (Plant.IsEmerged)
+            {
+                //this function is called 4 times as part of estimates
+                //shouldn't set public variables in here
+                var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                var grainDemand = N.StructuralDemand[0] + N.MetabolicDemand[0];
+                var leafStructuralDemand = N.StructuralDemand[2];
+                var structuralDemand = MathUtilities.Sum(N.StructuralDemand);
+                var metabolicDemand = MathUtilities.Sum(N.MetabolicDemand);
+
+                //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double nDemand = (structuralDemand + metabolicDemand - grainDemand - leafStructuralDemand - N.TotalReallocation) * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+
+                for (int i = 0; i < Organs.Count; i++)
+                    N.UptakeSupply[i] = 0;
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
+                {
+                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
+
+                    UptakeDemands.NO3N = new double[zone.NO3N.Length];
+                    UptakeDemands.NH4N = new double[zone.NH4N.Length];
+                    UptakeDemands.PlantAvailableNO3N = new double[zone.NO3N.Length];
+                    UptakeDemands.PlantAvailableNH4N = new double[zone.NO3N.Length];
+                    UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
+
+                    //only using Root to get Nitrogen from - temporary code for sorghum
+                    var root = Organs[1] as Root;
+                    //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
+                    double[] organNO3Supply = new double[zone.NO3N.Length];
+                    double[] organNH4Supply = new double[zone.NH4N.Length];
+                    root.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
+
+                    //new code
+                    double[] diffnAvailable = new double[root.Diffusion.Length];
+                    for(var i = 0; i < root.Diffusion.Length; ++i)
+                    {
+                        diffnAvailable[i] = root.Diffusion[i] - root.MassFlow[i];
+                    }
+                    var totalMassFlow = MathUtilities.Sum(root.MassFlow);
+                    var totalDiffusion = MathUtilities.Sum(diffnAvailable);
+
+                    var potentialSupply = totalMassFlow + totalDiffusion;
+                    var dltt = root.DltThermalTime.Value();
+                    var actualDiffusion = 0.0;
+                    var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
+                    var maxDiffusionConst = root.MaxDiffusion.Value();
+
+                    if (totalMassFlow < nDemand && dltt > 0.0)
+                    {
+                        actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
+                        actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
+
+                        var nsupplyFraction = root.NSupplyFraction.Value();
+                        var maxRate = root.MaxNUptakeRate.Value();
+
+                        var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
+                        var maxUptake = maxUptakeRateFrac * dltt - actualMassFlow;
+                        actualDiffusion = Math.Min(actualDiffusion, maxUptake);
+                    }
+
+                    nSupply = 0.0;
+                    //adjust diffusion values proportionally
+                    for (int layer = 0; layer < organNO3Supply.Length; layer++)
+                    {
+                        var massFlowLayerFraction = MathUtilities.Divide(root.MassFlow[layer], totalMassFlow, 0.0);
+                        var diffusionLayerFraction = MathUtilities.Divide(diffnAvailable[layer], totalDiffusion, 0.0);
+                        organNH4Supply[layer] = massFlowLayerFraction * root.MassFlow[layer];
+                        organNO3Supply[layer] = massFlowLayerFraction * root.MassFlow[layer] +
+                            diffusionLayerFraction * actualDiffusion;
+                    }
+
+                    //originalcode
+                    UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                    UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
+                    N.UptakeSupply[1] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;
+                    nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
+                    zones.Add(UptakeDemands);
+                }
+
+                if (nSupply > nDemand)
+                {
+                    //Reduce the PotentialUptakes that we pass to the soil arbitrator
+                    double ratio = Math.Min(1.0, nDemand / nSupply);
+                    foreach (ZoneWaterAndN UptakeDemands in zones)
+                    {
+                        UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
+                        UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
+                    }
+                }
+                return zones;
+            }
+            return null;
         }
 
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        public override void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
+        {
+            if (Plant.IsEmerged)
+            {
+                // Calculate the total no3 and nh4 across all zones.
+                NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                NMassFlowSupply = 0.0;
+                NDiffusionSupply = 0.0;
+                var supply = 0.0;
+                foreach (ZoneWaterAndN Z in zones)
+                {
+                    supply += MathUtilities.Sum(Z.NO3N);
+                    NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
+                    NSupply += supply * Z.Zone.Area;
 
-        ///// <summary>Called at water arbitration.</summary>
-        ///// <summary>WaterSupply is being calculated as the same as what is uptaken.</summary>
-        ///// <param name="soilstate">The sender of the event</param>
-        //public void GetWaterUptake(SoilState soilstate)
-        //{
-        //    if (Plant.IsAlive)
-        //    {
-        //        // Get all water supplies.
-        //        double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+                    for(int i = 0; i < Z.NH4N.Length; ++i)
+                        Z.NH4N[i] = 0;
+                }
+                NDiffusionSupply = supply - NMassFlowSupply;
 
-        //        List<double[]> supplies = new List<double[]>();
-        //        List<Zone> zones = new List<Zone>();
-        //        foreach (ZoneWaterAndN zone in soilstate.Zones)
-        //            foreach (IOrgan o in Organs)
-        //                if (o is IWaterNitrogenUptake)
-        //                {
-        //                    double[] organSupply = (o as IWaterNitrogenUptake).CalculateWaterSupply(zone);
-        //                    if (organSupply != null)
-        //                    {
-        //                        supplies.Add(organSupply);
-        //                        zones.Add(zone.Zone);
-        //                        waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
-        //                    }
-        //                }
+                //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
+                for (int i = 0; i < Organs.Count; i++)
+                    N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply / kgha2gsm;
 
-        //        // Calculate total water demand.
-        //        double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-        //        foreach (IArbitration o in Organs)
-        //            if (o is IHasWaterDemand)
-        //                waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+                //Allocate N that the SoilArbitrator has allocated the plant to each organ
+                AllocateUptake(Organs.ToArray(), N, NArbitrator);
+                Plant.Root.DoNitrogenUptake(zones);
+            }
+        }
 
-        //        // Calculate demand / supply ratio.
-        //        double fractionUsed = 0;
-        //        if (waterSupply > 0)
-        //            fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
-
-        //        WatSupply = waterSupply;
-        //    }
-        //}
         #endregion
 
         #region Plant interface methods
@@ -136,39 +239,35 @@ namespace Models.PMF
         /// <param name="arbitrator">The option.</param>
         override public void Retranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
         {
-            double BiomassRetranslocated = 0;
             if (BAT.TotalRetranslocationSupply > 0.00000000001)
             {
-                (arbitrator as SorghumArbitratorN).DoRetranslocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                // Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
-                for (int i = 0; i < Organs.Length; i++)
-                    if (BAT.RetranslocationSupply[i] > 0.00000000001)
+                var nArbitrator = arbitrator as SorghumArbitratorN;
+                if (nArbitrator != null)
+                {
+                    nArbitrator.DoRetranslocation(Organs, BAT);
+                }
+                else
+                {
+                    double BiomassRetranslocated = 0;
+                    if (BAT.TotalRetranslocationSupply > 0.00000000001)
                     {
-                        double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
-                        BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
+                        arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
+                        // Then calculate how much DM (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
+                        for (int i = 0; i < Organs.Length; i++)
+                            if (BAT.RetranslocationSupply[i] > 0.00000000001)
+                            {
+                                double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
+                                BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
+                            }
                     }
+                }
             }
         }
 
         #endregion
 
         #region Arbitration step functions
-        /// <summary>Calculate all of the Organ DM Demands </summary>
-        public override void PotentialDMAllocation()
-        {
-            base.PotentialDMAllocation();
-            
-            //need to recalc Actual area after being allocated potential DM.
-            //Initial dltLAI is calculated assuming enough biomass is available
-            //need to adjust dltLAI to maximum availabel with given biomass.
-            //need to do this before N is calculated.
-            
-
-            //also need to calculate senescence before calculating NDemand - which is definied within PotentialArbitration
-            
-
-        }
-
+       
 
         #endregion
 

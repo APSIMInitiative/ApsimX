@@ -46,6 +46,7 @@ namespace UserInterface.Views
         public TreeView(ViewBase owner, Gtk.TreeView treeView) : base(owner)
         {
             treeview1 = treeView;
+            _mainWidget = treeview1;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
@@ -87,6 +88,7 @@ namespace UserInterface.Views
             treeview1.DragDataReceived += OnDragDataReceived;
             treeview1.DragEnd += OnDragEnd;
             timer.Elapsed += OnTimerElapsed;
+            _mainWidget.Destroyed += OnDestroyed;
         }
 
         /// <summary>Invoked when a node is selected not by the user but by an Undo command.</summary>
@@ -256,6 +258,8 @@ namespace UserInterface.Views
             treeview1.DragDataReceived -= OnDragDataReceived;
             treeview1.DragEnd -= OnDragEnd;
             timer.Elapsed -= OnTimerElapsed;
+            ContextMenu = null;
+
             _mainWidget.Destroyed -= OnDestroyed;
             _owner = null;
         }

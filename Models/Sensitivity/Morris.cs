@@ -3,9 +3,11 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
     using Models.Factorial;
     using Models.Interfaces;
     using Models.Sensitivity;
+    using Models.Storage;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -333,12 +335,11 @@
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
         /// <param name="dataStore">The data store.</param>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
             if (!hasRun)
                 return;
-            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
-            DataTable predictedData = dataStore.RunQuery(sql);
+            DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {
 
@@ -454,10 +455,8 @@
                 DataTable muStarTable = tableKey.ToTable();
                 muStarTable.TableName = Name + "Statistics";
 
-                dataStore.DeleteDataInTable(eeTable.TableName);
-                dataStore.WriteTable(eeTable);
-                dataStore.DeleteDataInTable(muStarTable.TableName);
-                dataStore.WriteTable(muStarTable);
+                dataStore.Writer.WriteTable(eeTable);
+                dataStore.Writer.WriteTable(muStarTable);
             }
             hasRun = false;
         }

@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
-            if (Area == 0 & AreaRequested > 0)
+            if (Area == 0 && AreaRequested > 0)
             {
                 ResourceRequestList = new List<ResourceRequest>();
                 ResourceRequestList.Add(new ResourceRequest()
@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (LinkedLandItem != null & UseAreaAvailable)
+            if (LinkedLandItem != null && UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
             }
@@ -435,9 +435,8 @@ namespace Models.CLEM.Activities
             // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
             // But as updates happen at the end of the month, the fist months biomass is never added so stay with 0 or delete following section
             // Get this months growth
-            //Get this months pasture data from the pasture data list
+            // Get this months pasture data from the pasture data list
             PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.StartDate.Year && a.Month == Clock.StartDate.Month).FirstOrDefault();
-            //double growth = ; // GRASPFile.Get(xxxxxxxxx)
 
             double thisMonthsGrowth = pasturedata.Growth;
             if (thisMonthsGrowth > 0)

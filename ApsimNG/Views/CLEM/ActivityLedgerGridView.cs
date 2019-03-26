@@ -409,13 +409,15 @@ namespace UserInterface.Views
                 {
                     case "Success":
                     case "Partial":
-                    case "Ignore":
                     case "Critical":
                     case "Calculation":
                     case "NotNeeded":
                     case "Timer":
                     case "NoTask":
                         (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
+                        break;
+                    case "Warning":
+                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Ignored.png");
                         break;
                     default:
                         // use blank image as setting visible to false did not work.

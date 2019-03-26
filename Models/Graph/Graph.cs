@@ -12,6 +12,7 @@ namespace Models.Graph
     using Models.Core;
     using Factorial;
     using System.Data;
+    using Models.Storage;
 
     /// <summary>
     /// Represents a graph
@@ -87,7 +88,7 @@ namespace Models.Graph
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
-        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
+        public List<SeriesDefinition> GetDefinitionsToGraph(IDataStore storage)
         {
             EnsureAllAxesExist();
 
