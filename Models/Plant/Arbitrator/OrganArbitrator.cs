@@ -119,9 +119,10 @@ namespace Models.PMF
 
             //To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
             // Calculate posible growth based on Minimum N requirement of organs
+            // Only for structural demand
             for (int i = 0; i < Organs.Length; i++)
             {
-                double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.StorageDemand[i];
+                double TotalNDemand = N.StructuralDemand[i];
                 if (N.TotalAllocation[i] >= TotalNDemand)
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
@@ -130,20 +131,40 @@ namespace Models.PMF
                 else
                     N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNconc;
             }
-
+            // Calculate the total structural allocation for the old and new ones.
+            double totalOldDMStructuralAllocation = 0;
+            double totalNewDMStructuralAllocation = 0;
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
             for (int i = 0; i < Organs.Length; i++)
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
                 {
-                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
-                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
-                    double StorageProportion = DM.StorageAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
-                    DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * MetabolicProportion);
-                    DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-                    DM.StorageAllocation[i] = Math.Min(DM.StorageAllocation[i], N.ConstrainedGrowth[i] * StorageProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-
+                    totalOldDMStructuralAllocation += DM.StructuralAllocation[i];
+                    DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i]);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    totalNewDMStructuralAllocation += DM.StructuralAllocation[i];
                     //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
                 }
+            // Reallocation extra biomass into the organ with biggest storage demand
+            // if there are only nutirtion constrains
+            // In the case of no big storage demand, extra photosynthesis can be throwed out the system.
+            if (totalOldDMStructuralAllocation > totalNewDMStructuralAllocation)
+            {
+                int idxMaxStorageDemand = 0;
+                double maxStorageDemand = -1;
+                for (int i = 0; i < Organs.Length; i++)
+                {
+                    if (DM.StorageDemand[i] > maxStorageDemand)
+                    {
+                        idxMaxStorageDemand = i;
+                        maxStorageDemand = DM.StorageDemand[i];
+                    }
+                }
+                if (maxStorageDemand > 0)
+                {
+                    DM.StorageAllocation[idxMaxStorageDemand] = Math.Min(DM.StorageDemand[idxMaxStorageDemand],
+                        DM.StorageAllocation[idxMaxStorageDemand] +
+                        totalOldDMStructuralAllocation - totalNewDMStructuralAllocation);
+                }
+            }
             //Recalculated DM Allocation totals
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
