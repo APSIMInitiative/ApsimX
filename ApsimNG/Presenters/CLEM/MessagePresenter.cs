@@ -76,6 +76,10 @@ namespace UserInterface.Presenters
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
             IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
             IDataStore ds = Apsim.Children(simulations, typeof(IDataStore)).FirstOrDefault() as IDataStore;
+            if (ds == null)
+            {
+                return htmlString;
+            }
             DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
             foreach (DataRow dr in dataRows)
             {
@@ -106,6 +110,10 @@ namespace UserInterface.Presenters
                         {
                             parts.RemoveAt(0);
                         }
+                        if (parts[0].Contains("ERRORS in file:"))
+                        {
+                            parts.RemoveAt(0);
+                        }
                         if (parts[0].Contains("Simulation name:"))
                         {
                             parts.RemoveAt(0);
@@ -116,7 +124,7 @@ namespace UserInterface.Presenters
                         string title = "Message";
                         switch (dr[8].ToString())
                         {
-                            case "0":
+                            case "2":
                                 type = "Error";
                                 title = "Error";
                                 break;
@@ -131,8 +139,8 @@ namespace UserInterface.Presenters
                         {
                             if (!msgStr.StartsWith("Invalid parameter value in model"))
                             {
-                                msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                                msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
+                                //msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
+                                //msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
                             }
                         }
                         if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
@@ -158,8 +166,8 @@ namespace UserInterface.Presenters
                         {
                             type = "Ok";
                             title = "Success";
-                            DataTable dataRows2 = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_InitialConditions");
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[2][11].ToString());
+                            DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][9].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }
 

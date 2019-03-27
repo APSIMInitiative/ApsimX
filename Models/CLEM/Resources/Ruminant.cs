@@ -13,6 +13,9 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class Ruminant
     {
+        private RuminantFemale mother;
+        private double weight;
+
         /// <summary>
         /// Reference to the Breed Parameters.
         /// </summary>
@@ -36,7 +39,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Link to individual's mother
         /// </summary>
-        public RuminantFemale Mother { get; set; }
+        public RuminantFemale Mother
+        {
+            get
+            {
+                return mother;
+            }
+            set
+            {
+                mother = value;
+                if (mother != null)
+                {
+                    MotherID = value.ID;
+                }
+            }
+        }
+        /// <summary>
+        /// Link to individual's mother
+        /// </summary>
+        public int MotherID { get; private set; }
 
         /// <summary>
         /// Gender
@@ -52,7 +73,13 @@ namespace Models.CLEM.Resources
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
-        public double Age { get; set; }
+        public double Age { get; private set; }
+
+        /// <summary>
+        /// The age (months) this individual entered the simulation.
+        /// </summary>
+        /// <units>Months</units>
+        public double AgeEnteredSimulation { get; private set; }
 
         /// <summary>
         /// Purchase age (Months)
@@ -71,7 +98,18 @@ namespace Models.CLEM.Resources
         /// Weight (kg)
         /// </summary>
         /// <units>kg</units>
-        public double Weight { get; set; }
+        public double Weight
+        {
+            get
+            {
+                return weight;
+            }
+            set
+            {
+                weight = value;
+                HighWeight = Math.Max(HighWeight, weight);
+            }
+        }
 
         /// <summary>
         /// Previous weight (kg)
@@ -95,7 +133,7 @@ namespace Models.CLEM.Resources
         /// Highest previous weight
         /// </summary>
         /// <units>kg</units>
-        public double HighWeight { get; set; }
+        public double HighWeight { get; private set; }
 
         /// <summary>
         /// The current weight as a proportion of High weight achieved
@@ -107,6 +145,18 @@ namespace Models.CLEM.Resources
                 return HighWeight == 0 ? 1 : Weight / HighWeight;
             }
         }
+
+        /// <summary>
+        /// The current weight as a proportion of High weight achieved
+        /// </summary>
+        public double ProportionOfNormalisedWeight
+        {
+            get
+            {
+                return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+            }
+        }
+
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
@@ -314,6 +364,7 @@ namespace Models.CLEM.Resources
             if (this.Mother != null)
             {
                 this.Mother.SucklingOffspringList.Remove(this);
+                this.Mother.NumberOfWeaned++;
             }
             if(report)
             {
@@ -390,16 +441,39 @@ namespace Models.CLEM.Resources
         public double Wool { get; set; }
 
         /// <summary>
-        /// Amount of wool on individual
+        /// Amount of cashmere on individual
         /// </summary>
         public double Cashmere { get; set; }
 
+        /// <summary>
+        /// Method to increase age
+        /// </summary>
+        public void IncrementAge()
+        {
+            Age++;
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Ruminant()
+        public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
         {
+            this.Age = setAge;
+            this.AgeEnteredSimulation = setAge;
+            this.Gender = setGender;
+            this.BreedParams = setParams;
+
+            if (weight <= 0)
+            {
+                // use normalised weight
+                weight = NormalisedAnimalWeight;
+
+            }
+            else
+            {
+                this.Weight = setWeight;
+            }
+
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;
