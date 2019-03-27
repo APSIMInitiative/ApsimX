@@ -21,6 +21,9 @@ namespace UserInterface.Presenters
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Core.Runners;
+    using System.Reflection;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -39,6 +42,8 @@ namespace UserInterface.Presenters
         /// The command that is currently being run.
         /// </summary>
         private RunCommand command = null;
+
+        private static Dictionary<Type, MemberInfo[]> links = new Dictionary<Type, MemberInfo[]>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenu" /> class.
@@ -670,5 +675,78 @@ namespace UserInterface.Presenters
                 child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
             explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
         }
+
+
+        [ContextMenu(MenuName = "Find All References")]
+        public void OnFindReferences(object sender, EventArgs e)
+        {
+            try
+            {
+                IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+                if (model != null)
+                {
+                    //List<MemberInfo> links = new List<MemberInfo>();
+                    StringBuilder message = new StringBuilder();
+                    Stopwatch timer = Stopwatch.StartNew();
+
+                    foreach (IModel child in Apsim.ChildrenRecursively(explorerPresenter.ApsimXFile))
+                    {
+                        // Resolve replacements node.
+                        //if (child is Simulation)
+                        //    explorerPresenter.ApsimXFile.MakeSubsAndLoad(child as Simulation);
+
+                        explorerPresenter.ApsimXFile.Links.Resolve(child, throwOnFail: false);
+                        MemberInfo[] members = null;
+                        Type childType = child.GetType();
+
+                        // Locate all fields/properties of this type which are links.
+                        // First, try the cache.
+                        if (!links.TryGetValue(childType, out members))
+                        {
+                            // We haven't looked for members of this type before.
+                            List<MemberInfo> localMembers = new List<MemberInfo>();
+
+                            // Links may be static or non-static (instance), and can have any accessibility.
+                            BindingFlags flags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+                            // Find all properties which are links.
+                            localMembers.AddRange(child.GetType().GetProperties(flags).Where(p => ReflectionUtilities.GetAttribute(p, typeof(LinkAttribute), true) != null));
+
+                            // Find all fields which are links.
+                            localMembers.AddRange(child.GetType().GetFields(flags).Where(f => ReflectionUtilities.GetAttribute(f, typeof(LinkAttribute), true) != null));
+
+                            members = localMembers.ToArray();
+
+                            // Add members to cache.
+                            links.Add(childType, members);
+                        }
+
+                        // Now iterate over all members of this type which are links.
+                        foreach (MemberInfo member in members)
+                        {
+                            IModel linkValue = ReflectionUtilities.GetValueOfFieldOrProperty(member.Name, child) as IModel;
+                            if (linkValue == null)
+                                continue; // Silently ignore this member.
+
+                            bool isCorrectType = model.GetType().IsAssignableFrom(linkValue.GetType());
+                            bool hasCorrectPath = string.Equals(Apsim.FullPath(linkValue), Apsim.FullPath(model), StringComparison.InvariantCulture);
+                            if (isCorrectType && hasCorrectPath)
+                            {
+                                //result.Add(member);
+                                message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
+                            }
+                        }
+                    }
+                    timer.Stop();
+                    message.AppendLine($"Finished. Elapsed time: {timer.Elapsed.TotalSeconds.ToString("#.00")} seconds");
+                    explorerPresenter.MainPresenter.ShowMessage(message.ToString(), Simulation.MessageType.Information);
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
     }
 }
