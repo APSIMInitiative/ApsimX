@@ -392,7 +392,7 @@ namespace Models.CLEM.Activities
                                         HerdName = this.PredictedHerdName,
                                         BreedingSire = true,
                                         Gender = Sex.Male,
-                                        ID = 0, // ruminantHerd.NextUniqueID;
+                                        ID = 0, // Next unique ide will be assigned when added
                                         PreviousWeight = 450,
                                         SaleFlag = HerdChangeReason.SirePurchase
                                     };

@@ -43,6 +43,9 @@ namespace Models.CLEM.Activities
         [EventSubscribe("EndOfMonth")]
         private void OnEndOfMonth(object sender, EventArgs e)
         {
+            // Interest is paid and earned on the last day of the month after all other acitivites have made financial transactions.
+            // Interest payment does not occur in the Activity order.
+
             Status = ActivityStatus.NotNeeded;
             if (financesExist)
             {
