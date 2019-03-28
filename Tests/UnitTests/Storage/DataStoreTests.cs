@@ -1,12 +1,7 @@
 ﻿using Models.Core;
 using Models.Storage;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTests.Storage
 {
@@ -22,16 +17,16 @@ namespace UnitTests.Storage
             // Write the simulations to disk.
             sims.Write(sims.FileName);
 
-            // Record the .db file's filename.
+            // Record the database's filename.
             string oldDbFileName = storage.FileName;
 
             // Write the simulations to disk under a new filename.
             sims.Write(Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
 
-            // Record the .db file's new filename.
+            // Record the database's new filename.
             string newDbFileName = storage.FileName;
 
-            // The new .db file name should not be the same as the old one.
+            // The new file name should not be the same as the old one.
             Assert.AreNotEqual(oldDbFileName, newDbFileName);
         }
     }
