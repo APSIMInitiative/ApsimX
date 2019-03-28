@@ -37,6 +37,8 @@ namespace Models.CLEM
         [Link]
         IDataStore DataStore = null;
 
+        private static Random randomGenerator;
+
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
@@ -50,8 +52,6 @@ namespace Models.CLEM
         [Required, GreaterThanEqualValue(0) ]
         [Description("Random number generator seed (0 to use clock)")]
         public int RandomSeed { get; set; }
-
-        private static Random randomGenerator;
 
         /// <summary>
         /// Access the CLEM random number generator
@@ -94,6 +94,7 @@ namespace Models.CLEM
         /// <value>The area.</value>
         [XmlIgnore]
         public new double Area { get; set; }
+
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
         [XmlIgnore]
@@ -141,10 +142,11 @@ namespace Models.CLEM
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("CLEMValidate")]
+        private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
+            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
             // commencing is too early as Summary has not been created for reporting.
             // some values assigned in commencing will not be checked before processing, but will be caught here
             if (!Validate(Simulation, ""))
@@ -154,11 +156,11 @@ namespace Models.CLEM
                 // find IStorageReader of simulation
                 IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
                 IStorageReader ds = DataStore.Reader;
-                DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+                DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
                 // all all current errors and validation problems to error string.
                 foreach (DataRow dr in dataRows)
                 {
-                    error += "\n" + dr[7].ToString();
+                    error += "\n" + dr[6].ToString();
                 }
                 throw new ApsimXException(this, error);
             }
