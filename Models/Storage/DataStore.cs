@@ -163,27 +163,27 @@
             if (connection == null)
                 Open();
         }
-         
+        
+        /// <summary>
+        /// Updates the file name of the database file, based on the file name
+        /// of the parent Simulations object.
+        /// </summary>
+        public void UpdateFileName()
+        {
+            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            if (simulations == null)
+                FileName = ":memory:";
+            else if (useFirebird)
+                FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+            else
+                FileName = Path.ChangeExtension(simulations.FileName, ".db");
+        }
+
         /// <summary>Open the database.</summary>
         public void Open()
         {
-
             if (FileName == null)
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    FileName = simulations.FileName;
-                    if (useFirebird)
-                        FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
-                    else
-                        FileName = Path.ChangeExtension(simulations.FileName, ".db");
-                }
-            }
-
-            // If still no file was specified, then throw.
-            if (FileName == null)
-                FileName = ":memory:";
+                UpdateFileName();
 
             if (useFirebird)
                 connection = new Firebird();
