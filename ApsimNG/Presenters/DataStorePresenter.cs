@@ -74,6 +74,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             (view.MaximumNumberRecords as EditView).EndEdit();
+            (view.FileName as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.RowFilter.Changed -= OnColumnFilterChanged;
