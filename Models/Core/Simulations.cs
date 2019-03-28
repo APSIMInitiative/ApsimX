@@ -230,7 +230,12 @@ namespace Models.Core
                 if (child is Simulation)
                     (child as Simulation).FileName = FileName;
                 else if (child is DataStore)
-                    (child as DataStore).UpdateFileName();
+                {
+                    DataStore storage = child as DataStore;
+                    storage.Close();
+                    storage.UpdateFileName();
+                    storage.Open();
+                }
             }
         }
 
