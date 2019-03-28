@@ -96,17 +96,18 @@
 
             // Call created in all models.
             creationExceptions = new List<Exception>();
-            foreach (var model in Apsim.ChildrenRecursively(newModel))
+            try
             {
-                try
+                foreach (var model in Apsim.ChildrenRecursively(newModel))
                 {
                     model.OnCreated();
                 }
-                catch (Exception err)
+                newModel.OnCreated();
+            }
+            catch (Exception err)
                 {
                     creationExceptions.Add(err);
                 }
-            }
             return newModel;
         }
 
