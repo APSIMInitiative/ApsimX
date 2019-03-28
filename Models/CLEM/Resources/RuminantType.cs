@@ -246,7 +246,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                if (Resources.RuminantHerd().Herd != null)
+                {
+                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                }
+                return 0;
             }
         }
 
@@ -758,14 +762,7 @@ namespace Models.CLEM.Resources
 
         #region other
 
-        // add again if next methane equation requires an intercept value
-
-        ///// <summary>
-        ///// Methane production from intake intercept
-        ///// </summary>
-        //[Description("Methane production from intake intercept")]
-        //[Required]
-        //public double MethaneProductionIntercept { get; set; }
+        // add intercept again if next methane equation requires an intercept value
 
         /// <summary>
         /// Methane production from intake coefficient

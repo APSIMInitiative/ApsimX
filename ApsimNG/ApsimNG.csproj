@@ -455,6 +455,10 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PivotTable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPriceGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityPayHired.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionByCondition.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionCurve.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityIncome.png" />
