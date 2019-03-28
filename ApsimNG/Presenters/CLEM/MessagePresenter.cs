@@ -72,8 +72,8 @@ namespace UserInterface.Presenters
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 "\n</style>\n</head>\n<body>";
 
-            int errorCol = 7;
-            int msgCol = 6;
+            int errorCol = 8;
+            int msgCol = 7;
 
             // find IStorageReader of simulation
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
