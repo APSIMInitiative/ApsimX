@@ -43,7 +43,15 @@ namespace UserInterface.Presenters
         /// </summary>
         private RunCommand command = null;
 
+        /// <summary>
+        /// Maps a type to an array of fields/properties which are links.
+        /// </summary>
         private static Dictionary<Type, MemberInfo[]> links = new Dictionary<Type, MemberInfo[]>();
+
+        /// <summary>
+        /// Maps a type to a list of public string properties.
+        /// </summary>
+        private static Dictionary<Type, PropertyInfo[]> stringProperties = new Dictionary<Type, PropertyInfo[]>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenu" /> class.
@@ -685,21 +693,23 @@ namespace UserInterface.Presenters
                 IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
                 if (model != null)
                 {
-                    //List<MemberInfo> links = new List<MemberInfo>();
+                    string modelPath = Apsim.FullPath(model);
                     StringBuilder message = new StringBuilder();
                     Stopwatch timer = Stopwatch.StartNew();
+                    BindingFlags flags;
 
                     foreach (IModel child in Apsim.ChildrenRecursively(explorerPresenter.ApsimXFile))
                     {
                         // Resolve replacements node.
-                        //if (child is Simulation)
-                        //    explorerPresenter.ApsimXFile.MakeSubsAndLoad(child as Simulation);
+                        // if (child is Simulation)
+                        //     explorerPresenter.ApsimXFile.MakeSubsAndLoad(child as Simulation);
 
+                        // Resolve links
                         explorerPresenter.ApsimXFile.Links.Resolve(child, throwOnFail: false);
                         MemberInfo[] members = null;
                         Type childType = child.GetType();
 
-                        // Locate all fields/properties of this type which are links.
+                        // First, find all links to the model.
                         // First, try the cache.
                         if (!links.TryGetValue(childType, out members))
                         {
@@ -707,7 +717,7 @@ namespace UserInterface.Presenters
                             List<MemberInfo> localMembers = new List<MemberInfo>();
 
                             // Links may be static or non-static (instance), and can have any accessibility.
-                            BindingFlags flags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                            flags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
                             // Find all properties which are links.
                             localMembers.AddRange(child.GetType().GetProperties(flags).Where(p => ReflectionUtilities.GetAttribute(p, typeof(LinkAttribute), true) != null));
@@ -729,12 +739,39 @@ namespace UserInterface.Presenters
                                 continue; // Silently ignore this member.
 
                             bool isCorrectType = model.GetType().IsAssignableFrom(linkValue.GetType());
-                            bool hasCorrectPath = string.Equals(Apsim.FullPath(linkValue), Apsim.FullPath(model), StringComparison.InvariantCulture);
+                            bool hasCorrectPath = string.Equals(Apsim.FullPath(linkValue), modelPath, StringComparison.InvariantCulture);
                             if (isCorrectType && hasCorrectPath)
-                            {
-                                //result.Add(member);
                                 message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
+                        }
+
+                        // Next, search all public string properties for the path to this model.
+                        PropertyInfo[] properties;
+                        if (!stringProperties.TryGetValue(childType, out properties))
+                        {
+                            flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
+                            properties = childType.GetProperties(flags).Where(p => p.PropertyType == typeof(string) && p.CanRead).ToArray();
+                            stringProperties.Add(childType, properties);
+                        }
+                        foreach (PropertyInfo property in properties)
+                        {
+                            string value;
+                            try
+                            {
+                                // An exception could be thrown here from inside the property's getter.
+                                value = property.GetValue(child) as string;
                             }
+                            catch
+                            {
+                                continue;
+                            }
+
+                            IModel result = Apsim.Find(child, value);
+                            if (result == null)
+                                continue;
+                            bool correctType = model.GetType().IsAssignableFrom(result.GetType());
+                            bool correctPath = string.Equals(Apsim.FullPath(result), modelPath, StringComparison.InvariantCulture);
+                            if (correctType && correctPath)
+                                message.AppendLine($"Found reference in string property {property.Name} of node {Apsim.FullPath(child)}.");
                         }
                     }
                     timer.Stop();
@@ -747,6 +784,5 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
     }
 }
