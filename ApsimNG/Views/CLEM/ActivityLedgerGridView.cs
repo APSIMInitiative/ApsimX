@@ -405,25 +405,38 @@ namespace UserInterface.Views
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 cell.Visible = true;
+                string iconName = "blank";
                 switch (dataVal.ToString())
                 {
-                    case "Success":
-                    case "Partial":
-                    case "Critical":
-                    case "Calculation":
-                    case "NotNeeded":
-                    case "Timer":
-                    case "NoTask":
-                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
+                    case "0":
+                        iconName = "Success";
                         break;
-                    case "Warning":
-                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Ignored.png");
+                    case "1":
+                        iconName = "Partial";
                         break;
-                    default:
-                        // use blank image as setting visible to false did not work.
-                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.blank.png");
+                    case "2":
+                        iconName = "Ignored";
+                        break;
+                    case "3":
+                        iconName = "Critical";
+                        break;
+                    case "4":
+                        iconName = "Timer";
+                        break;
+                    case "5":
+                        iconName = "Calculation";
+                        break;
+                    case "6":
+                        iconName = "NotNeeded";
+                        break;
+                    case "7":
+                        iconName = "Ignored";
+                        break;
+                    case "8":
+                        iconName = "NoTask";
                         break;
                 }
+                (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+iconName+".png");
             }
         }
 
