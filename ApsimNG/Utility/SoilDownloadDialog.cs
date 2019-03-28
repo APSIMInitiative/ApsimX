@@ -269,6 +269,10 @@
 
                 List<Exception> errors = null;
                 soilObj = (Soil)FileFormat.ReadFromString<Soil>(newNode.OuterXml, out errors);
+
+                // Looks like we also need a soil temperature model as well....
+                Structure.Add(new CERESSoilTemperature(), soilObj);
+                soilObj.OnCreated();
             }
             catch (Exception e) // Needs better error handling. We should inform the user of any problems.
             {
