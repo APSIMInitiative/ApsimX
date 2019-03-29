@@ -171,7 +171,7 @@
         public void UpdateFileName()
         {
             Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            if (simulations == null)
+            if (simulations == null || simulations.FileName == null)
                 FileName = ":memory:";
             else if (useFirebird)
                 FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
