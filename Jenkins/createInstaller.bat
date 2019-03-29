@@ -49,6 +49,7 @@ exit /b
 
 :windows
 call :getIssueNumber
+if exist C:\signapsimx call C:\signapsimx\sign.bat "%apsimx%\Bin\Updater.exe"
 echo Generating installer...
 iscc /Q %setup%\apsimx.iss
 set "file_name=ApsimSetup%ISSUE_NUMBER%.exe"
