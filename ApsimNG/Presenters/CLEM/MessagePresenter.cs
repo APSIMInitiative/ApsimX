@@ -72,8 +72,8 @@ namespace UserInterface.Presenters
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 "\n</style>\n</head>\n<body>";
 
-            int errorCol = 8;
-            int msgCol = 7;
+            int errorCol = 7; // 8;
+            int msgCol = 6; // 7;
 
             // find IStorageReader of simulation
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
@@ -136,14 +136,6 @@ namespace UserInterface.Presenters
                                 break;
                             default:
                                 break;
-                        }
-                        if (type == "Error")
-                        {
-                            if (!msgStr.StartsWith("Invalid parameter value in model"))
-                            {
-                                //msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                                //msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                            }
                         }
                         if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
                         {
