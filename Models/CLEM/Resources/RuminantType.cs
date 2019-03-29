@@ -750,13 +750,6 @@ namespace Models.CLEM.Resources
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
-        /// <summary>
-        /// Maximum conception rate from uncontrolled breeding 
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Proportion]
-        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion
 

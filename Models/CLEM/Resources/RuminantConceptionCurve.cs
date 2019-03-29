@@ -35,18 +35,28 @@ namespace Models.CLEM.Resources
         [Description("Conception rate coefficient of breeder PW")]
         [Required]
         public double ConceptionRateCoefficent { get; set; }
+
         /// <summary>
         /// Conception rate intercept of breeder
         /// </summary>
         [Description("Conception rate intercept of breeder PW")]
         [Required]
         public double ConceptionRateIntercept { get; set; }
+
         /// <summary>
         /// Conception rate assymtote of breeder
         /// </summary>
         [Description("Conception rate assymtote")]
         [Required]
         public double ConceptionRateAsymptote { get; set; }
+
+        /// <summary>
+        /// Maximum conception rate from uncontrolled breeding 
+        /// </summary>
+        [Category("Advanced", "Breeding")]
+        [Description("Maximum conception rate from uncontrolled breeding")]
+        [Required, Proportion]
+        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
