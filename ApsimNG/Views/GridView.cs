@@ -395,7 +395,7 @@
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                    Color separatorColour = Color.LightSteelBlue;
+                    Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
                     cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                     textRenderer.Editable = false;
                 }

@@ -20,7 +20,7 @@ namespace ApsimNG.Classes.DirectedGraph
         public OxyColor ForegroundColour = OxyColors.Black;
         public string Description { get; set; }
         public int Width { get { return 120; } }
-
+        private bool transparent;
         /// <summary>Constructor</summary>
         public DGNode(Node directedGraphNode)
         {
@@ -28,6 +28,7 @@ namespace ApsimNG.Classes.DirectedGraph
             Location = new PointD(directedGraphNode.Location.X, directedGraphNode.Location.Y);
             Colour = OxyPlot.OxyColor.FromRgb(directedGraphNode.Colour.R, directedGraphNode.Colour.G, directedGraphNode.Colour.B);
             ForegroundColour = OxyPlot.OxyColor.FromRgb(directedGraphNode.OutlineColour.R, directedGraphNode.OutlineColour.G, directedGraphNode.OutlineColour.B);
+            transparent = directedGraphNode.Transparent;
         }
 
         /// <summary>Get a DirectedGraph node from this instance.</summary>
@@ -38,6 +39,7 @@ namespace ApsimNG.Classes.DirectedGraph
             n.Location = new System.Drawing.Point((int)Location.X, (int)Location.Y);
             n.Colour = System.Drawing.Color.FromArgb(Colour.R, Colour.G, Colour.B);
             n.OutlineColour = System.Drawing.Color.FromArgb(ForegroundColour.R, ForegroundColour.G, ForegroundColour.B);
+            n.Transparent = transparent;
             return n;
         }
 
@@ -45,23 +47,31 @@ namespace ApsimNG.Classes.DirectedGraph
         /// <param name="context">The graphics context to draw on</param>
         public override void Paint(Cairo.Context context)
         {
+            OxyColor outlineColour;
             if (Selected)
-                context.SetSourceColor(OxyColors.Blue);
+                outlineColour = OxyColors.Blue;
+            else if (transparent)
+                outlineColour = DefaultBackgroundColour;
             else
-                context.SetSourceColor(ForegroundColour);
+                outlineColour = DefaultOutlineColour;
+
+            OxyColor backgroundColour = transparent ? DefaultBackgroundColour : Colour;
+            OxyColor textColour = DefaultOutlineColour;
 
             // Draw circle
+            context.SetSourceColor(outlineColour);
             context.LineWidth = 3;
             context.NewPath();
             context.Arc(Location.X, Location.Y, Width/2, 0, 2 * Math.PI);
             context.StrokePreserve();
-            context.SetSourceColor(Colour);
+            context.SetSourceColor(backgroundColour);
             context.Fill();
 
             // Write text
             context.LineWidth = 1;
-            context.SetSourceColor(OxyColors.Black);
+            context.SetSourceColor(textColour);
             context.SetFontSize(13);
+
 
             DrawCentredText(context, Name, Location);
         }

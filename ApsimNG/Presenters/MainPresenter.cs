@@ -532,6 +532,10 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
+            startPage.AddButton(
+                                "Toggle Theme",
+                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                        OnToggleTheme);
 
             startPage.AddButton(
                                 "Help",
@@ -990,15 +994,38 @@
         }
 
         /// <summary>
+        /// Toggles between the default and dark themes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnToggleTheme(object sender, EventArgs e)
+        {
+            try
+            {
+                Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
+                view.ToggleTheme(sender, e);
+                // Might be better to restart automatically (after asking the user),
+                // but I haven't been able to figure out a reliable cross-platform 
+                // way of attaching the debugger to the new process. I leave this
+                // as an exercise to the reader.
+                view.ShowMsgDialog("Theme changes will be applied upon restarting Apsim.", "Theme Changes", Gtk.MessageType.Info, Gtk.ButtonsType.Ok);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Opens the ApsimX online documentation.
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         private void OnHelp(object sender, EventArgs args)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
-            process.Start();
+            Process getHelp = new Process();
+            getHelp.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
+            getHelp.Start();
         }
 
         /// <summary>

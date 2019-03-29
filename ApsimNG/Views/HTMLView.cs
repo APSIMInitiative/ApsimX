@@ -6,7 +6,7 @@ using Gtk;
 using WebKit;
 using MonoMac.AppKit;
 using APSIM.Shared.Utilities;
-using EventArguments;
+using UserInterface.EventArguments;
 using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
@@ -179,7 +179,6 @@ namespace UserInterface.Views
                 wb.Document.Body.InnerHtml = html;
             else
                 wb.DocumentText = html;
-
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
@@ -188,6 +187,35 @@ namespace UserInterface.Views
             while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
+                ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
+            }
+        }
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return wb.Document.BackColor;
+            }
+            set
+            {
+                wb.Document.BackColor = value;
+            }
+        }
+
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return wb.Document.ForeColor;
+            }
+            set
+            {
+                wb.Document.ForeColor = value;
+            }
         }
 
         public TWWebBrowserIE(Gtk.Box w)
@@ -821,9 +849,12 @@ namespace UserInterface.Views
 
             if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).wb != null)
             {
-                keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
+                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+                keyPressObject = ieBrowser.wb.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+                ieBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+                ieBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }

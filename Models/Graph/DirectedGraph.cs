@@ -22,6 +22,12 @@
         /// <summary>Outline colour of node</summary>
         public Color OutlineColour { get; set; }
 
+        /// <summary>
+        /// If true, the node's background and outline will be the same colour
+        /// as the canvas' background.
+        /// </summary>
+        public bool Transparent { get; set; }
+
         /// <summary>Constructor</summary>
         public Node()
         {
@@ -85,6 +91,27 @@
             // Remove unwanted nodes and arcs.
             Nodes.RemoveAll(node => !nodesToKeep.Contains(node));
             Arcs.RemoveAll(arc => !arcsToKeep.Contains(arc));
+        }
+
+        /// <summary>Add a new node to the graph</summary>
+        public void AddTransparentNode(string name)
+        {
+            Node newNode = Nodes.Find(node => node.Name == name);
+            if (newNode == null)
+            {
+                newNode = new Node();
+                newNode.Location = nextNodePosition;
+                nextNodePosition.X += 150;
+                if (nextNodePosition.X > 500)
+                {
+                    nextNodePosition.X = 50;
+                    nextNodePosition.Y = nextNodePosition.Y + 150;
+                }
+                Nodes.Add(newNode);
+            }
+            newNode.Name = name;
+            newNode.Transparent = true;
+            nodesToKeep.Add(newNode);
         }
 
         /// <summary>Add a new node to the graph</summary>
