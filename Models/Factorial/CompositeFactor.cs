@@ -5,7 +5,6 @@
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -29,7 +28,6 @@
             Paths = new List<string> { path };
             Values = new List<object> { value };
             Name = name;
-            Initialise();
         }
 
         /// <summary>Constructor</summary>
@@ -42,7 +40,6 @@
                 Name = (value as IModel).Name;
             else
                 Name = value.ToString();
-            Initialise();
         }
 
         /// <summary>Constructor</summary>
@@ -51,7 +48,6 @@
             Parent = parentFactor;
             Paths = paths;
             Values = values;
-            Initialise();
         }
 
         /// <summary>Gets or sets the specification to create overides for a simulation.</summary>
@@ -63,22 +59,11 @@
         /// <summary>Gets all values.</summary>
         public List<object> Values { get; set; }
 
-        /// <summary>Gets a descriptor of this factor.</summary>
-        public Tuple<string, string> Descriptor { get; private set; }
-
-        /// <summary>Gets a simulation replacement for this factor.</summary>
-        public IReplacement Replacement { get; private set; }
-
-        /// <summary>Called when object creation has occurred.</summary>
-        public override void OnCreated()
-        {
-            Initialise();
-        }
-
         /// <summary>
-        /// Apply this FactorValue to the specified simulation
+        /// Apply this CompositeFactor to the specified simulation
         /// </summary>
-        private void Initialise()
+        /// <param name="simulationDescription">A description of a simulation.</param>
+        public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
             List<string> allPaths;
             List<object> allValues;
@@ -105,23 +90,23 @@
             for (int i = 0; i != allPaths.Count; i++)
             {
                 if (allValues[i] is IModel)
-                    Replacement = new ModelReplacement(allPaths[i], allValues[i] as IModel);
+                    simulationDescription.AddOverride(new ModelReplacement(allPaths[i], allValues[i] as IModel));
                 else
-                    Replacement = new PropertyReplacement(allPaths[i], allValues[i]);
+                    simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
             }
 
             // Set descriptors in simulation.
             if (Specifications != null && Specifications.Count > 0)
             {
                 // compound factor value ie. one that has multiple specifications. 
-                Descriptor = new Tuple<string, string>(Parent.Name, Name);
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(Parent.Name, Name));
             }
             else
             {
                 if (allValues[0] is IModel)
-                    Descriptor = new Tuple<string, string>(Parent.Name, (allValues[0] as IModel).Name);
+                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(Parent.Name, (allValues[0] as IModel).Name));
                 else
-                    Descriptor = new Tuple<string, string>(Parent.Name, allValues[0].ToString());
+                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(Parent.Name, allValues[0].ToString()));
             }
         }
 
@@ -147,8 +132,9 @@
             else
             {
                 // Find the model that we are to replace.
-                Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
-                var modelToReplace = Apsim.Get(experiment.BaseSimulation, path) as IModel;
+                var experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
+                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
+                var modelToReplace = Apsim.Get(baseSimulation, path) as IModel;
 
                 // Now find a child of that type.
                 value = Apsim.Child(this, modelToReplace.GetType());

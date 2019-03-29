@@ -12,6 +12,7 @@ using System.ComponentModel;
 using Models.Core.Runners;
 using System.Linq;
 using Models.Core.ApsimFile;
+using Models.Core.Run;
 
 namespace Models.Core
 {
@@ -25,13 +26,10 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, ISimulationGenerator
+    public class Simulation : Model, ISimulationDescriptionGenerator
     {
         [NonSerialized]
         private ScopingRules scope = null;
-
-        /// <summary>Has this simulation been run?</summary>
-        private bool hasRun;
 
         /// <summary>Return total area.</summary>
         public double Area
@@ -150,48 +148,18 @@ namespace Models.Core
             Locater.Clear();
         }
 
-
-        /// <summary>Simulation runs are about to begin.</summary>
-        [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
-        {
-            hasRun = false;
-        }
-
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun()
+        public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            if (Parent is ISimulationGenerator || hasRun)
-                return null;
-            hasRun = true;
-
-            Simulation simulationToRun;
-            if (this.Parent == null)
-                simulationToRun = this;
-            else
-            {
-                Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                simulationToRun = Apsim.Clone(this) as Simulation;
-
-                // We are breaking.NET naming rules with our manager scripts.All our manager scripts are class 
-                // Script in the Models namespace.This is OK until we do a clone(binary serialise/deserialise). 
-                // When this happens, the serialisation engine seems to choose the first assembly it can find 
-                // that has the 'right' code.It seems that if the script c# is close to an existing assembly then 
-                // it chooses that assembly. In the attached .apsimx, it chooses the wrong temporary assembly for 
-                // SowingRule2. It chooses SowingRule assembly even though the script for the 2 manager files is 
-                // different. I'm not sure how to fix this yet. A brute force way is to recompile all manager 
-                // scripts after cloning.
-                // https://github.com/APSIMInitiative/ApsimX/issues/2603
-
-                simulationEngine.MakeSubsAndLoad(simulationToRun);
-            }
-            return simulationToRun;
+            var returnList = new List<SimulationDescription>();
+            returnList.Add(new SimulationDescription(this));
+            return returnList;
         }
 
         /// <summary>Gets a list of simulation names</summary>
         public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
         {
-            if (Parent is ISimulationGenerator)
+            if (Parent is ISimulationDescriptionGenerator)
                 return new string[0];
             return new string[] { Name };
         }
@@ -208,7 +176,7 @@ namespace Models.Core
             foreach (IModel zone in Apsim.ChildrenRecursively(this).Where(c => ScopingRules.IsScopedModel(c)))
             {
                 var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
-                                                            new string[] { Name, zone.Name }, 
+                                                            new string[] { Name, zone.Name },
                                                             "Simulation", Name);
                 factors.Add(factor);
                 factor.AddFactor("Zone", zone.Name);

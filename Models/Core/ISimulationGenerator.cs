@@ -1,23 +1,13 @@
 ﻿namespace Models.Core
 {
+    using Models.Core.Run;
     using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>An interface for something that can generate simulations to run</summary>
-    public interface ISimulationGenerator
+    public interface ISimulationDescriptionGenerator
     {
-        /// <summary>Gets the next simulation to run</summary>
-        Simulation NextSimulationToRun();
-
-        /// <summary>Gets a list of simulation names</summary>
-        IEnumerable<string> GetSimulationNames(bool fullFactorial = true);
-
-        /// <summary>Gets a list of factors</summary>
-        List<ISimulationGeneratorFactors> GetFactors();
-
-        /// <summary>Generates an .apsimx file for each simulation.</summary>
-        /// <param name="path">Directory to save the file to.</param>
-        void GenerateApsimXFile(string path);
+        /// <summary>Gets a list of simulation descriptions.</summary>
+        List<SimulationDescription> GenerateSimulationDescriptions();
     }
 
     /// <summary>Represents the factors coming from a ISimulationGenerator</summary>

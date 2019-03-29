@@ -8,6 +8,7 @@
     using System.Collections;
     using System.Linq;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
 
     /// <summary>
     /// Gets a run job for running one or more simulations.
@@ -49,21 +50,13 @@
             return ForSimulations(simulations, simulations, runTests);
         }
 
-        /// <summary>Runs the specified simulations.</summary>
-        /// <param name="underModel">Look at this model and all child models for simulations to create</param>
-        /// <returns>A list of all created simulations</returns>
-        public static SimulationCreator AllSimulations(IModel underModel)
-        {
-            return new SimulationCreator(underModel);
-        }
-
         /// <summary>An enumable class for creating simulations ready for running.</summary>
         public class SimulationCreator : IEnumerable<Simulation>
         {
             private SimulationEnumerator simulations;
 
             /// <summary>Simulation names being run</summary>
-            public List<string> SimulationNamesBeingRun { get { return simulations.SimulationNamesBeingRun; } }
+            public int SimulationNamesBeingRun { get { return simulations.NumSimulationsBeingRun; } }
 
             /// <summary>Constructor</summary>
             /// <param name="underModel">Look at this model and all child models for simulations to create</param>
@@ -89,8 +82,10 @@
         public class SimulationEnumerator : IEnumerator<Simulation>
         {
             private IModel relativeTo;
-            private List<ISimulationGenerator> modelsToRun;
+            private List<SimulationDescription> simulationDescriptionsToRun = new List<SimulationDescription>();
             private Simulation currentSimulation;
+            private string fileName;
+            private Simulations simulations;
 
             /// <summary>
             /// List of simulation clocks - allows us to monitor progress of the runs.
@@ -98,7 +93,7 @@
             public List<IClock> simClocks { get; private set; } = new List<IClock>();
 
             /// <summary>Simulation names being run</summary>
-            public List<string> SimulationNamesBeingRun { get; private set; }
+            public int NumSimulationsBeingRun { get { return simulationDescriptionsToRun.Count; } }
 
             /// <summary>Constructor</summary>
             /// <param name="underModel">Look at this model and all child models for simulations to create</param>
@@ -106,6 +101,9 @@
             {
                 relativeTo = underModel;
                 FindListOfModelsToRun();
+                simulations = Apsim.Parent(relativeTo, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                    fileName = simulations.FileName;
             }
 
             /// <summary>Return the current simulation</summary>
@@ -120,29 +118,20 @@
             /// <summary>Move to next simulation</summary>
             bool IEnumerator.MoveNext()
             {
-                if (modelsToRun == null)
-                    return false;
-                else
+                currentSimulation = null;
+
+                if (simulationDescriptionsToRun.Count > 0)
                 {
-                    // Iterate through all jobs and return the next one.
-                    currentSimulation = null;
-                    if (modelsToRun.Count > 0)
-                    {
-                        currentSimulation = modelsToRun[0].NextSimulationToRun();
-                        while (currentSimulation == null && modelsToRun.Count > 0)
-                        {
-                            modelsToRun.RemoveAt(0);
-                            if (modelsToRun.Count > 0)
-                                currentSimulation = modelsToRun[0].NextSimulationToRun();
-                        }
-                    }
-                    if (currentSimulation != null)
-                    {
-                        IClock simClock = (IClock)Apsim.ChildrenRecursively(currentSimulation).Find(m => typeof(IClock).IsAssignableFrom(m.GetType()));
-                        simClocks.Add(simClock);
-                    }
-                    return currentSimulation != null;
+                    // Determine if there are any simulation descriptions that need 
+                    // converting to a simulation and then run.
+                    currentSimulation = simulationDescriptionsToRun[0].ToSimulation(simulations);
+                    currentSimulation.FileName = fileName;
+                    IClock simClock = (IClock)Apsim.ChildrenRecursively(currentSimulation).Find(m => typeof(IClock).IsAssignableFrom(m.GetType()));
+                    simClocks.Add(simClock);
+
+                    simulationDescriptionsToRun.RemoveAt(0);
                 }
+                return currentSimulation != null;
             }
 
             /// <summary>Reset the enumerator</summary>
@@ -155,19 +144,13 @@
             /// <summary>Determine the list of jobs to run</summary>
             private void FindListOfModelsToRun()
             {
+                simulationDescriptionsToRun.Clear();
+
                 // Get a list of all models we're going to run.
-                modelsToRun = Apsim.ChildrenRecursively(relativeTo, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
-                if (relativeTo is ISimulationGenerator)
-                    modelsToRun.Add(relativeTo as ISimulationGenerator);
-
-                // For each model, resolve any links.
-                Simulations sims = Apsim.Parent(relativeTo, typeof(Simulations)) as Simulations;
-                modelsToRun.ForEach(model => sims.Links.Resolve(model));
-
-                // For each model, get a list of simulation names.
-                SimulationNamesBeingRun = new List<string>();
-                modelsToRun.ForEach(model => SimulationNamesBeingRun.AddRange(model.GetSimulationNames(false)));
+                foreach (var modelsToRun in Apsim.ChildrenRecursively(relativeTo, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>())
+                    simulationDescriptionsToRun.AddRange(modelsToRun.GenerateSimulationDescriptions());
             }
+
         }
 
     }

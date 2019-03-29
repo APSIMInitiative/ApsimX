@@ -105,6 +105,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
+    <Compile Include="Factorial\ExperimentTests.cs" />
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
@@ -121,7 +123,6 @@
     <Compile Include="Core\ApsimFile\ManagerConverterTests.cs" />
     <Compile Include="APSIMShared\IndexedDataTableTests.cs" />
     <Compile Include="Functions\TrackerFunctionTests.cs" />
-    <Compile Include="Core\Runner\RunnerTests.cs" />
     <Compile Include="FertiliserTests.cs" />
     <Compile Include="Core\MockEvents.cs" />
     <Compile Include="Core\MockLocator.cs" />
@@ -305,7 +306,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Runner\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

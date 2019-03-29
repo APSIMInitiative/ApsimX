@@ -75,16 +75,17 @@
             view.RunSims += OnRunSims;
             view.SetMaxSims += OnSetMaxNumSims;
 
-            maxSimsToDisplay = DefaultMaxSims;
-            var allCombinations = model.AllCombinations;
-            if (allCombinations == null || !allCombinations.Any())
-                throw new Exception(string.Format("Unable to generate a list of factors for experiment {0}.", model.Name));
+            throw new NotImplementedException();
+            //maxSimsToDisplay = DefaultMaxSims;
+            //var allCombinations = model.AllCombinations;
+            //if (allCombinations == null || !allCombinations.Any())
+            //    throw new Exception(string.Format("Unable to generate a list of factors for experiment {0}.", model.Name));
 
-            headers = GetHeaderNames(allCombinations.First());
-            simulations = GetTableData(allCombinations);
+            //headers = GetHeaderNames(allCombinations.First());
+            //simulations = GetTableData(allCombinations);
 
-            view.Initialise(headers);
-            UpdateView();
+            //view.Initialise(headers);
+            //UpdateView();
         }
 
         /// <summary>
@@ -176,32 +177,33 @@
         /// <param name="args">Event arguments.</param>
         private void OnSetMaxNumSims(object sender, EventArgs args)
         {
-            try
-            {
-                string newMaxSims = view.MaxSimsToDisplay;
-                int n;
-                if (string.IsNullOrEmpty(newMaxSims))
-                {
-                    maxSimsToDisplay = DefaultMaxSims;
-                    UpdateView();
-                }
-                else if (Int32.TryParse(newMaxSims, out n))
-                {
-                    if (n > 1000 && presenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)
-                        return;
-                    else if (n < 0)
-                        throw new Exception("Unable to display a negative number of simulations.");
-                    maxSimsToDisplay = n;
-                    simulations = GetTableData(model.AllCombinations);
-                    UpdateView();
-                }
-                else
-                    throw new Exception(string.Format("Unable to parse max number of simulations: {0}", newMaxSims));
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    string newMaxSims = view.MaxSimsToDisplay;
+            //    int n;
+            //    if (string.IsNullOrEmpty(newMaxSims))
+            //    {
+            //        maxSimsToDisplay = DefaultMaxSims;
+            //        UpdateView();
+            //    }
+            //    else if (Int32.TryParse(newMaxSims, out n))
+            //    {
+            //        if (n > 1000 && presenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)
+            //            return;
+            //        else if (n < 0)
+            //            throw new Exception("Unable to display a negative number of simulations.");
+            //        maxSimsToDisplay = n;
+            //        simulations = GetTableData(model.AllCombinations);
+            //        UpdateView();
+            //    }
+            //    else
+            //        throw new Exception(string.Format("Unable to parse max number of simulations: {0}", newMaxSims));
+            //}
+            //catch (Exception err)
+            //{
+            //    presenter.MainPresenter.ShowError(err);
+            //}
         }
 
         /// <summary>
@@ -209,10 +211,11 @@
         /// </summary>
         private void UpdateView()
         {
-            if (maxSimsToDisplay < 0)
-                maxSimsToDisplay = DefaultMaxSims;
-            view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
-            view.NumSims = model.AllCombinations.Count.ToString();
+            throw new NotImplementedException();
+            //if (maxSimsToDisplay < 0)
+            //    maxSimsToDisplay = DefaultMaxSims;
+            //view.Populate(simulations.GetRange(0, Math.Min(simulations.Count, maxSimsToDisplay)));
+            //view.NumSims = model.AllCombinations.Count.ToString();
         }
 
         /// <summary>
@@ -222,16 +225,17 @@
         /// <param name="args">Event arguments.</param>
         private void OnRunSims(object sender, EventArgs args)
         {
-            try
-            {
-                // Before running the simulations, disable all simulations except for those which are selected.
-                model.DisabledSimNames = model.GetSimulationNames().Where(s => !view.SelectedItems.Contains(s)).ToList();
-                runner.Do(presenter.CommandHistory);
-            }
-            catch (Exception e)
-            {
-                presenter.MainPresenter.ShowError(e);
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    // Before running the simulations, disable all simulations except for those which are selected.
+            //    model.DisabledSimNames = model.GetSimulationNames().Where(s => !view.SelectedItems.Contains(s)).ToList();
+            //    runner.Do(presenter.CommandHistory);
+            //}
+            //catch (Exception e)
+            //{
+            //    presenter.MainPresenter.ShowError(e);
+            //}
         }
 
         /// <summary>
@@ -291,31 +295,32 @@
         /// <returns>List of tuples, where each tuple contains the name of the simulations, the factor levels/values, and a boolean indicating whether it should be run or not.</returns>
         private List<Tuple<string, List<string>, bool>> GetTableData(List<List<CompositeFactor>> allSims, bool getAllData = false)
         {
-            try
-            {
-                List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
-                int i = 0;
-                foreach (var factors in allSims)
-                {
-                    if (!getAllData && i > maxSimsToDisplay)
-                        break;
-                    List<string> values = new List<string>();
-                    List<string> names = new List<string>();
-                    Experiment.GetFactorNamesAndValues(factors, names, values);
-                    // Pack all factor levels for the current simulation into a list.
-                    string name = model.Name + GetName(factors);
-                    bool flag = model.DisabledSimNames == null || 
-                                !model.DisabledSimNames.Contains(name);
-                    sims.Add(new Tuple<string, List<string>, bool>(name, values, flag));
-                    i++;
-                }
-                return sims;
-            }
-            catch (Exception e)
-            {
-                presenter.MainPresenter.ShowError(e);
-                return new List<Tuple<string, List<string>, bool>>();
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    List<Tuple<string, List<string>, bool>> sims = new List<Tuple<string, List<string>, bool>>();
+            //    int i = 0;
+            //    foreach (var factors in allSims)
+            //    {
+            //        if (!getAllData && i > maxSimsToDisplay)
+            //            break;
+            //        List<string> values = new List<string>();
+            //        List<string> names = new List<string>();
+            //        Experiment.GetFactorNamesAndValues(factors, names, values);
+            //        // Pack all factor levels for the current simulation into a list.
+            //        string name = model.Name + GetName(factors);
+            //        bool flag = model.DisabledSimNames == null || 
+            //                    !model.DisabledSimNames.Contains(name);
+            //        sims.Add(new Tuple<string, List<string>, bool>(name, values, flag));
+            //        i++;
+            //    }
+            //    return sims;
+            //}
+            //catch (Exception e)
+            //{
+            //    presenter.MainPresenter.ShowError(e);
+            //    return new List<Tuple<string, List<string>, bool>>();
+            //}
         }
 
         /// <summary>
@@ -325,11 +330,12 @@
         /// <returns></returns>
         private List<List<CompositeFactor>> GetEnabledSimulations()
         {
-            // Names of the disabled simulations.
-            List<string> disabledSimNames = GetDisabledSimNames();
+            throw new NotImplementedException();
+        //    // Names of the disabled simulations.
+        //    List<string> disabledSimNames = GetDisabledSimNames();
 
-            // To generate this list, a full factorial experiment is generated, and the results filtered based on the name of the simulation.
-            return model.AllCombinations.Where(x => (!disabledSimNames.Contains(GetName(x)))).ToList();
+        //    // To generate this list, a full factorial experiment is generated, and the results filtered based on the name of the simulation.
+        //    return model.AllCombinations.Where(x => (!disabledSimNames.Contains(GetName(x)))).ToList();
         }
 
         /// <summary>
@@ -359,38 +365,39 @@
         /// <param name="args">Event arguments.</param>
         private void OnExportCsv(object sender, FileActionArgs args)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(args.Path))
-                    throw new ArgumentNullException("Unable to generate csv file: path is null.");
+            throw new NotImplementedException();
+            //try
+            //{
+            //    if (string.IsNullOrEmpty(args.Path))
+            //        throw new ArgumentNullException("Unable to generate csv file: path is null.");
 
-                StringBuilder data = new StringBuilder();
-                if (headers == null || !headers.Any())
-                    throw new Exception("No data to export.");
+            //    StringBuilder data = new StringBuilder();
+            //    if (headers == null || !headers.Any())
+            //        throw new Exception("No data to export.");
 
-                // The first line contains the column headers.
-                string currentLine = headers.Aggregate((a, b) => a + "," + b);
-                data.AppendLine(currentLine);
+            //    // The first line contains the column headers.
+            //    string currentLine = headers.Aggregate((a, b) => a + "," + b);
+            //    data.AppendLine(currentLine);
 
-                // The rest of the file contains the factor information.
-                foreach (Tuple<string, List<string>, bool> sim in GetTableData(model.AllCombinations, true))
-                {
-                    // The first item on each line is the simulation name.
-                    currentLine = sim.Item1 + ",";
-                    // The rest of the line (except for the last item) contains the factor levels.
-                    currentLine += sim.Item2.Aggregate((a, b) => a + "," + b);
-                    // The final item on each line is the enabled status of the simulation.
-                    currentLine += "," + sim.Item3.ToString();
-                    data.AppendLine(currentLine);
-                }
+            //    // The rest of the file contains the factor information.
+            //    foreach (Tuple<string, List<string>, bool> sim in GetTableData(model.AllCombinations, true))
+            //    {
+            //        // The first item on each line is the simulation name.
+            //        currentLine = sim.Item1 + ",";
+            //        // The rest of the line (except for the last item) contains the factor levels.
+            //        currentLine += sim.Item2.Aggregate((a, b) => a + "," + b);
+            //        // The final item on each line is the enabled status of the simulation.
+            //        currentLine += "," + sim.Item3.ToString();
+            //        data.AppendLine(currentLine);
+            //    }
 
-                File.WriteAllText(args.Path, data.ToString());
-                presenter.MainPresenter.ShowMessage(string.Format("Successfully generated {0}.", args.Path), Simulation.MessageType.Information);
-            }
-            catch (Exception e)
-            {
-                presenter.MainPresenter.ShowError(e);
-            }
+            //    File.WriteAllText(args.Path, data.ToString());
+            //    presenter.MainPresenter.ShowMessage(string.Format("Successfully generated {0}.", args.Path), Simulation.MessageType.Information);
+            //}
+            //catch (Exception e)
+            //{
+            //    presenter.MainPresenter.ShowError(e);
+            //}
         }
 
         /// <summary>

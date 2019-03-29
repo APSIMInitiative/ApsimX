@@ -27,13 +27,10 @@
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Sobol : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
+    public class Sobol : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
-
-        /// <summary>A number of the currently running sim</summary>
-        private int simulationNumber;
 
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
@@ -55,10 +52,6 @@
         /// </remarks>
         public List<Parameter> Parameters { get; set; }
 
-        /// <summary>List of simulation names from last run</summary>
-        [XmlIgnore]
-        public List<string> simulationNames { get; set; }
-
         /// <summary>
         /// This ID is used to identify temp files used by this Sobol model.
         /// </summary>
@@ -74,7 +67,6 @@
         {
             Parameters = new List<Parameter>();
             allCombinations = new List<List<CompositeFactor>>();
-            simulationNames = new List<string>();
         }
 
         /// <summary>
@@ -140,113 +132,34 @@
             }
         }
 
-        private Stream serialisedBase;
-        private Simulations parentSimulations;
-
-        /// <summary>Simulation runs are about to begin.</summary>
-        [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        /// <summary>Gets a list of simulation descriptions.</summary>
+        public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            Initialise();
-            simulationNumber = 1;
-        }
+            var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
 
-        /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun()
-        {
-            if (allCombinations.Count == 0)
-                return null;
-
-            var combination = allCombinations[0];
-            allCombinations.RemoveAt(0);
-
-            Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
-            newSimulation.Name = Name + "Simulation" + simulationNumber;
-            newSimulation.Parent = null;
-            newSimulation.FileName = parentSimulations.FileName;
-            Apsim.ParentAllChildren(newSimulation);
-
-            // Make substitutions.
-            parentSimulations.MakeSubsAndLoad(newSimulation);
-
-            foreach (var value in combination)
-                value.Replacement.Replace(newSimulation);
-
-            PushFactorsToReportModels(newSimulation, combination);
-
-            simulationNumber++;
-            return newSimulation;
-        }
-
-        /// <summary>Find all report models and give them the factor values.</summary>
-        /// <param name="factorValues">The factor values to send to each report model.</param>
-        /// <param name="simulation">The simulation to search for report models.</param>
-        private void PushFactorsToReportModels(Simulation simulation, List<CompositeFactor> factorValues)
-        {
-            List<string> names = new List<string>();
-            List<string> values = new List<string>();
-            names.Add("SimulationName");
-            values.Add(simulation.Name);
-
-            foreach (var factor in factorValues)
-            {
-                names.Add(factor.Name);
-                values.Add(factor.Values[0].ToString());
-            }
-
-            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
-            {
-                report.ExperimentFactorNames = names;
-                report.ExperimentFactorValues = values;
-            }
-        }
-
-        /// <summary>
-        /// Generates an .apsimx file for each simulation in the experiment and returns an error message (if it fails).
-        /// </summary>
-        /// <param name="path">Full path including filename and extension.</param>
-        /// <returns>Empty string if successful, error message if it fails.</returns>
-        public void GenerateApsimXFile(string path)
-        {
-            Simulation sim = NextSimulationToRun();
-            while (sim != null)
-            {
-                Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
-
-                string st = FileFormat.WriteToString(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
-                sim = NextSimulationToRun();
-            }
-        }
-
-        /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
-        {
-            return simulationNames;
-        }
-
-        /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactors> GetFactors()
-        {
-            var factors = new List<ISimulationGeneratorFactors>();
-            foreach (Parameter param in Parameters)
-            {
-                factors.Add(new SimulationGeneratorFactors(new string[] { "Parameter" }, new string[] { param.Name },
-                "Parameter", param.Name));
-            }
-            return factors;
-        }
-
-        /// <summary>
-        /// Initialise the experiment ready for creating simulations.
-        /// </summary>
-        private void Initialise()
-        {
-            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
-            allCombinations.Clear();
+            // Calculate all combinations.
             CalculateFactors();
+
+            // Loop through all combinations and add a simulation description to the
+            // list of simulations descriptions being returned to the caller.
+            var simulationDescriptions = new List<SimulationDescription>();
+            int simulationNumber = 1;
+            foreach (var combination in allCombinations)
+            {
+                // Create a simulation.
+                var simulationName = Name + "Simulation" + simulationNumber;
+                var simDescription = new SimulationDescription(baseSimulation, simulationName);
+
+                // Apply each composite factor of this combination to our simulation description.
+                combination.ForEach(c => c.ApplyToSimulation(simDescription));
+                
+                // Add simulation description to the return list of descriptions
+                simulationDescriptions.Add(simDescription);
+
+                simulationNumber++;
+            }
+
+            return simulationDescriptions;
         }
 
         /// <summary>
@@ -254,6 +167,7 @@
         /// </summary>
         private void CalculateFactors()
         {
+            allCombinations.Clear();
             if (allCombinations.Count == 0)
             {
                 // Write a script to get random numbers from R.
@@ -304,7 +218,6 @@
                 X2 = ApsimTextFile.ToTable(sobolx2FileName);
 
                 int simulationNumber = 1;
-                simulationNames.Clear();
                 foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
                     var factors = new List<CompositeFactor>();
@@ -316,7 +229,6 @@
                     }
 
                     string newSimulationName = Name + "Simulation" + simulationNumber;
-                    simulationNames.Add(newSimulationName);
                     allCombinations.Add(factors);
                     simulationNumber++;
                 }

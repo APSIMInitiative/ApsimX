@@ -1,10 +1,12 @@
 ﻿namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -17,8 +19,12 @@
         private IEnumerator<Simulation> simulationEnumerator;
         private List<IRunnable> toolsToRun = new List<IRunnable>();
 
+        /// <summary>A delegate that gets called to indicate progress during an operation.</summary>
+        /// <param name="percent">Percentage compete.</param>
+        public delegate void OnProgress(int percent);
+
         /// <summary>Simulation names being run</summary>
-        public List<string> SimulationNamesBeingRun { get; private set; }
+        public int NumSimulationNamesBeingRun { get; private set; }
 
         /// <summary>
         /// Clocks of simulations that have begun running
@@ -31,18 +37,6 @@
                     return (simulationEnumerator as Runner.SimulationEnumerator).simClocks;
                 else
                     return null;
-            }
-        }
-
-        /// <summary>All known simulation names</summary>
-        public List<string> AllSimulationNames
-        {
-            get
-            {
-                List<string> AllSimulationNames = new List<string>();
-                List<ISimulationGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
-                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames(false)));
-                return AllSimulationNames;
             }
         }
 
@@ -73,20 +67,7 @@
 
                 Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
                 simulationEnumerator = enumerator;
-                SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;
-
-                // Send event telling all models that we're about to begin running.
-                Dictionary<string, string> simAndFolderNames = new Dictionary<string, string>();
-                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Where(m => m.Enabled).Cast<ISimulationGenerator>())
-                {
-                    string folderName = Apsim.Parent(simulation as IModel, typeof(Folder)).Name;
-                    foreach (string simulationName in simulation.GetSimulationNames())
-                    {
-                        if (simAndFolderNames.ContainsKey(simulationName))
-                            throw new Exception(string.Format("Duplicate simulation names found: {0} in simulation {1}", simulationName, (simulation as IModel).Name));
-                        simAndFolderNames.Add(simulationName, folderName);
-                    }
-                }
+                NumSimulationNamesBeingRun = enumerator.NumSimulationsBeingRun;
             }
 
             // Are there any runnable things?
@@ -99,7 +80,7 @@
 
             // If we didn't find anything to run then return null to tell job runner to exit.
             if (simulationEnumerator.MoveNext())
-                return new RunSimulation(simulations, simulationEnumerator.Current, false);
+                return new RunSimulation(simulations, simulationEnumerator.Current);
             else
                 return null;
         }
@@ -159,5 +140,51 @@
             storage.Writer.Stop();
         }
 
+
+        /// <summary>
+        /// Generates .apsimx files for each child model under a given model.
+        /// Returns false if errors were encountered, or true otherwise.
+        /// </summary>
+        /// <param name="path">
+        /// Path which the files will be saved to. 
+        /// If null, the user will be prompted to choose a directory.
+        /// </param>
+        /// <param name="progressCallBack">Invoked when the method needs to indicate progress.</param>
+        /// <returns>null for success or a list of exceptions.</returns>
+        public List<Exception> GenerateApsimXFiles(string path, OnProgress progressCallBack)
+        {
+            IEnumerable<ISimulationDescriptionGenerator> children;
+            if (modelSelectedByUser is ISimulationDescriptionGenerator)
+                children = new List<IModel> { modelSelectedByUser }.Cast<ISimulationDescriptionGenerator>();
+            else
+                children = Apsim.ChildrenRecursively(modelSelectedByUser, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>();
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            List<Exception> errors = null;
+            int i = 0;
+            foreach (var sim in children)
+            {
+                progressCallBack?.Invoke(100 * i / children.Count());
+                try
+                {
+                    foreach (var simDescription in sim.GenerateSimulationDescriptions())
+                    {
+                        string st = FileFormat.WriteToString(simDescription.ToSimulation(simulations));
+                        File.WriteAllText(Path.Combine(path, simDescription.Name + ".apsimx"), st);
+                    }
+                }
+                catch (Exception err)
+                {
+                    if (errors == null)
+                        errors = new List<Exception>();
+                    errors.Add(err);
+                }
+
+                i++;
+            }
+            return errors;
+        }
     }
 }

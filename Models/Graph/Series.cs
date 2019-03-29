@@ -304,18 +304,22 @@ namespace Models.Graph
         /// <param name="model"></param>
         private List<ISimulationGeneratorFactors> BuildListFromModel(IModel model)
         {
-            var simulationZonePairs = new List<ISimulationGeneratorFactors>();
-            if (model is ISimulationGenerator)
-                simulationZonePairs.AddRange((model as ISimulationGenerator).GetFactors());
-            else
-            {
-                foreach (IModel child in model.Children)
-                {
-                    if (child is Simulation || child is ISimulationGenerator || child is Folder)
-                        simulationZonePairs.AddRange(BuildListFromModel(child));
-                }
-            }
-            return simulationZonePairs;
+            throw new NotImplementedException();
+            //var simulationZonePairs = new List<ISimulationGeneratorFactors>();
+            //if (model is ISimulationDescriptionGenerator)
+            //{
+            //    foreach (var simDescriptions in (model as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
+            //        simulationZonePairs.Add(simDescriptions. );
+            //}
+            //else
+            //{
+            //    foreach (IModel child in model.Children)
+            //    {
+            //        if (child is Simulation || child is ISimulationDescriptionGenerator || child is Folder)
+            //            simulationZonePairs.AddRange(BuildListFromModel(child));
+            //    }
+            //}
+            //return simulationZonePairs;
         }
 
         /// <summary>

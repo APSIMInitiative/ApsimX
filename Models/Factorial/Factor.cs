@@ -120,7 +120,8 @@
             Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
             if (experiment != null)
             {
-                IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
+                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
+                IModel modelToReplace = Apsim.Get(baseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
                 foreach (IModel newModel in Children)
