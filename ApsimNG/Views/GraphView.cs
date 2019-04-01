@@ -713,6 +713,8 @@ namespace UserInterface.Views
             PngExporter pngExporter = new PngExporter();
             pngExporter.Width = 800;
             pngExporter.Height = 600;
+            Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
+            pngExporter.Background = OxyColor.FromRgb((byte)(colour.Red / 65535.0 * 255), (byte)(colour.Green / 65535.0 * 255), (byte)(colour.Blue / 65535.0 * 255));
             pngExporter.Export(plot1.Model, stream);
             stream.Seek(0, SeekOrigin.Begin);
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
@@ -924,7 +926,8 @@ namespace UserInterface.Views
         private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
         {
             List<double> dataPointValues = new List<double>();
-
+            double x; // Used only as an out parameter, to maintain backward
+                      // compatibility with older versions VS/C#.
             enumerator.MoveNext();
 
             if (enumerator.Current.GetType() == typeof(DateTime))
@@ -941,7 +944,7 @@ namespace UserInterface.Views
                 }
                 while (enumerator.MoveNext());
             }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do

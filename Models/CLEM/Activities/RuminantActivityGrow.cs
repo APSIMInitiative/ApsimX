@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
             // now calculated in Ruminant
             // ind.NormalisedAnimalWeight = standardReferenceWeight - ((1 - ind.BreedParams.SRWBirth) * standardReferenceWeight) * Math.Exp(-(ind.BreedParams.AgeGrowthRateCoefficient * (ind.Age * 30.4)) / (Math.Pow(standardReferenceWeight, ind.BreedParams.SRWGrowthScalar)));
             double liveWeightForIntake = ind.NormalisedAnimalWeight;
-            ind.HighWeight = Math.Max(ind.HighWeight, ind.Weight);
+            // now performed at allocation of weight in Ruminant
             if (ind.HighWeight < ind.NormalisedAnimalWeight)
             {
                 liveWeightForIntake = ind.HighWeight;
@@ -402,11 +402,6 @@ namespace Models.CLEM.Activities
             {
                 // calculate engergy and growth from milk intake
 
-                // old code
-                // dum = potential milk intake daily
-                // dumshort = potential intake. check that it isnt monthly
-
-
                 // recalculate milk intake based on mothers updated milk production for the time step
                 double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
                 ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
@@ -530,8 +525,8 @@ namespace Models.CLEM.Activities
 
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
-            //methaneProduced = 0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
-            //methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
+            // methane is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+            // methane is methaneProduced / 55.28 * 1000; // grams per day
             
             // Charmely et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
@@ -550,7 +545,7 @@ namespace Models.CLEM.Activities
             // grow all individuals
             foreach (Ruminant ind in ruminantHerd.Herd)
             {
-                ind.Age++;
+                ind.IncrementAge();
             }
         }
 

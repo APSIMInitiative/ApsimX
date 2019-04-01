@@ -106,6 +106,13 @@ namespace Models.CLEM.Activities
         public int MaximumSiresPerPurchase { get; set; }
 
         /// <summary>
+        /// Fill breeding males up to required amount
+        /// </summary>
+        [Description("Fill breeding males up to required number")]
+        [Required]
+        public bool FillBreedingMalesAtStartup { get; set; }
+
+        /// <summary>
         /// Male selling age (months)
         /// </summary>
         [Category("General", "Males")]
@@ -207,6 +214,30 @@ namespace Models.CLEM.Activities
             else
             {
                 SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept));
+            }
+
+            if(FillBreedingMalesAtStartup)
+            {
+                RuminantHerd herd = Resources.RuminantHerd();
+                if (herd != null)
+                {
+                    // get number in herd
+                    int numberPresent = this.CurrentHerd(false).Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
+                    // fill to number needed
+                    for (int i = numberPresent; i < SiresKept; i++)
+                    {
+                        RuminantMale newbull = new RuminantMale(48, Sex.Male, 450, breedParams)
+                        {
+                            Breed = this.PredictedHerdBreed,
+                            HerdName = this.PredictedHerdName,
+                            BreedingSire = true,
+                            ID = herd.NextUniqueID,
+                            PreviousWeight = 450,
+                            SaleFlag = HerdChangeReason.InitialHerd
+                        };
+                        herd.AddRuminant(newbull, this);
+                    }
+                }
             }
 
             // check GrazeFoodStoreExists
@@ -354,19 +385,15 @@ namespace Models.CLEM.Activities
                             {
                                 if (i < MaximumSiresPerPurchase)
                                 {
-                                    RuminantMale newbull = new RuminantMale
+                                    RuminantMale newbull = new RuminantMale(48, Sex.Male, 450, breedParams)
                                     {
                                         Location = grazeStore,
-                                        Age = 48,
                                         Breed = this.PredictedHerdBreed,
                                         HerdName = this.PredictedHerdName,
                                         BreedingSire = true,
-                                        BreedParams = breedParams,
                                         Gender = Sex.Male,
-                                        ID = 0, // ruminantHerd.NextUniqueID;
-                                        Weight = 450,
+                                        ID = 0, // Next unique ide will be assigned when added
                                         PreviousWeight = 450,
-                                        HighWeight = 450,
                                         SaleFlag = HerdChangeReason.SirePurchase
                                     };
 
@@ -471,10 +498,9 @@ namespace Models.CLEM.Activities
                                 int breederClass = Convert.ToInt32(numberBought / numberPerPurchaseCohort);
                                 ageOfBreeder = Convert.ToInt32(minBreedAge + (breederClass * 12));
 
-                                RuminantFemale newBreeder = new RuminantFemale
+                                RuminantFemale newBreeder = new RuminantFemale(ageOfBreeder, Sex.Female, 0, breedParams)
                                 {
                                     Location = grazeStore,
-                                    Age = ageOfBreeder,
                                     Breed = this.PredictedHerdBreed,
                                     HerdName = this.PredictedHerdName,
                                     BreedParams = breedParams,
@@ -482,11 +508,8 @@ namespace Models.CLEM.Activities
                                     ID = 0,
                                     SaleFlag = HerdChangeReason.BreederPurchase
                                 };
-                                // calculate normalised weight based on age.
-                                double weight = newBreeder.NormalisedAnimalWeight;
-                                newBreeder.Weight = weight;
-                                newBreeder.PreviousWeight = weight;
-                                newBreeder.HighWeight = weight;
+                                // weight will be set to normalised weight as it was assigned 0 at initialisation
+                                newBreeder.PreviousWeight = newBreeder.Weight;
 
                                 // this individual must be weaned to be permitted to start breeding.
                                 newBreeder.Wean(false, "Initial");

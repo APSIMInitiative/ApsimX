@@ -40,7 +40,7 @@ if not exist "%solution_file%" (
 
 rem Copy DeploymentSupport files.
 echo Copying DeploymentSupport files...
-xcopy /e /i %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib>nul
+xcopy /y /e /i %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib>nul
 copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin>nul
 echo Done.
 

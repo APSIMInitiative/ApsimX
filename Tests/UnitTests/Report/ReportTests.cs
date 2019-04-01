@@ -17,21 +17,14 @@
     public class ReportTests
     {
         /// <summary>
-        /// This test reproduces a bug where aggregation to [Clock].Today doesn't work, due to
-        /// [Clock].Today being evaluated before the simulation starts.
+        /// Template simulations object used to run tests in this class.
         /// </summary>
-        [Test]
-        public void EnsureAggregationWorks()
+        private Simulations sims;
+
+        [SetUp]
+        public void InitSimulations()
         {
-            // To test aggregation to [Clock].Today, we generate the first 10
-            // triangular numbers by summing [Clock].Today over the first 10 days of the year.
-            List<int> triangularNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 };
-
-            // To test aggregation to/from events, we sum day of year from start of week to end of week.
-            // The simulation starts in 2017 January 1, which is a Sunday (start of week).
-            List<int> weeklyNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27 };
-
-            var sims = new Simulations()
+            sims = new Simulations()
             {
                 FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
                 Children = new List<Model>()
@@ -58,7 +51,9 @@
                                         {
                                             "[Clock].Today.DayOfYear as n",
                                             "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
-                                            "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test"
+                                            "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
+                                            "[Clock].Today.Year as Year",
+                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
                                         },
                                         EventNames = new string[]
                                         {
@@ -71,7 +66,27 @@
                     }
                 }
             };
-           
+        }
+
+        /// <summary>
+        /// This test reproduces a bug where aggregation to [Clock].Today doesn't work, due to
+        /// [Clock].Today being evaluated before the simulation starts.
+        /// </summary>
+        [Test]
+        public void EnsureAggregationWorks()
+        {
+            Clock clock = Apsim.Find(sims, typeof(Clock)) as Clock;
+            clock.StartDate = new DateTime(2017, 1, 1);
+            clock.EndDate = new DateTime(2017, 1, 10);
+
+            // To test aggregation to [Clock].Today, we generate the first 10
+            // triangular numbers by summing [Clock].Today over the first 10 days of the year.
+            List<int> triangularNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 };
+
+            // To test aggregation to/from events, we sum day of year from start of week to end of week.
+            // The simulation starts in 2017 January 1, which is a Sunday (start of week).
+            List<int> weeklyNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27 };
+
             var runner = new Runner(sims);
             runner.Run(Runner.RunTypeEnum.MultiThreaded);
 
@@ -82,6 +97,27 @@
 
             predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["test"])).ToList();
             Assert.AreEqual(weeklyNumbers, predicted);
+        }
+
+        /// <summary>
+        /// This test reproduces a bug where aggregation from 1-Jan to 31-Dec doesn't work properly;
+        /// values don't reset after 31-dec, they instead continue aggregating.
+        /// </summary>
+        [Test]
+        public void EnsureYearlyAggregationWorks()
+        {
+            Clock clock = Apsim.Find(sims, typeof(Clock)) as Clock;
+            clock.StartDate = new DateTime(2017, 1, 1);
+            clock.EndDate = new DateTime(2019, 1, 1);
+
+            var runner = new Runner(sims);
+            runner.Run(Runner.RunTypeEnum.MultiThreaded);
+
+            var storage = sims.Children[0] as IDataStore;
+            DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "Year", "SigmaDay" });
+            int finalValFirstYear = int.Parse(data.AsEnumerable().Where(x => int.Parse(x["Year"].ToString()) == 2017).Select(x => x["SigmaDay"]).Last().ToString());
+            int firstValSecondYear = int.Parse(data.AsEnumerable().Where(x => int.Parse(x["Year"].ToString()) == 2018).Select(x => x["SigmaDay"]).First().ToString());
+            Assert.That(finalValFirstYear > firstValSecondYear, $"Error: Report aggregation from 01-Jan to 31-Dec did not reset after the end date. Final value in first year: {finalValFirstYear}, first value in second year: {firstValSecondYear}");
         }
     }
 }

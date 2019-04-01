@@ -216,6 +216,7 @@ namespace Models.PMF.Organs
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             if (soil.Weirdo == null)
             {
+                var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
                 var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
                 Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
             }
