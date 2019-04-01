@@ -713,11 +713,10 @@ namespace UserInterface.Presenters
 
                     foreach (IModel child in Apsim.FindAll(model))
                     {
-                        // Resolve replacements node.
-                        // if (child is Simulation)
-                        //     explorerPresenter.ApsimXFile.MakeSubsAndLoad(child as Simulation);
+                        if (Apsim.FullPath(child) == Apsim.FullPath(model))
+                            continue;
 
-                        // Resolve links
+                        // Resolve links (this doesn't seem to work properly).
                         explorerPresenter.ApsimXFile.Links.Resolve(child, throwOnFail: false);
                         MemberInfo[] members = null;
                         Type childType = child.GetType();
@@ -780,8 +779,6 @@ namespace UserInterface.Presenters
                                     continue;
                                 }
                                 if (value == null)
-                                    continue;
-                                if (!value.EndsWith(".Value()") && !value.EndsWith(".Value"))
                                     continue;
 
                                 value = value.Replace(".Value()", "").Replace(".Value", "");
