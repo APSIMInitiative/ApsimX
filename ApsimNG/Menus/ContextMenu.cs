@@ -707,7 +707,9 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     string modelPath = Apsim.FullPath(model);
-                    StringBuilder message = new StringBuilder();
+                    StringBuilder message = new StringBuilder($"Searching for references to model {Apsim.FullPath(model)}...");
+                    message.AppendLine();
+                    message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
                     BindingFlags flags;
 
@@ -756,7 +758,7 @@ namespace UserInterface.Presenters
                                 message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
                         }
 
-                        if (model is IFunction && child is IFunction)
+                        //if (model is IFunction && child is IFunction)
                         {
                             // Next, search all public string properties for the path to this model.
                             PropertyInfo[] properties;
@@ -801,6 +803,7 @@ namespace UserInterface.Presenters
                         }
                     }
                     timer.Stop();
+                    message.AppendLine();
                     message.AppendLine($"Finished. Elapsed time: {timer.Elapsed.TotalSeconds.ToString("#.00")} seconds");
                     explorerPresenter.MainPresenter.ShowMessage(message.ToString(), Simulation.MessageType.Information);
                 }
