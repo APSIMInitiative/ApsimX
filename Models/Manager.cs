@@ -331,7 +331,9 @@
                         Params.ReferencedAssemblies.Add(typeof(MathNet.Numerics.Fit).Assembly.Location); // MathNet.Numerics
                         Params.ReferencedAssemblies.Add(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location); // APSIM.Shared.dll
                         Params.ReferencedAssemblies.Add(typeof(IModel).Assembly.Location); // Models.exe
-                        
+
+                        if (!Params.ReferencedAssemblies.Contains(Assembly.GetCallingAssembly().Location))
+                            Params.ReferencedAssemblies.Add(Assembly.GetCallingAssembly().Location);
                         Params.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
                         Params.TempFiles.KeepFiles = false;
                         CompilerResults results;
