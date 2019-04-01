@@ -12,6 +12,7 @@
     using System.Xml;
     using System.Xml.Serialization;
     using Newtonsoft.Json;
+    using System.CodeDom.Compiler;
 
     /// <summary>
     /// The manager model
@@ -127,7 +128,7 @@
                 try
                 {
                     Children?.RemoveAll(x => x.GetType().Name == "Script");
-                    Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
+                    Assembly compiledAssembly = CompileTextToAssembly(Code, GetAssemblyFileName());
                     if (compiledAssembly.GetType("Models.Script") == null)
                         throw new ApsimXException(this, "Cannot find a public class called 'Script'");
 
@@ -267,5 +268,94 @@
             }
         }
 
+
+        /// <summary>
+        /// An assembly cache.
+        /// </summary>
+        private static Dictionary<string, Assembly> AssemblyCache = new Dictionary<string, Assembly>();
+
+        /// <summary>
+        /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
+        /// is null then compile to an in-memory assembly.
+        /// </summary>
+        public static Assembly CompileTextToAssembly(string code, string assemblyFileName)
+        {
+            // See if we've already compiled this code. If so then return the assembly.
+            if (AssemblyCache.ContainsKey(code))
+                return AssemblyCache[code];
+
+            lock (AssemblyCache)
+            {
+                if (AssemblyCache.ContainsKey(code))
+                    return AssemblyCache[code];
+                bool VB = code.IndexOf("Imports System") != -1;
+                string Language;
+                if (VB)
+                    Language = CodeDomProvider.GetLanguageFromExtension(".vb");
+                else
+                    Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+
+                if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
+                {
+                    CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
+                    if (Provider != null)
+                    {
+                        CompilerParameters Params = new CompilerParameters();
+
+                        string[] source = new string[1];
+                        if (assemblyFileName == null)
+                        {
+                            Params.GenerateInMemory = true;
+                            source[0] = code;
+                        }
+                        else
+                        {
+                            Params.GenerateInMemory = false;
+                            Params.OutputAssembly = assemblyFileName;
+                            string sourceFileName;
+                            if (VB)
+                                sourceFileName = Path.ChangeExtension(assemblyFileName, ".vb");
+                            else
+                                sourceFileName = Path.ChangeExtension(assemblyFileName, ".cs");
+                            File.WriteAllText(sourceFileName, code);
+                            source[0] = sourceFileName;
+                        }
+                        Params.TreatWarningsAsErrors = false;
+                        Params.IncludeDebugInformation = true;
+                        Params.WarningLevel = 2;
+                        Params.ReferencedAssemblies.Add("System.dll");
+                        Params.ReferencedAssemblies.Add("System.Xml.dll");
+                        Params.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+                        Params.ReferencedAssemblies.Add("System.Data.dll");
+                        Params.ReferencedAssemblies.Add("System.Core.dll");
+                        Params.ReferencedAssemblies.Add(typeof(MathNet.Numerics.Fit).Assembly.Location); // MathNet.Numerics
+                        Params.ReferencedAssemblies.Add(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location); // APSIM.Shared.dll
+                        Params.ReferencedAssemblies.Add(typeof(IModel).Assembly.Location); // Models.exe
+                        
+                        Params.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
+                        Params.TempFiles.KeepFiles = false;
+                        CompilerResults results;
+                        if (assemblyFileName == null)
+                            results = Provider.CompileAssemblyFromSource(Params, source);
+                        else
+                            results = Provider.CompileAssemblyFromFile(Params, source);
+                        string Errors = "";
+                        foreach (CompilerError err in results.Errors)
+                        {
+                            if (Errors != "")
+                                Errors += "\r\n";
+
+                            Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                        }
+                        if (Errors != "")
+                            throw new Exception(Errors);
+
+                        AssemblyCache.Add(code, results.CompiledAssembly);
+                        return results.CompiledAssembly;
+                    }
+                }
+                throw new Exception("Cannot compile manager script to an assembly");
+            }
+        }
     }
 }
