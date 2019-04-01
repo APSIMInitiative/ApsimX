@@ -129,7 +129,7 @@ namespace Models.Utilities
                 using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptName))
                     using (StreamReader reader = new StreamReader(s))
                         script = reader.ReadToEnd();
-                scriptName = Path.GetTempFileName();
+                scriptName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".r");
                 File.WriteAllText(scriptName, script);
             }
 
