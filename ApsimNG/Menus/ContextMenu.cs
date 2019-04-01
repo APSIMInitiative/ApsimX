@@ -24,6 +24,7 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using System.Linq;
     using System.Text;
+    using Models.Functions;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -696,7 +697,8 @@ namespace UserInterface.Presenters
         }
 
 
-        [ContextMenu(MenuName = "Find All References")]
+        [ContextMenu(MenuName = "Find All References",
+                     ShortcutKey = "Shift + F12")]
         public void OnFindReferences(object sender, EventArgs e)
         {
             try
@@ -709,7 +711,7 @@ namespace UserInterface.Presenters
                     Stopwatch timer = Stopwatch.StartNew();
                     BindingFlags flags;
 
-                    foreach (IModel child in Apsim.ChildrenRecursively(explorerPresenter.ApsimXFile))
+                    foreach (IModel child in Apsim.FindAll(model))
                     {
                         // Resolve replacements node.
                         // if (child is Simulation)
@@ -755,34 +757,50 @@ namespace UserInterface.Presenters
                                 message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
                         }
 
-                        // Next, search all public string properties for the path to this model.
-                        PropertyInfo[] properties;
-                        if (!stringProperties.TryGetValue(childType, out properties))
+                        if (model is IFunction && child is IFunction)
                         {
-                            flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
-                            properties = childType.GetProperties(flags).Where(p => p.PropertyType == typeof(string) && p.CanRead).ToArray();
-                            stringProperties.Add(childType, properties);
-                        }
-                        foreach (PropertyInfo property in properties)
-                        {
-                            string value;
-                            try
+                            // Next, search all public string properties for the path to this model.
+                            PropertyInfo[] properties;
+                            if (!stringProperties.TryGetValue(childType, out properties))
                             {
-                                // An exception could be thrown here from inside the property's getter.
-                                value = property.GetValue(child) as string;
+                                flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
+                                properties = childType.GetProperties(flags).Where(p => p.PropertyType == typeof(string) && p.CanRead).ToArray();
+                                stringProperties.Add(childType, properties);
                             }
-                            catch
+                            foreach (PropertyInfo property in properties)
                             {
-                                continue;
-                            }
+                                string value;
+                                try
+                                {
+                                    // An exception could be thrown here from inside the property's getter.
+                                    value = property.GetValue(child) as string;
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+                                if (value == null)
+                                    continue;
+                                if (!value.EndsWith(".Value()") && !value.EndsWith(".Value"))
+                                    continue;
 
-                            IModel result = Apsim.Find(child, value);
-                            if (result == null)
-                                continue;
-                            bool correctType = model.GetType().IsAssignableFrom(result.GetType());
-                            bool correctPath = string.Equals(Apsim.FullPath(result), modelPath, StringComparison.InvariantCulture);
-                            if (correctType && correctPath)
-                                message.AppendLine($"Found reference in string property {property.Name} of node {Apsim.FullPath(child)}.");
+                                value = value.Replace(".Value()", "").Replace(".Value", "");
+                                IModel result = null;
+                                try
+                                {
+                                    result = Apsim.Get(child, value) as IModel;
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+                                if (result == null)
+                                    continue;
+                                bool correctType = model.GetType().IsAssignableFrom(result.GetType());
+                                bool correctPath = string.Equals(Apsim.FullPath(result), modelPath, StringComparison.InvariantCulture);
+                                if (correctType && correctPath)
+                                    message.AppendLine($"Found reference in string property {property.Name} of node {Apsim.FullPath(child)}.");
+                            }
                         }
                     }
                     timer.Stop();
