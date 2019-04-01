@@ -160,6 +160,10 @@
                 // Close the reader and free resources.
                 excelReader.Close();
             }
+            else
+            {
+                throw new ApsimXException(this, string.Format("Unable to read Excel file '{0}': file does not exist.", fullFileName));
+            }
         }
 
         /// <summary>
