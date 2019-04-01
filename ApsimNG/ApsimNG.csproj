@@ -120,6 +120,7 @@
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <EmbeddedResource Include="Resources\Glade\CustomQueryView.glade" />
     <EmbeddedResource Include="Resources\Glade\PivotTableView.glade" />
+    <EmbeddedResource Include="Resources\Glade\SoilDownload.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -196,6 +197,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
+    <Compile Include="Commands\ReplaceModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
@@ -323,10 +325,11 @@
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\FileDialog.cs" />
     <Compile Include="Utility\FindInBrowserForm.cs" />
-    <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Utility\SoilDownloadDialog.cs" />
+    <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
@@ -452,6 +455,10 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PivotTable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPriceGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityPayHired.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionByCondition.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantConceptionCurve.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityIncome.png" />
@@ -922,6 +929,10 @@
     <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Batch, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Azure.Batch.8.0.1\lib\net452\Microsoft.Azure.Batch.dll</HintPath>

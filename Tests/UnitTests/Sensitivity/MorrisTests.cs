@@ -32,7 +32,7 @@ namespace UnitTests.Sensitivity
             {
                 string message = string.Empty;
                 foreach (Exception error in exceptions)
-                    message += error.Message + Environment.NewLine;
+                    message += error.ToString() + Environment.NewLine;
                 throw new Exception(message);
             }
         }

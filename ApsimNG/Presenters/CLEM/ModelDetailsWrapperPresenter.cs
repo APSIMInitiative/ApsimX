@@ -56,9 +56,21 @@
                 {
                     View.ModelTypeTextColour = "996633";
                 }
-                else if (View.ModelTypeText.Contains("Activities."))
+                else if (View.ModelTypeText.Contains(".Activities.LabourRequirement"))
+                {
+                    View.ModelTypeTextColour = "cc33cc";
+                }
+                else if (View.ModelTypeText.Contains(".Activities."))
                 {
                     View.ModelTypeTextColour = "009999";
+                }
+                else if (View.ModelTypeText.Contains(".Groupings."))
+                {
+                    View.ModelTypeTextColour = "cc33cc";
+                }
+                else if (View.ModelTypeText.Contains(".File"))
+                {
+                    View.ModelTypeTextColour = "008000";
                 }
 
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
