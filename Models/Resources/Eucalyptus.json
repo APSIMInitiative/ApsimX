@@ -620,13 +620,52 @@
           "Enabled": true,
           "ReadOnly": false
         },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.5,
-          "Units": null,
-          "Name": "ExtinctionCoefficient",
-          "Children": [
-            {
+		{
+  "$type": "Models.Functions.ExpressionFunction, Models",
+  "Expression": "([ExtinctionCoefficient].KMatureTrees+([ExtinctionCoefficient].KYoungTrees-[ExtinctionCoefficient].KMatureTrees)*Exp((0-2)*([Eucalyptus].Leaf.LAI/[ExtinctionCoefficient].LAIIntermediateK)^[ExtinctionCoefficient].ShapeCurve))",
+  "Name": "ExtinctionCoefficient",
+  "Children": [
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 0.50,
+      "Units": null,
+      "Name": "KYoungTrees",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 0.50,
+      "Units": null,
+      "Name": "KMatureTrees",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 0.7,
+      "Units": null,
+      "Name": "LAIIntermediateK",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 2.0,
+      "Units": null,
+      "Name": "ShapeCurve",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+	            {
               "$type": "Models.Memo, Models",
               "Text": "A value of 0.50 is commonly used for Eucalyptus ([macfarlane2007estimation]).\r\n",
               "Name": "Memo",
@@ -635,11 +674,11 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.5,
