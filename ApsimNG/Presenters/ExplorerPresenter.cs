@@ -736,6 +736,16 @@
             }
         }
 
+        public void DownloadSoil()
+        {
+            Models.Soils.Soil currentSoil = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Models.Soils.Soil;
+            if (currentSoil != null)
+            {
+                Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
+                dlg.ShowFor(currentSoil, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+            }
+        }
+
         /// <summary>
         /// The view wants us to return a list of menu descriptions for the
         /// main menu.

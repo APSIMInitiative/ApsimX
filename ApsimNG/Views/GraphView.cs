@@ -713,6 +713,8 @@ namespace UserInterface.Views
             PngExporter pngExporter = new PngExporter();
             pngExporter.Width = 800;
             pngExporter.Height = 600;
+            Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
+            pngExporter.Background = OxyColor.FromRgb((byte)(colour.Red / 65535.0 * 255), (byte)(colour.Green / 65535.0 * 255), (byte)(colour.Blue / 65535.0 * 255));
             pngExporter.Export(plot1.Model, stream);
             stream.Seek(0, SeekOrigin.Begin);
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);

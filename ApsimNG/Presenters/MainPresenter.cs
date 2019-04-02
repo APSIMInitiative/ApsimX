@@ -146,7 +146,7 @@
         /// <returns>Any exception message or null</returns>
         public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, Path.GetTempFileName());
+            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");

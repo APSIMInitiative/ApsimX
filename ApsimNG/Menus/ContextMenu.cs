@@ -299,7 +299,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Run APSIM" action
+        /// Event handler for a User interface "Check Soil" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -315,6 +315,17 @@ namespace UserInterface.Presenters
                 else
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
             }
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Download Soil" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil) })]
+        public void DownloadSoil(object sender, EventArgs e)
+        {
+            this.explorerPresenter.DownloadSoil();
         }
 
         /// <summary>

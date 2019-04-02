@@ -72,6 +72,9 @@ namespace UserInterface.Presenters
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 "\n</style>\n</head>\n<body>";
 
+            int errorCol = 8;
+            int msgCol = 7;
+
             // find IStorageReader of simulation
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
             IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
@@ -80,23 +83,22 @@ namespace UserInterface.Presenters
             {
                 return htmlString;
             }
-            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
             foreach (DataRow dr in dataRows)
             {
                 // convert invalid parameter warnings to errors
-                if(dr[7].ToString().StartsWith("Invalid parameter value in model"))
+                if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
                 {
-                    dr[8] = "0";
+                    dr[errorCol] = "0";
                 }
             }
-            dataRows = dataRows.OrderBy(a => a[8].ToString()).ToArray();
 
             if (dataRows.Count() > 0)
             {
                 foreach (DataRow dr in dataRows)
                 {
                     bool ignore = false;
-                    string msgStr = dr[7].ToString();
+                    string msgStr = dr[msgCol].ToString();
                     if (msgStr.Contains("@i:"))
                     {
                         ignore = true;
@@ -122,7 +124,7 @@ namespace UserInterface.Presenters
 
                         string type = "Message";
                         string title = "Message";
-                        switch (dr[8].ToString())
+                        switch (dr[errorCol].ToString())
                         {
                             case "2":
                                 type = "Error";
@@ -167,7 +169,7 @@ namespace UserInterface.Presenters
                             type = "Ok";
                             title = "Success";
                             DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][9].ToString());
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][8].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }
 
