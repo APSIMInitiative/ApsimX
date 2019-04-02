@@ -31,7 +31,12 @@ namespace Models.Core.ApsimFile
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
             string json = JsonConvert.SerializeXmlNode(doc);
-            JObject root = JObject.Parse(json);
+            var settings = new JsonSerializerSettings()
+            {
+                // This will tell the serializer not to attempt to localise dates.
+                DateParseHandling = DateParseHandling.None
+            };
+            JObject root = (JObject)JsonConvert.DeserializeObject(json, settings);
 
             JToken newRoot = CreateObject(root[doc.DocumentElement.Name]);
 
