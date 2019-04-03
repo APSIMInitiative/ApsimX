@@ -341,7 +341,7 @@ namespace Models.CLEM.Resources
         /// Get the Resource Group for Labour Family
         /// </summary>
         /// <returns></returns>
-        public Labour LabourFamily()
+        public Labour Labour()
         {
             return GetGroupByType(typeof(Labour)) as Labour;
         }

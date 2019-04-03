@@ -95,7 +95,8 @@ namespace Models.PMF.Organs
         public int Rank { get; set; } // 1 based ranking
 
         /// <summary>The area</summary>
-        [Description("Area mm2")]
+        [Description("Area")]
+        [Units("mm2")]
         public double Area { get; set; }
 
         //Leaf coefficients

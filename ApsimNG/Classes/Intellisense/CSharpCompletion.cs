@@ -271,6 +271,7 @@ namespace UserInterface.Intellisense
 		            typeof(IProjectContent).Assembly,
                     typeof(Models.Core.IModel).Assembly, // Models.exe
                     typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
+                    typeof(MathNet.Numerics.Combinatorics).Assembly, // MathNet.Numerics
                 };
             assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
 

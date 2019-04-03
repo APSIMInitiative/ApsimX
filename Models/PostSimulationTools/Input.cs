@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
+    using System.Threading;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -23,7 +24,7 @@
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class Input : Model, IRunnable, IReferenceExternalFiles
     {
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -58,10 +59,23 @@
             return new string[] { FileName };
         }
 
+        /// <summary>Gets the parent simulation or null if not found</summary>
+        private IStorageWriter StorageWriter
+        {
+            get
+            {
+                var dataStore = Apsim.Parent(this, typeof(IDataStore)) as IDataStore;
+                if (dataStore == null)
+                    throw new Exception("Cannot find a datastore");
+                return dataStore.Writer;
+            }
+        }
+
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(IDataStore dataStore)
+        /// <param name="cancelToken">The cancel token.</param>
+        public void Run(CancellationTokenSource cancelToken)
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
@@ -72,7 +86,7 @@
                 if (data != null)
                 {
                     data.TableName = this.Name;
-                    dataStore.Writer.WriteTable(data);
+                    StorageWriter.WriteTable(data);
                 }
             }
         }

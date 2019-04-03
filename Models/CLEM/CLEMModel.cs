@@ -29,6 +29,7 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
+        [XmlIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
@@ -210,12 +211,7 @@ namespace Models.CLEM
 
             if(this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
             {
-                //html += "\n<div class=\"activityentry\">This resource is measured in ";
-                //if((this as ResourceBaseWithTransactions).Units != "")
-                //{
-                //    html += "<span class=\"setvalue\">" + (this as ResourceBaseWithTransactions).Units + "</span> ";
-                //}
-                //html += "</div>";
+                // add units when completed
             }
             return html;
         }

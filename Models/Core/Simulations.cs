@@ -225,9 +225,18 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model simulation in Apsim.ChildrenRecursively(this))
-                if (simulation is Simulation)
-                    (simulation as Simulation).FileName = FileName;
+            foreach (Model child in Apsim.ChildrenRecursively(this))
+            {
+                if (child is Simulation)
+                    (child as Simulation).FileName = FileName;
+                else if (child is DataStore)
+                {
+                    DataStore storage = child as DataStore;
+                    storage.Close();
+                    storage.UpdateFileName();
+                    storage.Open();
+                }
+            }
         }
 
         /// <summary>

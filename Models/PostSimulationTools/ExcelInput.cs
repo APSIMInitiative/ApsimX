@@ -9,6 +9,7 @@
     using Storage;
     using System.Collections.Generic;
     using Models.Core.Run;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -18,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class ExcelInput : Model, IRunnable, IReferenceExternalFiles
     {
         private string _filename;
 
@@ -92,11 +93,14 @@
         /// <summary>
         /// Gets the parent simulation or null if not found
         /// </summary>
-        private Simulation Simulation
+        private IStorageWriter StorageWriter
         {
             get
             {
-                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                var dataStore = Apsim.Parent(this, typeof(IDataStore)) as IDataStore;
+                if (dataStore == null)
+                    throw new Exception("Cannot find a datastore");
+                return dataStore.Writer;
             }
         }
 
@@ -113,8 +117,8 @@
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        /// <param name="dataStore">The data store to store the data</param>
-        public void Run(IDataStore dataStore)
+        /// <param name="cancelToken">The cancel token.</param>
+        public void Run(CancellationTokenSource cancelToken)
         {
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
@@ -149,12 +153,16 @@
                     if (keep)
                     {
                         TruncateDates(table);
-                        dataStore.Writer.WriteTable(table);
+                        StorageWriter.WriteTable(table);
                     }
                 }
 
                 // Close the reader and free resources.
                 excelReader.Close();
+            }
+            else
+            {
+                throw new ApsimXException(this, string.Format("Unable to read Excel file '{0}': file does not exist.", fullFileName));
             }
         }
 
@@ -178,5 +186,6 @@
                             row[icol] = Convert.ToDateTime(row[icol]).Date;
                 }
         }
+
     }
 }

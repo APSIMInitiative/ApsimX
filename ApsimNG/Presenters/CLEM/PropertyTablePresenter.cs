@@ -182,9 +182,12 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                Model firstChild = model.Children.First();
-                List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
-                return sameTypeChildren;
+                Model firstChild = model.Children.FirstOrDefault();
+                if (firstChild != null)
+                {
+                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    return sameTypeChildren;
+                }
             }
             return null;
         }
@@ -354,6 +357,10 @@ namespace UserInterface.Presenters
         private void FillTable(DataTable table)
         {
             int propIndex = 0;
+            if(this.properties.Count == 0)
+            {
+                return;
+            }
             foreach (VariableProperty property in this.properties[0])
             {
                 //set the number of columns to the number of lists

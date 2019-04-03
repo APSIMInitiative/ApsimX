@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using System;
@@ -16,6 +17,29 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation
     {
+        /// <summary>The calculation for N retranslocation function</summary>
+        [ChildLinkByName]
+        [Units("/d")]
+        public IFunction RetranslocateFunction = null;
+
+        /// <summary>The calculation for DM retranslocation function</summary>
+        [ChildLinkByName]
+        [Units("/d")]
+        public IFunction RetranslocateDMFunction = null;
+
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        public double Calculate(IOrgan organ)
+        {
+            return RetranslocateFunction.Value();
+        }
+
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        public double CalculateBiomass(IOrgan organ)
+        {
+            return 0.0;
+        }
 
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
@@ -38,6 +62,13 @@ namespace Models.PMF
 
         }
 
+        /// <summary>Allocate the retranslocated material</summary>
+        /// <param name="organ"></param>
+        /// <param name="biomass"></param>
+        public void AllocateBiomass(IOrgan organ, BiomassAllocationType biomass)
+        {
+
+        }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
