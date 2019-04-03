@@ -31,10 +31,6 @@ namespace Models.PMF
         [Units("/d")]
         public IFunction RetranslocateDMFunction = null;
 
-        /// <summary>The parent plant</summary>
-        [Link]
-        private Plant parentPlant = null;
-
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
         public double Calculate(IOrgan organ)
