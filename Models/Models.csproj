@@ -220,6 +220,7 @@
     <Compile Include="Core\Interfaces\IOptionallySerialiseChildren.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ITest.cs" />
+    <Compile Include="Core\Reference.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
