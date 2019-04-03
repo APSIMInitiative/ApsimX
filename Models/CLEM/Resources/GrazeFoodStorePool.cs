@@ -15,6 +15,12 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStorePool : IFeedType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]

@@ -22,6 +22,12 @@ namespace Models.CLEM.Resources
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units")]
+        public string Units { get { return (Parent as Finance).CurrencyName; } }
+
+        /// <summary>
         /// Opening balance
         /// </summary>
         [Description("Opening balance")]

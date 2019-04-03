@@ -23,6 +23,12 @@ namespace Models.CLEM.Resources
     public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Starting amount
         /// </summary>
         [Description("Starting amount")]

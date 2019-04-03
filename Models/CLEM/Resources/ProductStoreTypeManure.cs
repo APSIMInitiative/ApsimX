@@ -23,6 +23,12 @@ namespace Models.CLEM.Resources
     public class ProductStoreTypeManure: CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// List of all uncollected manure stores
         /// These present manure in the field and yards
         /// </summary>

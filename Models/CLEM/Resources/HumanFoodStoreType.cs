@@ -24,6 +24,12 @@ namespace Models.CLEM.Resources
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]

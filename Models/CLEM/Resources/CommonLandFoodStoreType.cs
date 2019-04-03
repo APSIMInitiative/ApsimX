@@ -33,6 +33,12 @@ namespace Models.CLEM.Resources
         public ResourcesHolder Resources = null;
 
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Coefficient to convert N% to DMD%
         /// </summary>
         [Description("Coefficient to convert N% to DMD%")]

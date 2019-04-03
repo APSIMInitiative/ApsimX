@@ -167,8 +167,19 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "\n<div class=\"activityentry\">";
-            html += "Reported in <span class=\"setvalue\">" + UnitsOfArea +"</span>";
-            if(UnitsOfAreaToHaConversion != 1)
+            html += "Reported in ";
+            if(UnitsOfArea == null || UnitsOfArea == "")
+            {
+                html += "<span class=\"errorlink\">Unspecified units of area</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + UnitsOfArea + "</span>";
+            }
+            html += "</span>";
+
+
+            if (UnitsOfAreaToHaConversion != 1)
             {
                 html += " (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)";
             }

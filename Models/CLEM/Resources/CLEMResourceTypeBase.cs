@@ -23,11 +23,11 @@ namespace Models.CLEM.Resources
         [Link]
         Clock Clock = null;
 
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units")]
-        public string Units { get; set; }
+        ///// <summary>
+        ///// Unit type
+        ///// </summary>
+        //[Description("Units (nominal)")]
+        //public string Units { get; set; }
 
         /// <summary>
         /// Resource price

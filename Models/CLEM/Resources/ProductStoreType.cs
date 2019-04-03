@@ -23,6 +23,12 @@ namespace Models.CLEM.Resources
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Starting amount
         /// </summary>
         [Description("Starting amount")]

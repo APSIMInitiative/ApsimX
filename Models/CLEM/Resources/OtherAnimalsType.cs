@@ -23,6 +23,12 @@ namespace Models.CLEM.Resources
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Current cohorts of this Other Animal Type.
         /// </summary>
         [XmlIgnore]

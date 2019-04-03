@@ -27,6 +27,12 @@ namespace Models.CLEM.Resources
         private ResourcesHolder Resources = null;
 
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get {return "NA"; }  }
+
+        /// <summary>
         /// Breed
         /// </summary>
         [Category("Basic", "General")]
