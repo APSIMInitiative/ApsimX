@@ -708,6 +708,7 @@ namespace UserInterface.Presenters
                 {
                     string modelPath = Apsim.FullPath(model);
                     StringBuilder message = new StringBuilder($"Searching for references to model {Apsim.FullPath(model)}...");
+                    List<Reference> references = new List<Reference>();
                     message.AppendLine();
                     message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
@@ -755,7 +756,10 @@ namespace UserInterface.Presenters
                             bool isCorrectType = model.GetType().IsAssignableFrom(linkValue.GetType());
                             bool hasCorrectPath = string.Equals(Apsim.FullPath(linkValue), modelPath, StringComparison.InvariantCulture);
                             if (isCorrectType && hasCorrectPath)
+                            {
                                 message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
+                                references.Add(new Reference() { Member = member, Target = model, Model = child });
+                            }
                         }
 
                         //if (model is IFunction && child is IFunction)
@@ -798,7 +802,10 @@ namespace UserInterface.Presenters
                                 bool correctType = model.GetType().IsAssignableFrom(result.GetType());
                                 bool correctPath = string.Equals(Apsim.FullPath(result), modelPath, StringComparison.InvariantCulture);
                                 if (correctType && correctPath)
+                                {
                                     message.AppendLine($"Found reference in string property {property.Name} of node {Apsim.FullPath(child)}.");
+                                    references.Add(new Reference() { Member = property, Target = model, Model = child });
+                                }
                             }
                         }
                     }
@@ -806,6 +813,7 @@ namespace UserInterface.Presenters
                     message.AppendLine();
                     message.AppendLine($"Finished. Elapsed time: {timer.Elapsed.TotalSeconds.ToString("#.00")} seconds");
                     explorerPresenter.MainPresenter.ShowMessage(message.ToString(), Simulation.MessageType.Information);
+                    var dialog = new Utility.FindAllReferencesDialog(model, references, explorerPresenter);
                 }
             }
             catch (Exception err)

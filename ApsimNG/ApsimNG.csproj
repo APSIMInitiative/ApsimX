@@ -233,6 +233,7 @@
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Utility\FindAllReferencesDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
     <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
     <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
