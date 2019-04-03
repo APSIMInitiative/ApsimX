@@ -749,27 +749,39 @@
           "Enabled": true,
           "ReadOnly": false
         },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
-          "Units": "/d",
-          "Name": "SenescenceRate",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "A value of zero assumes that senescence is immediate.\r\n\r\n",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
+{
+  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+  "MaximumTemperatureWeighting": 0.0,
+  "Name": "SenescenceRate",
+  "Children": [
+    {
+      "$type": "Models.Functions.XYPairs, Models",
+      "X": [
+        -5.0,
+        -2.0,
+        0.0,
+        2.0,
+        2.1
+      ],
+      "Y": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Name": "XYPairs",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
+		{
           "$type": "Models.PMF.Library.BiomassRemoval, Models",
           "Name": "BiomassRemovalDefaults",
           "Children": [
@@ -917,99 +929,73 @@
               "Enabled": true,
               "ReadOnly": false
             },
-            {
-              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-              "MaximumTemperatureWeighting": 0.75,
-              "Name": "FT",
-              "Children": [
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    5.0,
-                    20.0,
-                    25.0,
-                    35.0
-                  ],
-                  "Y": [
-                    0.0,
-                    1.0,
-                    1.0,
-                    0.0
-                  ],
-                  "Name": "XYPairs",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": "Y",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN"
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": "X",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN"
-                        }
-                      ],
-                      "LegendPosition": 3,
-                      "DisabledSeries": null,
-                      "Name": "Graph",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -65536,
-                          "FactorToVaryColours": null,
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": null,
-                          "XFieldName": ".Simulations.Replacements.Eucalyptus.Leaf.Photosynthesis.FT.XYPairs.X",
-                          "YFieldName": ".Simulations.Replacements.Eucalyptus.Leaf.Photosynthesis.FT.XYPairs.Y",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
+{
+  "$type": "Models.Functions.MinimumFunction, Models",
+  "Name": "FT",
+  "Children": [
+    {
+      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+      "MaximumTemperatureWeighting": 0.75,
+      "Name": "FTDaytime",
+      "Children": [
+        {
+          "$type": "Models.Functions.XYPairs, Models",
+          "X": [
+            5.0,
+            20.0,
+            25.0,
+            35.0
+          ],
+          "Y": [
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "Name": "XYPairs",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+      "MaximumTemperatureWeighting": 0.0,
+      "Name": "FTFrost",
+      "Children": [
+        {
+          "$type": "Models.Functions.XYPairs, Models",
+          "X": [
+            -5.0,
+            0.0,
+            2.0
+          ],
+          "Y": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "Name": "XYPairs",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "XProperty": "[Leaf].Photosynthesis.VPD",
@@ -4028,6 +4014,15 @@
         "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.2, 0.17, 0.15",
         "",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+	    "",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
+	    "",
+	    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+	    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+	    "",
         "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.005,0.03,0.04",
         "",
@@ -4057,6 +4052,15 @@
         "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.19, 0.17, 0.17",
         "",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+	    "",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
+	    "",
+	    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+	    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+	    "",
         "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.03,0.1,0.1",
         "",
@@ -4089,6 +4093,15 @@
         "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.20, 0.16, 0.15",
         "",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  6, 17, 22, 38",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+	    "",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1  ",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0.5, 1, 1, 1, 1, 1, 1",
+	    "",
+	    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+	    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+	    "",
         "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.02,0.05,0.06",
         "",

@@ -19,6 +19,7 @@
     [ViewName("UserInterface.Views.ExperimentView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
+    [ScopedModel]
     public class Experiment : Model, ISimulationGenerator, ICustomDocumentation
     {
         [Link]
