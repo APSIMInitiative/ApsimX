@@ -38,8 +38,6 @@ namespace Models.PMF
             var leafIndex = 2;
             var rachisIndex = 3;
             var stemIndex = 4;
-            var tmp = (Organs[2] as SorghumLeaf).Plant.Phenology.DaysAfterSowing;
-            var clock = (Organs[2] as SorghumLeaf).Plant.Clock;
 
             var grainDemand = BAT.StructuralDemand[grainIndex] + BAT.MetabolicDemand[grainIndex];
             //calc leaf demand separately - old sorghum doesn't quite fit
@@ -122,9 +120,6 @@ namespace Models.PMF
             var rachisIndex = 3;
             var stemIndex = 4;
             var grainIndex = 0;
-
-            var tmp = (Organs[2] as SorghumLeaf).Plant.Phenology.DaysAfterSowing;
-            var clock = (Organs[2] as SorghumLeaf).Plant.Clock;
 
             var stemDemand = BAT.StructuralDemand[stemIndex];
             var rachisDemand = BAT.StructuralDemand[rachisIndex];

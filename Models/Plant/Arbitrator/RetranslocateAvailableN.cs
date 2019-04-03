@@ -39,11 +39,6 @@ namespace Models.PMF
         /// <param name="organ"></param>
         public double Calculate(IOrgan organ)
         {
-            var val = RetranslocateFunction.Value();
-            if (val > 0)
-            {
-                var tmp = parentPlant.Clock.Today.DayOfYear;
-            }
             return RetranslocateFunction.Value();
         }
 
