@@ -76,9 +76,36 @@ namespace Utility
 
             window.Title = string.Format("'{0}' references", references[0].Target.Name);
 
-            data.AppendValues(Apsim.FullPath(target), "");
+            string commonWordsString = GetCommonPathElements(references.Select(r => Apsim.FullPath(r.Model)).ToArray());
+            data.AppendValues(Apsim.FullPath(target), "", Apsim.FullPath(target));
             foreach (Reference reference in references)
-                data.AppendValues(Apsim.FullPath(reference.Model), reference.Member.DeclaringType.Name);
+            {
+                string path = Apsim.FullPath(reference.Model);
+                string cutDownPath = path.Replace(commonWordsString, "");
+                data.AppendValues(cutDownPath, reference.Member.DeclaringType.Name, path);
+            }
+        }
+
+        /// <summary>
+        /// Get the prefix common to all paths in all references.
+        /// </summary>
+        /// <param name="references"></param>
+        /// <returns></returns>
+        private string GetCommonPathElements(string[] paths)
+        {
+            try
+            {
+                string common = new string(
+                    paths.First().Substring(0, paths.Min(s => s.Length))
+                    .TakeWhile((c, i) => paths.All(s => s[i] == c)).ToArray());
+
+                // We actually want to display the last common word in the path.
+                return common.Substring(0, common.TrimEnd('.').LastIndexOf('.') + 1);
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -87,7 +114,7 @@ namespace Utility
         private void Initialise()
         {
             tree = new TreeView();
-            data = new ListStore(typeof(string), typeof(string));
+            data = new ListStore(typeof(string), typeof(string), typeof(string));
             tree.Model = data;
             tree.CanFocus = true;
             tree.RulesHint = true; // Allows for alternate-row colouring.
@@ -142,7 +169,7 @@ namespace Utility
 
                 TreeIter iter;
                 data.GetIter(out iter, path);
-                string nodePath = data.GetValue(iter, 0) as string;
+                string nodePath = data.GetValue(iter, 2) as string;
                 if (nodePath == null)
                     throw new Exception("Unable to navigate to selected item in 'Find All References' window.");
 
