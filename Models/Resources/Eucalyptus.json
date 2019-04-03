@@ -4015,6 +4015,10 @@
       "Command": [
         "[Leaf].Photosynthesis.RUE.FixedValue = 1.51",
         "",
+	    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.34",
+		"",
+		"[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.60",
+		"",
         "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.39, 0.61",
         "",
@@ -4040,6 +4044,10 @@
       "Command": [
         "[Leaf].Photosynthesis.RUE.FixedValue = 1.69",
         "",
+	    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.30",
+		"",
+	    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.56",
+		"",
         "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15,0.40, 0.64",
         "",
@@ -4068,6 +4076,10 @@
       "Command": [
         "[Leaf].Photosynthesis.RUE.FixedValue = 1.57",
         "",
+	    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.26",
+		"",
+	    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.55",
+		"",
         "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
         "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.30, 0.57",
         "",
