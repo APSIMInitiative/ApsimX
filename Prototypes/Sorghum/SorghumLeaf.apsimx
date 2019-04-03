@@ -3345,8 +3345,18 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
-                      "PhotosyntheticPathway": "C4",
+                      "$type": "Models.Memo, Models",
+                      "Text": "Replaced the RUE2CO2 function as C4 Photosynthetic pathway is not represented in old sorghum.\nLook to reimplement it once the stats are working",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
                       "Name": "FCO2",
                       "Children": [],
                       "IncludeInDocumentation": true,
