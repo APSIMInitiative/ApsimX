@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -33,14 +34,36 @@
         [NonSerialized]
         private DataStoreWriter dbWriter = new DataStoreWriter();
 
+        [JsonIgnore]
+        private string fileName;
+
         /// <summary>
         /// Selector for the database type. Set in the constructors.
         /// </summary>
         public bool useFirebird { get; set; } = false;
 
-        /// <summary>Returns the file name of the .db file</summary>
-        [XmlIgnore]
-        public string FileName { get; set; }
+        /// <summary>
+        /// Returns the file name of the .db file.
+        /// Returns CustomFileName if it has been given; will fallback to
+        /// fileName otherwise.
+        /// </summary>
+        [JsonIgnore]
+        public string FileName
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(CustomFileName) ? fileName : CustomFileName;
+            }
+            set
+            {
+                fileName = value;
+            }
+        }
+
+        /// <summary>
+        /// Allows the user to override the .db file location.
+        /// </summary>
+        public string CustomFileName { get; set; } = null;
 
         /// <summary>Get a reader to perform read operations on the datastore.</summary>
         public IStorageReader Reader { get { return dbReader; } }
@@ -140,27 +163,27 @@
             if (connection == null)
                 Open();
         }
-         
+        
+        /// <summary>
+        /// Updates the file name of the database file, based on the file name
+        /// of the parent Simulations object.
+        /// </summary>
+        public void UpdateFileName()
+        {
+            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            if (simulations == null || simulations.FileName == null)
+                FileName = ":memory:";
+            else if (useFirebird)
+                FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+            else
+                FileName = Path.ChangeExtension(simulations.FileName, ".db");
+        }
+
         /// <summary>Open the database.</summary>
         public void Open()
         {
-
             if (FileName == null)
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    FileName = simulations.FileName;
-                    if (useFirebird)
-                        FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
-                    else
-                        FileName = Path.ChangeExtension(simulations.FileName, ".db");
-                }
-            }
-
-            // If still no file was specified, then throw.
-            if (FileName == null)
-                FileName = ":memory:";
+                UpdateFileName();
 
             if (useFirebird)
                 connection = new Firebird();

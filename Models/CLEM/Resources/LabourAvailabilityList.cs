@@ -55,7 +55,6 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "</table>";
-            html += "\n</div>";
             return html;
         }
 

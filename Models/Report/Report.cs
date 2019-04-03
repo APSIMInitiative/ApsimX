@@ -16,6 +16,7 @@ namespace Models.Report
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
+    using Models.CLEM;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -27,6 +28,7 @@ namespace Models.Report
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
@@ -86,7 +88,7 @@ namespace Models.Report
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
             dataToWriteToDb = null;

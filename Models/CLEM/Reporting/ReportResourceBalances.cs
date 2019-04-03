@@ -100,7 +100,7 @@ namespace Models.CLEM.Reporting
                                 {
                                     for (int j = 0; j < (model as Labour).Items.Count; j++)
                                     {
-                                        variableNames.Add("[Resources]." + this.VariableNames[i] + ".Items[" + j.ToString() + "].AvailableDays as " + (model as Labour).Items[j].Name);
+                                        variableNames.Add("[Resources]." + this.VariableNames[i] + ".Items[" + (j+1).ToString() + "].AvailableDays as " + (model as Labour).Items[j].Name);
                                     }
                                 }
                                 else
@@ -152,7 +152,9 @@ namespace Models.CLEM.Reporting
         private void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
+            {
                 storage.Writer.WriteTable(dataToWriteToDb);
+            }
             dataToWriteToDb = null;
         }
 
@@ -160,6 +162,7 @@ namespace Models.CLEM.Reporting
         public new void DoOutput()
         {
             if (dataToWriteToDb == null)
+            {
                 dataToWriteToDb = new ReportData()
                 {
                     SimulationName = simulation.Name,
@@ -167,9 +170,12 @@ namespace Models.CLEM.Reporting
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
+            }
             List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
+            {
                 valuesToWrite.Add(columns[i].GetValue());
+            }
 
             dataToWriteToDb.Rows.Add(valuesToWrite);
 

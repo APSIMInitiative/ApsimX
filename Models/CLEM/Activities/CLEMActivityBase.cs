@@ -579,12 +579,13 @@ namespace Models.CLEM.Activities
 
                     amountProvided += amount;
                     removeRequest.Required = amount;
-//                    removeRequest.ResourceType = lt;
                     if (removeFromResource)
                     {
                         lt.LastActivityRequestID = request.ActivityID;
                         lt.LastActivityRequestAmount = amount;
                         lt.Remove(removeRequest);
+                        request.Provided += removeRequest.Provided;
+                        request.Value += request.Provided * lt.PayRate();
                     }
                 }
 
@@ -620,6 +621,8 @@ namespace Models.CLEM.Activities
                                     item.LastActivityRequestID = request.ActivityID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
+                                    request.Provided += removeRequest.Provided;
+                                    request.Value += request.Provided * item.PayRate();
                                 }
                             }
                             else
@@ -939,7 +942,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         NotNeeded,
         /// <summary>
-        /// Indicates activity cuased a warning and was not perfromed
+        /// Indicates activity caused a warning and was not performed
         /// </summary>
         Warning,
         /// <summary>

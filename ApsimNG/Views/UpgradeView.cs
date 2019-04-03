@@ -164,28 +164,23 @@ namespace UserInterface.Views
         {
             listmodel.Clear();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Major == 0)
-                label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
-            else
+            try
             {
-                try
-                {
-                    PopulateUpgradeList();
-                }
-                catch (Exception)
-                {
-                    MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                    loadFailure = true;
-                    return;
-                }
-                if (upgrades.Length > 0)
-                {
-                    label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
-                    label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
-                }
-                else
-                    label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
+                PopulateUpgradeList();
             }
+            catch (Exception)
+            {
+                MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                loadFailure = true;
+                return;
+            }
+            if (upgrades.Length > 0)
+            {
+                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
+                label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
+            }
+            else
+                label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
@@ -255,7 +250,10 @@ namespace UserInterface.Views
         {
             int selIndex = GetSelIndex();
             if (selIndex >= 0)
-                Process.Start(upgrades[selIndex].IssueURL);
+            {
+                Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                Process.Start(upgradeList[selIndex].IssueURL);
+            }
         }
 
         Gtk.MessageDialog waitDlg = null;
@@ -287,7 +285,8 @@ namespace UserInterface.Views
                         String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.Text))
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
-                    Upgrade upgrade = upgrades[selIndex];
+                    Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                    Upgrade upgrade = upgradeList[selIndex];
                     versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
@@ -322,6 +321,7 @@ namespace UserInterface.Views
                                 Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
                             waitDlg.Title = "APSIM Upgrade";
                             web.DownloadFileCompleted += Web_DownloadFileCompleted;
+                            web.DownloadProgressChanged += OnDownloadProgressChanged;
                             web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
                                 web.CancelAsync();
@@ -334,6 +334,7 @@ namespace UserInterface.Views
                         {
                             if (waitDlg != null)
                             {
+                                web.DownloadProgressChanged -= OnDownloadProgressChanged;
                                 waitDlg.Destroy();
                                 waitDlg = null;
                             }
@@ -348,6 +349,26 @@ namespace UserInterface.Views
                     window1.GdkWindow.Cursor = null;
                     ViewBase.MasterView.ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the download progress changes.
+        /// Updates the progress bar.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            try
+            {
+                double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
+                waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
+            }
+            catch (Exception err)
+            {
+                err = new Exception("Error updating download progress", err);
+                ShowError(err);
             }
         }
 

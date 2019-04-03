@@ -604,6 +604,7 @@ namespace Models.PMF.Organs
         /// <summary>alternative calculation that uses similar nDemands interface functions to GenericOrgan.</summary>
         public void CalculateNDemandsUsingSimpleFunctions()
         {
+            //TODO jb check if this is correct usage - possibly copied over by arbitrator
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
@@ -1066,10 +1067,13 @@ namespace Models.PMF.Organs
                 needToRecalculateLiveDead = false;
                 liveBiomass.Clear();
                 deadBiomass.Clear();
-                foreach (Biomass b in PlantZone.LayerLive)
-                    liveBiomass.Add(b);
-                foreach (Biomass b in PlantZone.LayerDead)
-                    deadBiomass.Add(b);
+                if (PlantZone != null)
+                {
+                    foreach (Biomass b in PlantZone.LayerLive)
+                        liveBiomass.Add(b);
+                    foreach (Biomass b in PlantZone.LayerDead)
+                        deadBiomass.Add(b);
+                }
             }
         }
 
@@ -1311,6 +1315,8 @@ namespace Models.PMF.Organs
                     double senescedFrac = senescenceRate.Value();
                     if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
                         senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+
                     Biomass Loss = Live * senescedFrac;
                     Live.Subtract(Loss);
                     Dead.Add(Loss);
