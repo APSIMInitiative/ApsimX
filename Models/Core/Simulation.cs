@@ -151,9 +151,14 @@ namespace Models.Core
         /// <summary>Gets the next job to run</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            var returnList = new List<SimulationDescription>();
-            returnList.Add(new SimulationDescription(this));
-            return returnList;
+            var simulationDescription = new SimulationDescription(this);
+
+            simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
+
+            foreach (var zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("ZoneName", zone.Name));
+
+            return new List<SimulationDescription>() { simulationDescription };
         }
 
         /// <summary>Gets a list of simulation names</summary>
@@ -164,35 +169,5 @@ namespace Models.Core
             return new string[] { Name };
         }
 
-        /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactors> GetFactors()
-        {
-            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
-            // Add top level simulation zone. This is needed if Report is in top level.
-            factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
-                                                       new string[] { Name, Name },
-                                                       "Simulation", Name));
-            factors[0].AddFactor("Zone", Name);
-            foreach (IModel zone in Apsim.ChildrenRecursively(this).Where(c => ScopingRules.IsScopedModel(c)))
-            {
-                var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
-                                                            new string[] { Name, zone.Name },
-                                                            "Simulation", Name);
-                factors.Add(factor);
-                factor.AddFactor("Zone", zone.Name);
-            }
-            return factors;
-        }
-
-        /// <summary>
-        /// Generates an .apsimx file for this simulation.
-        /// </summary>
-        /// <param name="path">Directory to write the file to.</param>
-        public void GenerateApsimXFile(string path)
-        {
-            IModel obj = Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() });
-            string st = FileFormat.WriteToString(obj);
-            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), st);
-        }
     }
 }

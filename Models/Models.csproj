@@ -225,7 +225,6 @@
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
-    <Compile Include="Core\SimulationGeneratorFactors.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />

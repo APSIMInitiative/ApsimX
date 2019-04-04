@@ -28,7 +28,10 @@
         public SimulationDescription(Simulation sim, string name = null, bool clone = true)
         {
             baseSimulation = sim;
-            Name = name;
+            if (name == null && baseSimulation != null)
+                Name = baseSimulation.Name;
+            else
+                Name = name;
             doClone = clone;
         }
 

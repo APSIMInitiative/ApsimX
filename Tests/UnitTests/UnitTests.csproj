@@ -96,6 +96,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -105,6 +106,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
+    <Compile Include="Graph\SeriesTests.cs" />
     <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
     <Compile Include="Factorial\ExperimentTests.cs" />
     <Compile Include="Storage\DataStoreReaderTests.cs" />
@@ -112,10 +115,11 @@
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
     <Compile Include="ManagerTests.cs" />
     <Compile Include="Sensitivity\MorrisTests.cs" />
-    <Compile Include="Graph\RegressionTests.cs" />
+    <Compile Include="APSIMShared\RegressionTests.cs" />
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="Storage\DataStoreTests.cs" />
+    <Compile Include="TextStorageReader.cs" />    
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="TestsTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />

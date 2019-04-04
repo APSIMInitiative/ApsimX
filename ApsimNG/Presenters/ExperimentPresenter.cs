@@ -75,7 +75,6 @@
             view.RunSims += OnRunSims;
             view.SetMaxSims += OnSetMaxNumSims;
 
-            throw new NotImplementedException();
             //maxSimsToDisplay = DefaultMaxSims;
             //var allCombinations = model.AllCombinations;
             //if (allCombinations == null || !allCombinations.Any())
