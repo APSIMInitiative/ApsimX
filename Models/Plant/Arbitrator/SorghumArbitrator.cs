@@ -56,13 +56,26 @@ namespace Models.PMF
         ///// <summary>The list of organs</summary>
         //private List<IArbitration> Organs = new List<IArbitration>();
 
+        ///// <summary>The list of organs</summary>
+        [Link]
+        private Root root = null; 
+
         #endregion
 
         #region Main outputs
+
+        /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
+        [XmlIgnore]
+        public double[] MassFlow { get; private set; }
+
+        /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
+        [XmlIgnore]
+        public double[] Diffusion { get; private set; }
+
+
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
         public double WatSupply { get; set; }
-
 
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
@@ -87,6 +100,69 @@ namespace Models.PMF
         }
 
         #region IUptake interface
+
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        public override void SetActualWaterUptake(List<ZoneWaterAndN> zones)
+        {
+
+            // Calculate the total water supply across all zones.
+            double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+            foreach (ZoneWaterAndN Z in zones)
+            {
+                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+            }
+
+            // Calculate total plant water demand.
+            WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+            foreach (IArbitration o in Organs)
+                if (o is IHasWaterDemand)
+                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+
+            // Calculate the fraction of water demand that has been given to us.
+            double fraction = 1;
+            if (WDemand > 0)
+                fraction = Math.Min(1.0, waterSupply / WDemand);
+
+            // Proportionally allocate supply across organs.
+            WAllocated = 0.0;
+
+            foreach (IHasWaterDemand WD in WaterDemands)
+            {
+                double demand = WD.CalculateWaterDemand();
+                double allocation = fraction * demand;
+                WD.WaterAllocation = allocation;
+                WAllocated += allocation;
+            }
+
+            // Give the water uptake for each zone to Root so that it can perform the uptake
+            // i.e. Root will do pass the uptake to the soil water balance.
+            foreach (ZoneWaterAndN zone in zones)
+            {
+                StoreWaterVariablesForNitrogenUptake(zone);
+                Plant.Root.DoWaterUptake(zone.Water, zone.Zone.Name);
+            }
+        }
+
+        private void StoreWaterVariablesForNitrogenUptake(ZoneWaterAndN zoneWater)
+        {
+            ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
+            if (myZone != null)
+            {
+
+                //store Water variables for N Uptake calculation
+                //Old sorghum doesn't do actualUptake of Water until end of day
+                myZone.AvailableSW = new double[myZone.soil.Thickness.Length];
+                myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
+
+                for(int layer = 0; layer < myZone.soil.Thickness.Length; ++layer)
+                {
+                    myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
+                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
+                }
+        }
+        }
 
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
@@ -136,47 +212,51 @@ namespace Models.PMF
                     //sorghum uses Diffusion & Massflow variables currently
                     double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha
                     double[] organNH4Supply = new double[zone.NH4N.Length];
-                    root.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
 
-                    //new code
-                    double[] diffnAvailable = new double[root.Diffusion.Length];
-                    for(var i = 0; i < root.Diffusion.Length; ++i)
+                    ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
+                    if (myZone != null)
                     {
-                        diffnAvailable[i] = root.Diffusion[i] - root.MassFlow[i];
+                        root.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
+
+                        //new code
+                        double[] diffnAvailable = new double[myZone.Diffusion.Length];
+                        for (var i = 0; i < myZone.Diffusion.Length; ++i)
+                        {
+                            diffnAvailable[i] = myZone.Diffusion[i] - myZone.MassFlow[i];
+                        }
+                        var totalMassFlow = MathUtilities.Sum(myZone.MassFlow); //g/m^2
+                        var totalDiffusion = MathUtilities.Sum(diffnAvailable);//g/m^2
+
+                        var potentialSupply = totalMassFlow + totalDiffusion;
+                        var dltt = root.DltThermalTime.Value();
+                        var actualDiffusion = 0.0;
+                        var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
+                        var maxDiffusionConst = root.MaxDiffusion.Value();
+
+                        if (totalMassFlow < nDemand && dltt > 0.0)
+                        {
+                            actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
+                            actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
+
+                            var nsupplyFraction = root.NSupplyFraction.Value();
+                            var maxRate = root.MaxNUptakeRate.Value();
+
+                            var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
+                            var maxUptake = maxUptakeRateFrac * dltt - actualMassFlow;
+                            actualDiffusion = Math.Min(actualDiffusion, maxUptake);
+                        }
+
+                        //adjust diffusion values proportionally
+                        //make sure organNO3Supply is in kg/ha
+                        for (int layer = 0; layer < organNO3Supply.Length; layer++)
+                        {
+                            var massFlowLayerFraction = MathUtilities.Divide(myZone.MassFlow[layer], totalMassFlow, 0.0);
+                            var diffusionLayerFraction = MathUtilities.Divide(diffnAvailable[layer], totalDiffusion, 0.0);
+                            //organNH4Supply[layer] = massFlowLayerFraction * root.MassFlow[layer];
+                            organNO3Supply[layer] = massFlowLayerFraction * myZone.MassFlow[layer] +
+                                diffusionLayerFraction * actualDiffusion / kgha2gsm;  //convert to kg/ha
+                        }
                     }
-                    var totalMassFlow = MathUtilities.Sum(root.MassFlow); //g/m^2
-                    var totalDiffusion = MathUtilities.Sum(diffnAvailable);//g/m^2
-
-                    var potentialSupply = totalMassFlow + totalDiffusion;
-                    var dltt = root.DltThermalTime.Value();
-                    var actualDiffusion = 0.0;
-                    var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
-                    var maxDiffusionConst = root.MaxDiffusion.Value();
-
-                    if (totalMassFlow < nDemand && dltt > 0.0)
-                    {
-                        actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
-                        actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
-
-                        var nsupplyFraction = root.NSupplyFraction.Value();
-                        var maxRate = root.MaxNUptakeRate.Value();
-
-                        var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
-                        var maxUptake = maxUptakeRateFrac * dltt - actualMassFlow;
-                        actualDiffusion = Math.Min(actualDiffusion, maxUptake);
-                    }
-
-                    //adjust diffusion values proportionally
-                    //make sure organNO3Supply is in kg/ha
-                    for (int layer = 0; layer < organNO3Supply.Length; layer++)
-                    {
-                        var massFlowLayerFraction = MathUtilities.Divide(root.MassFlow[layer], totalMassFlow, 0.0);
-                        var diffusionLayerFraction = MathUtilities.Divide(diffnAvailable[layer], totalDiffusion, 0.0);
-                        //organNH4Supply[layer] = massFlowLayerFraction * root.MassFlow[layer];
-                        organNO3Supply[layer] = massFlowLayerFraction * root.MassFlow[layer] +
-                            diffusionLayerFraction * actualDiffusion / kgha2gsm;  //convert to kg/ha
-                    }
-
                     //originalcode
                     UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                     UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
