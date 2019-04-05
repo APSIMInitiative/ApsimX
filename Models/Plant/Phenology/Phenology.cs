@@ -369,7 +369,7 @@ namespace Models.PMF.Phen
                 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) | (CurrentPhase.End == structure?.LeafInitialisationStage))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
                          Emerged = true;
                     }
