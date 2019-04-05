@@ -384,6 +384,12 @@ namespace UserInterface.Views
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+                // By default, clicking on a datapoint (a bar) of a bar graph
+                // will create a pop-up showing the x/y values at the beginning
+                // and end of the bar. We override this here, so that it only
+                // shows the x/y pair at the end of the bar. Perhaps we should
+                // accept the tracker string as an argument to this function?
+                series.TrackerFormatString = "{0}\n{1}: {3}\n{4}: {6}";
                 this.plot1.Model.Series.Add(series);
             }
         }

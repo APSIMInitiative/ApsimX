@@ -620,7 +620,7 @@ namespace UserInterface.Presenters
         {
             this.weatherDataView.GraphSummary.Clear();
             this.weatherDataView.GraphSummary.DrawBar(
-                                      title,
+                                      "Rainfall",
                                       months,
                                       monthlyRain,
                                       Axis.AxisType.Bottom,
