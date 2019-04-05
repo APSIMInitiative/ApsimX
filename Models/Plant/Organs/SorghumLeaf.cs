@@ -420,12 +420,8 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
-        /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantPartioning")]
-        virtual protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        /// <summary>Update area.</summary>
+        public void UpdateArea()
         {
             if (Plant.IsEmerged)
             {
@@ -435,6 +431,7 @@ namespace Models.PMF.Organs
                 senesceArea();
             }
         }
+
 
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
@@ -1109,6 +1106,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
+            //happening in potentialPlantPartitioning
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();

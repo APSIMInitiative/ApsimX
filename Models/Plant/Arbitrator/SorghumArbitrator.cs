@@ -58,7 +58,13 @@ namespace Models.PMF
 
         ///// <summary>The list of organs</summary>
         [Link]
-        private Root root = null; 
+        private Root root = null;
+
+        [Link]
+        private SorghumLeaf leaf = null;
+
+        [ScopedLinkByName]
+        private GenericOrgan stem = null;
 
         #endregion
 
@@ -153,17 +159,20 @@ namespace Models.PMF
 
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
+                myZone.StartWater = new double[myZone.soil.Thickness.Length];
                 myZone.AvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
 
                 for(int layer = 0; layer < myZone.soil.Thickness.Length; ++layer)
                 {
+                    myZone.StartWater[layer] = myZone.soil.Water[layer];
+
                     myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
                 }
+            }
         }
-        }
-
+        
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
         /// </summary>
@@ -179,7 +188,15 @@ namespace Models.PMF
                 var grainIndex = 0;
                 var rootIndex = 1;
                 var leafIndex = 2;
+                var stemIndex = 4;
 
+                var nGreen = stem.Live.N;
+                var dmGreen = stem.Live.Wt;
+                var dltDM = stem.potentialDMAllocation.Structural;
+
+                var rootDemand = N.StructuralDemand[rootIndex] + N.MetabolicDemand[rootIndex];
+                var stemDemand = N.StructuralDemand[stemIndex] + N.MetabolicDemand[stemIndex];
+                var leafDemand = N.MetabolicDemand[leafIndex];
                 var grainDemand = N.StructuralDemand[grainIndex] + N.MetabolicDemand[grainIndex];
                 //have to correct the leaf demand calculation
                 var leaf = Organs[leafIndex] as SorghumLeaf;
@@ -216,7 +233,7 @@ namespace Models.PMF
                     ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
                     if (myZone != null)
                     {
-                        root.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
+                        CalculateNitrogenSupply(myZone, zone);
 
                         //new code
                         double[] diffnAvailable = new double[myZone.Diffusion.Length];
@@ -280,6 +297,42 @@ namespace Models.PMF
                 return zones;
             }
             return null;
+        }
+
+        private void CalculateNitrogenSupply(ZoneState myZone, ZoneWaterAndN zone)
+        {
+            myZone.MassFlow = new double[myZone.soil.Thickness.Length];
+            myZone.Diffusion = new double[myZone.soil.Thickness.Length];
+
+            int currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+            for (int layer = 0; layer <= currentLayer; layer++)
+            {
+                var swdep = myZone.StartWater[layer]; //mm
+                var flow = myZone.WaterUptake[layer];
+                
+                //NO3N is in kg/ha - old sorghum used g/m^2
+                var no3conc = zone.NO3N[layer] * kgha2gsm / swdep;
+                var no3massFlow = no3conc * (-flow);
+                myZone.MassFlow[layer] = no3massFlow;
+
+                //diffusion
+                var swAvailFrac = myZone.AvailableSW[layer] / myZone.PotentialAvailableSW[layer];
+                //old sorghum stores N03 in g/ms not kg/ha
+                var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
+
+                if (layer == currentLayer)
+                {
+                    var proportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                    no3Diffusion *= proportion;
+                }
+
+                myZone.Diffusion[layer] = no3Diffusion;
+
+                //NH4Supply[layer] = no3massFlow;
+                //onyl 2 fields passed in for returning data. 
+                //actual uptake needs to distinguish between massflow and diffusion
+                //sorghum calcs don't use nh4 - so using that temporarily
+            }
         }
 
         /// <summary>
@@ -355,7 +408,31 @@ namespace Models.PMF
         #endregion
 
         #region Arbitration step functions
-       
+        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
+        /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantPartioning")]
+        override protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        {
+            if (Plant.IsEmerged)
+            {
+                DM.Clear();
+                N.Clear();
+
+                DMSupplies();
+                DMDemands();
+                PotentialDMAllocation();
+
+                leaf.UpdateArea();
+
+                NSupplies();
+                NDemands();
+
+                Reallocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
+            }
+        }
+
 
         #endregion
 

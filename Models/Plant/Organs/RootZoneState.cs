@@ -98,6 +98,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets PotentialAvailableSW during SW Uptake</summary>
         public double[] PotentialAvailableSW { get;  set; }
 
+        /// <summary>Record the Water level before </summary>
+        public double[] StartWater { get; set; }
+
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
         public double[] MassFlow { get;  set; }
 
