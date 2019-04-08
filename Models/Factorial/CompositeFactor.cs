@@ -13,7 +13,7 @@
     /// </summary>
     [ValidParent(ParentType = typeof(Factor))]
     [Serializable]
-    [ViewName("UserInterface.Views.CompositeFactorView")]
+    [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CompositeFactorPresenter")]
     public class CompositeFactor : Model
     {

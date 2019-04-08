@@ -14,7 +14,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 55; } }
+        public static int LatestVersion { get { return 56; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -436,7 +436,9 @@
             }
         }
 
+
         /// <summary>
+        /// Changes initial Root Wt to an array.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -458,8 +460,65 @@
 
         }
 
+        /// <summary>
+        /// Change Factor.Specifications to Factor.Specification. Also FactorValue
+        /// becomes CompositeFactor.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion56(JToken root, string fileName)
+        {
+            foreach (var factor in JsonUtilities.ChildrenRecursively(root as JObject, "Factor"))
+            {
+                var parent = JsonUtilities.Parent(factor);
 
+                string parentModelType = JsonUtilities.Type(parent);
+                if (parentModelType == "Factors")
+                {
+                    var specifications = factor["Specifications"] as JArray;
+                    if (specifications != null)
+                    {
+                        if (specifications.Count > 1)
+                        {
+                            // must be a compound factor. 
 
+                            // Change our Factor to a CompositeFactor
+                            factor["$type"] = "Models.Factorial.CompositeFactor, Models";
+
+                            // Remove the Factor from it's parent.
+                            var parentChildren = parent["Children"] as JArray;
+                            parentChildren.Remove(factor);
+
+                            // Create a new site factor and add our CompositeFactor to the children list.
+                            var siteFactor = JsonUtilities.ChildWithName(parent as JObject, "Site") as JObject;
+                            if (siteFactor == null)
+                            {
+                                // Create a site factor 
+                                siteFactor = new JObject();
+                                siteFactor["$type"] = "Models.Factorial.Factor, Models";
+                                siteFactor["Name"] = "Site";
+                                JArray siteFactorChildren = new JArray();
+                                siteFactor["Children"] = siteFactorChildren;
+
+                                // Add our new site factor to our models parent.
+                                parentChildren.Add(siteFactor);
+                            }
+                            (siteFactor["Children"] as JArray).Add(factor);
+
+                        }
+                        else
+                        {
+                            // Convert array to string.
+                            factor["Specification"] = specifications[0].ToString();
+                        }
+                    }
+                }
+                else if (parentModelType == "Factor")
+                {
+                    factor["$type"] = "Models.Factorial.CompositeFactor, Models";
+                }
+            }
+        }
 
         /// <summary>
         /// Changes initial Root Wt to an array.

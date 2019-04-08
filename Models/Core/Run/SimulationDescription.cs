@@ -84,6 +84,10 @@
             newSimulation.Parent = null;
             Apsim.ParentAllChildren(newSimulation);
             replacementsToApply.ForEach(r => r.Replace(newSimulation));
+
+            // Give the simulation the descriptors.
+            newSimulation.Descriptors = Descriptors;
+
             return newSimulation;
         }
 

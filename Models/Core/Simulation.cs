@@ -99,6 +99,9 @@ namespace Models.Core
             }
         }
 
+        /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
+        public List<SimulationDescription.Descriptor> Descriptors { get; set; }
+
         /// <summary>Gets the value of a variable or model.</summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
@@ -156,7 +159,7 @@ namespace Models.Core
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
             foreach (var zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("ZoneName", zone.Name));
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
         }

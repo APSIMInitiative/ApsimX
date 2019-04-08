@@ -40,6 +40,9 @@
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
+        /// <summary>A list of simulation names to run.</summary>
+        public List<string> SimulationNamesToRun { get; set; }
+
         public event EventHandler Finished;
 
         /// <summary>Constructor</summary>
@@ -66,6 +69,7 @@
         public void Do(CommandHistory CommandHistory)
         {
             IsRunning = true;
+            jobManager.SimulationNamesToRun = SimulationNamesToRun;
 
             stopwatch.Start();
                 

@@ -97,10 +97,15 @@
 
             /// <summary>Constructor</summary>
             /// <param name="underModel">Look at this model and all child models for simulations to create</param>
-            public SimulationEnumerator(IModel underModel)
+            /// <param name="simulationNamesToRun">A list of simulation names to run. Can be null.</param>
+            public SimulationEnumerator(IModel underModel, List<string> simulationNamesToRun = null)
             {
                 relativeTo = underModel;
                 FindListOfModelsToRun();
+
+                if (simulationNamesToRun != null)
+                    simulationDescriptionsToRun.RemoveAll(s => !simulationNamesToRun.Contains(s.Name));
+
                 simulations = Apsim.Parent(relativeTo, typeof(Simulations)) as Simulations;
                 if (simulations != null)
                     fileName = simulations.FileName;
@@ -146,9 +151,22 @@
             {
                 simulationDescriptionsToRun.Clear();
 
+                if (relativeTo is ISimulationDescriptionGenerator)
+                    simulationDescriptionsToRun.AddRange((relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions());
+
                 // Get a list of all models we're going to run.
                 foreach (var modelsToRun in Apsim.ChildrenRecursively(relativeTo, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>())
-                    simulationDescriptionsToRun.AddRange(modelsToRun.GenerateSimulationDescriptions());
+                {
+                    // If the model does not have a ISimulationDescriptionGenerator parent
+                    // (because it will be a base simulation for the generator parent) then
+                    // add the model to the list of models to run.
+                    if (modelsToRun is Simulation && ((modelsToRun as IModel).Parent is ISimulationDescriptionGenerator))
+                    {
+                        // Is a base simulation
+                    }
+                    else
+                        simulationDescriptionsToRun.AddRange(modelsToRun.GenerateSimulationDescriptions());
+                }
             }
 
         }

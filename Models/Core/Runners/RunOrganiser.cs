@@ -16,6 +16,7 @@
         private Simulations simulations;
         private IModel modelSelectedByUser;
         private bool runTests;
+
         private IEnumerator<Simulation> simulationEnumerator;
         private List<IRunnable> toolsToRun = new List<IRunnable>();
 
@@ -25,6 +26,9 @@
 
         /// <summary>Simulation names being run</summary>
         public int NumSimulationNamesBeingRun { get; private set; }
+
+        /// <summary>A list of simulation names to run.</summary>
+        public List<string> SimulationNamesToRun { get; set; }
 
         /// <summary>
         /// Clocks of simulations that have begun running
@@ -65,7 +69,7 @@
                 Events events = new Events(simulations);
                 events.Publish("BeginRun", null);
 
-                Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
+                Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser, SimulationNamesToRun);
                 simulationEnumerator = enumerator;
                 NumSimulationNamesBeingRun = enumerator.NumSimulationsBeingRun;
             }
@@ -116,6 +120,7 @@
             }
 
             storage.Writer.Stop();
+            simulationEnumerator = null;
         }
 
         /// <summary>

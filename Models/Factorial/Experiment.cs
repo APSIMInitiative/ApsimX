@@ -38,10 +38,22 @@
                 foreach (var combination in allCombinations)
                 {
                     // Create a simulation.
-                    var simDescription = new SimulationDescription(baseSimulation, GetName(combination), true);
+                    var simulationName = GetName(combination);
+                    var simDescription = new SimulationDescription(baseSimulation, simulationName, true);
 
                     // Add an experiment descriptor.
                     simDescription.Descriptors.Add(new SimulationDescription.Descriptor("Experiment", Name));
+
+                    // Add a simulation descriptor.
+                    simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
+
+                    // Add in simulation descriptors.
+                    foreach (var simulationDescriptor in baseSimulation.GenerateSimulationDescriptions())
+                    {
+                        foreach (var descriptor in simulationDescriptor.Descriptors)
+                            if (descriptor.Name != "SimulationName")
+                                simDescription.Descriptors.Add(descriptor);
+                    }
 
                     // Apply each composite factor of this combination to our simulation description.
                     combination.ForEach(c => c.ApplyToSimulation(simDescription));
