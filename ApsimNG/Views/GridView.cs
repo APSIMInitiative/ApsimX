@@ -1113,7 +1113,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
                     }
                     else
                     {
@@ -1140,7 +1140,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
                     }
 
                     EndEdit();
@@ -1921,6 +1921,7 @@
                     IGridCell currentCell = GetCurrentCell;
                     if (currentCell != null)
                         UpdateCellText(currentCell, (o as ComboBox).ActiveText);
+                    EndEdit();
                 };
             }
             catch (Exception err)
