@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -14,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 54; } }
+        public static int LatestVersion { get { return 55; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -433,12 +434,27 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Upgrades to version 55. Adds a RetranslocateNonStructural node to
+        /// all GenericOrgans which do not have a child called
+        /// RetranslocateNitrogen.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion55(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+                if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
+                    JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
+        }
+
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion55(JObject root, string fileName)
+        private static void NeilsNewBeautConverterWhichProbablyWontGetMerged(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
@@ -468,7 +484,7 @@
 
                 if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
                     manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
-                
+
                 manager.Replace(".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
 
                 manager.Replace(".SoilNitrogen.TotalN", ".Nutrient.TotalN");
@@ -538,7 +554,6 @@
                     series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.PlantAvailableNH4.kgha", "Nutrient.PlantAvailableNH4.kgha");
                 }
             }
-
         }
     }
 }
