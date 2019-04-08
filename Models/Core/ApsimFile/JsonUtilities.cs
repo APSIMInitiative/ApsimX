@@ -318,6 +318,67 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Adds the given model as a child of node.
+        /// </summary>
+        /// <param name="node">Node to which the model will be added.</param>
+        /// <param name="model">Child model to be added to node.</param>
+        /// <remarks>
+        /// If we ever rename the Children property of IModel, this (along with
+        /// many other things) will break horribly.
+        /// </remarks>
+        public static void AddModel(JObject node, IModel model)
+        {
+            var children = node["Children"] as JArray;
+            if (children == null)
+            {
+                children = new JArray();
+                node["Children"] = children;
+            }
+            string json = FileFormat.WriteToString(model);
+            JObject child = Deserialise(json);
+            children.Add(child);
+        }
+
+        /// <summary>
+        /// Deserialises a JSON string into a JObject.
+        /// </summary>
+        /// <param name="json">JSON string.</param>
+        public static JObject Deserialise(string json)
+        {
+            var settings = new JsonSerializerSettings()
+            {
+                // This will tell the serializer not to attempt to localise dates.
+                DateParseHandling = DateParseHandling.None
+            };
+            return (JObject)JsonConvert.DeserializeObject(json, settings);
+        }
+
+        /// <summary>
+        /// Adds a model of a given type as a child of node.
+        /// </summary>
+        /// <param name="node">Node to which the model will be added.</param>
+        /// <param name="t">Type of the child model to be added to node.</param>
+        public static void AddModel(JObject node, Type t)
+        {
+            AddModel(node, t, t.Name);
+        }
+
+        /// <summary>
+        /// Adds a model of a given type as a child of node.
+        /// </summary>
+        /// <param name="node">Node to which the model will be added.</param>
+        /// <param name="t">Type of the child model to be added to node.</param>
+        /// <param name="name">Name of the model to be added.</param>
+        public static void AddModel(JObject node, Type t, string name)
+        {
+            if (!(typeof(IModel).IsAssignableFrom(t)))
+                throw new Exception(string.Format("Error in JSON converter: Unable to add model of type {0} as a child node - it is not an IModel.", t.FullName));
+            IModel model = (IModel)t.Assembly.CreateInstance(t.Name);
+            model.Name = name;
+            AddModel(node, model);
+        }
+
+        /// <summary>
         /// Create and add a new child model node.
         /// </summary>
         /// <param name="parent">The parent model node.</param>
