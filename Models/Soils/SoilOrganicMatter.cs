@@ -27,9 +27,10 @@ namespace Models.Soils
         /// <summary>Gets or sets the soil cn.</summary>
         /// <value>The soil cn.</value>
         [Summary]
-        [Description("Soil C:N ratio (5-30)")]
+        [Description("Soil C:N ratio")]
+        [Units("g/g")]
         [Bounds(Lower = 5.0, Upper = 30.0)]
-        public double SoilCN { get; set; }
+        public double[] SoilCN { get; set; }
 
         /// <summary>Gets or sets the enr a coeff.</summary>
         /// <value>The enr a coeff.</value>
