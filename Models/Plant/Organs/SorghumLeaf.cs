@@ -962,12 +962,12 @@ namespace Models.PMF.Organs
             double laiToday = calcLAI();
             //wether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
-            double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] - DltRetranslocatedN;
+            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] - DltRetranslocatedN;
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
             var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
-            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value());
+            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
             if(phenology.Between("Germination", "Flowering"))
             {
