@@ -96,17 +96,20 @@
             }
 
             // Set descriptors in simulation.
+            string descriptorName = Name;
+            if (Parent != null)
+                descriptorName = Parent.Name;
             if (Specifications != null && Specifications.Count > 0)
             {
                 // compound factor value ie. one that has multiple specifications. 
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(Parent.Name, Name));
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
             }
             else
             {
                 if (allValues[0] is IModel)
-                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(Parent.Name, (allValues[0] as IModel).Name));
+                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, (allValues[0] as IModel).Name));
                 else
-                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(Parent.Name, allValues[0].ToString()));
+                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, allValues[0].ToString()));
             }
         }
 

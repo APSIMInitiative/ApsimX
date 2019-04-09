@@ -702,6 +702,276 @@
 
         }
 
+        /// <summary>Create xy series definitions with a 'Vary By Zone' grouping.</summary>
+        [Test]
+        public void SeriesWithVaryByZone()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1", "Zone", "Zone1", "Zone", "Zone2"),
+                        new Description("Sim2", "SimulationName", "Sim2", "Zone", "Zone1", "Zone", "Zone2")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Report",
+                                XFieldName = "Col1",
+                                YFieldName = "Col2",
+                                FactorToVaryColours = "SimulationName",
+                                FactorToVaryMarkers = "Zone"
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName  SimulationName   Zone Col1  Col2\r\n" +
+                "            ()              ()     ()   ()   (g)\r\n" +
+                "       Current            Sim1  Zone1    1    10\r\n" +
+                "       Current            Sim1  Zone1    2    20\r\n" +
+                "       Current            Sim1  Zone2    1    30\r\n" +
+                "       Current            Sim1  Zone2    2    40\r\n" +
+                "       Current            Sim2  Zone1    1    50\r\n" +
+                "       Current            Sim2  Zone1    2    60\r\n" +
+                "       Current            Sim2  Zone2    1    70\r\n" +
+                "       Current            Sim2  Zone2    2    80\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = folder.Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 4);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].title, "Sim1Zone1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+
+            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[1].marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[1].title, "Sim1Zone2");
+            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+
+            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[2].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[2].title, "Sim2Zone1");
+            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[2].y as double[], new double[] { 50, 60 });
+
+            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[3].marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[3].title, "Sim2Zone2");
+            Assert.AreEqual(definitions[3].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[3].y as double[], new double[] { 70, 80 });
+        }
+
+        /// <summary>Create a xy series definition with a 'Vary By' that doesn't exist in the data table.</summary>
+        [Test]
+        public void SeriesWithVaryByThatDoesntExist()
+        {
+            // Observed files don't have all the descriptor columns. For them, series will need
+            // to resort to using simulation names to find the data.
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
+                        new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Observed",
+                                XFieldName = "Col1",
+                                YFieldName = "Col2",
+                                FactorToVaryColours = "Exp"
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "SimulationName Col1  Col2\r\n" +
+                "            ()   ()   (g)\r\n" +
+                "          Sim1    1    10\r\n" +
+                "          Sim1    2    20\r\n" +
+                "          Sim2    1    30\r\n" +
+                "          Sim2    2    40\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = folder.Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 2);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].title, "Exp1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+
+            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].title, "Exp2");
+            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+        }
+
+        /// <summary>Create a xy series definition with a 'Vary By' that is a text field of the data table.</summary>
+        [Test]
+        public void SeriesWithVaryByTextField()
+        {
+            // Observed files don't have all the descriptor columns. For them, series will need
+            // to resort to using simulation names to find the data.
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1"),
+                        new Description("Sim2", "SimulationName", "Sim2")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Observed",
+                                XFieldName = "Col1",
+                                YFieldName = "Col2",
+                                FactorToVaryColours = "ABC",
+                                FactorToVaryMarkers = "DEF"
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "ABC  DEF Col1  Col2\r\n" +
+                " ()   ()   ()   (g)\r\n" +
+                "  A    d    1    10\r\n" +
+                "  A    d    2    20\r\n" +
+                "  A    e    1    30\r\n" +
+                "  A    e    2    40\r\n" +
+                "  B    d    1    50\r\n" +
+                "  B    d    2    60\r\n" +
+                "  B    e    1    70\r\n" +
+                "  B    e    2    80\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = folder.Children[1].Children[0] as Series;
+
+            var descriptorNames = series1.GetDescriptorNames().ToArray();
+            //Assert.AreEqual(descriptorNames, new string[] { "SimulationName", "Graph series", "ABC" });
+
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 4);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].title, "Ad");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+
+            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[1].marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[1].title, "Ae");
+            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+
+            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[2].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[2].title, "Bd");
+            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[2].y as double[], new double[] { 50, 60 });
+
+            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[3].marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[3].title, "Be");
+            Assert.AreEqual(definitions[3].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[3].y as double[], new double[] { 70, 80 });
+        }
+
+        /// <summary>Create xy series definitions with a filter.</summary>
+        [Test]
+        public void SeriesWithFilter()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "Exp", "Exp1"),
+                        new Description("Sim1", "Exp", "Exp2")
+                    }),
+                    new Series()
+                    {
+                        Name = "Series",
+                        TableName = "Report",
+                        XFieldName = "Col1",
+                        YFieldName = "Col2",
+                        FactorToVaryColours = "Exp",
+                        Filter = "A='a'"
+                    },
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName     Exp   A  Col1  Col2\r\n" +
+                "            ()      ()  ()    ()   (g)\r\n" +
+                "       Current    Exp1   a     1    10\r\n" +
+                "       Current    Exp1   a     1    10\r\n" +
+                "       Current    Exp2   b     2    20\r\n" +
+                "       Current    Exp2   b     2    20\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series = folder.Children[1] as Series;
+            var descriptors = series.GetDescriptorNames().ToList();
+            Assert.AreEqual(descriptors[0], "Exp");
+
+            var definitions = new List<SeriesDefinition>();
+            series.GetSeriesToPutOnGraph(reader, definitions);
+
+            Assert.AreEqual(definitions.Count, 1);
+
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1 });
+            Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 10 });
+        }
+
         /// <summary>Create some test data and return a storage reader. </summary>
         private static IStorageReader CreateTestData()
         {

@@ -564,6 +564,7 @@ namespace UserInterface.Presenters
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
 
             var descriptors = series.GetDescriptorNames();
+            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
             if (descriptors != null)
                 values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
@@ -591,6 +592,7 @@ namespace UserInterface.Presenters
 
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
             var descriptors = series.GetDescriptorNames();
+            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
             if (descriptors != null)
                 values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
@@ -622,6 +624,7 @@ namespace UserInterface.Presenters
 
             // Send colour options to view.
             var descriptors = series.GetDescriptorNames();
+            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
             if (descriptors != null)
                 colourOptions.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 

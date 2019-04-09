@@ -143,6 +143,8 @@ namespace Models.Graph
                 // Only keep the simulation descriptions that we are varying.
                 RemoveUnnessaryDescriptionsAndDescriptors(simulationDescriptions);
 
+                SplitDescriptionsWithSameDescriptors(simulationDescriptions);
+
                 // Remove simulation descriptions that have the same descriptors.
                 simulationDescriptions = simulationDescriptions.Distinct(new SimulationDescriptionComparer()).ToList();
 
@@ -152,6 +154,12 @@ namespace Models.Graph
                     simulationDescriptions.Add(new SimulationDescription(null, Name));
 
                 DataTable baseData = GetBaseData(reader, simulationDescriptions);
+
+                // If there are vary by fields that aren't in descriptors of the 
+                // simulationdescriptions then add them.
+                EnsureVaryBysAreInDescriptors(FactorToVaryColours, simulationDescriptions, baseData);
+                EnsureVaryBysAreInDescriptors(FactorToVaryMarkers, simulationDescriptions, baseData);
+                EnsureVaryBysAreInDescriptors(FactorToVaryLines, simulationDescriptions, baseData);
 
                 // Get data for each simulation / zone object
                 if (baseData != null)
@@ -171,6 +179,90 @@ namespace Models.Graph
             ourDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.x) || !MathUtilities.ValuesInArray(d.y));
 
             definitions.AddRange(ourDefinitions);
+        }
+
+        /// <summary>
+        /// Ensure the specified field name is in descriptors of the 
+        /// simulationdescription. If not then create a simulation description
+        /// for each valid value.
+        /// </summary>
+        /// <remarks>
+        /// This is to support vary by on a string field of the data table. Needed
+        /// by Morris 'Parameter' vary by.
+        /// </remarks>
+        /// <param name="varyByFieldName">The vary by field name to ensure is in the descriptors.</param>
+        /// <param name="simulationDescriptions"></param>
+        /// <param name="baseData"></param>
+        private void EnsureVaryBysAreInDescriptors(string varyByFieldName, List<SimulationDescription> simulationDescriptions, DataTable baseData)
+        {
+            if (varyByFieldName != null)
+            {
+                var newList = new List<SimulationDescription>();
+
+                foreach (var simulationDescription in simulationDescriptions)
+                {
+                    var descriptor = simulationDescription.Descriptors.Find(d => d.Name == varyByFieldName);
+                    if (descriptor == null)
+                    {
+                        // We need to create a simulation description for each valid value of
+                        // the descriptor.
+                        var validValues = DataTableUtilities.GetColumnAsStrings(baseData, varyByFieldName).Distinct();
+                        foreach (var value in validValues)
+                        {
+                            var newSimulationDescription = new SimulationDescription(null, simulationDescription.Name);
+                            newSimulationDescription.Descriptors.AddRange(simulationDescription.Descriptors);
+                            newSimulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(varyByFieldName, value));
+                            newList.Add(newSimulationDescription);
+                        }
+                    }
+                    else
+                        newList.Add(simulationDescription);
+                }
+
+                simulationDescriptions.Clear();
+                simulationDescriptions.AddRange(newList);
+            }
+        }
+
+        /// <summary>
+        /// If a simulation description has the same descriptor more than once,
+        /// split it into multiple descriptions.
+        /// </summary>
+        /// <remarks>
+        /// A simulation description can have multiple zones
+        /// e.g.
+        ///    Sim1 Descriptors: SimulationName=abc, Zone=field1, Zone=field2, x=1, x=2
+        /// Need to split this into 4 separate simulation descriptions:
+        ///    Sim1 Descriptors: SimulationName=abc, Zone=field1, x=1
+        ///    Sim2 Descriptors: SimulationName=abc, Zone=field1, x=2
+        ///    Sim3 Descriptors: SimulationName=abc, Zone=field2, x=1
+        ///    Sim4 Descriptors: SimulationName=abc, Zone=field2f, x=2
+        /// </remarks>
+        /// <param name="simulationDescriptions">Simulation descriptions.</param>
+        private void SplitDescriptionsWithSameDescriptors(List<SimulationDescription> simulationDescriptions)
+        {
+            var newList = new List<SimulationDescription>();
+            foreach (var simulationDescription in simulationDescriptions)
+            {
+                var descriptors = new List<List<SimulationDescription.Descriptor>>();
+                var descriptorGroups = simulationDescription.Descriptors.GroupBy(d => d.Name);
+                foreach (var group in descriptorGroups)
+                {
+                    var num = group.Count();
+                    descriptors.Add(group.ToList());
+                }
+
+                var allCombinations = MathUtilities.AllCombinationsOf(descriptors.ToArray());
+                foreach (var combination in allCombinations)
+                {
+                    newList.Add(new SimulationDescription(null, simulationDescription.Name)
+                    {
+                        Descriptors = combination
+                    });
+                }
+            }
+            simulationDescriptions.Clear();
+            simulationDescriptions.AddRange(newList);
         }
 
         /// <summary>
@@ -393,14 +485,27 @@ namespace Models.Graph
                 DataView data = new DataView(baseData);
                 try
                 {
+                    var fieldsThatExist = reader.ColumnNames(TableName);
+
                     string rowFilter = null;
 
                     foreach (var descriptor in simulationDescription.Descriptors)
                     {
-                        if (rowFilter != null)
-                            rowFilter += " AND ";
+                        if (fieldsThatExist.Contains(descriptor.Name))
+                        {
+                            if (rowFilter != null)
+                                rowFilter += " AND ";
 
-                        rowFilter += descriptor.Name + " = '" + descriptor.Value + "'";
+                            rowFilter += descriptor.Name + " = '" + descriptor.Value + "'";
+                        }
+                        else
+                        {
+                            // Field doesn't exist. This typically happens in observed files that don't
+                            // have the descriptor columns. Instead use the simulation name to match.
+                            if (rowFilter != null)
+                                rowFilter += " AND ";
+                            rowFilter += "SimulationName = '" + simulationDescription.Name + "'";
+                        }
                     }
 
                     data.RowFilter = rowFilter;
@@ -592,7 +697,7 @@ namespace Models.Graph
             groupByFieldNames.RemoveAll(f => f == "Graph series");
 
             // Add the groupby field nemas to the fieldNames we need to put in datatable.
-            List<string> fieldNames = new List<string>();
+            /*List<string> fieldNames = new List<string>();
             fieldNames.AddRange(groupByFieldNames);
 
             foreach (var description in descriptions)
@@ -618,19 +723,33 @@ namespace Models.Graph
             foreach (EventNamesOnGraph annotation in Apsim.Children(this, typeof(EventNamesOnGraph)))
                 fieldNames.Add(annotation.ColumnName);
 
-            string filterToUse;
+            // Remove field names that don't exist.
+            fieldNames.RemoveAll(f => !fieldsThatExist.Contains(f));
+            fieldNames.Add("SimulationName");
+            */
 
+            var fieldsThatExist = reader.ColumnNames(TableName);
+
+            // Create a filter to pass to GetData.
+            string filterToUse;
             if (Filter == null || Filter == string.Empty)
-                filterToUse = CreateRowFilter(descriptions, groupByFieldNames);
+                filterToUse = CreateRowFilter(descriptions, groupByFieldNames, fieldsThatExist);
             else
             {
-                var f = CreateRowFilter(descriptions, groupByFieldNames);
+                var f = CreateRowFilter(descriptions, groupByFieldNames, fieldsThatExist);
                 if (f != null)
                     filterToUse = Filter + " AND (" + f + ")";
                 else
                     filterToUse = Filter;
             }
-            return reader.GetData(tableName: TableName, checkpointName: Checkpoint, fieldNames: fieldNames.Distinct(), filter: filterToUse);
+            // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
+            // GetData in this situation.
+            string checkpointName = null;
+            if (fieldsThatExist.Contains("CheckpointID"))
+                checkpointName = Checkpoint;
+
+            // Go get the data.
+            return reader.GetData(tableName: TableName, checkpointName: checkpointName, /*fieldNames: fieldNames.Distinct(),*/ filter: filterToUse);
         }
 
         /// <summary>Return a list of field names that this series is varying.</summary>
@@ -652,33 +771,43 @@ namespace Models.Graph
         /// </summary>
         /// <param name="simulationDescriptions">A list of simulation descriptions.</param>
         /// <param name="groupByFieldNames">The group by field names to add to row filter.</param>
-        private string CreateRowFilter(IEnumerable<SimulationDescription> simulationDescriptions, IEnumerable<string> groupByFieldNames)
+        /// <param name="fieldsThatExist">Fields that exist in the table.</param>
+        private string CreateRowFilter(IEnumerable<SimulationDescription> simulationDescriptions, IEnumerable<string> groupByFieldNames, List<string> fieldsThatExist)
         {
             string rowFilter = null;
 
             // Create a filter based on the VaryBy fields.
             foreach (var groupByFieldName in groupByFieldNames)
             {
-                // Get a list of valid values for this groupby field name.
-                var validgroupByValues = new List<string>();
-                foreach (var description in simulationDescriptions)
+                if (fieldsThatExist.Contains(groupByFieldName))
                 {
-                    var descriptor = description.Descriptors.Find(d => d.Name == groupByFieldName);
-                    if (descriptor != null)
-                        validgroupByValues.Add(descriptor.Value);
+                    // Get a list of valid values for this groupby field name.
+                    var validgroupByValues = new List<string>();
+                    foreach (var description in simulationDescriptions)
+                    {
+                        var descriptor = description.Descriptors.Find(d => d.Name == groupByFieldName);
+                        if (descriptor != null)
+                            validgroupByValues.Add(descriptor.Value);
+                    }
+                    validgroupByValues = validgroupByValues.Distinct().ToList();
+
+                    // If we didn't find any group by values in the descriptors then the 
+                    // group by field must be a string column of the datatable. For now 
+                    // don't include the group by field in the filter.
+                    if (validgroupByValues.Count > 0)
+                    {
+                        if (rowFilter != null)
+                            rowFilter += " AND ";
+
+                        if (validgroupByValues.Count == 1)
+                            foreach (var value in validgroupByValues)
+                                rowFilter += groupByFieldName + " = '" + value + "'";
+                        else
+                            rowFilter += groupByFieldName + " IN (" +
+                                                          StringUtilities.Build(validgroupByValues, ",", "'", "'") +
+                                                          ")";
+                    }
                 }
-                validgroupByValues = validgroupByValues.Distinct().ToList();
-
-                if (rowFilter != null)
-                    rowFilter += " AND ";
-
-                if (validgroupByValues.Count == 1)
-                    foreach (var value in validgroupByValues)
-                        rowFilter += groupByFieldName + " = '" + value + "'";
-                else
-                    rowFilter += groupByFieldName + " IN (" +
-                                                  StringUtilities.Build(validgroupByValues, ",", "'", "'") +
-                                                  ")";
             }
 
             return rowFilter;
@@ -853,11 +982,6 @@ namespace Models.Graph
                     var descriptor1 = simulationDescription.Descriptors.Find(d => d.Name == DescriptorName1);
                     string descriptorValue1 = descriptor1.Value;
 
-                    var descriptor2 = simulationDescription.Descriptors.Find(d => d.Name == DescriptorName2);
-                    string descriptorValue2 = descriptor2.Value;
-
-
-
                     int index1 = values1.IndexOf(descriptorValue1);
                     if (index1 == -1)
                     {
@@ -867,15 +991,20 @@ namespace Models.Graph
                     index1 = index1 % MaximumIndex1;
                     Setter1(visualElement, index1);
 
-
-                    int index2 = values2.IndexOf(descriptorValue2);
-                    if (index2 == -1)
+                    var descriptor2 = simulationDescription.Descriptors.Find(d => d.Name == DescriptorName2);
+                    if (descriptor2 != null)
                     {
-                        values2.Add(descriptorValue2);
-                        index2 = values2.Count - 1;
+                        string descriptorValue2 = descriptor2.Value;
+
+                        int index2 = values2.IndexOf(descriptorValue2);
+                        if (index2 == -1)
+                        {
+                            values2.Add(descriptorValue2);
+                            index2 = values2.Count - 1;
+                        }
+                        index2 = index2 % MaximumIndex2;
+                        Setter2(visualElement, index2);
                     }
-                    index2 = index2 % MaximumIndex2;
-                    Setter2(visualElement, index2);
 
                     if (DescriptorName3 != null)
                     {

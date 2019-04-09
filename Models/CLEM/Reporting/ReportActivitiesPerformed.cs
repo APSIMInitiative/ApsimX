@@ -200,7 +200,7 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
-                    if (descriptor.Name != "Zone")
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
             }
         }

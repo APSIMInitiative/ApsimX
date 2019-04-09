@@ -30,9 +30,6 @@
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
-        /// <summary>Used to track whether this particular Morris has been run.</summary>
-        private bool hasRun = false;
-
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
 
@@ -157,8 +154,6 @@
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
             var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            allCombinations.Clear();
-            hasRun = true;
 
             // Calculate all combinations.
             CalculateFactors();
@@ -191,13 +186,24 @@
         }
 
         /// <summary>
+        /// Invoked when a run is done.
+        /// </summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun()
+        {
+            allCombinations.Clear();
+            ParameterValues.Clear();
+        }
+
+        /// <summary>
         /// Calculate factors that we need to run. Put combinations into allCombinations
         /// </summary>
         private void CalculateFactors()
         {
             if (allCombinations.Count == 0)
             {
-                ParameterValues = RunRToGetParameterValues();
+                if (ParameterValues.Rows.Count == 0)
+                    ParameterValues = RunRToGetParameterValues();
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
 
@@ -234,8 +240,6 @@
         /// <param name="dataStore">The data store.</param>
         public void Run(IDataStore dataStore)
         {
-            if (!hasRun)
-                return;
             DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {
@@ -355,7 +359,6 @@
                 dataStore.Writer.WriteTable(eeTable);
                 dataStore.Writer.WriteTable(muStarTable);
             }
-            hasRun = false;
         }
 
         /// <summary>

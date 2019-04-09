@@ -228,8 +228,31 @@ namespace Models.Report
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
-                    if (descriptor.Name != "Zone")
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                StoreFactorsInDataStore();
+            }
+        }
+
+        /// <summary>Store descriptors in DataStore.</summary>
+        private void StoreFactorsInDataStore()
+        {
+            if (storage != null && simulation != null && simulation.Descriptors != null)
+            {
+                var table = new DataTable("_Factors");
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("FactorName", typeof(string));
+                table.Columns.Add("FactorValue", typeof(string));
+
+                foreach (var descriptor in simulation.Descriptors)
+                {
+                    var row = table.NewRow();
+                    row[0] = simulation.Name;
+                    row[1] = descriptor.Name;
+                    row[2] = descriptor.Value;
+                    table.Rows.Add(row);
+                }
+                storage.Writer.WriteTable(table);
             }
         }
     }

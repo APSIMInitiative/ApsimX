@@ -96,6 +96,11 @@ namespace UnitTests
                 return view.ToTable();
             }
         }
+
+        public List<string> StringColumnNames(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }

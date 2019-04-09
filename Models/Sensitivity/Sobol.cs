@@ -149,6 +149,7 @@
                 // Create a simulation.
                 var simulationName = Name + "Simulation" + simulationNumber;
                 var simDescription = new SimulationDescription(baseSimulation, simulationName);
+                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
 
                 // Apply each composite factor of this combination to our simulation description.
                 combination.ForEach(c => c.ApplyToSimulation(simDescription));
@@ -163,6 +164,16 @@
         }
 
         /// <summary>
+        /// Invoked when a run is done.
+        /// </summary>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun()
+        {
+            allCombinations.Clear();
+            ParameterValues.Clear();
+        }
+
+        /// <summary>
         /// Calculate factors that we need to run. Put combinations into allCombinations
         /// </summary>
         private void CalculateFactors()
@@ -170,52 +181,55 @@
             allCombinations.Clear();
             if (allCombinations.Count == 0)
             {
-                // Write a script to get random numbers from R.
-                string script = string.Format
-                    ("library('boot')" + Environment.NewLine +
-                     "library('sensitivity')" + Environment.NewLine +
-                     "n <- {0}" + Environment.NewLine +
-                     "nparams <- {1}" + Environment.NewLine +
-                     "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
-                     "X2 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine
-                     ,
-                    NumPaths, Parameters.Count);
-
-                for (int i = 0; i < Parameters.Count; i++)
+                if (ParameterValues.Rows.Count == 0)
                 {
-                    script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
-                                            "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
-                                            ,
-                                            i + 1, Parameters[i].LowerBound,
-                                            Parameters[i].UpperBound - Parameters[i].LowerBound);
+                    // Write a script to get random numbers from R.
+                    string script = string.Format
+                        ("library('boot')" + Environment.NewLine +
+                         "library('sensitivity')" + Environment.NewLine +
+                         "n <- {0}" + Environment.NewLine +
+                         "nparams <- {1}" + Environment.NewLine +
+                         "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
+                         "X2 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine
+                         ,
+                        NumPaths, Parameters.Count);
+
+                    for (int i = 0; i < Parameters.Count; i++)
+                    {
+                        script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
+                                                "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
+                                                ,
+                                                i + 1, Parameters[i].LowerBound,
+                                                Parameters[i].UpperBound - Parameters[i].LowerBound);
+                    }
+
+                    string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
+                    string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
+
+                    script += string.Format("write.table(X1, \"{0}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
+                                            "write.table(X2, \"{1}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
+                                            "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine +
+                                            "write.csv(sa$X,row.names=FALSE)" + Environment.NewLine,
+                                            sobolx1FileName.Replace("\\", "/"),
+                                            sobolx2FileName.Replace("\\", "/"));
+
+                    // Run the script
+                    ParameterValues = RunR(script);
+
+                    // Read in the 2 data frames (X1, X2) that R wrote.
+                    if (!File.Exists(sobolx1FileName))
+                    {
+                        string rFileName = GetTempFileName("sobolscript", ".r");
+                        if (!File.Exists(rFileName))
+                            throw new Exception("Cannot find file: " + rFileName);
+                        string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
+                                     "Script:" + Environment.NewLine +
+                                     File.ReadAllText(rFileName);
+                        throw new Exception(message);
+                    }
+                    X1 = ApsimTextFile.ToTable(sobolx1FileName);
+                    X2 = ApsimTextFile.ToTable(sobolx2FileName);
                 }
-
-                string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
-                string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
-
-                script += string.Format("write.table(X1, \"{0}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
-                                        "write.table(X2, \"{1}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
-                                        "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine +
-                                        "write.csv(sa$X,row.names=FALSE)" + Environment.NewLine,
-                                        sobolx1FileName.Replace("\\", "/"),
-                                        sobolx2FileName.Replace("\\", "/"));
-
-                // Run the script
-                ParameterValues = RunR(script);
-
-                // Read in the 2 data frames (X1, X2) that R wrote.
-                if (!File.Exists(sobolx1FileName))
-                {
-                    string rFileName = GetTempFileName("sobolscript", ".r");
-                    if (!File.Exists(rFileName))
-                        throw new Exception("Cannot find file: " + rFileName);
-                    string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
-                                 "Script:" + Environment.NewLine +
-                                 File.ReadAllText(rFileName);
-                    throw new Exception(message);
-                }
-                X1 = ApsimTextFile.ToTable(sobolx1FileName);
-                X2 = ApsimTextFile.ToTable(sobolx2FileName);
 
                 int simulationNumber = 1;
                 foreach (DataRow parameterRow in ParameterValues.Rows)

@@ -509,7 +509,8 @@
                         else
                         {
                             // Convert array to string.
-                            factor["Specification"] = specifications[0].ToString();
+                            if (specifications.Count > 0)
+                                factor["Specification"] = specifications[0].ToString();
                         }
                     }
                 }
@@ -517,6 +518,19 @@
                 {
                     factor["$type"] = "Models.Factorial.CompositeFactor, Models";
                 }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenRecursively(root as JObject, "Series"))
+            {
+                var factorToVaryColours = series["FactorToVaryColours"];
+                if (factorToVaryColours != null && factorToVaryColours.Value<string>() == "Simulation")
+                    series["FactorToVaryColours"] = "SimulationName";
+                var factorToVaryMarkers = series["FactorToVaryMarkers"];
+                if (factorToVaryMarkers != null && factorToVaryMarkers.Value<string>() == "Simulation")
+                    series["FactorToVaryMarkers"] = "SimulationName";
+                var factorToVaryLines = series["FactorToVaryLines"];
+                if (factorToVaryLines != null && factorToVaryLines.Value<string>() == "Simulation")
+                    series["FactorToVaryLines"] = "SimulationName";
             }
         }
 

@@ -89,6 +89,15 @@
             return connection.GetColumnNames(tableName);
         }
 
+        /// <summary>Return a list of column names with string data type for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        public List<string> StringColumnNames(string tableName)
+        {
+            return connection.GetStringColumnNames(tableName);
+        }
+
+
         /// <summary>Returns a list of table names</summary>
         public List<string> TableNames { get { return connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
 

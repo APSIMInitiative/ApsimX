@@ -578,7 +578,7 @@
                         MainPresenter.ShowProgress(percent, false);
                     });
 
-                    if (errors.Count == 0)
+                    if (errors == null || errors.Count == 0)
                     {
                         MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
                         return true;

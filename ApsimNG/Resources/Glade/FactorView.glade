@@ -21,7 +21,9 @@
 [FertiliserRule].Script.ApplicationAmount = 0 to 200 step 20
  
 3. A path to a model that will be replaced with a child of this factor that has a matching type e.g.
-[Weather]</property>
+[Weather]
+
+4. Can be left blank if there are 1 or more child 'CompositeFactor' nodes.</property>
       </object>
       <packing>
         <property name="expand">False</property>

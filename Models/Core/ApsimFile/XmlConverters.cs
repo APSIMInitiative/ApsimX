@@ -1077,15 +1077,27 @@ namespace Models.Core.ApsimFile
                 List<XmlNode> baseSimulations = XmlUtilities.ChildNodes(experiment, "Simulation");
                 if (baseSimulations.Count == 1)
                 {
-                    string childType = specification.Replace("[", "").Replace("]", "");
+                    string childName = specification.Replace("[", "").Replace("]", "");
 
-                    List<string> specifications = XmlUtilities.Values(factorNode, "Specifications/string");
+                    var childType = FindChildTypeFromName(childName, baseSimulations[0]);
 
+                    
                     foreach (XmlNode child in XmlUtilities.ChildNodes(factorNode, childType))
                         pairs.Add(new PathValuesPair() { path = specification, value = XmlUtilities.Value(child, "Name") });
                 }
             }
             return pairs;
+        }
+
+        private static string FindChildTypeFromName(string childName, XmlNode baseSimulation)
+        {
+            var nodes = XmlUtilities.ChildNodesRecursively(baseSimulation, "Name");
+            var foundNode = nodes.Find(n => n.InnerText == childName);
+
+            if (foundNode == null)
+                return null;
+            else
+                return foundNode.ParentNode.Name;
         }
 
 
