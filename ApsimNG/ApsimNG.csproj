@@ -718,6 +718,8 @@
     <EmbeddedResource Include="Resources\AgPastureGrowth.png" />
     <EmbeddedResource Include="Resources\AgPastureBalance.png" />
     <EmbeddedResource Include="Resources\AgPastureRootDistribution.png" />
+    <EmbeddedResource Include="Resources\AgPastureGraze.png" />
+    <EmbeddedResource Include="Resources\AgPastureRemoveBiomass.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
