@@ -465,7 +465,7 @@
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private void UpgradeToVersion56(JObject root, string fileName)
+        private static void UpgradeToVersion56(JObject root, string fileName)
         {
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
