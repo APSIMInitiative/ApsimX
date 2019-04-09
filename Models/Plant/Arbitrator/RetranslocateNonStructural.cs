@@ -14,60 +14,89 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(IOrgan))]
+    [ValidParent(ParentType = typeof(GenericOrgan))]
     public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation
     {
-        /// <summary>The calculation for N retranslocation function</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        public IFunction RetranslocateFunction = null;
-
-        /// <summary>The calculation for DM retranslocation function</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        public IFunction RetranslocateDMFunction = null;
-
-        /// <summary>Allocate the retranslocated material</summary>
+        /// <summary>Allocate the retranslocated material.</summary>
         /// <param name="organ"></param>
-        public double Calculate(IOrgan organ)
+        public double CalculateN(GenericOrgan organ)
         {
-            return RetranslocateFunction.Value();
+            return Math.Max(0, (organ.StartLive.StorageN + organ.StartLive.MetabolicN) * (1 - organ.SenescenceRate.Value()) * organ.NRetranslocationFactor.Value());
         }
 
-        /// <summary>Allocate the retranslocated material</summary>
+        /// <summary>Allocate the retranslocated material.</summary>
         /// <param name="organ"></param>
-        public double CalculateBiomass(IOrgan organ)
+        public double CalculateBiomass(GenericOrgan organ)
         {
-            return 0.0;
+            double availableDM = Math.Max(0.0, organ.StartLive.StorageWt - organ.DMSupply.Reallocation) * organ.DMRetranslocationFactor.Value();
+            if (availableDM < 0)
+                throw new Exception("Negative DM retranslocation value computed for " + Name);
+
+            return availableDM;
         }
 
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
         /// <param name="nitrogen"></param>
-        public void Allocate(IOrgan organ, BiomassAllocationType nitrogen)
+        public void AllocateN(GenericOrgan organ, BiomassAllocationType nitrogen)
         {
-            var genOrgan = organ as GenericOrgan;
-
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN - genOrgan.NSupply.Retranslocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, organ.StartLive.StorageN + organ.StartLive.MetabolicN - organ.NSupply.Retranslocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
-            double storageRetranslocation = Math.Min(genOrgan.Live.StorageN, nitrogen.Retranslocation);
-            genOrgan.Live.StorageN -= storageRetranslocation;
-            genOrgan.Allocated.StorageN -= storageRetranslocation;
+            double storageRetranslocation = Math.Min(organ.Live.StorageN, nitrogen.Retranslocation);
+            organ.Live.StorageN -= storageRetranslocation;
+            organ.Allocated.StorageN -= storageRetranslocation;
 
             double metabolicRetranslocation = nitrogen.Retranslocation - storageRetranslocation;
-            genOrgan.Live.MetabolicN -= metabolicRetranslocation;
-            genOrgan.Allocated.MetabolicN -= metabolicRetranslocation;
+            organ.Live.MetabolicN -= metabolicRetranslocation;
+            organ.Allocated.MetabolicN -= metabolicRetranslocation;
 
         }
 
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
         /// <param name="biomass"></param>
-        public void AllocateBiomass(IOrgan organ, BiomassAllocationType biomass)
+        public void AllocateBiomass(GenericOrgan organ, BiomassAllocationType biomass)
         {
+            // Get DM lost by respiration (growth respiration)
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double dmConversionEfficiency = organ.DMConversionEfficiency.Value();
+            double carbonConcentration = organ.CarbonConcentration.Value();
+            double growthRespFactor = ((1.0 / dmConversionEfficiency) * (12.0 / 30.0) - 1.0 * carbonConcentration) * 44.0 / 12.0;
 
+            organ.GrowthRespiration = 0.0;
+
+            // Allocate structural DM
+            organ.Allocated.StructuralWt = Math.Min(biomass.Structural * dmConversionEfficiency, organ.DMDemand.Structural);
+            organ.Live.StructuralWt += organ.Allocated.StructuralWt;
+            organ.GrowthRespiration += organ.Allocated.StructuralWt * growthRespFactor;
+
+            // Allocate non structural DM
+            if ((biomass.Storage * dmConversionEfficiency - organ.DMDemand.Storage) > organ.BiomassToleranceValue)
+                throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
+
+            // Check retranslocation
+            if (biomass.Retranslocation - organ.StartLive.StorageWt > organ.BiomassToleranceValue)
+                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+
+            double diffWt = biomass.Storage - biomass.Retranslocation;
+            if (diffWt > 0)
+            {
+                diffWt *= dmConversionEfficiency;
+                organ.GrowthRespiration += diffWt * growthRespFactor;
+            }
+            organ.Allocated.StorageWt = diffWt;
+            organ.Live.StorageWt += diffWt;
+
+            // Allocate metabolic DM
+            organ.Allocated.MetabolicWt = biomass.Metabolic * dmConversionEfficiency;
+            organ.GrowthRespiration += organ.Allocated.MetabolicWt * growthRespFactor;
+            organ.Live.MetabolicWt += organ.Allocated.MetabolicWt;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -94,6 +123,4 @@ namespace Models.PMF
             }
         }
     }
-
-
 }
