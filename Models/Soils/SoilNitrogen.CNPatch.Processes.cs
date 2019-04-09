@@ -97,9 +97,14 @@ namespace Models.Soils
                         // 2.2.2. total available N for this process
                         double NAvailable = MineralNAvailable + g.SumDoubleArray(g.pot_n_decomp);
 
-                        // 2.2.3. potential N demanded for conversion of residues into soil OM
-                        double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0) +
-                                          g.SumDoubleArray(MathUtilities.Divide(dltC_into_hum, g.HumusCNr, 0.0));
+                       // 2.2.3. potential N demanded for conversion of residues into soil OM
+                        double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0);
+                                          
+                        for (int layer = 0; layer <= ImmobilisationLayer; layer++)
+                        {
+                        double fraction = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
+                        NDemand += MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum)*fraction, g.HumusCNr[layer], 0.0);
+                        }
 
                         // 2.2.4. factor to reduce mineralisation rate, if N available is insufficient
                         double ReductionFactor = 1.0;
