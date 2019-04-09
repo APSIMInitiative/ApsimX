@@ -58,8 +58,10 @@
             {
                 int fileVersion = (int)returnData.Root["Version"];
 
-                // Update the xml if not at the latest version.
+                if (fileVersion > LatestVersion)
+                    throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
 
+                // Run converters if not at the latest version.
                 while (fileVersion < toVersion)
                 {
                     returnData.DidConvert = true;
