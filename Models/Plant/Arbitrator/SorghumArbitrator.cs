@@ -270,8 +270,8 @@ namespace Models.PMF
                             var massFlowLayerFraction = MathUtilities.Divide(myZone.MassFlow[layer], totalMassFlow, 0.0);
                             var diffusionLayerFraction = MathUtilities.Divide(diffnAvailable[layer], totalDiffusion, 0.0);
                             //organNH4Supply[layer] = massFlowLayerFraction * root.MassFlow[layer];
-                            organNO3Supply[layer] = massFlowLayerFraction * myZone.MassFlow[layer] +
-                                diffusionLayerFraction * actualDiffusion / kgha2gsm;  //convert to kg/ha
+                            organNO3Supply[layer] = (massFlowLayerFraction * actualMassFlow +
+                                diffusionLayerFraction * actualDiffusion) / kgha2gsm;  //convert to kg/ha
                         }
                     }
                     //originalcode
