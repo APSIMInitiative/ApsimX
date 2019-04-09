@@ -715,8 +715,6 @@ namespace UserInterface.Presenters
         /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-
             foreach (IGridCell cell in e.ChangedCells)
             {
                 try
@@ -731,8 +729,6 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowError(ex);
                 }
             }
-            
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
