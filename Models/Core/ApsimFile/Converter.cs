@@ -436,13 +436,36 @@
         }
 
         /// <summary>
-        /// Upgrades to version 55. Adds a RetranslocateNonStructural node to
+        /// No description - blame Neil.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion55(JObject root, string fileName)
+        {
+            foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
+            {
+                double soilcnr = Convert.ToDouble(SOM["SoilCN"]);
+                SOM.Remove("SoilCN");
+                double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
+
+                double[] SoilCNVector = new double[thickness.Length];
+
+                for (int layer = 0; layer < thickness.Length; layer++)
+                    SoilCNVector[layer] = soilcnr;
+
+                JsonUtilities.SetValues(SOM, "SoilCN", SoilCNVector);
+            }
+
+        }
+
+        /// <summary>
+        /// Upgrades to version 56. Adds a RetranslocateNonStructural node to
         /// all GenericOrgans which do not have a child called
         /// RetranslocateNitrogen.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion55(JObject root, string fileName)
+        private void UpgradeToVersion56(JObject root, string fileName)
         {
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
@@ -469,8 +492,8 @@
             {
                 manager.Replace("using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
 
-                manager.Replace(".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                manager.Replace(".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                manager.Replace("SoilNitrogen.FOMN", ".Nutrient.FOMN");
+                manager.Replace("SoilNitrogen.FOMC", ".Nutrient.FOMC");
 
                 if (manager.Replace("Soil.SoilNitrogen.HumicN", "Humic.N"))
                     manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[ScopedLinkByName]" });
@@ -484,26 +507,25 @@
 
                 if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
                     manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
+                manager.Replace("SoilNitrogen.MineralisedN", "Nutrient.MineralisedN");
 
-                manager.Replace(".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
-
-                manager.Replace(".SoilNitrogen.TotalN", ".Nutrient.TotalN");
+                manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN");
                 if (manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN"))
                 {
                     manager.RemoveDeclaration("SoilNitrogen");
                     manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
                 }
 
-                manager.Replace(".SoilNitrogen.TotalC", ".Nutrient.TotalC");
+                manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC");
                 if (manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC"))
                 {
                     manager.RemoveDeclaration("SoilNitrogen");
                     manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
                 }
 
-                manager.Replace(".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-                manager.Replace(".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                manager.Replace(".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
+                manager.Replace("SoilNitrogen.mineral_n", "Nutrient.MineralN");
+                manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm");
+                manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm");
                 manager.Save();
             }
 

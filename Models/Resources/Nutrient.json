@@ -234,7 +234,17 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.ExpressionFunction, Models",
+          "Expression": "[Inert].C / [Soil].InitialSoilCNR",
+          "Name": "InitialNitrogen",
+          "Children": [
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
               "Expression": "[Soil].FInert * [Soil].OC * 100 * [Soil].BD * [Soil].Thickness",
@@ -997,7 +1007,21 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+<<<<<<< HEAD
             },
+=======
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.ExpressionFunction, Models",
+          "Expression": "[Humic].C / [Soil].InitialSoilCNR",
+          "Name": "InitialNitrogen",
+          "Children": [
+>>>>>>> 2e9bc12abcd6880983966855bf090e70f6456038
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
               "Expression": "(([Soil].OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)",
