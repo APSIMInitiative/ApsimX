@@ -101,7 +101,7 @@
             double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
 
             for (double value = from; value <= to; value += step)
-                values.Add(new CompositeFactor(this, path.Trim(), value));
+                values.Add(new CompositeFactor(this, path.Trim(), value.ToString()));
 
             return values;
         }
