@@ -986,9 +986,10 @@ namespace Models.PMF.Organs
                     DltLAI = (n - laiN) / NewLeafSLN.Value();
                     requiredN -= laiN;
                     nProvided += laiN;
+                    BAT.StructuralAllocation[leafIndex] -= laiN;
                 }
 
-                // take from decreasing senescence
+                // recalc the SLN after this N has been removed
                 laiToday = calcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
