@@ -3,23 +3,24 @@
     using EventArguments;
     using Models.Factorial;
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using Views;
 
     /// <summary>
-    /// Connects a Factor model to a FactorView.
+    /// Connects a CompositeFactor model to a EditorView.
     /// </summary>
-    public class FactorPresenter : IPresenter
+    public class CompositeFactorPresenter : IPresenter
     {
         /// <summary>
         /// The factor object
         /// </summary>
-        private Factor factor;
+        private CompositeFactor factor;
 
         /// <summary>
         /// The view object
         /// </summary>
-        private IFactorView factorView;
+        private IEditorView factorView;
 
         /// <summary>
         /// The presenter
@@ -39,14 +40,14 @@
         /// <param name="explorerPresenter">The presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.factor = model as Factor;
-            this.factorView = view as IFactorView;
+            this.factor = model as CompositeFactor;
+            this.factorView = view as IEditorView;
             this.presenter = explorerPresenter;
             intellisense = new IntellisensePresenter(factorView as ViewBase);
-            this.factorView.Specification.Value = factor.Specification;
+            this.factorView.Lines = factor.Specifications.ToArray();
 
-            this.factorView.Specification.Changed += this.OnTextHasChangedByUser;
-            this.factorView.Specification.IntellisenseItemsNeeded += this.OnContextItemsNeeded;
+            this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
+            this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
             this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
             intellisense.ItemSelected += OnIntellisenseItemSelected;
         }
@@ -58,8 +59,8 @@
         {
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            factorView.Specification.Changed -= this.OnTextHasChangedByUser;
-            factorView.Specification.IntellisenseItemsNeeded -= this.OnContextItemsNeeded;
+            factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
+            factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
             presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
@@ -125,7 +126,7 @@
             try
             {
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
-                presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specification", factorView.Specification.Value));
+                presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specifications", new List<string>(factorView.Lines)));
                 presenter.CommandHistory.ModelChanged += OnModelChanged;
             }
             catch (Exception err)
@@ -140,7 +141,7 @@
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            factorView.Specification.Value = factor.Specification;
+            factorView.Lines = factor.Specifications.ToArray();
         }
 
         /// <summary>
@@ -152,9 +153,9 @@
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             if (string.IsNullOrEmpty(args.ItemSelected))
-                factorView.Specification.InsertAtCursor(args.ItemSelected);
+                factorView.InsertAtCaret(args.ItemSelected);
             else
-                factorView.Specification.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                factorView.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }
