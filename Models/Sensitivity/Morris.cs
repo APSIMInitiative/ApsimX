@@ -192,7 +192,7 @@
         private void OnBeginRun()
         {
             allCombinations.Clear();
-            ParameterValues.Clear();
+            ParameterValues = null;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@
         {
             if (allCombinations.Count == 0)
             {
-                if (ParameterValues.Rows.Count == 0)
+                if (ParameterValues == null)
                     ParameterValues = RunRToGetParameterValues();
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");

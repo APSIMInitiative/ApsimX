@@ -51,6 +51,7 @@
             int index = match.Parent.Children.IndexOf(match as Model);
             match.Parent.Children.Insert(index, newModel as Model);
             newModel.Parent = match.Parent;
+            newModel.Name = match.Name;
             match.Parent.Children.Remove(match as Model);
             newModel.OnCreated();
         }

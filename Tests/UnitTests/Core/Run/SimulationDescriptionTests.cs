@@ -74,6 +74,9 @@
 
             var weather = newSim.Children[0] as MockWeather;
             Assert.AreEqual(weather.MaxT, 2);
+
+            // The name of the new model should be the same as the original model.
+            Assert.AreEqual(weather.Name, "Weather");
         }
 
         /// <summary>Ensure a model replacement override work.</summary>

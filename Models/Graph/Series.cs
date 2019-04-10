@@ -195,7 +195,7 @@ namespace Models.Graph
         /// <param name="baseData"></param>
         private void EnsureVaryBysAreInDescriptors(string varyByFieldName, List<SimulationDescription> simulationDescriptions, DataTable baseData)
         {
-            if (varyByFieldName != null)
+            if (varyByFieldName != null && varyByFieldName != "Graph series")
             {
                 var newList = new List<SimulationDescription>();
 
