@@ -8,6 +8,7 @@
     using System.Collections;
     using System.Linq;
     using Models.Core.ApsimFile;
+    using System.Text;
 
     /// <summary>
     /// Gets a run job for running one or more simulations.
@@ -45,7 +46,18 @@
             if (!File.Exists(fileName))
                 throw new Exception("Cannot find file: " + fileName);
             List<Exception> creationExceptions;
-            Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);            
+            Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
+            if (creationExceptions != null && creationExceptions.Count > 0)
+            {
+                StringBuilder error = new StringBuilder();
+                error.AppendFormat("Errors while opening file {0}:{1}", fileName, Environment.NewLine);
+                foreach (Exception err in creationExceptions)
+                {
+                    error.AppendLine(err.ToString());
+                    error.AppendLine();
+                }
+                throw new Exception(error.ToString());
+            }
             return ForSimulations(simulations, simulations, runTests);
         }
 
