@@ -65,12 +65,6 @@ namespace Models.Report
         /// </summary>
         [XmlIgnore] public int ActiveTabIndex = 0;
 
-        /// <summary>Experiment factor names</summary>
-        public List<string> ExperimentFactorNames { get; set; }
-
-        /// <summary>Experiment factor values</summary>
-        public List<string> ExperimentFactorValues { get; set; }
-
         /// <summary>
         /// Gets or sets variable names for outputting
         /// </summary>
@@ -231,10 +225,34 @@ namespace Models.Report
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                foreach (var descriptor in simulation.Descriptors)
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                StoreFactorsInDataStore();
+            }
+        }
+
+        /// <summary>Store descriptors in DataStore.</summary>
+        private void StoreFactorsInDataStore()
+        {
+            if (storage != null && simulation != null && simulation.Descriptors != null)
+            {
+                var table = new DataTable("_Factors");
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("FactorName", typeof(string));
+                table.Columns.Add("FactorValue", typeof(string));
+
+                foreach (var descriptor in simulation.Descriptors)
+                {
+                    var row = table.NewRow();
+                    row[0] = simulation.Name;
+                    row[1] = descriptor.Name;
+                    row[2] = descriptor.Value;
+                    table.Rows.Add(row);
+                }
+                storage.Writer.WriteTable(table);
             }
         }
     }

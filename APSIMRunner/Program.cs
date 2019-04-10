@@ -44,7 +44,6 @@ namespace APSIMRunner
                             simulationRunner.Services = new object[] { storage };
                             // Run simulation
                             simulationName = simulationRunner.simulationToRun.Name;
-                            simulationRunner.cloneSimulationBeforeRun = false;
                             simulationRunner.Run(new CancellationTokenSource());
                         }
                     }
