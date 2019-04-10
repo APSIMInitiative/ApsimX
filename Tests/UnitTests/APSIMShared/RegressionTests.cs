@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
 
-namespace UnitTests.Graph
+namespace UnitTests.APSIMShared
 {
     /// <summary>
     /// Unit tests for the regression utilities.

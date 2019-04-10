@@ -59,8 +59,10 @@
             {
                 int fileVersion = (int)returnData.Root["Version"];
 
-                // Update the xml if not at the latest version.
+                if (fileVersion > LatestVersion)
+                    throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
 
+                // Run converters if not at the latest version.
                 while (fileVersion < toVersion)
                 {
                     returnData.DidConvert = true;
@@ -435,6 +437,7 @@
             }
         }
 
+
         /// <summary>
         /// No description - blame Neil.
         /// </summary>
@@ -470,6 +473,80 @@
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
                     JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
+        }
+
+        /// <summary>
+        /// Upgrades to version 57. Change Factor.Specifications to 
+        /// Factor.Specification. Also FactorValue becomes CompositeFactor.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the .apsimx file.</param>
+        private static void UpgradeToVersion57(JToken root, string fileName)
+        {
+            foreach (var factor in JsonUtilities.ChildrenRecursively(root as JObject, "Factor"))
+            {
+                var parent = JsonUtilities.Parent(factor);
+
+                string parentModelType = JsonUtilities.Type(parent);
+                if (parentModelType == "Factors")
+                {
+                    var specifications = factor["Specifications"] as JArray;
+                    if (specifications != null)
+                    {
+                        if (specifications.Count > 1)
+                        {
+                            // must be a compound factor. 
+
+                            // Change our Factor to a CompositeFactor
+                            factor["$type"] = "Models.Factorial.CompositeFactor, Models";
+
+                            // Remove the Factor from it's parent.
+                            var parentChildren = parent["Children"] as JArray;
+                            parentChildren.Remove(factor);
+
+                            // Create a new site factor and add our CompositeFactor to the children list.
+                            var siteFactor = JsonUtilities.ChildWithName(parent as JObject, "Site") as JObject;
+                            if (siteFactor == null)
+                            {
+                                // Create a site factor 
+                                siteFactor = new JObject();
+                                siteFactor["$type"] = "Models.Factorial.Factor, Models";
+                                siteFactor["Name"] = "Site";
+                                JArray siteFactorChildren = new JArray();
+                                siteFactor["Children"] = siteFactorChildren;
+
+                                // Add our new site factor to our models parent.
+                                parentChildren.Add(siteFactor);
+                            }
+                            (siteFactor["Children"] as JArray).Add(factor);
+
+                        }
+                        else
+                        {
+                            // Convert array to string.
+                            if (specifications.Count > 0)
+                                factor["Specification"] = specifications[0].ToString();
+                        }
+                    }
+                }
+                else if (parentModelType == "Factor")
+                {
+                    factor["$type"] = "Models.Factorial.CompositeFactor, Models";
+                }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenRecursively(root as JObject, "Series"))
+            {
+                var factorToVaryColours = series["FactorToVaryColours"];
+                if (factorToVaryColours != null && factorToVaryColours.Value<string>() == "Simulation")
+                    series["FactorToVaryColours"] = "SimulationName";
+                var factorToVaryMarkers = series["FactorToVaryMarkers"];
+                if (factorToVaryMarkers != null && factorToVaryMarkers.Value<string>() == "Simulation")
+                    series["FactorToVaryMarkers"] = "SimulationName";
+                var factorToVaryLines = series["FactorToVaryLines"];
+                if (factorToVaryLines != null && factorToVaryLines.Value<string>() == "Simulation")
+                    series["FactorToVaryLines"] = "SimulationName";
+            }
         }
 
         /// <summary>
