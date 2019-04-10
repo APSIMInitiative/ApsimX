@@ -52,6 +52,11 @@ namespace Models.Storage
         /// <returns>Can return an empty list but never null.</returns>
         List<string> ColumnNames(string tableName);
 
+        /// <summary>Return a list of column names of type string for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        List<string> StringColumnNames(string tableName);
+
         /// <summary>
         /// Return a checkpoint ID for the specified checkpoint name.
         /// </summary>

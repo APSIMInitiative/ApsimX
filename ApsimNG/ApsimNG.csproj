@@ -121,6 +121,8 @@
     <EmbeddedResource Include="Resources\Glade\CustomQueryView.glade" />
     <EmbeddedResource Include="Resources\Glade\PivotTableView.glade" />
     <EmbeddedResource Include="Resources\Glade\SoilDownload.glade" />
+    <EmbeddedResource Include="Resources\Glade\ExperimentView.glade" />
+    <EmbeddedResource Include="Resources\Glade\FactorView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -233,6 +235,7 @@
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Presenters\CompositeFactorPresenter.cs" />
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
     <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
@@ -245,6 +248,10 @@
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
+    <Compile Include="Views\FactorView.cs" />
+    <Compile Include="Views\LabelView.cs" />
+    <Compile Include="Views\ListView.cs" />
+    <Compile Include="Views\MenuItemView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
@@ -456,6 +463,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CompositeFactor.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PivotTable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPriceGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPricing.png" />
