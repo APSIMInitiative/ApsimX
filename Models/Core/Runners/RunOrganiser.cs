@@ -98,7 +98,7 @@
 
             RunPostSimulationTools(simulations, storage);
 
-            storage.Writer.WaitForIdle();
+            storage.Writer.Stop();
 
             // Optionally run the tests
             if (runTests)
@@ -123,7 +123,6 @@
                 }
             }
 
-            storage.Writer.Stop();
             simulationEnumerator = null;
         }
 

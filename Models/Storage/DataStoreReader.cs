@@ -31,7 +31,14 @@
         private DataView units;
 
         /// <summary>Return a list of simulation names or empty string[]. Never returns null.</summary>
-        public List<string> SimulationNames { get { return simulationIDs.Keys.ToList(); } }
+        public List<string> SimulationNames
+        {
+            get
+            {
+                var data = connection.ExecuteQuery("select Name from _Simulations");
+                return DataTableUtilities.GetColumnAsStrings(data, "Name").ToList();
+            }
+        }
 
         /// <summary>Return a list of checkpoint names or empty string[]. Never returns null.</summary>
         public List<string> CheckpointNames { get { return checkpointIDs.Keys.ToList(); } }
