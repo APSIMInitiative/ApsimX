@@ -98,6 +98,8 @@
 
             RunPostSimulationTools(simulations, storage);
 
+            storage.Writer.WaitForIdle();
+
             // Optionally run the tests
             if (runTests)
             {
