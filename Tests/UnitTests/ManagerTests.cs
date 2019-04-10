@@ -44,6 +44,9 @@ namespace UnitTests
         /// 
         /// This test ensures that an exception is thrown and that it is the
         /// correct exception.
+        /// 
+        /// The manager in this file is disabled, but its OnCreated() method
+        /// should still be called.
         /// </remarks>
         [Test]
         public void ManagerScriptOnCreated()
