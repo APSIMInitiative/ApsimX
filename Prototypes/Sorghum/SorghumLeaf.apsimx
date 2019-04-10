@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 54,
+  "Version": 55,
   "Name": "Simulations",
   "Children": [
     {
@@ -8257,7 +8257,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
                       "Thickness": [
@@ -8297,6 +8296,18 @@
                         0.17
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
                       "FBiom": [
                         0.05,
                         0.02,
@@ -15233,7 +15244,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
                       "Thickness": [
@@ -15273,6 +15283,18 @@
                         0.17
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
                       "FBiom": [
                         0.05,
                         0.02,
@@ -23173,7 +23195,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
                       "Thickness": [
@@ -23213,6 +23234,18 @@
                         0.17
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
                       "FBiom": [
                         0.05,
                         0.02,
@@ -30341,7 +30374,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
                       "Thickness": [
@@ -30381,6 +30413,18 @@
                         0.17
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
                       "FBiom": [
                         0.05,
                         0.02,
@@ -31163,7 +31207,7 @@
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
-              "LineThickness": 1,
+              "LineThickness": 0,
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Das",
@@ -31176,36 +31220,6 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "RachisWtPMF1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Das",
-              "YFieldName": "Sorghum.TotalDead.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "RachisWtPMF11",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
