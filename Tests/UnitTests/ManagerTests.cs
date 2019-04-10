@@ -34,6 +34,29 @@ namespace UnitTests
             jobRunner.Run(jobManager, true);
         }
 
+        /// <summary>
+        /// Ensures that Manager Scripts are allowed to override the
+        /// OnCreated() method.
+        /// </summary>
+        /// <remarks>
+        /// OnCreatedError.apsimx contains a manager script which overrides
+        /// the OnCreated() method and throws an exception from this method.
+        /// 
+        /// This test ensures that an exception is thrown and that it is the
+        /// correct exception.
+        /// </remarks>
+        [Test]
+        public void ManagerScriptOnCreated()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
+            List<Exception> errors = new List<Exception>();
+            FileFormat.ReadFromString<IModel>(json, out errors);
+
+            Assert.NotNull(errors);
+            Assert.AreEqual(1, errors.Count, "Encountered the wrong number of errors when opening OnCreatedError.apsimx.");
+            Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
+        }
+
         private void EnsureJobRanRed(object sender, JobCompleteArgs args)
         {
             Assert.NotNull(args.exceptionThrowByJob, "Simulation with a faulty manager script has run green.");
