@@ -35,13 +35,28 @@
             {
                 string sql;
 
-                if (checkId == 0 && simIds == null)
-                    sql = string.Format("DROP TABLE {0}", table);
-                else if (checkId != 0 && simIds == null)
-                    sql = string.Format("DELETE FROM {0} WHERE CheckpointID={1}", table, checkId);
+                if (simIds == null)
+                {
+                    if (checkId == 0)
+                        sql = string.Format("DROP TABLE {0}", table);
+                    else
+                        sql = string.Format("DELETE FROM {0} WHERE CheckpointID={1}", table, checkId);
+                }
                 else
-                    sql = string.Format("DELETE FROM {0} WHERE CheckpointID={1} AND SimulationID IN ({2})",
-                                        table, checkId, StringUtilities.BuildString(simIds, ","));
+                {
+                    List<string> columns = database.GetTableColumns(table);
+                    string ids = StringUtilities.BuildString(simIds, ",");
+                    if (columns.Contains("SimulationID"))
+                        sql = string.Format("DELETE FROM {0} WHERE CheckpointID={1} AND SimulationID IN ({2})", table, checkId, ids);
+                    else if (columns.Contains("SimulationName"))
+                    {
+                        sql = string.Format("DELETE T FROM {0} T INNER JOIN _Simulations S ON SimulationName=SimulationName WHERE SimulationID IN ({1})", table, ids);
+                        if (checkId != 0)
+                            sql += string.Format(" AND CheckpointID={0}", checkId);
+                    }
+                    else
+                        sql = string.Format("DROP TABLE {0}", table);
+                }
                 database.ExecuteNonQuery(sql);
             }
         }

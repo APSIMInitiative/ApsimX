@@ -90,6 +90,24 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootFront</summary>
         public double RightDist { get; set; }
 
+        /// <summary>Gets or sets AvailableSW during SW Uptake
+        /// Old Sorghum does actual uptake at end of day
+        /// PMF does actual uptake before N uptake</summary>
+        public double[] AvailableSW { get;  set; }
+
+        /// <summary>Gets or sets PotentialAvailableSW during SW Uptake</summary>
+        public double[] PotentialAvailableSW { get;  set; }
+
+        /// <summary>Record the Water level before </summary>
+        public double[] StartWater { get; set; }
+
+        /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
+        public double[] MassFlow { get;  set; }
+
+        /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
+        public double[] Diffusion { get;  set; }
+
+
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="Root">The parent root organ</param>
@@ -188,12 +206,6 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
             double[] xf = soil.XF(plant.Name);
-            var rootDepthRate = rootFrontVelocity.Value();
-            var rootDepthRate2 = rootFrontVelocity.Value(RootLayer);
-
-            var clock = (root.Parent as Plant).Clock.Today;
-            var das = (root.Parent as Plant).Phenology.DaysAfterSowing;
-            var cstage = (root.Parent as Plant).Phenology.Stage;
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
