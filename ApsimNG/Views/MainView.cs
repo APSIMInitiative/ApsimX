@@ -312,7 +312,7 @@
             EventBox eventbox = new EventBox();
             eventbox.HasTooltip = text.Contains(Path.DirectorySeparatorChar.ToString());
             eventbox.TooltipText = text;
-            eventbox.ButtonPressEvent += on_eventbox1_button_press_event;
+            eventbox.ButtonPressEvent += OnEventbox1ButtonPress;
             eventbox.Add(headerBox);
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
             // Attach an icon to the context menu
@@ -352,7 +352,7 @@
         /// </summary>
         /// <param name="o">The object issuing the event</param>
         /// <param name="e">Button press event arguments</param>
-        public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
+        public void OnEventbox1ButtonPress(object o, ButtonPressEventArgs e)
         {
             if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
             {

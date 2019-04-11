@@ -1087,8 +1087,8 @@ namespace UserInterface.Views
                     if (this.OnLegendClick != null)
                     {
                         LegendClickArgs args = new LegendClickArgs();
-                        args.seriesIndex = seriesIndex;
-                        args.controlKeyPressed = e.IsControlDown;
+                        args.SeriesIndex = seriesIndex;
+                        args.ControlKeyPressed = e.IsControlDown;
                         this.OnLegendClick.Invoke(sender, args);
                     }
                 }

@@ -140,9 +140,9 @@ namespace UserInterface.Intellisense
         /// </summary>
         public static Pixbuf GetImage(IEntity entity)
         {
-            CompletionImage image = getCompletionImage(entity);
+            CompletionImage image = GetCompletionImage(entity);
             if (image != null)
-                return image.getImage(entity.Accessibility, entity.IsStatic);
+                return image.GetImage(entity.Accessibility, entity.IsStatic);
             else
                 return null;
         }
@@ -172,7 +172,7 @@ namespace UserInterface.Intellisense
         /// <param name="typeKind"></param>
         /// <param name="isStatic"></param>
         /// <returns></returns>
-        private static CompletionImage getCompletionImageForType(TypeKind typeKind, bool isStatic)
+        private static CompletionImage GetCompletionImageForType(TypeKind typeKind, bool isStatic)
         {
             switch (typeKind)
             {
@@ -198,14 +198,14 @@ namespace UserInterface.Intellisense
         /// Gets the CompletionImage instance for the specified entity.
         /// Returns null when no image is available for the entity type.
         /// </summary>
-        private static CompletionImage getCompletionImage(IEntity entity)
+        private static CompletionImage GetCompletionImage(IEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity cannot be null.");
             switch (entity.SymbolKind)
             {
                 case SymbolKind.TypeDefinition:
-                    return getCompletionImageForType(((ITypeDefinition)entity).Kind, entity.IsStatic);
+                    return GetCompletionImageForType(((ITypeDefinition)entity).Kind, entity.IsStatic);
                 case SymbolKind.Field:
                     IField field = (IField)entity;
                     if (field.IsConst)
@@ -243,7 +243,7 @@ namespace UserInterface.Intellisense
         /// </summary>
         /// <param name="accessibility">Accessibility of the member.</param>
         /// <returns>int in the range 0..<see cref="accessibilityOverlaysLength"/> - 1.</returns>
-        private static int getAccessibilityOverlayIndex(Accessibility accessibility)
+        private static int GetAccessibilityOverlayIndex(Accessibility accessibility)
         {
             switch (accessibility)
             {
@@ -264,9 +264,9 @@ namespace UserInterface.Intellisense
         /// <summary>
         /// Gets this image combined with the specified accessibility overlay.
         /// </summary>
-        private Pixbuf getImage(Accessibility accessibility, bool isStatic = false)
+        private Pixbuf GetImage(Accessibility accessibility, bool isStatic = false)
         {
-            int accessibilityIndex = getAccessibilityOverlayIndex(accessibility);
+            int accessibilityIndex = GetAccessibilityOverlayIndex(accessibility);
             int index = accessibilityIndex;
             if (isStatic && showStaticOverlay)
                 index += accessibilityOverlaysLength;
@@ -280,10 +280,10 @@ namespace UserInterface.Intellisense
                 Pixbuf icon = LoadPixbuf(imageName);
                 Pixbuf overlay = accessibilityOverlays[accessibilityIndex];
                 if (isStatic && showStaticOverlay)
-                    overlay = overlayImages(LoadPixbuf("OverlayStatic"), overlay);
+                    overlay = OverlayImages(LoadPixbuf("OverlayStatic"), overlay);
 
                 // Create the composite image - the icon with the superimposed overlay
-                Pixbuf composite = overlayImages(icon, overlay);
+                Pixbuf composite = OverlayImages(icon, overlay);
 
                 images[index] = composite;
             }
@@ -297,7 +297,7 @@ namespace UserInterface.Intellisense
         /// <param name="icon1">Image to go on the bottom layer.</param>
         /// <param name="icon2">Image to go on the top layer.</param>
         /// <returns>icon2 superimposed on top of icon1.</returns>
-        private Pixbuf overlayImages(Pixbuf icon1, Pixbuf icon2)
+        private Pixbuf OverlayImages(Pixbuf icon1, Pixbuf icon2)
         {
             if (icon1 == null)
                 return icon2;

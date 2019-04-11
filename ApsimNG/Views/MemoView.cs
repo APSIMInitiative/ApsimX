@@ -63,8 +63,8 @@ namespace UserInterface.Views
             helpBtn.Clicked += HelpBtn_Clicked;
             _mainWidget = vbox1;
             textView.ModifyFont(Pango.FontDescription.FromString("monospace"));
-            textView.FocusOutEvent += richTextBox1_Leave;
-            textView.Buffer.Changed += richTextBox1_TextChanged;
+            textView.FocusOutEvent += RichTextBox1_Leave;
+            textView.Buffer.Changed += RichTextBox1_TextChanged;
             textView.PopulatePopup += TextView_PopulatePopup;
             textView.ButtonPressEvent += TextView_ButtonPressEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -86,8 +86,8 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textView.FocusOutEvent -= richTextBox1_Leave;
-            textView.Buffer.Changed -= richTextBox1_TextChanged;
+            textView.FocusOutEvent -= RichTextBox1_Leave;
+            textView.Buffer.Changed -= RichTextBox1_TextChanged;
             textView.PopulatePopup -= TextView_PopulatePopup;
             menuItemList.Clear();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -151,7 +151,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void richTextBox1_Leave(object sender, FocusOutEventArgs e)
+        private void RichTextBox1_Leave(object sender, FocusOutEventArgs e)
         {
             if (MemoLeave != null)
             {
@@ -161,7 +161,7 @@ namespace UserInterface.Views
             }
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        private void RichTextBox1_TextChanged(object sender, EventArgs e)
         {
             try
             {

@@ -32,7 +32,7 @@ namespace ApsimNG.Views.CLEM
         private TextView textview1 = null;
 
         // Custom gridview added post-reading the glade file
-        public GridView gridview1 { get; set; } = null;
+        public GridView Grid { get; set; } = null;
 
         // Raw text containing the SQL query
         public string Sql
@@ -95,10 +95,10 @@ namespace ApsimNG.Views.CLEM
             textview1 = (TextView)builder.GetObject("textview1");
 
             // Add the custom gridview (external to glade)
-            gridview1 = new GridView(owner);
-            gridview1.ReadOnly = true;
+            Grid = new GridView(owner);
+            Grid.ReadOnly = true;
             
-            vbox4.Add(gridview1.MainWidget);
+            vbox4.Add(Grid.MainWidget);
             //notebook1.AppendPage(gridview1.MainWidget, data);
 
             // Assign methods to button click events
@@ -129,7 +129,7 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         public class WriteTableEventArgs :  EventArgs
         {
-            public string tablename { get; set; }
+            public string Tablename { get; set; }
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace ApsimNG.Views.CLEM
             {
                 Tablename = tableentry.Text;
                 WriteTableEventArgs args = new WriteTableEventArgs();
-                args.tablename = tableentry.Text;
+                args.Tablename = tableentry.Text;
 
                 OnWriteTable.Invoke(this, args);
             }

@@ -123,10 +123,10 @@ namespace UserInterface.Views
             TreeViewColumn column = new TreeViewColumn("Genotype Names", textRender, "text", 0);
             lbxGenotypeList.AppendColumn(column);
             lbxGenotypeList.HeadersVisible = false;
-            lbxGenotypeList.CursorChanged += lbxGenotypeList_SelectedIndexChanged;
+            lbxGenotypeList.CursorChanged += LbxGenotypeList_SelectedIndexChanged;
 
-            btnNewGeno.Clicked += btnNewGeno_Clicked;
-            btnDelGeno.Clicked += btnDelGeno_Clicked;
+            btnNewGeno.Clicked += BtnNewGeno_Clicked;
+            btnDelGeno.Clicked += BtnDelGeno_Clicked;
             edtGenotypeName.Changed += ChangeGenotypeName;
             rbtnSheep.Clicked += ClickAnimal;
             rbtnCattle.Clicked += ClickAnimal;
@@ -395,7 +395,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Event arguments</param>
-        private void btnNewGeno_Clicked(object sender, EventArgs e)
+        private void BtnNewGeno_Clicked(object sender, EventArgs e)
         {
             GrazType.AnimalType newAnimal;
             int iNewBreed;
@@ -717,7 +717,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnDelGeno_Clicked(object sender, EventArgs e)
+        private void BtnDelGeno_Clicked(object sender, EventArgs e)
         {
             if (FCurrGenotype >= 0)
             {
@@ -738,8 +738,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             // detach events
-            btnNewGeno.Clicked -= btnNewGeno_Clicked;
-            btnDelGeno.Clicked -= btnDelGeno_Clicked;
+            btnNewGeno.Clicked -= BtnNewGeno_Clicked;
+            btnDelGeno.Clicked -= BtnDelGeno_Clicked;
             edtGenotypeName.Changed -= ChangeGenotypeName;
             rbtnSheep.Clicked -= ClickAnimal;
             rbtnCattle.Clicked -= ClickAnimal;
@@ -758,7 +758,7 @@ namespace UserInterface.Views
             }
         }
 
-        private void lbxGenotypeList_SelectedIndexChanged(object sender, EventArgs e)
+        private void LbxGenotypeList_SelectedIndexChanged(object sender, EventArgs e)
         {
             ClickGenotypeList(sender, e);
         }

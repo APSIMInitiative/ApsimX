@@ -249,7 +249,7 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Custom gridview added post-reading the glade file
         /// </summary>
-        public GridView gridview { get; set; } = null;
+        public GridView Grid { get; set; } = null;
 
         /// <summary>
         /// Instantiate the View
@@ -302,9 +302,9 @@ namespace ApsimNG.Views.CLEM
             storebutton.Clicked += OnStoreData;
 
             // Add the custom gridview (external to glade)
-            gridview = new GridView(owner);
-            gridview.ReadOnly = true;
-            vbox1.Add(gridview.MainWidget);
+            Grid = new GridView(owner);
+            Grid.ReadOnly = true;
+            vbox1.Add(Grid.MainWidget);
 
             // Let the viewbase know which widget is the main widget
             _mainWidget = vbox1;

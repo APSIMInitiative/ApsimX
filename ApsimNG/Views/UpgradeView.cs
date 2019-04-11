@@ -22,7 +22,7 @@ namespace UserInterface.Views
         public class Upgrade
         {
             public DateTime ReleaseDate { get; set; }
-            public int issueNumber { get; set; }
+            public int IssueNumber { get; set; }
             public string IssueTitle { get; set; }
             public string IssueURL { get; set; }
             public string ReleaseURL { get; set; }
@@ -226,7 +226,7 @@ namespace UserInterface.Views
                 upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
             if (listmodel.IterNChildren() > 0)
@@ -287,7 +287,7 @@ namespace UserInterface.Views
 
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
                     Upgrade upgrade = upgradeList[selIndex];
-                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
 
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
@@ -452,22 +452,22 @@ namespace UserInterface.Views
             string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
             url += "?firstName=" + firstNameBox.Text;
 
-            url = addToURL(url, "lastName", lastNameBox.Text);
-            url = addToURL(url, "organisation", organisationBox.Text);
-            url = addToURL(url, "address1", address1Box.Text);
-            url = addToURL(url, "address2", address2Box.Text);
-            url = addToURL(url, "city", cityBox.Text);
-            url = addToURL(url, "state", stateBox.Text);
-            url = addToURL(url, "postcode", postcodeBox.Text);
-            url = addToURL(url, "country", countryBox.Text);
-            url = addToURL(url, "email", emailBox.Text);
-            url = addToURL(url, "product", "APSIM Next Generation " + version);
+            url = AddToURL(url, "lastName", lastNameBox.Text);
+            url = AddToURL(url, "organisation", organisationBox.Text);
+            url = AddToURL(url, "address1", address1Box.Text);
+            url = AddToURL(url, "address2", address2Box.Text);
+            url = AddToURL(url, "city", cityBox.Text);
+            url = AddToURL(url, "state", stateBox.Text);
+            url = AddToURL(url, "postcode", postcodeBox.Text);
+            url = AddToURL(url, "country", countryBox.Text);
+            url = AddToURL(url, "email", emailBox.Text);
+            url = AddToURL(url, "product", "APSIM Next Generation " + version);
 
             WebUtilities.CallRESTService<object>(url);
         }
 
         /// <summary>Add a key / value pair to url if not empty</summary>
-        private string addToURL(string url, string key, string value)
+        private string AddToURL(string url, string key, string value)
         {
             if (value == null || value == string.Empty)
                 value = "-";

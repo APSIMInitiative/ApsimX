@@ -41,12 +41,12 @@ namespace Utility
             btnFindNext = (Button)builder.GetObject("btnFindNext");
             lblReplaceWith = (Label)builder.GetObject("lblReplaceWith");
 
-            btnFindNext.Clicked += btnFindNext_Click;
-            btnFindPrevious.Clicked += btnFindPrevious_Click;
-            btnCancel.Clicked += btnCancel_Click;
-            btnReplace.Clicked += btnReplace_Click;
-            btnReplaceAll.Clicked += btnReplaceAll_Click;
-            btnHighlightAll.Clicked += btnHighlightAll_Click;
+            btnFindNext.Clicked += BtnFindNext_Click;
+            btnFindPrevious.Clicked += BtnFindPrevious_Click;
+            btnCancel.Clicked += BtnCancel_Click;
+            btnReplace.Clicked += BtnReplace_Click;
+            btnReplaceAll.Clicked += BtnReplaceAll_Click;
+            btnHighlightAll.Clicked += BtnHighlightAll_Click;
             window1.DeleteEvent += Window1_DeleteEvent;
             window1.Destroyed += Window1_Destroyed;
             AccelGroup agr = new AccelGroup();
@@ -57,11 +57,11 @@ namespace Utility
 
         private void Window1_Destroyed(object sender, EventArgs e)
         {
-            btnFindNext.Clicked -= btnFindNext_Click;
-            btnFindPrevious.Clicked -= btnFindPrevious_Click;
-            btnCancel.Clicked -= btnCancel_Click;
-            btnReplace.Clicked -= btnReplace_Click;
-            btnReplaceAll.Clicked -= btnReplaceAll_Click;
+            btnFindNext.Clicked -= BtnFindNext_Click;
+            btnFindPrevious.Clicked -= BtnFindPrevious_Click;
+            btnCancel.Clicked -= BtnCancel_Click;
+            btnReplace.Clicked -= BtnReplace_Click;
+            btnReplaceAll.Clicked -= BtnReplaceAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
         }
@@ -155,11 +155,11 @@ namespace Utility
             }
         }
 
-        private void btnFindPrevious_Click(object sender, EventArgs e)
+        private void BtnFindPrevious_Click(object sender, EventArgs e)
         {
             FindNext(false, false, "Text not found");
         }
-        private void btnFindNext_Click(object sender, EventArgs e)
+        private void BtnFindNext_Click(object sender, EventArgs e)
         {
             FindNext(false, true, "Text not found");
         }
@@ -188,17 +188,17 @@ namespace Utility
             return range;
         }
 
-        private void btnHighlightAll_Click(object sender, EventArgs e)
+        private void BtnHighlightAll_Click(object sender, EventArgs e)
         {
             _editor.HighlightSearchPattern = true;
-            btnFindNext_Click(sender, e);
+            BtnFindNext_Click(sender, e);
         }
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             window1.Hide();
         }
 
-        private void btnReplace_Click(object sender, EventArgs e)
+        private void BtnReplace_Click(object sender, EventArgs e)
         {
             Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
             Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
@@ -207,7 +207,7 @@ namespace Utility
                 ShowMsg("Search text not found.");
         }
 
-        private void btnReplaceAll_Click(object sender, EventArgs e)
+        private void BtnReplaceAll_Click(object sender, EventArgs e)
         {
             Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
             Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
