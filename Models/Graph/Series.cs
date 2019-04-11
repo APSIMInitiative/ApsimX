@@ -273,24 +273,27 @@ namespace Models.Graph
         private void RemoveUnnessaryDescriptionsAndDescriptors(List<SimulationDescription> simulationDescriptions)
         {
             var varyByFieldNames = GetVaryByFieldNames();
-            foreach (var simulationDescription in simulationDescriptions)
+            if (varyByFieldNames.Count > 0)
             {
-                // For this simulation description, determine which descriptors aren't 
-                // being varied, add them to a removal list.
-                var descriptorsToRemove = new List<SimulationDescription.Descriptor>();
-                foreach (var descriptor in simulationDescription.Descriptors)
+                foreach (var simulationDescription in simulationDescriptions)
                 {
-                    if (!varyByFieldNames.Contains(descriptor.Name))
-                        descriptorsToRemove.Add(descriptor);
+                    // For this simulation description, determine which descriptors aren't 
+                    // being varied, add them to a removal list.
+                    var descriptorsToRemove = new List<SimulationDescription.Descriptor>();
+                    foreach (var descriptor in simulationDescription.Descriptors)
+                    {
+                        if (!varyByFieldNames.Contains(descriptor.Name))
+                            descriptorsToRemove.Add(descriptor);
+                    }
+
+                    // Remove all descriptors in the removal list.
+                    foreach (var descritorToRemove in descriptorsToRemove)
+                        simulationDescription.Descriptors.Remove(descritorToRemove);
                 }
 
-                // Remove all descriptors in the removal list.
-                foreach (var descritorToRemove in descriptorsToRemove)
-                    simulationDescription.Descriptors.Remove(descritorToRemove);
+                // Remove all simulation descriptions that don't have any descriptors.
+                simulationDescriptions.RemoveAll(sd => sd.Descriptors.Count == 0);
             }
-
-            // Remove all simulation descriptions that don't have any descriptors.
-            simulationDescriptions.RemoveAll(sd => sd.Descriptors.Count == 0);
         }
 
         /// <summary>
@@ -951,9 +954,9 @@ namespace Models.Graph
                             values.Add(descriptor.Value);
                             index = values.Count - 1;
                         }
-                        if (index >= indexMatrix.Count)
-                            index = 0;
                     }
+                    if (index >= indexMatrix.Count)
+                        index = 0;
                     setter1(visualElement, indexMatrix[index].Item1);
                     setter2?.Invoke(visualElement, indexMatrix[index].Item2);
                     setter3?.Invoke(visualElement, indexMatrix[index].Item3);

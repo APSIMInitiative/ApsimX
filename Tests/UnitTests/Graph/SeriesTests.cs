@@ -702,6 +702,171 @@
 
         }
 
+        /// <summary>
+        /// Create a single xy series definition with a 'Vary By Simulation'.
+        /// Ensure it only pulls in simulations in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithVaryBySimulationUsingScope()
+        {
+            var simulations = new Simulations()
+            {
+                Name = "Simulations",
+                Children = new List<Model>()
+                {
+                    new Folder()
+                    {
+                        Name = "Folder1",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
+                                new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp2"),
+                                new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp1"),
+                                new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
+                            }),
+                            new Graph()
+                            {
+                                Children = new List<Model>()
+                                {
+                                    new Series()
+                                    {
+                                        Name = "Series1",
+                                        TableName = "Report",
+                                        XFieldName = "Col1",
+                                        YFieldName = "Col2",
+                                        FactorToVaryColours = "SimulationName"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new Folder()
+                    {
+                        Name = "Folder2",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim3", "SimulationName", "Sim3", "Exp", "Exp3"),
+                                new Description("Sim3", "SimulationName", "Sim3", "Exp", "Exp4"),
+                                new Description("Sim4", "SimulationName", "Sim4", "Exp", "Exp3"),
+                                new Description("Sim4", "SimulationName", "Sim4", "Exp", "Exp4")
+                            }),
+                        }
+                    }
+                }
+            };
+
+
+            Apsim.ParentAllChildren(simulations);
+
+            string data =
+                "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
+                "            ()              ()     ()   ()   (g)\r\n" +
+                "       Current            Sim1   Exp1    1    10\r\n" +
+                "       Current            Sim1   Exp1    2    20\r\n" +
+                "       Current            Sim2   Exp2    1    30\r\n" +
+                "       Current            Sim2   Exp2    2    40\r\n" +
+                "       Current            Sim3   Exp3    1    50\r\n" +
+                "       Current            Sim3   Exp3    2    60\r\n" +
+                "       Current            Sim4   Exp4    1    70\r\n" +
+                "       Current            Sim4   Exp4    2    80\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 2);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].title, "Sim1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+
+            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].title, "Sim2");
+            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+
+        }
+
+        /// <summary>
+        /// Create a single xy series definition with a 'Vary By Experiment'.
+        /// Ensure it only pulls in experiments in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithNoVaryByUsingScope()
+        {
+            var simulations = new Simulations()
+            {
+                Name = "Simulations",
+                Children = new List<Model>()
+                {
+                    new Folder()
+                    {
+                        Name = "Folder1",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim1", "SimulationName", "Sim1"),
+                            }),
+                            new Graph()
+                            {
+                                Children = new List<Model>()
+                                {
+                                    new Series()
+                                    {
+                                        Name = "Series1",
+                                        TableName = "Report",
+                                        XFieldName = "Col1",
+                                        YFieldName = "Col2",
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new Folder()
+                    {
+                        Name = "Folder2",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim2", "SimulationName", "Sim2"),
+                            }),
+                        }
+                    }
+                }
+            };
+
+
+            Apsim.ParentAllChildren(simulations);
+
+            string data =
+                "CheckpointName  SimulationName Col1  Col2\r\n" +
+                "            ()              ()   ()   (g)\r\n" +
+                "       Current            Sim1    1    10\r\n" +
+                "       Current            Sim1    2    20\r\n" +
+                "       Current            Sim2    1    30\r\n" +
+                "       Current            Sim2    2    40\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 1);
+            Assert.AreEqual(definitions[0].title, "Sim1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+        }
+
+
         /// <summary>Create xy series definitions with a 'Vary By Zone' grouping.</summary>
         [Test]
         public void SeriesWithVaryByZone()
