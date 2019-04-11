@@ -168,12 +168,12 @@ namespace ApsimNG.Classes.DirectedGraph
                 ep2.Y = SourceNode.Location.Y + (int)(d * Math.Sin(m2));
             }
 
-            int iStart = (int)Math.Min(ep1.X, ep2.X);
-            int iEnd = (int)Math.Max(ep1.X, ep2.X);
-            int xPoints = iEnd - iStart;
-            iStart = (int)Math.Min(ep1.Y, ep2.Y);
-            iEnd = (int)Math.Max(ep1.Y, ep2.Y);
-            int yPoints = iEnd - iStart;
+            int start = (int)Math.Min(ep1.X, ep2.X);
+            int end = (int)Math.Max(ep1.X, ep2.X);
+            int xPoints = end - start;
+            start = (int)Math.Min(ep1.Y, ep2.Y);
+            end = (int)Math.Max(ep1.Y, ep2.Y);
+            int yPoints = end - start;
 
             //will calc a min of 100 points
             int points = Math.Max(Math.Max(xPoints, yPoints), 50) * 2;

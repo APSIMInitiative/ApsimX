@@ -60,7 +60,7 @@ namespace UserInterface.Views
         private Button btnReset = null;
         private Button btnDelete = null;
         private Button btnAdd = null;
-        private IconView lbDefaultNames = null;
+        private IconView lblDefaultNames = null;
         private Gtk.TreeView lvSupps = null;
 
         private ListStore suppList = new ListStore(typeof(string));
@@ -88,7 +88,7 @@ namespace UserInterface.Views
             btnReset = (Button)builder.GetObject("btnReset");
             btnDelete = (Button)builder.GetObject("btnDelete");
             btnAdd = (Button)builder.GetObject("btnAdd");
-            lbDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
+            lblDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
             lvSupps = (Gtk.TreeView)builder.GetObject("lvSupps");
             _mainWidget = table1;
 
@@ -103,10 +103,10 @@ namespace UserInterface.Views
             entryLookup.Add(tbSulph, FoodSupplement.SuppAttribute.spaSU);
 
             lvSupps.Model = suppList;
-            lbDefaultNames.Model = defNameList;
-            lbDefaultNames.TextColumn = 0;
-            lbDefaultNames.ItemActivated += LbDefaultNames_Click;
-            lbDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
+            lblDefaultNames.Model = defNameList;
+            lblDefaultNames.TextColumn = 0;
+            lblDefaultNames.ItemActivated += LbDefaultNames_Click;
+            lblDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
 
             CellRendererText textRender = new Gtk.CellRendererText();
             TreeViewColumn column = new TreeViewColumn("Supplement Names", textRender, "text", 0);
@@ -129,16 +129,16 @@ namespace UserInterface.Views
             btnReset.Clicked += BtnReset_Click;
             btnResetAll.Clicked += BtnResetAll_Click;
             cbxRoughage.Toggled += CbxRoughage_CheckedChanged;
-            lbDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
-            lbDefaultNames.Visible = false;
+            lblDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
+            lblDefaultNames.Visible = false;
             lvSupps.CursorChanged += LvSupps_SelectedIndexChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            lbDefaultNames.ItemActivated -= LbDefaultNames_Click;
-            lbDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
+            lblDefaultNames.ItemActivated -= LbDefaultNames_Click;
+            lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
             tbName.Changed -= TbName_Validating;
             tbDM.Changed -= RealEditValidator;
             tbDMD.Changed -= RealEditValidator;
@@ -155,7 +155,7 @@ namespace UserInterface.Views
             btnReset.Clicked -= BtnReset_Click;
             btnResetAll.Clicked -= BtnResetAll_Click;
             cbxRoughage.Toggled -= CbxRoughage_CheckedChanged;
-            lbDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
+            lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
             lvSupps.CursorChanged -= LvSupps_SelectedIndexChanged;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
@@ -230,9 +230,9 @@ namespace UserInterface.Views
         {
             TreeIter first;
             if (defNameList.GetIterFirst(out first))
-                lbDefaultNames.SelectPath(defNameList.GetPath(first));
-            lbDefaultNames.Visible = true;
-            lbDefaultNames.GrabFocus();
+                lblDefaultNames.SelectPath(defNameList.GetPath(first));
+            lblDefaultNames.Visible = true;
+            lblDefaultNames.GrabFocus();
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
@@ -497,12 +497,12 @@ namespace UserInterface.Views
                         SupplementAdded.Invoke(sender, args);
                 }
             }
-            lbDefaultNames.Visible = false;
+            lblDefaultNames.Visible = false;
         }
 
         private void LbDefaultNames_Leave(object sender, EventArgs e)
         {
-            lbDefaultNames.Visible = false;
+            lblDefaultNames.Visible = false;
         }
 
     }

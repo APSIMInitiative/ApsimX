@@ -90,12 +90,12 @@ namespace UserInterface.Views
             table1.Attach(colourDropDown.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
 
             Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
-            EventBox ebHelp = new EventBox();
-            ebHelp.Add(helpImage);
-            ebHelp.ButtonPressEvent += Help_ButtonPressEvent;
+            EventBox helpBox = new EventBox();
+            helpBox.Add(helpImage);
+            helpBox.ButtonPressEvent += Help_ButtonPressEvent;
             HBox filterBox = new HBox();
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
-            filterBox.PackEnd(ebHelp, false, true, 0);
+            filterBox.PackEnd(helpBox, false, true, 0);
 
             //table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(filterBox, 1, 2, 10, 11, AttachOptions.Fill, 0, 10, 2);

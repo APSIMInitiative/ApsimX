@@ -15,11 +15,11 @@ namespace UserInterface.Views
     public class StockView : ViewBase, IStockView
     {
         private const int MAX_GENOTYPES = 20;
-        private int FCurrGenotype;
-        private GrazType.AnimalType[] FGenotypeAnimals = new GrazType.AnimalType[20];
+        private int currentGenotype;
+        private GrazType.AnimalType[] genotypeAnimals = new GrazType.AnimalType[20];
         private AnimalParamSet paramSet;
         private AnimalParamSet genotypeSet;
-        private bool FILLING = false;
+        private bool filling = false;
 
         private const double MINSHEEPSRW = 5.0;
         private const double MAXSHEEPSRW = 100.0;
@@ -144,7 +144,7 @@ namespace UserInterface.Views
         {
             get
             {
-                if (FCurrGenotype >= 0)
+                if (currentGenotype >= 0)
                     ParseCurrGenotype();
                 return genotypeInits;
             }
@@ -190,18 +190,18 @@ namespace UserInterface.Views
 
                 if (this.genotypeSet != null)
                 {
-                    FGenotypeAnimals[idx] = this.genotypeSet.Animal;
+                    genotypeAnimals[idx] = this.genotypeSet.Animal;
                 }
                 else
-                    FGenotypeAnimals[idx] = GrazType.AnimalType.Sheep;
+                    genotypeAnimals[idx] = GrazType.AnimalType.Sheep;
             }
-            FCurrGenotype = Math.Min(0, genotypeInits.Length - 1);
+            currentGenotype = Math.Min(0, genotypeInits.Length - 1);
             FillCurrGenotype();
 
-            FILLING = true;
-            if (FCurrGenotype >= 0)
-                SelectedGenoIndex = FCurrGenotype;
-            FILLING = false;
+            filling = true;
+            if (currentGenotype >= 0)
+                SelectedGenoIndex = currentGenotype;
+            filling = false;
 
             EnableButtons();
         }
@@ -214,18 +214,18 @@ namespace UserInterface.Views
             GrazType.AnimalType theAnimal;
             StockGeno theGenoType;
 
-            if (FCurrGenotype < 0)
+            if (currentGenotype < 0)
                 gbxGenotype.Hide();
             else
                 gbxGenotype.Show();
 
 
-            FILLING = true;
+            filling = true;
 
-            if (FCurrGenotype >= 0)
+            if (currentGenotype >= 0)
             {
-                theGenoType = this.genotypeInits[FCurrGenotype];
-                theAnimal = FGenotypeAnimals[FCurrGenotype];
+                theGenoType = this.genotypeInits[currentGenotype];
+                theAnimal = genotypeAnimals[currentGenotype];
 
                 if (theAnimal == GrazType.AnimalType.Sheep)
                 {
@@ -281,7 +281,7 @@ namespace UserInterface.Views
                     dePFW_Milk.Value = theGenoType.PeakMilk;
                 }
             }
-            FILLING = false;
+            filling = false;
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace UserInterface.Views
         {
             StockGeno theGenoType;
 
-            if (FCurrGenotype >= 0 && !FILLING)
+            if (currentGenotype >= 0 && !filling)
             {
                 theGenoType = new StockGeno();
                 theGenoType.Conception = new double[4];
@@ -370,7 +370,7 @@ namespace UserInterface.Views
                 theGenoType.Conception[1] = deConception1.Value * 0.01;
                 theGenoType.Conception[2] = deConception2.Value * 0.01;
 
-                if (FGenotypeAnimals[FCurrGenotype] == GrazType.AnimalType.Sheep)
+                if (genotypeAnimals[currentGenotype] == GrazType.AnimalType.Sheep)
                 {
                     theGenoType.Conception[3] = deConception3.Value * 0.01;
                     theGenoType.RefFleeceWt = dePFW_Milk.Value;
@@ -378,7 +378,7 @@ namespace UserInterface.Views
                     theGenoType.FleeceYield = deWoolYield.Value * 0.01;
                     theGenoType.PeakMilk = 0.0;
                 }
-                else if (FGenotypeAnimals[FCurrGenotype] == GrazType.AnimalType.Cattle)
+                else if (genotypeAnimals[currentGenotype] == GrazType.AnimalType.Cattle)
                 {
                     theGenoType.PeakMilk = dePFW_Milk.Value;
                     theGenoType.Conception[3] = 0.0;
@@ -386,7 +386,7 @@ namespace UserInterface.Views
                     theGenoType.MaxFibreDiam = 0.0;
                     theGenoType.FleeceYield = 0.0;
                 }
-                this.genotypeInits[FCurrGenotype] = theGenoType;
+                this.genotypeInits[currentGenotype] = theGenoType;
             }
         }
 
@@ -398,37 +398,37 @@ namespace UserInterface.Views
         private void BtnNewGeno_Clicked(object sender, EventArgs e)
         {
             GrazType.AnimalType newAnimal;
-            int iNewBreed;
-            string sNewBreed = "";
-            bool bFound;
-            int Idx;
+            int newBreedIndex;
+            string newBreed = "";
+            bool found;
+            int index;
 
             if (genotypeInits.Length < MAX_GENOTYPES)
             {
                 ParseCurrGenotype();
 
                 newAnimal = GrazType.AnimalType.Sheep;
-                iNewBreed = 0;
-                bFound = false;
-                while ((iNewBreed < paramSet.iBreedCount(newAnimal)) && !bFound)
+                newBreedIndex = 0;
+                found = false;
+                while ((newBreedIndex < paramSet.iBreedCount(newAnimal)) && !found)
                 {
-                    sNewBreed = paramSet.sBreedName(GrazType.AnimalType.Sheep, iNewBreed);
+                    newBreed = paramSet.sBreedName(GrazType.AnimalType.Sheep, newBreedIndex);
 
-                    bFound = true;
-                    for (Idx = 0; Idx < genotypeInits.Length; Idx++)
+                    found = true;
+                    for (index = 0; index < genotypeInits.Length; index++)
                     {
-                        bFound = (bFound && (sNewBreed.ToLower() != genotypeInits[Idx].Name.ToLower()));
+                        found = (found && (newBreed.ToLower() != genotypeInits[index].Name.ToLower()));
                     }
-                    if (!bFound && (newAnimal == GrazType.AnimalType.Sheep) && (iNewBreed == paramSet.iBreedCount(newAnimal)))
+                    if (!found && (newAnimal == GrazType.AnimalType.Sheep) && (newBreedIndex == paramSet.iBreedCount(newAnimal)))
                     {
                         newAnimal = GrazType.AnimalType.Cattle;
-                        iNewBreed = 0;
+                        newBreedIndex = 0;
                     }
                     else
-                        iNewBreed++;
+                        newBreedIndex++;
                 }
 
-                if (!bFound)
+                if (!found)
                 {
                     MessageDialog msgError = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, "Error adding more genotypes");
                     msgError.Title = "Error";
@@ -442,8 +442,8 @@ namespace UserInterface.Views
                     genotypeInits[genotypeInits.Length - 1].Conception = new double[4];
                 }
 
-                SetGenotypeDefaults(genotypeInits.Length - 1, sNewBreed);
-                genoList.AppendValues(sNewBreed);
+                SetGenotypeDefaults(genotypeInits.Length - 1, newBreed);
+                genoList.AppendValues(newBreed);
                 SelectedGenoIndex = genotypeInits.Length - 1;
                 ClickGenotypeList(null, null);
 
@@ -458,9 +458,9 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ClickGenotypeList(object sender, EventArgs e)
         {
-            if (FCurrGenotype >= 0 && !FILLING)
+            if (currentGenotype >= 0 && !filling)
                 ParseCurrGenotype();
-            FCurrGenotype = SelectedGenoIndex;
+            currentGenotype = SelectedGenoIndex;
             FillCurrGenotype(); 
         }
 
@@ -480,14 +480,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeBreed(object sender, EventArgs e)
         {
-            if (!FILLING)
+            if (!filling)
             {
                 string newGenoName = MakeUniqueGenoName(cbxDamBreed.SelectedValue);
-                SetGenotypeDefaults(FCurrGenotype, cbxDamBreed.SelectedValue);
+                SetGenotypeDefaults(currentGenotype, cbxDamBreed.SelectedValue);
                 FillCurrGenotype();
                 edtGenotypeName.Text = newGenoName;
                 //ChangeGenotypeName(sender, e);          // ensure trigger updates on the Animals tab also
-                FILLING = true;            SetItem(genoList, FCurrGenotype, newGenoName); FILLING = false;
+                filling = true;            SetItem(genoList, currentGenotype, newGenoName); filling = false;
             }
         }
 
@@ -498,9 +498,9 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeGenotypeName(object sender, EventArgs e)
         {
-            if (!FILLING)
+            if (!filling)
             {
-                SetItem(genoList, FCurrGenotype, edtGenotypeName.Text);
+                SetItem(genoList, currentGenotype, edtGenotypeName.Text);
             }
         }
         /// <summary>
@@ -597,27 +597,27 @@ namespace UserInterface.Views
             }
         }
 
-        private double RoundValue(double fX, double fScale)
+        private double RoundValue(double x, double scale)
         {
-            return fScale * Math.Round(fX / fScale);
+            return scale * Math.Round(x / scale);
         }
 
         /// <summary>
         /// Store the settings for the breed name in the list of genotypes that have been defined.
         /// </summary>
-        /// <param name="idx"></param>
-        /// <param name="sBreedName"></param>
-        private void SetGenotypeDefaults(int idx, string sBreedName)
+        /// <param name="index"></param>
+        /// <param name="breedName"></param>
+        private void SetGenotypeDefaults(int index, string breedName)
         {
             AnimalParamSet breedParams;
             StockGeno theGenoType;
 
-            breedParams = paramSet.Match(sBreedName);
+            breedParams = paramSet.Match(breedName);
             if (breedParams != null)
             {
-                theGenoType = genotypeInits[idx];
+                theGenoType = genotypeInits[index];
 
-                FGenotypeAnimals[idx] = breedParams.Animal;
+                genotypeAnimals[index] = breedParams.Animal;
 
                 theGenoType.Name = breedParams.sName;
                 theGenoType.DamBreed = string.Empty;
@@ -689,7 +689,7 @@ namespace UserInterface.Views
             else
                 currAnimal = GrazType.AnimalType.Cattle;
 
-            FGenotypeAnimals[FCurrGenotype] = currAnimal;
+            genotypeAnimals[currentGenotype] = currAnimal;
 
             List<string> names = new List<string>();
 
@@ -719,11 +719,11 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnDelGeno_Clicked(object sender, EventArgs e)
         {
-            if (FCurrGenotype >= 0)
+            if (currentGenotype >= 0)
             {
                 //TODO when animals tab is working: deleteGroupsWithGenotype(FCurrGenotype);
 
-                for (int idx = FCurrGenotype + 1; idx <= genotypeInits.Length - 1; idx++)
+                for (int idx = currentGenotype + 1; idx <= genotypeInits.Length - 1; idx++)
                         genotypeInits[idx - 1] = genotypeInits[idx];
                 Array.Resize(ref genotypeInits, genotypeInits.Length - 1);
 
