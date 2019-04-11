@@ -631,7 +631,7 @@ namespace Models.Core.ApsimFile
                         foreach (string tableName in tableNames)
                         {
                             List<string> columnNames = connection.GetColumnNames(tableName);
-                            if (columnNames.Contains("SimulationID"))
+                            if (columnNames.Contains("SimulationID") && !columnNames.Contains("CheckpointID"))
                             {
                                 connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
                             }
