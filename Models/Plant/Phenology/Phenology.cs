@@ -369,11 +369,11 @@ namespace Models.PMF.Phen
 
                 //sorghum resets the stage variable to 0 on the day the phase changes
                 //it will resume again normally the day after
-                double resetSorghumStage = incrementPhase ? 0.0 : 1.0;
+                double resetSorghumStage = SorghumFlag != null && incrementPhase ? 0.0 : 1.0;
                 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) | (CurrentPhase.End == structure?.LeafInitialisationStage))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
                          Emerged = true;
                     }
