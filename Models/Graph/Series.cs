@@ -725,7 +725,7 @@ namespace Models.Graph
             string filterToUse = "SimulationName IN (" +
                                    StringUtilities.Build(simulationNames, ",", "'", "'") +
                                    ")";
-            if (Filter != null)
+            if (Filter != null && Filter != string.Empty)
                 filterToUse += " AND " + Filter;
 
             // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
