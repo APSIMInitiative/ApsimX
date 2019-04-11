@@ -216,8 +216,8 @@ namespace UserInterface.Views
                         if (SuppAttrChanged != null)
                         {
                             TSuppAttrArgs args = new TSuppAttrArgs();
-                            args.attr = (int)tagEnum;
-                            args.attrVal = value * scale;
+                            args.Attr = (int)tagEnum;
+                            args.AttrVal = value * scale;
                             if (SuppAttrChanged != null)
                                 SuppAttrChanged.Invoke(sender, args);
                         }
@@ -262,7 +262,7 @@ namespace UserInterface.Views
                 lvSupps.GetCursor(out selPath, out selCol);
 
                 TIntArgs args = new TIntArgs();
-                args.value = selPath.Indices[0];
+                args.Value = selPath.Indices[0];
                 if (SupplementSelected != null)
                     SupplementSelected.Invoke(sender, args);
             }
@@ -426,8 +426,8 @@ namespace UserInterface.Views
         private void CbxRoughage_CheckedChanged(object sender, EventArgs e)
         {
             TSuppAttrArgs args = new TSuppAttrArgs();
-            args.attr = -2;
-            args.attrVal = cbxRoughage.Active ? 1 : 0;
+            args.Attr = -2;
+            args.AttrVal = cbxRoughage.Active ? 1 : 0;
             if (SuppAttrChanged != null)
                 SuppAttrChanged.Invoke(sender, args);
         }
@@ -452,8 +452,8 @@ namespace UserInterface.Views
                 if (SuppAttrChanged != null)
                 {
                     TSuppAttrArgs args = new TSuppAttrArgs();
-                    args.attr = -1;
-                    args.attrVal = value;
+                    args.Attr = -1;
+                    args.AttrVal = value;
                     if (SuppAttrChanged != null)
                         SuppAttrChanged.Invoke(sender, args);
                 }
@@ -477,7 +477,7 @@ namespace UserInterface.Views
                 if (SuppAttrChanged != null)
                 {
                     TStringArgs args = new TStringArgs();
-                    args.name = tbName.Text;
+                    args.Name = tbName.Text;
                     if (SuppNameChanged != null)
                         SuppNameChanged.Invoke(sender, args);
                 }
@@ -492,7 +492,7 @@ namespace UserInterface.Views
                 if (defNameList.GetIter(out iter, e.Path))
                 {
                     TStringArgs args = new TStringArgs();
-                    args.name = (string)defNameList.GetValue(iter, 0);
+                    args.Name = (string)defNameList.GetValue(iter, 0);
                     if (SupplementAdded != null)
                         SupplementAdded.Invoke(sender, args);
                 }

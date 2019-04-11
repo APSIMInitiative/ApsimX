@@ -74,29 +74,29 @@ namespace UserInterface.Views
                 hWndNewParent);
         }
 
-        public System.Windows.Forms.WebBrowser wb = null;
-        public Gtk.Socket socket = null;
-        public bool unmapped = false;
+        public System.Windows.Forms.WebBrowser Browser { get; set; } = null;
+        public Socket WebSocket { get; set; } = null;
+        public bool Unmapped { get; set; } = false;
         public Widget HoldingWidget { get; set; }
 
         public void InitIE(Gtk.Box w)
         {
             HoldingWidget = w;
-            wb = new System.Windows.Forms.WebBrowser();
+            Browser = new System.Windows.Forms.WebBrowser();
             w.SetSizeRequest(500, 500);
-            wb.Height = 500; // w.GdkWindow.FrameExtents.Height;
-            wb.Width = 500; // w.GdkWindow.FrameExtents.Width;
-            wb.Navigate("about:blank");
-            wb.Document.Write(String.Empty);
+            Browser.Height = 500; // w.GdkWindow.FrameExtents.Height;
+            Browser.Width = 500; // w.GdkWindow.FrameExtents.Width;
+            Browser.Navigate("about:blank");
+            Browser.Document.Write(String.Empty);
 
-            socket = new Gtk.Socket();
-            socket.SetSizeRequest(wb.Width, wb.Height);
-            w.Add(socket);
-            socket.Realize();
-            socket.Show();
-            socket.UnmapEvent += Socket_UnmapEvent;
-            IntPtr browser_handle = wb.Handle;
-            IntPtr window_handle = (IntPtr)socket.Id;
+            WebSocket = new Gtk.Socket();
+            WebSocket.SetSizeRequest(Browser.Width, Browser.Height);
+            w.Add(WebSocket);
+            WebSocket.Realize();
+            WebSocket.Show();
+            WebSocket.UnmapEvent += Socket_UnmapEvent;
+            IntPtr browser_handle = Browser.Handle;
+            IntPtr window_handle = (IntPtr)WebSocket.Id;
             NativeMethods.SetParent(browser_handle, window_handle);
 
             /// Another interesting issue is that on Windows, the WebBrowser control by default is
@@ -117,7 +117,7 @@ namespace UserInterface.Views
             /// registry key requesting that IE 11 be used for ApsimNG.exe (and for ApsimNG.vshost.exe,
             /// so it also works when run from Visual Studio).
 
-            wb.DocumentText = @"<!DOCTYPE html>
+            Browser.DocumentText = @"<!DOCTYPE html>
                    <html>
                    <head>
                    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge,10""/>
@@ -130,8 +130,8 @@ namespace UserInterface.Views
         /// </summary>
         public string GetSelectedText()
         {
-            wb.Document.ExecCommand("Copy", false, null);
-            dynamic document = wb.Document.DomDocument;
+            Browser.Document.ExecCommand("Copy", false, null);
+            dynamic document = Browser.Document.DomDocument;
             dynamic selection = document.selection;
             dynamic text = selection.createRange().text;
             return (string)text;
@@ -142,7 +142,7 @@ namespace UserInterface.Views
         /// </summary>
         public void SelectAll()
         {
-            wb.Document.ExecCommand("selectAll", false, null);
+            Browser.Document.ExecCommand("selectAll", false, null);
         }
 
         public void Remap()
@@ -152,40 +152,40 @@ namespace UserInterface.Views
             // In the GUI, this unmapping can occur either by switching to another tab, 
             // or by shrinking the window dimensions down to 0.
             // This explict remapping seems to correct the problem.
-            if (socket != null)
+            if (WebSocket != null)
             {
-                socket.Unmap();
-                socket.Map();
+                WebSocket.Unmap();
+                WebSocket.Map();
             }
-            unmapped = false;
+            Unmapped = false;
         }
 
         internal void Socket_UnmapEvent(object o, UnmapEventArgs args)
         {
-            unmapped = true;
+            Unmapped = true;
         }
 
         public void Navigate(string uri)
         {
-            wb.Navigate(uri);
+            Browser.Navigate(uri);
         }
 
         public void LoadHTML(string html)
         {
-            if (wb.Document.Body != null)
+            if (Browser.Document.Body != null)
                 // If we already have a document body, this is the more efficient
                 // way to update its contents. It doesn't affect the scroll position
                 // and doesn't make a little clicky sound.
-                wb.Document.Body.InnerHtml = html;
+                Browser.Document.Body.InnerHtml = html;
             else
-                wb.DocumentText = html;
+                Browser.DocumentText = html;
 
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb != null && wb.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
+            while (Browser != null && Browser.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -197,8 +197,8 @@ namespace UserInterface.Views
 
         public string GetTitle()
         {
-            if (wb.Document != null)
-                return wb.Document.Title;
+            if (Browser.Document != null)
+                return Browser.Document.Title;
             else
                 return String.Empty;
         }
@@ -213,7 +213,7 @@ namespace UserInterface.Views
 
         public void ExecJavaScript(string command, object[] args)
         {
-            wb.Document.InvokeScript(command, args);
+            Browser.Document.InvokeScript(command, args);
         }
 
         // Flag: Has Dispose already been called? 
@@ -234,10 +234,10 @@ namespace UserInterface.Views
 
             if (disposing)
             {
-                wb.Dispose();
-                wb = null;
-                socket.Dispose();
-                socket = null;
+                Browser.Dispose();
+                Browser = null;
+                WebSocket.Dispose();
+                WebSocket = null;
             }
 
             // Free any unmanaged objects here. 
@@ -309,9 +309,9 @@ namespace UserInterface.Views
             return (NSView)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
         }
 
-        public Safari wb = null;
-        public Gtk.Socket socket = new Gtk.Socket();
-        public ScrolledWindow scrollWindow = new ScrolledWindow();
+        public Safari Browser { get; set; } = null;
+        public Gtk.Socket WebSocket { get; set; } = new Gtk.Socket();
+        public ScrolledWindow ScrollWindow { get; set; } = new ScrolledWindow();
         public Widget HoldingWidget { get; set; }
 
 		/// <summary>
@@ -322,12 +322,12 @@ namespace UserInterface.Views
         public void InitWebKit(Gtk.Box w)
         {
             HoldingWidget = w;
-            wb = new Safari(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
-			wb.OnKeyDown += OnKeyDown;
-            scrollWindow.AddWithViewport(NSViewToGtkWidget(wb));
-            w.PackStart(scrollWindow, true, true, 0);
+            Browser = new Safari(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
+			Browser.OnKeyDown += OnKeyDown;
+            ScrollWindow.AddWithViewport(NSViewToGtkWidget(Browser));
+            w.PackStart(ScrollWindow, true, true, 0);
             w.ShowAll();
-            wb.ShouldCloseWithWindow = true;
+            Browser.ShouldCloseWithWindow = true;
         }
 
 		private void OnKeyDown(object sender, NSEventArgs args)
@@ -336,15 +336,15 @@ namespace UserInterface.Views
             {
                 if (args.Event.Characters.ToLower() == "a")
                 {
-                    MonoMac.WebKit.DomRange range = wb.MainFrameDocument.CreateRange();
-                    range.SelectNodeContents(wb.MainFrameDocument);
+                    MonoMac.WebKit.DomRange range = Browser.MainFrameDocument.CreateRange();
+                    range.SelectNodeContents(Browser.MainFrameDocument);
                     // Ugh! This is what we need to call, but it's not in the "official" MonoMac.WebKit stuff
                     // It requires a modified version. Be grateful for open source!
-                    wb.SetSelectedDomRange(range, NSSelectionAffinity.Downstream);
+                    Browser.SetSelectedDomRange(range, NSSelectionAffinity.Downstream);
                 }
                 else if (args.Event.Characters.ToLower() == "c")
                 {
-					wb.Copy(wb);
+					Browser.Copy(Browser);
                 }
 				else if (args.Event.Characters.ToLower() == "f")
                 {
@@ -359,17 +359,17 @@ namespace UserInterface.Views
 
         public void Navigate(string uri)
         {
-            wb.MainFrame.LoadRequest(new MonoMac.Foundation.NSUrlRequest(new MonoMac.Foundation.NSUrl(uri)));
+            Browser.MainFrame.LoadRequest(new MonoMac.Foundation.NSUrlRequest(new MonoMac.Foundation.NSUrl(uri)));
         }
 
         public void LoadHTML(string html)
         {
-            wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("file://"));
+            Browser.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("file://"));
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 			Stopwatch watch = new Stopwatch();
 			watch.Start();
-			while (wb != null && wb.IsLoading && watch.ElapsedMilliseconds < 10000)
+			while (Browser != null && Browser.IsLoading && watch.ElapsedMilliseconds < 10000)
 				while (Gtk.Application.EventsPending())
 					Gtk.Application.RunIteration();
         }
@@ -381,12 +381,12 @@ namespace UserInterface.Views
 
         public string GetTitle()
         {
-            return wb.MainFrameTitle;
+            return Browser.MainFrameTitle;
         }
 
         public bool Search(string forString, bool forward, bool caseSensitive, bool wrap)
         {
-            return wb.Search(forString, forward, caseSensitive, wrap);
+            return Browser.Search(forString, forward, caseSensitive, wrap);
         }
 
         public void ExecJavaScript(string command, object[] args)
@@ -400,7 +400,7 @@ namespace UserInterface.Views
                 first = false;
                 argString += obj.ToString();
             }
-            wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
+            Browser.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
         }
 
         // Flag: Has Dispose already been called? 
@@ -409,7 +409,7 @@ namespace UserInterface.Views
         // Public implementation of Dispose pattern callable by consumers. 
         public void Dispose()
         {
-			wb.OnKeyDown -= OnKeyDown;
+			Browser.OnKeyDown -= OnKeyDown;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -422,11 +422,11 @@ namespace UserInterface.Views
 
             if (disposing)
             {
-                wb.Dispose();
-                wb = null;
-                socket.Dispose();
-                socket = null;
-                scrollWindow.Destroy();
+                Browser.Dispose();
+                Browser = null;
+                WebSocket.Dispose();
+                WebSocket = null;
+                ScrollWindow.Destroy();
             }
 
             // Free any unmanaged objects here. 
@@ -438,8 +438,8 @@ namespace UserInterface.Views
     public class TWWebBrowserWK : IBrowserWidget
     {
 
-		public WebKit.WebView wb = null;
-        public ScrolledWindow scrollWindow = new ScrolledWindow();
+		public WebView Browser = null;
+        public ScrolledWindow ScrollWindow { get; set; } = new ScrolledWindow();
         public Widget HoldingWidget { get; set; }
 
 		/// <summary>
@@ -450,30 +450,30 @@ namespace UserInterface.Views
         public void InitWebKit(Gtk.Box w)
         {
             HoldingWidget = w;
-            wb = new WebKit.WebView();
-            scrollWindow.Add(wb);
+            Browser = new WebKit.WebView();
+            ScrollWindow.Add(Browser);
             // Hack to work around webkit bug; webkit will crash the app if a size is not provided
             // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=466360 for a related bug report
-            wb.SetSizeRequest(2, 2);
-			wb.KeyPressEvent += Wb_KeyPressEvent;
-            w.PackStart(scrollWindow, true, true, 0);
+            Browser.SetSizeRequest(2, 2);
+			Browser.KeyPressEvent += Wb_KeyPressEvent;
+            w.PackStart(ScrollWindow, true, true, 0);
             w.ShowAll();
         }
 
         public void Navigate(string uri)
         {
-            wb.Open(uri);
+            Browser.Open(uri);
         }
 
         public void LoadHTML(string html)
         {
-            wb.LoadHtmlString(html, "file://");
+            Browser.LoadHtmlString(html, "file://");
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (wb != null && wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+            while (Browser != null && Browser.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
         }
@@ -485,23 +485,23 @@ namespace UserInterface.Views
 
         public string GetTitle()
         {
-            return wb.Title;
+            return Browser.Title;
         }
 
         public bool Search(string forString, bool forward, bool caseSensitive, bool wrap)
         {
-            return wb.SearchText(forString, caseSensitive, forward, wrap);
+            return Browser.SearchText(forString, caseSensitive, forward, wrap);
         }
 
 		public void Highlight(string text, bool caseSenstive, bool doHighlight)
         {
 			// Doesn't seem to work as well as expected....
- 			wb.SelectAll();
-			wb.UnmarkTextMatches();
+ 			Browser.SelectAll();
+			Browser.UnmarkTextMatches();
 			if (doHighlight)
 			{
-			    wb.MarkTextMatches(text, caseSenstive, 0);
-			    wb.HighlightTextMatches = true;
+			    Browser.MarkTextMatches(text, caseSenstive, 0);
+			    Browser.HighlightTextMatches = true;
 			}
         }
 
@@ -516,7 +516,7 @@ namespace UserInterface.Views
                 first = false;
                 argString += obj.ToString();
             }
-            wb.ExecuteScript(command + "(" + argString + ")");
+            Browser.ExecuteScript(command + "(" + argString + ")");
         }
         // Flag: Has Dispose already been called? 
         bool disposed = false;
@@ -543,7 +543,7 @@ namespace UserInterface.Views
         // Public implementation of Dispose pattern callable by consumers. 
         public void Dispose()
         {
-			wb.KeyPressEvent -= Wb_KeyPressEvent;
+			Browser.KeyPressEvent -= Wb_KeyPressEvent;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -556,9 +556,9 @@ namespace UserInterface.Views
 
             if (disposing)
             {
-                wb.Dispose();
-                wb = null;
-                scrollWindow.Destroy();
+                Browser.Dispose();
+                Browser = null;
+                ScrollWindow.Destroy();
             }
 
             // Free any unmanaged objects here. 
@@ -693,16 +693,16 @@ namespace UserInterface.Views
             if (browser is TWWebBrowserIE)
             {
                 TWWebBrowserIE brow = browser as TWWebBrowserIE;
-                if (brow.unmapped)
+                if (brow.Unmapped)
                 {
                     brow.Remap();
                 }
 
-                if (brow.wb.Height != height || brow.wb.Width != width)
+                if (brow.Browser.Height != height || brow.Browser.Width != width)
                 {
-                    brow.socket.SetSizeRequest(width, height);
-                    brow.wb.Height = height;
-                    brow.wb.Width = width;
+                    brow.WebSocket.SetSizeRequest(width, height);
+                    brow.Browser.Height = height;
+                    brow.Browser.Width = width;
                 }
             }
         }
@@ -730,7 +730,7 @@ namespace UserInterface.Views
         public void EnableWb(bool state)
         {
             if (browser is TWWebBrowserIE)
-                (browser as TWWebBrowserIE).wb.Parent.Enabled = state;
+                (browser as TWWebBrowserIE).Browser.Parent.Enabled = state;
         }
 
         protected void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -745,7 +745,7 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
                 frame1.Unrealized -= Frame1_Unrealized;
-                (browser as TWWebBrowserIE).socket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                (browser as TWWebBrowserIE).WebSocket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
             if (browser != null)
                 browser.Dispose();
@@ -803,7 +803,7 @@ namespace UserInterface.Views
                         (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                     frame1.Unrealized += Frame1_Unrealized;
                     if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
-                       (browser as TWWebBrowserIE).wb.ScrollBarsEnabled = false;
+                       (browser as TWWebBrowserIE).Browser.ScrollBarsEnabled = false;
                 }
                 else if (ProcessUtilities.CurrentOS.IsMac)
                 {
@@ -819,9 +819,9 @@ namespace UserInterface.Views
             else
                browser.LoadHTML(contents);
 
-            if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).wb != null)
+            if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).Browser != null)
             {
-                keyPressObject = (browser as TWWebBrowserIE).wb.Document.ActiveElement;
+                keyPressObject = (browser as TWWebBrowserIE).Browser.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
             }

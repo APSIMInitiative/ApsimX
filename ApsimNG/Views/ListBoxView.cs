@@ -71,7 +71,8 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user double clicks the selection</summary>
         public event EventHandler DoubleClicked;
 
-        public IkonView listview;
+        public IkonView Listview { get; set; }
+
         private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
 
         /// <summary>
@@ -88,28 +89,28 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
         {
-            listview = new IkonView(listmodel);
+            Listview = new IkonView(listmodel);
             //listview = new TreeView(listmodel);
-            _mainWidget = listview;
-            listview.MarkupColumn = 0;
-            listview.PixbufColumn = 1;
-            listview.TooltipColumn = 2;
-            listview.SelectionMode = SelectionMode.Browse;
-            listview.Orientation = Gtk.Orientation.Horizontal;
-            listview.RowSpacing = 0;
-            listview.ColumnSpacing = 0;
-            listview.ItemPadding = 0;
+            _mainWidget = Listview;
+            Listview.MarkupColumn = 0;
+            Listview.PixbufColumn = 1;
+            Listview.TooltipColumn = 2;
+            Listview.SelectionMode = SelectionMode.Browse;
+            Listview.Orientation = Gtk.Orientation.Horizontal;
+            Listview.RowSpacing = 0;
+            Listview.ColumnSpacing = 0;
+            Listview.ItemPadding = 0;
 
-            listview.SelectionChanged += OnSelectionChanged;
-            listview.ButtonPressEvent += OnDoubleClick;
+            Listview.SelectionChanged += OnSelectionChanged;
+            Listview.ButtonPressEvent += OnDoubleClick;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             //listview.CursorChanged -= OnSelectionChanged;
-            listview.SelectionChanged -= OnSelectionChanged;
-            listview.ButtonPressEvent -= OnDoubleClick;
+            Listview.SelectionChanged -= OnSelectionChanged;
+            Listview.ButtonPressEvent -= OnDoubleClick;
             ClearPopup();
             popup.Destroy();
             listmodel.Dispose();
@@ -177,7 +178,7 @@ namespace UserInterface.Views
 
             string result = "<span font_weight='normal'>" + Path.GetFileName(fileName) + "</span>\n<span font_weight='light' size='smaller' style='italic'>" + Path.GetDirectoryName(fileName) + "</span>";
 
-            listview.ItemPadding = 6; // Restore padding if we have images to display
+            Listview.ItemPadding = 6; // Restore padding if we have images to display
 
             image = null;
             // Add an image index.
@@ -200,7 +201,7 @@ namespace UserInterface.Views
         {
             get
             {
-                TreePath[] selPath = listview.SelectedItems;
+                TreePath[] selPath = Listview.SelectedItems;
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
@@ -218,7 +219,7 @@ namespace UserInterface.Views
             }
             set
             {
-                TreePath[] selPath = listview.SelectedItems;
+                TreePath[] selPath = Listview.SelectedItems;
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
@@ -235,8 +236,8 @@ namespace UserInterface.Views
         /// <summary>Return true if the listview is visible.</summary>
         public bool IsVisible
         {
-            get { return listview.Visible; }
-            set { listview.Visible = value; }
+            get { return Listview.Visible; }
+            set { Listview.Visible = value; }
         }
 
 
@@ -254,17 +255,17 @@ namespace UserInterface.Views
                 {
                     TargetEntry[] target_table = new TargetEntry[] { new TargetEntry(modelMime, TargetFlags.App, 0) };
 
-                    Drag.SourceSet(listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
-                    listview.DragBegin += OnDragBegin;
-                    listview.DragDataGet += OnDragDataGet;
-                    listview.DragEnd += OnDragEnd;
+                    Drag.SourceSet(Listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
+                    Listview.DragBegin += OnDragBegin;
+                    Listview.DragDataGet += OnDragDataGet;
+                    Listview.DragEnd += OnDragEnd;
                 }
                 else if (wasModels)
                 {
-                    Drag.SourceUnset(listview);
-                    listview.DragBegin -= OnDragBegin;
-                    listview.DragDataGet -= OnDragDataGet;
-                    listview.DragEnd -= OnDragEnd;
+                    Drag.SourceUnset(Listview);
+                    Listview.DragBegin -= OnDragBegin;
+                    Listview.DragDataGet -= OnDragDataGet;
+                    Listview.DragEnd -= OnDragEnd;
                 }
             }
         }
@@ -289,10 +290,10 @@ namespace UserInterface.Views
                 DoubleClicked.Invoke(sender, e);
             if (e.Event.Button == 3)
             {
-                TreePath path = listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
+                TreePath path = Listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
                 if (path != null)
                 {
-                    listview.SelectPath(path);
+                    Listview.SelectPath(path);
                     if (popup.Children.Count() > 0)
                         popup.Popup();
                 }
@@ -403,7 +404,7 @@ namespace UserInterface.Views
 
             }
             if (popup.AttachWidget == null)
-                popup.AttachToWidget(listview, null);
+                popup.AttachToWidget(Listview, null);
             popup.ShowAll();
         }
 

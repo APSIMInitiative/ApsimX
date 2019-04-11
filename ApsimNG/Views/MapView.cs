@@ -181,7 +181,7 @@ namespace UserInterface.Views
                     Gtk.Application.RunIteration();
                 if ((browser as TWWebBrowserIE) != null)
                 {
-                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).wb;
+                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).Browser;
                     System.Drawing.Bitmap bm = new System.Drawing.Bitmap(width, height);
                     System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
                     wb.DrawToBitmap(bm, rect);

@@ -185,7 +185,7 @@ namespace UserInterface.Views
             args.ParamSet = this.paramSet;
             for (int idx = 0; idx < genotypeInits.Length; idx++)
             {
-                args.index = idx;
+                args.Index = idx;
                 GetGenoParams.Invoke(null, args);   // gets params from the stock model
 
                 if (this.genotypeSet != null)
