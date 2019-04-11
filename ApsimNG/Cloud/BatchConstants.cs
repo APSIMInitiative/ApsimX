@@ -5,14 +5,14 @@ namespace ApsimNG.Cloud
 {
     class BatchConstants
     {
-        public const string SEVENZIP_FILE_NAME = "7za.exe";
-        public const string MODEL_ZIPFILE_NAME = "model.zip";
-        public const string JOB_MANAGER_NAME = "JobManager";
-        private const string COMPUTE_NODE_MODEL_PATH = "%AZ_BATCH_NODE_SHARED_DIR%\\{0}";
+        public const string SevenZipFileName = "7za.exe";
+        public const string ModelZipFileName = "model.zip";
+        public const string JobManagerName = "JobManager";
+        private const string ComputeNodeModelPath = "%AZ_BATCH_NODE_SHARED_DIR%\\{0}";
 
         public static string GetJobInputPath(Guid jobId)
         {
-            return string.Format(COMPUTE_NODE_MODEL_PATH, jobId);
+            return string.Format(ComputeNodeModelPath, jobId);
         }
 
         public static string GetModelPath(Guid jobId)

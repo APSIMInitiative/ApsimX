@@ -122,7 +122,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Defines the format that the two TimeSpan fields (duration and CPU time) are to be displayed in.
         /// </summary>
-        private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
+        private const string TimespanFormat = @"dddd\d\ hh\h\ mm\m\ ss\s";
 
         /// <summary>
         /// Constructor. Initialises the jobs TreeView and the controls associated with it.
@@ -396,8 +396,8 @@ namespace UserInterface.Views
                     string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
                     string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
                     string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TIMESPAN_FORMAT);
-                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TIMESPAN_FORMAT);
+                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TimespanFormat);
+                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TimespanFormat);
                     store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr);
                 }
             });
@@ -534,9 +534,9 @@ namespace UserInterface.Views
             if (str1 == "" || str1 == null) return -1;
             if (str2 == "" || str2 == null) return 1;
             TimeSpan t1, t2;
-            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out t1))
+            if (!TimeSpan.TryParseExact(str1, TimespanFormat, null, out t1))
                 return -1;
-            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out t2))
+            if (!TimeSpan.TryParseExact(str2, TimespanFormat, null, out t2))
                 return 1;
             return TimeSpan.Compare(t1, t2);
         }
