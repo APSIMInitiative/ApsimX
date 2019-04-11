@@ -60,6 +60,18 @@ namespace UserInterface.Views
         public EditView(ViewBase owner) : base(owner)
         {
             textentry1 = new Entry();
+            Initialise();
+        }
+
+        /// <summary>Constructor</summary>
+        public EditView(ViewBase owner, Entry e) : base(owner)
+        {
+            textentry1 = e;
+            Initialise();
+        }
+
+        private void Initialise()
+        {
             _mainWidget = textentry1;
             textentry1.FocusOutEvent += OnSelectionChanged;
             textentry1.KeyPressEvent += OnKeyPress;
@@ -152,6 +164,7 @@ namespace UserInterface.Views
                     {
                         Coordinates = coordinates,
                         Code = textentry1.Text,
+                        ControlShiftSpace = true,
                         Offset = Offset
                     };
                     lastText = textentry1.Text;
