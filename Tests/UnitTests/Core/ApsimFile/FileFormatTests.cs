@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using System.Linq;
 
     /// <summary>
     /// Test the writer's load/save .apsimx capability 
@@ -134,6 +135,27 @@
 
             string json = FileFormat.WriteToString(simulations);
             Assert.IsFalse(json.Contains("Models.Clock"));
+        }
+
+        /// <summary>
+        /// This test ensures that exceptions thrown while opening a file cause
+        /// the run to be flagged as failed.
+        /// </summary>
+        [Test]
+        public void OnCreatedShouldFailRun()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
+            string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
+            File.WriteAllText(fileName, json);
+
+            Assembly models = typeof(IModel).Assembly;
+            string modelsExe = AppDomain.CurrentDomain.GetAssemblies().First(a => string.Equals(a.FullName, models.FullName, StringComparison.Ordinal)).Location;
+
+            var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(modelsExe, fileName, Path.GetTempPath(), true);
+            proc.WaitForExit();
+
+            Assert.AreNotEqual(0, proc.ExitCode, "A file ran without error when an exception should have been thrown while opening the file.");
         }
 
         /// <summary>A class that implements IDontSerialiseChildren.</summary>

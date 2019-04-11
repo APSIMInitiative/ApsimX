@@ -717,7 +717,7 @@ namespace UserInterface.Views
         {
             Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
-            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(colour.Red / 65535.0, colour.Green / 65535.0, colour.Blue / 65535.0, 1), false));
+            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(fileName);
         }

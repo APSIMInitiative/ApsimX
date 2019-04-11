@@ -366,10 +366,14 @@ namespace Models.PMF.Phen
                 // Calculate progression through current phase
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+
+                //sorghum resets the stage variable to 0 on the day the phase changes
+                //it will resume again normally the day after
+                double resetSorghumStage = SorghumFlag != null && incrementPhase ? 0.0 : 1.0;
                 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) | (CurrentPhase.End == structure?.LeafInitialisationStage))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
                          Emerged = true;
                     }
@@ -384,21 +388,18 @@ namespace Models.PMF.Phen
                         PhaseChangedData.StageName = CurrentPhase.Start;
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
-                    incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
-
-                    if (SorghumFlag != null)
+                    if(SorghumFlag != null && CurrentPhase is EmergingPhase)
                     {
-                        //old sorghum model adjustment
-                        //excess thermal time was lost at change of phase
-                        CurrentPhase.ResetPhase();
+                        propOfDayToUse = 0.0;
                     }
+                    incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
 
                 AccumulatedTT += thermalTime.Value();
                 if (Emerged)
                     AccumulatedEmergedTT += thermalTime.Value();
 
-                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
 
                if (plant != null)
                     if (plant.IsAlive && PostPhenology != null)

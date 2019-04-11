@@ -165,7 +165,7 @@ namespace Models.PMF.Organs
         
         /// <summary>Input for TargetSLN</summary>
         [ChildLinkByName]
-        IFunction TargetSLN = null;
+        public IFunction TargetSLN = null;
 
         /// <summary>Input for SenescedLeafSLN.</summary>
         [ChildLinkByName]
@@ -420,12 +420,8 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
-        /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantPartioning")]
-        virtual protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        /// <summary>Update area.</summary>
+        public void UpdateArea()
         {
             if (Plant.IsEmerged)
             {
@@ -435,6 +431,7 @@ namespace Models.PMF.Organs
                 senesceArea();
             }
         }
+
 
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
@@ -922,13 +919,39 @@ namespace Models.PMF.Organs
             return availableDM;
         }
 
-        private double calcLAI()
+        /// <summary>
+        /// calculates todays LAI values - can change during retranslocation calculations
+        /// </summary>
+        /// <returns></returns>
+        public double calcLAI()
         {
             return Math.Max(0.0, LAI + DltLAI - DltSenescedLai);
         }
         private double calcSLN(double laiToday, double nGreenToday)
         {
             return MathUtilities.Divide(nGreenToday, laiToday, 0.0);
+        }
+
+        /// <summary>
+        /// Adjustment function for calculating leaf demand
+        /// </summary>
+        public double calculateClassicDemandDelta()
+        {
+            //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
+            var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
+            //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
+            var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
+
+            var structural = nDemands.Structural.Value();
+            var diff = classicLeafDemand - pmfLeafDemand;
+            var diffdiff = structural + diff;
+            if (Math.Abs(diffdiff) > 0.0001)
+            {
+                double tmp = diffdiff;
+            }
+                
+
+            return classicLeafDemand - pmfLeafDemand;
         }
 
         /// <summary>Calculate the amount of N to retranslocate</summary>
@@ -939,12 +962,12 @@ namespace Models.PMF.Organs
             double laiToday = calcLAI();
             //wether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
-            double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] - DltRetranslocatedN;
+            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] - DltRetranslocatedN;
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
             var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
-            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value());
+            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
             if(phenology.Between("Germination", "Flowering"))
             {
@@ -963,9 +986,10 @@ namespace Models.PMF.Organs
                     DltLAI = (n - laiN) / NewLeafSLN.Value();
                     requiredN -= laiN;
                     nProvided += laiN;
+                    BAT.StructuralAllocation[leafIndex] -= laiN;
                 }
 
-                // take from decreasing senescence
+                // recalc the SLN after this N has been removed
                 laiToday = calcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
@@ -1083,6 +1107,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNDemand")]
         protected virtual void SetNDemand(object sender, EventArgs e)
         {
+            //happening in potentialPlantPartitioning
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
