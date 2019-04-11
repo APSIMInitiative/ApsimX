@@ -147,6 +147,7 @@
                     // Attempt to give the new script's properties the same
                     // values used by the old script.
                     SetParametersInObject(script);
+                    script.OnCreated();
                 }
                 catch (Exception err)
                 {

@@ -241,8 +241,6 @@
                 completionForm.Move(x, y);
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
                 completionView.SetCursor(new TreePath("0"), null, false);
-                //if (completionForm.GdkWindow != null)
-                //    completionForm.GdkWindow.Focus(0);
                 completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 while (GLib.MainContext.Iteration()) ;
                 return true;
@@ -321,6 +319,9 @@
         public void Populate(List<CompletionData> items)
         {
             completionModel.Clear();
+
+            // Add empty first row.
+            completionModel.AppendValues("", "", "", "", "", "", "");
             foreach (CompletionData item in items)
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
@@ -336,6 +337,9 @@
         public void Populate(List<NeedContextItemsArgs.ContextItem> items)
         {
             completionModel.Clear();
+
+            // Add empty first row.
+            completionModel.AppendValues("", "", "", "", "", "", "");
 
             Gdk.Pixbuf functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
             Gdk.Pixbuf propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
