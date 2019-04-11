@@ -46,7 +46,7 @@ namespace UserInterface.Intellisense
         /// These are images which are superimposed on the completion image. 
         /// e.g. a private method's image is a padlock on the corner of the normal method image.
         /// </summary>
-        private static readonly Pixbuf[] accessibilityOverlays = new Pixbuf[accessibilityOverlaysLength]
+        private static readonly Pixbuf[] AccessibilityOverlays = new Pixbuf[accessibilityOverlaysLength]
         {
             null,
             LoadPixbuf("OverlayPrivate"),
@@ -278,7 +278,7 @@ namespace UserInterface.Intellisense
             {
                 // This icon/overlay combination has not been used previously, so we need to generate it.
                 Pixbuf icon = LoadPixbuf(imageName);
-                Pixbuf overlay = accessibilityOverlays[accessibilityIndex];
+                Pixbuf overlay = AccessibilityOverlays[accessibilityIndex];
                 if (isStatic && showStaticOverlay)
                     overlay = OverlayImages(LoadPixbuf("OverlayStatic"), overlay);
 
