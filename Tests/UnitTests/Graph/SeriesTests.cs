@@ -38,12 +38,12 @@
             Apsim.ParentAllChildren(sim);
 
             string data =
-                "CheckpointName  Col1  Col2\r\n" +
-                "            ()    ()   (g)\r\n" +
-                "       Current     1    10\r\n" +
-                "       Current     1    10\r\n" +
-                "       Current     2    20\r\n" +
-                "       Current     2    20\r\n";
+                "CheckpointName  SimulationName  Col1  Col2\r\n" +
+                "            ()              ()    ()   (g)\r\n" +
+                "       Current            Sim1     1    10\r\n" +
+                "       Current            Sim1     1    10\r\n" +
+                "       Current            Sim1     2    20\r\n" +
+                "       Current            Sim1     2    20\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -62,7 +62,7 @@
             Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
             Assert.AreEqual(definitions[0].markerSize, MarkerSizeType.Normal);
             Assert.AreEqual(definitions[0].showInLegend, false);
-            Assert.AreEqual(definitions[0].title, "Series");
+            Assert.AreEqual(definitions[0].title, "Sim1");
             Assert.AreEqual(definitions[0].type, SeriesType.Bar);
             Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1, 2, 2 });
             Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 10, 20, 20 });
@@ -86,7 +86,7 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "Exp", "Exp1"),
-                        new Description("Sim1", "Exp", "Exp2")
+                        new Description("Sim2", "Exp", "Exp2")
                     }),
                     new Series()
                     {
@@ -101,12 +101,12 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "CheckpointName     Exp Col1  Col2\r\n" +
-                "            ()      ()   ()   (g)\r\n" +
-                "       Current    Exp1    1    10\r\n" +
-                "       Current    Exp1    1    10\r\n" +
-                "       Current    Exp2    2    20\r\n" +
-                "       Current    Exp2    2    20\r\n";
+                "CheckpointName  SimulationName   Exp Col1  Col2\r\n" +
+                "            ()              ()    ()   ()   (g)\r\n" +
+                "       Current            Sim1  Exp1    1    10\r\n" +
+                "       Current            Sim1  Exp1    1    10\r\n" +
+                "       Current            Sim2  Exp2    2    20\r\n" +
+                "       Current            Sim2  Exp2    2    20\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -161,9 +161,9 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "Irr", "Dry", "Fert", "0"),
-                        new Description("Sim1", "Irr", "Dry", "Fert", "10"),
-                        new Description("Sim1", "Irr", "Wet", "Fert", "0"),
-                        new Description("Sim1", "Irr", "Wet", "Fert", "10")
+                        new Description("Sim2", "Irr", "Dry", "Fert", "10"),
+                        new Description("Sim3", "Irr", "Wet", "Fert", "0"),
+                        new Description("Sim4", "Irr", "Wet", "Fert", "10")
                     }),
                     new Series()
                     {
@@ -179,16 +179,16 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "CheckpointName     Irr  Fert   Col1  Col2\r\n" +
-                "            ()      ()    ()   ()   (g)\r\n" +
-                "       Current     Dry     0   1    10\r\n" +
-                "       Current     Dry     0   2    20\r\n" +
-                "       Current     Dry    10   1    30\r\n" +
-                "       Current     Dry    10   2    40\r\n" +
-                "       Current     Wet     0   1    50\r\n" +
-                "       Current     Wet     0   2    60\r\n" +
-                "       Current     Wet    10   1    70\r\n" +
-                "       Current     Wet    10   2    80\r\n";
+                "CheckpointName  SimulationName     Irr  Fert   Col1  Col2\r\n" +
+                "            ()              ()      ()    ()   ()   (g)\r\n" +
+                "       Current            Sim1     Dry     0   1    10\r\n" +
+                "       Current            Sim1     Dry     0   2    20\r\n" +
+                "       Current            Sim2     Dry    10   1    30\r\n" +
+                "       Current            Sim2     Dry    10   2    40\r\n" +
+                "       Current            Sim3     Wet     0   1    50\r\n" +
+                "       Current            Sim3     Wet     0   2    60\r\n" +
+                "       Current            Sim4     Wet    10   1    70\r\n" +
+                "       Current            Sim4     Wet    10   2    80\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -250,24 +250,24 @@
         [Test]
         public void SeriesWithThreeVaryBy()
         {
-            var data = "CheckpointName     Irr  Fert  Cultivar  Col1  Col2\r\n" +
-                       "            ()      ()    ()        ()    ()   (g)\r\n" +
-                       "       Current     Dry     0     Early     1    10\r\n" +
-                       "       Current     Dry     0     Early     2    20\r\n" +
-                       "       Current     Dry    20     Early     1    30\r\n" +
-                       "       Current     Dry    20     Early     2    40\r\n" +
-                       "       Current     Wet     0     Early     1    50\r\n" +
-                       "       Current     Wet     0     Early     2    60\r\n" +
-                       "       Current     Wet    20     Early     1    70\r\n" +
-                       "       Current     Wet    20     Early     2    80\r\n" +
-                       "       Current     Dry     0      Late     1    90\r\n" +
-                       "       Current     Dry     0      Late     2    100\r\n" +
-                       "       Current     Dry    20      Late     1    110\r\n" +
-                       "       Current     Dry    20      Late     2    120\r\n" +
-                       "       Current     Wet     0      Late     1    130\r\n" +
-                       "       Current     Wet     0      Late     2    140\r\n" +
-                       "       Current     Wet    20      Late     1    150\r\n" +
-                       "       Current     Wet    20      Late     2    160\r\n";
+            var data = "CheckpointName  SimulationName     Irr  Fert  Cultivar  Col1  Col2\r\n" +
+                       "            ()              ()      ()    ()        ()    ()   (g)\r\n" +
+                       "       Current            Sim1     Dry     0     Early     1    10\r\n" +
+                       "       Current            Sim1     Dry     0     Early     2    20\r\n" +
+                       "       Current            Sim2     Dry    20     Early     1    30\r\n" +
+                       "       Current            Sim2     Dry    20     Early     2    40\r\n" +
+                       "       Current            Sim3     Wet     0     Early     1    50\r\n" +
+                       "       Current            Sim3     Wet     0     Early     2    60\r\n" +
+                       "       Current            Sim4     Wet    20     Early     1    70\r\n" +
+                       "       Current            Sim4     Wet    20     Early     2    80\r\n" +
+                       "       Current            Sim5     Dry     0      Late     1    90\r\n" +
+                       "       Current            Sim5     Dry     0      Late     2    100\r\n" +
+                       "       Current            Sim6     Dry    20      Late     1    110\r\n" +
+                       "       Current            Sim6     Dry    20      Late     2    120\r\n" +
+                       "       Current            Sim7     Wet     0      Late     1    130\r\n" +
+                       "       Current            Sim7     Wet     0      Late     2    140\r\n" +
+                       "       Current            Sim8     Wet    20      Late     1    150\r\n" +
+                       "       Current            Sim8     Wet    20      Late     2    160\r\n";
             var reader = new TextStorageReader(data);
 
             var folder = new Folder()
@@ -278,13 +278,13 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "Irr", "Dry", "Fert", "0", "Cultivar", "Early"),
-                        new Description("Sim1", "Irr", "Dry", "Fert", "20", "Cultivar", "Early"),
-                        new Description("Sim1", "Irr", "Wet", "Fert", "0", "Cultivar", "Early"),
-                        new Description("Sim1", "Irr", "Wet", "Fert", "20", "Cultivar", "Early"),
-                        new Description("Sim1", "Irr", "Dry", "Fert", "0", "Cultivar", "Late"),
-                        new Description("Sim1", "Irr", "Dry", "Fert", "20", "Cultivar", "Late"),
-                        new Description("Sim1", "Irr", "Wet", "Fert", "0", "Cultivar", "Late"),
-                        new Description("Sim1", "Irr", "Wet", "Fert", "20", "Cultivar", "Late")
+                        new Description("Sim2", "Irr", "Dry", "Fert", "20", "Cultivar", "Early"),
+                        new Description("Sim3", "Irr", "Wet", "Fert", "0", "Cultivar", "Early"),
+                        new Description("Sim4", "Irr", "Wet", "Fert", "20", "Cultivar", "Early"),
+                        new Description("Sim5", "Irr", "Dry", "Fert", "0", "Cultivar", "Late"),
+                        new Description("Sim6", "Irr", "Dry", "Fert", "20", "Cultivar", "Late"),
+                        new Description("Sim7", "Irr", "Wet", "Fert", "0", "Cultivar", "Late"),
+                        new Description("Sim8", "Irr", "Wet", "Fert", "20", "Cultivar", "Late")
                     }),
                     new Series()
                     {
@@ -376,32 +376,32 @@
         [Test]
         public void SeriesWithTwoIdenticalVaryBy()
         {
-            var data = "CheckpointName   ABC   Col1  Col2\r\n" +
-                       "            ()    ()     ()   (g)\r\n" +
-                       "       Current     A      1    10\r\n" +
-                       "       Current     A      2    20\r\n" +
-                       "       Current     B      1    30\r\n" +
-                       "       Current     B      2    40\r\n" +
-                       "       Current     C      1    50\r\n" +
-                       "       Current     C      2    60\r\n" +
-                       "       Current     D      1    70\r\n" +
-                       "       Current     D      2    80\r\n" +
-                       "       Current     E      1    90\r\n" +
-                       "       Current     E      2    100\r\n" +
-                       "       Current     F      1    110\r\n" +
-                       "       Current     F      2    120\r\n" +
-                       "       Current     G      1    130\r\n" +
-                       "       Current     G      2    140\r\n" +
-                       "       Current     H      1    150\r\n" +
-                       "       Current     H      2    160\r\n" +
-                       "       Current     I      1    170\r\n" +
-                       "       Current     I      2    180\r\n" +
-                       "       Current     J      1    190\r\n" +
-                       "       Current     J      2    200\r\n" +
-                       "       Current     K      1    210\r\n" +
-                       "       Current     K      2    220\r\n" +
-                       "       Current     L      1    230\r\n" +
-                       "       Current     L      2    240\r\n";
+            var data = "CheckpointName  SimulationName   ABC   Col1  Col2\r\n" +
+                       "            ()              ()    ()     ()   (g)\r\n" +
+                       "       Current            Sim1     A      1    10\r\n" +
+                       "       Current            Sim1     A      2    20\r\n" +
+                       "       Current            Sim2     B      1    30\r\n" +
+                       "       Current            Sim2     B      2    40\r\n" +
+                       "       Current            Sim3     C      1    50\r\n" +
+                       "       Current            Sim3     C      2    60\r\n" +
+                       "       Current            Sim4     D      1    70\r\n" +
+                       "       Current            Sim4     D      2    80\r\n" +
+                       "       Current            Sim5     E      1    90\r\n" +
+                       "       Current            Sim5     E      2    100\r\n" +
+                       "       Current            Sim6     F      1    110\r\n" +
+                       "       Current            Sim6     F      2    120\r\n" +
+                       "       Current            Sim7     G      1    130\r\n" +
+                       "       Current            Sim7     G      2    140\r\n" +
+                       "       Current            Sim8     H      1    150\r\n" +
+                       "       Current            Sim8     H      2    160\r\n" +
+                       "       Current            Sim9     I      1    170\r\n" +
+                       "       Current            Sim9     I      2    180\r\n" +
+                       "       Current           Sim10     J      1    190\r\n" +
+                       "       Current           Sim10     J      2    200\r\n" +
+                       "       Current           Sim11     K      1    210\r\n" +
+                       "       Current           Sim11     K      2    220\r\n" +
+                       "       Current           Sim12     L      1    230\r\n" +
+                       "       Current           Sim12     L      2    240\r\n";
             var reader = new TextStorageReader(data);
 
             var folder = new Folder()
@@ -412,17 +412,17 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "ABC", "A"),
-                        new Description("Sim1", "ABC", "B"),
-                        new Description("Sim1", "ABC", "C"),
-                        new Description("Sim1", "ABC", "D"),
-                        new Description("Sim1", "ABC", "E"),
-                        new Description("Sim1", "ABC", "F"),
-                        new Description("Sim1", "ABC", "G"),
-                        new Description("Sim1", "ABC", "H"),
-                        new Description("Sim1", "ABC", "I"),
-                        new Description("Sim1", "ABC", "J"),
-                        new Description("Sim1", "ABC", "K"),
-                        new Description("Sim1", "ABC", "L"),
+                        new Description("Sim2", "ABC", "B"),
+                        new Description("Sim3", "ABC", "C"),
+                        new Description("Sim4", "ABC", "D"),
+                        new Description("Sim5", "ABC", "E"),
+                        new Description("Sim6", "ABC", "F"),
+                        new Description("Sim7", "ABC", "G"),
+                        new Description("Sim8", "ABC", "H"),
+                        new Description("Sim9", "ABC", "I"),
+                        new Description("Sim10", "ABC", "J"),
+                        new Description("Sim11", "ABC", "K"),
+                        new Description("Sim12", "ABC", "L"),
                     }),
                     new Series()
                     {
@@ -541,12 +541,12 @@
             Apsim.ParentAllChildren(sim);
 
             string data =
-                "CheckpointName  Col1  Col2\r\n" +
-                "            ()    ()   (g)\r\n" +
-                "       Current     1    1.0\r\n" +
-                "       Current     2    1.5\r\n" +
-                "       Current     3    2.0\r\n" +
-                "       Current     4    2.5\r\n";
+                "CheckpointName  SimulationName  Col1  Col2\r\n" +
+                "            ()              ()    ()   (g)\r\n" +
+                "       Current            Sim1     1    1.0\r\n" +
+                "       Current            Sim1     2    1.5\r\n" +
+                "       Current            Sim1     3    2.0\r\n" +
+                "       Current            Sim1     4    2.5\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -555,7 +555,7 @@
             series.GetSeriesToPutOnGraph(reader, definitions);
 
             Assert.AreEqual(definitions.Count, 3);
-            Assert.AreEqual(definitions[0].title, "Series");
+            Assert.AreEqual(definitions[0].title, "Sim1");
             Assert.AreEqual(definitions[0].type, SeriesType.Bar);
             Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2, 3, 4 });
             Assert.AreEqual(definitions[0].y as double[], new double[] { 1.0, 1.5, 2.0, 2.5 });
@@ -584,7 +584,7 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "Exp", "Exp1"),
-                        new Description("Sim1", "Exp", "Exp2")
+                        new Description("Sim2", "Exp", "Exp2")
                     }),
                     new Graph()
                     {
@@ -613,12 +613,12 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "CheckpointName     Exp Col1  Col2  Col3\r\n" +
-                "            ()      ()   ()   (g)    ()\r\n" +
-                "       Current    Exp1    1    10    50\r\n" +
-                "       Current    Exp1    1    10    50\r\n" +
-                "       Current    Exp2    2    20    60\r\n" +
-                "       Current    Exp2    2    20    60\r\n";
+                "CheckpointName  SimulationName     Exp Col1  Col2  Col3\r\n" +
+                "            ()              ()      ()   ()   (g)    ()\r\n" +
+                "       Current            Sim1    Exp1    1    10    50\r\n" +
+                "       Current            Sim1    Exp1    1    10    50\r\n" +
+                "       Current            Sim2    Exp2    2    20    60\r\n" +
+                "       Current            Sim2    Exp2    2    20    60\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -653,9 +653,7 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
-                        new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp2"),
-                        new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp1"),
-                        new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
+                        new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2"),
                     }),
                     new Graph()
                     {
@@ -701,171 +699,6 @@
             Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
 
         }
-
-        /// <summary>
-        /// Create a single xy series definition with a 'Vary By Simulation'.
-        /// Ensure it only pulls in simulations in scope.
-        /// </summary>
-        [Test]
-        public void SeriesWithVaryBySimulationUsingScope()
-        {
-            var simulations = new Simulations()
-            {
-                Name = "Simulations",
-                Children = new List<Model>()
-                {
-                    new Folder()
-                    {
-                        Name = "Folder1",
-                        Children = new List<Model>()
-                        {
-                            new MockSimulationDescriptionGenerator(new List<Description>()
-                            {
-                                new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
-                                new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp2"),
-                                new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp1"),
-                                new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
-                            }),
-                            new Graph()
-                            {
-                                Children = new List<Model>()
-                                {
-                                    new Series()
-                                    {
-                                        Name = "Series1",
-                                        TableName = "Report",
-                                        XFieldName = "Col1",
-                                        YFieldName = "Col2",
-                                        FactorToVaryColours = "SimulationName"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    new Folder()
-                    {
-                        Name = "Folder2",
-                        Children = new List<Model>()
-                        {
-                            new MockSimulationDescriptionGenerator(new List<Description>()
-                            {
-                                new Description("Sim3", "SimulationName", "Sim3", "Exp", "Exp3"),
-                                new Description("Sim3", "SimulationName", "Sim3", "Exp", "Exp4"),
-                                new Description("Sim4", "SimulationName", "Sim4", "Exp", "Exp3"),
-                                new Description("Sim4", "SimulationName", "Sim4", "Exp", "Exp4")
-                            }),
-                        }
-                    }
-                }
-            };
-
-
-            Apsim.ParentAllChildren(simulations);
-
-            string data =
-                "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
-                "            ()              ()     ()   ()   (g)\r\n" +
-                "       Current            Sim1   Exp1    1    10\r\n" +
-                "       Current            Sim1   Exp1    2    20\r\n" +
-                "       Current            Sim2   Exp2    1    30\r\n" +
-                "       Current            Sim2   Exp2    2    40\r\n" +
-                "       Current            Sim3   Exp3    1    50\r\n" +
-                "       Current            Sim3   Exp3    2    60\r\n" +
-                "       Current            Sim4   Exp4    1    70\r\n" +
-                "       Current            Sim4   Exp4    2    80\r\n";
-
-            var reader = new TextStorageReader(data);
-
-            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
-            Assert.AreEqual(definitions.Count, 2);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
-
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].title, "Sim2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
-
-        }
-
-        /// <summary>
-        /// Create a single xy series definition with a 'Vary By Experiment'.
-        /// Ensure it only pulls in experiments in scope.
-        /// </summary>
-        [Test]
-        public void SeriesWithNoVaryByUsingScope()
-        {
-            var simulations = new Simulations()
-            {
-                Name = "Simulations",
-                Children = new List<Model>()
-                {
-                    new Folder()
-                    {
-                        Name = "Folder1",
-                        Children = new List<Model>()
-                        {
-                            new MockSimulationDescriptionGenerator(new List<Description>()
-                            {
-                                new Description("Sim1", "SimulationName", "Sim1"),
-                            }),
-                            new Graph()
-                            {
-                                Children = new List<Model>()
-                                {
-                                    new Series()
-                                    {
-                                        Name = "Series1",
-                                        TableName = "Report",
-                                        XFieldName = "Col1",
-                                        YFieldName = "Col2",
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    new Folder()
-                    {
-                        Name = "Folder2",
-                        Children = new List<Model>()
-                        {
-                            new MockSimulationDescriptionGenerator(new List<Description>()
-                            {
-                                new Description("Sim2", "SimulationName", "Sim2"),
-                            }),
-                        }
-                    }
-                }
-            };
-
-
-            Apsim.ParentAllChildren(simulations);
-
-            string data =
-                "CheckpointName  SimulationName Col1  Col2\r\n" +
-                "            ()              ()   ()   (g)\r\n" +
-                "       Current            Sim1    1    10\r\n" +
-                "       Current            Sim1    2    20\r\n" +
-                "       Current            Sim2    1    30\r\n" +
-                "       Current            Sim2    2    40\r\n";
-
-            var reader = new TextStorageReader(data);
-
-            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
-            Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
-        }
-
 
         /// <summary>Create xy series definitions with a 'Vary By Zone' grouping.</summary>
         [Test]
@@ -1040,16 +873,16 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "ABC  DEF Col1  Col2\r\n" +
-                " ()   ()   ()   (g)\r\n" +
-                "  A    d    1    10\r\n" +
-                "  A    d    2    20\r\n" +
-                "  A    e    1    30\r\n" +
-                "  A    e    2    40\r\n" +
-                "  B    d    1    50\r\n" +
-                "  B    d    2    60\r\n" +
-                "  B    e    1    70\r\n" +
-                "  B    e    2    80\r\n";
+                " SimulationName  ABC  DEF Col1  Col2\r\n" +
+                "             ()   ()   ()   ()   (g)\r\n" +
+                "           Sim1    A    d    1    10\r\n" +
+                "           Sim1    A    d    2    20\r\n" +
+                "           Sim1    A    e    1    30\r\n" +
+                "           Sim1    A    e    2    40\r\n" +
+                "           Sim2    B    d    1    50\r\n" +
+                "           Sim2    B    d    2    60\r\n" +
+                "           Sim2    B    e    1    70\r\n" +
+                "           Sim2    B    e    2    80\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -1099,7 +932,7 @@
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
                         new Description("Sim1", "Exp", "Exp1"),
-                        new Description("Sim1", "Exp", "Exp2")
+                        new Description("Sim2", "Exp", "Exp2")
                     }),
                     new Series()
                     {
@@ -1115,12 +948,12 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "CheckpointName     Exp   A  Col1  Col2\r\n" +
-                "            ()      ()  ()    ()   (g)\r\n" +
-                "       Current    Exp1   a     1    10\r\n" +
-                "       Current    Exp1   a     1    10\r\n" +
-                "       Current    Exp2   b     2    20\r\n" +
-                "       Current    Exp2   b     2    20\r\n";
+                "CheckpointName  SimulationName     Exp   A  Col1  Col2\r\n" +
+                "            ()              ()      ()  ()    ()   (g)\r\n" +
+                "       Current            Sim1    Exp1   a     1    10\r\n" +
+                "       Current            Sim1    Exp1   a     1    10\r\n" +
+                "       Current            Sim2    Exp2   b     2    20\r\n" +
+                "       Current            Sim2    Exp2   b     2    20\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -1135,6 +968,302 @@
 
             Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1 });
             Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 10 });
+        }
+
+        /// <summary>
+        /// Create a single xy series definition with a 'Vary By Simulation'.
+        /// Ensure it only pulls in simulations in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithVaryBySimulationUsingScope()
+        {
+            var simulations = new Simulations()
+            {
+                Name = "Simulations",
+                Children = new List<Model>()
+                {
+                    new Folder()
+                    {
+                        Name = "Folder1",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
+                                new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
+                            }),
+                            new Graph()
+                            {
+                                Children = new List<Model>()
+                                {
+                                    new Series()
+                                    {
+                                        Name = "Series1",
+                                        TableName = "Report",
+                                        XFieldName = "Col1",
+                                        YFieldName = "Col2",
+                                        FactorToVaryColours = "SimulationName"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new Folder()
+                    {
+                        Name = "Folder2",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim3", "SimulationName", "Sim3", "Exp", "Exp3"),
+                                new Description("Sim4", "SimulationName", "Sim4", "Exp", "Exp4")
+                            }),
+                        }
+                    }
+                }
+            };
+
+
+            Apsim.ParentAllChildren(simulations);
+
+            string data =
+                "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
+                "            ()              ()     ()   ()   (g)\r\n" +
+                "       Current            Sim1   Exp1    1    10\r\n" +
+                "       Current            Sim1   Exp1    2    20\r\n" +
+                "       Current            Sim2   Exp2    1    30\r\n" +
+                "       Current            Sim2   Exp2    2    40\r\n" +
+                "       Current            Sim3   Exp3    1    50\r\n" +
+                "       Current            Sim3   Exp3    2    60\r\n" +
+                "       Current            Sim4   Exp4    1    70\r\n" +
+                "       Current            Sim4   Exp4    2    80\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 2);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].title, "Sim1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+
+            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].title, "Sim2");
+            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+
+        }
+
+        /// <summary>
+        /// Create a single xy series definition with no vary by.
+        /// Ensure it only pulls in experiments in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithNoVaryByUsingScope()
+        {
+            var simulations = new Simulations()
+            {
+                Name = "Simulations",
+                Children = new List<Model>()
+                {
+                    new Folder()
+                    {
+                        Name = "Folder1",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim1", "SimulationName", "Sim1"),
+                            }),
+                            new Graph()
+                            {
+                                Children = new List<Model>()
+                                {
+                                    new Series()
+                                    {
+                                        Name = "Series1",
+                                        TableName = "Report",
+                                        XFieldName = "Col1",
+                                        YFieldName = "Col2",
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new Folder()
+                    {
+                        Name = "Folder2",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim2", "SimulationName", "Sim2"),
+                            }),
+                        }
+                    }
+                }
+            };
+
+
+            Apsim.ParentAllChildren(simulations);
+
+            string data =
+                "CheckpointName  SimulationName Col1  Col2\r\n" +
+                "            ()              ()   ()   (g)\r\n" +
+                "       Current            Sim1    1    10\r\n" +
+                "       Current            Sim1    2    20\r\n" +
+                "       Current            Sim2    1    30\r\n" +
+                "       Current            Sim2    2    40\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 1);
+            Assert.AreEqual(definitions[0].title, "Sim1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+        }
+
+        /// <summary>
+        /// Create a single xy series definition with a 'Vary By Experiment'.
+        /// Ensure it only pulls in experiments in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithVaryByFactorUsingScope()
+        {
+            var simulations = new Simulations()
+            {
+                Name = "Simulations",
+                Children = new List<Model>()
+                {
+                    new Folder()
+                    {
+                        Name = "Folder1",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim1", "SimulationName", "Sim1", "A", "a"),
+                            }),
+                            new Graph()
+                            {
+                                Children = new List<Model>()
+                                {
+                                    new Series()
+                                    {
+                                        Name = "Series1",
+                                        TableName = "Report",
+                                        XFieldName = "Col1",
+                                        YFieldName = "Col2",
+                                        FactorToVaryColours = "A"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new Folder()
+                    {
+                        Name = "Folder2",
+                        Children = new List<Model>()
+                        {
+                            new MockSimulationDescriptionGenerator(new List<Description>()
+                            {
+                                new Description("Sim2", "SimulationName", "Sim2", "A", "b"),
+                            }),
+                        }
+                    }
+                }
+            };
+
+            Apsim.ParentAllChildren(simulations);
+
+            string data =
+                "CheckpointName  SimulationName   A  Col1  Col2\r\n" +
+                "            ()              ()  ()    ()   (g)\r\n" +
+                "       Current            Sim1   a     1    10\r\n" +
+                "       Current            Sim1   a     2    20\r\n" +
+                "       Current            Sim2   a     1    30\r\n" +
+                "       Current            Sim2   a     2    40\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = simulations.Children[0].Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 1);
+            Assert.AreEqual(definitions[0].title, "a");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+        }
+
+        /// <summary>Create xy series definitions from predicted/observed table.</summary>
+        [Test]
+        public void SeriesFromPredictedObserved()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1", "Experiment", "Exp1"),
+                        new Description("Sim2", "SimulationName", "Sim2", "Experiment", "Exp1"),
+                        new Description("Sim3", "SimulationName", "Sim3", "Experiment", "Exp2"),
+                        new Description("Sim4", "SimulationName", "Sim4", "Experiment", "Exp2")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Report",
+                                XFieldName = "Predicted.Grain.Wt",
+                                YFieldName = "Observed.Grain.Wt",
+                                FactorToVaryColours = "Experiment",
+                                FactorToVaryMarkers = "Experiment"
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
+                "            ()              ()                 ()                 ()\r\n" +
+                "       Current            Sim1                  1                  1\r\n" +
+                "       Current            Sim2                  2                  5\r\n" +
+                "       Current            Sim3                  3                  8\r\n" +
+                "       Current            Sim4                  4                  6\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = folder.Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 2);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].title, "Exp1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 1, 5 });
+
+            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[1].title, "Exp2");
+            Assert.AreEqual(definitions[1].x as double[], new double[] { 3, 4 });
+            Assert.AreEqual(definitions[1].y as double[], new double[] { 8, 6 });
         }
 
         /// <summary>Create some test data and return a storage reader. </summary>
