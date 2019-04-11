@@ -109,7 +109,7 @@ namespace ApsimNG.Views.CLEM
             storebtn.Clicked += OnStoreClicked;
 
             // Let the viewbase know which widget is the main widget
-            _mainWidget = notebook1;
+            mainWidget = notebook1;
         }
 
         /// <summary>

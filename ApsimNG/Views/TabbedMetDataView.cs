@@ -163,7 +163,7 @@ namespace UserInterface.Views
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             hbox2 = (HBox)builder.GetObject("hbox2");
             alignment10 = (Alignment)builder.GetObject("alignment10");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
             graphViewRainfall = new GraphView(this);
@@ -189,7 +189,7 @@ namespace UserInterface.Views
             alignment10.Add(worksheetCombo.MainWidget);
             worksheetCombo.IsVisible = true;
             worksheetCombo.Changed += WorksheetCombo_Changed;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -201,8 +201,8 @@ namespace UserInterface.Views
                 spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
                 notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
                 worksheetCombo.Changed -= WorksheetCombo_Changed;
-                _mainWidget.Destroyed -= _mainWidget_Destroyed;
-                _owner = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
             catch (Exception err)
             {

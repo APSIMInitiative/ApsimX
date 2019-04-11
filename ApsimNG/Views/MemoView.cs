@@ -61,13 +61,13 @@ namespace UserInterface.Views
             helpBtn.ImagePosition = PositionType.Right;
             helpBtn.Image.Visible = true;
             helpBtn.Clicked += HelpBtn_Clicked;
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
             TextView.ModifyFont(Pango.FontDescription.FromString("monospace"));
             TextView.FocusOutEvent += RichTextBox1_Leave;
             TextView.Buffer.Changed += RichTextBox1_TextChanged;
             TextView.PopulatePopup += TextView_PopulatePopup;
             TextView.ButtonPressEvent += TextView_ButtonPressEvent;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         // Let a right click move the cursor if we're about to display a popup menu,
@@ -90,8 +90,8 @@ namespace UserInterface.Views
             TextView.Buffer.Changed -= RichTextBox1_TextChanged;
             TextView.PopulatePopup -= TextView_PopulatePopup;
             menuItemList.Clear();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

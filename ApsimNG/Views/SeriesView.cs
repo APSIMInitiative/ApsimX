@@ -45,7 +45,7 @@ namespace UserInterface.Views
             table1 = (Table)builder.GetObject("table1");
             label4 = (Label)builder.GetObject("label4");
             label5 = (Label)builder.GetObject("label5");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
 
             graphView1 = new GraphView(this);
             vbox1.PackStart(graphView1.MainWidget, true, true, 0);
@@ -110,12 +110,12 @@ namespace UserInterface.Views
 
             table1.Attach(lineThicknessDropDown.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
             table1.Attach(markerSizeDropDown.MainWidget, 3, 4, 8, 9, AttachOptions.Fill, 0, 0, 5);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
             checkpointDropDown.MainWidget.Destroy();
             dataSourceDropDown.MainWidget.Destroy();
             xDropDown.MainWidget.Destroy();
@@ -136,7 +136,7 @@ namespace UserInterface.Views
             checkBoxView6.MainWidget.Destroy();
             graphView1.MainWidget.Destroy();
             editView1.MainWidget.Destroy();
-            _owner = null;
+            owner = null;
         }
 
         /// <summary>Checkpoint control</summary>

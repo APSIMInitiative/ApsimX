@@ -147,7 +147,7 @@
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            _mainWidget = window1;
+            mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
@@ -462,7 +462,7 @@
             listButtonView2.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
             listButtonView1.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
             listButtonView2.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
-            _mainWidget.Destroy();
+            mainWidget.Destroy();
 
             // Let all the destruction stuff be carried out, just in 
             // case we've got any unmanaged resources that should be 
@@ -900,8 +900,8 @@
             baseFont.Size = newVal;
 
             // Iterate through all existing controls, setting the new base font
-            if (_mainWidget != null)
-                SetWidgetFont(_mainWidget, baseFont);
+            if (mainWidget != null)
+                SetWidgetFont(mainWidget, baseFont);
 
             // Reset the style machinery to apply the new base font to all
             // newly created Widgets.

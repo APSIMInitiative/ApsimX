@@ -262,7 +262,7 @@ namespace UserInterface.Views
             vboxPrimary.PackStart(lblStatus, false, true, 0);
             // Add primary vbox to alignment
             primaryContainer.Add(vboxPrimary);
-            _mainWidget = primaryContainer;            
+            mainWidget = primaryContainer;            
         }
 
         public Presenters.INewCloudJobPresenter Presenter { get; set; }

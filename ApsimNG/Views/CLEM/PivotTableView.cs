@@ -307,7 +307,7 @@ namespace ApsimNG.Views.CLEM
             vbox1.Add(Grid.MainWidget);
 
             // Let the viewbase know which widget is the main widget
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
         }
 
         /// <summary>

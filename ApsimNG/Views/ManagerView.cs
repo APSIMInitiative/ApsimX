@@ -35,12 +35,12 @@ namespace UserInterface.Views
         public ManagerView(ViewBase owner) : base(owner)
         {
             notebook = new Notebook();
-            _mainWidget = notebook;
+            mainWidget = notebook;
             grid = new GridView(this);
             scriptEditor = new EditorView(this);
             notebook.AppendPage(grid.MainWidget, new Label("Properties"));
             notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
@@ -49,8 +49,8 @@ namespace UserInterface.Views
             grid = null;
             scriptEditor.MainWidget.Destroy();
             scriptEditor = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

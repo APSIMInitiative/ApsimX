@@ -268,7 +268,7 @@ namespace UserInterface.Views
             vboxPrimary.PackEnd(progress, false, false, 0);
             vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
-            _mainWidget = vboxPrimary;
+            mainWidget = vboxPrimary;
             vboxPrimary.ShowAll();
 
             downloadProgressContainer.HideAll();

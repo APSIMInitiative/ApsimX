@@ -77,7 +77,7 @@ namespace UserInterface.Views
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
@@ -97,7 +97,7 @@ namespace UserInterface.Views
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
             BackColor = OxyPlot.OxyColors.White;
         }
 
@@ -131,8 +131,8 @@ namespace UserInterface.Views
             Clear();
             popup.Dispose();
             plot1.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

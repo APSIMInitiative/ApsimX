@@ -74,11 +74,11 @@ namespace UserInterface.Views
         /// </summary>
         private void SetupCombo()
         {
-            _mainWidget = combobox1;
+            mainWidget = combobox1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnSelectionChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace UserInterface.Views
             combobox1.Changed -= OnSelectionChanged;
             comboModel.Dispose();
             comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Gets or sets the list of valid values.</summary>

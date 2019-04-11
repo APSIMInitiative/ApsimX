@@ -50,7 +50,7 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
             rightHandView = (Viewport)builder.GetObject("RightHandView");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
             rightHandView.ShadowType = ShadowType.EtchedOut;
 
             treeview1.Model = treemodel;
@@ -71,7 +71,7 @@ namespace UserInterface.Views
             treeview1.ButtonPressEvent += OnButtonPress;
             treeview1.RowActivated += OnRowActivated;
 
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -92,8 +92,8 @@ namespace UserInterface.Views
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
 
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

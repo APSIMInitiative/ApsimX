@@ -17,12 +17,12 @@ namespace UserInterface.Views
         /// <summary>
         /// The parent view.
         /// </summary>
-        protected ViewBase _owner = null;
+        protected ViewBase owner = null;
 
         /// <summary>
         /// The main widget in this view.
         /// </summary>
-        protected Widget _mainWidget = null;
+        protected Widget mainWidget = null;
 
         /// <summary>
         /// Displays an error message to the user.
@@ -80,7 +80,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return _owner;
+                return owner;
             }
         }
 
@@ -91,7 +91,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return _mainWidget;
+                return mainWidget;
             }
         }
 
@@ -101,7 +101,7 @@ namespace UserInterface.Views
         /// <param name="owner">The parent view.</param>
         public ViewBase(ViewBase owner)
         {
-            _owner = owner;
+            this.owner = owner;
         }
     }
 }

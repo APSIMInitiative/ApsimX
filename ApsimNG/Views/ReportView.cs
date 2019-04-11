@@ -46,7 +46,7 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             alignment1 = (Alignment)builder.GetObject("alignment1");
-            _mainWidget = notebook1;
+            mainWidget = notebook1;
 
             variableEditor = new EditorView(this);
             vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
@@ -56,7 +56,7 @@ namespace UserInterface.Views
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
@@ -67,8 +67,8 @@ namespace UserInterface.Views
             frequencyEditor = null;
             dataStoreView1.MainWidget.Destroy();
             dataStoreView1 = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Provides access to the variable list.</summary>

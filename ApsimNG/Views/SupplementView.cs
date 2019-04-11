@@ -90,7 +90,7 @@ namespace UserInterface.Views
             btnAdd = (Button)builder.GetObject("btnAdd");
             lblDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
             lvSupps = (Gtk.TreeView)builder.GetObject("lvSupps");
-            _mainWidget = table1;
+            mainWidget = table1;
 
             entryLookup.Add(tbDM, FoodSupplement.SuppAttribute.spaDMP);
             entryLookup.Add(tbDMD, FoodSupplement.SuppAttribute.spaDMD);
@@ -132,7 +132,7 @@ namespace UserInterface.Views
             lblDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
             lblDefaultNames.Visible = false;
             lvSupps.CursorChanged += LvSupps_SelectedIndexChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -157,8 +157,8 @@ namespace UserInterface.Views
             cbxRoughage.Toggled -= CbxRoughage_CheckedChanged;
             lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
             lvSupps.CursorChanged -= LvSupps_SelectedIndexChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         private void RealEditValidator(object sender, EventArgs e)

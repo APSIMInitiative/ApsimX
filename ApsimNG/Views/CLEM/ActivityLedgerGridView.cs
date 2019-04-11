@@ -76,7 +76,7 @@ namespace UserInterface.Views
             Fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
             image1 = (Gtk.Image)builder.GetObject("image1");
-            _mainWidget = hbox1;
+            mainWidget = hbox1;
             Grid.Model = gridmodel;
             Grid.Selection.Mode = SelectionMode.Multiple;
             Fixedcolview.Model = gridmodel;
@@ -87,7 +87,7 @@ namespace UserInterface.Views
             image1.Visible = false;
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace UserInterface.Views
                 table.Dispose();
             }
 
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -771,8 +771,8 @@ namespace UserInterface.Views
             {
                 table.Dispose();
             }
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= MainWidgetDestroyed;
+            owner = null;
         }
 
         /// <summary>

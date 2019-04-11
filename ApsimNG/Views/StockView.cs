@@ -133,8 +133,8 @@ namespace UserInterface.Views
             cbxDamBreed.Changed += ChangeBreed;
             cbxGeneration.Changed += ChangeGeneration;
 
-            _mainWidget = notebook1;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = notebook1;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>

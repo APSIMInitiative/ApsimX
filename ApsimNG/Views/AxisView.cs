@@ -64,14 +64,14 @@ namespace UserInterface.Views
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
-            _mainWidget = table1;
+            mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
             entryMin.FocusOutEvent += OnMinimumChanged;
             entryMax.FocusOutEvent += OnMaximumChanged;
             entryInterval.FocusOutEvent += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -285,8 +285,8 @@ namespace UserInterface.Views
             entryInterval.FocusOutEvent -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
             checkbutton2.Toggled -= OnCheckedChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

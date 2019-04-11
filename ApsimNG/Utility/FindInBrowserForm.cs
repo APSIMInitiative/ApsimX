@@ -128,17 +128,17 @@
 				FindNext(true,"");
 		}
 
-		private bool _isHighlighted = false;
+		private bool isHighlighted = false;
 
         private void ChkHighlightAll_Click(object sender, EventArgs e)
         {
 			if (browser is TWWebBrowserWK)
 			{
 				bool highlight = chkHighlightAll.Active;
-				if (highlight != _isHighlighted)
+				if (highlight != isHighlighted)
 				{
 					(browser as TWWebBrowserWK).Highlight(txtLookFor.Text, chkMatchCase.Active, highlight);
-					_isHighlighted = highlight;
+					isHighlighted = highlight;
 				}
 			}
         }

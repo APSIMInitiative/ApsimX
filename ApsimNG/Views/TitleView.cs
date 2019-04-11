@@ -35,16 +35,16 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TitleView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             entry1 = (Entry)builder.GetObject("entry1");
-            _mainWidget = hbox1;
+            mainWidget = hbox1;
             entry1.Changed += OnPositionComboChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entry1.Changed -= OnPositionComboChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

@@ -82,7 +82,7 @@ namespace UserInterface.Views
 
         private const string modelMime = "application/x-model-component";
         private GCHandle dragSourceHandle;
-        private bool _isModels = false;
+        private bool isModels = false;
         private Menu popup = new Menu();
         private AccelGroup accel = new AccelGroup();
 
@@ -91,7 +91,7 @@ namespace UserInterface.Views
         {
             Listview = new IkonView(listmodel);
             //listview = new TreeView(listmodel);
-            _mainWidget = Listview;
+            mainWidget = Listview;
             Listview.MarkupColumn = 0;
             Listview.PixbufColumn = 1;
             Listview.TooltipColumn = 2;
@@ -103,7 +103,7 @@ namespace UserInterface.Views
 
             Listview.SelectionChanged += OnSelectionChanged;
             Listview.ButtonPressEvent += OnDoubleClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -115,8 +115,8 @@ namespace UserInterface.Views
             popup.Destroy();
             listmodel.Dispose();
             accel.Dispose();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>
@@ -149,7 +149,7 @@ namespace UserInterface.Views
                     {
                         text = AddFileNameListItem(val, ref image);
                     }
-                    else if (_isModels)
+                    else if (isModels)
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
                         string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
@@ -246,11 +246,11 @@ namespace UserInterface.Views
         /// </summary>
         public bool IsModelList
         {
-            get { return _isModels; }
+            get { return isModels; }
             set
             {
-                bool wasModels = _isModels;
-                _isModels = value;
+                bool wasModels = isModels;
+                isModels = value;
                 if (value)
                 {
                     TargetEntry[] target_table = new TargetEntry[] { new TargetEntry(modelMime, TargetFlags.App, 0) };

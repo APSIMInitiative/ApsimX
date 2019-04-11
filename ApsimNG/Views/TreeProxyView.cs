@@ -50,7 +50,7 @@ namespace UserInterface.Views
             VPaned mainPanel = (VPaned)builder.GetObject("vpaned1");
             Alignment constantsTab = (Alignment)builder.GetObject("alignment1");
             HBox graphContainer = (HBox)builder.GetObject("hbox1");
-            _mainWidget = mainPanel;
+            mainWidget = mainPanel;
 
             TemporalDataGrid = new GridView(this as ViewBase);
             TemporalDataGrid.CellsChanged += GridCellEdited;
@@ -74,7 +74,7 @@ namespace UserInterface.Views
             ConstantsGrid = new GridView(this);
             constantsTab.Add((ConstantsGrid as ViewBase).MainWidget);
             MainWidget.ShowAll();
-            _mainWidget.Destroyed += MainWidgetDestroyed;
+            mainWidget.Destroyed += MainWidgetDestroyed;
         }
 
         /// <summary>
@@ -383,9 +383,9 @@ namespace UserInterface.Views
             {
                 TemporalDataGrid.Dispose();
                 SpatialDataGrid.Dispose();
-                _mainWidget.Dispose();
-                _mainWidget.Destroyed -= MainWidgetDestroyed;
-                _owner = null;
+                mainWidget.Dispose();
+                mainWidget.Destroyed -= MainWidgetDestroyed;
+                owner = null;
             }
             catch (Exception err)
             {

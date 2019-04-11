@@ -52,7 +52,7 @@ namespace UserInterface.Views
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             vpaned2 = (VPaned)builder.GetObject("vpaned2");
             vbox1 = (VBox)builder.GetObject("vbox1");
-            _mainWidget = vpaned1;
+            mainWidget = vpaned1;
             propertyGrid = new GridView(this);
             vbox1.PackStart(propertyGrid.MainWidget, true, true, 0);
             //vpaned1.Pack1(PropertyGrid.MainWidget, true, true);
@@ -62,7 +62,7 @@ namespace UserInterface.Views
             graph = new GraphView(this);
             vpaned2.Pack2(graph.MainWidget, true, false);
             graph.MainWidget.Realized += GraphWidget_Realized;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
@@ -73,8 +73,8 @@ namespace UserInterface.Views
             propertyGrid = null;
             graph.MainWidget.Destroy();
             graph = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

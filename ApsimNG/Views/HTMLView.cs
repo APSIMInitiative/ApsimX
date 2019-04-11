@@ -317,7 +317,7 @@ namespace UserInterface.Views
 		/// <summary>
         /// The find form
         /// </summary>
-        private Utility.FindInBrowserForm _findForm = new Utility.FindInBrowserForm();
+        private Utility.FindInBrowserForm findForm = new Utility.FindInBrowserForm();
 
         public void InitWebKit(Gtk.Box w)
         {
@@ -348,11 +348,11 @@ namespace UserInterface.Views
                 }
 				else if (args.Event.Characters.ToLower() == "f")
                 {
-					_findForm.ShowFor(this);
+					findForm.ShowFor(this);
 				}
                 else if (args.Event.Characters.ToLower() == "g")
                 {
-                    _findForm.FindNext((args.Event.ModifierFlags & NSEventModifierMask.ShiftKeyMask) != NSEventModifierMask.ShiftKeyMask, null);
+                    findForm.FindNext((args.Event.ModifierFlags & NSEventModifierMask.ShiftKeyMask) != NSEventModifierMask.ShiftKeyMask, null);
                 }
             }
         }
@@ -445,7 +445,7 @@ namespace UserInterface.Views
 		/// <summary>
         /// The find form
         /// </summary>
-        private Utility.FindInBrowserForm _findForm = new Utility.FindInBrowserForm();
+        private Utility.FindInBrowserForm findForm = new Utility.FindInBrowserForm();
 
         public void InitWebKit(Gtk.Box w)
         {
@@ -529,15 +529,15 @@ namespace UserInterface.Views
 			{
 			    if (args.Event.Key == Gdk.Key.f || args.Event.Key == Gdk.Key.F)
 				{
-				    _findForm.ShowFor(this);
+				    findForm.ShowFor(this);
 			    }
 				else if (args.Event.Key == Gdk.Key.g || args.Event.Key == Gdk.Key.G)
 				{	
-					_findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) != Gdk.ModifierType.ShiftMask, null);
+					findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) != Gdk.ModifierType.ShiftMask, null);
 				}
 			}
 			else if (args.Event.Key == Gdk.Key.F3)
-				_findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) != Gdk.ModifierType.ShiftMask, null);
+				findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) != Gdk.ModifierType.ShiftMask, null);
         }
 
         // Public implementation of Dispose pattern callable by consumers. 
@@ -623,7 +623,7 @@ namespace UserInterface.Views
             vbox2 = (VBox)builder.GetObject("vbox2");
             frame1 = (Frame)builder.GetObject("frame1");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            _mainWidget = vpaned1;
+            mainWidget = vpaned1;
             // Handle a temporary browser created when we want to export a map.
             if (owner == null)
             {
@@ -651,7 +651,7 @@ namespace UserInterface.Views
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -755,8 +755,8 @@ namespace UserInterface.Views
             }
             memo.MainWidget.Destroy();
             memo = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         protected virtual void NewTitle(string title)

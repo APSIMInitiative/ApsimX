@@ -32,7 +32,7 @@ namespace UserInterface.Views
         public ExplorerView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
-            _mainWidget = (VBox)builder.GetObject("vbox1");
+            mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
@@ -41,7 +41,7 @@ namespace UserInterface.Views
             popup = new MenuView();
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             rightHandView.ShadowType = ShadowType.EtchedOut;
-            _mainWidget.Destroyed += OnDestroyed;
+            mainWidget.Destroyed += OnDestroyed;
         }
 
         /// <summary>The tree on the left side of the explorer view</summary>
@@ -120,8 +120,8 @@ namespace UserInterface.Views
             }
             ToolStrip.Destroy();
             popup.Destroy();
-            _mainWidget.Destroyed -= OnDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnDestroyed;
+            owner = null;
         }
     }
 }

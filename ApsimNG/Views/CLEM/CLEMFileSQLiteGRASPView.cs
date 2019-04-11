@@ -81,7 +81,7 @@ namespace UserInterface.Views
             label2 = (Label)builder.GetObject("label2");
             buttonBack = (Button)builder.GetObject("button2");
             buttonNext = (Button)builder.GetObject("button3");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
 
             grid = new GridView(this);
             vbox1.PackStart(grid.MainWidget, true, true, 0);
@@ -89,7 +89,7 @@ namespace UserInterface.Views
             label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
             buttonBack.Clicked += OnBackButtonClick;
             buttonNext.Clicked += OnNextButtonClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -99,8 +99,8 @@ namespace UserInterface.Views
             buttonNext.Clicked -= OnNextButtonClick;
             grid.MainWidget.Destroy();
             grid = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

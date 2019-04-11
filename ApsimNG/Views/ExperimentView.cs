@@ -87,7 +87,7 @@ namespace UserInterface.Views
         public ExperimentView(ViewBase owner) : base(owner)
         {
             primaryContainer = new HBox();          
-            _mainWidget = primaryContainer;
+            mainWidget = primaryContainer;
             primaryContainer.ShowAll();
         }
 
@@ -311,7 +311,7 @@ namespace UserInterface.Views
             store?.Dispose();
             contextMenu?.Dispose();
             MainWidget?.Destroy();
-            _owner = null;
+            owner = null;
         }
 
         /// <summary>

@@ -77,13 +77,13 @@ namespace Utility
             args.RetVal = true;
         }
 
-        TextEditor _editor;
+        TextEditor editor;
         TextEditor Editor
         {
-            get { return _editor; }
+            get { return editor; }
             set
             {
-                _editor = value;
+                editor = value;
             }
         }
 
@@ -100,8 +100,8 @@ namespace Utility
         private void UpdateTitleBar()
         {
             string text = ReplaceMode ? "Find & replace" : "Find";
-            if (_editor != null && _editor.FileName != null)
-                text += " - " + System.IO.Path.GetFileName(_editor.FileName);
+            if (editor != null && editor.FileName != null)
+                text += " - " + System.IO.Path.GetFileName(editor.FileName);
             if (this.selectionOnly)
                 text += " (selection only)";
             window1.Title = text;
@@ -190,7 +190,7 @@ namespace Utility
 
         private void BtnHighlightAll_Click(object sender, EventArgs e)
         {
-            _editor.HighlightSearchPattern = true;
+            editor.HighlightSearchPattern = true;
             BtnFindNext_Click(sender, e);
         }
         private void BtnCancel_Click(object sender, EventArgs e)
