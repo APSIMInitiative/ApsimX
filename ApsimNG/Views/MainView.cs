@@ -79,7 +79,7 @@
         /// <summary>
         /// Status window used to display error messages and other information.
         /// </summary>
-        private TextView StatusWindow = null;
+        private TextView statusWindow = null;
 
         /// <summary>
         /// Button to stop a simulation.
@@ -139,7 +139,7 @@
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
-            StatusWindow = (TextView)builder.GetObject("StatusWindow");
+            statusWindow = (TextView)builder.GetObject("StatusWindow");
             stopButton = (Button)builder.GetObject("stopButton");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             notebook2 = (Notebook)builder.GetObject("notebook2");
@@ -171,14 +171,14 @@
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
-            StatusWindow.Buffer.TagTable.Add(tag);
+            statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
             tag.Foreground = "brown";
-            StatusWindow.Buffer.TagTable.Add(tag);
+            statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("normal");
             tag.Foreground = "blue";
-            StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
-            StatusWindow.Visible = false;
+            statusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
+            statusWindow.Visible = false;
             stopButton.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Delete.png", 12, 12));
             stopButton.ImagePosition = PositionType.Right;
             stopButton.Image.Visible = true;
@@ -693,11 +693,11 @@
         {
             Application.Invoke(delegate
             {
-                StatusWindow.Visible = message != null;
+                statusWindow.Visible = message != null;
                 if (overwrite || message == null)
                 {
                     numberOfButtons = 0;
-                    StatusWindow.Buffer.Clear();
+                    statusWindow.Buffer.Clear();
                 }
 
                 if (message != null)
@@ -720,17 +720,17 @@
                     message += Environment.NewLine;
                     TextIter insertIter;
                     if (overwrite)
-                        insertIter = StatusWindow.Buffer.StartIter;
+                        insertIter = statusWindow.Buffer.StartIter;
                     else
-                        insertIter = StatusWindow.Buffer.EndIter;
+                        insertIter = statusWindow.Buffer.EndIter;
 
-                    StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
+                    statusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
                     if (errorLevel == Simulation.ErrorLevel.Error && withButton)
                         AddButtonToStatusWindow("More Information", numberOfButtons++);
                     if (addSeparator)
                     {
-                        insertIter = StatusWindow.Buffer.EndIter;
-                        StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, Environment.NewLine + "----------------------------------------------" + Environment.NewLine, tagName);
+                        insertIter = statusWindow.Buffer.EndIter;
+                        statusWindow.Buffer.InsertWithTagsByName(ref insertIter, Environment.NewLine + "----------------------------------------------" + Environment.NewLine, tagName);
                     }
                 }
 
@@ -752,13 +752,13 @@
 
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
         {
-            TextIter iter = StatusWindow.Buffer.EndIter;
-            TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref iter);
+            TextIter iter = statusWindow.Buffer.EndIter;
+            TextChildAnchor anchor = statusWindow.Buffer.CreateChildAnchor(ref iter);
             EventBox box = new EventBox();
             ApsimNG.Classes.CustomButton moreInfo = new ApsimNG.Classes.CustomButton(buttonName, buttonID);
             moreInfo.Clicked += ShowDetailedErrorMessage;
             box.Add(moreInfo);
-            StatusWindow.AddChildAtAnchor(box, anchor);
+            statusWindow.AddChildAtAnchor(box, anchor);
             box.ShowAll();
             box.Realize();
             box.ShowAll();

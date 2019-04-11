@@ -13,7 +13,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
-        void AddContextAction(string ButtonText, System.EventHandler OnClick);
+        void AddContextAction(string buttonText, EventHandler onClick);
 
         /// <summary>
         /// Return the current cursor position in the memo.

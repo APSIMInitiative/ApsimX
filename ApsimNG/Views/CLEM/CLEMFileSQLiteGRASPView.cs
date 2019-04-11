@@ -62,12 +62,12 @@ namespace UserInterface.Views
         private Label label2 = null;
         private Button buttonBack = null;
         private Button buttonNext = null;
-        private GridView Grid;
+        private GridView grid;
 
         /// <summary>
         /// Property to provide access to the grid.
         /// </summary>
-        public IGridView GridView { get { return Grid; } }
+        public IGridView GridView { get { return grid; } }
 
         /// <summary>
         /// Constructor
@@ -83,8 +83,8 @@ namespace UserInterface.Views
             buttonNext = (Button)builder.GetObject("button3");
             _mainWidget = vbox1;
 
-            Grid = new GridView(this);
-            vbox1.PackStart(Grid.MainWidget, true, true, 0);
+            grid = new GridView(this);
+            vbox1.PackStart(grid.MainWidget, true, true, 0);
             button1.Clicked += OnBrowseButtonClick;
             label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
             buttonBack.Clicked += OnBackButtonClick;
@@ -97,8 +97,8 @@ namespace UserInterface.Views
             button1.Clicked -= OnBrowseButtonClick;
             buttonBack.Clicked -= OnBackButtonClick;
             buttonNext.Clicked -= OnNextButtonClick;
-            Grid.MainWidget.Destroy();
-            Grid = null;
+            grid.MainWidget.Destroy();
+            grid = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             _owner = null;
         }

@@ -63,7 +63,7 @@
         }
 
         /// <summary>Perform the command</summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do(CommandHistory commandHistory)
         {
             IsRunning = true;
 
@@ -79,7 +79,7 @@
         }
 
         /// <summary>Undo the command</summary>
-        public void Undo(CommandHistory CommandHistory)
+        public void Undo(CommandHistory commandHistory)
         {
         }
 

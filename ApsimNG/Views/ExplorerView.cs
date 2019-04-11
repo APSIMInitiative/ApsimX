@@ -24,7 +24,7 @@ namespace UserInterface.Views
     /// </summary>
     public class ExplorerView : ViewBase, IExplorerView
     {
-        private Viewport RightHandView;
+        private Viewport rightHandView;
         private MenuView popup;
         private Gtk.TreeView treeviewWidget;
 
@@ -39,8 +39,8 @@ namespace UserInterface.Views
             treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
             popup = new MenuView();
-            RightHandView = (Viewport)builder.GetObject("RightHandView");
-            RightHandView.ShadowType = ShadowType.EtchedOut;
+            rightHandView = (Viewport)builder.GetObject("RightHandView");
+            rightHandView.ShadowType = ShadowType.EtchedOut;
             _mainWidget.Destroyed += OnDestroyed;
         }
 
@@ -56,16 +56,16 @@ namespace UserInterface.Views
         /// <param name="control">The control to add.</param>
         public void AddRightHandView(object control)
         {
-            foreach (Widget child in RightHandView.Children)
+            foreach (Widget child in rightHandView.Children)
             {
-                RightHandView.Remove(child);
+                rightHandView.Remove(child);
                 child.Destroy();
             }
             ViewBase view = control as ViewBase;
             if (view != null)
             {
-                RightHandView.Add(view.MainWidget);
-                RightHandView.ShowAll();
+                rightHandView.Add(view.MainWidget);
+                rightHandView.ShowAll();
             }
         }
 
@@ -75,7 +75,7 @@ namespace UserInterface.Views
             // Create a Bitmap and draw the panel
             int width;
             int height;
-            Gdk.Window panelWindow = RightHandView.Child.GdkWindow;
+            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
             panelWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
@@ -110,11 +110,11 @@ namespace UserInterface.Views
         private void OnDestroyed(object sender, EventArgs e)
         {
             treeviewWidget.Realized -= OnLoaded;
-            if (RightHandView != null)
+            if (rightHandView != null)
             {
-                foreach (Widget child in RightHandView.Children)
+                foreach (Widget child in rightHandView.Children)
                 {
-                    RightHandView.Remove(child);
+                    rightHandView.Remove(child);
                     child.Destroy();
                 }
             }

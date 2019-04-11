@@ -31,9 +31,9 @@ namespace UserInterface.Views
 
         private VBox vbox1 = null;
         private Gtk.TreeView treeview1 = null;
-        private Viewport RightHandView = null;
+        private Viewport rightHandView = null;
 
-        private Menu Popup = new Menu();
+        private Menu popup = new Menu();
 
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
         private CellRendererText textRender;
@@ -49,9 +49,9 @@ namespace UserInterface.Views
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
-            RightHandView = (Viewport)builder.GetObject("RightHandView");
+            rightHandView = (Viewport)builder.GetObject("RightHandView");
             _mainWidget = vbox1;
-            RightHandView.ShadowType = ShadowType.EtchedOut;
+            rightHandView.ShadowType = ShadowType.EtchedOut;
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -76,11 +76,11 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (RightHandView != null)
+            if (rightHandView != null)
             {
-                foreach (Widget child in RightHandView.Children)
+                foreach (Widget child in rightHandView.Children)
                 {
-                    RightHandView.Remove(child);
+                    rightHandView.Remove(child);
                     child.Destroy();
                 }
             }
@@ -152,17 +152,17 @@ namespace UserInterface.Views
         public void AddRightHandView(object control)
         {
             //remove existing Right Hand View
-            foreach (Widget child in RightHandView.Children)
+            foreach (Widget child in rightHandView.Children)
             {
-                RightHandView.Remove(child);
+                rightHandView.Remove(child);
                 child.Destroy();
             }
             //create new Right Hand View
             ViewBase view = control as ViewBase;
             if (view != null)
             {
-                RightHandView.Add(view.MainWidget);
-                RightHandView.ShowAll();
+                rightHandView.Add(view.MainWidget);
+                rightHandView.ShowAll();
             }
         }
 
@@ -172,7 +172,7 @@ namespace UserInterface.Views
             // Create a Bitmap and draw the panel
             int width;
             int height;
-            Gdk.Window panelWindow = RightHandView.Child.GdkWindow;
+            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
             panelWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
@@ -410,7 +410,7 @@ namespace UserInterface.Views
         {
             if (e.Event.Button == 3)
             {
-                Popup.Popup();
+                popup.Popup();
             }
         }
 

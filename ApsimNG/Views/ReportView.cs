@@ -34,8 +34,8 @@ namespace UserInterface.Views
         private VBox vbox2 = null;
         private Alignment alignment1 = null;
 
-        private EditorView VariableEditor;
-        private EditorView FrequencyEditor;
+        private EditorView variableEditor;
+        private EditorView frequencyEditor;
         private DataStoreView dataStoreView1;
 
         /// <summary>Constructor</summary>
@@ -48,11 +48,11 @@ namespace UserInterface.Views
             alignment1 = (Alignment)builder.GetObject("alignment1");
             _mainWidget = notebook1;
 
-            VariableEditor = new EditorView(this);
-            vbox1.PackStart(VariableEditor.MainWidget, true, true, 0);
+            variableEditor = new EditorView(this);
+            vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
 
-            FrequencyEditor = new EditorView(this);
-            vbox2.PackStart(FrequencyEditor.MainWidget, true, true, 0);
+            frequencyEditor = new EditorView(this);
+            vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
@@ -61,10 +61,10 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            VariableEditor.MainWidget.Destroy();
-            VariableEditor = null;
-            FrequencyEditor.MainWidget.Destroy();
-            FrequencyEditor = null;
+            variableEditor.MainWidget.Destroy();
+            variableEditor = null;
+            frequencyEditor.MainWidget.Destroy();
+            frequencyEditor = null;
             dataStoreView1.MainWidget.Destroy();
             dataStoreView1 = null;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -72,10 +72,10 @@ namespace UserInterface.Views
         }
 
         /// <summary>Provides access to the variable list.</summary>
-        public IEditorView VariableList { get { return VariableEditor; } }
+        public IEditorView VariableList { get { return variableEditor; } }
 
         /// <summary>Provides access to the variable list.</summary>
-        public IEditorView EventList { get { return FrequencyEditor; } }
+        public IEditorView EventList { get { return frequencyEditor; } }
 
         /// <summary>Provides access to the DataGrid.</summary>
         public IDataStoreView DataStoreView { get { return dataStoreView1; } }

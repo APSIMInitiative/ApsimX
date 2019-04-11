@@ -79,8 +79,8 @@ namespace UserInterface.Views
         int GraphShowYearsMaxValue { set; }
 
         /// <summary>Populates the data grid</summary>
-        /// <param name="Data">The data</param>
-        void PopulateData(DataTable Data);
+        /// <param name="data">The data</param>
+        void PopulateData(DataTable data);
 
         /// <summary>
         /// Populates the DropDown of Excel WorksheetNames 

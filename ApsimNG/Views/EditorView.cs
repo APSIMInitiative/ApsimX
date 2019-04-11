@@ -186,14 +186,14 @@ namespace UserInterface.Views
                     textEditor.Document.MimeType = "text/x-csharp";
                     textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
                     textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
-                    StyleSeparator.Visible = true;
-                    StyleMenu.Visible = true;
+                    styleSeparator.Visible = true;
+                    styleMenu.Visible = true;
                 }
                 else
                 {
                     textEditor.Options.ColorScheme = "Default";
-                    StyleSeparator.Visible = false;
-                    StyleMenu.Visible = false;
+                    styleSeparator.Visible = false;
+                    styleMenu.Visible = false;
                 }
             }
         }
@@ -246,8 +246,8 @@ namespace UserInterface.Views
             }
         }
 
-        private MenuItem StyleMenu;
-        private MenuItem StyleSeparator;
+        private MenuItem styleMenu;
+        private MenuItem styleSeparator;
 
         /// <summary>
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
@@ -336,8 +336,8 @@ namespace UserInterface.Views
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
-            StyleSeparator = AddContextSeparator();
-            StyleMenu = AddMenuItem("Use style", null);
+            styleSeparator = AddContextSeparator();
+            styleMenu = AddMenuItem("Use style", null);
             Menu styles = new Menu();
 
             // find all the editor styles and add sub menu items to the popup
@@ -352,7 +352,7 @@ namespace UserInterface.Views
                 subItem.Visible = true;
                 styles.Append(subItem);
             }
-            StyleMenu.Submenu = styles;
+            styleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
         }

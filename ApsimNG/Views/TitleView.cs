@@ -20,7 +20,7 @@ namespace UserInterface.Views
     /// </summary>
     public class TitleView : ViewBase, ITitleView
     {
-        private string OriginalText;
+        private string originalText;
 
         public event TitleChangedDelegate OnTitleChanged;
 
@@ -61,11 +61,11 @@ namespace UserInterface.Views
         /// </summary>
         private void OnPositionComboChanged(object sender, EventArgs e)
         {
-            if (OriginalText == null)
-                OriginalText = entry1.Text;
-            if (entry1.Text != OriginalText && OnTitleChanged != null)
+            if (originalText == null)
+                originalText = entry1.Text;
+            if (entry1.Text != originalText && OnTitleChanged != null)
             {
-                OriginalText = entry1.Text;
+                originalText = entry1.Text;
                 OnTitleChanged.Invoke(entry1.Text);
             }
         }

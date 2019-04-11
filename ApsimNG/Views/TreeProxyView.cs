@@ -182,11 +182,11 @@ namespace UserInterface.Views
         {
             get
             {
-                List<double> NDemands = new List<double>();
+                List<double> nDemands = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[2] as string))
-                        NDemands.Add(Convert.ToDouble((string)row[2], System.Globalization.CultureInfo.InvariantCulture));
-                return NDemands.ToArray();
+                        nDemands.Add(Convert.ToDouble((string)row[2], System.Globalization.CultureInfo.InvariantCulture));
+                return nDemands.ToArray();
             }
         }
 
@@ -197,11 +197,11 @@ namespace UserInterface.Views
         {
             get
             {
-                List<double> CanopyWidths = new List<double>();
+                List<double> canopyWidths = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[3] as string))
-                        CanopyWidths.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
-                return CanopyWidths.ToArray();
+                        canopyWidths.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
+                return canopyWidths.ToArray();
             }
         }
 
@@ -212,11 +212,11 @@ namespace UserInterface.Views
         {
             get
             {
-                List<double> TreeLeafAreas = new List<double>();
+                List<double> treeLeafAreas = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[4] as string))
-                        TreeLeafAreas.Add(Convert.ToDouble((string)row[4], System.Globalization.CultureInfo.InvariantCulture));
-                return TreeLeafAreas.ToArray();
+                        treeLeafAreas.Add(Convert.ToDouble((string)row[4], System.Globalization.CultureInfo.InvariantCulture));
+                return treeLeafAreas.ToArray();
             }
         }
 
@@ -230,10 +230,10 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="dates">Dates to be displayed in the dates column.</param>
         /// <param name="heights">Heights to be displayed in the heights column.</param>
-        /// <param name="NDemands">N Demands to be displayed in the N Demands column.</param>
-        /// <param name="CanopyWidths">Canopy widths to be displayed in the canopy widths column.</param>
-        /// <param name="TreeLeafAreas">Tree leaf areas to be displayed in the leaf areas column.</param>
-        public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands, double[] CanopyWidths, double[] TreeLeafAreas)
+        /// <param name="nDemands">N Demands to be displayed in the N Demands column.</param>
+        /// <param name="canopyWidths">Canopy widths to be displayed in the canopy widths column.</param>
+        /// <param name="treeLeafAreas">Tree leaf areas to be displayed in the leaf areas column.</param>
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] canopyWidths, double[] treeLeafAreas)
         {
             string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Tree Leaf Area (m2)" };
             DataTable table = new DataTable("Height Data");
@@ -246,9 +246,9 @@ namespace UserInterface.Views
             {
                 string date = dates.Length > i ? dates[i].ToShortDateString() : null;
                 string height = heights.Length > i ? (heights[i] / 1000).ToString() : null;
-                string nDemand = NDemands.Length > i ? NDemands[i].ToString() : null;
-                string canopyWidth = CanopyWidths.Length > i ? CanopyWidths[i].ToString() : null;
-                string treeLeafArea = TreeLeafAreas.Length > i ? TreeLeafAreas[i].ToString() : null;
+                string nDemand = nDemands.Length > i ? nDemands[i].ToString() : null;
+                string canopyWidth = canopyWidths.Length > i ? canopyWidths[i].ToString() : null;
+                string treeLeafArea = treeLeafAreas.Length > i ? treeLeafAreas[i].ToString() : null;
                 table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
             }
 

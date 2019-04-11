@@ -95,7 +95,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
-        /// <param name="Message">Message to be displayed.</param>
+        /// <param name="message">Message to be displayed.</param>
         /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
         /// <param name="overwrite">
         /// If true, all existing messages will be overridden.
@@ -106,7 +106,7 @@ namespace UserInterface.Interfaces
         /// Whether or not a 'more info' button should be drawn under the message. 
         /// If the message is not an error, this parameter has no effect.
         /// </param>
-        void ShowMessage(string Message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
+        void ShowMessage(string message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
 
         /// <summary>
         /// Displays an error message with a 'more info' button.

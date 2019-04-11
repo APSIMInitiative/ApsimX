@@ -62,7 +62,7 @@ namespace UserInterface.Views
         private Entry countryBox = null;
         private Entry postcodeBox = null;
         private Label label1 = null;
-        private Alignment HTMLalign = null;
+        private Alignment htmlAlign = null;
         private CheckButton checkbutton1 = null;
         private Gtk.TreeView listview1 = null;
         private Alignment alignment3 = null;
@@ -72,7 +72,7 @@ namespace UserInterface.Views
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private HTMLView HTMLview;
+        private HTMLView htmlView;
 
         /// <summary>
         /// Constructor
@@ -96,7 +96,7 @@ namespace UserInterface.Views
             countryBox = (Entry)builder.GetObject("countryBox");
             postcodeBox = (Entry)builder.GetObject("postcodeBox");
             label1 = (Label)builder.GetObject("label1");
-            HTMLalign = (Alignment)builder.GetObject("HTMLalign");
+            htmlAlign = (Alignment)builder.GetObject("HTMLalign");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             listview1 = (Gtk.TreeView)builder.GetObject("listview1");
             alignment3 = (Alignment)builder.GetObject("alignment3");
@@ -125,8 +125,8 @@ namespace UserInterface.Views
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
                           alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
 
-            HTMLview = new HTMLView(new ViewBase(null));
-            HTMLalign.Add(HTMLview.MainWidget);
+            htmlView = new HTMLView(new ViewBase(null));
+            htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
             oldVersions.Toggled += OnShowOldVersionsToggled;
@@ -203,7 +203,7 @@ namespace UserInterface.Views
             {
                 // web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
                 // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                HTMLview.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                htmlView.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
             }
             catch (Exception)
             {

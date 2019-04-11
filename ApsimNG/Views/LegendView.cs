@@ -26,7 +26,7 @@ namespace UserInterface.Views
     /// </summary>
     public class LegendView : ViewBase, ILegendView
     {
-        private string OriginalText;
+        private string originalText;
 
         public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
@@ -107,7 +107,7 @@ namespace UserInterface.Views
                 else // Could not find a matching entry
                     combobox1.Active = 0;
             }
-            OriginalText = title;
+            originalText = title;
             settingCombo = false;
         }
 
@@ -118,9 +118,9 @@ namespace UserInterface.Views
         {
             TreeIter iter;
             if (combobox1.GetActiveIter(out iter))
-                OriginalText = (string)combobox1.Model.GetValue(iter, 0);
+                originalText = (string)combobox1.Model.GetValue(iter, 0);
             else
-                OriginalText = null;
+                originalText = null;
         }
 
         /// <summary>
@@ -134,11 +134,11 @@ namespace UserInterface.Views
             string curText = null;
             if (combobox1.GetActiveIter(out iter))
                 curText = (string)combobox1.Model.GetValue(iter, 0);
-            if (OriginalText == null)
-                OriginalText = curText;
-            if (curText != OriginalText && OnPositionChanged != null)
+            if (originalText == null)
+                originalText = curText;
+            if (curText != originalText && OnPositionChanged != null)
             {
-                OriginalText = curText;
+                originalText = curText;
                 OnPositionChanged.Invoke(curText);
             }
         }

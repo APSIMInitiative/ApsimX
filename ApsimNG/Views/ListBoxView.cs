@@ -82,7 +82,7 @@ namespace UserInterface.Views
         private const string modelMime = "application/x-model-component";
         private GCHandle dragSourceHandle;
         private bool _isModels = false;
-        private Menu Popup = new Menu();
+        private Menu popup = new Menu();
         private AccelGroup accel = new AccelGroup();
 
         /// <summary>Constructor</summary>
@@ -111,7 +111,7 @@ namespace UserInterface.Views
             listview.SelectionChanged -= OnSelectionChanged;
             listview.ButtonPressEvent -= OnDoubleClick;
             ClearPopup();
-            Popup.Destroy();
+            popup.Destroy();
             listmodel.Dispose();
             accel.Dispose();
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -293,8 +293,8 @@ namespace UserInterface.Views
                 if (path != null)
                 {
                     listview.SelectPath(path);
-                    if (Popup.Children.Count() > 0)
-                        Popup.Popup();
+                    if (popup.Children.Count() > 0)
+                        popup.Popup();
                 }
                 e.RetVal = true;
             }
@@ -352,30 +352,30 @@ namespace UserInterface.Views
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
             ClearPopup();
-            foreach (MenuDescriptionArgs Description in menuDescriptions)
+            foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
-                if (Description.ShowCheckbox)
+                if (description.ShowCheckbox)
                 {
-                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
-                    checkItem.Active = Description.Checked;
+                    CheckMenuItem checkItem = new CheckMenuItem(description.Name);
+                    checkItem.Active = description.Checked;
                     item = checkItem;
                 }
-                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && MasterView.HasResource(Description.ResourceNameForImage))
+                else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
-                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    ImageMenuItem imageItem = new ImageMenuItem(description.Name);
+                    imageItem.Image = new Image(null, description.ResourceNameForImage);
                     item = imageItem;
                 }
                 else
                 {
-                    item = new MenuItem(Description.Name);
+                    item = new MenuItem(description.Name);
                 }
-                if (!String.IsNullOrEmpty(Description.ShortcutKey))
+                if (!String.IsNullOrEmpty(description.ShortcutKey))
                 {
                     string keyName = String.Empty;
                     Gdk.ModifierType modifier = Gdk.ModifierType.None;
-                    string[] keyNames = Description.ShortcutKey.Split(new Char[] { '+' });
+                    string[] keyNames = description.ShortcutKey.Split(new Char[] { '+' });
                     foreach (string name in keyNames)
                     {
                         if (name == "Ctrl")
@@ -398,18 +398,18 @@ namespace UserInterface.Views
                     {
                     }
                 }
-                item.Activated += Description.OnClick;
-                Popup.Append(item);
+                item.Activated += description.OnClick;
+                popup.Append(item);
 
             }
-            if (Popup.AttachWidget == null)
-                Popup.AttachToWidget(listview, null);
-            Popup.ShowAll();
+            if (popup.AttachWidget == null)
+                popup.AttachToWidget(listview, null);
+            popup.ShowAll();
         }
 
         private void ClearPopup()
         {
-            foreach (Widget w in Popup)
+            foreach (Widget w in popup)
             {
                 if (w is MenuItem)
                 {
@@ -424,7 +424,7 @@ namespace UserInterface.Views
                         }
                     }
                 }
-                Popup.Remove(w);
+                popup.Remove(w);
                 w.Destroy();
             }
         }
