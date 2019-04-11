@@ -227,15 +227,18 @@ namespace Models.Graph
                     var descriptor = seriesDescription.Descriptors.Find(d => d.Name == varyByFieldName);
                     if (descriptor == null)
                     {
-                        // We need to create a simulation description for each valid value of
-                        // the descriptor.
-                        var validValues = DataTableUtilities.GetColumnAsStrings(baseData, varyByFieldName).Distinct();
-                        foreach (var value in validValues)
+                        if (baseData.Columns.Contains(varyByFieldName))
                         {
-                            var newSimulationDescription = new SeriesDescription() { SimulationNames = seriesDescription.SimulationNames };
-                            newSimulationDescription.Descriptors.AddRange(seriesDescription.Descriptors);
-                            newSimulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(varyByFieldName, value));
-                            newList.Add(newSimulationDescription);
+                            // We need to create a simulation description for each valid value of
+                            // the descriptor.
+                            var validValues = DataTableUtilities.GetColumnAsStrings(baseData, varyByFieldName).Distinct();
+                            foreach (var value in validValues)
+                            {
+                                var newSimulationDescription = new SeriesDescription() { SimulationNames = seriesDescription.SimulationNames };
+                                newSimulationDescription.Descriptors.AddRange(seriesDescription.Descriptors);
+                                newSimulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(varyByFieldName, value));
+                                newList.Add(newSimulationDescription);
+                            }
                         }
                     }
                     else
@@ -722,7 +725,7 @@ namespace Models.Graph
             string filterToUse = "SimulationName IN (" +
                                    StringUtilities.Build(simulationNames, ",", "'", "'") +
                                    ")";
-            if (Filter != null)
+            if (Filter != null && Filter != string.Empty)
                 filterToUse += " AND " + Filter;
 
             // Checkpoints don't exist in observed files so don't pass a checkpoint name to 

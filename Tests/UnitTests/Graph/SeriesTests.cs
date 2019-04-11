@@ -1266,6 +1266,62 @@
             Assert.AreEqual(definitions[1].y as double[], new double[] { 8, 6 });
         }
 
+        /// <summary>Create xy series definitions from predicted/observed table.</summary>
+        [Test]
+        public void SeriesFromPredictedObservedAndMixOfSimulations()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1", "Experiment", "Exp1"),
+                        new Description("Sim2", "SimulationName", "Sim2", "Experiment", "Exp1"),
+                        new Description("Sim3", "SimulationName", "Sim3")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Report",
+                                XFieldName = "Predicted.Grain.Wt",
+                                YFieldName = "Observed.Grain.Wt",
+                                FactorToVaryColours = "Experiment",
+                                FactorToVaryMarkers = "Experiment"
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
+                "            ()              ()                 ()                 ()\r\n" +
+                "       Current            Sim1                  1                  1\r\n" +
+                "       Current            Sim2                  2                  5\r\n" +
+                "       Current            Sim3                  3                  8\r\n" +
+                "       Current            Sim3                  4                  6\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = folder.Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 1);
+            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].title, "Exp1");
+            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].y as double[], new double[] { 1, 5 });
+        }
+
         /// <summary>Create some test data and return a storage reader. </summary>
         private static IStorageReader CreateTestData()
         {
