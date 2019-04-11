@@ -97,9 +97,14 @@ namespace Models.Soils
                         // 2.2.2. total available N for this process
                         double NAvailable = MineralNAvailable + g.SumDoubleArray(g.pot_n_decomp);
 
-                        // 2.2.3. potential N demanded for conversion of residues into soil OM
-                        double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0) +
-                                          MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum), g.HumusCNr, 0.0);
+                       // 2.2.3. potential N demanded for conversion of residues into soil OM
+                        double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0);
+                                          
+                        for (int layer = 0; layer <= ImmobilisationLayer; layer++)
+                        {
+                        double fraction = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
+                        NDemand += MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum)*fraction, g.HumusCNr[layer], 0.0);
+                        }
 
                         // 2.2.4. factor to reduce mineralisation rate, if N available is insufficient
                         double ReductionFactor = 1.0;
@@ -182,7 +187,7 @@ namespace Models.Soils
                         hum_c[layer] += dlt_c_res_to_hum[layer];
 
                         // organic N balance
-                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr, 0.0);
+                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr[layer], 0.0);
                         biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.MBiomassCNr, 0.0);
 
                         // soil mineral N
@@ -260,7 +265,7 @@ namespace Models.Soils
                                        dlt_c_fom_to_hum[0][layer] + dlt_c_fom_to_hum[1][layer] + dlt_c_fom_to_hum[2][layer];
 
                         biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.MBiomassCNr, 0.0);
-                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr, 0.0);
+                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr[layer], 0.0);
 
                         // 4.2. update FOM pools
                         for (int pool = 0; pool < 3; pool++)
@@ -315,7 +320,7 @@ namespace Models.Soils
 
                     // compute the mineralisation amounts of C and N from the humic pool
                     double dlt_c_miner = pot_miner * stf * swf;
-                    double dlt_n_miner = MathUtilities.Divide(dlt_c_miner, g.HumusCNr, 0.0);
+                    double dlt_n_miner = MathUtilities.Divide(dlt_c_miner, g.HumusCNr[layer], 0.0);
 
                     // distribute the mineralised N and C
                     dlt_c_hum_to_biom[layer] = dlt_c_miner * (1.0 - g.AHumusRespirationFactor);
@@ -362,7 +367,7 @@ namespace Models.Soils
                     dlt_c_biom_to_atm[layer] = dlt_c_miner * g.MBiomassRespirationFactor;
 
                     // calculate net mineralisation
-                    dlt_n_biom_to_min[layer] = dlt_n_miner - MathUtilities.Divide(dlt_c_biom_to_hum[layer], g.HumusCNr, 0.0) -
+                    dlt_n_biom_to_min[layer] = dlt_n_miner - MathUtilities.Divide(dlt_c_biom_to_hum[layer], g.HumusCNr[layer], 0.0) -
                                        MathUtilities.Divide((dlt_c_miner - dlt_c_biom_to_atm[layer] - dlt_c_biom_to_hum[layer]), g.MBiomassCNr, 0.0);
                 }
                 else
@@ -439,7 +444,7 @@ namespace Models.Soils
 
                     // test whether there is adequate N available to meet immobilisation demand
                     double n_demand = MathUtilities.Divide(dlt_c_biom_tot, g.MBiomassCNr, 0.0) +
-                                      MathUtilities.Divide(dlt_c_hum_tot, g.HumusCNr, 0.0);
+                                      MathUtilities.Divide(dlt_c_hum_tot, g.HumusCNr[layer], 0.0);
                     double n_available = mineralN_available + dlt_n_fom_gross_miner;
 
                     // factor to reduce mineralisation rates if insufficient N to meet immobilisation demand

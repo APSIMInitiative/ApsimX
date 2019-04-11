@@ -36,9 +36,6 @@
         [Link]
         private ISimulationEngine simulationEngine;
 
-        /// <summary>The simulation to run.</summary>
-        public bool cloneSimulationBeforeRun;
-
         /// <summary>An array of services that can be used to resolve links in the simulation</summary>
         public object[] Services { get; set; }
 
@@ -60,11 +57,9 @@
         /// <summary>Constructor</summary>
         /// <param name="simEngine">Simulation engine</param>
         /// <param name="simulation">The simulation to clone and run.</param>
-        /// <param name="doClone">Clone the simulation before running?</param>
-        public RunSimulation(ISimulationEngine simEngine, Simulation simulation, bool doClone)
+        public RunSimulation(ISimulationEngine simEngine, Simulation simulation)
         {
             simulationToRun = simulation;
-            cloneSimulationBeforeRun = doClone;
             simulationEngine = simEngine;
         }
 
@@ -100,14 +95,7 @@
             Links links = null;
             try
             {
-                // Clone simulation
-                if (cloneSimulationBeforeRun)
-                {
-                    simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
-                    simulationEngine.MakeSubsAndLoad(simulationToRun);
-                }
-                else
-                    events = new Events(simulationToRun);
+                events = new Events(simulationToRun);
 
                 // Remove disabled models from simulation
                 foreach (IModel model in Apsim.ChildrenRecursively(simulationToRun))

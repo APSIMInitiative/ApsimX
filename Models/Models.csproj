@@ -221,10 +221,14 @@
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ITest.cs" />
     <Compile Include="Core\Reference.cs" />
+    <Compile Include="Core\Run\IReplacement.cs" />
+    <Compile Include="Core\Run\ModelReplacement.cs" />
+    <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
-    <Compile Include="Core\SimulationGeneratorFactors.cs" />
+    <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
+    <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
@@ -399,7 +403,6 @@
     <Compile Include="Factorial\Factor.cs" />
     <Compile Include="Factorial\Experiment.cs" />
     <Compile Include="Factorial\Factors.cs" />
-    <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="Memo.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

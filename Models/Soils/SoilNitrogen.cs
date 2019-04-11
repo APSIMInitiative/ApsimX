@@ -153,7 +153,7 @@ namespace Models.Soils
             oc = Soil.OC;
             FBiom = Soil.FBiom;
             FInert = Soil.FInert;
-            HumusCNr = Soil.SoilOrganicMatter.SoilCN;
+            HumusCNr = Soil.InitialSoilCNR;
             InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
             enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
@@ -357,7 +357,7 @@ namespace Models.Soils
 
                 // calculate inert soil C
                 double InertC = FInert[layer] * Soil_OC;
-                double InertN = MathUtilities.Divide(InertC, HumusCNr, 0.0);
+                double InertN = MathUtilities.Divide(InertC, HumusCNr[layer], 0.0);
 
                 // calculate microbial biomass C and N
                 double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * FBiom[layer], 1.0 + FBiom[layer], 0.0);
@@ -365,7 +365,7 @@ namespace Models.Soils
 
                 // calculate C and N values for humus
                 double HumusC = Soil_OC - BiomassC;
-                double HumusN = MathUtilities.Divide(HumusC, HumusCNr, 0.0);
+                double HumusN = MathUtilities.Divide(HumusC, HumusCNr[layer], 0.0);
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
