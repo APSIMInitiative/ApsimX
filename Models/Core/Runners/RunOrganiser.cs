@@ -146,6 +146,7 @@
             }
 
             storage.Writer.Stop();
+            storage.Reader.Refresh();
         }
 
 
