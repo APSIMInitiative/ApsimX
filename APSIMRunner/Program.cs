@@ -7,6 +7,7 @@ namespace APSIMRunner
 {
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Core;
     using Models.Core.Runners;
     using System;
     using System.Threading;
@@ -30,6 +31,8 @@ namespace APSIMRunner
                     Exception error = null;
                     string simulationName = null;
                     StorageViaSockets storage = new StorageViaSockets(job.key);
+                    object[] services = new object[] { storage };
+
                     try
                     {
                         IRunnable jobToRun = job.job;
@@ -38,8 +41,13 @@ namespace APSIMRunner
                             RunSimulation simulationRunner = job.job as RunSimulation;
 
                             // Replace datastore with a socket writer
-                            simulationRunner.Services = new object[] { storage };
+                            simulationRunner.Services = services;
                             simulationName = simulationRunner.simulationToRun.Name;
+                        }
+                        else
+                        {
+                            Links links = new Links(services);
+                            links.Resolve(jobToRun);
                         }
 
                         jobToRun.Run(new CancellationTokenSource());

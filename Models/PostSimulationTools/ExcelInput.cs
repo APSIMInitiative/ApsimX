@@ -24,6 +24,12 @@
         private string _filename;
 
         /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
+
+        /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
         [Description("EXCEL file name (must be .xlsx)")]
@@ -97,10 +103,9 @@
         {
             get
             {
-                var dataStore = Apsim.Parent(this, typeof(IDataStore)) as IDataStore;
-                if (dataStore == null)
+                if (storage == null)
                     throw new Exception("Cannot find a datastore");
-                return dataStore.Writer;
+                return storage.Writer;
             }
         }
 
