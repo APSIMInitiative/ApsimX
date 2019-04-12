@@ -140,7 +140,8 @@
                 var modelToReplace = Apsim.Get(baseSimulation, path) as IModel;
 
                 // Now find a child of that type.
-                value = Apsim.Child(this, modelToReplace.GetType());
+                var possibleMatches = Apsim.Children(this, modelToReplace.GetType());
+                value = possibleMatches.Find(m => m.Name == modelToReplace.Name);
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value);
