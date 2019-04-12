@@ -141,7 +141,10 @@
 
                 // Now find a child of that type.
                 var possibleMatches = Apsim.Children(this, modelToReplace.GetType());
-                value = possibleMatches.Find(m => m.Name == modelToReplace.Name);
+                if (possibleMatches.Count > 1)
+                    value = possibleMatches.Find(m => m.Name == modelToReplace.Name);
+                else
+                    value = possibleMatches[0];
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value);
