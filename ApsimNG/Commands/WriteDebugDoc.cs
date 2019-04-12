@@ -14,6 +14,7 @@ namespace UserInterface.Commands
     using Presenters;
     using System.Xml.Xsl;
     using System.Diagnostics;
+    using Models.Core.Run;
 
     /// <summary>
     /// This command exports the specified node and all child nodes as HTML.
@@ -47,9 +48,8 @@ namespace UserInterface.Commands
             try
             {
                 List<Simulation> sims = new List<Models.Core.Simulation>();
-                clonedSimulation = Apsim.Clone(simulation) as Simulation;
-                sims.Add(clonedSimulation);
-                explorerPresenter.ApsimXFile.MakeSubsAndLoad(clonedSimulation);
+                var sim = new SimulationDescription(simulation);
+                sims.Add(sim.ToSimulation(explorerPresenter.ApsimXFile));
 
                 events = explorerPresenter.ApsimXFile.GetEventService(clonedSimulation);
                 events.ConnectEvents();

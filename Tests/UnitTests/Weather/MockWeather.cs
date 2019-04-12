@@ -1,10 +1,11 @@
 ﻿namespace UnitTests.Weather
 {
+    using Models.Core;
     using Models.Interfaces;
     using System;
 
     [Serializable]
-    class MockWeather : IWeather
+    class MockWeather : Model, IWeather
     {
         public double Amp { get; set; }
 

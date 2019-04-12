@@ -25,7 +25,7 @@ namespace Models.PMF
         /// <param name="BAT">The bat.</param>
         public void DoAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
-            double NotAllocated = TotalSupply * 0.1;
+            double NotAllocated = TotalSupply; // / 0.1; //g/m^2
             //allocate structural first - will be a different order to biomass so need to hard code the order until an interface is created
             //roots
             //stem
@@ -33,18 +33,26 @@ namespace Models.PMF
             //leaf
 
             //then allocate metabolic relative to demand
-            //var grainIndex = 0;
+            var grainIndex = 0;
             var rootIndex = 1;
             var leafIndex = 2;
             var rachisIndex = 3;
             var stemIndex = 4;
-            var tmp = (Organs[2] as SorghumLeaf).Plant.Phenology.DaysAfterSowing;
-            var clock = (Organs[2] as SorghumLeaf).Plant.Clock;
 
-            //var demand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand;// - BAT.StructuralDemand[grainIndex];
-            var demand = BAT.TotalPlantDemand - BAT.StructuralDemand[leafIndex]; // calcNDemand in old sorghum did not include new leaf
-            if (demand > 0.0)
-                BAT.SupplyDemandRatioN = Math.Min( (BAT.TotalUptakeSupply * 0.1) / demand, 1.0);
+            var grainDemand = BAT.StructuralDemand[grainIndex] + BAT.MetabolicDemand[grainIndex];
+            var rootDemand = BAT.StructuralDemand[rootIndex] + BAT.MetabolicDemand[rootIndex];
+            var stemDemand = BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex];
+            var rachisDemand = BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex];
+            var leafMetabolicDemand = BAT.MetabolicDemand[leafIndex];
+            var leafStructuralDemand = BAT.StructuralDemand[leafIndex];
+
+            //calc leaf demand separately - old sorghum doesn't quite fit
+            var leaf = Organs[leafIndex] as SorghumLeaf;
+            var leafAdjustment = leaf.calculateClassicDemandDelta();
+
+            var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
+            if (totalPlantNDemand > 0.0)
+                BAT.SupplyDemandRatioN = Math.Min((BAT.TotalUptakeSupply) / totalPlantNDemand, 1.0);
 
             double rootAllocation = BAT.SupplyDemandRatioN * BAT.StructuralDemand[rootIndex];
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
@@ -55,18 +63,37 @@ namespace Models.PMF
             AllocateStructural(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
             AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
-            //old sorghum didn't serparate structural and metabolic demands for stem and rachis - metabolic included the structural amount
-            var nTotalDemand = BAT.StructuralDemand[stemIndex] + BAT.StructuralDemand[rachisIndex] +
-                BAT.MetabolicDemand[leafIndex] + BAT.MetabolicDemand[stemIndex] + BAT.MetabolicDemand[rachisIndex];
+            var nDemand = totalPlantNDemand - rootDemand;
 
-            AllocateMetabolic(leafIndex, ref TotalAllocated, ref NotAllocated, BAT, BAT.MetabolicDemand[leafIndex], nTotalDemand);
-            AllocateMetabolic(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT, BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex], nTotalDemand);
-            AllocateMetabolic(stemIndex, ref TotalAllocated, ref NotAllocated, BAT, BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex], nTotalDemand);
+            var leafAlloc = CalcPoportionalAllocation(NotAllocated, BAT.MetabolicDemand[leafIndex], nDemand);
+            AllocateMetabolic(leafIndex, leafAlloc, BAT);
 
-            //AllocateStorage(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            //AllocateStorage(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
-            //AllocateStorage(stemIndex, ref TotalAllocated, ref NotAllocated, BAT);
+            var rachisAlloc = NotAllocated * MathUtilities.Divide(BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex], nDemand, 0.0);
+            AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
 
+            var stemAlloc = NotAllocated * MathUtilities.Divide(BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex], nDemand, 0.0);
+            AllocateMetabolic(stemIndex, stemAlloc, BAT);
+
+            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated))
+            {
+                //this is to check that nDemand is equal to old sorghum N demand calc
+                throw new Exception("Proportional allocation of Metabolic N doesn't balance");
+            }
+            TotalAllocated += NotAllocated;
+        }
+        /// <summary>
+        /// Calculating the amount of N to allocate to an organ using its proportion to totalDemand
+        /// </summary>
+        /// <param name="notAllocated">Amount of N that has not been allocated in g/m^2</param>
+        /// <param name="organDemand">N demand for the organ as calculated in old Sorghum in g/m^2</param>
+        /// <param name="totalDemand">Total N demand for Leaf, Stem and Rachis as calculated in old Sorghum in g/m^2</param>
+        private double CalcPoportionalAllocation(double notAllocated, double organDemand, double totalDemand)
+        {
+            if(organDemand < 0 || totalDemand < 0)
+            {
+                throw new Exception("Imvalid demand property");
+            }
+            return notAllocated * MathUtilities.Divide(organDemand, totalDemand, 0.0);
         }
         private void AllocateStructural(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
         {
@@ -79,26 +106,21 @@ namespace Models.PMF
                 TotalAllocated += (StructuralAllocation);
             }
         }
-        private void AllocateMetabolic(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT, double organDemand, double nTotalDemand)
+        private void AllocateMetabolic(int i, double allocation, BiomassArbitrationType BAT)
         {
             double MetabolicRequirement = Math.Max(0.0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
-            if (organDemand > 0.0)
+            if (allocation > 0.0)
             {
                 //double MetabolicAllocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(BAT.MetabolicDemand[i], nTotalDemand, 0));
-                double Allocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(organDemand, nTotalDemand, 0));
-                double MetabolicAllocation = Math.Min(MetabolicRequirement, Allocation);
+                //double Allocation = Math.Max(0.0, allocatation * MathUtilities.Divide(organDemand, nTotalDemand, 0));
+                double MetabolicAllocation = Math.Min(MetabolicRequirement, allocation);
 
                 //to stop it from givig it too much metabolic - push the flowover from metabolic into storage
                 BAT.MetabolicAllocation[i] += MetabolicAllocation; 
-                NotAllocated -= (MetabolicAllocation);
-                TotalAllocated += (MetabolicAllocation);
 
                 //do storage if there is any leftover
-                double storageAllocation = Allocation - MetabolicAllocation;
+                double storageAllocation = allocation - MetabolicAllocation;
                 BAT.StorageAllocation[i] += storageAllocation;
-                NotAllocated -= (storageAllocation);
-                TotalAllocated += (storageAllocation);
-
             }
         }
         private void AllocateStorage(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
@@ -126,9 +148,6 @@ namespace Models.PMF
             var rachisIndex = 3;
             var stemIndex = 4;
             var grainIndex = 0;
-
-            var tmp = (Organs[2] as SorghumLeaf).Plant.Phenology.DaysAfterSowing;
-            var clock = (Organs[2] as SorghumLeaf).Plant.Clock;
 
             var stemDemand = BAT.StructuralDemand[stemIndex];
             var rachisDemand = BAT.StructuralDemand[rachisIndex];
