@@ -1,6 +1,7 @@
 ﻿namespace UnitTests.Storage
 {
     using APSIM.Shared.Utilities;
+    using Models.Core;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -183,6 +184,31 @@
             DataStoreReader reader = new DataStoreReader(database);
             Assert.AreEqual(reader.CheckpointNames[0], "Current");
             Assert.AreEqual(reader.CheckpointNames[1], "Saved1");
+        }
+
+        /// <summary>
+        /// Ensures that checkpoint names are updated after running a simulation.
+        /// Reproduces github bug #3734
+        /// https://github.com/APSIMInitiative/ApsimX/issues/3734
+        /// </summary>
+        [Test]
+        public void RefreshCheckpointNames()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            sims.FileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
+            sims.Write(sims.FileName);
+            Console.WriteLine($"fileName={sims.FileName}");
+
+            Simulation sim = Apsim.Find(sims, typeof(Simulation)) as Simulation;
+            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+
+            // Record checkpoint names before and after running the simulation,
+            // and ensure that they are not the same.
+            string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
+            sims.Run(sim, true);
+            string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
+
+            Assert.AreNotEqual(checkpointNamesBeforeRun, checkpointNamesAfterRun, "Storage reader failed to update checkpoint names after simulation was run.");
         }
 
         /// <summary>Create a table that we can test</summary>

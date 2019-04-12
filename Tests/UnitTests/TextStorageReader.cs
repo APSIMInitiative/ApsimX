@@ -101,6 +101,11 @@ namespace UnitTests
         {
             throw new System.NotImplementedException();
         }
+
+        public void Refresh()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }
