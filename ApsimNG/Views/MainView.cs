@@ -165,9 +165,8 @@
             hpaned1.Child2.Hide();
             hpaned1.Child2.NoShowAll = true;
 
-            Widget homeIconLabel = LabelWithIcon(indexTabText, "go-home");
-            notebook1.SetMenuLabel(vbox1, homeIconLabel);
-            notebook2.SetMenuLabel(vbox2, homeIconLabel);
+            notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
+            notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
             hbox1.HeightRequest = 20;            
 
             TextTag tag = new TextTag("error");
@@ -315,13 +314,13 @@
             eventbox.TooltipText = text;
             eventbox.ButtonPressEvent += on_eventbox1_button_press_event;
             eventbox.Add(headerBox);
-            eventbox.ShowAll();
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
-            notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, new Label(tabLabel.Text));
-
             // Attach an icon to the context menu
-            Widget iconLabel = LabelWithIcon(tabLabel.Text, "../ApsimNG/Resources/apsim logo32.png");
-            notebook.SetMenuLabel(notebook.CurrentPageWidget, iconLabel);
+            Widget iconLabel = LabelWithIcon(tabLabel.Text, null);
+            notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, iconLabel);
+            // For reasons that I do not understand at all, with Release builds we must delay calling ShowAll until
+            // after the page has been added. This is not the case with Debug builds.
+            eventbox.ShowAll();
         }
 
         /// <summary>
@@ -380,9 +379,8 @@
                 // And the HBox has the actual label as its first child
                 Label tabLabel = (Label)hbox.Children[0];
                 tabLabel.Text = newTabName;
-
                 // Update the context menu label
-                Widget label = LabelWithIcon(newTabName, "../ApsimNG/Resources/apsim logo32.png");
+                Widget label = LabelWithIcon(newTabName, null);
                 notebook.SetMenuLabel(tab, label);
             }
         }
@@ -399,14 +397,27 @@
         public Widget LabelWithIcon(string text, string icon)
         {
             Gtk.Image image;
-
-            // Find the icon
-            if (File.Exists(icon))
+            if (String.IsNullOrEmpty(icon)) // If no icon name provided, try using the text. 
             {
-                Gdk.Pixbuf pix = new Gdk.Pixbuf(icon, 12, 12);
-                image = new Gtk.Image(pix);
+                string nameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
+                if (HasResource(nameForImage))
+                    icon = nameForImage;
+                else
+                    icon = "ApsimNG.Resources.apsim logo32.png";
             }
-            else
+
+            // Are we looking for a resource?
+            if (HasResource(icon))
+            {
+                image = new Gtk.Image(new Gdk.Pixbuf(null, icon, 12, 12));
+            }
+
+            // Or maybe a file?
+            else if (File.Exists(icon))
+            {
+                image = new Gtk.Image(new Gdk.Pixbuf(icon, 12, 12));
+            }
+            else // OK, let's try the stock icons
             {
                 image = new Gtk.Image();
                 image.SetFromIconName(icon, IconSize.Menu);
@@ -422,12 +433,7 @@
             box.PackStart(image, false, true, 0);
             box.PackStart(label, false, true, 0);
             box.Visible = true;
-
-            // The final widget can only have 1 child, so we have to pack one layer deeper
-            HBox bin = new HBox(false, 4);
-            bin.PackStart(box, false, true, 0);
-
-            return bin;
+            return box;
         }
 
         /// <summary>Set the wait cursor (or not)/</summary>
@@ -711,7 +717,6 @@
                         tagName = "normal";
                     }
                     message = message.TrimEnd(Environment.NewLine.ToCharArray());
-                    //message = message.Replace("\n", "\n                      ");
                     message += Environment.NewLine;
                     TextIter insertIter;
                     if (overwrite)

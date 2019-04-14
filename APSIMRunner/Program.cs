@@ -7,6 +7,7 @@ namespace APSIMRunner
 {
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Core;
     using Models.Core.Runners;
     using System;
     using System.Threading;
@@ -29,24 +30,27 @@ namespace APSIMRunner
                     // Run the simulation.
                     Exception error = null;
                     string simulationName = null;
-                    RunSimulation simulationRunner = null;
-                    StorageViaSockets storage = new StorageViaSockets();
+                    StorageViaSockets storage = new StorageViaSockets(job.key);
+                    object[] services = new object[] { storage };
+
                     try
                     {
                         IRunnable jobToRun = job.job;
-                        if (jobToRun is RunExternal)
-                            jobToRun.Run(new CancellationTokenSource());
-                        else
+                        if (jobToRun is RunSimulation)
                         {
-                            simulationRunner = job.job as RunSimulation;
+                            RunSimulation simulationRunner = job.job as RunSimulation;
 
                             // Replace datastore with a socket writer
-                            simulationRunner.Services = new object[] { storage };
-                            // Run simulation
+                            simulationRunner.Services = services;
                             simulationName = simulationRunner.simulationToRun.Name;
-                            simulationRunner.cloneSimulationBeforeRun = false;
-                            simulationRunner.Run(new CancellationTokenSource());
                         }
+                        else
+                        {
+                            Links links = new Links(services);
+                            links.Resolve(jobToRun);
+                        }
+
+                        jobToRun.Run(new CancellationTokenSource());
                     }
                     catch (Exception err)
                     {
@@ -59,7 +63,8 @@ namespace APSIMRunner
                     // Signal end of job.
                     JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();
                     endJobArguments.key = job.key;
-                    endJobArguments.Error = error;
+                    if (error != null)
+                        endJobArguments.errorMessage = error.ToString();
                     endJobArguments.simulationName = simulationName;
                     SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
                     SocketServer.Send("127.0.0.1", 2222, endJobCommand);

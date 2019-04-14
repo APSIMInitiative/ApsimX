@@ -19,6 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("Defines the labour required for an activity where unit size is provided by the parent activity")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/labour/labourrequirementnounitsize.htm")]
     public class LabourRequirementNoUnitSize: LabourRequirement
     {
         /// <summary>

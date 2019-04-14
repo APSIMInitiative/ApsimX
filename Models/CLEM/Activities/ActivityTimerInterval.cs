@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity time defines a start month and interval upon which to perform activities.")]
+    [HelpUri(@"content/features/timers/interval.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -72,7 +73,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+                if (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month)
                 {
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
@@ -86,7 +87,7 @@ namespace Models.CLEM.Activities
                     activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                 }
-                return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
+                return (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month);
             }
         }
 
@@ -97,7 +98,7 @@ namespace Models.CLEM.Activities
         public bool Check(DateTime dateToCheck)
         {
             // compare with next due date
-            if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+            if (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month)
             {
                 return true;
             }

@@ -20,6 +20,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
+    [HelpUri(@"content/features/filters/animalpricegroup.htm")]
     public class AnimalPriceGroup: CLEMModel
     {
         /// <summary>

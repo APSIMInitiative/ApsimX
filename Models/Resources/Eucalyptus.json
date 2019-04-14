@@ -488,16 +488,42 @@
       "potentialDMAllocation": null,
       "Name": "Leaf",
       "Children": [
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 1.0,
-          "Units": "",
-          "Name": "StomatalConductanceCO2Modifier",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
+		{
+			"$type": "Models.Functions.ExpressionFunction, Models",
+			"Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
+			"Name": "CO2internal",
+			"Children": [],
+			"IncludeInDocumentation": true,
+			"Enabled": true,
+			"ReadOnly": false
+		},
+		{
+			 "$type": "Models.Functions.DivideFunction, Models",
+			"Name": "StomatalConductanceCO2Modifier",
+			"Children": [
+			{
+				"$type": "Models.Functions.VariableReference, Models",
+				"VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+				"Name": "FCO2",
+				"Children": [],
+				"IncludeInDocumentation": true,
+				"Enabled": true,
+				"ReadOnly": false
+			},
+			{
+				"$type": "Models.Functions.ExpressionFunction, Models",
+				"Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+				"Name": "RelativeCO2Gradient",
+			      "Children": [],
+				"IncludeInDocumentation": true,
+				"Enabled": true,
+				"ReadOnly": false
+			}
+	],
+		"IncludeInDocumentation": true,
+		"Enabled": true,
+		"ReadOnly": false
+		},
         {
           "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "InitialWtFunction",
@@ -594,13 +620,52 @@
           "Enabled": true,
           "ReadOnly": false
         },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.5,
-          "Units": null,
-          "Name": "ExtinctionCoefficient",
-          "Children": [
-            {
+		{
+  "$type": "Models.Functions.ExpressionFunction, Models",
+  "Expression": "([ExtinctionCoefficient].KMatureTrees+([ExtinctionCoefficient].KYoungTrees-[ExtinctionCoefficient].KMatureTrees)*Exp((0-2)*([Eucalyptus].Leaf.LAI/[ExtinctionCoefficient].LAIIntermediateK)^[ExtinctionCoefficient].ShapeCurve))",
+  "Name": "ExtinctionCoefficient",
+  "Children": [
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 0.50,
+      "Units": null,
+      "Name": "KYoungTrees",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 0.50,
+      "Units": null,
+      "Name": "KMatureTrees",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 0.7,
+      "Units": null,
+      "Name": "LAIIntermediateK",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.Constant, Models",
+      "FixedValue": 2.0,
+      "Units": null,
+      "Name": "ShapeCurve",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+	            {
               "$type": "Models.Memo, Models",
               "Text": "A value of 0.50 is commonly used for Eucalyptus ([macfarlane2007estimation]).\r\n",
               "Name": "Memo",
@@ -609,11 +674,11 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.5,
@@ -684,27 +749,39 @@
           "Enabled": true,
           "ReadOnly": false
         },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
-          "Units": "/d",
-          "Name": "SenescenceRate",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "A value of zero assumes that senescence is immediate.\r\n\r\n",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
+{
+  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+  "MaximumTemperatureWeighting": 0.0,
+  "Name": "SenescenceRate",
+  "Children": [
+    {
+      "$type": "Models.Functions.XYPairs, Models",
+      "X": [
+        -5.0,
+        -2.0,
+        0.0,
+        2.0,
+        2.1
+      ],
+      "Y": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Name": "XYPairs",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
+		{
           "$type": "Models.PMF.Library.BiomassRemoval, Models",
           "Name": "BiomassRemovalDefaults",
           "Children": [
@@ -852,99 +929,73 @@
               "Enabled": true,
               "ReadOnly": false
             },
-            {
-              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-              "MaximumTemperatureWeighting": 0.75,
-              "Name": "FT",
-              "Children": [
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    5.0,
-                    20.0,
-                    25.0,
-                    35.0
-                  ],
-                  "Y": [
-                    0.0,
-                    1.0,
-                    1.0,
-                    0.0
-                  ],
-                  "Name": "XYPairs",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": "Y",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN"
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": "X",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN"
-                        }
-                      ],
-                      "LegendPosition": 3,
-                      "DisabledSeries": null,
-                      "Name": "Graph",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -65536,
-                          "FactorToVaryColours": null,
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": null,
-                          "XFieldName": ".Simulations.Replacements.Eucalyptus.Leaf.Photosynthesis.FT.XYPairs.X",
-                          "YFieldName": ".Simulations.Replacements.Eucalyptus.Leaf.Photosynthesis.FT.XYPairs.Y",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
+{
+  "$type": "Models.Functions.MinimumFunction, Models",
+  "Name": "FT",
+  "Children": [
+    {
+      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+      "MaximumTemperatureWeighting": 0.75,
+      "Name": "FTDaytime",
+      "Children": [
+        {
+          "$type": "Models.Functions.XYPairs, Models",
+          "X": [
+            5.0,
+            20.0,
+            25.0,
+            35.0
+          ],
+          "Y": [
+            0.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          "Name": "XYPairs",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+      "MaximumTemperatureWeighting": 0.0,
+      "Name": "FTFrost",
+      "Children": [
+        {
+          "$type": "Models.Functions.XYPairs, Models",
+          "X": [
+            -5.0,
+            0.0,
+            2.0
+          ],
+          "Y": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "Name": "XYPairs",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "XProperty": "[Leaf].Photosynthesis.VPD",
@@ -1271,47 +1322,92 @@
           "Enabled": true,
           "ReadOnly": false
         },
+		{
+  "$type": "Models.Functions.MultiplyFunction, Models",
+  "Name": "SpecificLeafAreaFunction",
+  "Children": [
+    {
+      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+      "XProperty": "[Eucalyptus].Age.Value()",
+      "Name": "SpecificLeafAreaPot",
+      "Children": [
         {
-          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[Eucalyptus].Age.Value()",
-          "Name": "SpecificLeafAreaFunction",
-          "Children": [
-            {
-              "$type": "Models.Functions.XYPairs, Models",
-              "X": [
-                0.0,
-                1.0,
-                2.0,
-                3.0,
-                8.0
-              ],
-              "Y": [
-                0.016,
-                0.0105,
-                0.0089,
-                0.0085,
-                0.0073
-              ],
-              "Name": "XYPairs",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
+          "$type": "Models.Functions.XYPairs, Models",
+          "X": [
+            0.0,
+            1.0,
+            2.0,
+            3.0,
+            8.0
+          ],
+          "Y": [
+            0.016,
+            0.0105,
+            0.0089,
+            0.0085,
+            0.0073
+          ],
+          "Name": "XYPairs",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "\r\nData for SLA (m^2/g)came from [borges2009parametrizaccao] and [almeida2003comparison]. Values and trends were similar. A generalised pattern should suffice for many applicatinos, but cultivar-specific patterns are available for some cultivars and could be used to slighly refine their simulation. These data are also similar to those in [rance2014assessment]. \n\n    \r\n",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+      "XProperty": "[IWeather].CO2",
+      "Name": "CO2Modifier",
+      "Children": [
+        {
+          "$type": "Models.Functions.XYPairs, Models",
+          "X": [
+            350.0,
+            850.0
+          ],
+          "Y": [
+            1.0,
+            0.8
+          ],
+          "Name": "XYPairs",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+		            {
               "$type": "Models.Memo, Models",
-              "Text": "\r\nData for SLA (m^2/g) came from [borges2009parametrizaccao] and [almeida2003comparison]. Values and trends were similar. A generalised pattern should suffice for many applicatinos, but cultivar-specific patterns are available for some cultivars and could be used to slighly refine their simulation. These data are also similar to those in [rance2014assessment]. \r\n\r\n    \r\n",
+              "Text": "  \r\n",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
+
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "XProperty": "[Eucalyptus].Age.Value()",
@@ -3896,6 +3992,135 @@
       "Enabled": true,
       "ReadOnly": false
     },
+	{
+  "$type": "Models.PMF.CultivarFolder, Models",
+  "Name": "BrazilClones",
+  "Children": [
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Leaf].Photosynthesis.RUE.FixedValue = 1.51",
+        "",
+	    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.34",
+		"",
+		"[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.60",
+		"",
+        "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.39, 0.61",
+        "",
+        "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.09,0.09,0.09",
+        "",
+        "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.2, 0.17, 0.15",
+        "",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+	    "",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
+	    "",
+	    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+	    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+	    "",
+        "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.005,0.03,0.04",
+        "",
+        "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.26",
+      ],
+      "Name": "BrazilPlasticClone",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Leaf].Photosynthesis.RUE.FixedValue = 1.69",
+        "",
+	    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.30",
+		"",
+	    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.56",
+		"",
+        "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15,0.40, 0.64",
+        "",
+        "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.08,0.08,0.08",
+        "",
+        "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.19, 0.17, 0.17",
+        "",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+	    "",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
+	    "",
+	    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+	    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+	    "",
+        "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.03,0.1,0.1",
+        "",
+        "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.35",
+        "",
+        "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
+        "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.018, 0.014, 0.011, 0.009, 0.008, 0.007"
+      ],
+      "Name": "BrazilTropicalClone",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Leaf].Photosynthesis.RUE.FixedValue = 1.57",
+        "",
+	    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.26",
+		"",
+	    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.55",
+		"",
+        "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.30, 0.57",
+        "",
+        "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.09,0.09,0.09",
+        "",
+        "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.20, 0.16, 0.15",
+        "",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  6, 17, 22, 38",
+	    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+	    "",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1  ",
+	    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0.5, 1, 1, 1, 1, 1, 1",
+	    "",
+	    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+	    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+	    "",
+        "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+        "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.02,0.05,0.06",
+        "",
+        "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.24",
+        "",
+        "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
+        "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.015, 0.013, 0.009, 0.008, 0.007, 0.007"
+      ],
+      "Name": "BrazilSubTropicalClone",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+},
     {
       "$type": "Models.PMF.CultivarFolder, Models",
       "Name": "saligna",

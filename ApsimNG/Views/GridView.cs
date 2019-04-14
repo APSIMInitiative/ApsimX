@@ -1082,6 +1082,8 @@
                 bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
                 if (keyName == "Return" || keyName == "Tab" || IsArrowKey(key))
                 {
+                    if (userEditingCell && (key == Gdk.Key.Left || key == Gdk.Key.Right))
+                        return;
                     int nextRow = rowIdx;
                     int numCols = DataSource != null ? DataSource.Columns.Count : 0;
                     int nextCol = colIdx;
@@ -1111,7 +1113,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
                     }
                     else
                     {
@@ -1138,7 +1140,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
                     }
 
                     EndEdit();
@@ -1919,6 +1921,7 @@
                     IGridCell currentCell = GetCurrentCell;
                     if (currentCell != null)
                         UpdateCellText(currentCell, (o as ComboBox).ActiveText);
+                    EndEdit();
                 };
             }
             catch (Exception err)

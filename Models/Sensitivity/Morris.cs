@@ -2,17 +2,17 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.ApsimFile;
+    using Models.Core.Run;
     using Models.Factorial;
     using Models.Interfaces;
     using Models.Sensitivity;
+    using Models.Storage;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Xml.Serialization;
     using Utilities;
 
@@ -25,16 +25,10 @@
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Morris : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
+    public class Morris : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
         /// <summary>A list of factors that we are to run</summary>
-        private List<List<FactorValue>> allCombinations = new List<List<FactorValue>>();
-
-        /// <summary>A number of the currently running sim</summary>
-        private int simulationNumber;
-
-        /// <summary>Used to track whether this particular Morris has been run.</summary>
-        private bool hasRun = false;
+        private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
@@ -64,10 +58,6 @@
         /// </remarks>
         public int[] Years { get; set; }
 
-        /// <summary>List of simulation names from last run</summary>
-        [XmlIgnore]
-        public List<string> simulationNames { get; set; }
-
         /// <summary>
         /// This ID is used to identify temp files used by this Morris method.
         /// </summary>
@@ -82,8 +72,7 @@
         public Morris()
         {
             Parameters = new List<Parameter>();
-            allCombinations = new List<List<FactorValue>>();
-            simulationNames = new List<string>();
+            allCombinations = new List<List<CompositeFactor>>();
         }
 
         /// <summary>
@@ -161,132 +150,49 @@
             }
         }
 
-        private Stream serialisedBase;
-        private Simulations parentSimulations;
+        /// <summary>Gets a list of simulation descriptions.</summary>
+        public List<SimulationDescription> GenerateSimulationDescriptions()
+        {
+            var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
 
-        /// <summary>Simulation runs are about to begin.</summary>
+            // Calculate all combinations.
+            CalculateFactors();
+
+            // Loop through all combinations and add a simulation description to the
+            // list of simulations descriptions being returned to the caller.
+            var simulationDescriptions = new List<SimulationDescription>();
+            int simulationNumber = 1;
+            foreach (var combination in allCombinations)
+            {
+                // Create a simulation.
+                var simulationName = Name + "Simulation" + simulationNumber;
+                var simDescription = new SimulationDescription(baseSimulation, simulationName);
+
+                // Add some descriptors
+                int path = (simulationNumber - 1) / (Parameters.Count + 1) + 1;
+                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
+                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("Path", path.ToString()));
+
+                // Apply each composite factor of this combination to our simulation description.
+                combination.ForEach(c => c.ApplyToSimulation(simDescription));
+
+                // Add simulation description to the return list of descriptions
+                simulationDescriptions.Add(simDescription);
+
+                simulationNumber++;
+            }
+
+            return simulationDescriptions;
+        }
+
+        /// <summary>
+        /// Invoked when a run is done.
+        /// </summary>
         [EventSubscribe("BeginRun")]
         private void OnBeginRun()
         {
-            if (Enabled)
-            {
-                Initialise();
-                simulationNumber = 1;
-            }
-        }
-
-        /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool fullFactorial = true)
-        {
-            hasRun = true;
-            if (allCombinations.Count == 0)
-                return null;
-
-            var combination = allCombinations[0];
-            allCombinations.RemoveAt(0);
-
-            Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
-            newSimulation.Name = Name + "Simulation" + simulationNumber;
-            newSimulation.Parent = null;
-            newSimulation.FileName = parentSimulations.FileName;
-            Apsim.ParentAllChildren(newSimulation);
-
-            // Make substitutions.
-            parentSimulations.MakeSubsAndLoad(newSimulation);
-
-            foreach (FactorValue value in combination)
-                value.ApplyToSimulation(newSimulation);
-
-            PushFactorsToReportModels(newSimulation, combination);
-
-            simulationNumber++;
-            return newSimulation;
-        }
-
-        /// <summary>Find all report models and give them the factor values.</summary>
-        /// <param name="factorValues">The factor values to send to each report model.</param>
-        /// <param name="simulation">The simulation to search for report models.</param>
-        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
-        {
-            List<string> names = new List<string>();
-            List<string> values = new List<string>();
-            names.Add("SimulationName");
-            values.Add(simulation.Name);
-
-            // Add path to report files
-            int path = (simulationNumber - 1) / (Parameters.Count + 1) + 1;
-            names.Add("Path");
-            values.Add(path.ToString());
-
-            foreach (FactorValue factor in factorValues)
-            {
-                names.Add(factor.Name);
-                values.Add(factor.Values[0].ToString());
-            }
-
-            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
-            {
-                report.ExperimentFactorNames = names;
-                report.ExperimentFactorValues = values;
-            }
-        }
-
-        /// <summary>
-        /// Generates an .apsimx file for each simulation in the experiment and returns an error message (if it fails).
-        /// </summary>
-        /// <param name="path">Full path including filename and extension.</param>
-        /// <returns>Empty string if successful, error message if it fails.</returns>
-        public void GenerateApsimXFile(string path)
-        {
-            Simulation sim = NextSimulationToRun();
-            while (sim != null)
-            {
-                Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
-
-                string st = FileFormat.WriteToString(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
-                sim = NextSimulationToRun();
-            }
-        }
-
-        /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
-        {
-            return simulationNames;
-        }
-
-        /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactors> GetFactors()
-        {
-            string[] columnNames = new string[] { "Parameter", "Year" };
-            string[] columnValues = new string[2];
-
-            var factors = new List<ISimulationGeneratorFactors>();
-            foreach (Parameter param in Parameters)
-            {
-                foreach (var year in Years)
-                {
-                    factors.Add(new SimulationGeneratorFactors(columnNames, new string[] { param.Name, year.ToString() },
-                    "ParameterxYear", param.Name + year));
-                    factors.Add(new SimulationGeneratorFactors(new string[] { "Year" }, new string[] { year.ToString() },
-                    "Year", year.ToString()));
-                }
-                factors.Add(new SimulationGeneratorFactors(new string[] { "Parameter" }, new string[] { param.Name },
-                "Parameter", param.Name));
-            }
-            return factors;
-        }
-
-        /// <summary>
-        /// Initialise the experiment ready for creating simulations.
-        /// </summary>
-        private void Initialise()
-        {
-            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
             allCombinations.Clear();
-            CalculateFactors();
+            ParameterValues = null;
         }
 
         /// <summary>
@@ -296,24 +202,23 @@
         {
             if (allCombinations.Count == 0)
             {
-                ParameterValues = RunRToGetParameterValues();
+                if (ParameterValues == null)
+                    ParameterValues = RunRToGetParameterValues();
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
 
                 int simulationNumber = 1;
-                simulationNames.Clear();
                 foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
-                    List<FactorValue> factors = new List<FactorValue>();
+                    var factors = new List<CompositeFactor>();
                     foreach (Parameter param in Parameters)
                     {
                         object value = Convert.ToDouble(parameterRow[param.Name]);
-                        FactorValue f = new FactorValue(null, param.Name, param.Path, value);
+                        CompositeFactor f = new CompositeFactor(param.Name, param.Path, value);
                         factors.Add(f);
                     }
 
                     string newSimulationName = Name + "Simulation" + simulationNumber;
-                    simulationNames.Add(newSimulationName);
                     allCombinations.Add(factors);
                     simulationNumber++;
                 }
@@ -333,12 +238,9 @@
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
         /// <param name="dataStore">The data store.</param>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
-            if (!hasRun)
-                return;
-            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
-            DataTable predictedData = dataStore.RunQuery(sql);
+            DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {
 
@@ -454,12 +356,9 @@
                 DataTable muStarTable = tableKey.ToTable();
                 muStarTable.TableName = Name + "Statistics";
 
-                dataStore.DeleteDataInTable(eeTable.TableName);
-                dataStore.WriteTable(eeTable);
-                dataStore.DeleteDataInTable(muStarTable.TableName);
-                dataStore.WriteTable(muStarTable);
+                dataStore.Writer.WriteTable(eeTable);
+                dataStore.Writer.WriteTable(muStarTable);
             }
-            hasRun = false;
         }
 
         /// <summary>
@@ -593,8 +492,5 @@
                 }
             }
         }
-
-
-
     }
 }

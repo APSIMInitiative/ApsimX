@@ -1,14 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Events.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -34,13 +29,18 @@ namespace Models.Core
             allModels.Add(relativeTo);
             allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
 
-            List<Publisher> publishers = Publisher.FindAll(allModels);
+            var publishers = Publisher.FindAll(allModels);
+            var subscribers = Subscriber.FindAll(allModels);
 
             // Connect publishers to subscribers.
             foreach (Publisher publisher in publishers)
             {
-                var subscribers = Subscriber.FindAll(publisher.Name, publisher.Model as IModel, scope);
-                subscribers.ForEach(subscriber => publisher.ConnectSubscriber(subscriber));
+                var modelsInScope = scope.FindAll(publisher.Model as IModel).ToList();
+                var subscribersForEvent = subscribers.Where(s => modelsInScope.Contains(s.Model) &&
+                                                                 s.Name.Equals(publisher.Name, StringComparison.InvariantCultureIgnoreCase));
+                //var subscribers = Subscriber.FindAll(publisher.Name, publisher.Model as IModel, scope);
+                foreach (var subscriber in subscribersForEvent)
+                    publisher.ConnectSubscriber(subscriber);
             }
         }
 
@@ -133,6 +133,30 @@ namespace Models.Core
 
             /// <summary>Gets or sets the name of the event.</summary>
             public string Name { get; private set; }
+
+            /// <summary>Find all event subscribers in the specified models.</summary>
+            /// <param name="allModels">A list of all models in simulation.</param>
+            /// <returns>The list of event subscribers</returns>
+            internal static List<Subscriber> FindAll(List<IModel> allModels)
+            {
+                List<Subscriber> subscribers = new List<Subscriber>();
+                foreach (IModel modelNode in allModels)
+                {
+                    foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (subscriberAttribute != null)
+                            subscribers.Add(new Subscriber()
+                            {
+                                Name = subscriberAttribute.ToString(),
+                                methodInfo = method,
+                                Model = modelNode
+                            });
+                    }
+                }
+
+                return subscribers;
+            }
 
             /// <summary>Find all event subscribers in the specified models.</summary>
             /// <param name="name">The name of the event to look for</param>

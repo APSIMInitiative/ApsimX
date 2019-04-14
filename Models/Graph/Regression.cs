@@ -13,6 +13,7 @@ namespace Models.Graph
     using APSIM.Shared.Utilities;
     using System.Drawing;
     using Models.Core;
+    using Models.Storage;
 
     /// <summary>
     /// A regression model.

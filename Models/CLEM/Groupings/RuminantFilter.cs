@@ -22,6 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/filters/ruminantfilter.htm")]
     public class RuminantFilter: CLEMModel
     {
         /// <summary>
@@ -93,9 +94,9 @@ namespace Models.CLEM.Groupings
             else
             {
 
-                if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
+                if (Value.ToUpper() == "TRUE" || Value.ToUpper() == "FALSE")
                 {
-                    str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") | (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
+                    str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") || (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
                     str += Parameter;
                 }
                 else

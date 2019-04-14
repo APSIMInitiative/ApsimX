@@ -16,7 +16,7 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel: Model
+    public abstract class CLEMModel: Model, ICLEMUI
     {
         /// <summary>
         /// Link to summary
@@ -25,6 +25,12 @@ namespace Models.CLEM
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
+
+        /// <summary>
+        /// Identifies the last selected tab for display
+        /// </summary>
+        [XmlIgnore]
+        public string SelectedTab { get; set; }
 
         /// <summary>
         /// Allows unique id of activity to be set 
@@ -38,6 +44,7 @@ namespace Models.CLEM
         /// <summary>
         /// Model identifier
         /// </summary>
+        [XmlIgnore]
         public string UniqueID { get { return id.ToString(); } }
 
         /// <summary>
@@ -204,12 +211,7 @@ namespace Models.CLEM
 
             if(this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
             {
-                //html += "\n<div class=\"activityentry\">This resource is measured in ";
-                //if((this as ResourceBaseWithTransactions).Units != "")
-                //{
-                //    html += "<span class=\"setvalue\">" + (this as ResourceBaseWithTransactions).Units + "</span> ";
-                //}
-                //html += "</div>";
+                // add units when completed
             }
             return html;
         }

@@ -25,6 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantgrow.htm")]
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
@@ -79,9 +80,15 @@ namespace Models.CLEM.Activities
             // Natural weaning takes place here before animals eat or take milk from mother.
             foreach (var ind in herd.Where(a => a.Weaned == false))
             {
-                if (ind.Age >= ind.BreedParams.GestationLength)
+                double weaningAge = ind.BreedParams.NaturalWeaningAge;
+                if(weaningAge == 0)
                 {
-                    ind.Wean();
+                    weaningAge = ind.BreedParams.GestationLength;
+                }
+
+                if (ind.Age >= weaningAge)
+                {
+                    ind.Wean(true, "Natural");
                 }
             }
         }
@@ -124,7 +131,7 @@ namespace Models.CLEM.Activities
             // now calculated in Ruminant
             // ind.NormalisedAnimalWeight = standardReferenceWeight - ((1 - ind.BreedParams.SRWBirth) * standardReferenceWeight) * Math.Exp(-(ind.BreedParams.AgeGrowthRateCoefficient * (ind.Age * 30.4)) / (Math.Pow(standardReferenceWeight, ind.BreedParams.SRWGrowthScalar)));
             double liveWeightForIntake = ind.NormalisedAnimalWeight;
-            ind.HighWeight = Math.Max(ind.HighWeight, ind.Weight);
+            // now performed at allocation of weight in Ruminant
             if (ind.HighWeight < ind.NormalisedAnimalWeight)
             {
                 liveWeightForIntake = ind.HighWeight;
@@ -189,6 +196,7 @@ namespace Models.CLEM.Activities
                         // assuming average feed quality if no previous diet values
                         // This need to happen before suckling potential intake can be determined.
                         CalculateMilkProduction(femaleind);
+                        femaleind.MilkProducedThisTimeStep = femaleind.MilkProduction * 30.4;
                     }
                     else
                     {
@@ -211,16 +219,22 @@ namespace Models.CLEM.Activities
         /// <returns>energy of milk</returns>
         private double CalculateMilkProduction(RuminantFemale ind)
         {
+            ind.MilkMilkedThisTimeStep = 0;
+            ind.MilkSuckledThisTimeStep = 0;
+
             double energyMetabolic = EnergyGross * (((ind.DietDryMatterDigestibility==0)?50:ind.DietDryMatterDigestibility)/100.0) * 0.81;
             // Reference: SCA p.
             double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
             double milkTime = ind.DaysLactating;
             double milkCurve = 0;
-            if (ind.SucklingOffspring.Count == 0 && ind.MilkingPerformed) // no suckling calf and milking has been performed
+            // determine milk production curve to use
+            // if milking is taking place use the non-suckling curve for duration of lactation
+            // otherwise use the suckling curve where there is a larger drop off in milk production
+            if (ind.MilkingPerformed)
             {
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             }
-            else // suckling calf
+            else // no milking
             {
                 milkCurve = ind.BreedParams.MilkCurveSuckling;
             }
@@ -229,14 +243,15 @@ namespace Models.CLEM.Activities
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.MilkProductionPotential * 3.2 / kl;
             // adjust last time step's energy balance
-            if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
+            double adjustedEnergyBalance = ind.EnergyBalance;
+            if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
             {
-                ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
+                adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
             }
 
             // set milk production in lactating females for consumption.
-            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
-            ind.MilkAmount = ind.MilkProduction * 30.4;
+            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
+            ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
 
             // returns the energy required for milk production
             return ind.MilkProduction * 3.2 / kl;
@@ -387,17 +402,12 @@ namespace Models.CLEM.Activities
             {
                 // calculate engergy and growth from milk intake
 
-                // old code
-                // dum = potential milk intake daily
-                // dumshort = potential intake. check that it isnt monthly
-
-
                 // recalculate milk intake based on mothers updated milk production for the time step
                 double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
                 ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
                 if (ind.Mother != null)
                 {
-                    ind.Mother.TakeMilk(ind.MilkIntake * 30.4);
+                    ind.Mother.TakeMilk(ind.MilkIntake * 30.4, MilkUseReason.Suckling);
                 }
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
@@ -515,8 +525,8 @@ namespace Models.CLEM.Activities
 
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
-            //methaneProduced = 0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
-            //methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
+            // methane is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+            // methane is methaneProduced / 55.28 * 1000; // grams per day
             
             // Charmely et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
@@ -535,7 +545,7 @@ namespace Models.CLEM.Activities
             // grow all individuals
             foreach (Ruminant ind in ruminantHerd.Herd)
             {
-                ind.Age++;
+                ind.IncrementAge();
             }
         }
 
@@ -550,8 +560,8 @@ namespace Models.CLEM.Activities
             // and before breeding, trading, culling etc (See Clock event order)
 
             // Calculated by
-            // critical weight &
-            // juvenile (unweaned) death based on mothers weight &
+            // critical weight &&
+            // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
 
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
@@ -561,7 +571,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * (1.0 - a.BreedParams.ProportionOfMaxWeightToSurvive))).ToList();
             // set died flag
             died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
-            ruminantHerd.RemoveRuminant(died);
+            ruminantHerd.RemoveRuminant(died, this);
 
             // base mortality adjusted for condition
             foreach (var ind in ruminantHerd.Herd)
@@ -599,8 +609,8 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            List<RuminantFemale> mothersWithCalf = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspring.Count() > 0).ToList();
-            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspring.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> mothersWithCalf = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Count() > 0)
             {
@@ -608,7 +618,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var deadMother in mothersWithCalf)
                     {
-                        foreach (var calf in deadMother.SucklingOffspring)
+                        foreach (var calf in deadMother.SucklingOffspringList)
                         {
                             if(wetMothersAssigned < wetMothersAvailable.Count())
                             {
@@ -625,7 +635,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            ruminantHerd.RemoveRuminant(died);
+            ruminantHerd.RemoveRuminant(died, this);
         }
 
         /// <summary>

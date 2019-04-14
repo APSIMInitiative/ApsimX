@@ -19,7 +19,9 @@ namespace Models.CLEM.Groupings
     [Description("Individual filter term for to identify individuals. Multiple filters are additive and will further refine the criteria")]
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(LabourSpecificationItem))]
+    [ValidParent(ParentType = typeof(LabourPriceGroup))]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/filters/labourfilter.htm")]
     public class LabourFilter: CLEMModel
     {
         /// <summary>
@@ -88,7 +90,7 @@ namespace Models.CLEM.Groupings
                 return str;
             }
 
-            if (Value.ToUpper() == "TRUE" | Value.ToUpper() == "FALSE")
+            if (Value.ToUpper() == "TRUE" || Value.ToUpper() == "FALSE")
             {
                 str += (Operator == FilterOperators.NotEqual) ? "Not " : "";
                 str += Parameter;
@@ -122,6 +124,21 @@ namespace Models.CLEM.Groupings
                 str += Value;
             }
             return str;
+        }
+
+        /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        public LabourFilter Clone()
+        {
+            LabourFilter clone = new LabourFilter()
+            {
+                Parameter = this.Parameter,
+                Operator = this.Operator,
+                Value = this.Value
+            };
+            return clone;
         }
 
         private void UpdateName()
@@ -181,7 +198,11 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Age (months) of individuals
         /// </summary>
-        Age
+        Age,
+        /// <summary>
+        /// Is hired labour
+        /// </summary>
+        Hired
     }
 
 }

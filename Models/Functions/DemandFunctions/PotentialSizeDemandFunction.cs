@@ -12,6 +12,10 @@ namespace Models.Functions.DemandFunctions
     [Description("Demand is calculated from the product of potential growth increment, organ number and thermal time.")]
     public class PotentialSizeDemandFunction : Model, IFunction
     {
+        private int startStageIndex;
+
+        private int endStageIndex;
+        
         /// <summary>The start stage name</summary>
         public string StartStageName = "";
 
@@ -50,10 +54,20 @@ namespace Models.Functions.DemandFunctions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-                if (Phenology.Between(StartStageName, EndStageName))
+                if (Phenology.Between(startStageIndex, endStageIndex))
                 return PotentialGrowthIncrement.Value(arrayIndex) * OrganNumber.Value(arrayIndex) * ThermalTime.Value(arrayIndex);
             else
                 return 0;
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            startStageIndex = Phenology.StartStagePhaseIndex(StartStageName);
+            endStageIndex = Phenology.EndStagePhaseIndex(EndStageName);
         }
 
     }

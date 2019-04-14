@@ -90,6 +90,24 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootFront</summary>
         public double RightDist { get; set; }
 
+        /// <summary>Gets or sets AvailableSW during SW Uptake
+        /// Old Sorghum does actual uptake at end of day
+        /// PMF does actual uptake before N uptake</summary>
+        public double[] AvailableSW { get;  set; }
+
+        /// <summary>Gets or sets PotentialAvailableSW during SW Uptake</summary>
+        public double[] PotentialAvailableSW { get;  set; }
+
+        /// <summary>Record the Water level before </summary>
+        public double[] StartWater { get; set; }
+
+        /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
+        public double[] MassFlow { get;  set; }
+
+        /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
+        public double[] Diffusion { get;  set; }
+
+
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="Root">The parent root organ</param>
@@ -204,12 +222,16 @@ namespace Models.PMF.Organs
                     ratio = extractable / capacity;
 
                 root.SWAvailabilityRatio = ratio;
-                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
+                rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
             //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             if (soil.Weirdo == null)
+            {
+                var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
+                var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
                 Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
+            }
             else
                 Depth = Depth + rootFrontVelocity.Value(RootLayer);
 

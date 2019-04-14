@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all finance types (bank accounts) for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/finance/finance.htm")]
     public class Finance : ResourceBaseWithTransactions
     {
         /// <summary>

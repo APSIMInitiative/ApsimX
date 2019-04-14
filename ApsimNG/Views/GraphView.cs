@@ -384,6 +384,12 @@ namespace UserInterface.Views
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+                // By default, clicking on a datapoint (a bar) of a bar graph
+                // will create a pop-up showing the x/y values at the beginning
+                // and end of the bar. We override this here, so that it only
+                // shows the x/y pair at the end of the bar. Perhaps we should
+                // accept the tracker string as an argument to this function?
+                series.TrackerFormatString = "{0}\n{1}: {3}\n{4}: {6}";
                 this.plot1.Model.Series.Add(series);
             }
         }
@@ -709,14 +715,11 @@ namespace UserInterface.Views
         /// </summary>
         public void ExportToClipboard()
         {
-            MemoryStream stream = new MemoryStream();
-            PngExporter pngExporter = new PngExporter();
-            pngExporter.Width = 800;
-            pngExporter.Height = 600;
-            pngExporter.Export(plot1.Model, stream);
-            stream.Seek(0, SeekOrigin.Begin);
+            Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
+            string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
+            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-            cb.Image = new Gdk.Pixbuf(stream);
+            cb.Image = new Gdk.Pixbuf(fileName);
         }
 
         /// <summary>
@@ -827,6 +830,7 @@ namespace UserInterface.Views
             }
 
             if (axis is LinearAxis &&
+                !(axis is DateTimeAxis) &&
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
                 // We want the axis labels to always have a leading 0 when displaying decimal places.
@@ -923,7 +927,8 @@ namespace UserInterface.Views
         private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
         {
             List<double> dataPointValues = new List<double>();
-
+            double x; // Used only as an out parameter, to maintain backward
+                      // compatibility with older versions VS/C#.
             enumerator.MoveNext();
 
             if (enumerator.Current.GetType() == typeof(DateTime))
@@ -940,7 +945,7 @@ namespace UserInterface.Views
                 }
                 while (enumerator.MoveNext());
             }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do

@@ -95,7 +95,8 @@ namespace Models.PMF.Organs
         public int Rank { get; set; } // 1 based ranking
 
         /// <summary>The area</summary>
-        [Description("Area mm2")]
+        [Description("Area")]
+        [Units("mm2")]
         public double Area { get; set; }
 
         //Leaf coefficients
@@ -392,7 +393,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+            get { return Age > GrowthDuration + LagDuration && Age < GrowthDuration + LagDuration + SenescenceDuration; }
 
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
@@ -762,6 +763,8 @@ namespace Models.PMF.Organs
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
+            // FunctionalNConc = (CriticalNConc * (DM.Structural + DM.Metabolic) - MinimumNConc * DM.Structural)) / DM.Metabolic
+            //                 = (CriticalNConc - MinimumNConc * (DM.Structural / (DM.Structural + DM.Metabolic))) / (DM.Metabolic / (DM.Structural + DM.Metabolic))
             FunctionalNConc = (leafCohortParameters.CriticalNConc.Value() -
                                leafCohortParameters.MinimumNConc.Value() * StructuralFraction) *
                               (1 / (1 - StructuralFraction));
@@ -923,7 +926,7 @@ namespace Models.PMF.Organs
             //Senessing leaf area
             double areaSenescing = LiveArea*SenescedFrac;
             double areaSenescingN = 0;
-            if ((Live.MetabolicNConc <= MinimumNConc) & (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
+            if ((Live.MetabolicNConc <= MinimumNConc) && (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
                 areaSenescingN = LeafStartArea*(MetabolicNRetranslocated - MetabolicNAllocation)/LiveStart.MetabolicN;
 
             double leafAreaLoss = Math.Max(areaSenescing, areaSenescingN);
@@ -1109,7 +1112,7 @@ namespace Models.PMF.Organs
                         _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                     }
 
-                    if (Age >= 0 & Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
+                    if (Age >= 0 && Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
                     {
                         lsn += ApexCohort.GroupSize[i];
                     }

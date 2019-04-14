@@ -21,15 +21,18 @@ namespace UserInterface.Views
     /// </summary>
     public class ModelDetailsWrapperView : ViewBase, IModelDetailsWrapperView
     {
+        private HBox hbox = null;
         private VBox vbox1 = null;
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
+        private LinkButton modelHelpLinkImg = null;
         private Label modelVersionLabel = null;
         private Viewport bottomView = null;
 
         public ModelDetailsWrapperView(ViewBase owner) : base(owner)
         {
+            hbox = new HBox();
             vbox1 = new VBox();
 
             modelTypeLabel = new Label
@@ -53,13 +56,20 @@ namespace UserInterface.Views
             modelDescriptionLabel.Wrap = true;
             modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
 
-            modelHelpLinkLabel = new LinkButton("", "more information")
+            modelHelpLinkLabel = new LinkButton("", "")
             {
                 Xalign = 0.0f,
             };
             modelHelpLinkLabel.Clicked += ModelHelpLinkLabel_Clicked;
             modelHelpLinkLabel.ModifyBase(StateType.Normal, new Gdk.Color(131, 0, 131));
             modelHelpLinkLabel.Visible = false;
+
+            Gtk.CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
+            pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Help.png");
+            pixbufRender.Xalign = 0.5f;
+            Gtk.Image img = new Image(pixbufRender.Pixbuf);
+            modelHelpLinkLabel.Image = img;
+            modelHelpLinkLabel.Image.Visible = true;
 
             modelVersionLabel = new Label()
             {
@@ -82,15 +92,23 @@ namespace UserInterface.Views
                 ShadowType = ShadowType.None
             };
 
+            hbox.PackStart(modelTypeLabel, false, true, 0);
+            hbox.PackStart(modelHelpLinkLabel, false, false, 0);
+
+            vbox1.PackStart(hbox, false, true, 0);
             vbox1.PackStart(modelTypeLabel, false, true, 0);
             vbox1.PackStart(modelDescriptionLabel, false, true, 0);
             vbox1.PackStart(modelVersionLabel, false, true, 4);
-            vbox1.PackStart(modelHelpLinkLabel, false, true, 0);
             vbox1.Add(bottomView);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
             _mainWidget = vbox1;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void Hbox_SizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            modelHelpLinkImg.HeightRequest = 50;
         }
 
         /// <summary>

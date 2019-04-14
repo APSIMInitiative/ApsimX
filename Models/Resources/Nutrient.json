@@ -250,7 +250,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
-          "Expression": "[Inert].C / [Soil].SoilOrganicMatter.SoilCN",
+          "Expression": "[Inert].C / [Soil].InitialSoilCNR",
           "Name": "InitialNitrogen",
           "Children": [
             {
@@ -1185,7 +1185,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
-          "Expression": "[Humic].C / [Soil].SoilOrganicMatter.SoilCN",
+          "Expression": "[Humic].C / [Soil].InitialSoilCNR",
           "Name": "InitialNitrogen",
           "Children": [
             {

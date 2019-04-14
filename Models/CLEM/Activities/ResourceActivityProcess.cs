@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
             // processed resource should already be taken
             Status = ActivityStatus.NotNeeded;
             // add created resources
-            ResourceRequest rr = ResourceRequestList.Where(a => a.Resource.GetType() == resourceTypeProcessModel.GetType()).FirstOrDefault();
+            ResourceRequest rr = ResourceRequestList.Where(a => (a.Resource != null && a.Resource.GetType() == resourceTypeProcessModel.GetType())).FirstOrDefault();
             if (rr != null)
             {
                 resourceTypeCreatedModel.Add(rr.Provided * ConversionRate, this, "Created " + (resourceTypeCreatedModel as Model).Name);

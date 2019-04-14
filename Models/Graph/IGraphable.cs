@@ -1,19 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGraphable.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Graph
+﻿namespace Models.Graph
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Drawing;
+    using Models.Storage;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Drawing;
     using System.Xml.Serialization;
-    using Core;
 
     /// <summary>
     /// An interface for a model that can graph itself.
