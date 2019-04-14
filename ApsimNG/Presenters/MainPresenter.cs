@@ -28,7 +28,7 @@
     public class MainPresenter
     {
         /// <summary>A list of presenters for tabs on the left.</summary>
-        public List<IPresenter> presenters1 = new List<IPresenter>();
+        public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
@@ -118,7 +118,7 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.presenters1.OfType<ExplorerPresenter>())
+            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
@@ -753,7 +753,7 @@
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {            
-            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
+            List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
                 if (presenter.ApsimXFile.FileName == fileName)
@@ -804,7 +804,7 @@
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
             {
-                this.presenters1.Add(newPresenter);
+                this.Presenters1.Add(newPresenter);
             }
             else
             {
@@ -872,13 +872,13 @@
         {
             if (e.LeftTabControl)
             {
-                IPresenter presenter = presenters1[e.Index - 1];
+                IPresenter presenter = Presenters1[e.Index - 1];
                 e.AllowClose = true;
                 if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
                 if (e.AllowClose)
                 {
                     presenter.Detach();
-                    this.presenters1.RemoveAt(e.Index - 1);
+                    this.Presenters1.RemoveAt(e.Index - 1);
                 }
             }
             else

@@ -72,10 +72,10 @@ namespace UserInterface.Views
 
         private void Initialise()
         {
-            _mainWidget = textentry1;
+            mainWidget = textentry1;
             textentry1.FocusOutEvent += OnSelectionChanged;
             textentry1.KeyPressEvent += OnKeyPress;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -92,8 +92,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textentry1.FocusOutEvent -= OnSelectionChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         private string lastText = String.Empty;

@@ -102,8 +102,8 @@ namespace UserInterface.Views
             vbox1.Add(bottomView);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
-            _mainWidget = vbox1;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = vbox1;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void Hbox_SizeAllocated(object o, SizeAllocatedArgs args)
@@ -170,8 +170,8 @@ namespace UserInterface.Views
                     child.Destroy();
                 }
             }
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         public string ModelTypeText
