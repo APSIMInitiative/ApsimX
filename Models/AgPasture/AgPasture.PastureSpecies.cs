@@ -283,6 +283,10 @@ namespace Models.AgPasture
             foreach (PastureBelowGroundOrgan root in roots)
                 root.DoResetOrgan();
 
+            // clean up secondary variables
+            greenLAI = 0.0;
+            deadLAI = 0.0;
+
             isAlive = false;
             phenologicStage = -1;
         }
