@@ -133,9 +133,9 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation);
-            Links.Resolve(simulationRunner);
-            simulationRunner.Run(new System.Threading.CancellationTokenSource());
+            IJobManager jobManager = new RunOrganiser(this, simulation, true);
+            IJobRunner jobRunner = new JobRunnerAsync();
+            jobRunner.Run(jobManager, wait: true);
         }
 
 
