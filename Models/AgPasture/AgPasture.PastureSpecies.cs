@@ -5112,15 +5112,20 @@ namespace Models.AgPasture
         {
             double TodaysHeight = myPlantHeightMaximum;
 
-            if (StandingHerbageWt <= myPlantHeightMassForMax)
+            if (isAlive)
             {
-                double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
-                double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
-                heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
-                TodaysHeight *= heightF;
+                if (StandingHerbageWt <= myPlantHeightMassForMax)
+                {
+                    double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
+                    double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
+                    heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
+                    TodaysHeight *= heightF;
+                    Math.Max(TodaysHeight, myPlantHeightMinimum);
+                }
             }
-
-            return Math.Max(TodaysHeight, myPlantHeightMinimum);
+            else
+                TodaysHeight = 0.0;
+            return TodaysHeight;
         }
 
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
