@@ -124,6 +124,7 @@
             }
 
             simulationEnumerator = null;
+            storage.Reader.Refresh();
         }
 
         /// <summary>
@@ -146,7 +147,6 @@
             }
 
             storage.Writer.Stop();
-            storage.Reader.Refresh();
         }
 
 
