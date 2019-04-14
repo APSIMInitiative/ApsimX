@@ -197,7 +197,6 @@
             Simulations sims = Utilities.GetRunnableSim();
             sims.FileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             sims.Write(sims.FileName);
-            Console.WriteLine($"fileName={sims.FileName}");
 
             Simulation sim = Apsim.Find(sims, typeof(Simulation)) as Simulation;
             IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
