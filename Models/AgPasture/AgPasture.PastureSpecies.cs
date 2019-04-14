@@ -597,7 +597,7 @@ namespace Models.AgPasture
 
         /// <summary>Gets or sets the scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [XmlIgnore]
-        [Description("Reference CO2 concentration for photosynthesis [ppm]:")]
+        [Description("Scaling parameter for the CO2 effect on photosynthesis [ppm]:")]
         [Units("ppm")]
         public double CO2EffectScaleFactor = 700.0;
 
@@ -1944,13 +1944,13 @@ namespace Models.AgPasture
         /// <summary>Tissue turnover factor due to variations in temperature (0-1).</summary>
         private double ttfTemperature;
 
-        /// <summary>Tissue turnover factor due to variations in moisture (0-1).</summary>
+        /// <summary>Tissue turnover factor for shoot due to variations in moisture (0-1).</summary>
         private double ttfMoistureShoot;
 
-        /// <summary>Tissue turnover factor due to variations in moisture (0-1).</summary>
+        /// <summary>Tissue turnover factor for roots due to variations in moisture (0-1).</summary>
         private double ttfMoistureRoot;
 
-        /// <summary>Tissue turnover factor due to variations in moisture (0-1).</summary>
+        /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
         private double ttfLeafNumber;
 
         /// <summary>Effect of defoliation on stolon turnover (0-1).</summary>
