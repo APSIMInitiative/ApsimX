@@ -286,6 +286,7 @@ namespace Models.AgPasture
             // clean up secondary variables
             greenLAI = 0.0;
             deadLAI = 0.0;
+            roots[0].Depth = 0.0;
 
             isAlive = false;
             phenologicStage = -1;
