@@ -54,10 +54,10 @@ namespace Models
             public int numLayers;
 
             /// <summary>The soil_heat</summary>
-            public double soil_heat = 0;
+            public double SoilHeatFlux = 0;
 
             /// <summary>The dryleaffraction</summary>
-            public double dryleaffraction = 0;
+            public double DryLeafFraction = 0;
 
             /// <summary>Gets or sets the component data.</summary>
             public List<CanopyType> Canopies = new List<CanopyType>();
@@ -186,8 +186,8 @@ namespace Models
             /// </summary>
             public void Reset()
             {
-                soil_heat = 0.0;
-                dryleaffraction = 0.0;
+                SoilHeatFlux = 0.0;
+                DryLeafFraction = 0.0;
                 Albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
