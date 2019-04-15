@@ -783,19 +783,19 @@ namespace Models.PMF.Organs
         public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             double totalStructuralNDemand = 0;
-            double totalNDemand = 0;
+            double totalStorageNDemand = 0;
 
             foreach (ZoneState Z in Zones)
             {
                 totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.StorageNDemand);
+                totalStorageNDemand += MathUtilities.Sum(Z.StorageNDemand);
             }
             NTakenUp = nitrogen.Uptake;
             Allocated.StructuralN = nitrogen.Structural;
             Allocated.StorageN = nitrogen.Storage;
             Allocated.MetabolicN = nitrogen.Metabolic;
 
-            double surplus = Allocated.N - totalNDemand;
+            double surplus = Allocated.N - totalStructuralNDemand - totalStorageNDemand;
             if (surplus > 0.000000001)
                 throw new Exception("N Allocation to roots exceeds Demand");
             double NAllocated = 0;
@@ -810,7 +810,7 @@ namespace Models.PMF.Organs
                         Z.LayerLive[i].StructuralN += nitrogen.Structural * StructFrac;
                         NAllocated += nitrogen.Structural * StructFrac;
                     }
-                    double totalStorageNDemand = MathUtilities.Sum(Z.StorageNDemand);
+
                     if (totalStorageNDemand > 0)
                     {
                         double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;

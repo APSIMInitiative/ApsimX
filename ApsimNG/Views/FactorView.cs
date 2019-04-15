@@ -19,8 +19,8 @@
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.FactorView.glade");
             builder.Autoconnect(this);
-            _mainWidget = (VBox)builder.GetObject("vbox");
-            _mainWidget.Destroyed += OnMainWidgetDestroyed;
+            mainWidget = (VBox)builder.GetObject("vbox");
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
 
             Specification = new EditView(owner, 
                                          (Entry)builder.GetObject("specificationEditBox"));
@@ -36,8 +36,8 @@
         {
             (Specification as EditView).MainWidget.Destroy();
 
-            _mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnMainWidgetDestroyed;
+            owner = null;
         }
     }
 }
