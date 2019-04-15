@@ -154,14 +154,7 @@ namespace Models
         [Units("mm")]
         public double PrecipitationInterception
         {
-            get
-            {
-                double totalInterception = 0.0;
-                for (int i = 0; i <= zoneMicroClimates[0].numLayers - 1; i++)
-                    for (int j = 0; j <= zoneMicroClimates[0].Canopies.Count - 1; j++)
-                        totalInterception += zoneMicroClimates[0].Canopies[j].interception[i];
-                return totalInterception;
-            }
+            get { return zoneMicroClimates[0].PrecipitationInterception; }
         }
 
         /*        /// <summary>Gets the canopy conductance aggregated for all canopy components (mm).</summary>
