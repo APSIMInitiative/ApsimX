@@ -157,6 +157,14 @@ namespace Models
             get { return zoneMicroClimates[0].PrecipitationInterception; }
         }
 
+        /// <summary>Gets the amount of radiation intercepted by the canopy (MJ/m2).</summary>
+        [Description("Total intercepted radiation")]
+        [Units("MJ/m^2")]
+        public double RadiationInterception
+        {
+            get { return zoneMicroClimates[0].RadiationInterception; }
+        }
+
         /*        /// <summary>Gets the canopy conductance aggregated for all canopy components (mm).</summary>
                 [Description("Whole system canopy conductance")]
                 [Units("mm")]
@@ -249,6 +257,14 @@ namespace Models
         public double SoilHeatFlux
         {
             get { return zoneMicroClimates[0].SoilHeatFlux; }
+        }
+
+        /// <summary>Gets the total plant cover (0-1).</summary>
+        [Description("Total canopy cover")]
+        [Units("-")]
+        public double CanopyCover
+        {
+            get { return MathUtilities.Divide(RadiationInterception, weather.Radn, 0.0); }
         }
 
         /// <summary>Called when simulation commences.</summary>

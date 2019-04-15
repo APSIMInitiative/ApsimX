@@ -215,6 +215,21 @@ namespace Models
                 }
             }
 
+            /// <summary>Gets the intercepted radiation.</summary>
+            [Description("Intercepted radiation")]
+            [Units("MJ/m2")]
+            public double RadiationInterception
+            {
+                get
+                {
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                        for (int j = 0; j <= Canopies.Count - 1; j++)
+                            totalInterception += Canopies[j].Rs[i];
+                    return totalInterception;
+                }
+            }
+
             /// <summary>Gets the radiation term of PET.</summary>
             [Description("Radiation component of PET")]
             [Units("mm")]
