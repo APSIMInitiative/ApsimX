@@ -1,6 +1,6 @@
 ﻿using System;
-using APSIM.Shared.Utilities;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 
@@ -234,7 +234,7 @@ namespace Models
             [Units("MJ/m2/day")]
             public double NetRadiation
             {
-                get { return weather.Radn * (1.0 - Albedo) + NetLongWaveRadiation; }
+                get { return NetShortWaveRadiation + NetLongWaveRadiation; }
             }
 
             /// <summary>Gets the net_rs.</summary>
@@ -242,7 +242,7 @@ namespace Models
             [Units("MJ/m2/day")]
             public double NetShortWaveRadiation
             {
-                get { return weather.Radn * (1.0 - Albedo); }
+                get { return weather == null ? 0.0 : weather.Radn * (1.0 - Albedo); }
             }
 
             /// <summary>

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
 
 namespace Models
 {
@@ -195,6 +194,38 @@ namespace Models
         public double DryLeafTimeFraction
         {
             get { return zoneMicroClimates[0].dryleaffraction; }
+        }
+
+        /// <summary>Gets the total net radiation, long and short waves (MJ/m2).</summary>
+        [Description("Net radiation, long and short waves")]
+        [Units("MJ/m^2")]
+        public double NetRadiation
+        {
+            get { return NetShortWaveRadiation + NetLongWaveRadiation; }
+        }
+
+        /// <summary>Gets the net short wave radiation (MJ/m2).</summary>
+        [Description("Net short wave radiation")]
+        [Units("MJ/m^2")]
+        public double NetShortWaveRadiation
+        {
+            get { return zoneMicroClimates[0].NetShortWaveRadiation; }
+        }
+
+        /// <summary>Gets the net long wave radiation (MJ/m2).</summary>
+        [Description("Net long wave radiation")]
+        [Units("MJ/m^2")]
+        public double NetLongWaveRadiation
+        {
+            get { return zoneMicroClimates[0].NetLongWaveRadiation; }
+        }
+
+        /// <summary>Gets the flux of heat into the soil (MJ/m2).</summary>
+        [Description("Soil heat flux")]
+        [Units("MJ/m^2")]
+        public double SoilHeat
+        {
+            get { return zoneMicroClimates[0].soil_heat; }
         }
 
         /// <summary>Called when simulation commences.</summary>
