@@ -150,6 +150,52 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the interception.</summary>
+        [Description("Intercepted rainfall")]
+        [Units("mm")]
+        public double interception
+        {
+            get
+            {
+                double totalInterception = 0.0;
+                for (int i = 0; i <= zoneMicroClimates[0].numLayers - 1; i++)
+                    for (int j = 0; j <= zoneMicroClimates[0].Canopies.Count - 1; j++)
+                        totalInterception += zoneMicroClimates[0].Canopies[j].interception[i];
+                return totalInterception;
+            }
+        }
+
+        /// <summary>Gets the total Penman-Monteith potential evapotranspiration (MJ/m2).</summary>
+        [Description("Total Penman-Monteith potential evapotranspiration")]
+        [Units("MJ/m^2")]
+        public double PetTotal
+        {
+            get { return PetRadiationTerm + PetAerodynamicTerm; }
+        }
+
+        /// <summary>Gets the radiation term of for the Penman-Monteith PET (mm).</summary>
+        [Description("Radiation term of for the Penman-Monteith PET")]
+        [Units("mm")]
+        public double PetRadiationTerm
+        {
+            get { return zoneMicroClimates[0].petr; }
+        }
+
+        /// <summary>Gets the aerodynamic term of for the Penman-Monteith PET (mm).</summary>
+        [Description("Aerodynamic term of for the Penman-Monteith PET")]
+        [Units("mm")]
+        public double PetAerodynamicTerm
+        {
+            get { return zoneMicroClimates[0].peta; }
+        }
+
+        /// <summary>Gets the fraction of the daytime in which the leaves are dry (0-1).</summary>
+        [Description("Fraction of the daytime in which the leaves are dry")]
+        [Units("-")]
+        public double DryLeafTimeFraction
+        {
+            get { return zoneMicroClimates[0].dryleaffraction; }
+        }
 
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
@@ -381,21 +427,6 @@ namespace Models
                     ZoneMC.Canopies[j].PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLengthEvap * ZoneMC.dryleaffraction, ZoneMC.Canopies[j].Ga[i], ZoneMC.Canopies[j].Gc[i]);
                     ZoneMC.Canopies[j].PET[i] = ZoneMC.Canopies[j].PETr[i] + ZoneMC.Canopies[j].PETa[i];
                 }
-        }
-
-        /// <summary>Gets the interception.</summary>
-        [Description("Intercepted rainfall")]
-        [Units("mm")]
-        public double interception
-        {
-            get
-            {
-                double totalInterception = 0.0;
-                for (int i = 0; i <= zoneMicroClimates[0].numLayers - 1; i++)
-                    for (int j = 0; j <= zoneMicroClimates[0].Canopies.Count - 1; j++)
-                        totalInterception += zoneMicroClimates[0].Canopies[j].interception[i];
-                return totalInterception;
-            }
         }
 
         /// <summary>Calculate the aerodynamic decoupling for system compartments</summary>
