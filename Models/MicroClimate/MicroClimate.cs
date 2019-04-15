@@ -240,7 +240,7 @@ namespace Models
         [Units("MJ/m^2")]
         public double NetShortWaveRadiation
         {
-            get { return zoneMicroClimates[0].NetShortWaveRadiation; }
+            get { return weather.Radn * (1.0 - zoneMicroClimates[0].Albedo); }
         }
 
         /// <summary>Gets the net long wave radiation (MJ/m2).</summary>
