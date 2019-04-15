@@ -24,7 +24,7 @@ namespace ApsimNG.Classes.DirectedGraph
 
         /// <summary>Paint on the graphics context</summary>
         /// <param name="context">The graphics context to draw on</param>
-        public abstract void Paint(Cairo.Context GraphicsObject);
+        public abstract void Paint(Context graphicsObject);
 
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>

@@ -143,7 +143,7 @@ namespace ApsimNG.Presenters.CLEM
                 output.AcceptChanges();
             }
 
-            view.gridview.DataSource = output;
+            view.Grid.DataSource = output;
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace ApsimNG.Presenters.CLEM
         private void OnStoreData(object sender, EventArgs e)
         {
             // Check that data exists
-            DataTable data = view.gridview.DataSource;
+            DataTable data = view.Grid.DataSource;
             if (data == null) return;
             
             // Store the data
@@ -224,7 +224,7 @@ namespace ApsimNG.Presenters.CLEM
             view.TrackChanges -= OnTrackChanges;
 
             view.Detach();
-            view.gridview.Dispose();
+            view.Grid.Dispose();
         }
 
         /// <summary>

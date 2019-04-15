@@ -127,7 +127,7 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Mutual exclusion sempahore for reading the .db files.
         /// </summary>
-        private object dbMutex;
+        private object databaseMutex;
 
         /// <summary>
         /// Constructor. Requires Azure credentials to already be set in ApsimNG.Properties.Settings. 
@@ -150,7 +150,7 @@ namespace ApsimNG.Cloud
             outputPath = path;
             rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
             tempPath = Path.GetTempPath() + "\\" + jobId;
-            dbMutex = new object();
+            databaseMutex = new object();
             presenter = explorer;
             unzipResults = unzipResultFiles;
             try
@@ -470,16 +470,16 @@ namespace ApsimNG.Cloud
         /// <returns></returns>
         private string ReadSqliteDB(string path, bool printHeader, string delim)
         {
-            lock(dbMutex)
+            lock(databaseMutex)
             {
-                SQLiteConnection m_dbConnection;
+                SQLiteConnection dbConnection;
                 Dictionary<string, string> simNames = new Dictionary<string, string>();
 
-                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);                
+                dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);                
 
                 try
                 {
-                    m_dbConnection.Open();                    
+                    dbConnection.Open();                    
                 }
                 catch (Exception err)
                 {
@@ -493,7 +493,7 @@ namespace ApsimNG.Cloud
                 string sql = "SELECT * FROM _Simulations";
                 try
                 {
-                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -512,7 +512,7 @@ namespace ApsimNG.Cloud
                 List<string> tables = new List<string>();
                 try
                 {
-                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read()) tables.Add(reader[0].ToString());
                     command.Dispose();
@@ -534,7 +534,7 @@ namespace ApsimNG.Cloud
                     {
                         DataTable reportTable = new DataTable();
                         sql = "SELECT * FROM " + tableName;
-                        SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                        SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
                         SQLiteDataReader reader = command.ExecuteReader();
                         reportTable.Load(reader);
                         reportTable.Merge(master);
@@ -547,7 +547,7 @@ namespace ApsimNG.Cloud
                 {
                     presenter.ShowError(new Exception("Error reading or merging table: ", err));
                 }
-                m_dbConnection.Close();
+                dbConnection.Close();
                 // Generate the CSV file data                
                 // enumerate delimited column names
                 string csvData = "File Name" + delim + "Sim Name" + delim + master.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Aggregate((a, b) => a + delim + b) + "\n";

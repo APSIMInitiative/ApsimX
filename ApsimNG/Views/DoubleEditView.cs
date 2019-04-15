@@ -144,9 +144,9 @@ namespace UserInterface.Views
         /// </summary>
         private void SetupDoubleEdit()
         {
-            _mainWidget = textEntry;
+            mainWidget = textEntry;
             textEntry.Changed += OnChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textEntry.Changed -= OnChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

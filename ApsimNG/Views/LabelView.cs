@@ -19,7 +19,7 @@ namespace UserInterface.Views
         public LabelView(ViewBase owner, Label l) : base(owner)
         {
             label = l;
-            _mainWidget = label;
+            mainWidget = label;
         }
 
         /// <summary>Gets or sets the text of the label.</summary>
