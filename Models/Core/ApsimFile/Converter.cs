@@ -462,26 +462,12 @@
         }
 
         /// <summary>
-        /// Upgrades to version 56. Adds a RetranslocateNonStructural node to
-        /// all GenericOrgans which do not have a child called
-        /// RetranslocateNitrogen.
-        /// </summary>
-        /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion56(JObject root, string fileName)
-        {
-            foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
-                if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
-                    JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
-        }
-
-        /// <summary>
         /// Upgrades to version 57. Change Factor.Specifications to 
         /// Factor.Specification. Also FactorValue becomes CompositeFactor.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the .apsimx file.</param>
-        private static void UpgradeToVersion57(JToken root, string fileName)
+        private static void UpgradeToVersion56(JToken root, string fileName)
         {
             foreach (var factor in JsonUtilities.ChildrenRecursively(root as JObject, "Factor"))
             {
@@ -547,6 +533,20 @@
                 if (factorToVaryLines != null && factorToVaryLines.Value<string>() == "Simulation")
                     series["FactorToVaryLines"] = "SimulationName";
             }
+        }
+
+        /// <summary>
+        /// Upgrades to version 56. Adds a RetranslocateNonStructural node to
+        /// all GenericOrgans which do not have a child called
+        /// RetranslocateNitrogen.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion57(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+                if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
+                    JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
         }
 
         /// <summary>
