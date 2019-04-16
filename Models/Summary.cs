@@ -179,6 +179,7 @@
         private void CreateInitialConditionsTable()
         {
             var initConditions = new DataTable("_InitialConditions");
+            initConditions.Columns.Add("SimulationName", typeof(string));
             initConditions.Columns.Add("ModelPath", typeof(string));
             initConditions.Columns.Add("Name", typeof(string));
             initConditions.Columns.Add("Description", typeof(string));
@@ -191,15 +192,15 @@
             string simulationPath = Apsim.FullPath(simulation);
 
             var row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulationPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
             initConditions.Rows.Add(row);
 
             // Get all model properties and store in 'initialConditionsTable'
@@ -227,7 +228,7 @@
                             property.Units = string.Empty;
 
                         row = initConditions.NewRow();
-                        row.ItemArray = new object[] { thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
+                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
                         initConditions.Rows.Add(row);
                     }
                 }

@@ -31,7 +31,14 @@
         private DataView units;
 
         /// <summary>Return a list of simulation names or empty string[]. Never returns null.</summary>
-        public List<string> SimulationNames { get { return simulationIDs.Keys.ToList(); } }
+        public List<string> SimulationNames
+        {
+            get
+            {
+                var data = connection.ExecuteQuery("select Name from _Simulations");
+                return DataTableUtilities.GetColumnAsStrings(data, "Name").ToList();
+            }
+        }
 
         /// <summary>Return a list of checkpoint names or empty string[]. Never returns null.</summary>
         public List<string> CheckpointNames { get { return checkpointIDs.Keys.ToList(); } }
@@ -88,6 +95,15 @@
         {
             return connection.GetColumnNames(tableName);
         }
+
+        /// <summary>Return a list of column names with string data type for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        public List<string> StringColumnNames(string tableName)
+        {
+            return connection.GetStringColumnNames(tableName);
+        }
+
 
         /// <summary>Returns a list of table names</summary>
         public List<string> TableNames { get { return connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }

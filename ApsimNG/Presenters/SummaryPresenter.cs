@@ -44,11 +44,11 @@
                 if (parentSimulation.Parent is Experiment)
                 {
                     Experiment experiment = parentSimulation.Parent as Experiment;
-                    string[] simulationNames = experiment.GetSimulationNames().ToArray();
-                    summaryView.SimulationDropDown.Values = simulationNames;
-                    if (simulationNames.Length > 0)
+                    var simulationNames = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
+                    summaryView.SimulationDropDown.Values = simulationNames.ToArray();
+                    if (simulationNames.Count() > 0)
                     {
-                        summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
+                        summaryView.SimulationDropDown.SelectedValue = simulationNames.First();
                     }
                 }
                 else

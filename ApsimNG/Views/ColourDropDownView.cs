@@ -36,12 +36,12 @@ namespace UserInterface.Views
         public ColourDropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
-            _mainWidget = combobox1;
+            mainWidget = combobox1;
             combobox1.PackStart(comboRender, true);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.SetCellDataFunc(comboRender, OnDrawColourCombo);
             combobox1.Changed += OnChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -50,8 +50,8 @@ namespace UserInterface.Views
             combobox1.SetCellDataFunc(comboRender, null);
             comboModel.Dispose();
             comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Invoked when the user changes the selection</summary>

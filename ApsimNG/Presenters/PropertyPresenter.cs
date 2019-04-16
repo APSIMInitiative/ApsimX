@@ -356,11 +356,16 @@ namespace UserInterface.Presenters
             foreach (IVariable property in properties)
             {
                 if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value , null });
+                    table.Rows.Add(new object[] { property.Value, null });
                 else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
+                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
                 else
-                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+                {
+                    string description = property.Description;
+                    if (!string.IsNullOrEmpty(property.Units))
+                        description += " (" + property.Units + ")";
+                    table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
+                }
             }
         }
 
@@ -710,8 +715,6 @@ namespace UserInterface.Presenters
         /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-
             foreach (IGridCell cell in e.ChangedCells)
             {
                 try
@@ -726,8 +729,6 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowError(ex);
                 }
             }
-            
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

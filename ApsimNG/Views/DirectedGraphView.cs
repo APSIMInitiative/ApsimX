@@ -72,9 +72,8 @@ namespace UserInterface.Views
             };
             
             scroller.AddWithViewport(drawable);
-
-            _mainWidget = scroller;
-            //drawable.ModifyBg(StateType.Normal, new Gdk.Color(255, 255, 255));
+            
+            mainWidget = scroller;
             drawable.Realized += OnRealized;
             DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
             DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));

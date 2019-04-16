@@ -11,8 +11,8 @@
           "$type": "Models.Clock, Models",
           "Name": "Clock",
           "IncludeInDocumentation": true,
-          "StartDate": "1900-01-01",
-          "EndDate": "2000-12-31"
+          "StartDate": "1900-01-01T00:00:00",
+          "EndDate": "2000-12-31T00:00:00"
         }
       ],
       "IncludeInDocumentation": true

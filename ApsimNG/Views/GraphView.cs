@@ -63,7 +63,7 @@ namespace UserInterface.Views
         private Label captionLabel = null;
         private EventBox captionEventBox = null;
         private Label label2 = null;
-        private Menu Popup = new Menu();
+        private Menu popup = new Menu();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
@@ -77,7 +77,7 @@ namespace UserInterface.Views
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
@@ -93,11 +93,10 @@ namespace UserInterface.Views
             plot1.Model.MouseDown += OnChartClick;
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
-            Popup.AttachToWidget(plot1, null);
+            popup.AttachToWidget(plot1, null);
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
             Color foreground = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Selected));
             ForegroundColour = OxyColor.FromRgb(foreground.R, foreground.G, foreground.B);
         }
@@ -113,7 +112,7 @@ namespace UserInterface.Views
             // We can do this via reflection. Here's how it currently can be done in Gtk#.
             // Windows.Forms would do it differently.
             // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in Popup)
+            foreach (Widget w in popup)
             {
                 if (w is MenuItem)
                 {
@@ -130,10 +129,10 @@ namespace UserInterface.Views
                 }
             }
             Clear();
-            Popup.Dispose();
+            popup.Dispose();
             plot1.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -411,6 +410,12 @@ namespace UserInterface.Views
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+                // By default, clicking on a datapoint (a bar) of a bar graph
+                // will create a pop-up showing the x/y values at the beginning
+                // and end of the bar. We override this here, so that it only
+                // shows the x/y pair at the end of the bar. Perhaps we should
+                // accept the tracker string as an argument to this function?
+                series.TrackerFormatString = "{0}\n{1}: {3}\n{4}: {6}";
                 this.plot1.Model.Series.Add(series);
             }
         }
@@ -736,16 +741,11 @@ namespace UserInterface.Views
         /// </summary>
         public void ExportToClipboard()
         {
-            MemoryStream stream = new MemoryStream();
-            PngExporter pngExporter = new PngExporter();
-            pngExporter.Width = 800;
-            pngExporter.Height = 600;
             Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
-            pngExporter.Background = OxyColor.FromRgb((byte)(colour.Red / 65535.0 * 255), (byte)(colour.Green / 65535.0 * 255), (byte)(colour.Blue / 65535.0 * 255));
-            pngExporter.Export(plot1.Model, stream);
-            stream.Seek(0, SeekOrigin.Begin);
+            string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
+            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-            cb.Image = new Gdk.Pixbuf(stream);
+            cb.Image = new Gdk.Pixbuf(fileName);
         }
 
         /// <summary>
@@ -758,8 +758,8 @@ namespace UserInterface.Views
         {
             ImageMenuItem item = new ImageMenuItem(menuText);
             item.Activated += onClick;
-            Popup.Append(item);
-            Popup.ShowAll();
+            popup.Append(item);
+            popup.ShowAll();
         }
 
         /// <summary>
@@ -770,7 +770,7 @@ namespace UserInterface.Views
         public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
         {
             CheckMenuItem item = null;
-            foreach (Widget w in Popup)
+            foreach (Widget w in popup)
             {
                 CheckMenuItem oldItem = w as CheckMenuItem;
                 if (oldItem != null)
@@ -798,8 +798,8 @@ namespace UserInterface.Views
             {
                 item = new CheckMenuItem(menuItemText);
                 item.DrawAsRadio = false;
-                Popup.Append(item);
-                Popup.ShowAll();
+                popup.Append(item);
+                popup.ShowAll();
             }
             // Be sure to set the Active property before attaching the Activated event, since
             // the event handler will call this function again when Active is changed.
@@ -1098,23 +1098,23 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnMouseDoubleClick(object sender, OxyMouseDownEventArgs e)
         {
-            Point Location = new Point((int)e.Position.X, (int)e.Position.Y);
+            Point location = new Point((int)e.Position.X, (int)e.Position.Y);
             Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
             Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
-            if (plotArea.Contains(Location))
+            if (plotArea.Contains(location))
             {
                 Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
                 Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                if (legendArea.Contains(Location))
+                if (legendArea.Contains(location))
                 {
-                    int y = Convert.ToInt32(Location.Y - this.plot1.Model.LegendArea.Top);
+                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top);
                     int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
                     int seriesIndex = y / itemHeight;
                     if (this.OnLegendClick != null)
                     {
                         LegendClickArgs args = new LegendClickArgs();
-                        args.seriesIndex = seriesIndex;
-                        args.controlKeyPressed = e.IsControlDown;
+                        args.SeriesIndex = seriesIndex;
+                        args.ControlKeyPressed = e.IsControlDown;
                         this.OnLegendClick.Invoke(sender, args);
                     }
                 }
@@ -1140,7 +1140,7 @@ namespace UserInterface.Views
 
                 Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
                 Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
-                if (titleArea.Contains(Location))
+                if (titleArea.Contains(location))
                 {
                     if (this.OnTitleClick != null)
                     {
@@ -1150,19 +1150,19 @@ namespace UserInterface.Views
 
                 if (this.OnAxisClick != null)
                 {
-                    if (leftAxisArea.Contains(Location))
+                    if (leftAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Left);
                     }
-                    else if (topAxisArea.Contains(Location))
+                    else if (topAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Top);
                     }
-                    else if (rightAxisArea.Contains(Location))
+                    else if (rightAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Right);
                     }
-                    else if (bottomAxisArea.Contains(Location))
+                    else if (bottomAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Bottom);
                     }
@@ -1266,7 +1266,7 @@ namespace UserInterface.Views
         {
             e.Handled = false;
             if (inRightClick)
-                Popup.Popup();
+                popup.Popup();
             inRightClick = false;
         }
 

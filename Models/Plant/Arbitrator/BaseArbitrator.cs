@@ -113,17 +113,17 @@ namespace Models.PMF
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         [XmlIgnore]
-        public double WDemand { get; private set; }
+        public double WDemand { get; protected set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
         [XmlIgnore]
-        public double WSupply { get; private set; }
+        public double WSupply { get; protected set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
         [XmlIgnore]
-        public double WAllocated { get; private set; }
+        public double WAllocated { get; protected set; }
 
         #endregion
 
@@ -188,7 +188,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
+        public virtual void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
 
             // Calculate the total water supply across all zones.
@@ -295,6 +295,7 @@ namespace Models.PMF
                     NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
+                //NUptakeSupply units should be g/m^2
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 

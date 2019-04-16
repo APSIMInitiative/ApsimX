@@ -13,7 +13,7 @@ namespace Utility
         private static Configuration instance = null;
 
         /// <summary>The configuration file</summary>
-        private string ConfigurationFile = null;
+        private string configurationFile = null;
 
         /// <summary>The location for the form</summary>
         public Point MainFormLocation { get; set; }
@@ -199,9 +199,9 @@ namespace Utility
                 if (instance != null)
                     return instance;
 
-                string ConfigurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
+                string configurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
                 // deserialise the file
-                if (File.Exists(ConfigurationFile))
+                if (File.Exists(configurationFile))
                 {
                     System.Xml.Serialization.XmlSerializer xmlreader = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
                     StreamReader filereader = null;
@@ -211,14 +211,14 @@ namespace Utility
                     // configuration file.
                     try
                     {
-                        filereader = new StreamReader(ConfigurationFile);
+                        filereader = new StreamReader(configurationFile);
                         instance = (Configuration)xmlreader.Deserialize(filereader);
                         filereader.Close();
                     }
                     catch (Exception)
                     {
                         filereader.Close();
-                        File.Delete(ConfigurationFile);
+                        File.Delete(configurationFile);
                     }
                     
                 }
@@ -233,7 +233,7 @@ namespace Utility
                     instance.FilesInHistory = 20;
                 }
 
-                instance.ConfigurationFile = ConfigurationFile;
+                instance.configurationFile = configurationFile;
                 return instance;
             }
         }
@@ -241,10 +241,10 @@ namespace Utility
         /// <summary>Store the configuration settings to file</summary>
         public void Save()
         {
-            string ConfigPath = Path.GetDirectoryName(ConfigurationFile);
-            if (!Directory.Exists(ConfigPath))
-                Directory.CreateDirectory(ConfigPath);
-            StreamWriter filewriter = new StreamWriter(ConfigurationFile);
+            string configPath = Path.GetDirectoryName(configurationFile);
+            if (!Directory.Exists(configPath))
+                Directory.CreateDirectory(configPath);
+            StreamWriter filewriter = new StreamWriter(configurationFile);
             System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();

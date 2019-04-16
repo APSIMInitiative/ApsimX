@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 55,
+  "Version": 54,
   "Name": "Simulations",
   "Children": [
     {
@@ -107,17 +107,6 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Plant, Models",
-          "CropType": "Eucalyptus",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
-          "ResourceName": "Eucalyptus",
-          "Name": "Eucalyptus",
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
@@ -127,6 +116,7 @@
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [
         {
