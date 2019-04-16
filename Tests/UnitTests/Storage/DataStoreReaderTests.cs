@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Runners;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -204,7 +205,11 @@
             // Record checkpoint names before and after running the simulation,
             // and ensure that they are not the same.
             string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
-            sims.Run(sim, true);
+
+            // Run the simulation
+            IJobManager jobManager = new RunOrganiser(sims, sim, false);
+            IJobRunner jobRunner = new JobRunnerAsync();
+            jobRunner.Run(jobManager, wait: true);
             string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
 
             Assert.AreNotEqual(checkpointNamesBeforeRun, checkpointNamesAfterRun, "Storage reader failed to update checkpoint names after simulation was run.");
