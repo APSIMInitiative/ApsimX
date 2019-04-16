@@ -48,7 +48,7 @@ namespace UserInterface.Views
         public ListButtonView(ViewBase owner) : base(owner)
         {
             vbox = new VBox(false, 0);
-            _mainWidget = vbox;
+            mainWidget = vbox;
             buttonPanel = new HBox();
             // buttonPanel.Layout = ButtonBoxStyle.Start;
             filterPanel = new HBox();
@@ -63,15 +63,15 @@ namespace UserInterface.Views
             vbox.PackStart(filterPanel, false, true, 0);
             vbox.PackStart(buttonPanel, false, true, 0);
             vbox.PackStart(scrolledwindow1, true, true, 0);
-            _mainWidget.ShowAll();
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.ShowAll();
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
             filterEntry.Changed -= OnFilterChanged;
-            _owner = null;
+            owner = null;
         }
 
         /// <summary>The list.</summary>

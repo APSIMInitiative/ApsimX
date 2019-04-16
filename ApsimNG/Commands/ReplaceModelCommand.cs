@@ -40,8 +40,8 @@
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Do(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Do(CommandHistory commandHistory)
         {
             IModel parent = modelToReplace.Parent as IModel;
             int modelIndex = parent.Children.IndexOf(modelToReplace as Model);
@@ -65,8 +65,8 @@
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Undo(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Undo(CommandHistory commandHistory)
         {
             if (modelWasReplaced)
             {

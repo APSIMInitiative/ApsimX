@@ -98,7 +98,7 @@
             mainWindow.Destroyed += OnClose;
             mainWindow.KeyPressEvent += OnKeyPress;
 
-            _mainWidget = mainWindow;
+            mainWidget = mainWindow;
         }
 
         /// <summary>

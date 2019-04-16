@@ -56,9 +56,9 @@
         public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null) : base(owner)
         {
             tree = treeView;
-            _mainWidget = tree;
+            mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
-            _mainWidget.Destroyed += OnMainWidgetDestroyed;
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
         }
 
@@ -103,8 +103,8 @@
         /// <summary>The main widget has been destroyed.</summary>
         private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnMainWidgetDestroyed;
+            owner = null;
         }
 
         /// <summary>Populate the tree view.</summary>

@@ -27,17 +27,17 @@
         /// <summary>
         /// Invoked when the user selects an item (via enter or double click).
         /// </summary>
-        private event EventHandler<NeedContextItemsArgs.ContextItem> onItemSelected;
+        private event EventHandler<NeedContextItemsArgs.ContextItem> OnItemSelected;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+        private event EventHandler<NeedContextItemsArgs> OnContextItemsNeeded;
 
         /// <summary>
         /// Invoked when the intellisense popup loses focus.
         /// </summary>
-        private event EventHandler onLoseFocus;
+        private event EventHandler OnLoseFocus;
 
         /// <summary>
         /// Default constructor. Initialises intellisense popup, but doesn't display anything.
@@ -131,12 +131,12 @@
         {
             add
             {
-                DetachHandlers(ref onItemSelected);
-                onItemSelected += value;
+                DetachHandlers(ref OnItemSelected);
+                OnItemSelected += value;
             }
             remove
             {
-                onItemSelected -= value;
+                OnItemSelected -= value;
             }
         }
 
@@ -147,12 +147,12 @@
         {
             add
             {
-                if (onContextItemsNeeded == null)
-                    onContextItemsNeeded += value;
+                if (OnContextItemsNeeded == null)
+                    OnContextItemsNeeded += value;
             }
             remove
             {
-                onContextItemsNeeded -= value;
+                OnContextItemsNeeded -= value;
             }
         }
 
@@ -163,14 +163,14 @@
         {
             add
             {
-                if (onLoseFocus == null)
+                if (OnLoseFocus == null)
                 {
-                    onLoseFocus += value;
+                    OnLoseFocus += value;
                 }
             }
             remove
             {
-                onLoseFocus -= value;
+                OnLoseFocus -= value;
             }
         }
 
@@ -231,7 +231,7 @@
         /// </summary>
         /// <param name="x">Horizontal coordinate</param>
         /// <param name="y">Vertical coordinate</param>        
-        private bool showAtCoordinates(int x, int y)
+        private bool ShowAtCoordinates(int x, int y)
         {            
             // only display the list if there are options to display
             if (completionModel.IterNChildren() > 0)
@@ -291,7 +291,7 @@
                 // Move the popup one line higher as well, to room allow for the input box in the popup.
                 y -= completionForm.HeightRequest + lineHeight;
 
-            return showAtCoordinates(Math.Max(0, x), Math.Max(0, y));
+            return ShowAtCoordinates(Math.Max(0, x), Math.Max(0, y));
         }
 
         /// <summary>
@@ -303,7 +303,7 @@
             // generate list of intellisense options
             List<string> items = new List<string>();
             List<NeedContextItemsArgs.ContextItem> allItems = new List<NeedContextItemsArgs.ContextItem>();
-            onContextItemsNeeded?.Invoke(this, new NeedContextItemsArgs() { ObjectName = node, Items = items, AllItems = allItems });
+            OnContextItemsNeeded?.Invoke(this, new NeedContextItemsArgs() { ObjectName = node, Items = items, AllItems = allItems });
 
             if (allItems.Count < 1)
                 return false;
@@ -391,7 +391,7 @@
         private void OnLeaveCompletion(object sender, FocusOutEventArgs e)
         {
             completionForm.Hide();
-            onLoseFocus?.Invoke(this, new EventArgs());
+            OnLoseFocus?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -459,7 +459,7 @@
         private void HandleItemSelected()
         {
             completionForm.Hide();
-            onItemSelected?.Invoke(this, SelectedItem);
+            OnItemSelected?.Invoke(this, SelectedItem);
         }
     }
 }

@@ -396,6 +396,104 @@
             Assert.AreEqual(sims.Count, 2);
         }
 
+
+        /// <summary>Ensure compound that has a model override works.</summary>
+        [Test]
+        public void EnsureFactorWithTwoChildModelsOfSameTypeWorks()
+        {
+            var experiment = new Experiment()
+            {
+                Name = "Exp1",
+                Children = new List<Model>()
+                {
+                    new Simulation()
+                    {
+                        Name = "BaseSimulation",
+                        Children = new List<Model>()
+                        {
+                            new Models.Operations()
+                            {
+                                Name = "Sowing",
+                                Operation = new List<Models.Operation>()
+                                {
+                                    new Models.Operation()
+                                    {
+                                        Action = "Sowing"
+                                    }
+                                }
+                            },
+                            new Models.Operations()
+                            {
+                                Name = "Cutting",
+                                Operation = new List<Models.Operation>()
+                                {
+                                    new Models.Operation()
+                                    {
+                                        Action =   "Cutting"
+                                    }
+                                }
+
+                            },
+                        }
+                    },
+                    new Factors()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Factor()
+                            {
+                                Name = "Site",
+                                Children = new List<Model>()
+                                {
+                                    new CompositeFactor()
+                                    {
+                                        Name = "1",
+                                        Specifications = new List<string>() { "[Sowing]",
+                                                                              "[Cutting]"},
+                                        Children = new List<Model>()
+                                        {
+                                            new Models.Operations()
+                                            {
+                                                Name = "Sowing",
+                                                Operation = new List<Models.Operation>()
+                                                {
+                                                    new Models.Operation()
+                                                    {
+                                                        Action = "Sowing1"
+                                                    }
+                                                }
+                                            },
+                                            new Models.Operations()
+                                            {
+                                                Name = "Cutting",
+                                                Operation = new List<Models.Operation>()
+                                                {
+                                                    new Models.Operation()
+                                                    {
+                                                        Action =   "Cutting1"
+                                                    }
+                                                }
+
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(experiment);
+
+            var sims = experiment.GenerateSimulationDescriptions();
+            Assert.AreEqual(sims[0].Name, "Exp1Site1");
+            var sim = sims[0].ToSimulation();
+            var sowing = sim.Children[0] as Models.Operations;
+            var cutting = sim.Children[1] as Models.Operations;
+            Assert.AreEqual(sowing.Operation[0].Action, "Sowing1");
+            Assert.AreEqual(cutting.Operation[0].Action, "Cutting1");
+        }
+
         /// <summary>Ensure disabled simulations aren't run.</summary>
         [Test]
         public void EnsureDisabledSimulationsArentRun()
