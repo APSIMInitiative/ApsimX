@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.Runners;
 using NUnit.Framework;
 
 namespace UnitTests.Core
@@ -31,7 +32,9 @@ namespace UnitTests.Core
             bool hasBeenRun = (bool)ReflectionUtilities.GetValueOfFieldOrProperty("HasBeenRun", script);
             Assert.False(hasBeenRun);
 
-            sims.Run(sim, doClone: false);
+            IJobManager jobManager = new RunOrganiser(sims, sim, false);
+            IJobRunner jobRunner = new JobRunnerAsync();
+            jobRunner.Run(jobManager, wait: true);
 
             hasBeenRun = (bool)ReflectionUtilities.GetValueOfFieldOrProperty("HasBeenRun", script);
             Assert.True(hasBeenRun, "Failure in a post simulation tool prevented another post simulation tool from running.");
