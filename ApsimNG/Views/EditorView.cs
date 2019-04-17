@@ -182,19 +182,7 @@ namespace UserInterface.Views
             {
                 textEditor.Text = value;
                 if (ScriptMode)
-                {
                     textEditor.Document.MimeType = "text/x-csharp";
-                    textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-                    textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
-                    styleSeparator.Visible = true;
-                    styleMenu.Visible = true;
-                }
-                else
-                {
-                    textEditor.Options.ColorScheme = "Default";
-                    styleSeparator.Visible = false;
-                    styleMenu.Visible = false;
-                }
             }
         }
 
@@ -311,13 +299,15 @@ namespace UserInterface.Views
             Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
-            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-            options.Zoom = Utility.Configuration.Settings.EditorZoom;
+            options.ColorScheme = Configuration.Settings.EditorStyleName;
+            options.Zoom = Configuration.Settings.EditorZoom;
             options.HighlightCaretLine = true;
             options.EnableSyntaxHighlighting = true;
             options.HighlightMatchingBracket = true;
             textEditor.Options = options;
             textEditor.Options.Changed += EditorOptionsChanged;
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.Options.Zoom = Configuration.Settings.EditorZoom;
             textEditor.TextArea.DoPopupMenu = DoPopup;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
