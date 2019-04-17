@@ -242,14 +242,15 @@
         /// Write a single sumary file for all simulations.
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
-        /// <param name="fileName">The file name to write</param>
-        public static void WriteSummaryToTextFiles(IDataStore storage, string fileName)
+        /// <param name="fileName">The file name to write</param>           
+        /// <param name="darkTheme">Whether or not the dark theme should be used.</param>
+        public static void WriteSummaryToTextFiles(IDataStore storage, string fileName, bool darkTheme)
         {
             using (StreamWriter report = new StreamWriter(fileName))
             {
                 foreach (string simulationName in storage.Reader.SimulationNames)
                 {
-                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html);
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme : darkTheme);
                     report.WriteLine();
                     report.WriteLine();
                     report.WriteLine("############################################################################");
@@ -265,12 +266,14 @@
         /// <param name="writer">Text writer to write to</param>
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="outtype">Indicates the format to be produced</param>
+        /// <param name="darkTheme">Whether or not the dark theme should be used.</param>
         public static void WriteReport(
             IDataStore storage,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
-            OutputType outtype)
+            OutputType outtype,
+            bool darkTheme)
         {
             Document document = null;
             RtfDocumentRenderer renderer = null;
@@ -282,14 +285,26 @@
                 writer.WriteLine("<head>");
                 writer.WriteLine("<meta content='text/html; charset=UTF-8; http-equiv='content-type'>");
                 writer.WriteLine("<style>");
-                writer.WriteLine("h2 { color:darkblue; } ");
-                writer.WriteLine("h3 { color:darkblue; } ");
-                writer.WriteLine("table { border:1px solid black; border-collapse:collapse; width:100%; table-layout:fixed; text-align:left; }");
+                if (darkTheme)
+                {
+                    writer.WriteLine("h2 { color:white; } ");
+                    writer.WriteLine("h3 { color:white; } ");
+                    writer.WriteLine("table { border:1px solid white; }");
+                }
+                else
+                {
+                    writer.WriteLine("h2 { color:darkblue; } ");
+                    writer.WriteLine("h3 { color:darkblue; } ");
+                    writer.WriteLine("table { border:1px solid black; }");
+                    writer.WriteLine("th { background-color: palegoldenrod}");
+                    writer.WriteLine("tr.total { color:darkorange; }");
+                }
+                writer.WriteLine("table { border-collapse:collapse; width:100%; table-layout:fixed; text-align:left; }");
                 writer.WriteLine("table.headered {text-align:right; }");
-                writer.WriteLine("tr.total { color:darkorange; font-weight:bold; }");
+                writer.WriteLine("tr.total { font-weight:bold; }");
                 writer.WriteLine("table.headered td.col1 { text-align:left; font-weight:bold; }");
                 writer.WriteLine("td { border:1px solid; }");
-                writer.WriteLine("th { border:1px solid; text-align:right; background-color: palegoldenrod}");
+                writer.WriteLine("th { border:1px solid; text-align:right; }");
                 writer.WriteLine("th.col1 { text-align:left; }");
                 writer.WriteLine("</style>");
                 writer.WriteLine("</head>");

@@ -37,6 +37,11 @@ namespace UserInterface.Views
         event EventHandler LeaveEditor;
 
         /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        event EventHandler StyleChanged;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         string Text { get; set; }
@@ -111,6 +116,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         System.Drawing.Point GetPositionOfCursor();
+
+        /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        void Refresh();
     }
 
     /// <summary>
@@ -169,6 +179,11 @@ namespace UserInterface.Views
         public event EventHandler LeaveEditor;
 
         /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        public event EventHandler StyleChanged;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         public string Text
@@ -182,19 +197,7 @@ namespace UserInterface.Views
             {
                 textEditor.Text = value;
                 if (ScriptMode)
-                {
                     textEditor.Document.MimeType = "text/x-csharp";
-                    textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-                    textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
-                    styleSeparator.Visible = true;
-                    styleMenu.Visible = true;
-                }
-                else
-                {
-                    textEditor.Options.ColorScheme = "Default";
-                    styleSeparator.Visible = false;
-                    styleMenu.Visible = false;
-                }
             }
         }
 
@@ -311,13 +314,15 @@ namespace UserInterface.Views
             Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
-            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-            options.Zoom = Utility.Configuration.Settings.EditorZoom;
+            options.ColorScheme = Configuration.Settings.EditorStyleName;
+            options.Zoom = Configuration.Settings.EditorZoom;
             options.HighlightCaretLine = true;
             options.EnableSyntaxHighlighting = true;
             options.HighlightMatchingBracket = true;
             textEditor.Options = options;
             textEditor.Options.Changed += EditorOptionsChanged;
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.Options.Zoom = Configuration.Settings.EditorZoom;
             textEditor.TextArea.DoPopupMenu = DoPopup;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
@@ -548,6 +553,15 @@ namespace UserInterface.Views
             textEditor.TextArea.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
             return new System.Drawing.Point(x + frameX, y + frameY);
+        }
+
+        /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        public void Refresh()
+        {
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.QueueDraw();
         }
 
         /// <summary>
@@ -810,6 +824,8 @@ namespace UserInterface.Views
             Utility.Configuration.Settings.EditorStyleName = caption;
             textEditor.Options.ColorScheme = caption;
             textEditor.QueueDraw();
+
+            StyleChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

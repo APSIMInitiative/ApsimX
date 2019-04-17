@@ -46,9 +46,6 @@
         /// </summary>
         private double baseFontSize = 12.5;
 
-        /// <summary>
-        /// Step by which we do font size changes (in points)
-        /// </summary>
         private double scrollSizeStep = 0.5;
 
         /// <summary>
@@ -67,7 +64,7 @@
         private ListButtonView listButtonView2;
 
         /// <summary>
-        /// Main Gtk window.
+        /// The main Gtk Window.
         /// </summary>
         private Window window1 = null;
 
@@ -122,17 +119,22 @@
         private Pango.FontDescription baseFont;
 
         /// <summary>
+        /// Dark theme icon.
+        /// </summary>
+        private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
+
+        /// <summary>
+        /// Default theme Icon.
+        /// </summary>
+        private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
             MasterView = this;
             numberOfButtons = 0;
-            if ((uint)Environment.OSVersion.Platform <= 3)
-            {
-                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                      ".gtkrc"));
-            }
             baseFont = Rc.GetStyle(new Label()).FontDescription.Copy();
             defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
             FontSize = Utility.Configuration.Settings.BaseFontSize;
@@ -155,7 +157,8 @@
             EventBox labelBox = new EventBox();
             Label label = new Label("NOTE: This version of APSIM writes .apsimx files as JSON, not XML. These files cannot be opened with older versions of APSIM.");
             labelBox.Add(label);
-            labelBox.ModifyBg(StateType.Normal, new Gdk.Color(0xff, 0xff, 0x00)); // yellow
+            if (!Utility.Configuration.Settings.DarkTheme)
+                labelBox.ModifyBg(StateType.Normal, new Gdk.Color(0xff, 0xff, 0x00)); // yellow
             vbox1.PackStart(labelBox, false, true, 0);
             vbox1.PackEnd(listButtonView1.MainWidget, true, true, 0);
             listButtonView2 = new ListButtonView(this);
@@ -177,7 +180,6 @@
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("normal");
             tag.Foreground = "blue";
-            statusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
             statusWindow.Visible = false;
             stopButton.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Delete.png", 12, 12));
             stopButton.ImagePosition = PositionType.Right;
@@ -191,6 +193,8 @@
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
                 InitMac();
+            if ((uint)Environment.OSVersion.Platform <= 3)
+                RefreshTheme();
         }
 
         /// <summary>
@@ -558,7 +562,7 @@
             if (tabPage >= 0 && notebook != null)
                 notebook.CurrentPage = tabPage;
         }
-
+        
         /// <summary>Gets or set the main window position.</summary>
         public Point WindowLocation
         {
@@ -750,6 +754,27 @@
             OnError?.Invoke(this, new ErrorArgs { Error = err });
         }
 
+        /// <summary>
+        /// Sets the Gtk theme based on the user's previous choice.
+        /// </summary>
+        public void RefreshTheme()
+        {
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
+                {
+                    using (StreamReader darkTheme = new StreamReader(rcStream))
+                        Rc.ParseString(darkTheme.ReadToEnd());
+                }
+
+                // Remove black colour from colour pallete.
+                Color black = Color.FromArgb(0, 0, 0);
+                ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
+            }
+            else
+                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
+        }
+
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
         {
             TextIter iter = statusWindow.Buffer.EndIter;
@@ -769,6 +794,22 @@
         private void ShowDetailedErrorMessage(object sender, EventArgs args)
         {
             ShowDetailedError?.Invoke(sender, args);
+        }
+
+        /// <summary>
+        /// Invoked when theme is toggled.
+        /// Toggles the icon displayed on the "toggle theme" button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        public void ToggleTheme(object sender, EventArgs args)
+        {
+            if (sender is ToolButton)
+            {
+                ToolButton button = sender as ToolButton;
+                button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
+                button.IconWidget.ShowAll();
+            }
         }
 
         /// <summary>
@@ -936,6 +977,7 @@
             MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
                 msgType, buttonType, message);
             md.Title = title;
+            md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
             md.Destroy();
             return result;

@@ -6,7 +6,7 @@ using Gtk;
 using WebKit;
 using MonoMac.AppKit;
 using APSIM.Shared.Utilities;
-using EventArguments;
+using UserInterface.EventArguments;
 using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
@@ -179,7 +179,6 @@ namespace UserInterface.Views
                 Browser.Document.Body.InnerHtml = html;
             else
                 Browser.DocumentText = html;
-
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
@@ -188,6 +187,35 @@ namespace UserInterface.Views
             while (Browser != null && Browser.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
+                ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
+            }
+        }
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return Browser.Document.BackColor;
+            }
+            set
+            {
+                Browser.Document.BackColor = value;
+            }
+        }
+
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return Browser.Document.ForeColor;
+            }
+            set
+            {
+                Browser.Document.ForeColor = value;
+            }
         }
 
         public TWWebBrowserIE(Gtk.Box w)
@@ -727,7 +755,7 @@ namespace UserInterface.Views
         /// Enables or disables the Windows web browser.
         /// </summary>
         /// <param name="state">True to enable the browser, false to disable it.</param>
-        public void EnableWb(bool state)
+        public void EnableBrowser(bool state)
         {
             if (browser is TWWebBrowserIE)
                 (browser as TWWebBrowserIE).Browser.Parent.Enabled = state;
@@ -821,9 +849,12 @@ namespace UserInterface.Views
 
             if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).Browser != null)
             {
-                keyPressObject = (browser as TWWebBrowserIE).Browser.Document.ActiveElement;
+                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+                keyPressObject = ieBrowser.Browser.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+                ieBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+                ieBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }

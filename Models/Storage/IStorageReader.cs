@@ -71,5 +71,7 @@ namespace Models.Storage
         /// <returns></returns>
         int GetSimulationID(string simulationName);
 
+        /// <summary>Refresh this instance to reflect the database connection.</summary>
+        void Refresh();
     }
 }
