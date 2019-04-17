@@ -117,12 +117,12 @@ namespace UserInterface.Views
         /// Name, ID, State, NumSims, Progress, StartTime, EndTime
         /// </summary>
         private readonly string[] columnTitles = { "Name/Description", "Job ID", "State", "#Sims", "Progress", "Start Time", "End Time", "Duration", "CPU Time" };
-        private enum columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, Duration, CpuTime };
+        private enum Columns { Name, ID, State, NumSims, Progress, StartTime, EndTime, Duration, CpuTime };
 
         /// <summary>
         /// Defines the format that the two TimeSpan fields (duration and CPU time) are to be displayed in.
         /// </summary>
-        private const string TIMESPAN_FORMAT = @"dddd\d\ hh\h\ mm\m\ ss\s";
+        private const string TimespanFormat = @"dddd\d\ hh\h\ mm\m\ ss\s";
 
         /// <summary>
         /// Constructor. Initialises the jobs TreeView and the controls associated with it.
@@ -268,7 +268,7 @@ namespace UserInterface.Views
             vboxPrimary.PackEnd(progress, false, false, 0);
             vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
-            _mainWidget = vboxPrimary;
+            mainWidget = vboxPrimary;
             vboxPrimary.ShowAll();
 
             downloadProgressContainer.HideAll();
@@ -396,8 +396,8 @@ namespace UserInterface.Views
                     string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
                     string dispName = myJobsOnly ? job.DisplayName : job.DisplayName + " (" + job.Owner + ")";
                     string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TIMESPAN_FORMAT);
-                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TIMESPAN_FORMAT);
+                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TimespanFormat);
+                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TimespanFormat);
                     store.AppendValues(dispName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr);
                 }
             });
@@ -426,23 +426,23 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortData(TreeModel model, TreeIter a, TreeIter b, int i)
         {
-            if (i == (int)columns.Name || i == (int)columns.ID || i == (int)columns.State)
+            if (i == (int)Columns.Name || i == (int)Columns.ID || i == (int)Columns.State)
             {
                 return SortStrings(model, a, b, i);
             }
-            else if (i == (int)columns.StartTime || i == (int)columns.EndTime)
+            else if (i == (int)Columns.StartTime || i == (int)Columns.EndTime)
             {
                 return SortDateStrings(model, a, b, i);
             }
-            else if (i == (int)columns.NumSims)
+            else if (i == (int)Columns.NumSims)
             {
                 return SortInts(model, a, b, i);
             }
-            else if (i == (int)columns.Progress)
+            else if (i == (int)Columns.Progress)
             {
                 return SortProgress(model, a, b);
             }
-            else if (i == (int)columns.CpuTime || i == (int)columns.Duration)
+            else if (i == (int)Columns.CpuTime || i == (int)Columns.Duration)
             {
                 return SortCpuTime(model, a, b);
             }
@@ -492,7 +492,7 @@ namespace UserInterface.Views
         private int SortProgress(TreeModel model, TreeIter a, TreeIter b)
         {
             int x, y;
-            int columnIndex = (int)columns.Progress;
+            int columnIndex = (int)Columns.Progress;
             if (!Int32.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out x))
                 return -1;
             if (!Int32.TryParse(((string)model.GetValue(b, columnIndex)).Replace("%", ""), out y))
@@ -513,7 +513,7 @@ namespace UserInterface.Views
         /// <returns>Less than zero if the first date is earlier than the second, zero if they are equal, or greater than zero if the first date is later than the second.</returns>
         private int SortDateStrings(TreeModel model, TreeIter a, TreeIter b, int n)
         {
-            if (!(n == (int)columns.StartTime || n == (int)columns.EndTime)) return -1;
+            if (!(n == (int)Columns.StartTime || n == (int)Columns.EndTime)) return -1;
             string str1 = (string)model.GetValue(a, n);
             string str2 = (string)model.GetValue(b, n);
             return Presenter.CompareDateTimeStrings(str1, str2);
@@ -528,15 +528,15 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortCpuTime(TreeModel model, TreeIter a, TreeIter b)
         {
-            int index = (int)columns.CpuTime;
+            int index = (int)Columns.CpuTime;
             string str1 = (string)model.GetValue(a, index);
             string str2 = (string)model.GetValue(b, index);
             if (str1 == "" || str1 == null) return -1;
             if (str2 == "" || str2 == null) return 1;
             TimeSpan t1, t2;
-            if (!TimeSpan.TryParseExact(str1, TIMESPAN_FORMAT, null, out t1))
+            if (!TimeSpan.TryParseExact(str1, TimespanFormat, null, out t1))
                 return -1;
-            if (!TimeSpan.TryParseExact(str2, TIMESPAN_FORMAT, null, out t2))
+            if (!TimeSpan.TryParseExact(str2, TimespanFormat, null, out t2))
                 return 1;
             return TimeSpan.Compare(t1, t2);
         }
@@ -667,7 +667,7 @@ namespace UserInterface.Views
         {
             TreeIter iter;
             tree.Model.GetIter(out iter, row);
-            return (string)tree.Model.GetValue(iter, (int)columns.ID);
+            return (string)tree.Model.GetValue(iter, (int)Columns.ID);
         }
 
         /// <summary>

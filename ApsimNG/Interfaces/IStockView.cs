@@ -25,9 +25,9 @@ namespace UserInterface.Interfaces
 
     public class GenotypeInitArgs : EventArgs
     {
-        public AnimalParamSet ParamSet;
-        public StockGeno[] Genotypes;
-        public int index;
+        public AnimalParamSet ParamSet { get; set; }
+        public StockGeno[] Genotypes { get; set; }
+        public int Index { get; set; }
     }
 
 }

@@ -14,6 +14,7 @@ using Models.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
+using Models.Core.Run;
 
 namespace Models.Core
 {
@@ -132,38 +133,12 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation, doClone);
+            RunSimulation simulationRunner = new RunSimulation(this, simulation);
             Links.Resolve(simulationRunner);
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
 
-        /// <summary>
-        /// Perform model substitutions
-        /// </summary>
-        public void MakeSubsAndLoad(Simulation model)
-        {
-            IModel replacements = Apsim.Child(this, "Replacements");
-            if (replacements != null)
-            {
-                foreach (IModel replacement in replacements.Children)
-                {
-                    foreach (IModel match in Apsim.FindAll(model))
-                    {
-                        if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            // Do replacement.
-                            IModel newModel = Apsim.Clone(replacement);
-                            int index = match.Parent.Children.IndexOf(match as Model);
-                            match.Parent.Children.Insert(index, newModel as Model);
-                            newModel.Parent = match.Parent;
-                            match.Parent.Children.Remove(match as Model);
 
-                            newModel.OnCreated();
-                        }
-                    }
-                }
-            }
-        }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
@@ -181,33 +156,6 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
-        }
-
-        /// <summary>Find all simulation names that are going to be run.</summary>
-        /// <returns></returns>
-        public string[] FindAllSimulationNames()
-        {
-            List<string> simulations = new List<string>();
-            // Look for simulations.
-            foreach (Model Model in Apsim.ChildrenRecursively(this))
-            {
-                if (Model is Simulation)
-                {
-                    // An experiment can have a base simulation - don't return that to caller.
-                    if (!(Model.Parent is Experiment))
-                        simulations.Add(Model.Name);
-                }
-            }
-
-            // Look for experiments and get them to create their simulations.
-            foreach (Model experiment in Apsim.ChildrenRecursively(this))
-            {
-                if (experiment is Experiment)
-                    simulations.AddRange((experiment as Experiment).GetSimulationNames());
-            }
-
-            return simulations.ToArray();
-
         }
 
         /// <summary>Find and return a list of duplicate simulation names.</summary>
@@ -316,10 +264,9 @@ namespace Models.Core
                     string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
 
                     // Clone the simulation
-                    Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
+                    SimulationDescription simDescription = new SimulationDescription(simulation);
 
-                    // Make any substitutions.
-                    MakeSubsAndLoad(clonedSimulation);
+                    Simulation clonedSimulation = simDescription.ToSimulation(this);
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

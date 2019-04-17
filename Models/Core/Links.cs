@@ -53,7 +53,8 @@ namespace Models.Core
         /// Resolve links in an unknown object e.g. user interface presenter
         /// </summary>
         /// <param name="obj"></param>
-        public void Resolve(object obj)
+        /// <param name="throwOnFail">Should an exception be thrown if a link fails to be resolved?</param>
+        public void Resolve(object obj, bool throwOnFail = true)
         {
             // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(obj, GetModel(obj).GetType(),
@@ -68,7 +69,7 @@ namespace Models.Core
                     object match = services.Find(s => field.DataType.IsAssignableFrom(s.GetType()));
                     if (match != null)
                         field.Value = GetModel(match);
-                    else if (!link.IsOptional)
+                    else if (!link.IsOptional && throwOnFail)
                         throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                 }
             }
