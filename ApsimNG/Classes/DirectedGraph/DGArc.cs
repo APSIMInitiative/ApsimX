@@ -60,7 +60,7 @@ namespace ApsimNG.Classes.DirectedGraph
                 if (Selected)
                     context.SetSourceColor(OxyColors.Blue);
                 else
-                    context.SetSourceColor(Colour);
+                    context.SetSourceColor(DefaultOutlineColour);
 
                 // Draw text if necessary
                 if (Name != null)

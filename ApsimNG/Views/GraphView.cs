@@ -97,8 +97,8 @@ namespace UserInterface.Views
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
-            BackColor = OxyPlot.OxyColors.White;
+            Color foreground = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Selected));
+            ForegroundColour = OxyColor.FromRgb(foreground.R, foreground.G, foreground.B);
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -173,10 +173,34 @@ namespace UserInterface.Views
         /// </summary>
         public int LeftRightPadding { get; set; }
 
+        /// <summary>
+        /// Controls the background colour of the graph.
+        /// </summary>
         public OxyColor BackColor
         {
-            get { return this.plot1.Model.Background; }
-            set { this.plot1.Model.Background = value; }
+            get
+            {
+                return this.plot1.Model.Background;
+            }
+            set
+            {
+                this.plot1.Model.Background = value;
+            }
+        }
+
+        /// <summary>
+        /// Controls the foreground colour of the graph.
+        /// </summary>
+        public OxyColor ForegroundColour
+        {
+            get
+            {
+                return this.plot1.Model.TextColor;
+            }
+            set
+            {
+                this.plot1.Model.TextColor = value;
+            }
         }
 
         public int Width
@@ -293,6 +317,8 @@ namespace UserInterface.Views
                     series.Title = title;
                 else
                     series.ToolTip = title;
+                if (colour == Color.Empty)
+                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();

@@ -31,7 +31,7 @@
 
         /// <summary>Grid for holding data.</summary>
         public IListView List { get; }
-
+        
         /// <summary>Gets or sets the value displayed in the number of simulations label./// </summary>
         public ILabelView NumberSimulationsLabel { get; set; }
 

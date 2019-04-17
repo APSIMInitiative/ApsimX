@@ -49,9 +49,11 @@ namespace UserInterface.Views
             mainWidget = notebook1;
 
             variableEditor = new EditorView(this);
+            variableEditor.StyleChanged += OnStyleChanged;
             vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
 
             frequencyEditor = new EditorView(this);
+            frequencyEditor.StyleChanged += OnStyleChanged;
             vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
 
             dataStoreView1 = new DataStoreView(this);
@@ -59,8 +61,30 @@ namespace UserInterface.Views
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Invoked when the user changes the colour scheme (style) of one of
+        /// the text editors. Refreshes both text editors, so that the new
+        /// both use the new style.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnStyleChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                variableEditor?.Refresh();
+                frequencyEditor?.Refresh();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
+            variableEditor.StyleChanged -= OnStyleChanged;
+            frequencyEditor.StyleChanged -= OnStyleChanged;
             variableEditor.MainWidget.Destroy();
             variableEditor = null;
             frequencyEditor.MainWidget.Destroy();

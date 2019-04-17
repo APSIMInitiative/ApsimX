@@ -162,6 +162,11 @@ namespace UserInterface.Interfaces
         void SelectTabContaining(object o);
 
         /// <summary>
+        /// Toggles between the default and dark GTK themes.
+        /// </summary>
+        void RefreshTheme();
+
+        /// <summary>
         /// Gets the text from a clipboard.
         /// </summary>
         /// <param name="clipboardName">Name of the clipboard.</param>
@@ -174,6 +179,14 @@ namespace UserInterface.Interfaces
         /// <param name="text">Text to be copied.</param>
         /// <param name="clipboardName">Name of the clipboard.</param>
         void SetClipboardText(string text, string clipboardName);
+
+        /// <summary>
+        /// Invoked when theme is toggled.
+        /// Toggles the icon displayed on the "toggle theme" button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        void ToggleTheme(object sender, EventArgs args);
 
         /// <summary>
         /// Invoked when application tries to close
