@@ -87,6 +87,7 @@ namespace Models.Graph
                     data = definitions.FirstOrDefault(d => d.data != null)?.data;
                 xFieldName = definitions[0].xFieldName;
             }
+
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
