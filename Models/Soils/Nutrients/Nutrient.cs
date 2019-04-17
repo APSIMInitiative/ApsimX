@@ -390,7 +390,7 @@
 
             foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
             {
-                directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black);
 
                 foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
                 {
@@ -410,7 +410,7 @@
 
             foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
             {
-                directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black);
                 foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
                 {
                     string destName = nitrogenFlow.destinationName;
@@ -424,7 +424,7 @@
             }
 
             if (needAtmosphereNode)
-                directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+                directedGraphInfo.AddTransparentNode("Atmosphere");
 
             
             directedGraphInfo.End();

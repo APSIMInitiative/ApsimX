@@ -26,16 +26,16 @@ namespace UserInterface.Views
         public CheckBoxView(ViewBase owner) : base(owner)
         {
             checkbutton1 = new CheckButton();
-            _mainWidget = checkbutton1;
+            mainWidget = checkbutton1;
             checkbutton1.Toggled += OnCheckChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             checkbutton1.Toggled -= OnCheckChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>

@@ -34,8 +34,8 @@ namespace UserInterface.Views
         private VBox vbox2 = null;
         private Alignment alignment1 = null;
 
-        private EditorView VariableEditor;
-        private EditorView FrequencyEditor;
+        private EditorView variableEditor;
+        private EditorView frequencyEditor;
         private DataStoreView dataStoreView1;
 
         /// <summary>Constructor</summary>
@@ -46,36 +46,60 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             alignment1 = (Alignment)builder.GetObject("alignment1");
-            _mainWidget = notebook1;
+            mainWidget = notebook1;
 
-            VariableEditor = new EditorView(this);
-            vbox1.PackStart(VariableEditor.MainWidget, true, true, 0);
+            variableEditor = new EditorView(this);
+            variableEditor.StyleChanged += OnStyleChanged;
+            vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
 
-            FrequencyEditor = new EditorView(this);
-            vbox2.PackStart(FrequencyEditor.MainWidget, true, true, 0);
+            frequencyEditor = new EditorView(this);
+            frequencyEditor.StyleChanged += OnStyleChanged;
+            vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the colour scheme (style) of one of
+        /// the text editors. Refreshes both text editors, so that the new
+        /// both use the new style.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnStyleChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                variableEditor?.Refresh();
+                frequencyEditor?.Refresh();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            VariableEditor.MainWidget.Destroy();
-            VariableEditor = null;
-            FrequencyEditor.MainWidget.Destroy();
-            FrequencyEditor = null;
+            variableEditor.StyleChanged -= OnStyleChanged;
+            frequencyEditor.StyleChanged -= OnStyleChanged;
+            variableEditor.MainWidget.Destroy();
+            variableEditor = null;
+            frequencyEditor.MainWidget.Destroy();
+            frequencyEditor = null;
             dataStoreView1.MainWidget.Destroy();
             dataStoreView1 = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Provides access to the variable list.</summary>
-        public IEditorView VariableList { get { return VariableEditor; } }
+        public IEditorView VariableList { get { return variableEditor; } }
 
         /// <summary>Provides access to the variable list.</summary>
-        public IEditorView EventList { get { return FrequencyEditor; } }
+        public IEditorView EventList { get { return frequencyEditor; } }
 
         /// <summary>Provides access to the DataGrid.</summary>
         public IDataStoreView DataStoreView { get { return dataStoreView1; } }

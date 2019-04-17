@@ -89,7 +89,7 @@ namespace Models.Graph
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
-        public List<SeriesDefinition> GetDefinitionsToGraph(IDataStore storage)
+        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
         {
             EnsureAllAxesExist();
 
