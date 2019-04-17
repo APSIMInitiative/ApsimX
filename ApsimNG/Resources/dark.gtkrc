@@ -170,3 +170,9 @@ style "notebook_style" {
 	bg[ACTIVE]			= shade (1.5, @bg_color) # Unfocused tab background.
 }
 widget_class "*<GtkNotebook>*<GtkEventBox>"     	style "notebook_style"
+
+style "scrollbar_style" {
+	bg[PRELIGHT]		= shade (2.0, @bg_color) # Scrollbar colour
+	bg[NORMAL]			= shade (1.5, @bg_color) # Scrollbar colour
+}
+class "GtkScrollbar" style "scrollbar_style"
