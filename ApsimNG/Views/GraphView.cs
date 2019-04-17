@@ -97,7 +97,7 @@ namespace UserInterface.Views
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
-            Color foreground = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Selected));
+            Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             ForegroundColour = OxyColor.FromRgb(foreground.R, foreground.G, foreground.B);
         }
 
