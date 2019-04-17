@@ -37,6 +37,11 @@ namespace UserInterface.Views
         event EventHandler LeaveEditor;
 
         /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        event EventHandler StyleChanged;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         string Text { get; set; }
@@ -111,6 +116,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         System.Drawing.Point GetPositionOfCursor();
+
+        /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        void Refresh();
     }
 
     /// <summary>
@@ -167,6 +177,11 @@ namespace UserInterface.Views
         /// Invoked when the user leaves the text editor.
         /// </summary>
         public event EventHandler LeaveEditor;
+
+        /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        public event EventHandler StyleChanged;
 
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
@@ -541,6 +556,15 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        public void Refresh()
+        {
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.QueueDraw();
+        }
+
+        /// <summary>
         /// Hide the completion window.
         /// </summary>
         /// <param name="sender">The sending object</param>
@@ -800,6 +824,8 @@ namespace UserInterface.Views
             Utility.Configuration.Settings.EditorStyleName = caption;
             textEditor.Options.ColorScheme = caption;
             textEditor.QueueDraw();
+
+            StyleChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
