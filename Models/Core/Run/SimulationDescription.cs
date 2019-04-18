@@ -7,6 +7,7 @@
     /// Encapsulates all the bits that are need to construct a simulation
     /// and the associated metadata describing a simulation.
     /// </summary>
+    [Serializable]
     public class SimulationDescription
     {
         /// <summary>The base simulation.</summary>
@@ -110,6 +111,7 @@
         }
 
         /// <summary>Encapsulates a descriptor for a simulation.</summary>
+        [Serializable]
         public class Descriptor
         {
             /// <summary>The name of the descriptor.</summary>

@@ -198,6 +198,23 @@ namespace Models.Core.Runners
             }
         }
 
+        /// <summary>
+        /// Attempts to locate a DataStore which can be used to write data
+        /// received from a job.
+        /// </summary>
+        /// <param name="job">Job which has sent data.</param>
+        private IDataStore GetDataStore(IRunnable job)
+        {
+            if (job is RunSimulation)
+                return (job as RunSimulation).DataStore;
+
+            if (job is IModel)
+                return Apsim.Find(job as IModel, typeof(IDataStore)) as IDataStore;
+
+            // What should we do here? For now, just throw.
+            throw new Exception(string.Format("Unable to locate DataStore for '{0}' model.", job.GetType().Name));
+        }
+
         /// <summary>Called by a runner process to send its output data.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
@@ -208,14 +225,12 @@ namespace Models.Core.Runners
                 if (args.obj is TransferReportData)
                 {
                     var transferData = args.obj as TransferReportData;
-                    var runSimulation = runningJobs[transferData.key] as RunSimulation;
-                    runSimulation.DataStore.Writer.WriteTable(transferData.data);
+                    GetDataStore(runningJobs[transferData.key]).Writer.WriteTable(transferData.data);
                 }
                 else if (args.obj is TransferDataTable)
                 {
                     var transferData = args.obj as TransferDataTable;
-                    var runSimulation = runningJobs[transferData.key] as RunSimulation;
-                    runSimulation.DataStore.Writer.WriteTable(transferData.data);
+                    GetDataStore(runningJobs[transferData.key]).Writer.WriteTable(transferData.data);
                 }
                 else
                     throw new Exception("Invalid socket transfer method.");

@@ -658,6 +658,10 @@ namespace Models.Core
                 {
                     this.Value = MathUtilities.StringsToDoubles(stringValues);
                 }
+                else if (this.DataType == typeof(float[]))
+                {
+                    this.Value = MathUtilities.StringsToDoubles(stringValues).Cast<float>().ToArray();
+                }
                 else if (this.DataType == typeof(int[]))
                 {
                     this.Value = MathUtilities.StringsToDoubles(stringValues);
@@ -676,6 +680,10 @@ namespace Models.Core
                 if (this.DataType == typeof(double))
                 {
                     this.Value = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                }
+                else if (this.DataType == typeof(float)) // yuck!
+                {
+                    this.Value = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                 }
                 else if (this.DataType == typeof(int))
                 {

@@ -12,8 +12,8 @@
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExperimentView.glade");
             builder.Autoconnect(this);
-            _mainWidget = (VBox)builder.GetObject("vbox");
-            _mainWidget.Destroyed += OnMainWidgetDestroyed;
+            mainWidget = (VBox)builder.GetObject("vbox");
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
 
             List = new ListView(owner, 
                                 (Gtk.TreeView) builder.GetObject("list"),
@@ -31,7 +31,7 @@
 
         /// <summary>Grid for holding data.</summary>
         public IListView List { get; }
-
+        
         /// <summary>Gets or sets the value displayed in the number of simulations label./// </summary>
         public ILabelView NumberSimulationsLabel { get; set; }
 
@@ -63,8 +63,8 @@
             (MaximumNumSimulations as EditView).MainWidget.Destroy();
             (RunAPSIMAction as MenuItemView).Destroy();
 
-            _mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnMainWidgetDestroyed;
+            owner = null;
         }
     }
 }

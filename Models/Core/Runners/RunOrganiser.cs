@@ -124,6 +124,7 @@
             }
 
             simulationEnumerator = null;
+            storage.Reader.Refresh();
         }
 
         /// <summary>

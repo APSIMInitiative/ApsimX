@@ -257,7 +257,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    SetModelProperty("Line", markerType);
+                    SetModelProperty("Marker", markerType);
                     SetModelProperty("FactorToVaryMarkers", null);
                 }
             }
