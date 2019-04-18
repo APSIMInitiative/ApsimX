@@ -11,7 +11,6 @@
         public ExperimentView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExperimentView.glade");
-            builder.Autoconnect(this);
             mainWidget = (VBox)builder.GetObject("vbox");
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 

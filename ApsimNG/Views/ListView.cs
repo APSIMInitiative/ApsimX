@@ -166,7 +166,14 @@
                     cell.Weight = (int) Pango.Weight.Bold;
                 if (renderDetails.Italics)
                     cell.Font = "Sans Italic";
-                cell.Foreground = renderDetails.Colour.Name;
+                cell.Foreground = renderDetails.Colour.Name; // ?
+            }
+            else if (baseCell is CellRendererText)
+            {
+                var cell = baseCell as CellRendererText;
+                cell.Strikethrough = false;
+                cell.Weight = (int)Pango.Weight.Normal;
+                cell.Font = "Normal";
             }
         }
 
