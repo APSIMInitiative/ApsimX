@@ -33,6 +33,8 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             object o = locator.Get(VariableName.Trim());
+            if (o == null)
+                throw new Exception(VariableName.Trim());
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
             else if (o is Array)
