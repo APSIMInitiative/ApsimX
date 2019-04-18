@@ -26,6 +26,8 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
+        private List<SimulationDescription> simulationDescriptions;
+
         /// <summary>Constructor for a series</summary>
         public Series()
         {
@@ -140,10 +142,10 @@ namespace Models.Graph
             {
                 // TableName exists so get the vary by fields and the simulation descriptions.
                 var varyByFieldNames = GetVaryByFieldNames();
-                var simulationDescriptions = FindSimulationDescriptions();
+                simulationDescriptions = FindSimulationDescriptions();
                 var whereClauseForInScopeData = CreateInScopeWhereClause(simulationDescriptions);
                
-                if (varyByFieldNames.Count == 0)
+                if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
                     // No vary by fields. Just plot the whole table in a single
                     // series with data that is in scope.
@@ -151,19 +153,24 @@ namespace Models.Graph
                 }
                 else
                 {
-                    // There are one for more vary by fields. Create series definitions
+                    // There are one or more vary by fields. Create series definitions
                     // for each combination of vary by fields.
-                    seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions);
-
-                    // Paint all definitions. 
-                    var painter = GetSeriesPainter();
-                    foreach (var seriesDefinition in seriesDefinitions)
-                        painter.Paint(seriesDefinition);
+                    seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions, whereClauseForInScopeData);
                 }
+
+                // If we don't have any definitions then see if the vary by fields
+                // refer to string fields in the database table.
+                if (seriesDefinitions.Count == 0)
+                    seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
+
+                // Paint all definitions. 
+                var painter = GetSeriesPainter();
+                foreach (var seriesDefinition in seriesDefinitions)
+                    painter.Paint(seriesDefinition);
 
                 // Tell each series definition to read its data.
                 foreach (var seriesDefinition in seriesDefinitions)
-                    seriesDefinition.ReadData(reader);
+                    seriesDefinition.ReadData(reader, simulationDescriptions);
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -183,6 +190,42 @@ namespace Models.Graph
             // We might have child models that wan't to add to the annotations e.g. regression.
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
                 series.GetAnnotationsToPutOnGraph(annotations);
+        }
+
+        /// <summary>
+        /// Create series definitions assuming the vary by fields are text fields in the table.
+        /// </summary>
+        /// <param name="reader">The reader to read from.</param>
+        /// <param name="varyByFieldNames">The vary by fields.</param>
+        /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
+        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, List<string> varyByFieldNames, string whereClauseForInScopeData)
+        {
+            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
+
+            var fieldsThatExist = reader.ColumnNames(TableName);
+            var varyByThatExistInTable = varyByFieldNames.Where(v => fieldsThatExist.Contains(v)).ToList();
+
+            var validValuesForEachVaryByField = new List<List<string>>();
+            foreach (var varyByFieldName in varyByThatExistInTable)
+            {
+                var data = reader.GetData(TableName, 
+                                            fieldNames: new string[] { varyByFieldName },
+                                            filter: whereClauseForInScopeData,
+                                            distinct: true);
+                var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName).ToList();
+                validValuesForEachVaryByField.Add(values);
+            }
+
+            foreach (var combination in MathUtilities.AllCombinationsOf(validValuesForEachVaryByField.ToArray(), reverse:true))
+            {
+                var descriptors = new List<SimulationDescription.Descriptor>();
+                for (int i = 0; i < combination.Count; i++)
+                    descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
+                                                                         combination[i]));
+                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, descriptors));
+            }
+
+            return definitions;
         }
 
         /// <summary>
@@ -208,28 +251,37 @@ namespace Models.Graph
         /// </summary>
         /// <param name="varyByFieldNames">The vary by fields</param>
         /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
-        private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames, List<SimulationDescription> simulationDescriptions)
+        /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
+        private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames, 
+                                                                    List<SimulationDescription> simulationDescriptions,
+                                                                    string whereClauseForInScopeData)
         {
             SplitDescriptionsWithSameDescriptors(simulationDescriptions);
-            RemoveUnnessaryDescriptionsAndDescriptors(simulationDescriptions);
 
             var definitions = new List<SeriesDefinition>();
             foreach (var simulationDescription in simulationDescriptions)
             {
-                // Determine the title of the series.
-                string title = Name;
-                if (simulationDescription.Descriptors.Count != 1 || 
-                    simulationDescription.Descriptors[0].Name != "Graph series")
+                // Determine the descriptors to pass to the new definition that will
+                // be created below. We only want to pass the 'vary by' descriptors.
+                var descriptorsForDefinition = new List<SimulationDescription.Descriptor>();
+                foreach (var descriptor in simulationDescription.Descriptors)
                 {
-                    simulationDescription.Descriptors.ForEach(f => title += f.Value);
-                    if (IncludeSeriesNameInLegend || title == "?")
-                        title += ": " + Name;
+                    if (varyByFieldNames.Contains(descriptor.Name))
+                        descriptorsForDefinition.Add(descriptor);
                 }
 
-                // Create the definition.
-                var definition = new SeriesDefinition(series:this, 
-                                                      descriptors: simulationDescription.Descriptors, 
-                                                      customTitle:title);
+                // Try and find a definition that has the same descriptors.
+                var foundDefinition = definitions.Find(d => SimulationDescription.Equals(d.Descriptors, descriptorsForDefinition));
+
+                // Only create a definition if there are descriptors and there isn't
+                // already a definition with the same descriptors.
+                if (descriptorsForDefinition.Count > 0 && foundDefinition == null)
+                {
+                    // Create the definition.
+                    definitions.Add(new SeriesDefinition(this,
+                                                         whereClauseForInScopeData,
+                                                         descriptorsForDefinition));
+                }
             }
 
             return definitions;
@@ -271,37 +323,6 @@ namespace Models.Graph
             }
             simulationDescriptions.Clear();
             simulationDescriptions.AddRange(newList);
-        }
-
-        /// <summary>
-        /// If a simulation description doesn't have any descriptors that are being
-        /// varied then remove it.
-        /// </summary>
-        /// <param name="simulationDescriptions"></param>
-        private void RemoveUnnessaryDescriptionsAndDescriptors(List<SimulationDescription> simulationDescriptions)
-        {
-            var varyByFieldNames = GetVaryByFieldNames();
-            if (varyByFieldNames.Count > 0)
-            {
-                foreach (var simulationDescription in simulationDescriptions)
-                {
-                    // For this simulation description, determine which descriptors aren't 
-                    // being varied, add them to a removal list.
-                    var descriptorsToRemove = new List<SimulationDescription.Descriptor>();
-                    foreach (var descriptor in simulationDescription.Descriptors)
-                    {
-                        if (!varyByFieldNames.Contains(descriptor.Name))
-                            descriptorsToRemove.Add(descriptor);
-                    }
-
-                    // Remove all descriptors in the removal list.
-                    foreach (var descritorToRemove in descriptorsToRemove)
-                        simulationDescription.Descriptors.Remove(descritorToRemove);
-                }
-
-                // Remove all simulation descriptions that don't have any descriptors.
-                simulationDescriptions.RemoveAll(sd => sd.Descriptors.Count == 0);
-            }
         }
 
         /// <summary>

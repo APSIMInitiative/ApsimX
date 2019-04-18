@@ -1,16 +1,11 @@
 ﻿namespace UnitTests.Graph
 {
     using APSIM.Shared.Utilities;
-    using Models;
     using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
     using Models.Graph;
     using Models.Storage;
     using NUnit.Framework;
-    using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
 
@@ -56,7 +51,6 @@
             Assert.AreEqual(definitions[0].YFieldName, "Col2");
             Assert.AreEqual(definitions[0].Colour, series.Colour);
             Assert.IsNull(definitions[0].Error);
-            Assert.AreEqual(definitions[0].Filter, "SimulationName IN ('Sim1')");
             Assert.AreEqual(definitions[0].Line, LineType.Solid);
             Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -123,7 +117,6 @@
                 Assert.AreEqual(definitions[0].XFieldName, "Col1");
                 Assert.AreEqual(definitions[0].YFieldName, "Col2");
                 Assert.IsNull(definitions[0].Error);
-                Assert.IsNull(definitions[0].Filter);
                 Assert.AreEqual(definitions[0].Line, LineType.Solid);
                 Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
                 Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -206,7 +199,6 @@
                 Assert.AreEqual(definitions[0].XFieldName, "Col1");
                 Assert.AreEqual(definitions[0].YFieldName, "Col2");
                 Assert.IsNull(definitions[0].Error);
-                Assert.IsNull(definitions[0].Filter);
                 Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
                 Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
                 Assert.AreEqual(definitions[0].MarkerSize, MarkerSizeType.Normal);
@@ -555,7 +547,7 @@
             series.GetSeriesToPutOnGraph(reader, definitions);
 
             Assert.AreEqual(definitions.Count, 3);
-            Assert.AreEqual(definitions[0].Title, "Sim1");
+            Assert.AreEqual(definitions[0].Title, "Series");
             Assert.AreEqual(definitions[0].Type, SeriesType.Bar);
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2, 3, 4 });
             Assert.AreEqual(definitions[0].Y as double[], new double[] { 1.0, 1.5, 2.0, 2.5 });
@@ -1125,7 +1117,7 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].Title, "Sim1");
+            Assert.AreEqual(definitions[0].Title, "Series1");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
             Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
         }
