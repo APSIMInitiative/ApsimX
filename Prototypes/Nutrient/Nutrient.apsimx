@@ -1446,6 +1446,16 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "Start": "Emergence",
+                  "End": "Old",
+                  "Name": "NitrogenDemandSwitch",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,

@@ -4829,7 +4829,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structuture].Height",
+                      "VariableName": "[Structure].Height",
                       "Name": "HeightFunction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5609,7 +5609,7 @@
     },
     {
       "$type": "Models.Factorial.Experiment, Models",
-      "DisabledSimNames": null,
+      "DisabledSimNames": [],
       "Name": "Lincoln1997",
       "Children": [
         {
