@@ -6,6 +6,8 @@ using System.Linq;
 using NUnit.Framework;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using Models;
+using Models.Core;
 
 namespace UnitTests.Core.ApsimFile
 {
@@ -277,6 +279,88 @@ namespace UnitTests.Core.ApsimFile
             JArray arr = rootNode["A"] as JArray;
 
             Assert.AreEqual(arr.Values<string>(), values);
+        }
+
+        /// <summary>
+        /// Tests the AddModel functions.
+        /// </summary>
+        [Test]
+        public void AddModelTests()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTests.AddModelTests.json");
+            JObject node = JObject.Parse(json);
+
+            // Clock1 has an empty Children array, whereas clock2 does not have
+            // a Children array. This test ensures that this does not matter.
+            JObject clock1 = JsonUtilities.ChildWithName(node, "Clock1");
+            JObject clock2 = JsonUtilities.ChildWithName(node, "Clock2");
+            AddChildren(clock1);
+            AddChildren(clock2);
+
+            string clock2Name = clock2["Name"]?.ToString();
+            clock2["Name"] = clock1["Name"]; // For comparison purposes.
+
+            Assert.AreEqual(clock1, clock2, "Clock1:" + Environment.NewLine + clock1?.ToString() + Environment.NewLine + "Clock2:" + Environment.NewLine + clock2?.ToString());
+
+            JObject nullJObject = null;
+            IModel nullModel = null;
+            Type nullType = null;
+            string nullString = null;
+
+            // JsonUtilities.AddModel(JObject, IModel)
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, new Clock()),                 Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(clock1, nullModel),                        Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, nullModel),                   Throws.InstanceOf<Exception>());
+
+            // JsonUtilities.AddModel(JObject, Type)
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, typeof(Clock)),               Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(clock1, nullType),                         Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, nullType),                    Throws.InstanceOf<Exception>());
+
+            // JsonUtilities.AddModel(JObject, Type, string)
+            Assert.That(() => JsonUtilities.AddModel(clock1, typeof(Clock), nullString),        Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(clock1, nullType, ""),                     Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(clock1, nullType, nullString),             Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, typeof(Clock), ""),           Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, typeof(Clock), nullString),   Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, nullType, nullString),        Throws.InstanceOf<Exception>());
+            Assert.That(() => JsonUtilities.AddModel(nullJObject, nullType, ""),                Throws.InstanceOf<Exception>());
+        }
+
+        /// <summary>
+        /// Adds children to a node using each overload of the AddModel()
+        /// function, and ensures that all children are identical. And are
+        /// correctly named and typed.
+        /// </summary>
+        /// <param name="node"></param>
+        private void AddChildren(JObject node)
+        {
+            Clock clock = new Clock();
+            clock.Name = "Clock";
+
+            // First, add a model using type and instance methods, and ensure
+            // that the resultant children are identical.
+            JsonUtilities.AddModel(node, clock);
+            JsonUtilities.AddModel(node, typeof(Clock), "Clock");
+            JsonUtilities.AddModel(node, typeof(Clock));
+
+            List<JObject> children = JsonUtilities.Children(node);
+
+            // Node should now have 3 children.
+            Assert.NotNull(children);
+            Assert.AreEqual(3, children.Count);
+
+            JObject childClock1 = children[0];
+            JObject childClock2 = children[1];
+            JObject childClock3 = children[2];
+
+            // Ensure that all children are identical.
+            Assert.AreEqual(childClock1, childClock2);
+            Assert.AreEqual(childClock1, childClock3);
+
+            // Ensure that first child node has correct name and type.
+            Assert.AreEqual("Clock", JsonUtilities.Name(childClock1));
+            Assert.AreEqual("Clock", JsonUtilities.Type(childClock1, withNamespace: false));
         }
     }
 }
