@@ -2172,7 +2172,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[Grain].DMDemand.Structural",
                       "Name": "DMDemand",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3295,7 +3295,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Flowering.Target.NumberOfEarlyFloweringNodes.Value()",
+                          "VariableName": "[Phenology].EarlyFlowering.Target.NumberOfEarlyFloweringNodes.Value()",
                           "Name": "EarlyFloweringNodes",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3304,7 +3304,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Flowering.Target.NumberOfLateFloweringNodes.Value()",
+                          "VariableName": "[Phenology].EarlyPodDevelopment.Target.NumberOfLateFloweringNodes.Value()",
                           "Name": "LateFloweringNodes",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -9262,7 +9262,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "Lawes1990",
               "Children": [
                 {
