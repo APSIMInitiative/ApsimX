@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 54,
+  "Version": 56,
   "Name": "Simulations",
   "Children": [
     {
@@ -10,8 +10,6 @@
       "Children": [
         {
           "$type": "Models.Report.Report, Models",
-          "ExperimentFactorNames": null,
-          "ExperimentFactorValues": null,
           "VariableNames": [
             "[Clock].Today",
             "[Clock].Today.Year as Year",
@@ -215,7 +213,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Grain].DMDemand",
+                  "VariableName": "[Grain].DMDemandFunction.Value()",
                   "Name": "GrainDemand",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4338,6 +4336,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -4917,6 +4916,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -5203,7 +5203,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].DMDemands.Structural.DMDemandFunction.Value()",
+                                  "VariableName": "[Grain].DMDemandFunction.Value()",
                                   "Name": "GrainDemand",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5499,6 +5499,8 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [
         {
@@ -5539,6 +5541,7 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Sorghum_HE1_BusterNoTillers",
           "Children": [
             {
@@ -5869,7 +5872,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 50.0,
-                      "SoilCN": 12.5,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
                       "Thickness": [
@@ -5909,6 +5911,18 @@
                         0.17
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
                       "FBiom": [
                         0.05,
                         0.02,
@@ -6227,8 +6241,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": null,
                   "EventNames": null,
                   "Name": "Report",
@@ -7703,6 +7715,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE1_T1",
               "Children": [
                 {
@@ -8041,7 +8054,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -8081,6 +8093,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -8466,8 +8490,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": null,
                       "EventNames": null,
                       "Name": "Report",
@@ -8549,6 +8571,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE1_T2",
               "Children": [
                 {
@@ -8879,7 +8902,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -8919,6 +8941,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -9176,8 +9210,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": null,
                       "EventNames": null,
                       "Name": "Report",
@@ -9395,6 +9427,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE1_T3",
               "Children": [
                 {
@@ -9825,7 +9858,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -9865,6 +9897,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -10239,6 +10283,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE2_T1",
               "Children": [
                 {
@@ -10734,7 +10779,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -10774,6 +10818,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -11012,8 +11068,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -11075,6 +11129,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE2_T2",
               "Children": [
                 {
@@ -11498,7 +11553,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -11538,6 +11592,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -11776,8 +11842,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -11839,6 +11903,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE2_T3",
               "Children": [
                 {
@@ -12262,7 +12327,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -12302,6 +12366,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -12540,8 +12616,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -12613,6 +12687,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE3_T1",
               "Children": [
                 {
@@ -13078,7 +13153,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -13118,6 +13192,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -13356,8 +13442,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -13419,6 +13503,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE3_T2",
               "Children": [
                 {
@@ -13884,7 +13969,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -13924,6 +14008,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -14162,8 +14258,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -14225,6 +14319,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE3_T3",
               "Children": [
                 {
@@ -14690,7 +14785,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -14730,6 +14824,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -14968,8 +15074,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -15041,6 +15145,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE4_T1",
               "Children": [
                 {
@@ -15464,7 +15569,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -15504,6 +15608,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -15710,8 +15826,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -15773,6 +15887,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE4_T2",
               "Children": [
                 {
@@ -16196,7 +16311,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -16236,6 +16350,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -16442,8 +16568,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -16505,6 +16629,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE4_T3",
               "Children": [
                 {
@@ -16928,7 +17053,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -16968,6 +17092,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -17174,8 +17310,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -17247,6 +17381,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE5_T1",
               "Children": [
                 {
@@ -17754,7 +17889,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -17794,6 +17928,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -18032,8 +18178,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -18095,6 +18239,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE5_T2",
               "Children": [
                 {
@@ -18602,7 +18747,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -18642,6 +18786,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -18880,8 +19036,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -18943,6 +19097,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE5_T3",
               "Children": [
                 {
@@ -19456,7 +19611,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -19496,6 +19650,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -19734,8 +19900,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -19807,6 +19971,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE6_T1",
               "Children": [
                 {
@@ -20302,7 +20467,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -20342,6 +20506,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -20580,8 +20756,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -20643,6 +20817,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE6_T2",
               "Children": [
                 {
@@ -21138,7 +21313,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -21178,6 +21352,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -21416,8 +21602,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -21479,6 +21663,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE6_T3",
               "Children": [
                 {
@@ -21974,7 +22159,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -22014,6 +22198,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -22252,8 +22448,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -22325,6 +22519,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE7_T1",
               "Children": [
                 {
@@ -22766,7 +22961,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -22806,6 +23000,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -23044,8 +23250,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -23107,6 +23311,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE7_T2",
               "Children": [
                 {
@@ -23554,7 +23759,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -23594,6 +23798,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -23832,8 +24048,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -23895,6 +24109,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE7_T3",
               "Children": [
                 {
@@ -24342,7 +24557,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -24382,6 +24596,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -24620,8 +24846,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -24693,6 +24917,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE8_T1",
               "Children": [
                 {
@@ -25134,7 +25359,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -25174,6 +25398,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -25412,8 +25648,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -25475,6 +25709,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE8_T2",
               "Children": [
                 {
@@ -25922,7 +26157,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -25962,6 +26196,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -26200,8 +26446,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -26263,6 +26507,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_HE8_T3",
               "Children": [
                 {
@@ -26710,7 +26955,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 50.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -26750,6 +26994,18 @@
                             0.17
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -26988,8 +27244,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -27061,6 +27315,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE13_Buster-I-N",
               "Children": [
                 {
@@ -27419,7 +27674,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -27450,6 +27704,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -27726,8 +27989,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -27789,6 +28050,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE13_Buster-I+N",
               "Children": [
                 {
@@ -28159,7 +28421,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -28190,6 +28451,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -28446,8 +28716,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -28509,6 +28777,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE13_Buster+I+N",
               "Children": [
                 {
@@ -28867,7 +29136,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -28898,6 +29166,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -29210,8 +29487,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -29273,6 +29548,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE13_M35-1-I-N",
               "Children": [
                 {
@@ -29631,7 +29907,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -29662,6 +29937,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -29938,8 +30222,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -30001,6 +30283,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE13_M35-1-I+N",
               "Children": [
                 {
@@ -30359,7 +30642,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -30390,6 +30672,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -30684,8 +30975,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -30747,6 +31036,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE13_M35-1+I+N",
               "Children": [
                 {
@@ -31105,7 +31395,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -31136,6 +31425,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -31448,8 +31746,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -31521,6 +31817,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE14_Buster",
               "Children": [
                 {
@@ -31879,7 +32176,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -31910,6 +32206,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -32174,8 +32479,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -32237,6 +32540,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE14_M35-1",
               "Children": [
                 {
@@ -32595,7 +32899,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -32626,6 +32929,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -32890,8 +33202,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -32953,6 +33263,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE14_QL41xQL36",
               "Children": [
                 {
@@ -33311,7 +33622,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -33342,6 +33652,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -33606,8 +33925,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -33679,6 +33996,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE15_Buster",
               "Children": [
                 {
@@ -34037,7 +34355,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -34068,6 +34385,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -34308,8 +34634,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -34371,6 +34695,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE15_M35-1",
               "Children": [
                 {
@@ -34729,7 +35054,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -34760,6 +35084,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -35000,8 +35333,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -35063,6 +35394,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE15_QL41xQL36",
               "Children": [
                 {
@@ -35421,7 +35753,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -35452,6 +35783,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -35692,8 +36032,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -35765,6 +36103,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE17_T1",
               "Children": [
                 {
@@ -36123,7 +36462,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -36154,6 +36492,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -36466,8 +36813,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -36529,6 +36874,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE17_T2",
               "Children": [
                 {
@@ -36887,7 +37233,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -36918,6 +37263,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -37230,8 +37584,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -37293,6 +37645,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE17_T3",
               "Children": [
                 {
@@ -37651,7 +38004,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -37682,6 +38034,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -37994,8 +38355,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -38067,6 +38426,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T1",
               "Children": [
                 {
@@ -38437,7 +38797,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -38468,6 +38827,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -38663,8 +39031,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -38726,6 +39092,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T2",
               "Children": [
                 {
@@ -39084,7 +39451,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -39115,6 +39481,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -39355,8 +39730,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -39418,6 +39791,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T3",
               "Children": [
                 {
@@ -39776,7 +40150,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -39807,6 +40180,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -40059,8 +40441,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -40122,6 +40502,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T4",
               "Children": [
                 {
@@ -40480,7 +40861,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -40511,6 +40891,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -40763,8 +41152,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -40826,6 +41213,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T5",
               "Children": [
                 {
@@ -41184,7 +41572,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -41215,6 +41602,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -41448,8 +41844,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -41511,6 +41905,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T6",
               "Children": [
                 {
@@ -41869,7 +42264,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -41900,6 +42294,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -42140,8 +42543,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -42203,6 +42604,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T7",
               "Children": [
                 {
@@ -42561,7 +42963,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -42592,6 +42993,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -42844,8 +43254,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -42907,6 +43315,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_LE19_T8",
               "Children": [
                 {
@@ -43265,7 +43674,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -43296,6 +43704,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -43548,8 +43965,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -43621,6 +44036,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_1",
               "Children": [
                 {
@@ -43991,7 +44407,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -44022,6 +44437,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -44290,8 +44714,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -44353,6 +44775,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_2",
               "Children": [
                 {
@@ -44723,7 +45146,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -44754,6 +45176,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -45022,8 +45453,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -45085,6 +45514,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_3",
               "Children": [
                 {
@@ -45455,7 +45885,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -45486,6 +45915,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -45754,8 +46192,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -45817,6 +46253,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_4",
               "Children": [
                 {
@@ -46187,7 +46624,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -46218,6 +46654,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -46492,8 +46937,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -46555,6 +46998,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_5",
               "Children": [
                 {
@@ -46925,7 +47369,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -46956,6 +47399,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -47158,8 +47610,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -47221,6 +47671,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_6",
               "Children": [
                 {
@@ -47591,7 +48042,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -47622,6 +48072,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -47896,8 +48355,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -47959,6 +48416,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_7",
               "Children": [
                 {
@@ -48329,7 +48787,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -48360,6 +48817,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -48646,8 +49112,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -48709,6 +49173,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_8",
               "Children": [
                 {
@@ -49079,7 +49544,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -49110,6 +49574,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -49312,8 +49785,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -49375,6 +49846,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_Gatton_RUE_9",
               "Children": [
                 {
@@ -49745,7 +50217,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 30.0,
-                          "SoilCN": 12.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -49776,6 +50247,15 @@
                             0.11
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5,
+                            12.5
+                          ],
                           "FBiom": [
                             0.03,
                             0.01,
@@ -50062,8 +50542,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -50135,6 +50613,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T1",
               "Children": [
                 {
@@ -50645,7 +51124,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -50694,6 +51172,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -50962,8 +51455,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -51025,6 +51516,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T2",
               "Children": [
                 {
@@ -51535,7 +52027,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -51584,6 +52075,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -51852,8 +52358,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -51915,6 +52419,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T3",
               "Children": [
                 {
@@ -52425,7 +52930,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -52474,6 +52978,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -52742,8 +53261,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -52805,6 +53322,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T4",
               "Children": [
                 {
@@ -53315,7 +53833,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -53364,6 +53881,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -53632,8 +54164,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -53695,6 +54225,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T5",
               "Children": [
                 {
@@ -54163,7 +54694,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -54212,6 +54742,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -54480,8 +55025,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -54543,6 +55086,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T6",
               "Children": [
                 {
@@ -55011,7 +55555,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -55060,6 +55603,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -55328,8 +55886,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -55391,6 +55947,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T7",
               "Children": [
                 {
@@ -55859,7 +56416,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -55908,6 +56464,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -56176,8 +56747,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -56239,6 +56808,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T8",
               "Children": [
                 {
@@ -56707,7 +57277,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -56756,6 +57325,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -57024,8 +57608,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -57087,6 +57669,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T9",
               "Children": [
                 {
@@ -57543,7 +58126,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -57592,6 +58174,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -57860,8 +58457,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -57923,6 +58518,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T10",
               "Children": [
                 {
@@ -58379,7 +58975,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -58428,6 +59023,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -58696,8 +59306,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -58759,6 +59367,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T11",
               "Children": [
                 {
@@ -59215,7 +59824,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -59264,6 +59872,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -59532,8 +60155,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -59595,6 +60216,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW5_GxE_T12",
               "Children": [
                 {
@@ -60051,7 +60673,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -60100,6 +60721,21 @@
                             0.14
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -60368,8 +61004,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -60441,6 +61075,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T1",
               "Children": [
                 {
@@ -60935,7 +61570,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -60978,6 +61612,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -61180,8 +61827,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -61243,6 +61888,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T2",
               "Children": [
                 {
@@ -61737,7 +62383,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -61780,6 +62425,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -61982,8 +62640,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -62045,6 +62701,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T3",
               "Children": [
                 {
@@ -62539,7 +63196,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -62582,6 +63238,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -62784,8 +63453,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -62847,6 +63514,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T4",
               "Children": [
                 {
@@ -63341,7 +64009,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -63384,6 +64051,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -63586,8 +64266,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -63649,6 +64327,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T5",
               "Children": [
                 {
@@ -64101,7 +64780,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -64144,6 +64822,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -64346,8 +65037,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -64409,6 +65098,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T7",
               "Children": [
                 {
@@ -64861,7 +65551,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -64904,6 +65593,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -65106,8 +65808,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -65169,6 +65869,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T8",
               "Children": [
                 {
@@ -65621,7 +66322,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -65664,6 +66364,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -65866,8 +66579,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -65929,6 +66640,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T9",
               "Children": [
                 {
@@ -66375,7 +67087,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -66418,6 +67129,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -66620,8 +67344,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -66683,6 +67405,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T10",
               "Children": [
                 {
@@ -67129,7 +67852,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -67172,6 +67894,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -67374,8 +68109,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -67437,6 +68170,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T11",
               "Children": [
                 {
@@ -67883,7 +68617,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -67926,6 +68659,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -68128,8 +68874,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],
@@ -68191,6 +68935,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
               "Name": "Sorghum_BW8_GxE_T12",
               "Children": [
                 {
@@ -68637,7 +69382,6 @@
                         {
                           "$type": "Models.Soils.SoilOrganicMatter, Models",
                           "RootCN": 45.0,
-                          "SoilCN": 14.5,
                           "EnrACoeff": 7.4,
                           "EnrBCoeff": 0.2,
                           "Thickness": [
@@ -68680,6 +69424,19 @@
                             0.03
                           ],
                           "OCMetadata": null,
+                          "SoilCN": [
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5,
+                            14.5
+                          ],
                           "FBiom": [
                             0.05,
                             0.02,
@@ -68882,8 +69639,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "biomass_n"
                       ],

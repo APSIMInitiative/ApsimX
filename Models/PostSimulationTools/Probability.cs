@@ -46,6 +46,10 @@
         /// <param name="dataStore">The DataStore to work with</param>
         public void Run(IDataStore dataStore)
         {
+            if (string.IsNullOrWhiteSpace(TableName))
+                throw new Exception(string.Format("Error in probability model {0}: TableName is null", Name));
+            else if (!dataStore.Reader.TableNames.Contains(TableName))
+                throw new Exception(string.Format("Error in probability model {0}: table '{1}' does not exist in the database.", Name, TableName));
             DataTable simulationData = dataStore.Reader.GetData(TableName, fieldNames: dataStore.Reader.ColumnNames(TableName));
             if (simulationData != null)
             {

@@ -106,6 +106,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\PostSimulationToolTests.cs" />
     <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
     <Compile Include="Graph\SeriesTests.cs" />
     <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
@@ -119,7 +120,7 @@
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="Storage\DataStoreTests.cs" />
-    <Compile Include="TextStorageReader.cs" />    
+    <Compile Include="TextStorageReader.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="TestsTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
@@ -164,7 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTests.AddModelTests.json" />
     <EmbeddedResource Include="Core\ApsimFile\OnCreatedError.apsimx" />
+    <EmbeddedResource Include="Core\PostSimulationTool.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
