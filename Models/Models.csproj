@@ -524,7 +524,7 @@
     <Compile Include="Functions\SubtractFunction.cs" />
     <Compile Include="Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Functions\SupplyFunctions\RUEModel.cs" />
-    <Compile Include="Functions\Variable.cs" />
+    <Compile Include="Functions\VariableReference.cs" />
     <Compile Include="Functions\WeightedTemperatureFunction.cs" />
     <Compile Include="Functions\XYPairs.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
