@@ -93,6 +93,7 @@
 
             mainWindow = new Window("File Converter");
             mainWindow.TransientFor = owner.MainWidget.Toplevel as Window;
+            mainWindow.WindowPosition = WindowPosition.Center;
             mainWindow.Add(controlsContainer);
             mainWindow.DeleteEvent += OnDelete;
             mainWindow.Destroyed += OnClose;
