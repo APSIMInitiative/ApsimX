@@ -80,7 +80,7 @@
                 }
             }
             if (index >= indexMatrix.Count)
-                index = 0;
+                index = index % indexMatrix.Count;
             setter1(seriesDefinition, indexMatrix[index].Item1);
             setter2?.Invoke(seriesDefinition, indexMatrix[index].Item2);
             setter3?.Invoke(seriesDefinition, indexMatrix[index].Item3);

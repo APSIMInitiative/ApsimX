@@ -554,11 +554,15 @@
 
             Assert.AreEqual(definitions[1].Title, "Regression line");
             Assert.AreEqual(definitions[1].Type, SeriesType.Scatter);
+            Assert.AreEqual(definitions[1].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[1].MarkerSize, MarkerSizeType.Normal);
             Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 4 });
             Assert.AreEqual(definitions[1].Y as double[], new double[] { 1, 2.5 });
 
             Assert.AreEqual(definitions[2].Title, "1:1 line");
             Assert.AreEqual(definitions[2].Type, SeriesType.Scatter);
+            Assert.AreEqual(definitions[2].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[2].MarkerSize, MarkerSizeType.Normal);
             Assert.AreEqual(definitions[2].X as double[], new double[] { 1, 4 });
             Assert.AreEqual(definitions[2].Y as double[], new double[] { 1, 4 });
 

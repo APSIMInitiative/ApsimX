@@ -21,7 +21,7 @@
         private Series series;
 
         /// <summary>Series definition filter.</summary>
-        private string filter;
+        private string scopeFilter;
 
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
@@ -68,8 +68,7 @@
             if (series.Checkpoint != "Current")
                 Title += " (" + series.Checkpoint + ")";
 
-            AddToFilter(whereClauseForInScopeData);
-            AddToFilter(series.Filter);
+            scopeFilter = whereClauseForInScopeData;
         }
 
         /// <summary>Constructor</summary>
@@ -121,10 +120,28 @@
         public SeriesType Type { get; }
 
         /// <summary>Gets the marker size.</summary>
-        public MarkerSizeType MarkerSize { get { return series.MarkerSize; } }
+        public MarkerSizeType MarkerSize
+        {
+            get
+            {
+                if (series == null) // Can be null for regression lines or 1:1 lines
+                    return MarkerSizeType.Normal;
+                else
+                    return series.MarkerSize;
+            }
+        }
 
         /// <summary>Gets the line thickness.</summary>
-        public LineThicknessType LineThickness { get { return series.LineThickness; } }
+        public LineThicknessType LineThickness
+        {
+            get
+            {
+                if (series == null) // Can be null for regression lines or 1:1 lines
+                    return LineThicknessType.Normal;
+                else
+                    return series.LineThickness;
+            }
+        }
 
         /// <summary>Gets the associated x axis.</summary>
         public Axis.AxisType XAxis { get; }
@@ -177,17 +194,19 @@
         /// <summary>Gets the error values</summary>
         public IEnumerable Error { get; private set; }
 
-        /// <summary>Add a clause to the filter./// </summary>
-        /// <param name="filterClause">The clause to add e.g. Exp = 'Exp1'</param>
-        private void AddToFilter(string filterClause)
+        /// <summary>Add a clause to the filter.</summary>
+        /// <param name="filter">The filter to add to.</param>
+        /// <param name="filterClause">The clause to add e.g. Exp = 'Exp1'.</param>
+        private string AddToFilter(string filter, string filterClause)
         {
             if (filterClause != null)
             {
                 if (filter == null)
-                    filter = filterClause;
+                    return filterClause;
                 else
-                    filter += " AND " + filterClause;
+                    return filter + " AND " + filterClause;
             }
+            return filter;
         }
 
         /// <summary>A static setter function for colour from an index.</summary>
@@ -238,18 +257,23 @@
                 var fieldsThatExist = reader.ColumnNames(series.TableName);
 
                 // If we have descriptors, then use them to filter the data for this series.
+                string filter = null;
                 if (Descriptors != null)
                 {
-                    string descriptorFilter = null;
                     foreach (var descriptor in Descriptors)
                     {
                         if (fieldsThatExist.Contains(descriptor.Name))
-                            AddToFilter(descriptor.Name + " = '" + descriptor.Value + "'");
+                            filter = AddToFilter(filter, descriptor.Name + " = '" + descriptor.Value + "'");
                         else
-                            AddSimulationNameClauseToFilter(descriptor, simulationDescriptions);
+                            filter = AddSimulationNameClauseToFilter(filter, descriptor, simulationDescriptions);
                     }
-                    AddToFilter(descriptorFilter);
+
+                    // Incorporate our scope filter if we haven't limited filter to particular simulations.
+                    if (!filter.Contains("SimulationName IN"))
+                        filter = AddToFilter(filter, scopeFilter);
                 }
+                else
+                    filter = AddToFilter(filter, scopeFilter);
 
                 // Get a list of fields to read from data store.
                 var fieldsToRead = new List<string>();
@@ -268,7 +292,7 @@
                 }
 
                 // Add any field names from the filter.
-                fieldsToRead.AddRange(ExtractFieldNamesFromFilter());
+                fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
                 // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
                 // GetData in this situation.
@@ -277,7 +301,7 @@
                     checkpointName = series.Checkpoint;
 
                 // Go get the data.
-                Data = reader.GetData(series.TableName, checkpointName, filter: filter);
+                Data = reader.GetData(series.TableName, checkpointName, fieldNames: fieldsToRead, filter: filter);
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(series.TableName, XFieldName);
@@ -300,19 +324,21 @@
         }
 
         /// <summary>Add a 'SimulationName=' clause to filter using a descriptor.</summary>
+        /// <param name="filter">Filter to add to.</param>
         /// <param name="descriptor">The descriptor to use to create the filter.</param>
         /// <param name="simulationDescriptions">Complete list of simulation descriptions.</param>
-        private void AddSimulationNameClauseToFilter(SimulationDescription.Descriptor descriptor, List<SimulationDescription> simulationDescriptions)
+        private string AddSimulationNameClauseToFilter(string filter, SimulationDescription.Descriptor descriptor, List<SimulationDescription> simulationDescriptions)
         {
             var simulationNames = simulationDescriptions.FindAll(sim => sim.HasDescriptor(descriptor)).Select(sim => sim.Name);
-            AddToFilter("SimulationName IN (" +
-                        StringUtilities.Build(simulationNames, ",", "'", "'") +
-                        ")");
+            return AddToFilter(filter, "SimulationName IN (" +
+                                StringUtilities.Build(simulationNames, ",", "'", "'") +
+                                ")");
         }
 
         /// <summary>Extract and return a list of field names from the filter.</summary>
+        /// <param name="filter">Filter to extract field names from.</param>
         /// <returns>The field names or an empty list. Never null.</returns>
-        private List<string> ExtractFieldNamesFromFilter()
+        private List<string> ExtractFieldNamesFromFilter(string filter)
         {
             var fieldNames = new List<string>();
 
@@ -321,7 +347,7 @@
                 var localFilter = filter;
 
                 // Look for XXX in ('asdf', 'qwer').
-                string inPattern = @"(?<FieldName>.+)?\s+IN\s+\(.+\)";
+                string inPattern = @"(^|\s+)(?<FieldName>\S+)\s+IN\s+\(.+\)";
                 Match match = Regex.Match(localFilter, inPattern);
                 while (match.Success)
                 {
@@ -338,7 +364,7 @@
                 localFilter = localFilter.Replace(")", "");
 
                 // Look for individual filter clauses (e.g. A = B).
-                string clausePattern = @"(?<FieldName>.+)?\s*=|>|<|>=|<=\s*\w\s+";
+                string clausePattern = @"(?<FieldName>\S+)\s*=|>|<|>=|<=\s*\w\s+";
                 match = Regex.Match(localFilter, clausePattern);
                 while (match.Success)
                 {
