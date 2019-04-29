@@ -362,8 +362,18 @@ namespace UserInterface.Views
         {
             try
             {
-                double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
-                waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
+                Gtk.Application.Invoke(delegate
+                {
+                    try
+                    {
+                        double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
+                        waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
+                    }
+                    catch (Exception err)
+                    {
+                        ShowError(err);
+                    }
+                });
             }
             catch (Exception err)
             {
