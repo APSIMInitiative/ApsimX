@@ -66,7 +66,7 @@ namespace Models.Graph
         {
             if (definitions != null && definitions.Count > 0)
             {
-                data = definitions[0].data;
+                data = definitions.FirstOrDefault(d => d.data != null)?.data;
                 xFieldName = definitions[0].xFieldName;
             }
         }
