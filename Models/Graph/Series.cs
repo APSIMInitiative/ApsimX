@@ -322,7 +322,7 @@ namespace Models.Graph
         /// <summary>
         /// Find and return a list of all simulation descriptions.
         /// </summary>
-        private List<SimulationDescription> FindSimulationDescriptions()
+        public List<SimulationDescription> FindSimulationDescriptions()
         {
             // Find a parent that heads the scope that we're going to graph
             IModel parent = FindParent();
@@ -492,6 +492,7 @@ namespace Models.Graph
                 seriesDefinition.yAxis = YAxis;
                 seriesDefinition.xFieldUnits = reader.Units(TableName, XFieldName);
                 seriesDefinition.yFieldUnits = reader.Units(TableName, YFieldName);
+                seriesDefinition.SimulationNames = seriesDescription.SimulationNames.ToArray();
                 seriesDefinition.showInLegend = ShowInLegend;
                 if (seriesDescription.Descriptors.Count == 0)
                     seriesDefinition.title = Name;
