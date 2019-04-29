@@ -163,7 +163,7 @@
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
-            _mainWidget = hboxContainer;
+            mainWidget = hboxContainer;
             Grid.Model = gridModel;
             fixedColView.Model = gridModel;
             fixedColView.Selection.Mode = SelectionMode.None;
@@ -186,7 +186,7 @@
             fixedColView.EnableSearch = false;
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
-            _mainWidget.Destroyed += MainWidgetDestroyed;
+            mainWidget.Destroyed += MainWidgetDestroyed;
         }
 
         /// <summary>
@@ -395,7 +395,7 @@
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                    Color separatorColour = Color.LightSteelBlue;
+                    Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
                     cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                     textRenderer.Editable = false;
                 }
@@ -881,8 +881,8 @@
             accel.Dispose();
             if (table != null)
                 table.Dispose();
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= MainWidgetDestroyed;
+            owner = null;
         }
 
         /// <summary>

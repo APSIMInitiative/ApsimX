@@ -69,7 +69,7 @@
         /// <summary>
         /// URI for accessing the Google geocoding API. I don't recall exactly who owns this key!
         /// </summary>
-        private static string GoogleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw&";
+        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw&";
 
         /// <summary>
         /// Handles presses of the "get placename" button
@@ -81,7 +81,7 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return;
-            string url = GoogleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
+            string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
             try
             {
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
@@ -116,7 +116,7 @@
                 return;
             // For now, name matching is restricted to Australia, since at this point we don't
             // yet have things set up for the global soil database
-            string url = GoogleGeocodingApi + "components=country:AU|locality:" + entryPlacename.Text;
+            string url = googleGeocodingApi + "components=country:AU|locality:" + entryPlacename.Text;
             try
             {
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);

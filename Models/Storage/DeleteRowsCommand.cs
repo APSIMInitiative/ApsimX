@@ -35,10 +35,14 @@
             {
                 string sql;
 
+                bool tableWasDropped = false;
                 if (simIds == null)
                 {
                     if (checkId == 0)
+                    {
                         sql = string.Format("DROP TABLE {0}", table);
+                        tableWasDropped = true;
+                    }
                     else
                         sql = string.Format("DELETE FROM {0} WHERE CheckpointID={1}", table, checkId);
                 }
@@ -58,6 +62,16 @@
                         sql = string.Format("DROP TABLE {0}", table);
                 }
                 database.ExecuteNonQuery(sql);
+
+                // If there are no rows left in table then drop the table.
+                if (!tableWasDropped)
+                {
+                    var data = database.ExecuteQuery(string.Format("SELECT * FROM {0} LIMIT 1", table));
+                    if (data.Rows.Count == 0)
+                    {
+                        database.ExecuteNonQuery(string.Format("DROP TABLE {0}", table));
+                    }
+                }
             }
         }
     }

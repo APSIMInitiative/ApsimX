@@ -41,7 +41,7 @@ namespace UserInterface.Commands
         /// <summary>
         /// Perform the command
         /// </summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do(CommandHistory commandHistory)
         {
             Simulation clonedSimulation = null;
             IEvent events = null;
@@ -238,7 +238,7 @@ namespace UserInterface.Commands
         /// <summary>
         /// Undo the command
         /// </summary>
-        public void Undo(CommandHistory CommandHistory)
+        public void Undo(CommandHistory commandHistory)
         {
 
         }

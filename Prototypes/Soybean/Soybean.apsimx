@@ -656,84 +656,6 @@
                 },
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartFlowering",
-                  "ReSetEvent": "never",
-                  "Name": "NFF",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Vegetative.CompletionNodeNumber.Value()",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartGrainFilling",
-                  "ReSetEvent": "never",
-                  "Name": "FN",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "PostEventValue",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].LeafTipsAppeared",
-                          "Name": "PostEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].NFF.Value()",
-                          "Name": "PostEventValue1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "Emergence",
                   "ReSetEvent": "never",
                   "Name": "EmergenceDAS",
@@ -7181,7 +7103,7 @@
             "[Soil].Temperature[4] as ST15cm",
             "([Soil].Temperature[6]+[Soil].Temperature[7])/2 as ST45cm",
             "[Soil].SoilWater.WaterTable",
-            "([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
+            "([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
             "[Soybean].Nodule.FixationRate",
             "[Soybean].Root.Depth",
             "[Soybean].Leaf.CohortSize",
@@ -7445,7 +7367,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Experiment, Models",
-                  "DisabledSimNames": null,
+                  "DisabledSimNames": [],
                   "Name": "Ames2015",
                   "Children": [
                     {

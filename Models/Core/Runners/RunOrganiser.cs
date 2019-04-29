@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>A job manager that looks after running all simulations</summary>
@@ -124,6 +125,7 @@
             }
 
             simulationEnumerator = null;
+            storage.Reader.Refresh();
         }
 
         /// <summary>
@@ -134,17 +136,31 @@
         public static void RunPostSimulationTools(IModel rootModel, IDataStore storage)
         {
             storage.Writer.Stop();
-
+            List<Exception> errors = new List<Exception>();
             // Call all post simulation tools.
             foreach (IPostSimulationTool tool in Apsim.FindAll(rootModel, typeof(IPostSimulationTool)))
             {
                 if ((tool as IModel).Enabled)
                 {
-                    tool.Run(storage);
+                    try
+                    {
+                        tool.Run(storage);
+                    }
+                    catch (Exception error)
+                    {
+                        errors.Add(error);
+                    }
                     storage.Writer.WaitForIdle();
                 }
             }
 
+            if (errors.Count > 0)
+            {
+                StringBuilder message = new StringBuilder(string.Format("{0} errors thrown from post simulation tools:{1}{1}", errors.Count, Environment.NewLine));
+                foreach (Exception error in errors)
+                    message.AppendLine(error.ToString());
+                throw new Exception(message.ToString());
+            }
             storage.Writer.Stop();
         }
 

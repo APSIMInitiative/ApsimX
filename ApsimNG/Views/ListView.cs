@@ -56,9 +56,9 @@
         public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null) : base(owner)
         {
             tree = treeView;
-            _mainWidget = tree;
+            mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
-            _mainWidget.Destroyed += OnMainWidgetDestroyed;
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
         }
 
@@ -103,8 +103,8 @@
         /// <summary>The main widget has been destroyed.</summary>
         private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnMainWidgetDestroyed;
+            owner = null;
         }
 
         /// <summary>Populate the tree view.</summary>
@@ -137,10 +137,6 @@
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;
-            tree.RulesHint = true;
-            string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
-            tree.Name = "custom_treeview";
-            Rc.ParseString(style);
 
             // Populate with rows.
             store.Clear();
@@ -157,23 +153,27 @@
         /// <param name="iter">The tree iterator.</param>
         public void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, TreeModel model, TreeIter iter)
         {
-            var cell = (baseCell as CellRendererText);
-            cell.Strikethrough = false;
-            cell.Weight = 1;
-            cell.Font = "Normal";
-            cell.Foreground = "Black";
+            TreePath path = tree.Model.GetPath(iter);
+            int rowIndex = path.Indices[0];
+            int colIndex = DataSource.Columns.IndexOf(col.Title);
 
-            var path = tree.Model.GetPath(iter);
-            var rowIndex = path.Indices[0];
-            var colIndex = DataSource.Columns.IndexOf(col.Title);
-
-            var renderDetails = CellRenderDetails.Find(c => c.ColumnIndex == colIndex && c.RowIndex == rowIndex);
+            CellRendererDescription renderDetails = CellRenderDetails.Find(c => c.ColumnIndex == colIndex && c.RowIndex == rowIndex);
             if (renderDetails != null)
             {
+                var cell = baseCell as CellRendererText;
                 cell.Strikethrough = renderDetails.StrikeThrough;
-                if (renderDetails.Bold)     cell.Weight = (int) Pango.Weight.Bold;
-                if (renderDetails.Italics)  cell.Font = "Sans Italic";
-                cell.Foreground =   renderDetails.Colour.Name;
+                if (renderDetails.Bold)
+                    cell.Weight = (int) Pango.Weight.Bold;
+                if (renderDetails.Italics)
+                    cell.Font = "Sans Italic";
+                cell.Foreground = renderDetails.Colour.Name; // ?
+            }
+            else if (baseCell is CellRendererText)
+            {
+                var cell = baseCell as CellRendererText;
+                cell.Strikethrough = false;
+                cell.Weight = (int)Pango.Weight.Normal;
+                cell.Font = "Normal";
             }
         }
 

@@ -119,7 +119,7 @@ namespace UserInterface.Views
 
             nbook.CurrentPage = 0;
 
-            _mainWidget = nbook;
+            mainWidget = nbook;
             setupComplete = true;
         }
 
