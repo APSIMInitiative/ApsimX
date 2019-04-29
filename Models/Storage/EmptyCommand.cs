@@ -22,9 +22,12 @@
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
         {
+            if (database == null)
+                return;
+
             if (database.TableExists("_Checkpoints"))
             {
-                var checkpointData = new DataView(database.ExecuteQuery("SELECT * FROM _Checkpoints"));
+                var checkpointData = new DataView(database.ExecuteQuery("SELECT * FROM [_Checkpoints]"));
                 checkpointData.RowFilter = "Name='Current'";
                 if (checkpointData.Count == 1)
                 {
@@ -34,7 +37,7 @@
                     foreach (string tableName in database.GetTableNames())
                     {
                         if (!tableName.StartsWith("_"))
-                            database.ExecuteNonQuery(string.Format("DELETE FROM {0} WHERE CheckpointID={1}", tableName, checkId));
+                            database.ExecuteNonQuery(string.Format("DELETE FROM [{0}] WHERE [CheckpointID]={1}", tableName, checkId));
                     }
                 }
             }
@@ -45,7 +48,7 @@
                 foreach (string tableName in database.GetTableNames())
                 {
                     if (!tableName.StartsWith("_"))
-                        database.ExecuteNonQuery(string.Format("DELETE FROM {0}", tableName));
+                        database.ExecuteNonQuery(string.Format("DELETE FROM [{0}]", tableName));
                 }
             }
 
@@ -56,7 +59,11 @@
             {
                 if (!tableName.StartsWith("_"))
                 {
-                    var data = database.ExecuteQuery(string.Format("SELECT * FROM {0} LIMIT 1", tableName));
+                    DataTable data = null;
+                    if (database is Firebird)
+                        data = database.ExecuteQuery(string.Format("SELECT FIRST 1 * FROM [{0}]", tableName));
+                    else
+                        data = database.ExecuteQuery(string.Format("SELECT * FROM [{0}] LIMIT 1", tableName));
                     if (data.Rows.Count == 0)
                         tableNamesToDelete.Add(tableName);
                     else
@@ -69,8 +76,7 @@
                 tableNamesToDelete = database.GetTableNames();
 
             foreach (string tableName in tableNamesToDelete)
-                database.ExecuteNonQuery(string.Format("DROP TABLE {0}", tableName));
-            database.ExecuteNonQuery("VACUUM");
+                database.DropTable(tableName);
         }
     }
 }

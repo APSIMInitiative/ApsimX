@@ -14,7 +14,7 @@
     public class DataStoreReader : IStorageReader
     {
         /// <summary>A database connection</summary>
-        private IDatabaseConnection connection = null;
+        public IDatabaseConnection connection { get; private set; } = null;
 
         /// <summary>A list of field names for each table.</summary>
         private Dictionary<string, List<string>> tables = new Dictionary<string, List<string>>();
@@ -118,7 +118,7 @@
             // Read in simulation ids.
             if (connection.TableExists("_Simulations"))
             {
-                var data = connection.ExecuteQuery("SELECT * FROM _Simulations");
+                var data = connection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
                     simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
@@ -126,7 +126,7 @@
             // Read in checkpoint ids.
             if (connection.TableExists("_Checkpoints"))
             {
-                var data = connection.ExecuteQuery("SELECT * FROM _Checkpoints");
+                var data = connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
                     checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
@@ -177,10 +177,32 @@
                 fieldList = fieldNames.ToList();
 
             bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
+            bool hasCheckpointName = fieldList.Contains("CheckpointID") || fieldList.Contains("CheckpointName") || checkpointName != null;
 
-            sql.Append("SELECT C.[Name] AS CheckpointName, C.[ID] AS CheckpointID");
+            sql.Append("SELECT ");
+
+            if (count > 0 && connection is Firebird)
+            {
+                sql.Append("FIRST ");
+                sql.Append(count);
+                sql.Append(" SKIP ");
+                sql.Append(from);
+                sql.Append(" ");
+            }
+
+            bool firstField = true;
+            if (hasCheckpointName)
+            {
+                sql.Append("C.[Name] AS [CheckpointName], C.[ID] AS [CheckpointID]");
+                firstField = false;
+            }
             if (hasSimulationName)
-                sql.Append(", S.[Name] AS SimulationName, S.[ID] AS SimulationID");
+            {
+                if (!firstField)
+                    sql.Append(", ");
+                sql.Append("S.[Name] AS [SimulationName], S.[ID] AS [SimulationID]");
+                firstField = false;
+            }
 
             fieldList.Remove("CheckpointID");
             fieldList.Remove("SimulationName");
@@ -190,48 +212,84 @@
             {
                 if (fieldNamesInTable.Contains(fieldName))
                 {
-                    sql.Append(",T.");
+                    if (!firstField)
+                        sql.Append(", ");
+                    firstField = false;
+                    sql.Append("T.");
                     sql.Append("[");
-                    sql.Append(fieldName);
+                    if (!(connection is Firebird) || tableName.StartsWith("_")
+                      || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
+                      || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
+                      || fieldName.Equals("CheckpointID", StringComparison.OrdinalIgnoreCase)
+                      || fieldName.Equals("CheckpointName", StringComparison.OrdinalIgnoreCase))
+                        sql.Append(fieldName);
+                    else
+                        sql.Append("COL_" + (connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
                     sql.Append(']');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
                 }
             }
 
+            bool firstFrom = true;
             // Write FROM clause
-            sql.Append(" FROM [_Checkpoints] C");
+            sql.Append("FROM ");
+            if (hasCheckpointName)
+            {
+                sql.Append("[_Checkpoints] C");
+                firstFrom = false;
+            }
             if (hasSimulationName)
-                sql.Append(", [_Simulations] S");
-            sql.Append(", [" + tableName);
+            {
+                if (!firstFrom)
+                    sql.Append(", ");
+                sql.Append("[_Simulations] S");
+                firstFrom = false;
+            }
+            if (!firstFrom)
+                sql.Append(", ");
+            sql.Append("[" + tableName);
             sql.Append("] T ");
 
-            // Write WHERE clause
-            sql.Append("WHERE [CheckpointID] = C.[ID]");
-            if (hasSimulationName)
+            if (hasCheckpointName || hasSimulationName || filter != null)
             {
-                sql.Append(" AND [SimulationID] = S.[ID]");
-                if (simulationName != null)
+                bool firstWhere = true;
+                // Write WHERE clause
+                sql.Append("WHERE ");
+                if (hasCheckpointName)
                 {
-                    sql.Append(" AND S.[Name] = '");
-                    sql.Append(simulationName);
-                    sql.Append('\'');
+                    sql.Append("T.[CheckpointID] = C.[ID]");
+                    // Write checkpoint name
+                    if (checkpointName == null)
+                        sql.Append(" AND C.[Name] = 'Current'");
+                    else
+                        sql.Append(" AND C.[Name] = '" + checkpointName + "'");
+                    firstWhere = false;
+                }
+                if (hasSimulationName)
+                {
+                    if (!firstWhere)
+                        sql.Append(" AND ");
+                    sql.Append("T.[SimulationID] = S.[ID]");
+                    if (simulationName != null)
+                    {
+                        sql.Append(" AND S.[Name] = '");
+                        sql.Append(simulationName);
+                        sql.Append('\'');
+                    }
+                    firstWhere = false;
+                }
+
+                if (filter != null)
+                {
+                    if (!firstWhere)
+                        sql.Append(" AND ");
+                    firstWhere = false;
+                    sql.Append("(");
+                    sql.Append(filter);
+                    sql.Append(")");
                 }
             }
-
-            // Write checkpoint name
-            if (checkpointName == null)
-                sql.Append(" AND C.[Name] = 'Current'");
-            else
-                sql.Append(" AND C.[Name] = '" + checkpointName + "'");
-
-            if (filter != null)
-            {
-                sql.Append(" AND (");
-                sql.Append(filter);
-                sql.Append(")");
-            }
-
             // Write ORDER BY clause
             if (orderBy == null)
             {
@@ -239,7 +297,12 @@
                 {
                     sql.Append(" ORDER BY S.[ID]");
                     if (hasToday)
-                        sql.Append(", T.[Clock.Today]");
+                    {
+                        if (connection is Firebird)
+                            sql.Append(", T.[COL_" + (connection as Firebird).GetColumnNumber(tableName, "Clock.Today").ToString() + "]");
+                        else
+                            sql.Append(", T.[Clock.Today]");
+                    }
                 }
             }
             else
@@ -247,25 +310,43 @@
                 sql.Append(" ORDER BY " + orderBy);
             }
 
-            // Write LIMIT/OFFSET clause
-            if (count > 0)
-            {
-                sql.Append(" LIMIT ");
-                sql.Append(count);
-                sql.Append(" OFFSET ");
-                sql.Append(from);
-            }
+            if (connection is SQLite)
+                // Write LIMIT/OFFSET clause
+                if (count > 0)
+                {
+                    sql.Append(" LIMIT ");
+                    sql.Append(count);
+                    sql.Append(" OFFSET ");
+                    sql.Append(from);
+                }
 
             // It appears that the a where clause that has 'SimulationName in ('xxx, 'yyy') is
             // case sensitive despite having COLLATE NOCASE in the 'CREATE TABLE _Simulations'
             // statement. I don't know why this is. The replace below seems to fix the problem.
+            if (connection is SQLite)
+                sql = sql.Replace("SimulationName IN ", "SimulationName COLLATE NOCASE IN ");
+            else if (connection is Firebird)
+                sql = sql.Replace("SimulationName ", "S.[Name] ");
             var st = sql.ToString();
-            //if (!useFirebird)
-                st = st.Replace("SimulationName IN ", "SimulationName COLLATE NOCASE IN ");
-            return connection.ExecuteQuery(st);
+            DataTable result = connection.ExecuteQuery(st);
+            // For Firebird, we need to recover the full names of the data columns
+            if (connection is Firebird && !tableName.StartsWith("_"))
+            {
+                foreach (DataColumn dataCol in result.Columns)
+                {
+                    if (dataCol.ColumnName.StartsWith("COL_"))
+                    {
+                        int colNo;
+                        if (Int32.TryParse(dataCol.ColumnName.Substring(4), out colNo))
+                        {
+                            dataCol.ColumnName = (connection as Firebird).GetLongColumnName(tableName, colNo);
+                        }
+                    }
+                }
+            }
+            return result;
         }
 
-        /// <summary>Return all data from the specified simulation and table name.</summary>
         /// <param name="sql">The SQL.</param>
         /// <returns></returns>
         public DataTable GetDataUsingSql(string sql)

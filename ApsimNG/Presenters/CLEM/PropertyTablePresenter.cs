@@ -564,7 +564,10 @@ namespace UserInterface.Presenters
                         DataTable data = null;
                         if (storage.Reader.TableNames.Contains(tableName))
                         {
-                            data = this.storage.Reader.GetDataUsingSql("SELECT * FROM " + tableName + " LIMIT 1");
+                            if ((storage.Reader is DataStoreReader) && (storage.Reader as DataStoreReader).connection is Firebird)
+                                data = this.storage.Reader.GetDataUsingSql("SELECT FIRST 1 * FROM [" + tableName + "]");
+                            else
+                                data = this.storage.Reader.GetDataUsingSql("SELECT * FROM [" + tableName + "] LIMIT 1");
                         }
 
                         if (data != null)

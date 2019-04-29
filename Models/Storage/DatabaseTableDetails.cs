@@ -54,7 +54,8 @@
             foreach (DataColumn column in table.Columns)
             { 
                 columnNamesInDb.Add(column.ColumnName);
-                colTypes.Add(connection.GetDBDataTypeName(column.DataType));
+                bool allowLongStrings = table.TableName.StartsWith("_");
+                colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
             }
 
             connection.CreateTable(Name, columnNamesInDb.ToList(), colTypes);
@@ -79,7 +80,8 @@
                     }
 
                     // Column is missing from database file - write it.
-                    connection.AddColumn(Name, column.ColumnName, connection.GetDBDataTypeName(column.DataType));
+                    bool allowLongStrings = table.TableName.StartsWith("_");
+                    connection.AddColumn(Name, column.ColumnName, connection.GetDBDataTypeName(column.DataType, allowLongStrings));
                     columnNamesInDb.Add(column.ColumnName);
                 }
             }

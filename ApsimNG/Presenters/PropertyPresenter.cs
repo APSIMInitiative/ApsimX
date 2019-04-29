@@ -593,7 +593,12 @@ namespace UserInterface.Presenters
                         string tableName = cell.Value.ToString();
                         DataTable data = null;
                         if (storage.Reader.TableNames.Contains(tableName))
-                            data = storage.Reader.GetDataUsingSql("SELECT * FROM " + tableName + " LIMIT 1");
+                        {
+                            if ((storage.Reader is DataStoreReader) && (storage.Reader as DataStoreReader).connection is Firebird)
+                                data = storage.Reader.GetDataUsingSql("SELECT FIRST 1 * FROM [" + tableName + "]");
+                            else
+                                data = storage.Reader.GetDataUsingSql("SELECT * FROM [" + tableName + "] LIMIT 1");
+                        }
                         if (data != null)
                         {
                             fieldNames = DataTableUtilities.GetColumnNames(data).ToList();

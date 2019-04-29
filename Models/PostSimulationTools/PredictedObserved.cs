@@ -77,60 +77,165 @@ namespace Models.PostSimulationTools
                 IEnumerable<string> commonCols = predictedDataNames.Intersect(observedDataNames);
 
                 StringBuilder query = new StringBuilder("SELECT ");
-                foreach (string s in commonCols)
+
+                if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).connection is Firebird)
                 {
-                    if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
-                        query.Append("O.'@field', ");
-                    else
-                        query.Append("O.'@field' AS 'Observed.@field', P.'@field' AS 'Predicted.@field', ");
-
-                    query.Replace("@field", s);
-                }
-
-                query.Append("FROM " + ObservedTableName + " O INNER JOIN " + PredictedTableName + " P USING (SimulationID) WHERE O.'@match1' = P.'@match1'");
-                if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
-                    query.Append(" AND O.'@match2' = P.'@match2'");
-                if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
-                    query.Append(" AND O.'@match3' = P.'@match3'");
-
-                int checkpointID = dataStore.Writer.GetCheckpointID("Current");
-                query.Append(" AND P.CheckpointID = " + checkpointID);
-
-                query.Replace(", FROM", " FROM"); // get rid of the last comma
-                query.Replace("O.'SimulationID' AS 'Observed.SimulationID', P.'SimulationID' AS 'Predicted.SimulationID'", "O.'SimulationID' AS 'SimulationID'");
-
-                query = query.Replace("@match1", FieldNameUsedForMatch);
-                query = query.Replace("@match2", FieldName2UsedForMatch);
-                query = query.Replace("@match3", FieldName3UsedForMatch);
-
-                if (Parent is Folder)
-                {
-                    // Limit it to particular simulations in scope.
-                    List<string> simulationNames = new List<string>();
-                    foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
+                    Firebird fb = (dataStore.Reader as DataStoreReader).connection as Firebird;
+                    foreach (string s in commonCols)
                     {
-                        var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
-                        simulationNames.AddRange(names);
+                        if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
+                            query.Append("O.[@fieldo], ");
+                        else
+                            query.Append("O.[@fieldo] AS [Observed.@fieldo], P.[@fieldp] AS [Predicted.@fieldp], ");
+
+                        string sObs = fb.GetShortColumnName(ObservedTableName, s);
+                        query.Replace("@fieldo", sObs);
+                        string sPred = fb.GetShortColumnName(PredictedTableName, s);
+                        query.Replace("@fieldp", sPred);
                     }
 
-                foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
-                    if (!(simulation.Parent is Experiment))
-                        simulationNames.Add(simulation.Name);
+                    query.Append("FROM [" + ObservedTableName + "] O INNER JOIN [" + PredictedTableName + "] P USING ([SimulationID]) WHERE O.[@match1o] = P.[@match1p]");
+                    if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
+                        query.Append(" AND O.[@match2o] = P.[@match2p]");
+                    if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
+                        query.Append(" AND O.[@match3o] = P.[@match3p]");
 
-                    query.Append(" AND O.SimulationID in (");
-                    foreach (string simulationName in simulationNames)
+                    int checkpointID = dataStore.Writer.GetCheckpointID("Current");
+                    query.Append(" AND P.[CheckpointID] = " + checkpointID);
+
+                    query.Replace(", FROM", " FROM"); // get rid of the last comma
+                    query.Replace("O.[SimulationID] AS [Observed.SimulationID], P.[SimulationID] AS [Predicted.SimulationID]", "O.[SimulationID] AS [SimulationID]");
+
+                    string match;
+                    if (!string.IsNullOrEmpty(FieldNameUsedForMatch))
                     {
-                        if (simulationName != simulationNames[0])
-                            query.Append(',');
-                        query.Append(dataStore.Writer.GetSimulationID(simulationName));
+                        match = fb.GetShortColumnName(ObservedTableName, FieldNameUsedForMatch);
+                        query = query.Replace("@match1o", match);
+                        match = fb.GetShortColumnName(PredictedTableName, FieldNameUsedForMatch);
+                        query = query.Replace("@match1p", match);
                     }
-                    query.Append(")");
-                }
+                    if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
+                    {
+                        match = fb.GetShortColumnName(ObservedTableName, FieldName2UsedForMatch);
+                        query = query.Replace("@match2o", match);
+                        match = fb.GetShortColumnName(PredictedTableName, FieldName2UsedForMatch);
+                        query = query.Replace("@match2p", match);
+                    }
+                    if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
+                    {
+                        match = fb.GetShortColumnName(ObservedTableName, FieldName3UsedForMatch);
+                        query = query.Replace("@match3o", match);
+                        match = fb.GetShortColumnName(PredictedTableName, FieldName3UsedForMatch);
+                        query = query.Replace("@match3p", match);
+                    }
 
+                    if (Parent is Folder)
+                    {
+                        // Limit it to particular simulations in scope.
+                        List<string> simulationNames = new List<string>();
+                        foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
+                        {
+                            var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
+                            simulationNames.AddRange(names);
+                        }
+
+                        foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
+                            if (!(simulation.Parent is Experiment))
+                                simulationNames.Add(simulation.Name);
+
+                        query.Append(" AND O.[SimulationID] in (");
+                        foreach (string simulationName in simulationNames)
+                        {
+                            if (simulationName != simulationNames[0])
+                                query.Append(',');
+                            query.Append(dataStore.Writer.GetSimulationID(simulationName));
+                        }
+                        query.Append(")");
+                    }
+
+                }
+                else
+                {
+                    foreach (string s in commonCols)
+                    {
+                        if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
+                            query.Append("O.[@field], ");
+                        else
+                            query.Append("O.[@field] AS [Observed.@field], P.[@field] AS [Predicted.@field], ");
+
+                        query.Replace("@field", s);
+                    }
+
+                    query.Append("FROM [" + ObservedTableName + "] O INNER JOIN [" + PredictedTableName + "] P USING (SimulationID) WHERE O.[@match1] = P.[@match1]");
+                    if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
+                        query.Append(" AND O.[@match2] = P.[@match2]");
+                    if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
+                        query.Append(" AND O.[@match3] = P.[@match3]");
+
+                    int checkpointID = dataStore.Writer.GetCheckpointID("Current");
+                    query.Append(" AND P.[CheckpointID] = " + checkpointID);
+
+                    query.Replace(", FROM", " FROM"); // get rid of the last comma
+                    query.Replace("O.[SimulationID] AS [Observed.SimulationID], P.[SimulationID] AS [Predicted.SimulationID]", "O.[SimulationID] AS [SimulationID]");
+
+                    query = query.Replace("@match1", FieldNameUsedForMatch);
+                    query = query.Replace("@match2", FieldName2UsedForMatch);
+                    query = query.Replace("@match3", FieldName3UsedForMatch);
+
+                    if (Parent is Folder)
+                    {
+                        // Limit it to particular simulations in scope.
+                        List<string> simulationNames = new List<string>();
+                        foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
+                        {
+                            var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
+                            simulationNames.AddRange(names);
+                        }
+
+                        foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
+                            if (!(simulation.Parent is Experiment))
+                                simulationNames.Add(simulation.Name);
+
+                        query.Append(" AND O.[SimulationID] in (");
+                        foreach (string simulationName in simulationNames)
+                        {
+                            if (simulationName != simulationNames[0])
+                                query.Append(',');
+                            query.Append(dataStore.Writer.GetSimulationID(simulationName));
+                        }
+                        query.Append(")");
+                    }
+                }
                 DataTable predictedObservedData = dataStore.Reader.GetDataUsingSql(query.ToString());
 
                 if (predictedObservedData != null)
                 {
+                    // If Firebird, first convert the short names (needed for querying) back into long ones
+                    if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).connection is Firebird)
+                    {
+                        Firebird fb = (dataStore.Reader as DataStoreReader).connection as Firebird;
+                        string match1 = fb.GetShortColumnName(ObservedTableName, FieldNameUsedForMatch);
+                        string match2 = fb.GetShortColumnName(ObservedTableName, FieldName2UsedForMatch);
+                        string match3 = fb.GetShortColumnName(ObservedTableName, FieldName3UsedForMatch);
+                        foreach (DataColumn column in predictedObservedData.Columns)
+                        {
+                            if (column.ColumnName.StartsWith("Predicted."))
+                            {
+                                string shortName = column.ColumnName.Substring("Predicted.".Length);
+                                column.ColumnName = "Predicted." + fb.GetLongColumnName(PredictedTableName, shortName);
+                            }
+                            else if (column.ColumnName.StartsWith("Observed."))
+                            {
+                                string shortName = column.ColumnName.Substring("Observed.".Length);
+                                column.ColumnName = "Observed." + fb.GetLongColumnName(ObservedTableName, shortName);
+                            }
+                            else if (column.ColumnName.Equals(match1) || column.ColumnName.Equals(match2) || column.ColumnName.Equals(match3))
+                            {
+                                column.ColumnName = fb.GetLongColumnName(ObservedTableName, column.ColumnName);
+                            }
+                        }
+                    }
+
                     // Add in error columns for each data column.
                     foreach (string columnName in commonCols)
                     {
@@ -148,6 +253,7 @@ namespace Models.PostSimulationTools
                                 predictedObservedData.Columns[errorColumnName].SetOrdinal(predictedObservedData.Columns["Predicted." + columnName].Ordinal + 1);
                             }
                         }
+
                     }
 
                     // Write table to datastore.
@@ -176,8 +282,8 @@ namespace Models.PostSimulationTools
                 else
                 {
                     // Determine what went wrong.
-                    DataTable predictedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM " + PredictedTableName);
-                    DataTable observedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM " + ObservedTableName);
+                    DataTable predictedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
+                    DataTable observedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
                     if (predictedData == null || predictedData.Rows.Count == 0)
                         throw new Exception(Name + ": Cannot find any predicted data.");
                     else if (observedData == null || observedData.Rows.Count == 0)

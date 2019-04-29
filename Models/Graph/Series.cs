@@ -522,7 +522,7 @@ namespace Models.Graph
                             if (rowFilter != null)
                                 rowFilter += " AND ";
 
-                            rowFilter += descriptor.Name + " = '" + descriptor.Value + "'";
+                            rowFilter += "[" + descriptor.Name + "] = '" + descriptor.Value + "'";
                         }
                         else if (baseData.Columns.Contains("SimulationName"))
                         {
@@ -531,7 +531,7 @@ namespace Models.Graph
                             if (rowFilter != null)
                                 rowFilter += " AND ";
 
-                            rowFilter += "SimulationName IN (" +
+                            rowFilter += "[SimulationName] IN (" +
                                   StringUtilities.Build(seriesDescription.SimulationNames, ",", "'", "'") +
                                   ")";
                         }
@@ -726,7 +726,25 @@ namespace Models.Graph
                                    StringUtilities.Build(simulationNames, ",", "'", "'") +
                                    ")";
             if (Filter != null && Filter != string.Empty)
-                filterToUse += " AND " + Filter;
+            {
+                // For Firebird, we need to convert long column names into their short form.
+                if (reader is DataStoreReader && (reader as DataStoreReader).connection is Firebird)
+                {
+                    string filterCopy = Filter;
+                    List<string> output = filterCopy.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
+                    foreach (string field in output)
+                    {
+                        string shortName = ((reader as DataStoreReader).connection as Firebird).GetShortColumnName(TableName, field);
+                        if (!string.IsNullOrEmpty(shortName))
+                        {
+                            filterCopy = filterCopy.Replace("[" + field + "]", "[" + shortName + "]");
+                        }
+                    }
+                    filterToUse += " AND " + filterCopy;
+                }
+                else
+                    filterToUse += " AND " + Filter;
+            }
 
             // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
             // GetData in this situation.
