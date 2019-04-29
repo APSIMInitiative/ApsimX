@@ -177,7 +177,7 @@
                 fieldList = fieldNames.ToList();
 
             bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
-            bool hasCheckpointName = fieldList.Contains("CheckpointID") || fieldList.Contains("CheckpointName") || checkpointName != null;
+            bool hasCheckpointName = fieldNamesInTable.Contains("CheckpointID") || fieldNamesInTable.Contains("CheckpointName") || checkpointName != null;
 
             sql.Append("SELECT ");
 
