@@ -33,7 +33,7 @@
                     // Delete current data from all tables.
                     foreach (string tableName in database.GetTableNames())
                     {
-                        if (!tableName.StartsWith("_"))
+                        if (!tableName.StartsWith("_") && database.TableExists(tableName))
                             database.ExecuteNonQuery(string.Format("DELETE FROM {0} WHERE CheckpointID={1}", tableName, checkId));
                     }
                 }
