@@ -23,10 +23,12 @@ namespace Models.Storage
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
         /// <param name="orderBy">Optional column name to order by</param>
+        /// <param name="distinct">Only return distinct values for field?</param>
         DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                         string filter = null,
                         int from = 0, int count = 0,
-                        string orderBy = null);
+                        string orderBy = null,
+                        bool distinct = false);
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
         /// <param name="sql">The SQL.</param>

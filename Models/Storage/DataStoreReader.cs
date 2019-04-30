@@ -151,11 +151,13 @@
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
         /// <param name="orderBy">Optional column name to order by</param>
+        /// <param name="distinct">Only return distinct values for field?</param>
         /// <returns></returns>
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0,
-                                 string orderBy = null)
+                                 string orderBy = null,
+                                 bool distinct = false)
         {
             if (!connection.TableExists(tableName))
                 return null;
@@ -178,7 +180,10 @@
 
             bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
 
-            sql.Append("SELECT C.[Name] AS CheckpointName, C.[ID] AS CheckpointID");
+            sql.Append("SELECT");
+            if (distinct)
+                sql.Append(" DISTINCT");
+            sql.Append(" C.[Name] AS CheckpointName, C.[ID] AS CheckpointID");
             if (hasSimulationName)
                 sql.Append(", S.[Name] AS SimulationName, S.[ID] AS SimulationID");
 

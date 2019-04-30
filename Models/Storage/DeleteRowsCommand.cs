@@ -59,7 +59,10 @@
                             sql += string.Format(" AND CheckpointID={0}", checkId);
                     }
                     else
+                    {
                         sql = string.Format("DROP TABLE {0}", table);
+                        tableWasDropped = true;
+                    }
                 }
                 database.ExecuteNonQuery(sql);
 
