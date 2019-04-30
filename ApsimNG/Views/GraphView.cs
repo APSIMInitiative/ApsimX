@@ -518,8 +518,12 @@ namespace UserInterface.Views
             else
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
-            annotation.TextColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-            //annotation.Text += "\r\n\r\n";
+
+            if (colour == Color.Empty)
+                annotation.TextColor = ForegroundColour;
+            else
+                annotation.TextColor = Utility.Colour.ToOxy(colour);
+
             this.plot1.Model.Annotations.Add(annotation);
         }
         /// <summary>
