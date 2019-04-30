@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>An interface  for reading and writing to/from a database.</summary>
     public interface IDataStore : IDisposable
@@ -14,6 +15,13 @@
 
         /// <summary>Get a writer to perform write operations on the datastore.</summary>
         IStorageWriter Writer { get; }
+
+        /// <summary>
+        /// Get the list of column names within a table
+        /// </summary>
+        /// <param name="tableName">Name of the table</param>
+        /// <returns></returns>
+        IEnumerable<string> ColumnNames(string tableName);
 
         /// <summary>Opens the databse connection.</summary>
         void Open();

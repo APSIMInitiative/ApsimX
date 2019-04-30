@@ -78,9 +78,9 @@ namespace Models.PostSimulationTools
 
                 StringBuilder query = new StringBuilder("SELECT ");
 
-                if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).connection is Firebird)
+                if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).Connection is Firebird)
                 {
-                    Firebird fb = (dataStore.Reader as DataStoreReader).connection as Firebird;
+                    Firebird fb = (dataStore.Reader as DataStoreReader).Connection as Firebird;
                     foreach (string s in commonCols)
                     {
                         if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
@@ -211,9 +211,9 @@ namespace Models.PostSimulationTools
                 if (predictedObservedData != null)
                 {
                     // If Firebird, first convert the short names (needed for querying) back into long ones
-                    if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).connection is Firebird)
+                    if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).Connection is Firebird)
                     {
-                        Firebird fb = (dataStore.Reader as DataStoreReader).connection as Firebird;
+                        Firebird fb = (dataStore.Reader as DataStoreReader).Connection as Firebird;
                         string match1 = fb.GetShortColumnName(ObservedTableName, FieldNameUsedForMatch);
                         string match2 = fb.GetShortColumnName(ObservedTableName, FieldName2UsedForMatch);
                         string match3 = fb.GetShortColumnName(ObservedTableName, FieldName3UsedForMatch);

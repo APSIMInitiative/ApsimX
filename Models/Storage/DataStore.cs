@@ -222,5 +222,19 @@
                 connection = null;
             }
         }
+
+        /// <summary>
+        /// Get the list of column names within a table
+        /// </summary>
+        /// <param name="tableName">Name of the table</param>
+        /// <returns></returns>
+        public IEnumerable<string> ColumnNames(string tableName)
+        {
+            if (connection != null)
+                return connection.GetColumnNames(tableName);
+            else
+                return null;
+        }
+
     }
 }

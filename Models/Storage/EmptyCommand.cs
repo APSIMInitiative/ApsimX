@@ -59,12 +59,7 @@
             {
                 if (!tableName.StartsWith("_"))
                 {
-                    DataTable data = null;
-                    if (database is Firebird)
-                        data = database.ExecuteQuery(string.Format("SELECT FIRST 1 * FROM [{0}]", tableName));
-                    else
-                        data = database.ExecuteQuery(string.Format("SELECT * FROM [{0}] LIMIT 1", tableName));
-                    if (data.Rows.Count == 0)
+                    if (database.TableIsEmpty(tableName))
                         tableNamesToDelete.Add(tableName);
                     else
                         allTablesEmpty = false;

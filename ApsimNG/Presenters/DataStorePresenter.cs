@@ -181,25 +181,7 @@ namespace UserInterface.Presenters
                         var names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
                         string filter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
                         if (!string.IsNullOrEmpty(view.RowFilter.Value))
-                        {
-                            // For Firebird, we need to convert column names to their short form to perform the query
-                            if (dataStore.Reader is DataStoreReader && (dataStore.Reader as DataStoreReader).connection is Firebird)
-                            {
-                                string rowFilter = view.RowFilter.Value;
-                                List<string> output = rowFilter.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
-                                foreach (string field in output)
-                                {
-                                    string shortName = ((dataStore.Reader as DataStoreReader).connection as Firebird).GetShortColumnName(view.TableList.SelectedValue, field);
-                                    if (!string.IsNullOrEmpty(shortName))
-                                    {
-                                        rowFilter = rowFilter.Replace("[" + field + "]", "[" + shortName + "]");
-                                    }
-                                }
-                                filter += " AND " + rowFilter;
-                            }
-                            else
-                                filter += " AND " + view.RowFilter.Value;
-                        }
+                            filter += " AND " + view.RowFilter.Value;
                         data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
                     }
                     else if (SimulationFilter != null)

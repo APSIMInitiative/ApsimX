@@ -14,7 +14,7 @@
     public class DataStoreReader : IStorageReader
     {
         /// <summary>A database connection</summary>
-        public IDatabaseConnection connection { get; private set; } = null;
+        public IDatabaseConnection Connection { get; private set; } = null;
 
         /// <summary>A list of field names for each table.</summary>
         private Dictionary<string, List<string>> tables = new Dictionary<string, List<string>>();
@@ -35,7 +35,7 @@
         {
             get
             {
-                var data = connection.ExecuteQuery("select Name from _Simulations");
+                var data = Connection.ExecuteQuery("select Name from [_Simulations]");
                 return DataTableUtilities.GetColumnAsStrings(data, "Name").ToList();
             }
         }
@@ -63,7 +63,7 @@
         /// <param name="database">The database connection to read from.</param>
         public void SetConnection(IDatabaseConnection database)
         {
-            connection = database;
+            Connection = database;
             Refresh();
         }
 
@@ -93,7 +93,7 @@
         /// <returns>Can return an empty list but never null.</returns>
         public List<string> ColumnNames(string tableName)
         {
-            return connection.GetColumnNames(tableName);
+            return Connection.GetColumnNames(tableName);
         }
 
         /// <summary>Return a list of column names with string data type for a table. Never returns null.</summary>
@@ -101,12 +101,12 @@
         /// <returns>Can return an empty list but never null.</returns>
         public List<string> StringColumnNames(string tableName)
         {
-            return connection.GetStringColumnNames(tableName);
+            return Connection.GetStringColumnNames(tableName);
         }
 
 
         /// <summary>Returns a list of table names</summary>
-        public List<string> TableNames { get { return connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
+        public List<string> TableNames { get { return Connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
 
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         public void Refresh()
@@ -116,24 +116,24 @@
             tables.Clear();
 
             // Read in simulation ids.
-            if (connection.TableExists("_Simulations"))
+            if (Connection.TableExists("_Simulations"))
             {
-                var data = connection.ExecuteQuery("SELECT * FROM [_Simulations]");
+                var data = Connection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
                     simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
 
             // Read in checkpoint ids.
-            if (connection.TableExists("_Checkpoints"))
+            if (Connection.TableExists("_Checkpoints"))
             {
-                var data = connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
+                var data = Connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
                     checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
 
             // For each table in the database, read in field names.
-            foreach (var tableName in connection.GetTableNames())
-                tables.Add(tableName, connection.GetTableColumns(tableName));
+            foreach (var tableName in Connection.GetTableNames())
+                tables.Add(tableName, Connection.GetTableColumns(tableName));
 
             // Get the units table.
             units = new DataView(GetData("_Units"));
@@ -157,10 +157,10 @@
                                  int from = 0, int count = 0,
                                  string orderBy = null)
         {
-            if (!connection.TableExists(tableName))
+            if (!Connection.TableExists(tableName))
                 return null;
 
-            var fieldNamesInTable = connection.GetColumnNames(tableName);
+            var fieldNamesInTable = Connection.GetColumnNames(tableName);
 
             if (fieldNamesInTable == null || fieldNamesInTable.Count == 0)
                 return null;
@@ -181,7 +181,7 @@
 
             sql.Append("SELECT ");
 
-            if (count > 0 && connection is Firebird)
+            if (count > 0 && Connection is Firebird)
             {
                 sql.Append("FIRST ");
                 sql.Append(count);
@@ -217,14 +217,14 @@
                     firstField = false;
                     sql.Append("T.");
                     sql.Append("[");
-                    if (!(connection is Firebird) || tableName.StartsWith("_")
+                    if (!(Connection is Firebird) || tableName.StartsWith("_")
                       || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
                       || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
                       || fieldName.Equals("CheckpointID", StringComparison.OrdinalIgnoreCase)
                       || fieldName.Equals("CheckpointName", StringComparison.OrdinalIgnoreCase))
                         sql.Append(fieldName);
                     else
-                        sql.Append("COL_" + (connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
+                        sql.Append("COL_" + (Connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
                     sql.Append(']');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
@@ -282,11 +282,26 @@
 
                 if (filter != null)
                 {
+                    string copyFilter = filter;
+                    // For Firebird, we need to convert column names to their short form to perform the query
+                    if (Connection is Firebird)
+                    {
+                        List<string> output = copyFilter.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
+                        foreach (string field in output)
+                        {
+                            string shortName = (Connection as Firebird).GetShortColumnName(tableName, field);
+                            if (!string.IsNullOrEmpty(shortName))
+                            {
+                                copyFilter = copyFilter.Replace("[" + field + "]", "[" + shortName + "]");
+                            }
+                        }
+                    }
+
                     if (!firstWhere)
                         sql.Append(" AND ");
                     firstWhere = false;
                     sql.Append("(");
-                    sql.Append(filter);
+                    sql.Append(copyFilter);
                     sql.Append(")");
                 }
             }
@@ -298,8 +313,8 @@
                     sql.Append(" ORDER BY S.[ID]");
                     if (hasToday)
                     {
-                        if (connection is Firebird)
-                            sql.Append(", T.[COL_" + (connection as Firebird).GetColumnNumber(tableName, "Clock.Today").ToString() + "]");
+                        if (Connection is Firebird)
+                            sql.Append(", T.[COL_" + (Connection as Firebird).GetColumnNumber(tableName, "Clock.Today").ToString() + "]");
                         else
                             sql.Append(", T.[Clock.Today]");
                     }
@@ -310,7 +325,7 @@
                 sql.Append(" ORDER BY " + orderBy);
             }
 
-            if (connection is SQLite)
+            if (Connection is SQLite)
                 // Write LIMIT/OFFSET clause
                 if (count > 0)
                 {
@@ -323,14 +338,14 @@
             // It appears that the a where clause that has 'SimulationName in ('xxx, 'yyy') is
             // case sensitive despite having COLLATE NOCASE in the 'CREATE TABLE _Simulations'
             // statement. I don't know why this is. The replace below seems to fix the problem.
-            if (connection is SQLite)
+            if (Connection is SQLite)
                 sql = sql.Replace("SimulationName IN ", "SimulationName COLLATE NOCASE IN ");
-            else if (connection is Firebird)
+            else if (Connection is Firebird)
                 sql = sql.Replace("SimulationName ", "S.[Name] ");
             var st = sql.ToString();
-            DataTable result = connection.ExecuteQuery(st);
+            DataTable result = Connection.ExecuteQuery(st);
             // For Firebird, we need to recover the full names of the data columns
-            if (connection is Firebird && !tableName.StartsWith("_"))
+            if (Connection is Firebird && !tableName.StartsWith("_"))
             {
                 foreach (DataColumn dataCol in result.Columns)
                 {
@@ -339,7 +354,7 @@
                         int colNo;
                         if (Int32.TryParse(dataCol.ColumnName.Substring(4), out colNo))
                         {
-                            dataCol.ColumnName = (connection as Firebird).GetLongColumnName(tableName, colNo);
+                            dataCol.ColumnName = (Connection as Firebird).GetLongColumnName(tableName, colNo);
                         }
                     }
                 }
@@ -353,7 +368,7 @@
         {
             try
             {
-                return connection.ExecuteQuery(sql);
+                return Connection.ExecuteQuery(sql);
             }
             catch (Exception)
             {
