@@ -530,6 +530,13 @@ namespace UserInterface.Presenters
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }
+                    else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
+                    {
+                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
+                        string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = values;
+                    }
                     else
                     {
                         cell.EditorType = EditorTypeEnum.TextBox;

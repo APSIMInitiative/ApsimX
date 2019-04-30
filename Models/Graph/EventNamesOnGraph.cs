@@ -34,16 +34,57 @@ namespace Models.Graph
         /// Gets or sets the column name to plot.
         /// </summary>
         [Description("The column name to plot")]
+        [Display(Values = "GetValidColumnNames")]
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the simulation name to plot.
+        /// </summary>
+        [Description("Name of the simulation to plot")]
+        [Display(Values = "GetValidSimNames")]
+        public string SimulationName { get; set; }
+
+        /// <summary>
+        /// Gets a list of valid column names.
+        /// </summary>
+        public string[] GetValidColumnNames()
+        {
+            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            if (storage == null)
+                return null;
+
+            Series parent = Apsim.Parent(this, typeof(Series)) as Series;
+            if (parent == null)
+                return null;
+
+            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
+            parent.GetSeriesToPutOnGraph(storage.Reader, definitions);
+            if (definitions == null || definitions.Count < 1)
+                return null;
+
+            DataTable data = definitions[0].data;
+            return data.Columns.Cast<DataColumn>().Where(c => c.DataType == typeof(string)).Select(c => c.ColumnName).ToArray();
+        }
+
+        /// <summary>
+        /// Gets a list of names of simulations in scope.
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetValidSimNames()
+        {
+            return (Apsim.Parent(this, typeof(Series)) as Series)?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
+        }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
         public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions)
         {
-            if (definitions.Count > 0)
+            if (definitions != null && definitions.Count > 0)
             {
-                data = definitions[0].data;
+                data = definitions.FirstOrDefault(d => d.data != null && d.SimulationNames.Contains(SimulationName))?.data;
+                if (data == null)
+                    data = definitions.FirstOrDefault(d => d.data != null)?.data;
                 xFieldName = definitions[0].xFieldName;
             }
         }
