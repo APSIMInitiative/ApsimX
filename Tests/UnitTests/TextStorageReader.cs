@@ -102,6 +102,29 @@ namespace UnitTests
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets a "brief" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="fullColumnName">The "full" name of the column</param>
+        /// <returns>The "brief" name of the column</returns>
+        public string BriefColumnName(string tablename, string fullColumnName)
+        {
+            return fullColumnName;
+        }
+
+        /// <summary>
+        /// Gets the "full" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="queryColumnName"></param>
+        /// <returns>The "full" name of the column</returns>
+        public string FullColumnName(string tablename, string queryColumnName)
+        {
+            return queryColumnName;
+        }
+
+
         public void Refresh()
         {
             throw new System.NotImplementedException();

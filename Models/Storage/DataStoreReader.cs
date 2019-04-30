@@ -104,6 +104,33 @@
             return Connection.GetStringColumnNames(tableName);
         }
 
+        /// <summary>
+        /// Gets a "brief" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="fullColumnName">The "full" name of the column</param>
+        /// <returns>The "brief" name of the column</returns>
+        public string BriefColumnName(string tablename, string fullColumnName)
+        {
+            if (Connection is Firebird)
+                return (Connection as Firebird).GetShortColumnName(tablename, fullColumnName);
+            else
+                return fullColumnName;
+        }
+
+        /// <summary>
+        /// Gets the "full" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="queryColumnName"></param>
+        /// <returns>The "full" name of the column</returns>
+        public string FullColumnName(string tablename, string queryColumnName)
+        {
+            if (Connection is Firebird)
+                return (Connection as Firebird).GetLongColumnName(tablename, queryColumnName);
+            else
+                return queryColumnName;
+        }
 
         /// <summary>Returns a list of table names</summary>
         public List<string> TableNames { get { return Connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
