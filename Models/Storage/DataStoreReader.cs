@@ -178,11 +178,13 @@
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
         /// <param name="orderBy">Optional column name to order by</param>
+        /// <param name="distinct">Only return distinct values for field?</param>
         /// <returns></returns>
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0,
-                                 string orderBy = null)
+                                 string orderBy = null,
+                                 bool distinct = false)
         {
             if (!Connection.TableExists(tableName))
                 return null;
@@ -208,6 +210,9 @@
 
             sql.Append("SELECT ");
 
+            if (distinct)
+                sql.Append(" DISTINCT ");
+
             if (count > 0 && Connection is Firebird)
             {
                 sql.Append("FIRST ");
@@ -223,6 +228,7 @@
                 sql.Append("C.[Name] AS [CheckpointName], C.[ID] AS [CheckpointID]");
                 firstField = false;
             }
+
             if (hasSimulationName)
             {
                 if (!firstField)
@@ -260,7 +266,7 @@
 
             bool firstFrom = true;
             // Write FROM clause
-            sql.Append("FROM ");
+            sql.Append(" FROM ");
             if (hasCheckpointName)
             {
                 sql.Append("[_Checkpoints] C");

@@ -8,6 +8,8 @@
 
     class DatabaseTableDetails
     {
+        private static readonly string[] indexColumns = { "ID", "CheckpointID", "SimulationID" };
+
         /// <summary>The datastore connection.</summary>
         private IDatabaseConnection connection;
 
@@ -57,8 +59,12 @@
                 bool allowLongStrings = table.TableName.StartsWith("_");
                 colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
             }
-
             connection.CreateTable(Name, columnNamesInDb.ToList(), colTypes);
+
+            if (table.Columns.Contains("ID") && table.TableName.StartsWith("_"))
+                connection.CreateIndex(table.TableName, new List<string>() { "ID" }, true);
+            else if (table.Columns.Contains("CheckpointID") && table.Columns.Contains("SimulationID"))
+                connection.CreateIndex(table.TableName, new List<string>() { "CheckpointID", "SimulationID" }, false);
 
             TableExistsInDb = true;
         }
