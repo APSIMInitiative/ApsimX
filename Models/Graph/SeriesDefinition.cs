@@ -294,6 +294,10 @@
                 // Add any field names from the filter.
                 fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
+                // Add any fields from child graphable models.
+                foreach (IGraphable series in Apsim.Children(series, typeof(IGraphable)))
+                    fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
+
                 // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
                 // GetData in this situation.
                 string checkpointName = null;

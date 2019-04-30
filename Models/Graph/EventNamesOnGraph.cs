@@ -53,17 +53,11 @@ namespace Models.Graph
             if (storage == null)
                 return null;
 
-            Series parent = Apsim.Parent(this, typeof(Series)) as Series;
-            if (parent == null)
+            Series series = Apsim.Parent(this, typeof(Series)) as Series;
+            if (series == null)
                 return null;
 
-            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            parent.GetSeriesToPutOnGraph(storage.Reader, definitions);
-            if (definitions == null || definitions.Count < 1)
-                return null;
-
-            DataTable data = definitions[0].data;
-            return data.Columns.Cast<DataColumn>().Where(c => c.DataType == typeof(string)).Select(c => c.ColumnName).ToArray();
+            return storage.Reader.ColumnNames(series.TableName).ToArray();
         }
 
         /// <summary>
@@ -75,6 +69,18 @@ namespace Models.Graph
             return (Apsim.Parent(this, typeof(Series)) as Series)?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
         }
 
+
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        public IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition)
+        {
+            if (string.IsNullOrEmpty(ColumnName))
+                return new string[0];
+            else
+                return new string[] { ColumnName };
+        }
+
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
@@ -82,10 +88,17 @@ namespace Models.Graph
         {
             if (definitions != null && definitions.Count > 0)
             {
-                data = definitions.FirstOrDefault(d => d.data != null && d.SimulationNames.Contains(SimulationName))?.data;
+                // Try to find a definition that has the correct simulation name.
+                foreach (var definition in definitions)
+                {
+                    var simulationNameDescriptor = definition.Descriptors.Find(desc => desc.Name == "SimulationName");
+                    if (simulationNameDescriptor != null && simulationNameDescriptor.Value == SimulationName)
+                        data = definition.Data;
+                }
+
                 if (data == null)
-                    data = definitions.FirstOrDefault(d => d.data != null)?.data;
-                xFieldName = definitions[0].xFieldName;
+                    data = definitions.FirstOrDefault(d => d.Data != null)?.Data;
+                xFieldName = definitions[0].XFieldName;
             }
 
         }
@@ -141,6 +154,9 @@ namespace Models.Graph
         /// <param name="data">The data table to search</param>
         private string FindPhenologyStageColumn(DataTable data)
         {
+            if (ColumnName == null || ColumnName == string.Empty)
+                return null;
+
             var columnNames = data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
             return columnNames.Find(name => name.Contains(ColumnName));
         }

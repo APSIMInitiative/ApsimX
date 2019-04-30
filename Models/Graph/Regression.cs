@@ -94,6 +94,14 @@ namespace Models.Graph
             if (showOneToOne)
                 Put1To1LineOnGraph(definitions, x, y);
         }
+        
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        public IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition)
+        {
+            return new string[0];
+        }
 
         /// <summary>Puts the regression line and 1:1 line on graph.</summary>
         /// <param name="definitions">The definitions.</param>

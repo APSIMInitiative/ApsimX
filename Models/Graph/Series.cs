@@ -192,6 +192,14 @@ namespace Models.Graph
                 series.GetAnnotationsToPutOnGraph(annotations);
         }
 
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        public IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition)
+        {
+            return new string[0];
+        }
+
         /// <summary>
         /// Create series definitions assuming the vary by fields are text fields in the table.
         /// </summary>
@@ -335,7 +343,7 @@ namespace Models.Graph
         /// <summary>
         /// Find and return a list of all simulation descriptions.
         /// </summary>
-        private List<SimulationDescription> FindSimulationDescriptions()
+        public List<SimulationDescription> FindSimulationDescriptions()
         {
             // Find a parent that heads the scope that we're going to graph
             IModel parent = FindParent();

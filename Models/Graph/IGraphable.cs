@@ -20,6 +20,11 @@
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
         /// <param name="annotations">A list of annotations to add to.</param>
         void GetAnnotationsToPutOnGraph(List<Annotation> annotations);
+
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition);
     }
 
     /// <summary>An enumeration for the different types of graph series</summary>
