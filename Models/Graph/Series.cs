@@ -143,7 +143,7 @@ namespace Models.Graph
                 // TableName exists so get the vary by fields and the simulation descriptions.
                 var varyByFieldNames = GetVaryByFieldNames();
                 simulationDescriptions = FindSimulationDescriptions();
-                var whereClauseForInScopeData = CreateInScopeWhereClause(simulationDescriptions);
+                var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationDescriptions);
                
                 if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
@@ -212,7 +212,7 @@ namespace Models.Graph
                                             fieldNames: new string[] { varyByFieldName },
                                             filter: whereClauseForInScopeData,
                                             distinct: true);
-                var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName).ToList();
+                var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName).Distinct().ToList();
                 validValuesForEachVaryByField.Add(values);
             }
 
@@ -231,19 +231,26 @@ namespace Models.Graph
         /// <summary>
         /// Create an SQL WHERE clause for rows that are in scope.
         /// </summary>
+        /// <param name="reader">The reader to read from.</param>
         /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
-        private string CreateInScopeWhereClause(IEnumerable<SimulationDescription> simulationDescriptions)
+        private string CreateInScopeWhereClause(IStorageReader reader, IEnumerable<SimulationDescription> simulationDescriptions)
         {
-            // Extract all the simulation names from all descriptions.
-            var simulationNames = simulationDescriptions.Select(d => d.Name).Distinct();
+            var fieldsThatExist = reader.ColumnNames(TableName);
+            if (fieldsThatExist.Contains("SimulationID") || fieldsThatExist.Contains("SimulationName"))
+            {
+                // Extract all the simulation names from all descriptions.
+                var simulationNames = simulationDescriptions.Select(d => d.Name).Distinct();
 
-            string whereClause = null;
-            if (Filter != null && Filter != string.Empty)
-                whereClause = Filter + " AND ";
-            whereClause += "SimulationName IN (" +
-                            StringUtilities.Build(simulationNames, ",", "'", "'") +
-                            ")";
-            return whereClause;
+                string whereClause = null;
+                if (Filter != null && Filter != string.Empty)
+                    whereClause = Filter + " AND ";
+                whereClause += "SimulationName IN (" +
+                                StringUtilities.Build(simulationNames, ",", "'", "'") +
+                                ")";
+                return whereClause;
+            }
+            else
+                return Filter;
         }
 
         /// <summary>
