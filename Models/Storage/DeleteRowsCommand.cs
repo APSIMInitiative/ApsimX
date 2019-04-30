@@ -64,17 +64,9 @@
                 else
                 {
                     database.ExecuteNonQuery(sql);
-
                     // If there are no rows left in table then drop the table.
-                    System.Data.DataTable data;
-                    if (database is Firebird)
-                        data = database.ExecuteQuery(string.Format("SELECT FIRST 1 * FROM [{0}]", table));
-                    else
-                        data = database.ExecuteQuery(string.Format("SELECT * FROM [{0}] LIMIT 1", table));
-                    if (data.Rows.Count == 0)
-                    {
+                    if (database.TableIsEmpty(table))
                         database.DropTable(table);
-                    }
                 }
             }
         }
