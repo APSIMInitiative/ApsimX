@@ -44,7 +44,8 @@
             this.factorView = view as IEditorView;
             this.presenter = explorerPresenter;
             intellisense = new IntellisensePresenter(factorView as ViewBase);
-            this.factorView.Lines = factor.Specifications.ToArray();
+            if (factor.Specifications != null)
+                this.factorView.Lines = factor.Specifications.ToArray();
 
             this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
