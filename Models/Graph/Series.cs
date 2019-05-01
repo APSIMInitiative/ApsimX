@@ -257,8 +257,10 @@ namespace Models.Graph
                                 ")";
                 return whereClause;
             }
-            else
+            else if (Filter != string.Empty)
                 return Filter;
+            else
+                return null;
         }
 
         /// <summary>
