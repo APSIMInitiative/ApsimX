@@ -23,10 +23,12 @@ namespace Models.Storage
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
         /// <param name="orderBy">Optional column name to order by</param>
+        /// <param name="distinct">Only return distinct values for field?</param>
         DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                         string filter = null,
                         int from = 0, int count = 0,
-                        string orderBy = null);
+                        string orderBy = null,
+                        bool distinct = false);
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
         /// <param name="sql">The SQL.</param>
@@ -52,10 +54,26 @@ namespace Models.Storage
         /// <returns>Can return an empty list but never null.</returns>
         List<string> ColumnNames(string tableName);
 
-        /// <summary>Return a list of column names of type string for a table. Never returns null.</summary>
+        /// <summary>Return a list of full column names of type string for a table. Never returns null.</summary>
         /// <param name="tableName">The table name to return column names for.</param>
         /// <returns>Can return an empty list but never null.</returns>
         List<string> StringColumnNames(string tableName);
+
+        /// <summary>
+        /// Gets a "brief" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="fullColumnName">The "full" name of the column</param>
+        /// <returns>The "brief" name of the column</returns>
+        string BriefColumnName(string tablename, string fullColumnName);
+
+        /// <summary>
+        /// Gets the "full" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="queryColumnName"></param>
+        /// <returns>The "full" name of the column</returns>
+        string FullColumnName(string tablename, string queryColumnName);
 
         /// <summary>
         /// Return a checkpoint ID for the specified checkpoint name.

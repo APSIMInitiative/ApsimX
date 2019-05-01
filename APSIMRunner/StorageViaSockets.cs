@@ -28,7 +28,7 @@
             var rowData = new JobRunnerMultiProcess.TransferReportData()
             {
                 key = jobKey,
-                data = data 
+                data = data
             };
 
             if (data.Rows.Count > 0)
@@ -130,6 +130,15 @@
         {
             throw new NotImplementedException();
         }
-    }
 
+        /// <summary>
+        /// Get the list of column names within a table
+        /// </summary>
+        /// <param name="tableName">Name of the table</param>
+        /// <returns></returns>
+        public IEnumerable<string> ColumnNames(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

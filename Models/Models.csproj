@@ -227,6 +227,11 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
+    <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
+    <Compile Include="Graph\MultiDescriptorPainter.cs" />
+    <Compile Include="Graph\SequentialPainter.cs" />
+    <Compile Include="Graph\SeriesDefinition.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />

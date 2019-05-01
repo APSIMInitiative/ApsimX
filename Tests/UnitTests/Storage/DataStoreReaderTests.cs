@@ -120,7 +120,7 @@
             CreateTable(database);
 
             DataStoreReader reader = new DataStoreReader(database);
-            var data = reader.GetDataUsingSql("SELECT Col1 FROM Report");
+            var data = reader.GetDataUsingSql("SELECT [Col1] FROM [Report]");
 
             Assert.AreEqual(Utilities.TableToString(data),
                                            "      Col1\r\n" +

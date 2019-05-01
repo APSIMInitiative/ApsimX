@@ -92,6 +92,15 @@
             return newSimulation;
         }
 
+        /// <summary>
+        /// Return true if this simulation has a descriptor.
+        /// </summary>
+        /// <param name="descriptor">The descriptor to search for.</param>
+        public bool HasDescriptor(Descriptor descriptor)
+        {
+            return Descriptors.Find(d => d.Name == descriptor.Name && d.Value == descriptor.Value) != null;
+        }
+
         /// <summary>Add any replacements to all simulation descriptions.</summary>
         /// <param name="simulations">The top level simulations model.</param>
         private void AddReplacements(Simulations simulations)
@@ -128,6 +137,24 @@
                 Name = name;
                 Value = value;
             }
+        }
+
+
+        /// <summary>Compare two list of descriptors for equality.</summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>true if the are the same.</returns>
+        public static bool Equals(List<SimulationDescription.Descriptor> x, List<SimulationDescription.Descriptor> y)
+        {
+            if (x.Count != y.Count)
+                return false;
+            for (int i = 0; i < x.Count; i++)
+            {
+                if (x[i].Name != y[i].Name ||
+                    x[i].Value != y[i].Value)
+                    return false;
+            }
+            return true;
         }
 
     }
