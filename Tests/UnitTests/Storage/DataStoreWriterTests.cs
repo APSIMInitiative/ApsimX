@@ -144,7 +144,7 @@
             writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM Report ORDER BY Col"),
+            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM [Report] ORDER BY [Col]"),
                            "CheckpointID,SimulationID,Col\r\n" +
                            "           1,           1,  3\r\n");
         }

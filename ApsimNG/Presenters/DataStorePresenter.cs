@@ -178,7 +178,7 @@ namespace UserInterface.Presenters
                     if (ExperimentFilter != null)
                     {
                         var names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
-                        string filter = "S.NAME IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        string filter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
                         if (!string.IsNullOrEmpty(view.RowFilter.Value))
                             filter += " AND " + view.RowFilter.Value;
                         data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
