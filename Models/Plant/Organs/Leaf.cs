@@ -589,7 +589,7 @@ namespace Models.PMF.Organs
                 int count = 0;
                 foreach (LeafCohort l in Leaves)
                 {
-                    if (l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2)
+                    if (l.Age >= 0 && l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2)
                         count++;
                 }
                 return count;
@@ -621,7 +621,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves.Where(l => l.Age >= 0 & l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / parentPlant.Population;
+                return Leaves.Where(l => l.Age >= 0 && l.Age < l.LagDuration + l.GrowthDuration + l.SenescenceDuration / 2).Sum(l => l.CohortPopulation) / parentPlant.Population;
             }
         }
 
@@ -1818,7 +1818,7 @@ namespace Models.PMF.Organs
                 double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
                 double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
 
-                if (resLeafCohort > totalBMLeafCohort)
+                if (resLeafCohort - totalBMLeafCohort > 0.00001)
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
 
                 if (resLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)

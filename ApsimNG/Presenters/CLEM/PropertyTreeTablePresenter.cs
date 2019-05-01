@@ -230,9 +230,12 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                Model firstChild = model.Children.First();
-                List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
-                return sameTypeChildren;
+                Model firstChild = model.Children.FirstOrDefault();
+                if (firstChild != null)
+                {
+                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    return sameTypeChildren;
+                }
             }
             return null;
         }
@@ -245,8 +248,13 @@ namespace UserInterface.Presenters
         {
             CategoryTree categories = new CategoryTree();
 
+            Model firstChild = null;
+
             this.childrenWithSameType = this.GetChildModelsWithSameType(this.model);
-            Model firstChild = this.childrenWithSameType.First() as Model;
+            if (childrenWithSameType != null)
+            {
+                firstChild = this.childrenWithSameType.First() as Model;
+            }
 
             if (firstChild != null)
             {

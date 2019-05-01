@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity applies controlled burning to a specified graze food store (i.e. native pasture paddock).")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/pasture/burnpasture.htm")]
     public class PastureActivityBurn: CLEMActivityBase
     {
         /// <summary>

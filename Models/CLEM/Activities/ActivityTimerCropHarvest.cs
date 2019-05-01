@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
+    [HelpUri(@"content/features/timers/cropharvest.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -82,7 +83,7 @@ namespace Models.CLEM.Activities
 
             return results;
         }
-
+        
         /// <summary>
         /// Method to determine whether the activity is due based on harvest details form parent.
         /// </summary>
@@ -96,12 +97,12 @@ namespace Models.CLEM.Activities
 
                 DateTime harvestDate;
 
-                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0)
+                if (ManageProductActivity.PreviousHarvest != null && OffsetMonthHarvestStop > 0)
                 {
                     // compare with previous harvest
                     harvestDate = ManageProductActivity.PreviousHarvest.HarvestDate;
                 }
-                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
+                else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart <= 0)
                 {
                     // compare with next harvest 
                     harvestDate = ManageProductActivity.NextHarvest.HarvestDate;
@@ -138,6 +139,45 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Method to determine whether the activity has past based on current dateand harvest details form parent.
+        /// </summary>
+        /// <returns>Whether the activity is past</returns>
+        public bool ActivityPast
+        {
+            get
+            {
+                int[] range = new int[2] { OffsetMonthHarvestStart, OffsetMonthHarvestStop };
+                int[] month = new int[2];
+
+                DateTime harvestDate;
+
+                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0)
+                {
+                    // compare with previous harvest
+                    harvestDate = ManageProductActivity.PreviousHarvest.HarvestDate;
+                }
+                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
+                {
+                    // compare with next harvest 
+                    harvestDate = ManageProductActivity.NextHarvest.HarvestDate;
+                }
+                else
+                {
+                    // no harvest to compare with
+                    return false;
+                }
+
+                for (int i = 0; i < 2; i++)
+                {
+                    DateTime checkDate = harvestDate.AddMonths(range[i]);
+                    month[i] = (checkDate.Year * 100 + checkDate.Month);
+                }
+                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                return (month[0] < today && month[1] < today);
+            }
+        }
+
+        /// <summary>
         /// Method to determine whether the activity is due based on a specified date
         /// </summary>
         /// <returns>Whether the activity is due based on the specified date</returns>
@@ -169,14 +209,14 @@ namespace Models.CLEM.Activities
                 html += "\n<div class=\"filter\">At harvest";
                 html += "\n</div>";
             }
-            else if (OffsetMonthHarvestStop == 0 & OffsetMonthHarvestStart < 0)
+            else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
             {
                 html += "\n<div class=\"filter\">";
                 html += "All <span class=\"setvalueextra\">";
                 html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest";
                 html += "</div>";
             }
-            else if (OffsetMonthHarvestStop > 0 & OffsetMonthHarvestStart == 0)
+            else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
             {
                 html += "\n<div class=\"filter\">";
                 html += "All <span class=\"setvalueextra\">";

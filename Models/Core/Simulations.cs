@@ -14,6 +14,7 @@ using Models.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
+using Models.Core.Run;
 
 namespace Models.Core
 {
@@ -27,9 +28,6 @@ namespace Models.Core
     [ScopedModel]
     public class Simulations : Model, ISimulationEngine
     {
-        /// <summary>The _ file name</summary>
-        private string _FileName;
-
         [NonSerialized]
         private Links links;
 
@@ -46,23 +44,7 @@ namespace Models.Core
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
         [XmlIgnore]
-        public string FileName
-        {
-            get
-            {
-                return _FileName;
-            }
-            set
-            {
-                _FileName = value;
-                DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
-                if (storage != null)
-                {
-                    storage.Close();
-                    storage.FileName = null;
-                }
-            }
-        }
+        public string FileName { get; set; }
 
         /// <summary>Returns an instance of a links service</summary>
         [XmlIgnore]
@@ -127,7 +109,7 @@ namespace Models.Core
             filesReferenced.AddRange(FindAllReferencedFiles());
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
         }
 
         /// <summary>
@@ -137,9 +119,9 @@ namespace Models.Core
         /// <returns>A new simulations object that represents the file on disk</returns>
         public Simulations RevertCheckpoint(string checkpointName)
         {
-            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
-                storage.RevertCheckpoint(checkpointName);
+                storage.Writer.RevertCheckpoint(checkpointName);
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
@@ -151,38 +133,12 @@ namespace Models.Core
         public void Run(Simulation simulation, bool doClone)
         {
             Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation, doClone);
+            RunSimulation simulationRunner = new RunSimulation(this, simulation);
             Links.Resolve(simulationRunner);
             simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
 
-        /// <summary>
-        /// Perform model substitutions
-        /// </summary>
-        public void MakeSubsAndLoad(Simulation model)
-        {
-            IModel replacements = Apsim.Child(this, "Replacements");
-            if (replacements != null)
-            {
-                foreach (IModel replacement in replacements.Children)
-                {
-                    foreach (IModel match in Apsim.FindAll(model))
-                    {
-                        if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            // Do replacement.
-                            IModel newModel = Apsim.Clone(replacement);
-                            int index = match.Parent.Children.IndexOf(match as Model);
-                            match.Parent.Children.Insert(index, newModel as Model);
-                            newModel.Parent = match.Parent;
-                            match.Parent.Children.Remove(match as Model);
 
-                            newModel.OnCreated();
-                        }
-                    }
-                }
-            }
-        }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
@@ -202,33 +158,6 @@ namespace Models.Core
             SetFileNameInAllSimulations();
         }
 
-        /// <summary>Find all simulation names that are going to be run.</summary>
-        /// <returns></returns>
-        public string[] FindAllSimulationNames()
-        {
-            List<string> simulations = new List<string>();
-            // Look for simulations.
-            foreach (Model Model in Apsim.ChildrenRecursively(this))
-            {
-                if (Model is Simulation)
-                {
-                    // An experiment can have a base simulation - don't return that to caller.
-                    if (!(Model.Parent is Experiment))
-                        simulations.Add(Model.Name);
-                }
-            }
-
-            // Look for experiments and get them to create their simulations.
-            foreach (Model experiment in Apsim.ChildrenRecursively(this))
-            {
-                if (experiment is Experiment)
-                    simulations.AddRange((experiment as Experiment).GetSimulationNames());
-            }
-
-            return simulations.ToArray();
-
-        }
-
         /// <summary>Find and return a list of duplicate simulation names.</summary>
         public List<string> FindDuplicateSimulationNames()
         {
@@ -244,9 +173,18 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model simulation in Apsim.ChildrenRecursively(this))
-                if (simulation is Simulation)
-                    (simulation as Simulation).FileName = FileName;
+            foreach (Model child in Apsim.ChildrenRecursively(this))
+            {
+                if (child is Simulation)
+                    (child as Simulation).FileName = FileName;
+                else if (child is DataStore)
+                {
+                    DataStore storage = child as DataStore;
+                    storage.Close();
+                    storage.UpdateFileName();
+                    storage.Open();
+                }
+            }
         }
 
         /// <summary>
@@ -261,7 +199,7 @@ namespace Models.Core
         private void CreateLinks()
         {
             List<object> services = new List<object>();
-            IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
+            var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
             if (storage != null)
                 services.Add(storage);
             services.Add(this);
@@ -326,10 +264,9 @@ namespace Models.Core
                     string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
 
                     // Clone the simulation
-                    Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
+                    SimulationDescription simDescription = new SimulationDescription(simulation);
 
-                    // Make any substitutions.
-                    MakeSubsAndLoad(clonedSimulation);
+                    Simulation clonedSimulation = simDescription.ToSimulation(this);
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

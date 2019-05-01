@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
+    [HelpUri(@"content/features/timers/monthrange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -105,7 +106,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if ((date.Month >= EndMonth) | (date.Month <= StartMonth))
+                if ((date.Month >= EndMonth) || (date.Month <= StartMonth))
                 {
                     due = true;
                 }

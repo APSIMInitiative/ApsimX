@@ -40,7 +40,7 @@ if not exist "%solution_file%" (
 
 rem Copy DeploymentSupport files.
 echo Copying DeploymentSupport files...
-xcopy /e /i %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib>nul
+xcopy /y /e /i %apsimx%\DeploymentSupport\Windows\Bin64\lib %apsimx%\lib>nul
 copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %apsimx%\Bin>nul
 echo Done.
 
@@ -48,6 +48,9 @@ rem Restore NuGet packages.
 echo Restoring NuGet packages...
 pushd "%apsimx%">nul
 nuget restore -verbosity quiet
+pushd "%apsimx%\..\APSIM.Shared">nul
+nuget restore -verbosity quiet
+popd>nul
 popd>nul
 
 rem Set verbosity to minimal, don't display the logo, 

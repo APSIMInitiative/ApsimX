@@ -55,6 +55,10 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public double Provided { get; set; }
         ///<summary>
+        /// Value provided
+        ///</summary> 
+        public double Value { get; set; }
+        ///<summary>
         /// Filtering and sorting items list
         ///</summary> 
         public List<object> FilterDetails { get; set; }

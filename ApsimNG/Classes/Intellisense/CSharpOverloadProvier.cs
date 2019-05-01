@@ -13,7 +13,7 @@ namespace UserInterface.Intellisense
     {
         private readonly CSharpCompletionContext context;
         private readonly int startOffset;
-        internal readonly IList<CSharpInsightItem> items;
+        private readonly IList<CSharpInsightItem> items;
         private int selectedIndex;
 
         public CSharpOverloadProvider(CSharpCompletionContext context, int startOffset, IEnumerable<CSharpInsightItem> items)

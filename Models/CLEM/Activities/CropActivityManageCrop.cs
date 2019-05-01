@@ -22,8 +22,12 @@ namespace Models.CLEM.Activities
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
+    [HelpUri(@"content/features/activities/crop/managecrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
+        [Link]
+        Clock Clock = null;
+
         /// <summary>
         /// Land type where crop is to be grown
         /// </summary>
@@ -131,7 +135,8 @@ namespace Models.CLEM.Activities
             int i = 0;
             foreach (var item in this.Children.OfType<CropActivityManageProduct>())
             {
-                item.ActivityEnabled = i == CurrentCropIndex;
+                item.ActivityEnabled = (i == CurrentCropIndex);
+                item.FirstTimeStepOfRotation = Clock.StartDate.Year*100 + Clock.StartDate.Month;
                 i++;
             }
         }
@@ -142,7 +147,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
         private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
         {
-            if (Area == 0 & UseAreaAvailable)
+            if (Area == 0 && UseAreaAvailable)
             {
                 Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
             }
@@ -164,7 +169,15 @@ namespace Models.CLEM.Activities
                 int i = 0;
                 foreach (var item in this.Children.OfType<CropActivityManageProduct>())
                 {
-                    item.ActivityEnabled = i == CurrentCropIndex;
+                    item.ActivityEnabled = (i == CurrentCropIndex);
+                    if (item.ActivityEnabled)
+                    {
+                        item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = Clock.Today.AddDays(1).Year * 100 + Clock.Today.AddDays(1).Month;
+                    }
+                    else
+                    {
+                        item.FirstTimeStepOfRotation = 0;
+                    }
                     i++;
                 }
             }
@@ -176,7 +189,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (LinkedLandItem != null & UseAreaAvailable)
+            if (LinkedLandItem != null && UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
             }

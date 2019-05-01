@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/products/manuretype.htm")]
     public class ProductStoreTypeManure: CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

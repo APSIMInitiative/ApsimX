@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Interfaces;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -15,6 +16,8 @@
     [Serializable]
     public class RunSimulation : IRunnable, IComputationalyTimeConsuming
     {
+        private IDataStore storage = null;
+
         /// <summary>The arguments for a commence event.</summary>
         public class CommenceArgs
         {
@@ -33,11 +36,19 @@
         [Link]
         private ISimulationEngine simulationEngine;
 
-        /// <summary>The simulation to run.</summary>
-        public bool cloneSimulationBeforeRun;
-
         /// <summary>An array of services that can be used to resolve links in the simulation</summary>
         public object[] Services { get; set; }
+
+        /// <summary>Gets the data store for this simulation.</summary>
+        public IDataStore DataStore
+        {
+            get
+            {
+                if (storage == null)
+                    storage = Apsim.Find(simulationEngine as IModel, typeof(DataStore)) as IDataStore;
+                return storage;
+            }
+        }
 
         /// <summary>A timer to record how long it takes to run</summary>
         [NonSerialized]
@@ -46,11 +57,9 @@
         /// <summary>Constructor</summary>
         /// <param name="simEngine">Simulation engine</param>
         /// <param name="simulation">The simulation to clone and run.</param>
-        /// <param name="doClone">Clone the simulation before running?</param>
-        public RunSimulation(ISimulationEngine simEngine, Simulation simulation, bool doClone)
+        public RunSimulation(ISimulationEngine simEngine, Simulation simulation)
         {
             simulationToRun = simulation;
-            cloneSimulationBeforeRun = doClone;
             simulationEngine = simEngine;
         }
 
@@ -86,14 +95,7 @@
             Links links = null;
             try
             {
-                // Clone simulation
-                if (cloneSimulationBeforeRun)
-                {
-                    simulationToRun = Apsim.Clone(simulationToRun) as Simulation;
-                    simulationEngine.MakeSubsAndLoad(simulationToRun);
-                }
-                else
-                    events = new Events(simulationToRun);
+                events = new Events(simulationToRun);
 
                 // Remove disabled models from simulation
                 foreach (IModel model in Apsim.ChildrenRecursively(simulationToRun))

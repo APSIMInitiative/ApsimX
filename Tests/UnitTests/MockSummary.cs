@@ -11,6 +11,15 @@ namespace UnitTests
     {
         public static List<string> messages = new List<string>();
 
+        /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
+        /// <param name="sender">The sender model</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            messages.Clear();
+        }
+
         public void WriteMessage(IModel model, string message)
         {
             messages.Add(message);
@@ -32,7 +41,7 @@ namespace UnitTests
         }
         public void WriteError(IModel model, string message)
         {
-            messages.Add("WARNING: " + message);
+            messages.Add("ERROR: " + message);
         }
     }
 }

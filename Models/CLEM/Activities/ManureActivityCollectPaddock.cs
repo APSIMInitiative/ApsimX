@@ -25,6 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the collection of manure from a specified paddock in the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/manure/collectmanurepaddock.htm")]
     public class ManureActivityCollectPaddock: CLEMActivityBase
     {
         private ProductStoreTypeManure manureStore;

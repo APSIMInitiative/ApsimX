@@ -371,7 +371,7 @@ namespace Models.Soils
         /// The paddock
         /// </summary>
         [Link]
-        private Simulation paddock = null;
+        private Zone paddock = null;
 
         //Needed for SurfaceCover
         /// <summary>

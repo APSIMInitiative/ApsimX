@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
     [Description("An individual labour availability item with monthly days available")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/labour/labouravailabilityitemmonthly.htm")]
     public class LabourAvailabilityItemMonthly : LabourSpecificationItem
     {
         /// <summary>
@@ -36,7 +37,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override double GetAvailability(int month)
         {
-            if(month<=12 & month>0 & month<=MonthlyValues.Count())
+            if(month<=12 && month>0 && month<=MonthlyValues.Count())
             {
                 return MonthlyValues[month - 1];
             }

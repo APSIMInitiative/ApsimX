@@ -22,10 +22,10 @@ namespace UserInterface.Views
         public ButtonView(ViewBase owner) : base(owner)
         {
             button = new Button();
-            _mainWidget = button;
+            mainWidget = button;
             button.Clicked += OnButtonClick;
             button.SetSizeRequest(80, 36);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>Invoked when the user clicks the button.</summary>
@@ -53,8 +53,8 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             button.Clicked -= OnButtonClick;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>User has clicked the button.</summary>

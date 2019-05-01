@@ -721,7 +721,7 @@ namespace Models
 
         //if (n_uptake_option == 1) then
 
-        //! time constant for uptake by  diffusion (days). H van Keulen & NG Seligman. Purdoe 1987. 
+        //! time constant for uptake by  diffusion (days). H van Keulen && NG Seligman. Purdoe 1987. 
         //! This is the time it would take to take up by diffusion the current amount of N if it wasn't depleted between time steps
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 100.0, Name = "no3_diffn_const")]
         /// <summary>
@@ -2287,7 +2287,7 @@ namespace Models
             //    //*     ===========================================================
 
             //    //*+  Purpose
-            //    //*       Zero crop daily variables & arrays
+            //    //*       Zero crop daily variables && arrays
 
 
 
@@ -2398,7 +2398,7 @@ namespace Models
             //*     ===========================================================
 
             //*+  Purpose
-            //*       Zero crop variables & arrays
+            //*       Zero crop variables && arrays
 
 
             //! zero pools etc.
@@ -2423,7 +2423,7 @@ namespace Models
         //    //*     ===========================================================
 
         //    //*+  Purpose
-        //    //*       Zero soil variables & arrays
+        //    //*       Zero soil variables && arrays
 
         //    //sv- from [INPUTS]
 
@@ -3760,7 +3760,7 @@ namespace Models
 
 
             //!     ===========================================================
-            //      subroutine cproc_transp_eff1(svp_fract, transp_eff_cf,          &
+            //      subroutine cproc_transp_eff1(svp_fract, transp_eff_cf,          &&
             //                 current_stage,maxt, mint, transp_eff)
             //!     ===========================================================
 
@@ -3787,7 +3787,7 @@ namespace Models
             //!       Average saturation vapour pressure for ambient temperature
             //!       during transpiration is calculated as part-way between that
             //!       for minimum temperature and that for the maximum temperature.
-            //!       Tanner & Sinclair (1983) used .75 and .67 of the distance as
+            //!       Tanner && Sinclair (1983) used .75 and .67 of the distance as
             //!       representative of the positive net radiation (rn).  Daily SVP
             //!       should be integrated from about 0900 hours to evening when Radn
             //!       becomes negative.
@@ -3848,7 +3848,7 @@ namespace Models
             //!       Average saturation vapour pressure for ambient temperature
             //!       during transpiration is calculated as part-way between that
             //!       for minimum temperature and that for the maximum temperature.
-            //!       Tanner & Sinclair (1983) used .75 and .67 of the distance as
+            //!       Tanner && Sinclair (1983) used .75 and .67 of the distance as
             //!       representative of the positive net radiation (rn).  Daily SVP
             //!       should be integrated from about 0900 hours to evening when Radn
             //!       becomes negative.
@@ -6095,7 +6095,7 @@ namespace Models
 
 
             //!     ===========================================================
-            //      subroutine cproc_bio_water1(num_layer, dlayer, root_depth,          &
+            //      subroutine cproc_bio_water1(num_layer, dlayer, root_depth,          &&
             //                          sw_supply, transp_eff, dlt_dm_pot_te)
             //!     ===========================================================
 
@@ -6580,8 +6580,8 @@ namespace Models
         //!   Calculate biomass non-limiting leaf area development
 
 
-        //g_dlt_lai_stressed = g_dlt_lai_pot          &
-        //             * min(g_swdef_expansion          &
+        //g_dlt_lai_stressed = g_dlt_lai_pot          &&
+        //             * min(g_swdef_expansion          &&
         //                  ,g_nfact_expansion)
 
 
@@ -8360,13 +8360,13 @@ namespace Models
         //        uptake_name = "uptake_" + i_uptake_type + "_" + i_crop_type;
 
 
-        //         call get_real_array (unknown_module          &
-        //                       ,uptake_name          &
-        //                       ,i_max_layer          &
-        //                       ,'()")]          &
-        //                       ,uptake_array          &
-        //                       ,num_uptakes          &
-        //                       ,i_uptake_lbound          &
+        //         call get_real_array (unknown_module          &&
+        //                       ,uptake_name          &&
+        //                       ,i_max_layer          &&
+        //                       ,'()")]          &&
+        //                       ,uptake_array          &&
+        //                       ,num_uptakes          &&
+        //                       ,i_uptake_lbound          &&
         //                       ,i_uptake_ubound)
 
         //         do 100 layer = 1, num_uptakes
@@ -13555,11 +13555,11 @@ namespace Models
                 l_dlt_dm_N[root] = l_N_root * gm2kg / sm2ha;
 
                 //TODO: put this back in. Better then below where you refer to "straw".
-                //Console.WriteLine(                         "          Organic matter from crop:-      Leaves&Cabbage to surface residue      Roots to soil FOM");
+                //Console.WriteLine(                         "          Organic matter from crop:-      Leaves&&Cabbage to surface residue      Roots to soil FOM");
                 //Console.WriteLine("{0}{1,22:F1}{2,44:F3}", "                          DM (kg/ha) =", (l_dm_residue * gm2kg / sm2ha), (l_dm_root * gm2kg / sm2ha));
                 //Console.WriteLine("{0}{1,22:F1}{2,44:F3}", "                          N  (kg/ha) =", (l_N_residue * gm2kg / sm2ha), (l_N_root * gm2kg / sm2ha));
 
-                //Console.WriteLine(                         "Organic matter removed from system:-            Stem&Sucrose to mill");
+                //Console.WriteLine(                         "Organic matter removed from system:-            Stem&&Sucrose to mill");
                 //Console.WriteLine("{0}{1,22:F1}",          "                         DM (kg/ha) =", (g_dm_green[sstem] + g_dm_green[sucrose]) * gm2kg / sm2ha );
                 //Console.WriteLine("{0}{1,22:F1}",          "                         N  (kg/ha) =", (g_n_green[sstem] + g_n_green[sucrose]) * gm2kg / sm2ha);
 

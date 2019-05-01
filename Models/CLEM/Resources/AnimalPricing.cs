@@ -18,10 +18,11 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("This is the parent model component holing all Animal Price Entries that define the value of individuals in the breed/herd.")]
+    [Description("This component holds all Animal Price Entries that define the value of individuals in the breed/herd.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]
     [Version(1, 0, 3, "Purchase and sales identifier used")]
+    [HelpUri(@"content/features/resources/ruminants/animalpricing.htm")]
     public class AnimalPricing: CLEMModel, IValidatableObject
     {
         /// <summary>

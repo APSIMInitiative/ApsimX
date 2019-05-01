@@ -32,19 +32,19 @@ namespace UserInterface.Views
         public XYPairsView(ViewBase owner) : base(owner)
         {
             vpaned = new VPaned();
-            _mainWidget = vpaned;
+            mainWidget = vpaned;
             gridView = new GridView(this);
             graphView = new GraphView(this);
             vpaned.Pack1(gridView.MainWidget, true, false);
             vpaned.Pack2(graphView.MainWidget, true, false);
             gridView.NumericFormat = null;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

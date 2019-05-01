@@ -18,7 +18,14 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using Models.Report;
+    using Utility;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
+    using Models.Core.Runners;
+    using System.Reflection;
+    using System.Linq;
+    using System.Text;
+    using Models.Functions;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -26,7 +33,7 @@ namespace UserInterface.Presenters
     public class ContextMenu
     {
         [Link(IsOptional = true)]
-        IStorageReader storage = null;
+        IDataStore storage = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -37,6 +44,16 @@ namespace UserInterface.Presenters
         /// The command that is currently being run.
         /// </summary>
         private RunCommand command = null;
+
+        /// <summary>
+        /// Maps a type to an array of fields/properties which are links.
+        /// </summary>
+        private static Dictionary<Type, MemberInfo[]> links = new Dictionary<Type, MemberInfo[]>();
+
+        /// <summary>
+        /// Maps a type to a list of public string properties.
+        /// </summary>
+        private static Dictionary<Type, PropertyInfo[]> stringProperties = new Dictionary<Type, PropertyInfo[]>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenu" /> class.
@@ -56,7 +73,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.EmptyDataStore();
+            storage.Writer.Empty();
         }
 
         /// <summary>
@@ -71,9 +88,7 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                foreach (IPostSimulationTool tool in Apsim.FindAll(explorerPresenter.ApsimXFile, typeof(IPostSimulationTool)))
-                    if ((tool as IModel).Enabled)
-                        tool.Run(storage);
+                RunOrganiser.RunPostSimulationTools(explorerPresenter.ApsimXFile, storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -299,7 +314,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Run APSIM" action
+        /// Event handler for a User interface "Check Soil" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -315,6 +330,17 @@ namespace UserInterface.Presenters
                 else
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
             }
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Download Soil" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil) })]
+        public void DownloadSoil(object sender, EventArgs e)
+        {
+            this.explorerPresenter.DownloadSoil();
         }
 
         /// <summary>
@@ -371,9 +397,9 @@ namespace UserInterface.Presenters
         {
             explorerPresenter.MainPresenter.ShowWaitCursor(true);
             List<DataTable> tables = new List<DataTable>();
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                using (DataTable table = storage.GetData(tableName))
+                using (DataTable table = storage.Reader.GetData(tableName))
                 {
                     table.TableName = tableName;
                     tables.Add(table);
@@ -434,7 +460,7 @@ namespace UserInterface.Presenters
             try
             {
                 string summaryFleName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".sum");
-                Summary.WriteSummaryToTextFiles(storage, summaryFleName);
+                Summary.WriteSummaryToTextFiles(storage, summaryFleName, Configuration.Settings.DarkTheme);
                 explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -669,6 +695,132 @@ namespace UserInterface.Presenters
             foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
                 child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
             explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+        }
+
+
+        [ContextMenu(MenuName = "Find All References",
+                     ShortcutKey = "Shift + F12")]
+        public void OnFindReferences(object sender, EventArgs e)
+        {
+            try
+            {
+                IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+                if (model != null)
+                {
+                    string modelPath = Apsim.FullPath(model);
+                    StringBuilder message = new StringBuilder($"Searching for references to model {Apsim.FullPath(model)}...");
+                    List<Reference> references = new List<Reference>();
+                    message.AppendLine();
+                    message.AppendLine();
+                    Stopwatch timer = Stopwatch.StartNew();
+                    BindingFlags flags;
+
+                    foreach (IModel child in Apsim.FindAll(model))
+                    {
+                        if (Apsim.FullPath(child) == Apsim.FullPath(model))
+                            continue;
+
+                        // Resolve links (this doesn't seem to work properly).
+                        explorerPresenter.ApsimXFile.Links.Resolve(child, throwOnFail: false);
+                        MemberInfo[] members = null;
+                        Type childType = child.GetType();
+
+                        // First, find all links to the model.
+                        // First, try the cache.
+                        if (!links.TryGetValue(childType, out members))
+                        {
+                            // We haven't looked for members of this type before.
+                            List<MemberInfo> localMembers = new List<MemberInfo>();
+
+                            // Links may be static or non-static (instance), and can have any accessibility.
+                            flags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+                            // Find all properties which are links.
+                            localMembers.AddRange(child.GetType().GetProperties(flags).Where(p => ReflectionUtilities.GetAttribute(p, typeof(LinkAttribute), true) != null));
+
+                            // Find all fields which are links.
+                            localMembers.AddRange(child.GetType().GetFields(flags).Where(f => ReflectionUtilities.GetAttribute(f, typeof(LinkAttribute), true) != null));
+
+                            members = localMembers.ToArray();
+
+                            // Add members to cache.
+                            links.Add(childType, members);
+                        }
+
+                        // Now iterate over all members of this type which are links.
+                        foreach (MemberInfo member in members)
+                        {
+                            IModel linkValue = ReflectionUtilities.GetValueOfFieldOrProperty(member.Name, child) as IModel;
+                            if (linkValue == null)
+                                continue; // Silently ignore this member.
+
+                            bool isCorrectType = model.GetType().IsAssignableFrom(linkValue.GetType());
+                            bool hasCorrectPath = string.Equals(Apsim.FullPath(linkValue), modelPath, StringComparison.InvariantCulture);
+                            if (isCorrectType && hasCorrectPath)
+                            {
+                                message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
+                                references.Add(new Reference() { Member = member, Target = model, Model = child });
+                            }
+                        }
+
+                        //if (model is IFunction && child is IFunction)
+                        {
+                            // Next, search all public string properties for the path to this model.
+                            PropertyInfo[] properties;
+                            if (!stringProperties.TryGetValue(childType, out properties))
+                            {
+                                flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
+                                properties = childType.GetProperties(flags).Where(p => p.PropertyType == typeof(string) && p.CanRead).ToArray();
+                                stringProperties.Add(childType, properties);
+                            }
+                            foreach (PropertyInfo property in properties)
+                            {
+                                string value;
+                                try
+                                {
+                                    // An exception could be thrown here from inside the property's getter.
+                                    value = property.GetValue(child) as string;
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+                                if (value == null)
+                                    continue;
+
+                                value = value.Replace(".Value()", "").Replace(".Value", "");
+                                IModel result = null;
+                                try
+                                {
+                                    result = Apsim.Get(child, value) as IModel;
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+                                if (result == null)
+                                    continue;
+                                bool correctType = model.GetType().IsAssignableFrom(result.GetType());
+                                bool correctPath = string.Equals(Apsim.FullPath(result), modelPath, StringComparison.InvariantCulture);
+                                if (correctType && correctPath)
+                                {
+                                    message.AppendLine($"Found reference in string property {property.Name} of node {Apsim.FullPath(child)}.");
+                                    references.Add(new Reference() { Member = property, Target = model, Model = child });
+                                }
+                            }
+                        }
+                    }
+                    timer.Stop();
+                    message.AppendLine();
+                    message.AppendLine($"Finished. Elapsed time: {timer.Elapsed.TotalSeconds.ToString("#.00")} seconds");
+                    explorerPresenter.MainPresenter.ShowMessage(message.ToString(), Simulation.MessageType.Information);
+                    var dialog = new Utility.FindAllReferencesDialog(model, references, explorerPresenter);
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
     }
 }

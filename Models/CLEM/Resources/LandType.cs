@@ -20,8 +20,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/land/landtype.htm")]
     public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units")]
+        public new string Units { get {return (Parent as Land).UnitsOfArea; } }
+
         /// <summary>
         /// Total Area
         /// </summary>
@@ -256,7 +263,7 @@ namespace Models.CLEM.Resources
             else
             {
                 // if resource was removed by activity it is added to the activty 
-                if(!added & amountChanged > 0)
+                if(!added && amountChanged > 0)
                 {
                     AllocatedActivitiesList.Add(new LandActivityAllocation()
                     {

@@ -14,9 +14,9 @@ namespace UserInterface.Intellisense
 
         private int parameterIndex;
 
-        internal int parameterStartOffset;
+        private int parameterStartOffset;
 
-        internal int parameterLength;
+        private int parameterLength;
 
         public ParameterHighlightingOutputFormatter(StringBuilder b, int highlightedParameterIndex)
             : base(new StringWriter(b))

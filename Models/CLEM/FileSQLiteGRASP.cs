@@ -25,14 +25,15 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.CLEMFileSQLiteGRASPView")]
-    [PresenterName("UserInterface.Presenters.CLEMFileSQLiteGRASPPresenter")]
+    [ViewName("UserInterface.Views.GridView")] //CLEMFileSQLiteGRASPView
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileSQLiteGRASPPresenter
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/datareaders/graspdatareadersql.htm")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>
@@ -222,7 +223,7 @@ namespace Models.CLEM
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation != null & this.FileName != null)
+                if (simulation != null && this.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 }

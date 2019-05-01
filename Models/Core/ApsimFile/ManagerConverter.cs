@@ -389,6 +389,25 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Remove a declaration.
+        /// </summary>
+        /// <param name="instanceName">The instance name of the declaration.</param>
+        /// <returns>true if link was inserted.</returns>
+        public bool RemoveDeclaration(string instanceName)
+        {
+            var declarations = GetDeclarations();
+            var declaration = declarations.Find(d => d.InstanceName == instanceName);
+            if (declaration != null)
+            {
+                declarations.Remove(declaration);
+                SetDeclarations(declarations);
+                return true;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
         /// Find a line with the matching string
         /// </summary>
         /// <param name="stringToFind">String to find.</param>
