@@ -100,6 +100,10 @@ namespace UserInterface.Presenters
                 {
                     explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
                 }
+                catch (FirebirdException e)
+                {
+                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+                }
 
                 foreach (SeriesDefinition definition in seriesDefinitions)
                 {
