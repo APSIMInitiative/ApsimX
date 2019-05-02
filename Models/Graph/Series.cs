@@ -137,14 +137,17 @@ namespace Models.Graph
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
+            {
                 seriesDefinitions.Add(new SeriesDefinition(this));
+                seriesDefinitions[0].ReadData(reader, simulationDescriptions);
+            }
             else
             {
                 // TableName exists so get the vary by fields and the simulation descriptions.
                 var varyByFieldNames = GetVaryByFieldNames();
                 simulationDescriptions = FindSimulationDescriptions();
                 var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationDescriptions);
-               
+
                 if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
                     // No vary by fields. Just plot the whole table in a single
