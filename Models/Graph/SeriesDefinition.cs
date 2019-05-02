@@ -305,7 +305,7 @@
                     checkpointName = series.Checkpoint;
 
                 // Go get the data.
-                Data = reader.GetData(series.TableName, checkpointName, fieldNames: fieldsToRead, filter: filter);
+                Data = reader.GetData(series.TableName, checkpointName, fieldNames: fieldsToRead.Distinct(), filter: filter);
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(series.TableName, XFieldName);
