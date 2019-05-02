@@ -46,10 +46,9 @@ namespace Models.Functions.SupplyFunctions
         [Link]
         private Root Root = null;
 
-        /// <summary>The radiation use efficiency</summary>
+        /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
-        [Description("Radiation use efficiency")]
-        private IFunction RUE = null;
+        private IFunction RadIntTot = null;
 
         /// <summary>The transpiration efficiency coefficient for net biomass assimilate</summary>
         [Link]
@@ -61,25 +60,27 @@ namespace Models.Functions.SupplyFunctions
         [Link]
         private IFunction FCO2 = null;
 
-        /// <summary>The N deficiency impact on RUE</summary>
-        [Link]
-        private IFunction FN = null;
-
         /// <summary>The stress impact on PgMax</summary>
         [Link]
         private IFunction LUEStress = null;
 
-        /// <summary>The daily radiation intercepted by crop canopy</summary>
-        [Link]
-        private IFunction RadIntTot = null;
+        /// <summary>The mean temperature impact on RUE</summary>
+        [Link(IsOptional = true)]
+        private IFunction FT = null;
+
+        /// <summary>The N deficiency impact on RUE</summary>
+        [Link(IsOptional = true)]
+        private IFunction FN = null;
+
+        /// <summary>The radiation use efficiency</summary>
+        [Link(IsOptional = true)]
+        [Description("Radiation use efficiency")]
+        private IFunction RUE = null;
 
         /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
         [Link(IsOptional = true)]
         private IFunction GrossAssimilateModel = null;
 
-        /// <summary>The mean temperature impact on RUE</summary>
-        [Link(IsOptional = true)]
-        private IFunction FT = null;
         //------------------------------------------------------------------------------------------------
 
         /// <summary>The photosynthesis type (net/gross)</summary>
@@ -211,7 +212,6 @@ namespace Models.Functions.SupplyFunctions
                 CalcTemperature();
                 CalcSVP();
                 CalcVPD();
-                CalcRUE();
                 if (string.Equals(AssimilateType, "net") || (GrossAssimilateModel != null))
                 {
                     CalcRadiation();
@@ -365,12 +365,12 @@ namespace Models.Functions.SupplyFunctions
         {
             // Calculates hourlyVPD at the air temperature in kPa
             hourlyVPD = new List<double>();
-            minVPD = 0;
+            minVPD = -1;
             for (int i = 0; i < 24; i++)
             {
                 double vpd = 0.1 * (MetUtilities.svp(hourlyTemp[i]) - MetUtilities.svp(Weather.MinT));
                 hourlyVPD.Add(vpd);
-                if (vpd > 0 && minVPD == 0) minVPD = vpd;
+                if (vpd > 0 && minVPD < 0) minVPD = vpd;
             }
             MeanDayVPD = hourlyVPD.Where(v => v > 0).Average();
             MaxHrVPD = hourlyVPD.Max();
@@ -708,7 +708,6 @@ namespace Models.Functions.SupplyFunctions
                     //Canopy gross photosynthesis
                     GrossPs = HourlyGrossPhotosythesis(PgMax, LUE, LAI, Latitude, Day, SinHeight, PARDIR, PARDIF);
                     GrossPs *= hrWeights[t];
-
                 }
                 else
                     GrossPs = 0;
