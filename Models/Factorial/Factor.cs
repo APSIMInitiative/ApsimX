@@ -40,7 +40,7 @@
         {
             List<CompositeFactor> factorValues = new List<CompositeFactor>();
 
-            if (Specification == null)
+            if (string.IsNullOrEmpty(Specification))
             {
                 // Look for child FactorValues.
                 factorValues.AddRange(Apsim.Children(this, typeof(CompositeFactor)).Cast<CompositeFactor>());
