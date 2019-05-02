@@ -234,6 +234,7 @@
     <Compile Include="Graph\SeriesDefinition.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
+    <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
