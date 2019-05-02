@@ -761,7 +761,7 @@
                 code.Append("\n\t\t[Description(\"" + param.Description + "\")]\n");
                 if (String.Compare(param.TypeName, "cultivars") == 0)
                 {
-                    code.Append("\t\t[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]\n");
+                    code.Append("\t\t[Display(Type = DisplayType.CultivarName)]\n");
                 }
                 code.Append("\t\tpublic " + atype + param.Name + " { get; set; }\n");
             }
