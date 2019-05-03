@@ -1096,7 +1096,7 @@
                             type = "Fertiliser.Types." + newtype;
                             this.FindTokenValue("depth", childText, ref depth);
 
-                            childText = string.Format("Fertiliser.Apply({0}, {1}, {2});", amount, type, depth);
+                            childText = string.Format("[Fertiliser].Apply({0}, {1}, {2});", amount, type, depth);
                         }
                         else
                         {
@@ -1106,7 +1106,7 @@
 
                                 this.FindTokenValue("amount", childText, ref amount);
 
-                                childText = string.Format("Irrigation.Apply({0});", amount);
+                                childText = string.Format("[Irrigation].Apply({0});", amount);
                             }
                             else
                             {
