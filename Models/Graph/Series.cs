@@ -166,17 +166,17 @@ namespace Models.Graph
                 if (seriesDefinitions.Count == 0)
                     seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
 
+                // Paint all definitions. 
+                var painter = GetSeriesPainter();
+                foreach (var seriesDefinition in seriesDefinitions)
+                    painter.Paint(seriesDefinition);
+
                 // Tell each series definition to read its data.
                 foreach (var seriesDefinition in seriesDefinitions)
                     seriesDefinition.ReadData(reader, simulationDescriptions);
 
                 // Remove series that have no data.
                 seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
-
-                // Paint all definitions. 
-                var painter = GetSeriesPainter();
-                foreach (var seriesDefinition in seriesDefinitions)
-                    painter.Paint(seriesDefinition);
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
