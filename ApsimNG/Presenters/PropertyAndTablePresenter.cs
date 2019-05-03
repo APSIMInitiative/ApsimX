@@ -37,6 +37,7 @@
             table = tableModel.Tables[0];
             view.Grid2.DataSource = table;
             view.Grid2.CellsChanged += OnCellValueChanged2;
+            view.Grid2.NumericFormat = null;
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
