@@ -15,9 +15,6 @@
         /// <summary>The underlying model</summary>
         private IModelAsTable tableModel;
 
-        /// <summary>The intellisense.</summary>
-        private IntellisensePresenter intellisense;
-
         private IDualGridView view;
         private ExplorerPresenter explorerPresenter;
         private DataTable table;
