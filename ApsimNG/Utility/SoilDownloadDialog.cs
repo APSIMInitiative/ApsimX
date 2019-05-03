@@ -274,7 +274,7 @@
                 Structure.Add(new CERESSoilTemperature(), soilObj);
                 soilObj.OnCreated();
             }
-            catch (Exception e) // Needs better error handling. We should inform the user of any problems.
+            catch (Exception) // Needs better error handling. We should inform the user of any problems.
             {
             }
             return soilObj;
@@ -310,7 +310,7 @@
                     }
                     return true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -361,7 +361,7 @@
                     }
                     return true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return false;
                 }

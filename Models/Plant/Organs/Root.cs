@@ -1110,7 +1110,7 @@ namespace Models.PMF.Organs
             double[] supply = new double[PlantZone.soil.Thickness.Length];
 
             var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
-            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer-1);
+            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, Math.Max(0, currentLayer - 1));
             var layerBottom = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
 
