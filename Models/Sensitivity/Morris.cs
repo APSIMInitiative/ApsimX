@@ -126,12 +126,8 @@
             }
             set
             {
-                NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
-                NumIntervals = Convert.ToInt32(value[0].Rows[1][1]);
-                Jump = Convert.ToInt32(value[0].Rows[2][1]);
-
                 Parameters.Clear();
-                foreach (DataRow row in value[1].Rows)
+                foreach (DataRow row in value[0].Rows)
                 {
                     Parameter param = new Parameter();
                     if (!Convert.IsDBNull(row["Name"]))
