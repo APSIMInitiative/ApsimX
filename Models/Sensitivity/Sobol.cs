@@ -329,12 +329,16 @@
                          "{{" + Environment.NewLine +
                          "  sa$y <- variableValues[[columnName]]" + Environment.NewLine +
                          "  tell(sa)" + Environment.NewLine +
-                         "  colnames(sa$T) <- paste(columnName, colnames(sa$T), sep=\".\")" + Environment.NewLine +
+                         "  sa$S$Parameter <- params" + Environment.NewLine +
                          "  sa$T$Parameter <- params" + Environment.NewLine +
+                         "  sa$S$ColumnName <- columnName" + Environment.NewLine +
+                         "  sa$T$ColumnName <- columnName" + Environment.NewLine +
+                         "  sa$S$Indices <- \"FirstOrder\"" + Environment.NewLine +
+                         "  sa$T$Indices <- \"Total\"" + Environment.NewLine +
                          "  if (!exists(\"allData\"))" + Environment.NewLine +
-                         "    allData <- sa$T" + Environment.NewLine +
+                         "    allData <- rbind(sa$S, sa$T)" + Environment.NewLine +
                          "  else" + Environment.NewLine +
-                         "    allData <- merge(allData, sa$T)" + Environment.NewLine +
+                         "    allData <- rbind(allData, sa$S, sa$T)" + Environment.NewLine +
                          "}}" + Environment.NewLine +
                          "write.table(allData, sep=\",\", row.names=FALSE)" + Environment.NewLine
                         ,

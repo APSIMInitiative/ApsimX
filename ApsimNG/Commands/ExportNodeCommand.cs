@@ -676,7 +676,7 @@ namespace UserInterface.Commands
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { null }, null, null) as ViewBase;
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
