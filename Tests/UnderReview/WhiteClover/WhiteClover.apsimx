@@ -142,7 +142,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -185,7 +185,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Photoperiod.Value()",
+                          "XProperty": "[Phenology].Photoperiod",
                           "Name": "ShortDays",
                           "Children": [
                             {
@@ -219,7 +219,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].ThermalTime.Value()",
+                          "XProperty": "[Phenology].ThermalTime",
                           "Name": "LowTemperatures",
                           "Children": [
                             {
@@ -288,7 +288,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
+                      "XProperty": "[Phenology].Photoperiod",
                       "Name": "Progression",
                       "Children": [
                         {
@@ -348,7 +348,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
+                      "XProperty": "[Phenology].Photoperiod",
                       "Name": "Progression",
                       "Children": [
                         {
@@ -805,7 +805,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.Value()",
+                      "VariableName": "[Leaf].Photosynthesis",
                       "Name": "Photosynthesis",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -818,7 +818,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.RUE.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.RUE",
                           "Name": "RUE",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -909,7 +909,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.Value()",
+                              "VariableName": "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion",
                               "Name": "BaseProportion",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -956,7 +956,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Inflorescence].TargetBiomassProportion.Reproductive.TargetProportion.PhotoPeriodFactor.Value()",
+                                      "VariableName": "[Inflorescence].TargetBiomassProportion.Reproductive.TargetProportion.PhotoPeriodFactor",
                                       "Name": "FloweringIntensity",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -1028,7 +1028,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction].Value()",
+                                      "VariableName": "[TargetAboveGroundFraction]",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -1037,7 +1037,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Leaf].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -1078,7 +1078,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction].Value()",
+                                          "VariableName": "[TargetAboveGroundFraction]",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -1087,7 +1087,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Leaf].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -1187,7 +1187,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Leaf].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -1228,7 +1228,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].minimumNconc.Value()",
+                          "VariableName": "[Leaf].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -1259,7 +1259,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].criticalNConc.Value()",
+                              "VariableName": "[Leaf].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -1268,7 +1268,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].minimumNconc.Value()",
+                              "VariableName": "[Leaf].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -1300,7 +1300,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Leaf].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -1309,7 +1309,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].maximumNconc.Value()",
+                          "VariableName": "[Leaf].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -1418,7 +1418,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAIFunction.SpecificLeafArea.Value()",
+                      "VariableName": "[Leaf].LAIFunction.SpecificLeafArea",
                       "Name": "SpecificLeafArea",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2088,7 +2088,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TargetBiomassProportion.Value()",
+                              "VariableName": "[Leaf].TargetBiomassProportion",
                               "Name": "TargetLeafProportion",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -2121,7 +2121,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.Value()",
+                                  "VariableName": "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves",
                                   "Name": "ProportionToLeaves",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -2130,7 +2130,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].TargetBiomassProportion.Value()",
+                                  "VariableName": "[Leaf].TargetBiomassProportion",
                                   "Name": "TargetLeafProportion",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -2158,7 +2158,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Inflorescence].TargetBiomassProportion.Value()",
+                                  "VariableName": "[Inflorescence].TargetBiomassProportion",
                                   "Name": "TargetInflorescenceProportion",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -2216,7 +2216,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction].Value()",
+                                      "VariableName": "[TargetAboveGroundFraction]",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -2225,7 +2225,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Petiole].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Petiole].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -2266,7 +2266,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction].Value()",
+                                          "VariableName": "[TargetAboveGroundFraction]",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -2275,7 +2275,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Petiole].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Petiole].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -2365,7 +2365,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Petiole].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -2406,7 +2406,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].minimumNconc.Value()",
+                          "VariableName": "[Petiole].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2437,7 +2437,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].criticalNConc.Value()",
+                              "VariableName": "[Petiole].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -2446,7 +2446,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].minimumNconc.Value()",
+                              "VariableName": "[Petiole].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -2478,7 +2478,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Petiole].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2487,7 +2487,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].maximumNconc.Value()",
+                          "VariableName": "[Petiole].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2539,7 +2539,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SenescenceRate.ReferenceRate.Value()",
+                      "VariableName": "[Leaf].SenescenceRate.ReferenceRate",
                       "Name": "ReferenceRate",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2981,7 +2981,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TargetBiomassProportion.Value()",
+                              "VariableName": "[Leaf].TargetBiomassProportion",
                               "Name": "TargetLeafProportion",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -2990,7 +2990,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].TargetBiomassProportion.Value()",
+                              "VariableName": "[Petiole].TargetBiomassProportion",
                               "Name": "TargetPetioleProportion",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -2999,7 +2999,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Inflorescence].TargetBiomassProportion.Value()",
+                              "VariableName": "[Inflorescence].TargetBiomassProportion",
                               "Name": "TargetInflorescenceProportion",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -3052,7 +3052,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction].Value()",
+                                      "VariableName": "[TargetAboveGroundFraction]",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -3061,7 +3061,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Stolon].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Stolon].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -3102,7 +3102,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction].Value()",
+                                          "VariableName": "[TargetAboveGroundFraction]",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -3111,7 +3111,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Stolon].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Stolon].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -3201,7 +3201,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stolon].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Stolon].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -3242,7 +3242,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stolon].minimumNconc.Value()",
+                          "VariableName": "[Stolon].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3273,7 +3273,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stolon].criticalNConc.Value()",
+                              "VariableName": "[Stolon].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -3282,7 +3282,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stolon].minimumNconc.Value()",
+                              "VariableName": "[Stolon].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -3314,7 +3314,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stolon].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Stolon].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3323,7 +3323,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stolon].maximumNconc.Value()",
+                          "VariableName": "[Stolon].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3535,7 +3535,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -3661,7 +3661,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -3801,7 +3801,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -4126,7 +4126,7 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].Photoperiod.Value()",
+                              "XProperty": "[Phenology].Photoperiod",
                               "Name": "PhotoPeriodFactor",
                               "Children": [
                                 {
@@ -4208,7 +4208,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction].Value()",
+                                      "VariableName": "[TargetAboveGroundFraction]",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -4217,7 +4217,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Inflorescence].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Inflorescence].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -4258,7 +4258,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Inflorescence].TargetAboveGroundFraction.Value()",
+                                          "VariableName": "[Inflorescence].TargetAboveGroundFraction",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -4267,7 +4267,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetBiomassProportion].Value()",
+                                          "VariableName": "[TargetBiomassProportion]",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -4357,7 +4357,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Inflorescence].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Inflorescence].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -4398,7 +4398,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].minimumNconc.Value()",
+                          "VariableName": "[Inflorescence].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -4429,7 +4429,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Inflorescence].criticalNConc.Value()",
+                              "VariableName": "[Inflorescence].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -4438,7 +4438,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Inflorescence].minimumNconc.Value()",
+                              "VariableName": "[Inflorescence].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -4470,7 +4470,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Inflorescence].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -4479,7 +4479,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].maximumNconc.Value()",
+                          "VariableName": "[Inflorescence].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -5060,7 +5060,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction].Value()",
+                                          "VariableName": "[TargetAboveGroundFraction]",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -5074,7 +5074,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Nodule].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Nodule].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -5129,7 +5129,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TargetAboveGroundFraction].Value()",
+                                              "VariableName": "[TargetAboveGroundFraction]",
                                               "Name": "TargetAboveGroundProp",
                                               "Children": [],
                                               "IncludeInDocumentation": false,
@@ -5143,7 +5143,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Nodule].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Nodule].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -5243,7 +5243,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -5284,7 +5284,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].minimumNconc.Value()",
+                          "VariableName": "[Nodule].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -5315,7 +5315,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nodule].criticalNConc.Value()",
+                              "VariableName": "[Nodule].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -5324,7 +5324,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nodule].minimumNconc.Value()",
+                              "VariableName": "[Nodule].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -5356,7 +5356,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Nodule].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -5365,7 +5365,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].maximumNconc.Value()",
+                          "VariableName": "[Nodule].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -5496,7 +5496,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Root].SoilWaterScale.Value()",
+                          "XProperty": "[Root].SoilWaterScale",
                           "Name": "SoilMoistureFactor",
                           "Children": [
                             {
@@ -5672,7 +5672,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Root].SoilWaterScale.Value()",
+                      "XProperty": "[Root].SoilWaterScale",
                       "Name": "SoilAerationFactor",
                       "Children": [
                         {
@@ -5988,7 +5988,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Nodule].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Nodule].TargetBiomassProportion",
                                           "Name": "ActualNoduleProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -5997,7 +5997,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Nodule].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.Value()",
+                                          "VariableName": "[Nodule].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion",
                                           "Name": "BaseNoduleProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -6015,7 +6015,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.Value()",
+                                          "VariableName": "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion",
                                           "Name": "TaprootBaseProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -6024,7 +6024,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Root].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.Value()",
+                                          "VariableName": "[Root].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion",
                                           "Name": "RootBaseProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -6115,7 +6115,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction].Value()",
+                                          "VariableName": "[TargetAboveGroundFraction]",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -6129,7 +6129,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Taproot].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Taproot].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -6184,7 +6184,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TargetAboveGroundFraction].Value()",
+                                              "VariableName": "[TargetAboveGroundFraction]",
                                               "Name": "TargetAboveGroundProp",
                                               "Children": [],
                                               "IncludeInDocumentation": false,
@@ -6198,7 +6198,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Taproot].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Taproot].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -6288,7 +6288,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Taproot].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Taproot].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -6329,7 +6329,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].minimumNconc.Value()",
+                          "VariableName": "[Taproot].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -6360,7 +6360,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Taproot].criticalNConc.Value()",
+                              "VariableName": "[Taproot].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -6369,7 +6369,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Taproot].minimumNconc.Value()",
+                              "VariableName": "[Taproot].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -6401,7 +6401,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Taproot].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -6410,7 +6410,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].maximumNconc.Value()",
+                          "VariableName": "[Taproot].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -6532,7 +6532,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Root].SoilWaterScale.Value()",
+                      "XProperty": "[Root].SoilWaterScale",
                       "Name": "SoilAerationFactor",
                       "Children": [
                         {
@@ -6666,7 +6666,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -6802,7 +6802,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -7077,7 +7077,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Nodule].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Nodule].TargetBiomassProportion",
                                           "Name": "ActualNoduleProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -7086,7 +7086,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Nodule].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.Value()",
+                                          "VariableName": "[Nodule].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion",
                                           "Name": "BaseNoduleProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -7104,7 +7104,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.Value()",
+                                          "VariableName": "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion",
                                           "Name": "TaprootBaseProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -7113,7 +7113,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Root].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.Value()",
+                                          "VariableName": "[Root].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion",
                                           "Name": "RootBaseProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -7195,7 +7195,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction].Value()",
+                                          "VariableName": "[TargetAboveGroundFraction]",
                                           "Name": "TargetAboveGroundProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -7209,7 +7209,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Root].TargetBiomassProportion.Value()",
+                                      "VariableName": "[Root].TargetBiomassProportion",
                                       "Name": "TargetOrganProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -7264,7 +7264,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TargetAboveGroundFraction].Value()",
+                                              "VariableName": "[TargetAboveGroundFraction]",
                                               "Name": "TargetAboveGroundProp",
                                               "Children": [],
                                               "IncludeInDocumentation": false,
@@ -7278,7 +7278,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Root].TargetBiomassProportion.Value()",
+                                          "VariableName": "[Root].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -7368,7 +7368,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -7409,7 +7409,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -7440,7 +7440,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc.Value()",
+                              "VariableName": "[Root].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -7449,7 +7449,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc.Value()",
+                              "VariableName": "[Root].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -7481,7 +7481,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Root].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -7490,7 +7490,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc.Value()",
+                          "VariableName": "[Root].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -7844,7 +7844,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Root].SoilWaterScale.Value()",
+                      "XProperty": "[Root].SoilWaterScale",
                       "Name": "SoilAerationFactor",
                       "Children": [
                         {
@@ -7968,7 +7968,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -8104,7 +8104,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation.Value()",
+                      "XProperty": "[Phenology].PhotoperiodVariation",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
@@ -8591,7 +8591,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Photoperiod.Value()",
+                          "XProperty": "[Phenology].Photoperiod",
                           "Name": "PhotoPeriodFactor",
                           "Children": [
                             {
@@ -8651,7 +8651,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[TargetShootRootRatio].Value()",
+                  "VariableName": "[TargetShootRootRatio]",
                   "Name": "TargetSR",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -8674,7 +8674,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[TargetShootRootRatio].Value()",
+                      "VariableName": "[TargetShootRootRatio]",
                       "Name": "TargetSR",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -9002,10 +9002,10 @@
             "[ExtraVariables].Script.AccumHarvestedWt as CumulativeHarvestedWt",
             "[ExtraVariables].Script.AccumHarvestedN as CumulativeNTakenOff",
             "",
-            "[WhiteClover].Phenology.ThermalTime.Value()",
-            "[WhiteClover].Phenology.Photoperiod.Value()",
-            "[WhiteClover].Phenology.PhotoperiodVariation.Value()",
-            "[WhiteClover].Phenology.PhotoperiodVariation1.Value()",
+            "[WhiteClover].Phenology.ThermalTime",
+            "[WhiteClover].Phenology.Photoperiod",
+            "[WhiteClover].Phenology.PhotoperiodVariation",
+            "[WhiteClover].Phenology.PhotoperiodVariation1",
             "",
             "[WhiteClover].Phenology.Vernalisation.TodaysVernalisation",
             "[WhiteClover].Phenology.Vernalisation.DaysVernalised",
@@ -9013,7 +9013,7 @@
             "[WhiteClover].Phenology.CurrentPhaseName",
             "[WhiteClover].Phenology.Stage",
             "[WhiteClover].Root.LengthDensity",
-            "[WhiteClover].Leaf.ExtinctionCoefficientFunction.Value()",
+            "[WhiteClover].Leaf.ExtinctionCoefficientFunction",
             "",
             "[WhiteClover].Arbitrator.DM.TotalFixationSupply",
             "[WhiteClover].Arbitrator.DM.TotalPlantDemand",
@@ -9067,9 +9067,9 @@
             "[WhiteClover].Taproot.NDemand.Total",
             "[WhiteClover].Nodule.NDemand.Total",
             "",
-            "[WhiteClover].ShootRootRatio.Value()",
-            "[WhiteClover].TargetShootRootRatio.Value()",
-            "[WhiteClover].TargetAboveGroundFraction.Value()",
+            "[WhiteClover].ShootRootRatio",
+            "[WhiteClover].TargetShootRootRatio",
+            "[WhiteClover].TargetAboveGroundFraction",
             "([WhiteClover].AboveGroundLive.Wt/([WhiteClover].TotalLive.Wt+0.000001)) as WhiteClover.CurrentAboveGroundFraction",
             "([WhiteClover].Leaf.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as LeafFraction",
             "([WhiteClover].Stolon.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as StolonFraction",
@@ -9078,34 +9078,34 @@
             "([WhiteClover].Nodule.Live.Wt / ([WhiteClover].BelowGround.Wt + 0.000001)) as NoduleFraction",
             "([WhiteClover].Taproot.Live.Wt / ([WhiteClover].BelowGround.Wt + 0.000001)) as TaprootFraction",
             "([WhiteClover].Root.Live.Wt / ([WhiteClover].BelowGround.Wt + 0.000001)) as RootFraction",
-            "[WhiteClover].Leaf.TargetBiomassProportion.Value()",
-            "[WhiteClover].Petiole.TargetBiomassProportion.Value()",
-            "[WhiteClover].Stolon.TargetBiomassProportion.Value()",
-            "[WhiteClover].Inflorescence.TargetBiomassProportion.Value()",
-            "[WhiteClover].Taproot.TargetBiomassProportion.Value()",
-            "[WhiteClover].Root.TargetBiomassProportion.Value()",
-            "[WhiteClover].Nodule.TargetBiomassProportion.Value()",
-            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.Value()",
-            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
-            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
-            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
-            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
-            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
-            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
-            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
-            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+            "[WhiteClover].Leaf.TargetBiomassProportion",
+            "[WhiteClover].Petiole.TargetBiomassProportion",
+            "[WhiteClover].Stolon.TargetBiomassProportion",
+            "[WhiteClover].Inflorescence.TargetBiomassProportion",
+            "[WhiteClover].Taproot.TargetBiomassProportion",
+            "[WhiteClover].Root.TargetBiomassProportion",
+            "[WhiteClover].Nodule.TargetBiomassProportion",
+            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
             "([WhiteClover].Leaf.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as LeafFractionDMAllocated",
             "([WhiteClover].Stolon.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as StolonFractionDMAllocated",
             "([WhiteClover].Petiole.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as PetioleFractionDMAllocated",
@@ -9113,7 +9113,7 @@
             "([WhiteClover].Nodule.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as NoduleFractionDMAllocated",
             "([WhiteClover].Taproot.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as TaprootFractionDMAllocated",
             "([WhiteClover].Root.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as RootFractionDMAllocated",
-            "([WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.Value()+[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.Value()+[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.Value()+[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.Value()+[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.Value()+[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.Value()+[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.Value()) as TotalDMDemanded",
+            "([WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction+[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction+[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction+[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction+[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction+[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction+[WhiteClover].Root.DMDemands.Structural.DMDemandFunction) as TotalDMDemanded",
             "[WhiteClover].Leaf.DMPotentialAllocation.Total",
             "[WhiteClover].Petiole.DMPotentialAllocation.Total",
             "[WhiteClover].Stolon.DMPotentialAllocation.Total",
@@ -9150,7 +9150,7 @@
             "[WhiteClover].Leaf.LAI",
             "[WhiteClover].Leaf.LAIDead",
             "[WhiteClover].Leaf.Height",
-            "[WhiteClover].Leaf.PotentialBiomass.Value()",
+            "[WhiteClover].Leaf.PotentialBiomass",
             "[WhiteClover].Leaf.Transpiration",
             "[WhiteClover].Leaf.Fw",
             "[WhiteClover].Leaf.Fn",
@@ -14139,7 +14139,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "WhiteClover.Phenology.ThermalTime.Value()",
+                          "YFieldName": "WhiteClover.Phenology.ThermalTime",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -14169,7 +14169,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "WhiteClover.Phenology.Photoperiod.Value()",
+                          "YFieldName": "WhiteClover.Phenology.Photoperiod",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -14199,7 +14199,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "WhiteClover.Phenology.PhotoperiodVariation.Value()",
+                          "YFieldName": "WhiteClover.Phenology.PhotoperiodVariation",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -16919,7 +16919,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Leaf.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Leaf.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -16949,7 +16949,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Petiole.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Petiole.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -16979,7 +16979,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Stolon.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Stolon.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17009,7 +17009,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Inflorescence.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Inflorescence.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17075,7 +17075,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Root.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Root.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17105,7 +17105,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Taproot.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Taproot.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17135,7 +17135,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Nodule.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Nodule.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17483,7 +17483,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.TargetShootRootRatio.Value()",
+                              "YFieldName": "WhiteClover.TargetShootRootRatio",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17513,7 +17513,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.ShootRootRatio.Value()",
+                              "YFieldName": "WhiteClover.ShootRootRatio",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17579,7 +17579,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.TargetAboveGroundFraction.Value()",
+                              "YFieldName": "WhiteClover.TargetAboveGroundFraction",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17680,7 +17680,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17710,7 +17710,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17740,7 +17740,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17770,7 +17770,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17836,7 +17836,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17866,7 +17866,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17896,7 +17896,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17926,7 +17926,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17992,7 +17992,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18022,7 +18022,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18052,7 +18052,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18118,7 +18118,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18148,7 +18148,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18178,7 +18178,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -30529,7 +30529,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "WhiteClover.Phenology.ThermalTime.Value()",
+                          "YFieldName": "WhiteClover.Phenology.ThermalTime",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -30559,7 +30559,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "WhiteClover.Phenology.Photoperiod.Value()",
+                          "YFieldName": "WhiteClover.Phenology.Photoperiod",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -30589,7 +30589,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "WhiteClover.Phenology.PhotoperiodVariation.Value()",
+                          "YFieldName": "WhiteClover.Phenology.PhotoperiodVariation",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -33309,7 +33309,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Leaf.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Leaf.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33339,7 +33339,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Petiole.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Petiole.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33369,7 +33369,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Stolon.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Stolon.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33399,7 +33399,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Inflorescence.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Inflorescence.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33465,7 +33465,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Root.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Root.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33495,7 +33495,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Taproot.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Taproot.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33525,7 +33525,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.Nodule.TargetBiomassProportion.Value()",
+                              "YFieldName": "WhiteClover.Nodule.TargetBiomassProportion",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33873,7 +33873,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.TargetShootRootRatio.Value()",
+                              "YFieldName": "WhiteClover.TargetShootRootRatio",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33903,7 +33903,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.ShootRootRatio.Value()",
+                              "YFieldName": "WhiteClover.ShootRootRatio",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33969,7 +33969,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "WhiteClover.TargetAboveGroundFraction.Value()",
+                              "YFieldName": "WhiteClover.TargetAboveGroundFraction",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -34070,7 +34070,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34100,7 +34100,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34130,7 +34130,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34160,7 +34160,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34226,7 +34226,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34256,7 +34256,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34286,7 +34286,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34316,7 +34316,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34382,7 +34382,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34412,7 +34412,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34442,7 +34442,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34508,7 +34508,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34538,7 +34538,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34568,7 +34568,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand.Value()",
+                                  "YFieldName": "WhiteClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
