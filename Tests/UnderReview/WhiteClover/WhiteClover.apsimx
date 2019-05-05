@@ -9025,16 +9025,16 @@
             "[WhiteClover].Petiole.DMSupply.Total",
             "[WhiteClover].Stolon.DMSupply.Total",
             "[WhiteClover].Inflorescence.DMSupply.Total",
-            "[WhiteClover].Root.DMSupply.Total",
-            "[WhiteClover].Taproot.DMSupply.Total",
             "[WhiteClover].Nodule.DMSupply.Total",
+            "[WhiteClover].Taproot.DMSupply.Total",
+            "[WhiteClover].Root.DMSupply.Total",
             "[WhiteClover].Leaf.DMDemand.Total",
             "[WhiteClover].Petiole.DMDemand.Total",
             "[WhiteClover].Stolon.DMDemand.Total",
             "[WhiteClover].Inflorescence.DMDemand.Total",
-            "[WhiteClover].Root.DMDemand.Total",
-            "[WhiteClover].Taproot.DMDemand.Total",
             "[WhiteClover].Nodule.DMDemand.Total",
+            "[WhiteClover].Taproot.DMDemand.Total",
+            "[WhiteClover].Root.DMDemand.Total",
             "",
             "[WhiteClover].Arbitrator.N.TotalPlantSupply",
             "[WhiteClover].Arbitrator.N.TotalPlantDemand",
@@ -9049,31 +9049,31 @@
             "[WhiteClover].Arbitrator.WAllocated",
             "[WhiteClover].Arbitrator.FW",
             "[WhiteClover].Root.NSupplyUptake",
-            "[WhiteClover].Root.NTakenUp",
             "[WhiteClover].Root.NSupply.Uptake",
             "[WhiteClover].Root.NUptake",
+            "[WhiteClover].Root.NTakenUp",
             "[WhiteClover].Leaf.NSupply.Total",
             "[WhiteClover].Petiole.NSupply.Total",
             "[WhiteClover].Stolon.NSupply.Total",
             "[WhiteClover].Inflorescence.NSupply.Total",
-            "[WhiteClover].Root.NSupply.Total",
-            "[WhiteClover].Taproot.NSupply.Total",
             "[WhiteClover].Nodule.NSupply.Total",
+            "[WhiteClover].Taproot.NSupply.Total",
+            "[WhiteClover].Root.NSupply.Total",
             "[WhiteClover].Leaf.NDemand.Total",
             "[WhiteClover].Petiole.NDemand.Total",
             "[WhiteClover].Stolon.NDemand.Total",
             "[WhiteClover].Inflorescence.NDemand.Total",
-            "[WhiteClover].Root.NDemand.Total",
-            "[WhiteClover].Taproot.NDemand.Total",
             "[WhiteClover].Nodule.NDemand.Total",
+            "[WhiteClover].Taproot.NDemand.Total",
+            "[WhiteClover].Root.NDemand.Total",
             "",
             "[WhiteClover].ShootRootRatio",
             "[WhiteClover].TargetShootRootRatio",
             "[WhiteClover].TargetAboveGroundFraction",
             "([WhiteClover].AboveGroundLive.Wt/([WhiteClover].TotalLive.Wt+0.000001)) as WhiteClover.CurrentAboveGroundFraction",
             "([WhiteClover].Leaf.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as LeafFraction",
-            "([WhiteClover].Stolon.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as StolonFraction",
             "([WhiteClover].Petiole.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as PetioleFraction",
+            "([WhiteClover].Stolon.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as StolonFraction",
             "([WhiteClover].Inflorescence.Live.Wt / ([WhiteClover].AboveGroundLive.Wt + 0.000001)) as FlowerFraction",
             "([WhiteClover].Nodule.Live.Wt / ([WhiteClover].BelowGround.Wt + 0.000001)) as NoduleFraction",
             "([WhiteClover].Taproot.Live.Wt / ([WhiteClover].BelowGround.Wt + 0.000001)) as TaprootFraction",
@@ -9082,16 +9082,30 @@
             "[WhiteClover].Petiole.TargetBiomassProportion",
             "[WhiteClover].Stolon.TargetBiomassProportion",
             "[WhiteClover].Inflorescence.TargetBiomassProportion",
+            "[WhiteClover].Nodule.TargetBiomassProportion",
             "[WhiteClover].Taproot.TargetBiomassProportion",
             "[WhiteClover].Root.TargetBiomassProportion",
-            "[WhiteClover].Nodule.TargetBiomassProportion",
-            "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction",
-            "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction",
-            "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction",
-            "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction",
-            "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction",
-            "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction",
-            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction",
+            "[WhiteClover].Leaf.DMDemands.Structural",
+            "[WhiteClover].Petiole.DMDemands.Structural",
+            "[WhiteClover].Stolon.DMDemands.Structural",
+            "[WhiteClover].Inflorescence.DMDemands.Structural",
+            "[WhiteClover].Nodule.DMDemands.Structural",
+            "[WhiteClover].Taproot.DMDemands.Structural",
+            "[WhiteClover].Root.DMDemands.Structural",
+            "[WhiteClover].Leaf.DMDemands.Metabolic",
+            "[WhiteClover].Petiole.DMDemands.Metabolic",
+            "[WhiteClover].Stolon.DMDemands.Metabolic",
+            "[WhiteClover].Inflorescence.DMDemands.Metabolic",
+            "[WhiteClover].Nodule.DMDemands.Metabolic",
+            "[WhiteClover].Taproot.DMDemands.Metabolic",
+            "[WhiteClover].Root.DMDemands.Metabolic",
+            "[WhiteClover].Leaf.DMDemand.Storage",
+            "[WhiteClover].Petiole.DMDemands.Storage",
+            "[WhiteClover].Stolon.DMDemands.Storage",
+            "[WhiteClover].Inflorescence.DMDemands.Storage",
+            "[WhiteClover].Nodule.DMDemands.Storage",
+            "[WhiteClover].Taproot.DMDemands.Storage",
+            "[WhiteClover].Root.DMDemands.Storage",
             "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
             "[WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
             "[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
@@ -9100,20 +9114,25 @@
             "[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
             "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
             "[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
             "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
             "[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
             "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
             "[WhiteClover].Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "([WhiteClover].Leaf.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as LeafFractionDMAllocated",
-            "([WhiteClover].Stolon.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as StolonFractionDMAllocated",
-            "([WhiteClover].Petiole.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as PetioleFractionDMAllocated",
-            "([WhiteClover].Inflorescence.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as InflorescenceFractionDMAllocated",
-            "([WhiteClover].Nodule.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as NoduleFractionDMAllocated",
-            "([WhiteClover].Taproot.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as TaprootFractionDMAllocated",
-            "([WhiteClover].Root.Allocated.Wt/([WhiteClover].Arbitrator.DM.Allocated+0.000001)) as RootFractionDMAllocated",
-            "([WhiteClover].Leaf.DMDemands.Structural.DMDemandFunction+[WhiteClover].Petiole.DMDemands.Structural.DMDemandFunction+[WhiteClover].Stolon.DMDemands.Structural.DMDemandFunction+[WhiteClover].Inflorescence.DMDemands.Structural.DMDemandFunction+[WhiteClover].Nodule.DMDemands.Structural.DMDemandFunction+[WhiteClover].Taproot.DMDemands.Structural.DMDemandFunction+[WhiteClover].Root.DMDemands.Structural.DMDemandFunction) as TotalDMDemanded",
+            "([WhiteClover].Leaf.DMDemands.Structural+[WhiteClover].Petiole.DMDemands.Structural+[WhiteClover].Stolon.DMDemands.Structural+[WhiteClover].Inflorescence.DMDemands.Structural+[WhiteClover].Nodule.DMDemands.Structural+[WhiteClover].Taproot.DMDemands.Structural+[WhiteClover].Root.DMDemands.Structural) as WhiteClover.Total.DMDemands.Structural",
+            "([WhiteClover].Leaf.DMDemands.Metabolic+[WhiteClover].Petiole.DMDemands.Metabolic+[WhiteClover].Stolon.DMDemands.Metabolic+[WhiteClover].Inflorescence.DMDemands.Metabolic+[WhiteClover].Nodule.DMDemands.Metabolic+[WhiteClover].Taproot.DMDemands.Metabolic+[WhiteClover].Root.DMDemands.Metabolic) as WhiteClover.Total.DMDemands.Metabolic",
+            "([WhiteClover].Leaf.DMDemands.Storage+[WhiteClover].Petiole.DMDemands.Storage+[WhiteClover].Stolon.DMDemands.Storage+[WhiteClover].Inflorescence.DMDemands.Storage+[WhiteClover].Nodule.DMDemands.Storage+[WhiteClover].Taproot.DMDemands.Storage+[WhiteClover].Root.DMDemands.Storage) as WhiteClover.Total.DMDemands.Storage",
+            "",
+            "[WhiteClover].Leaf.DMDemand.Total",
+            "[WhiteClover].Petiole.DMDemand.Total",
+            "[WhiteClover].Stolon.DMDemand.Total",
+            "[WhiteClover].Inflorescence.DMDemand.Total",
+            "[WhiteClover].Nodule.DMDemand.Total",
+            "[WhiteClover].Taproot.DMDemand.Total",
+            "[WhiteClover].Root.DMDemand.Total",
+            "([WhiteClover].Leaf.DMDemand.Total+[WhiteClover].Petiole.DMDemand.Total+[WhiteClover].Stolon.DMDemand.Total+[WhiteClover].Inflorescence.DMDemand.Total+[WhiteClover].Nodule.DMDemand.Total+[WhiteClover].Taproot.DMDemand.Total+[WhiteClover].Root.DMDemand.Total) as WhiteClover.Total.Demand.Wt",
+            "",
             "[WhiteClover].Leaf.DMPotentialAllocation.Total",
             "[WhiteClover].Petiole.DMPotentialAllocation.Total",
             "[WhiteClover].Stolon.DMPotentialAllocation.Total",
@@ -9121,7 +9140,15 @@
             "[WhiteClover].Nodule.DMPotentialAllocation.Total",
             "[WhiteClover].Taproot.DMPotentialAllocation.Total",
             "[WhiteClover].Root.DMPotentialAllocation.Total",
-            "([WhiteClover].Leaf.DMPotentialAllocation.Total+[WhiteClover].Petiole.DMPotentialAllocation.Total+[WhiteClover].Stolon.DMPotentialAllocation.Total+[WhiteClover].Inflorescence.DMPotentialAllocation.Total+[WhiteClover].Nodule.DMPotentialAllocation.Total+[WhiteClover].Taproot.DMPotentialAllocation.Total+[WhiteClover].Root.DMPotentialAllocation.Total) as TotalPotentialDMAllocated",
+            "([WhiteClover].Leaf.DMPotentialAllocation.Total+[WhiteClover].Petiole.DMPotentialAllocation.Total+[WhiteClover].Stolon.DMPotentialAllocation.Total+[WhiteClover].Inflorescence.DMPotentialAllocation.Total+[WhiteClover].Nodule.DMPotentialAllocation.Total+[WhiteClover].Taproot.DMPotentialAllocation.Total+[WhiteClover].Root.DMPotentialAllocation.Total) as WhiteClover.Total.PotAllocation.Wt",
+            "",
+            "([WhiteClover].Leaf.Allocated.Wt/([WhiteClover].Leaf.Allocated.Wt+[WhiteClover].Petiole.Allocated.Wt+[WhiteClover].Stolon.Allocated.Wt+[WhiteClover].Inflorescence.Allocated.Wt+0.000001)) as LeafFractionDMAllocated",
+            "([WhiteClover].Petiole.Allocated.Wt/([WhiteClover].Leaf.Allocated.Wt+[WhiteClover].Petiole.Allocated.Wt+[WhiteClover].Stolon.Allocated.Wt+[WhiteClover].Inflorescence.Allocated.Wt+0.000001)) as PetioleFractionDMAllocated",
+            "([WhiteClover].Stolon.Allocated.Wt/([WhiteClover].Leaf.Allocated.Wt+[WhiteClover].Petiole.Allocated.Wt+[WhiteClover].Stolon.Allocated.Wt+[WhiteClover].Inflorescence.Allocated.Wt+0.000001)) as StolonFractionDMAllocated",
+            "([WhiteClover].Inflorescence.Allocated.Wt/([WhiteClover].Leaf.Allocated.Wt+[WhiteClover].Petiole.Allocated.Wt+[WhiteClover].Stolon.Allocated.Wt+[WhiteClover].Inflorescence.Allocated.Wt+0.000001)) as InflorescenceFractionDMAllocated",
+            "([WhiteClover].Nodule.Allocated.Wt/([WhiteClover].Nodule.Allocated.Wt+[WhiteClover].Taproot.Allocated.Wt+[WhiteClover].Root.Allocated.Wt+0.000001)) as NoduleFractionDMAllocated",
+            "([WhiteClover].Taproot.Allocated.Wt/([WhiteClover].Nodule.Allocated.Wt+[WhiteClover].Taproot.Allocated.Wt+[WhiteClover].Root.Allocated.Wt+0.000001)) as TaprootFractionDMAllocated",
+            "([WhiteClover].Root.Allocated.Wt/([WhiteClover].Nodule.Allocated.Wt+[WhiteClover].Taproot.Allocated.Wt+[WhiteClover].Root.Allocated.Wt+0.000001)) as RootFractionDMAllocated",
             "",
             "[WhiteClover].Total.Wt",
             "[WhiteClover].Total.N",
@@ -9162,17 +9189,17 @@
             "[WhiteClover].Leaf.Photosynthesis.FVPD",
             "[WhiteClover].Leaf.FRGR",
             "",
-            "[WhiteClover].Stolon.Live.Wt",
-            "[WhiteClover].Stolon.Live.N",
-            "[WhiteClover].Stolon.Live.NConc",
-            "[WhiteClover].Stolon.Dead.Wt",
-            "[WhiteClover].Stolon.Dead.NConc",
-            "",
             "[WhiteClover].Petiole.Live.Wt",
             "[WhiteClover].Petiole.Live.N",
             "[WhiteClover].Petiole.Live.NConc",
             "[WhiteClover].Petiole.Dead.Wt",
             "[WhiteClover].Petiole.Dead.NConc",
+            "",
+            "[WhiteClover].Stolon.Live.Wt",
+            "[WhiteClover].Stolon.Live.N",
+            "[WhiteClover].Stolon.Live.NConc",
+            "[WhiteClover].Stolon.Dead.Wt",
+            "[WhiteClover].Stolon.Dead.NConc",
             "",
             "[WhiteClover].Inflorescence.Live.Wt",
             "[WhiteClover].Inflorescence.Live.N",
@@ -9202,108 +9229,124 @@
             "[WhiteClover].Root.WaterUptake",
             "",
             "[WhiteClover].Leaf.Live.StructuralWt",
-            "[WhiteClover].Leaf.Live.StorageWt",
             "[WhiteClover].Leaf.Live.MetabolicWt",
+            "[WhiteClover].Leaf.Live.StorageWt",
             "[WhiteClover].Leaf.Live.StructuralN",
-            "[WhiteClover].Leaf.Live.StorageN",
             "[WhiteClover].Leaf.Live.MetabolicN",
+            "[WhiteClover].Leaf.Live.StorageN",
             "",
             "[WhiteClover].Leaf.Dead.StructuralWt",
-            "[WhiteClover].Leaf.Dead.StorageWt",
             "[WhiteClover].Leaf.Dead.MetabolicWt",
+            "[WhiteClover].Leaf.Dead.StorageWt",
             "[WhiteClover].Leaf.Dead.StructuralN",
-            "[WhiteClover].Leaf.Dead.StorageN",
             "[WhiteClover].Leaf.Dead.MetabolicN",
+            "[WhiteClover].Leaf.Dead.StorageN",
             "",
-            "[WhiteClover].Stolon.Live.StructuralWt",
-            "[WhiteClover].Stolon.Live.StorageWt",
-            "[WhiteClover].Stolon.Live.MetabolicWt",
-            "[WhiteClover].Stolon.Live.StructuralN",
-            "[WhiteClover].Stolon.Live.StorageN",
             "[WhiteClover].Petiole.Live.StructuralWt",
-            "[WhiteClover].Petiole.Live.StorageWt",
             "[WhiteClover].Petiole.Live.MetabolicWt",
+            "[WhiteClover].Petiole.Live.StorageWt",
             "[WhiteClover].Petiole.Live.StructuralN",
+            "[WhiteClover].Petiole.Live.MetabolicN",
             "[WhiteClover].Petiole.Live.StorageN",
+            "[WhiteClover].Stolon.Live.StructuralWt",
+            "[WhiteClover].Stolon.Live.MetabolicWt",
+            "[WhiteClover].Stolon.Live.StorageWt",
+            "[WhiteClover].Stolon.Live.StructuralN",
+            "[WhiteClover].Stolon.Live.MetabolicN",
+            "[WhiteClover].Stolon.Live.StorageN",
             "[WhiteClover].Inflorescence.Live.StructuralWt",
+            "[WhiteClover].Inflorescence.Live.MetabolicWt",
             "[WhiteClover].Inflorescence.Live.StorageWt",
             "[WhiteClover].Inflorescence.Live.StructuralN",
+            "[WhiteClover].Inflorescence.Live.MetabolicN",
             "[WhiteClover].Inflorescence.Live.StorageN",
-            "[WhiteClover].Root.Live.StructuralWt",
-            "[WhiteClover].Root.Live.StorageWt",
-            "[WhiteClover].Root.Live.StructuralN",
-            "[WhiteClover].Root.Live.StorageN",
-            "[WhiteClover].Taproot.Live.StructuralWt",
-            "[WhiteClover].Taproot.Live.StorageWt",
-            "[WhiteClover].Taproot.Live.StructuralN",
-            "[WhiteClover].Taproot.Live.StorageN",
             "[WhiteClover].Nodule.Live.StructuralWt",
+            "[WhiteClover].Nodule.Live.MetabolicWt",
             "[WhiteClover].Nodule.Live.StorageWt",
             "[WhiteClover].Nodule.Live.StructuralN",
+            "[WhiteClover].Nodule.Live.MetabolicN",
             "[WhiteClover].Nodule.Live.StorageN",
+            "[WhiteClover].Taproot.Live.StructuralWt",
+            "[WhiteClover].Taproot.Live.MetabolicWt",
+            "[WhiteClover].Taproot.Live.StorageWt",
+            "[WhiteClover].Taproot.Live.StructuralN",
+            "[WhiteClover].Taproot.Live.MetabolicN",
+            "[WhiteClover].Taproot.Live.StorageN",
+            "[WhiteClover].Root.Live.StructuralWt",
+            "[WhiteClover].Root.Live.MetabolicWt",
+            "[WhiteClover].Root.Live.StorageWt",
+            "[WhiteClover].Root.Live.StructuralN",
+            "[WhiteClover].Root.Live.MetabolicN",
+            "[WhiteClover].Root.Live.StorageN",
             "",
             "[WhiteClover].Leaf.Live.StructuralNConc",
-            "[WhiteClover].Leaf.Live.StorageNConc",
             "[WhiteClover].Root.Live.StructuralNConc",
-            "[WhiteClover].Root.Live.StorageNConc",
             "",
             "[WhiteClover].Leaf.Allocated.Wt",
-            "[WhiteClover].Stolon.Allocated.Wt",
             "[WhiteClover].Petiole.Allocated.Wt",
+            "[WhiteClover].Stolon.Allocated.Wt",
             "[WhiteClover].Inflorescence.Allocated.Wt",
             "[WhiteClover].Nodule.Allocated.Wt",
             "[WhiteClover].Taproot.Allocated.Wt",
             "[WhiteClover].Root.Allocated.Wt",
             "[WhiteClover].Leaf.Senesced.Wt",
-            "[WhiteClover].Stolon.Senesced.Wt",
             "[WhiteClover].Petiole.Senesced.Wt",
+            "[WhiteClover].Stolon.Senesced.Wt",
             "[WhiteClover].Inflorescence.Senesced.Wt",
             "[WhiteClover].Nodule.Senesced.Wt",
             "[WhiteClover].Taproot.Senesced.Wt",
             "[WhiteClover].Root.Senesced.Wt",
             "[WhiteClover].Leaf.Detached.Wt",
-            "[WhiteClover].Stolon.Detached.Wt",
             "[WhiteClover].Petiole.Detached.Wt",
+            "[WhiteClover].Stolon.Detached.Wt",
             "[WhiteClover].Inflorescence.Detached.Wt",
             "[WhiteClover].Nodule.Detached.Wt",
             "[WhiteClover].Taproot.Detached.Wt",
             "[WhiteClover].Root.Detached.Wt",
             "[WhiteClover].Leaf.Removed.Wt",
-            "[WhiteClover].Stolon.Removed.Wt",
             "[WhiteClover].Petiole.Removed.Wt",
+            "[WhiteClover].Stolon.Removed.Wt",
             "[WhiteClover].Inflorescence.Removed.Wt",
             "[WhiteClover].Nodule.Removed.Wt",
             "[WhiteClover].Taproot.Removed.Wt",
             "[WhiteClover].Root.Removed.Wt",
+            "([WhiteClover].Leaf.Allocated.Wt+[WhiteClover].Petiole.Allocated.Wt+[WhiteClover].Stolon.Allocated.Wt+[WhiteClover].Inflorescence.Allocated.Wt+[WhiteClover].Nodule.Allocated.Wt+[WhiteClover].Taproot.Allocated.Wt+[WhiteClover].Root.Allocated.Wt) as WhiteClover.Total.Allocated.Wt",
+            "([WhiteClover].Leaf.Senesced.Wt+[WhiteClover].Petiole.Senesced.Wt+[WhiteClover].Stolon.Senesced.Wt+[WhiteClover].Inflorescence.Senesced.Wt+[WhiteClover].Nodule.Senesced.Wt+[WhiteClover].Taproot.Senesced.Wt+[WhiteClover].Root.Senesced.Wt) as WhiteClover.Total.Senesced.Wt",
+            "([WhiteClover].Leaf.Detached.Wt+[WhiteClover].Petiole.Detached.Wt+[WhiteClover].Stolon.Detached.Wt+[WhiteClover].Inflorescence.Detached.Wt+[WhiteClover].Nodule.Detached.Wt+[WhiteClover].Taproot.Detached.Wt+[WhiteClover].Root.Detached.Wt) as WhiteClover.Total.Detached.Wt",
+            "([WhiteClover].Leaf.Removed.Wt+[WhiteClover].Petiole.Removed.Wt+[WhiteClover].Stolon.Removed.Wt+[WhiteClover].Inflorescence.Removed.Wt+[WhiteClover].Nodule.Removed.Wt+[WhiteClover].Taproot.Removed.Wt+[WhiteClover].Root.Removed.Wt) as WhiteClover.Total.Removed.Wt",
             "",
             "[WhiteClover].Leaf.Allocated.N",
-            "[WhiteClover].Stolon.Allocated.N",
             "[WhiteClover].Petiole.Allocated.N",
+            "[WhiteClover].Stolon.Allocated.N",
             "[WhiteClover].Inflorescence.Allocated.N",
             "[WhiteClover].Nodule.Allocated.N",
             "[WhiteClover].Taproot.Allocated.N",
             "[WhiteClover].Root.Allocated.N",
             "[WhiteClover].Leaf.Senesced.N",
-            "[WhiteClover].Stolon.Senesced.N",
             "[WhiteClover].Petiole.Senesced.N",
+            "[WhiteClover].Stolon.Senesced.N",
             "[WhiteClover].Inflorescence.Senesced.N",
             "[WhiteClover].Nodule.Senesced.N",
             "[WhiteClover].Taproot.Senesced.N",
             "[WhiteClover].Root.Senesced.N",
             "[WhiteClover].Leaf.Detached.N",
-            "[WhiteClover].Stolon.Detached.N",
             "[WhiteClover].Petiole.Detached.N",
+            "[WhiteClover].Stolon.Detached.N",
             "[WhiteClover].Inflorescence.Detached.N",
             "[WhiteClover].Nodule.Detached.N",
             "[WhiteClover].Taproot.Detached.N",
             "[WhiteClover].Root.Detached.N",
             "[WhiteClover].Leaf.Removed.N",
-            "[WhiteClover].Stolon.Removed.N",
             "[WhiteClover].Petiole.Removed.N",
+            "[WhiteClover].Stolon.Removed.N",
             "[WhiteClover].Inflorescence.Removed.N",
             "[WhiteClover].Nodule.Removed.N",
             "[WhiteClover].Taproot.Removed.N",
-            "[WhiteClover].Root.Removed.N"
+            "[WhiteClover].Root.Removed.N",
+            "([WhiteClover].Leaf.Allocated.N+[WhiteClover].Petiole.Allocated.N+[WhiteClover].Stolon.Allocated.N+[WhiteClover].Inflorescence.Allocated.N+[WhiteClover].Nodule.Allocated.N+[WhiteClover].Taproot.Allocated.N+[WhiteClover].Root.Allocated.N) as WhiteClover.Total.Allocated.N",
+            "([WhiteClover].Leaf.Senesced.N+[WhiteClover].Petiole.Senesced.N+[WhiteClover].Stolon.Senesced.N+[WhiteClover].Inflorescence.Senesced.N+[WhiteClover].Nodule.Senesced.N+[WhiteClover].Taproot.Senesced.N+[WhiteClover].Root.Senesced.N) as WhiteClover.Total.Senesced.N",
+            "([WhiteClover].Leaf.Detached.N+[WhiteClover].Petiole.Detached.N+[WhiteClover].Stolon.Detached.N+[WhiteClover].Inflorescence.Detached.N+[WhiteClover].Nodule.Detached.N+[WhiteClover].Taproot.Detached.N+[WhiteClover].Root.Detached.N) as WhiteClover.Total.Detached.N",
+            "([WhiteClover].Leaf.Removed.N+[WhiteClover].Petiole.Removed.N+[WhiteClover].Stolon.Removed.N+[WhiteClover].Inflorescence.Removed.N+[WhiteClover].Nodule.Removed.N+[WhiteClover].Taproot.Removed.N+[WhiteClover].Root.Removed.N) as WhiteClover.Total.Removed.N"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -12669,7 +12712,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -12685,7 +12728,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Inputs",
                           "Children": [
                             {
@@ -12795,7 +12838,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -12811,7 +12854,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Outputs",
                           "Children": [
                             {
@@ -13047,7 +13090,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -13074,7 +13117,7 @@
                             }
                           ],
                           "LegendPosition": 2,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "OrganicN",
                           "Children": [
                             {
@@ -15105,12 +15148,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PlantBiomass",
                           "Children": [
                             {
@@ -15231,12 +15274,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PlantLiveBiomass",
                           "Children": [
                             {
@@ -15357,12 +15400,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LiveBiomassAG",
                           "Children": [
                             {
@@ -15513,12 +15556,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "DeadBiomassAG",
                           "Children": [
                             {
@@ -15669,12 +15712,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LiveBiomassBG",
                           "Children": [
                             {
@@ -15795,12 +15838,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "DeadBiomassBG",
                           "Children": [
                             {
@@ -15920,7 +15963,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -15936,7 +15979,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf",
                           "Children": [
                             {
@@ -16602,7 +16645,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -16618,7 +16661,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ActualBiomassProportionAG",
                           "Children": [
                             {
@@ -16758,7 +16801,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -16774,7 +16817,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ActualBiomassProportionBG",
                           "Children": [
                             {
@@ -16884,7 +16927,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -16900,7 +16943,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TargetBiomassProportionAG",
                           "Children": [
                             {
@@ -17040,7 +17083,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -17056,7 +17099,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TargetBiomassProportionBG",
                           "Children": [
                             {
@@ -17166,7 +17209,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -17182,7 +17225,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AllocatedBiomassProportionAG",
                           "Children": [
                             {
@@ -17322,7 +17365,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -17338,7 +17381,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AllocatedBiomassProportionBG",
                           "Children": [
                             {
@@ -17448,7 +17491,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -17464,7 +17507,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ShootRootRatio",
                           "Children": [
                             {
@@ -17544,7 +17587,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -17560,7 +17603,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGroundFraction",
                           "Children": [
                             {
@@ -18476,7 +18519,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -18492,7 +18535,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf",
                           "Children": [
                             {
@@ -18698,7 +18741,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -18714,7 +18757,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Stolon",
                           "Children": [
                             {
@@ -19082,7 +19125,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19098,7 +19141,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Nodule",
                           "Children": [
                             {
@@ -19188,7 +19231,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19204,7 +19247,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf",
                           "Children": [
                             {
@@ -19344,7 +19387,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19360,7 +19403,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole",
                           "Children": [
                             {
@@ -19500,7 +19543,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19516,7 +19559,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Stolon",
                           "Children": [
                             {
@@ -19656,7 +19699,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19672,7 +19715,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Inflorescence",
                           "Children": [
                             {
@@ -19812,7 +19855,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19828,7 +19871,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Taproot",
                           "Children": [
                             {
@@ -19968,7 +20011,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -19984,7 +20027,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Root",
                           "Children": [
                             {
@@ -20124,7 +20167,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -20140,7 +20183,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Nodule",
                           "Children": [
                             {
