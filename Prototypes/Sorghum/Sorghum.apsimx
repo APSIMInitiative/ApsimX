@@ -8046,7 +8046,7 @@
                       "$type": "Models.Graph.Regression, Models",
                       "ForEachSeries": false,
                       "showOneToOne": true,
-                      "showEquation": false,
+                      "showEquation": true,
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
