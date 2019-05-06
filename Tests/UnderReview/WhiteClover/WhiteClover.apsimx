@@ -3980,7 +3980,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.05,
+                      "FixedValue": 0.1,
                       "Units": "/day",
                       "Name": "ReferenceRate",
                       "Children": [],
@@ -4005,38 +4005,6 @@
                             0.1,
                             0.1,
                             0.25,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation",
-                      "Name": "PhotoPeriodFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.015,
-                            0.03,
-                            0.04,
-                            0.05
-                          ],
-                          "Y": [
-                            0.0,
-                            0.1,
-                            0.5,
-                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
