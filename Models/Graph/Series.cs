@@ -137,14 +137,17 @@ namespace Models.Graph
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
+            {
                 seriesDefinitions.Add(new SeriesDefinition(this));
+                seriesDefinitions[0].ReadData(reader, simulationDescriptions);
+            }
             else
             {
                 // TableName exists so get the vary by fields and the simulation descriptions.
                 var varyByFieldNames = GetVaryByFieldNames();
                 simulationDescriptions = FindSimulationDescriptions();
                 var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationDescriptions);
-               
+
                 if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
                     // No vary by fields. Just plot the whole table in a single
@@ -163,17 +166,17 @@ namespace Models.Graph
                 if (seriesDefinitions.Count == 0)
                     seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
 
+                // Paint all definitions. 
+                var painter = GetSeriesPainter();
+                foreach (var seriesDefinition in seriesDefinitions)
+                    painter.Paint(seriesDefinition);
+
                 // Tell each series definition to read its data.
                 foreach (var seriesDefinition in seriesDefinitions)
                     seriesDefinition.ReadData(reader, simulationDescriptions);
 
                 // Remove series that have no data.
                 seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
-
-                // Paint all definitions. 
-                var painter = GetSeriesPainter();
-                foreach (var seriesDefinition in seriesDefinitions)
-                    painter.Paint(seriesDefinition);
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
