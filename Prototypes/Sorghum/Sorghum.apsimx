@@ -8214,94 +8214,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowPageOfGraphs": true,
-              "Name": "tests",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "DisabledSeries": [],
-                  "Name": "GrainWt",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.GrainGreenWt",
-                      "YFieldName": "Pred-Obs.GrainGreenWt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -20735,7 +20647,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997.met",
+                          "FileName": "Met\\HE1997.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -21590,7 +21502,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997.met",
+                          "FileName": "Met\\HE1997.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -22428,7 +22340,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997RS.met",
+                          "FileName": "Met\\HE1997RS.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -23229,7 +23141,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997RS.met",
+                          "FileName": "Met\\HE1997RS.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -24009,7 +23921,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997RS.met",
+                          "FileName": "Met\\HE1997RS.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -24799,7 +24711,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997RS.met",
+                          "FileName": "Met\\HE1997RS.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -25600,7 +25512,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997RS.met",
+                          "FileName": "Met\\HE1997RS.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -26380,7 +26292,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\HE1997RS.met",
+                          "FileName": "Met\\HE1997RS.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -27190,7 +27102,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -28102,7 +28014,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -28987,7 +28899,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -29872,7 +29784,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -30757,7 +30669,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -31600,7 +31512,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -32443,7 +32355,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -33286,7 +33198,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -34129,7 +34041,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -34960,7 +34872,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -35791,7 +35703,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -36622,7 +36534,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW5_GxE.met",
+                          "FileName": "Met\\BW5_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -37463,7 +37375,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -38285,7 +38197,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -39080,7 +38992,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -39875,7 +39787,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -40670,7 +40582,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -41423,7 +41335,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -42185,7 +42097,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -42938,7 +42850,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -43691,7 +43603,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -44438,7 +44350,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -45185,7 +45097,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -45932,7 +45844,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\BW8_GxE.met",
+                          "FileName": "Met\\BW8_GxE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -46709,7 +46621,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE13.met",
+                          "FileName": "Met\\LE13.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -47453,7 +47365,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE13.met",
+                          "FileName": "Met\\LE13.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -48162,7 +48074,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE13.met",
+                          "FileName": "Met\\LE13.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -48915,7 +48827,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE13.met",
+                          "FileName": "Met\\LE13.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -49632,7 +49544,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE13.met",
+                          "FileName": "Met\\LE13.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -50367,7 +50279,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE13.met",
+                          "FileName": "Met\\LE13.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -51130,7 +51042,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE14.met",
+                          "FileName": "Met\\LE14.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -51862,7 +51774,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE14.met",
+                          "FileName": "Met\\LE14.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -52553,7 +52465,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE14.met",
+                          "FileName": "Met\\LE14.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -53268,7 +53180,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE15.met",
+                          "FileName": "Met\\LE15.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -54114,7 +54026,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE15.met",
+                          "FileName": "Met\\LE15.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -54919,7 +54831,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE15.met",
+                          "FileName": "Met\\LE15.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -55757,7 +55669,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE17.met",
+                          "FileName": "Met\\LE17.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -56537,7 +56449,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE17.met",
+                          "FileName": "Met\\LE17.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -57276,7 +57188,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE17.met",
+                          "FileName": "Met\\LE17.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -58039,7 +57951,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -58714,7 +58626,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -59395,7 +59307,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -60088,7 +60000,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -60781,7 +60693,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -61441,7 +61353,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -62122,7 +62034,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -62815,7 +62727,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                          "FileName": "Met\\LE19.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -63540,7 +63452,7 @@
                             },
                             {
                               "$type": "Models.Weather, Models",
-                              "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\LE19.met",
+                              "FileName": "Met\\LE19.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
                               "Children": [],
@@ -64230,7 +64142,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -64978,7 +64890,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -65699,7 +65611,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -66420,7 +66332,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -67147,7 +67059,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -67802,7 +67714,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -68529,7 +68441,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -69268,7 +69180,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
@@ -69923,7 +69835,7 @@
                         },
                         {
                           "$type": "Models.Weather, Models",
-                          "FileName": "C:\\Users\\hol430\\Documents\\Sorghum\\Met\\Gatton_RUE.met",
+                          "FileName": "Met\\Gatton_RUE.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
