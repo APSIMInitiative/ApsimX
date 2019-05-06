@@ -7525,8 +7525,8 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
+                  "FixedValue": 0.0,
+                  "Units": "0-1",
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [],
                   "IncludeInDocumentation": false,
