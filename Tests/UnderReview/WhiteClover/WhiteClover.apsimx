@@ -519,7 +519,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [
                     {
@@ -1150,7 +1150,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/g",
                       "Name": "Metabolic",
                       "Children": [
                         {
@@ -1733,28 +1733,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "DMReallocationFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This is the default value for PMF. ",
-                      "Name": "Description",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
                   "Units": "/day",
-                  "Name": "NReallocationFactor",
+                  "Name": "DMReallocationFactor",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1866,8 +1846,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "/day",
+                  "Name": "NReallocationFactor",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This is the default value for PMF. ",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [
                     {
@@ -1881,6 +1881,16 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "StomatalConductanceCO2Modifier",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1940,16 +1950,6 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "StomatalConductanceCO2Modifier",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2006,7 +2006,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2338,7 +2338,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/g",
                       "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2750,7 +2750,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2780,7 +2780,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2899,7 +2899,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3174,7 +3174,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/g",
                       "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3703,7 +3703,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3853,7 +3853,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3954,7 +3954,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3968,7 +3968,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The N concentration in the inflorescence of is relatively low compared to other organs (typical values about 2.0%), but the seed N content is considerably higher (about 4.5%).  The model currently does not separate inflrescence from seeds, thus it uses variable thresholds to account for the fact that the proportion of seed increases with time during the reproductive phase.  \r\n",
+                      "Text": "The N concentration in the inflorescence of is relatively low compared to other organs (typical values about 2.0%), but the seed N content is considerably higher (about 4.5%).  The model currently does not separate inflorescence from seeds, thus it uses variable thresholds to account for the fact that the proportion of seed increases with time during the reproductive phase.  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -4336,7 +4336,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/g",
                       "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -4715,7 +4715,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4745,7 +4745,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4855,7 +4855,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5222,7 +5222,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/g",
                       "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -5712,7 +5712,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": "/d",
+                  "Units": "/day",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5722,7 +5722,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5732,7 +5732,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5742,7 +5742,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "NRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5752,7 +5752,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "NReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5762,7 +5762,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -5881,7 +5881,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -6267,7 +6267,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/g",
                       "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -6710,7 +6710,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "/day",
                   "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -6856,7 +6856,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -6970,7 +6970,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
-                  "Units": null,
+                  "Units": "gC/gDM",
                   "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -7516,7 +7516,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
+                  "Units": "0-1",
                   "Name": "DMConversionEfficiency",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -8158,7 +8158,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
                   "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -8283,7 +8283,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 10.0,
-                  "Units": "kgN/ha",
+                  "Units": "gN/m^2",
                   "Name": "MaxDailyNUptake",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -42374,7 +42374,7 @@
                 }
               ],
               "LegendPosition": 1,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "AboveGroundWt",
               "Children": [
                 {
@@ -42452,7 +42452,7 @@
                 }
               ],
               "LegendPosition": 1,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "HarvestedBiomass",
               "Children": [
                 {
@@ -42530,7 +42530,7 @@
                 }
               ],
               "LegendPosition": 1,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "HerbageNconc",
               "Children": [
                 {
@@ -42608,7 +42608,7 @@
                 }
               ],
               "LegendPosition": 1,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "CumHarvestedWt",
               "Children": [
                 {
@@ -42686,7 +42686,7 @@
                 }
               ],
               "LegendPosition": 1,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "NTakenOff",
               "Children": [
                 {
@@ -42764,7 +42764,7 @@
                 }
               ],
               "LegendPosition": 1,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "CumNTakenOff",
               "Children": [
                 {
