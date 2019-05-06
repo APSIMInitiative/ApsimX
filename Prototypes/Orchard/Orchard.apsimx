@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 129,
   "Version": 56,
   "Name": "Simulations",
   "Children": [
@@ -5470,7 +5470,7 @@
               "Title": null,
               "Inverted": false,
               "Minimum": "NaN",
-              "Maximum": 12.0,
+              "Maximum": 7.0,
               "Interval": "NaN",
               "DateTimeAxis": false,
               "CrossesAtZero": false
