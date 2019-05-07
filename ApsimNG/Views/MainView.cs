@@ -192,8 +192,12 @@
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
+            {
                 InitMac();
-            if ((uint)Environment.OSVersion.Platform <= 3)
+                Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+                RefreshTheme();
+            }
+            else if ((uint)Environment.OSVersion.Platform <= 3)
                 RefreshTheme();
         }
 
