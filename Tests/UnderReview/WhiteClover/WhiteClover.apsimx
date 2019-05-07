@@ -63,13 +63,13 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        2.5,
+                        4.0,
                         25.0,
-                        37.5
+                        36.5
                       ],
                       "Y": [
                         0.0,
-                        22.5,
+                        22.0,
                         0.0
                       ],
                       "Name": "XYPairs",
@@ -677,13 +677,13 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            2.5,
-                            7.5,
-                            15.0,
-                            18.0,
+                            4.0,
+                            10.0,
+                            16.5,
+                            19.0,
                             27.0,
-                            35.0,
-                            37.5
+                            34.0,
+                            36.5
                           ],
                           "Y": [
                             0.0,
@@ -884,7 +884,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.45,
+                          "FixedValue": 0.42,
                           "Units": "g/g",
                           "Name": "TargetProportion",
                           "Children": [],
@@ -1938,8 +1938,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.2,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2078,7 +2078,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.667,
+                              "FixedValue": 0.75,
                               "Units": "g/g",
                               "Name": "ProportionToLeaves",
                               "Children": [],
@@ -2831,8 +2831,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.2,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3878,7 +3878,7 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.2,
+                      "FractionLiveToRemove": 0.1,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.1,
                       "FractionDeadToResidue": 0.2,
@@ -3904,8 +3904,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.2,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -4796,8 +4796,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.2,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -5779,18 +5779,6 @@
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.025,
                       "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.025,
-                      "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -5803,7 +5791,7 @@
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.025,
                       "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
+                      "Name": "Graze",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -5815,7 +5803,19 @@
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.025,
                       "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
+                      "Name": "Harvest",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -6907,7 +6907,7 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
@@ -7757,7 +7757,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 100.0,
+                  "FixedValue": 90.0,
                   "Units": "m/g",
                   "Name": "SpecificRootLength",
                   "Children": [],
@@ -8342,7 +8342,7 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
@@ -8710,7 +8710,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "*Huia* is the basic white clover cultivar in the model.  It is the oldest selected strain from New Zealand, developed from wild plants growing in Hawkes Bay and Canterbury (Caradus).  *Huia* is a medium-leaved cultivar, with generic perfomance - producing good yields and being reasonably persistent. It has been mostly superseeded by cultivars with more specific usage (e.g. for dairying or for hill country conditions).  \r\n",
+                      "Text": "This is an old and traditional cultivar and the *base* white clover cultivar in the model.  It is the oldest selected strain from New Zealand, released in 1957, developed from wild plants growing in Hawkes Bay and Canterbury regions ([CaradusEtAl1996]).  Huia is a *medium-leaf* cultivar developed for generic usage and has an average performance, it can produce good yields and is reasonably persistent under grazing.  However, it has a relatively low stolon density, has low growth rates over winter, and is susceptible to some pests.  The Huia cultivar has been mostly superseded by modern cultivars that have greater production potential, more resistance to pests, and that were developed for more specific uses (e.g. for dairying or for hill country conditions).  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -8725,13 +8725,23 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
+                    "[Phenology].ThermalTime.XYPairs.X = 2.5,25,37.5",
+                    "[Phenology].ThermalTime.XYPairs.X = 0,22.5,0",
+                    "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
+                    "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
+                    "[Leaf].HeightFunction.XYPairs.Y = 20,75,110,140,150",
+                    "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.667",
+                    "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.2",
+                    "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
+                    "[Root].MaximumRootDepth.FixedValue = 750",
+                    "[Root].SpecificRootLength.FixedValue = 100",
+                    "[TargetShootRootRatio].AllPhases.TargetSR.MeanSR.FixedValue = 3.0"
                   ],
                   "Name": "Kopu",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The *Kopu* cultivar was selected from crosses with north-american ladino cultivars for resitance to nematodes and high yield. It is intended for lowland pastures.  \r\n",
+                      "Text": "This is a *large-leaf* cultivar developed in New Zealand from crossings between local varieties and north-american ladino genotypes.  It succeeded Pitau and Kopu cultivars, being more persistent than these due to greater stolon density; it has also greater resistance to nematodes and clover root weevil.  As a *large-leaf* cultivar, Kopu2 has leaves that are 25-50% larger than Huia, with corresponding longer petioles; it has a semi-prostrate growth habit, enabling higher harvest index than *medium-leaf* cultivars.  Kopu2 has been shown to produce high yields, especially in early season, being more winter active that the previous cultivars; it is intended for lowland pastures under rotational cattle grazing.  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -8746,13 +8756,22 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
+                    "[Phenology].ThermalTime.XYPairs.X = 0,21,32",
+                    "[Phenology].ThermalTime.XYPairs.X = 0,21,0",
+                    "[Leaf].Photosynthesis.FT.XYPairs.X = -1,0,5,12.5,15.5,24.5,32.5,35",
+                    "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.4",
+                    "[Leaf].HeightFunction.XYPairs.Y = 20,50,75,97.5,104",
+                    "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.85",
+                    "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
+                    "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.05",
+                    "[Root].MaximumRootDepth.FixedValue = 500",
+                    "[Root].SpecificRootLength.FixedValue = 100"
                   ],
-                  "Name": "Kotare",
+                  "Name": "Tahora",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is a large-leaved cultivar with medium stolon density. *Kotare* can produce high yields with good summer growth.  It is aimed at dairying of finishing systems.   \r\n",
+                      "Text": "This is a *small-leaf* cultivar developed in New Zealand for use in mixed grazed swards of hill country farms, it was released in 1987 ([WiddupAndBarrett2011]).  Tahora was bred from white clover ecotypes growing in moist hill country, so it can be sensitive to drought.  The version Tahora 2 is a bit more tollerant than the original and has been used over a wide range of conditions.  Tahora shows high persistence under grazing, it has a prostrate growth habit, with a dense stolons structure that provide many growing points for fast recovery after defoliation.  The stolons spread well and the plant develops a finely branched fibrous root system, enabling it to compete well with most grasses.  This cultivar has also short petioles, which results in a relatively low harvest index; the performance of Tahora in yield trials showed it can produce as much as Huia, but considerably less than modern cultivars.  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -8767,34 +8786,22 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
-                  ],
-                  "Name": "Weka",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "*Weka* is a medium-leaved cultivar and with high stolon density.  It is considered high yielding and can be used in all grazing systems.  *Weka* also shows good persitence, being tollerant to dry condition and hard grazing, as well as having strong spreading habit.  \r\n",
-                      "Name": "Description",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    ""
+                    "[Phenology].ThermalTime.XYPairs.X = 2.5,25,37.5",
+                    "[Phenology].ThermalTime.XYPairs.X = 0,22.5,0",
+                    "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
+                    "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
+                    "[Leaf].HeightFunction.XYPairs.Y = 20,65,100,130,135",
+                    "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.7",
+                    "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
+                    "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
+                    "[Root].MaximumRootDepth.FixedValue = 950",
+                    "[Root].SpecificRootLength.FixedValue = 100"
                   ],
                   "Name": "Apex",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The *Apex* cultivar was selected for persistency and high yield. It has a high stolon density and is drought-tolerant; it is also resistant diseases and has good root weevil tolerance. It is intended for lowland pastures.  \r\n",
+                      "Text": "This is a *medium-leaf*, cultivar bred in New Zealand and it also known as Crusader.  It was bred for improved persistence, being able to cope with drought and it is also resistant to several diseases and tolerant to clever root weevil.  The plants have a semi-prostrate growth habit, with high stolon density.  Leaf size is about the same as Huia's and thus plant height and harvest index are assumed to be similar.  Nonetheless, production levels are significantly greater all year round than those of Huia or Sustain, but especially over winter.  The cultivar is considered well suited for all grazing systems.  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": false,
