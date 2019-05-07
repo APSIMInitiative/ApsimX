@@ -195,10 +195,8 @@
             {
                 InitMac();
                 Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
-                RefreshTheme();
             }
-            else if ((uint)Environment.OSVersion.Platform <= 3)
-                RefreshTheme();
+            RefreshTheme();
         }
 
         /// <summary>
@@ -775,7 +773,9 @@
                 Color black = Color.FromArgb(0, 0, 0);
                 ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
             }
-            else
+            else if (ProcessUtilities.CurrentOS.IsWindows)
+                // Apsim's default gtk theme uses the 'wimp' rendering engine,
+                // which doesn't play nicely on non-windows systems.
                 Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
         }
 
