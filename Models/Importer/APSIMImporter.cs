@@ -761,7 +761,7 @@
                 code.Append("\n\t\t[Description(\"" + param.Description + "\")]\n");
                 if (String.Compare(param.TypeName, "cultivars") == 0)
                 {
-                    code.Append("\t\t[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]\n");
+                    code.Append("\t\t[Display(Type = DisplayType.CultivarName)]\n");
                 }
                 code.Append("\t\tpublic " + atype + param.Name + " { get; set; }\n");
             }
@@ -1096,7 +1096,7 @@
                             type = "Fertiliser.Types." + newtype;
                             this.FindTokenValue("depth", childText, ref depth);
 
-                            childText = string.Format("Fertiliser.Apply({0}, {1}, {2});", amount, type, depth);
+                            childText = string.Format("[Fertiliser].Apply({0}, {1}, {2});", amount, type, depth);
                         }
                         else
                         {
@@ -1106,7 +1106,7 @@
 
                                 this.FindTokenValue("amount", childText, ref amount);
 
-                                childText = string.Format("Irrigation.Apply({0});", amount);
+                                childText = string.Format("[Irrigation].Apply({0});", amount);
                             }
                             else
                             {

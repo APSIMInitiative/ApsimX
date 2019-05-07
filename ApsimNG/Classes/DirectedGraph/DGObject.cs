@@ -6,6 +6,7 @@
 namespace ApsimNG.Classes.DirectedGraph
 {
     using Cairo;
+    using OxyPlot;
     using System;
 
     /// <summary>A base object for all directed graph view objects</summary>
@@ -14,17 +15,19 @@ namespace ApsimNG.Classes.DirectedGraph
         public bool Selected { get; set; }
         public PointD Location { get; set; }
         public string Name { get; set; }
-        public OxyPlot.OxyColor Colour { get; set; }
+        public OxyColor Colour { get; set; }
+        public static OxyColor DefaultOutlineColour { get; set; }
+        public static OxyColor DefaultBackgroundColour { get; set; }
 
         /// <summary>Constructor</summary>
         public DGObject()
         {
-            Colour = OxyPlot.OxyColors.Black;
+            Colour = OxyColors.Black;
         }
 
         /// <summary>Paint on the graphics context</summary>
         /// <param name="context">The graphics context to draw on</param>
-        public abstract void Paint(Cairo.Context GraphicsObject);
+        public abstract void Paint(Context graphicsObject);
 
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>

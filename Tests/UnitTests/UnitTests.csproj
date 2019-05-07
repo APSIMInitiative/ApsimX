@@ -96,6 +96,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -105,15 +106,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\PostSimulationToolTests.cs" />
+    <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
+    <Compile Include="Graph\SeriesTests.cs" />
+    <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
+    <Compile Include="Factorial\ExperimentTests.cs" />
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
     <Compile Include="ManagerTests.cs" />
     <Compile Include="Sensitivity\MorrisTests.cs" />
-    <Compile Include="Graph\RegressionTests.cs" />
+    <Compile Include="APSIMShared\RegressionTests.cs" />
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="Storage\DataStoreTests.cs" />
+    <Compile Include="TextStorageReader.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="TestsTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
@@ -121,7 +128,6 @@
     <Compile Include="Core\ApsimFile\ManagerConverterTests.cs" />
     <Compile Include="APSIMShared\IndexedDataTableTests.cs" />
     <Compile Include="Functions\TrackerFunctionTests.cs" />
-    <Compile Include="Core\Runner\RunnerTests.cs" />
     <Compile Include="FertiliserTests.cs" />
     <Compile Include="Core\MockEvents.cs" />
     <Compile Include="Core\MockLocator.cs" />
@@ -160,6 +166,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTests.AddModelTests.json" />
+    <EmbeddedResource Include="Core\ApsimFile\OnCreatedError.apsimx" />
+    <EmbeddedResource Include="Core\PostSimulationTool.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
@@ -306,7 +314,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Runner\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

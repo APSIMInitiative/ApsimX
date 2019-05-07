@@ -13596,10 +13596,10 @@ Soil parameterisation was based on the two description of the soil at the Rainsh
             <string />
             <string>[Weather].Rain</string>
             <string>[Irrigation].IrrigationApplied</string>
-            <string>([FodderBeet].Leaf.Transpiration + [Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
-            <string>([FodderBeet].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as FodderBeet_ET</string>
-            <string>([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as Oats_ET</string>
-            <string>[MicroClimate].interception as Interception</string>
+            <string>([FodderBeet].Leaf.Transpiration + [Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET</string>
+            <string>([FodderBeet].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as FodderBeet_ET</string>
+            <string>([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as Oats_ET</string>
+            <string>[MicroClimate].PrecipitationInterception as Interception</string>
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>([FodderBeet].Leaf.Transpiration + [Oats].Leaf.Transpiration) as Transpiration</string>
             <string>[Soil].SoilWater.Drainage as Drainage</string>

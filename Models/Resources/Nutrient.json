@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 47,
+  "Version": 56,
   "Name": "Simulations",
   "Children": [
     {
@@ -13,92 +13,105 @@
             "$type": "Models.Graph.Node, Models",
             "Name": "Inert",
             "Location": "65, 426",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "SurfaceResidue",
             "Location": "345, 45",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "FOMLignin",
             "Location": "265, 151",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "FOMCellulose",
             "Location": "444, 154",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "FOMCarbohydrate",
             "Location": "50, 200",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "Microbial",
             "Location": "218, 299",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "Humic",
             "Location": "458, 293",
-            "Colour": "LightGreen",
-            "OutlineColour": "Black"
+            "Colour": "0, 114, 178",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "Urea",
             "Location": "529, 419",
-            "Colour": "LightCoral",
-            "OutlineColour": "Black"
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "NO3",
             "Location": "185, 435",
-            "Colour": "LightCoral",
-            "OutlineColour": "Black"
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "NH4",
             "Location": "357, 422",
-            "Colour": "LightCoral",
-            "OutlineColour": "Black"
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "Atmosphere",
             "Location": "63, 290",
             "Colour": "White",
-            "OutlineColour": "White"
+            "OutlineColour": "White",
+            "Transparent": true
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "PlantAvailableNO3",
             "Location": "702, 339",
-            "Colour": "LightCoral",
-            "OutlineColour": "Black"
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
           },
           {
             "$type": "Models.Graph.Node, Models",
             "Name": "PlantAvailableNH4",
             "Location": "675, 205",
-            "Colour": "LightCoral",
-            "OutlineColour": "Black"
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
           }
         ],
         "Arcs": [
@@ -256,7 +269,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Inert].C / [Soil].SoilOrganicMatter.SoilCN",
+              "Expression": "[Inert].C / [Soil].InitialSoilCNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -1191,7 +1204,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Humic].C / [Soil].SoilOrganicMatter.SoilCN",
+              "Expression": "[Humic].C / [Soil].InitialSoilCNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {
