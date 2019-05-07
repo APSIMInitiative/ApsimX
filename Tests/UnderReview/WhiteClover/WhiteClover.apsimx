@@ -8870,7 +8870,7 @@
             },
             {
               "Key": "fracPopDecline",
-              "Value": "0.05"
+              "Value": "0.01"
             }
           ],
           "Name": "Defoliate",
@@ -9000,6 +9000,8 @@
             "[WhiteClover].Arbitrator.N.TotalReallocationSupply",
             "[WhiteClover].Arbitrator.N.TotalRetranslocationSupply",
             "[WhiteClover].Arbitrator.N.TotalUptakeSupply",
+            "[WhiteClover].Arbitrator.N.TotalReallocation",
+            "[WhiteClover].Arbitrator.N.TotalRetranslocation",
             "[WhiteClover].Arbitrator.WSupply",
             "[WhiteClover].Arbitrator.WDemand",
             "[WhiteClover].Arbitrator.WAllocated",
@@ -9684,7 +9686,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "###Presentation###\r\n\r\nSimulation setup was based on a field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program (for more details see [MartinEtAl2017]).  Here only plots with pure white clover are used.  \r\nThe experiment consisted of six fertiliser treatments with four replicates.  The nominal N rates were 0, 50, 100, 200, 350 and 500 kg/ha/yr, but the actual amounts applied varied as each application was linked to a defoliation event, the plan was to have 10 defoliation per year, but this was not possible, with seven events actually happening for white clover.  The plots were mown at a height of about 4 cm and the harvested herbage was removed from the plots.  The measurements comprised of dry matter yield and quality indicators (here herbage N content is used).  \r\nData and general management of the experiment was supplied by Grant Edwards, Lincoln University.\r\n\r\nThe soil at the experimental site was a Templeton fine sandy loam (an Immature Pallic soil, USDA: Udic Haplustept), the required parameters were inferred based on data from the New Zealand National Soils Database (Landcare Research).  \r\nWeather data was obtained from nearby Broadfields weather station (NIWA).\r\n\r\n",
+                  "Text": "###Presentation###\r\n\r\nThe simulation setup was based on a field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program (for more details see [MartinEtAl2017]).  Here only plots with pure white clover are used.  \r\nThe experiment consisted of six fertiliser treatments with four replicates.  The nominal N rates were 0, 50, 100, 200, 350 and 500 kg/ha/yr, but the actual amounts applied varied as each application was linked to a defoliation event, the plan was to have 10 defoliation per year, but this was not possible, with seven events actually happening for white clover.  The plots were mown at a height of about 4 cm and the harvested herbage was removed from the plots.  The measurements comprised of dry matter yield and quality indicators (here herbage N content is used).  \r\nData and general management of the experiment was supplied by Grant Edwards, Lincoln University.\r\n\r\nThe soil at the experimental site was a Templeton fine sandy loam (an Immature Pallic soil, USDA: Udic Haplustept), the required parameters were inferred based on data from the New Zealand National Soils Database (Landcare Research).  \r\nWeather data was obtained from nearby Broadfield weather station (NIWA).\r\n\r\n",
                   "Name": "Presentation",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -26463,6 +26465,340 @@
                     },
                     {
                       "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "NSupply",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Uptake",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "UptakeN",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "UptakeN",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Fixation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Nodule.NFixed",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "FixedN",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Reallocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 1,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalReallocationSupply",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "ReallocationSupply",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalReallocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "ReallocatedN",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Retranslocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 1,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalRetranslocationSupply",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "RetranslocationSupply",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalRetranslocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "RetranslocatedN",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
                       "ShowPageOfGraphs": false,
                       "Name": "Harvests",
                       "Children": [
@@ -27539,7 +27875,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -27555,7 +27891,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "AboveGroundWt",
                       "Children": [
                         {
@@ -27651,7 +27987,7 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "AboveGroundWt_PO",
                       "Children": [
                         {
@@ -27713,7 +28049,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -27729,7 +28065,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "HarvestedWt",
                       "Children": [
                         {
@@ -27887,7 +28223,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -27903,7 +28239,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CumHarvestedWt",
                       "Children": [
                         {
@@ -27999,7 +28335,7 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CumHarvestedWt_PO",
                       "Children": [
                         {
@@ -28072,12 +28408,12 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "HerbageNc",
                       "Children": [
                         {
@@ -28173,7 +28509,7 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "HerbageNc_PO",
                       "Children": [
                         {
@@ -28235,7 +28571,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -28251,7 +28587,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "NTakenOff",
                       "Children": [
                         {
@@ -28347,7 +28683,7 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "NTakenOff_PO",
                       "Children": [
                         {
@@ -28409,7 +28745,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -28425,7 +28761,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CumNTakenOff",
                       "Children": [
                         {
@@ -28521,7 +28857,7 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "CumNTakenOff_PO",
                       "Children": [
                         {
@@ -30038,15 +30374,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "###Discussion###\r\n\r\nThe results show that the model was able to capture the general growth pattern and the cumulative amounts of herbage harveested.  The values for N content still need improvement.  \r\n\r\n",
-                  "Name": "Discussion",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -45661,6 +45988,340 @@
                     },
                     {
                       "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "NSupply",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Uptake",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "UptakeN",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "UptakeN",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Fixation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Nodule.NFixed",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "FixedN",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Reallocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 1,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalReallocationSupply",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "ReallocationSupply",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalReallocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "ReallocatedN",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Graph.Axis, Models",
+                              "Type": 2,
+                              "Title": "Nitrogen (kg/ha)",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "DisabledSeries": [],
+                          "Name": "Retranslocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 1,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalRetranslocationSupply",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "RetranslocationSupply",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": "NRate",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "WhiteClover.Arbitrator.N.TotalRetranslocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "RetranslocatedN",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
                       "ShowPageOfGraphs": false,
                       "Name": "Harvests",
                       "Children": [
@@ -49065,15 +49726,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "###Discussion###\r\n\r\nThe results show that the model was able to capture the general growth pattern and the cumulative amounts of herbage harveested.  The values for N content still need improvement.  \r\n\r\n",
-                  "Name": "Discussion",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -49082,7 +49734,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "Text": "\r\n### All data from New Zealand\r\n",
+              "Text": "\r\n## All data from New Zealand\r\n",
               "Name": "SubTitle",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -49553,6 +50205,15 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "##Discussion##\r\n\r\nThe results show that the model was able to capture the general growth pattern and the cumulative amounts of herbage harvested.  Given the large uncertainties that measurements of plant biomass have, it is generally more appropriate to compare season cumulative values instead of values for individual measurements.  The experimental results showed no significant effect of N fertilisation on biomass accumulation, which was expected as white clover can compensate for those variations through biological N fixation.  \nThe values for N content were also highly variable, and they did show some response to fertilisation.  The model results also shows similar response, but the general pattern was not we described by the model.  The way the model computes demand and remobilisation of N seems to be a specific part of the model that still needs improvement.  \r\n\r\n",
+              "Name": "Discussion",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
