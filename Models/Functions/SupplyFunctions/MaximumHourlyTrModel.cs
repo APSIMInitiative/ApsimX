@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
@@ -13,10 +13,25 @@ namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
     /// # [Name]
-    /// Biomass accumulation is modeled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
-    ///   This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
-    ///   RUE is calculated from a potential value which is discounted using stress factors that account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water hourlyTr (FW) and atmospheric CO<sub>2</sub> concentration (FCO2).  
-    ///   NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
+    /// This module simulates photosynthesis using the Soil-Plant-Atmosphere System Simulation(SPASS) developed by Wang(1997), with a few modifications, such as a downscaling to hourly time step with the temperature diurnal pattern from Resource et al. (1981). Hence, the model simulates hourly potential biomass assimilation.VPD is calculated as the difference between hourly saturated vapor pressure(SVP) and SVP at minimum temperature(Messina et al., 2015) and is used to calculate hourly transpiration as follows:
+    /// 
+    /// TR<sub>pot,t</sub> = (ΔDM<sub>pot, t</sub>× VPD<sub>t</sub>) / TEC
+    /// 
+    /// where TR<sub>pot</sub> is the potential transpiration driven by radiation interception (mm), ΔDM<sub>pot</sub>is the hourly potential increase in dry matter (i.e.amount of CO<sub>2</sub> fixed by photosynthesis; g.m<sup>-2</sup>), TEC is the transpiration efficiency coefficient (kPa.gC<sup>-1</sup>.m<sup>-2</sup>.mm water<sup>-1</sup>), and t is time.
+    /// 
+    /// The potential transpiration is then adjusted based on the level of evaporative demand and soil water stress when applicable.First, VPD-limited hourly transpiration(TR<sub>VPD-limited,t</sub>) is calculated as follows for VPD<sub>t</sub> > VPD<sub>ref</sub>:
+    /// 
+    /// TR<sub>VPDref</sub> = (ΔDM<sub>pot, VPDref</sub> × VPD<sub>ref</sub>)/TEC
+    /// 
+    /// Reduction<sub>t</sub> = Max(0, TR<sub>pot,t </sub> - TR<sub>VPDref</sub>) × α
+    /// 
+    /// TR<sub>VPD-limited,t</sub> = TR<sub>pot,t</sub> - Reduction<sub>t</sub>
+    /// 
+    /// where VPD<sub>ref</sub> is the threshold VPD above which transpiration rate is reduced (kPa), TR<sub>VPDref</sub> is the transpiration rate at VPD<sub>ref</sub> (mm.hr<sup>-1</sup>), ΔDM<sub>pot,VPDref</sub> is the interpolated hourly growth at VPD<sub>ref</sub> (g.m<sup>-2</sup>). Reduction is the reduction in transpiration rate above VPD<sub>ref</sub>(mm.hr<sup>-1</sup>), and α is the reduction factor for VPD<sub>t</sub> > VPD<sub>ref</sub>(decimal; zero for no reduction, 1 for complete capping of transpiration rate at TR<sub>VPDref</sub>)
+    /// 
+    /// Then, soil-water-limited hourly transpiration (TR<sub>water-limited</sub>) is calculated.Hourly transpiration is capped starting from the maximum TR<sub>VPD-limited</sub> at midday until the total plant available soil moisture can meet the crop daily water demand.Finally, actual hourly increase in dry matter (ΔDM) is calculated based on TR<sub>water-limited</sub>, as follows:
+    /// 
+    /// ΔDM<sub>t</sub> = (TR<sub>water-limited,t</sub> × TEC) / VPD<sub>t</sub>
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
