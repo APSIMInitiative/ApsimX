@@ -128,7 +128,7 @@ namespace Models.PMF.Organs
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
-        [ChildLinkByName]
+        [ChildLinkByName(IsOptional = true)]
         public IRetranslocateMethod RetranslocateNitrogen = null;
 
         /// <summary>The live biomass state at start of the computation round</summary>
