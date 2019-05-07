@@ -39,7 +39,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when a grid cell header is clicked.
         /// </summary>
-        event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
+        event EventHandler<GridColumnClickedArgs> GridColumnClicked;
 
         /// <summary>
         /// Occurs when user clicks a button on the cell.
@@ -119,7 +119,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Clear all presenter defined context items.
         /// </summary>
-        void ClearContextActions();
+        void ClearContextActions(bool hideDefault);
 
         /// <summary>
         /// Returns true if the grid row is empty.

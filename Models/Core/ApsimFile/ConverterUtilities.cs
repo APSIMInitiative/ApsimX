@@ -14,6 +14,8 @@ namespace Models.Core.ApsimFile
     using System.Reflection;
     using System.IO;
     using System.Text.RegularExpressions;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -97,6 +99,34 @@ namespace Models.Core.ApsimFile
             return writer.ToString();
         }
 
+
+        /// <summary>
+        /// Add the specified 'using' statement to the specified code.
+        /// </summary>
+        /// <param name="manager">The manager to modifiy</param>
+        /// <param name="linkStatement">The link statement to insert at the correct location</param>
+        internal static void InsertLink(XmlNode manager, string linkStatement)
+        {
+            XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
+            string code = codeNode.InnerText;
+
+            string returnCode = code;
+            if (!code.Contains(linkStatement))
+            {
+
+                int curlyIndex = code.IndexOf('{');
+                curlyIndex = code.IndexOf('{', curlyIndex + 1); // look for second curly bracket.
+                if (curlyIndex >= 0)
+                {
+                    returnCode = code.Substring(0, curlyIndex + 1);
+                    returnCode += Environment.NewLine + "        "+linkStatement;
+                    returnCode += code.Substring(curlyIndex + 2);
+                }
+            }
+            codeNode.InnerText = returnCode;
+        }
+
+
         /// <summary>
         /// Find a PMF node, as a direct child under the specified node, that has the specified name element.
         /// </summary>
@@ -172,10 +202,11 @@ namespace Models.Core.ApsimFile
         /// <param name="manager">The manager model.</param>
         /// <param name="searchFor">The pattern to search for</param>
         /// <param name="replaceWith">The string to replace</param>
-        internal static void SearchReplaceManagerCode(XmlNode manager, string searchFor, string replaceWith)
+        internal static bool SearchReplaceManagerCode(XmlNode manager, string searchFor, string replaceWith)
         {
             XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
             string newCode = codeNode.InnerText.Replace(searchFor, replaceWith);
+            bool wasChanged = newCode != codeNode.InnerText;
             codeNode.InnerText = newCode;
 
             // Now look under the script node.
@@ -183,6 +214,7 @@ namespace Models.Core.ApsimFile
             if (script != null)
                 foreach (XmlNode scriptChild in script.ChildNodes)
                     scriptChild.InnerText = scriptChild.InnerText.Replace(searchFor, replaceWith);
+            return wasChanged;
         }
 
         /// <summary>

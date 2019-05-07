@@ -24,23 +24,24 @@ namespace UserInterface.Views
     /// </summary>
     public class ExplorerView : ViewBase, IExplorerView
     {
-        private Viewport RightHandView;
+        private Viewport rightHandView;
         private MenuView popup;
         private Gtk.TreeView treeviewWidget;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
-            _mainWidget = (VBox)builder.GetObject("vbox1");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
+            mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
+            treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
             popup = new MenuView();
-            RightHandView = (Viewport)builder.GetObject("RightHandView");
-            RightHandView.ShadowType = ShadowType.EtchedOut;
-            _mainWidget.Destroyed += OnDestroyed;
+            rightHandView = (Viewport)builder.GetObject("RightHandView");
+            rightHandView.ShadowType = ShadowType.EtchedOut;
+            mainWidget.Destroyed += OnDestroyed;
         }
 
         /// <summary>The tree on the left side of the explorer view</summary>
@@ -55,16 +56,16 @@ namespace UserInterface.Views
         /// <param name="control">The control to add.</param>
         public void AddRightHandView(object control)
         {
-            foreach (Widget child in RightHandView.Children)
+            foreach (Widget child in rightHandView.Children)
             {
-                RightHandView.Remove(child);
+                rightHandView.Remove(child);
                 child.Destroy();
             }
             ViewBase view = control as ViewBase;
             if (view != null)
             {
-                RightHandView.Add(view.MainWidget);
-                RightHandView.ShowAll();
+                rightHandView.Add(view.MainWidget);
+                rightHandView.ShowAll();
             }
         }
 
@@ -74,13 +75,31 @@ namespace UserInterface.Views
             // Create a Bitmap and draw the panel
             int width;
             int height;
-            Gdk.Window panelWindow = RightHandView.Child.GdkWindow;
+            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
             panelWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
             System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             return bitmap;
+        }
+
+        /// <summary>
+        /// Invoked when the view is drawn on the screen.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnLoaded(object sender, EventArgs args)
+        {
+            // Context menu keyboard shortcuts are registered when the tree
+            // view gains focus. Unfortunately, some views seem to prevent this
+            // event from firing, and as a result, the keyboard shortcuts don't
+            // work. To fix this, we select the first node in the tree when it
+            // is "realized" (rendered).
+            TreeIter iter;
+            treeviewWidget.Model.GetIterFirst(out iter);
+            string firstNodeName = treeviewWidget.Model.GetValue(iter, 0)?.ToString();
+            Tree.SelectedNode = "." + firstNodeName;
         }
         
         /// <summary>
@@ -90,18 +109,19 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnDestroyed(object sender, EventArgs e)
         {
-            if (RightHandView != null)
+            treeviewWidget.Realized -= OnLoaded;
+            if (rightHandView != null)
             {
-                foreach (Widget child in RightHandView.Children)
+                foreach (Widget child in rightHandView.Children)
                 {
-                    RightHandView.Remove(child);
+                    rightHandView.Remove(child);
                     child.Destroy();
                 }
             }
             ToolStrip.Destroy();
             popup.Destroy();
-            _mainWidget.Destroyed -= OnDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnDestroyed;
+            owner = null;
         }
     }
 }

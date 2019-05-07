@@ -19,6 +19,7 @@
     using System.Xml;
     using ICSharpCode.NRefactory.TypeSystem;
     using APSIM.Shared.Utilities;
+    using Models.Storage;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -40,12 +41,12 @@
         /// <summary>
         /// Fired when the we need to generate intellisense suggestions.
         /// </summary>
-        private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+        private event EventHandler<NeedContextItemsArgs> OnContextItemsNeeded;
 
         /// <summary>
         /// Fired when an item is selected in the intellisense window.
         /// </summary>
-        private event EventHandler<IntellisenseItemSelectedArgs> onItemSelected;
+        private event EventHandler<IntellisenseItemSelectedArgs> OnItemSelected;
 
         /// <summary>
         /// Responsible for generating the completion options.
@@ -110,12 +111,12 @@
         {
             add
             {
-                DetachHandlers(ref onItemSelected);
-                onItemSelected += value;
+                DetachHandlers(ref OnItemSelected);
+                OnItemSelected += value;
             }
             remove
             {
-                onItemSelected -= value;
+                OnItemSelected -= value;
             }
         }
 
@@ -126,20 +127,20 @@
         {
             add
             {
-                if (onContextItemsNeeded == null)
-                    onContextItemsNeeded += value;
-                else if (onContextItemsNeeded != value)
+                if (OnContextItemsNeeded == null)
+                    OnContextItemsNeeded += value;
+                else if (OnContextItemsNeeded != value)
                 {
-                    foreach (var d in onContextItemsNeeded.GetInvocationList())
+                    foreach (var d in OnContextItemsNeeded.GetInvocationList())
                     {
-                        onContextItemsNeeded -= (d as EventHandler<NeedContextItemsArgs>);
+                        OnContextItemsNeeded -= (d as EventHandler<NeedContextItemsArgs>);
                     }
-                    onContextItemsNeeded += value;
+                    OnContextItemsNeeded += value;
                 }
             }
             remove
             {
-                onContextItemsNeeded -= value;
+                OnContextItemsNeeded -= value;
             }
         }
 
@@ -187,7 +188,7 @@
             // Ignore everything before most recent model name in square brackets.
             // I'm assuming that model/node names cannot start with a number.
             string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
-            var matches = System.Text.RegularExpressions.Regex.Matches(cellContents, modelNamePattern);
+            var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
             if (matches.Count > 0)
             {
                 int modelNameIndex = objectName.LastIndexOf(matches[matches.Count - 1].Value);
@@ -546,7 +547,7 @@
                 ItemSelected = args.Name + (args.IsMethod ? "(" : ""),
                 IsMethod = args.IsMethod
             };
-            onItemSelected?.Invoke(this, itemSelectedArgs);
+            OnItemSelected?.Invoke(this, itemSelectedArgs);
         }
     }
 }

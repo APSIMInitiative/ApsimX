@@ -32,7 +32,7 @@ namespace Models.CLEM.Resources
         ///<summary>
         /// Name of activity requesting resource
         ///</summary> 
-        public Model ActivityModel { get; set; }
+        public CLEMModel ActivityModel { get; set; }
         ///<summary>
         /// Unique identifier for instance of activity request
         /// Used to allow multiple concurrent resource requests i.e labour types.
@@ -54,6 +54,10 @@ namespace Models.CLEM.Resources
         /// Amount provided
         ///</summary> 
         public double Provided { get; set; }
+        ///<summary>
+        /// Value provided
+        ///</summary> 
+        public double Value { get; set; }
         ///<summary>
         /// Filtering and sorting items list
         ///</summary> 

@@ -24,20 +24,6 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 500.0)]
         public double RootCN { get; set; }
 
-        /// <summary>Gets or sets the root wt.</summary>
-        /// <value>The root wt.</value>
-        [Summary]
-        [Units("kg/ha")]
-        [Description("Root Weight (kg/ha)")]
-        public double RootWt { get; set; }
-
-        /// <summary>Gets or sets the soil cn.</summary>
-        /// <value>The soil cn.</value>
-        [Summary]
-        [Description("Soil C:N ratio (5-30)")]
-        [Bounds(Lower = 5.0, Upper = 30.0)]
-        public double SoilCN { get; set; }
-
         /// <summary>Gets or sets the enr a coeff.</summary>
         /// <value>The enr a coeff.</value>
         [Summary]
@@ -87,6 +73,14 @@ namespace Models.Soils
         /// <value>The oc metadata.</value>
         public string[] OCMetadata { get; set; }
 
+        /// <summary>Gets or sets the soil cn.</summary>
+        /// <value>The soil cn.</value>
+        [Summary]
+        [Description("Soil C:N")]
+        [Units("g/g")]
+        [Bounds(Lower = 5.0, Upper = 30.0)]
+        public double[] SoilCN { get; set; }
+
         /// <summary>Gets or sets the f biom.</summary>
         /// <value>The f biom.</value>
         [Summary]
@@ -103,8 +97,17 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] FInert { get; set; }
 
+        /// <summary>Gets or sets the Initial Root Wt</summary>
+        /// <value>The f inert.</value>
+        [Summary]
+        [Description("RootWt")]
+        [Units("kg/ha")]
+        [Display(Format = "N1")]
+        public double[] RootWt { get; set; }
+
         /// <summary>The PPM</summary>
         private const double ppm = 1000000.0;
+
 
         // Support for OC units.
         /// <summary>

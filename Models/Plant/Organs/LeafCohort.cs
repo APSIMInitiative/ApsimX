@@ -95,7 +95,8 @@ namespace Models.PMF.Organs
         public int Rank { get; set; } // 1 based ranking
 
         /// <summary>The area</summary>
-        [Description("Area mm2")]
+        [Description("Area")]
+        [Units("mm2")]
         public double Area { get; set; }
 
         //Leaf coefficients
@@ -392,7 +393,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return Age > GrowthDuration + LagDuration & Age < GrowthDuration + LagDuration + SenescenceDuration; }
+            get { return Age > GrowthDuration + LagDuration && Age < GrowthDuration + LagDuration + SenescenceDuration; }
 
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
@@ -736,12 +737,13 @@ namespace Models.PMF.Organs
             }
             else
                 CohortPopulation = Structure.TotalStemPopn;
+            CohortPopulation *= cohortParams.FinalFraction;
             Age = cohortParams.CohortAge;
 
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
 
-            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * cohortParams.FinalFraction;
+            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
             LagDuration = leafCohortParameters.LagDuration.Value();
@@ -765,6 +767,8 @@ namespace Models.PMF.Organs
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
+            // FunctionalNConc = (CriticalNConc * (DM.Structural + DM.Metabolic) - MinimumNConc * DM.Structural)) / DM.Metabolic
+            //                 = (CriticalNConc - MinimumNConc * (DM.Structural / (DM.Structural + DM.Metabolic))) / (DM.Metabolic / (DM.Structural + DM.Metabolic))
             FunctionalNConc = (leafCohortParameters.CriticalNConc.Value() -
                                leafCohortParameters.MinimumNConc.Value() * StructuralFraction) *
                               (1 / (1 - StructuralFraction));
@@ -926,7 +930,7 @@ namespace Models.PMF.Organs
             //Senessing leaf area
             double areaSenescing = LiveArea*SenescedFrac;
             double areaSenescingN = 0;
-            if ((Live.MetabolicNConc <= MinimumNConc) & (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
+            if ((Live.MetabolicNConc <= MinimumNConc) && (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
                 areaSenescingN = LeafStartArea*(MetabolicNRetranslocated - MetabolicNAllocation)/LiveStart.MetabolicN;
 
             double leafAreaLoss = Math.Max(areaSenescing, areaSenescingN);
@@ -970,11 +974,14 @@ namespace Models.PMF.Organs
             Dead.StorageWt += Math.Max(0.0,
                 StorageWtSenescing - DMRetranslocated - StorageWtReallocated);
 
-            MaintenanceRespiration = 0;
             //Do Maintenance respiration
-            MaintenanceRespiration += Live.MetabolicWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            MaintenanceRespiration += Live.StorageWt*leafCohortParameters.MaintenanceRespirationFunction.Value();
-            
+            MaintenanceRespiration = 0;
+            if (leafCohortParameters.MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+            {
+                MaintenanceRespiration += Live.MetabolicWt * leafCohortParameters.MaintenanceRespirationFunction.Value();
+                MaintenanceRespiration += Live.StorageWt * leafCohortParameters.MaintenanceRespirationFunction.Value();
+            }
+
             Age = Age + thermalTime;
 
             // Do Detachment of this Leaf Cohort
@@ -1109,7 +1116,7 @@ namespace Models.PMF.Organs
                         _senescenceDuration = SenescenceDuration * leafCohortParameters.SenescenceDurationAgeMultiplier.Value((int)ApexCohort.GroupAge[i] - 1);
                     }
 
-                    if (Age >= 0 & Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
+                    if (Age >= 0 && Age < _lagDuration + _GrowthDuration + _senescenceDuration / 2)
                     {
                         lsn += ApexCohort.GroupSize[i];
                     }

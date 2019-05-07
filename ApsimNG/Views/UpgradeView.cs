@@ -22,7 +22,7 @@ namespace UserInterface.Views
         public class Upgrade
         {
             public DateTime ReleaseDate { get; set; }
-            public int issueNumber { get; set; }
+            public int IssueNumber { get; set; }
             public string IssueTitle { get; set; }
             public string IssueURL { get; set; }
             public string ReleaseURL { get; set; }
@@ -32,6 +32,11 @@ namespace UserInterface.Views
         /// A list of potential upgrades available.
         /// </summary>
         private Upgrade[] upgrades = new Upgrade[0];
+
+        /// <summary>
+        /// A list of all possible upgrades and downgrades.
+        /// </summary>
+        private Upgrade[] allUpgrades = new Upgrade[0];
 
         private bool loadFailure = false;
 
@@ -57,7 +62,7 @@ namespace UserInterface.Views
         private Entry countryBox = null;
         private Entry postcodeBox = null;
         private Label label1 = null;
-        private Alignment HTMLalign = null;
+        private Alignment htmlAlign = null;
         private CheckButton checkbutton1 = null;
         private Gtk.TreeView listview1 = null;
         private Alignment alignment3 = null;
@@ -65,16 +70,16 @@ namespace UserInterface.Views
         private Alignment alignment5 = null;
         private Alignment alignment6 = null;
         private Alignment alignment7 = null;
-
+        private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private HTMLView HTMLview;
+        private HTMLView htmlView;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public UpgradeView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.MasterView.BuilderFromResource("ApsimNG.Resources.Glade.UpgradeView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.UpgradeView.glade");
             window1 = (Window)builder.GetObject("window1");
             button1 = (Button)builder.GetObject("button1");
             button2 = (Button)builder.GetObject("button2");
@@ -91,7 +96,7 @@ namespace UserInterface.Views
             countryBox = (Entry)builder.GetObject("countryBox");
             postcodeBox = (Entry)builder.GetObject("postcodeBox");
             label1 = (Label)builder.GetObject("label1");
-            HTMLalign = (Alignment)builder.GetObject("HTMLalign");
+            htmlAlign = (Alignment)builder.GetObject("HTMLalign");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             listview1 = (Gtk.TreeView)builder.GetObject("listview1");
             alignment3 = (Alignment)builder.GetObject("alignment3");
@@ -99,7 +104,7 @@ namespace UserInterface.Views
             alignment5 = (Alignment)builder.GetObject("alignment5");
             alignment6 = (Alignment)builder.GetObject("alignment6");
             alignment7 = (Alignment)builder.GetObject("alignment7");
-
+            oldVersions = (CheckButton)builder.GetObject("checkbutton2");
             listview1.Model = listmodel;
 
             CellRendererText textRender = new Gtk.CellRendererText();
@@ -120,10 +125,11 @@ namespace UserInterface.Views
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
                           alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
 
-            HTMLview = new HTMLView(new ViewBase(null));
-            HTMLalign.Add(HTMLview.MainWidget);
+            htmlView = new HTMLView(new ViewBase(null));
+            htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
+            oldVersions.Toggled += OnShowOldVersionsToggled;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
             window1.Destroyed += OnFormClosing;
@@ -158,28 +164,23 @@ namespace UserInterface.Views
         {
             listmodel.Clear();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Major == 0)
-                label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
-            else
+            try
             {
-                try
-                {
-                    PopulateUpgradeList();
-                }
-                catch (Exception)
-                {
-                    MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                    loadFailure = true;
-                    return;
-                }
-                if (upgrades.Length > 0)
-                {
-                    label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
-                    label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
-                }
-                else
-                    label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
+                PopulateUpgradeList();
             }
+            catch (Exception)
+            {
+                MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                loadFailure = true;
+                return;
+            }
+            if (upgrades.Length > 0)
+            {
+                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
+                label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
+            }
+            else
+                label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
@@ -202,7 +203,7 @@ namespace UserInterface.Views
             {
                 // web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
                 // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                HTMLview.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                htmlView.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
             }
             catch (Exception)
             {
@@ -219,10 +220,13 @@ namespace UserInterface.Views
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             // version = new Version(0, 0, 0, 652);  
-            upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
-            foreach (Upgrade upgrade in upgrades)
+            if (oldVersions.Active && allUpgrades.Length < 1)
+                allUpgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+            else if (!oldVersions.Active && upgrades.Length < 1)
+                upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
+            foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
             if (listmodel.IterNChildren() > 0)
@@ -246,12 +250,21 @@ namespace UserInterface.Views
         {
             int selIndex = GetSelIndex();
             if (selIndex >= 0)
-                Process.Start(upgrades[selIndex].IssueURL);
+            {
+                Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                Process.Start(upgradeList[selIndex].IssueURL);
+            }
         }
 
         Gtk.MessageDialog waitDlg = null;
         string tempSetupFileName = null;
         string versionNumber = null;
+
+        private void OnShowOldVersionsToggled(object sender, EventArgs args)
+        {
+            listmodel.Clear();
+            PopulateUpgradeList();
+        }
 
         /// <summary>
         /// User has requested an upgrade.
@@ -272,8 +285,9 @@ namespace UserInterface.Views
                         String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.Text))
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
-                    Upgrade upgrade = upgrades[selIndex];
-                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                    Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                    Upgrade upgrade = upgradeList[selIndex];
+                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
 
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
@@ -307,6 +321,7 @@ namespace UserInterface.Views
                                 Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
                             waitDlg.Title = "APSIM Upgrade";
                             web.DownloadFileCompleted += Web_DownloadFileCompleted;
+                            web.DownloadProgressChanged += OnDownloadProgressChanged;
                             web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
                                 web.CancelAsync();
@@ -319,6 +334,7 @@ namespace UserInterface.Views
                         {
                             if (waitDlg != null)
                             {
+                                web.DownloadProgressChanged -= OnDownloadProgressChanged;
                                 waitDlg.Destroy();
                                 waitDlg = null;
                             }
@@ -333,6 +349,36 @@ namespace UserInterface.Views
                     window1.GdkWindow.Cursor = null;
                     ViewBase.MasterView.ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the download progress changes.
+        /// Updates the progress bar.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            try
+            {
+                Gtk.Application.Invoke(delegate
+                {
+                    try
+                    {
+                        double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
+                        waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
+                    }
+                    catch (Exception err)
+                    {
+                        ShowError(err);
+                    }
+                });
+            }
+            catch (Exception err)
+            {
+                err = new Exception("Error updating download progress", err);
+                ShowError(err);
             }
         }
 
@@ -416,22 +462,22 @@ namespace UserInterface.Views
             string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
             url += "?firstName=" + firstNameBox.Text;
 
-            url = addToURL(url, "lastName", lastNameBox.Text);
-            url = addToURL(url, "organisation", organisationBox.Text);
-            url = addToURL(url, "address1", address1Box.Text);
-            url = addToURL(url, "address2", address2Box.Text);
-            url = addToURL(url, "city", cityBox.Text);
-            url = addToURL(url, "state", stateBox.Text);
-            url = addToURL(url, "postcode", postcodeBox.Text);
-            url = addToURL(url, "country", countryBox.Text);
-            url = addToURL(url, "email", emailBox.Text);
-            url = addToURL(url, "product", "APSIM Next Generation " + version);
+            url = AddToURL(url, "lastName", lastNameBox.Text);
+            url = AddToURL(url, "organisation", organisationBox.Text);
+            url = AddToURL(url, "address1", address1Box.Text);
+            url = AddToURL(url, "address2", address2Box.Text);
+            url = AddToURL(url, "city", cityBox.Text);
+            url = AddToURL(url, "state", stateBox.Text);
+            url = AddToURL(url, "postcode", postcodeBox.Text);
+            url = AddToURL(url, "country", countryBox.Text);
+            url = AddToURL(url, "email", emailBox.Text);
+            url = AddToURL(url, "product", "APSIM Next Generation " + version);
 
             WebUtilities.CallRESTService<object>(url);
         }
 
         /// <summary>Add a key / value pair to url if not empty</summary>
-        private string addToURL(string url, string key, string value)
+        private string AddToURL(string url, string key, string value)
         {
             if (value == null || value == string.Empty)
                 value = "-";

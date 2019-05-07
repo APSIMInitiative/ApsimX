@@ -1,18 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AddModelPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
+    using Models.Core.ApsimFile;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using Views;
 
     /// <summary>This presenter lets the user add a model.</summary>
@@ -51,6 +45,8 @@ namespace UserInterface.Presenters
             // Trap events from the view.
             this.view.List.DoubleClicked += this.OnAddButtonClicked;
             this.view.List.DragStarted += this.OnDragStart;
+
+            this.view.FilterChanged += OnFilterChanged;
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -59,6 +55,7 @@ namespace UserInterface.Presenters
             // Trap events from the view.
             this.view.List.DoubleClicked -= this.OnAddButtonClicked;
             this.view.List.DragStarted -= this.OnDragStart;
+            this.view.FilterChanged -= this.OnFilterChanged;
         }
 
         /// <summary>The user has clicked the add button.</summary>
@@ -72,14 +69,9 @@ namespace UserInterface.Presenters
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
-                    // Use the pre built serialization assembly.
-                    string binDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                    string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
-
                     object child = Activator.CreateInstance(selectedModelType, true);
-                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
-                    this.explorerPresenter.Add(childXML, Apsim.FullPath(this.model));
-                    /* this.explorerPresenter.HideRightHandPanel(); */
+                    string childString = FileFormat.WriteToString(child as IModel);
+                    explorerPresenter.Add(childString, Apsim.FullPath(this.model));
                 }
                 finally
                 {
@@ -115,18 +107,14 @@ namespace UserInterface.Presenters
 
                 if (modelType != null)
                 {
-                    // Use the pre built serialization assembly.
-                    string binDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                    string deserializerFileName = Path.Combine(binDirectory, "Models.XmlSerializers.dll");
-
                     object child = Activator.CreateInstance(modelType, true);
-                    string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
-                    (this.view.List as ListBoxView).SetClipboardText(childXML);
+                    string childString = FileFormat.WriteToString(child as IModel);
+                    (this.view.List as ListBoxView).SetClipboardText(childString);
 
                     DragObject dragObject = new DragObject();
                     dragObject.NodePath = e.NodePath;
                     dragObject.ModelType = modelType;
-                    dragObject.Xml = childXML;
+                    dragObject.ModelString = childString;
                     e.DragObject = dragObject;
                 }
             }
@@ -134,6 +122,17 @@ namespace UserInterface.Presenters
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
+        }
+
+        /// <summary>
+        /// The filter/search textbox has been modified by the user.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnFilterChanged(object sender, EventArgs e)
+        {
+            string filter = view.Filter;
+            this.view.List.Values = this.allowableChildModels.Where(m => m.Name.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).Select(m => m.FullName).ToArray();
         }
     }
 }

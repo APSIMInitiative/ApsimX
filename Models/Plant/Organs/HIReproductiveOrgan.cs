@@ -12,6 +12,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Plant))]
     public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
     {
         /// <summary>The surface organic matter model</summary>
@@ -20,7 +21,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        protected Plant parentPlant = null;
 
         /// <summary>Gets or sets the above ground.</summary>
         [Link]
@@ -134,14 +135,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-
-            }
+            if (parentPlant.IsAlive || parentPlant.IsEnding)
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -150,14 +145,16 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Allocated = new PMF.Biomass();
+            Live = new Biomass();
+            Dead = new Biomass();
+            DMDemand = new BiomassPoolType();
+            NDemand = new BiomassPoolType();
+            DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
+            Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            NDemand = new BiomassPoolType();
-            DMDemand = new BiomassPoolType();
-            NSupply = new BiomassSupplyType();
-            DMSupply = new BiomassSupplyType();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -166,7 +163,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
+            if (data.Plant == parentPlant)
+            {
                 Clear();
+                ClearBiomassFlows();
+            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -175,12 +176,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            Biomass total = Live + Dead;
-            if (total.Wt > 0.0)
+            if (Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
             }
 
             Clear();
@@ -257,10 +257,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="value">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        /// <param name="amountToRemove">The fractions of biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -270,6 +270,15 @@ namespace Models.PMF.Organs
             Dead.Clear();
             DMDemand.Clear();
             NDemand.Clear();
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
         }
     }
 }

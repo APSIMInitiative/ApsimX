@@ -1,0 +1,388 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 54,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "GrowCrop",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "This is a highly simplified crop production simulation that demonstrates how CLEM manages crops at the most basic level and how these crop products are then transfered to a food store. \n\n###Resources\nThis simulation demonstrates that the minimum resources required to grow a crop are land and a resource store (in this case an animal food store) for grain and/or residue storage. \n\n###Activities\n'Crop activity manage crop' is first required to define the crop area and where the crop is grown. Under 'crop activitiy manage crop' crop products are managed using 'crop activity manage product', which can include grain and/or crop residues, depending on what is required for the simulation. Where multiple crop products are included these must be nested, with maize residue nested under maize grain in this example. To manage crop products, the user defines the relevant crop as names in the the crop or crop residue input files, where the crop product is stored and the proportion of the product kept (i.e. 10% of crop residue may be left in the field). \n\n###Reports & Graphs\nReports & graphs are stored in a 'CLEM Folder' to make it easier to select CLEM (rather than APSIM) functions. In this example, the relevant resource ledgers (animal food store and land) and resource balances (animal food store) were included, as well as an activties report. The graph demonstrates the accumulation of grain and residue in the animal food store over the duration of the simulation, with grain added in September or October each year (see the activities report).\n",
+          "Name": "Grow Crop",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "StartDate": "2001-09-01T00:00:00",
+          "EndDate": "2009-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.ZoneCLEM, Models",
+          "RandomSeed": 0,
+          "ClimateRegion": 0,
+          "EcologicalIndicatorsCalculationMonth": 12,
+          "Area": 0.0,
+          "Slope": 0.0,
+          "Name": "CLEM",
+          "Children": [
+            {
+              "$type": "Models.CLEM.FileCrop, Models",
+              "FileName": "Crop_new_format(Burkina 20130222).prn",
+              "ExcelWorkSheetName": null,
+              "SelectedTab": null,
+              "Name": "FileCrop",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.FileCrop, Models",
+              "FileName": "CropResidue_new_format(Burkina 20130222).prn",
+              "ExcelWorkSheetName": null,
+              "SelectedTab": "Summary",
+              "Name": "FileCropResidue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "SelectedTab": null,
+              "Name": "Resources",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Resources.Land, Models",
+                  "UnitsOfArea": "hectares",
+                  "UnitsOfAreaToHaConversion": 1.0,
+                  "SelectedTab": null,
+                  "Name": "Land",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.LandType, Models",
+                      "LandArea": 1.0,
+                      "PortionBuildings": 0.0,
+                      "ProportionOfTotalArea": 1.0,
+                      "SoilType": 3,
+                      "Units": null,
+                      "SelectedTab": null,
+                      "Name": "Field",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                  "SelectedTab": null,
+                  "Name": "AnimalFoodStore",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.AnimalFoodStoreType, Models",
+                      "DMD": 51.0,
+                      "Nitrogen": 1.5,
+                      "StartingAmount": 0.0,
+                      "Units": null,
+                      "SelectedTab": null,
+                      "Name": "Maize grain",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.AnimalFoodStoreType, Models",
+                      "DMD": 46.0,
+                      "Nitrogen": 1.0,
+                      "StartingAmount": 0.0,
+                      "Units": null,
+                      "SelectedTab": null,
+                      "Name": "Maize residue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "LastShortfallResourceRequest": null,
+              "LastActivityPerformed": null,
+              "SelectedTab": null,
+              "Name": "Activities",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Activities.CropActivityManageCrop, Models",
+                  "LandItemNameToUse": "Land.Field",
+                  "AreaRequested": 1.0,
+                  "UseAreaAvailable": true,
+                  "OnPartialResourcesAvailableAction": 0,
+                  "SelectedTab": null,
+                  "Name": "Manage maize",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                      "ModelNameFileCrop": "FileCrop",
+                      "CropName": "Maize_local",
+                      "StoreItemName": "AnimalFoodStore.Maize grain",
+                      "ProportionKept": 1.0,
+                      "TreesPerHa": 0.0,
+                      "UnitsToHaConverter": 0.0,
+                      "OnPartialResourcesAvailableAction": 0,
+                      "SelectedTab": null,
+                      "Name": "Manage grain",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                          "ModelNameFileCrop": "FileCropResidue",
+                          "CropName": "Maize_local_Stover",
+                          "StoreItemName": "AnimalFoodStore.Maize residue",
+                          "ProportionKept": 1.0,
+                          "TreesPerHa": 0.0,
+                          "UnitsToHaConverter": 0.0,
+                          "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
+                          "Name": "Manage residue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.CLEMFolder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Reports and Graphs",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": [
+                    "AnimalFoodStore"
+                  ],
+                  "EventNames": null,
+                  "Name": "AnimalFoodStoreLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": [
+                    "Land"
+                  ],
+                  "EventNames": null,
+                  "Name": "LandLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": [
+                    "[Clock].Today as Date",
+                    "AnimalFoodStore"
+                  ],
+                  "EventNames": [
+                    "[Clock].CLEMEndOfTimeStep"
+                  ],
+                  "Name": "AnimalFoodStoreBalance",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                  "ExperimentFactorNames": null,
+                  "ExperimentFactorValues": null,
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "Name": "ReportActivitiesPerformed",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "Maize grain & residue balance (t)",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": 1000.0,
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [],
+                  "Name": "Graph_AnimalFoodStoreBalance",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "AnimalFoodStoreBalance",
+                      "XFieldName": "Date",
+                      "YFieldName": "Maize grain",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Maize_grain",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "AnimalFoodStoreBalance",
+                      "XFieldName": "Date",
+                      "YFieldName": "Maize residue",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Maize_residue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

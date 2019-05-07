@@ -6,8 +6,10 @@
 namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
@@ -19,11 +21,14 @@ namespace Models.Core.Runners
     public class JobRunnerMultiProcess : IJobRunner
     {
         private SocketServer server;
-        private IStorageWriter storageWriter;
         private IJobManager jobs;
+        private bool allStopped;
 
         /// <summary>A token for cancelling running of jobs</summary>
         private CancellationTokenSource cancelToken;
+
+        /// <summary>Write child process' output to standard output?</summary>
+        private bool verbose;
 
         /// <summary>Non simulation errors thrown by runners or this class on socket threads</summary>
         private string errors;
@@ -37,10 +42,10 @@ namespace Models.Core.Runners
         public event EventHandler<JobCompleteArgs> JobCompleted;
 
         /// <summary>Constructor</summary>
-        /// <param name="writer">The writer where all data should be stored</param>
-        public JobRunnerMultiProcess(IStorageWriter writer)
+        /// <param name="verbose">Write child process' output to standard output?</param>
+        public JobRunnerMultiProcess(bool verbose)
         {
-            storageWriter = writer;
+            this.verbose = verbose;
         }
 
         /// <summary>Run the specified jobs</summary>
@@ -50,22 +55,22 @@ namespace Models.Core.Runners
         public void Run(IJobManager jobManager, bool wait = false, int numberOfProcessors = -1)
         {
             jobs = jobManager;
+            allStopped = false;
+            // If the job manager is a RunExternal, then we don't need to worry about storage - 
+            // each ApsimRunner will launch its own Models.exe which will manage storage itself.
 
             // Determine number of threads to use
             if (numberOfProcessors == -1)
             {
+                int number;
                 string numOfProcessorsString = Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS");
-                if (numOfProcessorsString != null)
-                    numberOfProcessors = Convert.ToInt32(numOfProcessorsString);
-                numberOfProcessors = System.Math.Max(numberOfProcessors, 1);
+                if (numOfProcessorsString != null && Int32.TryParse(numOfProcessorsString, out number))
+                    numberOfProcessors = System.Math.Max(number, 1);
+                else
+                    numberOfProcessors = System.Math.Max(Environment.ProcessorCount - 1, 1);
             }
 
             cancelToken = new CancellationTokenSource();
-
-            DeleteRunners();
-            CreateRunners(numberOfProcessors);
-
-            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
             // Spin up a job manager server.
             server = new SocketServer();
@@ -76,8 +81,13 @@ namespace Models.Core.Runners
             // Tell server to start listening.
             Task t = Task.Run(() => server.StartListening(2222));
 
+            DeleteRunners();
+            CreateRunners(numberOfProcessors);
+
+            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+
             if (wait)
-                while (!t.IsCompleted)
+                while (!allStopped)
                     Thread.Sleep(200);
         }
 
@@ -93,7 +103,6 @@ namespace Models.Core.Runners
                     server = null;
                     DeleteRunners();
                     runningJobs.Clear();
-
                     jobs.Completed();
                     if (AllJobsCompleted != null)
                     {
@@ -104,6 +113,7 @@ namespace Models.Core.Runners
                     }
                 }
             }
+            allStopped = true;
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
@@ -117,7 +127,7 @@ namespace Models.Core.Runners
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, workingDirectory, false);
+                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), verbose, verbose);
             }
         }
 
@@ -149,7 +159,7 @@ namespace Models.Core.Runners
             try
             {
                 IRunnable jobToRun;
-                Guid jobKey;
+                Guid jobKey = Guid.Empty;
                 lock (this)
                 {
                     jobToRun = jobs.GetNextJobToRun();
@@ -161,19 +171,48 @@ namespace Models.Core.Runners
                     server.Send(args.socket, "NULL");
                 else
                 {
-                    RunSimulation runner = jobToRun as RunSimulation;
-                    IModel savedParent = runner.SetParentOfSimulation(null);
-                    GetJobReturnData returnData = new GetJobReturnData();
-                    returnData.key = jobKey;
-                    returnData.job = runner;
-                    server.Send(args.socket, returnData);
-                    runner.SetParentOfSimulation(savedParent);
+                    if (jobToRun is RunSimulation)
+                    {
+                        RunSimulation runner = jobToRun as RunSimulation;
+                        IModel savedParent = runner.SetParentOfSimulation(null);
+                        GetJobReturnData returnData = new GetJobReturnData();
+                        returnData.key = jobKey;
+                        returnData.job = runner;
+                        server.Send(args.socket, returnData);
+                        runner.SetParentOfSimulation(savedParent);
+                    }
+                    else
+                    {
+                        GetJobReturnData returnData = new GetJobReturnData()
+                        {
+                            key = jobKey,
+                            job = jobToRun
+                        };
+                        server.Send(args.socket, returnData);
+                    }
                 }
             }
             catch (Exception err)
             {
                 errors += err.ToString() + Environment.NewLine;
             }
+        }
+
+        /// <summary>
+        /// Attempts to locate a DataStore which can be used to write data
+        /// received from a job.
+        /// </summary>
+        /// <param name="job">Job which has sent data.</param>
+        private IDataStore GetDataStore(IRunnable job)
+        {
+            if (job is RunSimulation)
+                return (job as RunSimulation).DataStore;
+
+            if (job is IModel)
+                return Apsim.Find(job as IModel, typeof(IDataStore)) as IDataStore;
+
+            // What should we do here? For now, just throw.
+            throw new Exception(string.Format("Unable to locate DataStore for '{0}' model.", job.GetType().Name));
         }
 
         /// <summary>Called by a runner process to send its output data.</summary>
@@ -183,12 +222,19 @@ namespace Models.Core.Runners
         {
             try
             {
-                List<TransferRowInTable> rows = args.obj as List<TransferRowInTable>;
-                foreach (TransferRowInTable row in rows)
+                if (args.obj is TransferReportData)
                 {
-                    storageWriter.WriteRow(row.simulationName, row.tableName,
-                                           row.columnNames, row.columnUnits, row.values);
+                    var transferData = args.obj as TransferReportData;
+                    GetDataStore(runningJobs[transferData.key]).Writer.WriteTable(transferData.data);
                 }
+                else if (args.obj is TransferDataTable)
+                {
+                    var transferData = args.obj as TransferDataTable;
+                    GetDataStore(runningJobs[transferData.key]).Writer.WriteTable(transferData.data);
+                }
+                else
+                    throw new Exception("Invalid socket transfer method.");
+
                 server.Send(args.socket, "OK");
             }
             catch (Exception err)
@@ -252,16 +298,41 @@ namespace Models.Core.Runners
         [Serializable]
         public class TransferRowInTable
         {
+            /// <summary>Key to the job</summary>
+            public Guid key;
             /// <summary>Simulation name</summary>
-            public string simulationName;
+            public string SimulationName;
             /// <summary>Table name</summary>
-            public string tableName;
+            public string TableName;
             /// <summary>Column names</summary>
-            public IEnumerable<string> columnNames;
+            public IList<string> ColumnNames;
             /// <summary>Column units</summary>
-            public IEnumerable<string> columnUnits;
+            public IList<string> columnUnits;
             /// <summary>Row values for each column</summary>
-            public IEnumerable<object> values;
+            public IList<object> Values;
+        }
+
+
+        /// <summary>An class for encapsulating a ReportData</summary>
+        [Serializable]
+        public class TransferReportData
+        {
+            /// <summary>Key to the job</summary>
+            public Guid key;
+            /// <summary>Simulation name</summary>
+            public ReportData data;
+        }
+
+
+        /// <summary>An class for encapsulating a DataTable</summary>
+        [Serializable]
+        public class TransferDataTable
+        {
+            /// <summary>Key to the job</summary>
+            public Guid key;
+
+            /// <summary>Simulation name</summary>
+            public DataTable data;
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Plant))]
     public class SimpleLeaf : Model, ICanopy, ILeaf, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
         /// <summary>The plant</summary>
@@ -97,14 +98,25 @@ namespace Models.PMF.Organs
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX")]
-        public double Gsmax { get; set; }
+        [Description("Daily maximum stomatal conductance(m/s)")]
+        public double Gsmax
+        {
+            get
+            {
+                return Gsmax350*FRGR * StomatalConductanceCO2Modifier.Value();
+            }
+        }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s)")]
+        public double Gsmax350 { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
         [Description("R50")]
         public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [XmlIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
@@ -180,6 +192,11 @@ namespace Models.PMF.Organs
         /// <summary>The FRGR function</summary>
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
+
+        /// <summary>The effect of CO2 on stomatal conductance</summary>
+        [Link]
+        IFunction StomatalConductanceCO2Modifier = null;
+
 
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
@@ -329,13 +346,18 @@ namespace Models.PMF.Organs
             DMDemand.Clear();
             NDemand.Clear();
             potentialDMAllocation.Clear();
+            Height = 0;
+            LAI = 0;
+            LeafInitialised = false;
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
-            Height = 0;
-            LAI = 0;
-            LeafInitialised = false;
         }
         #endregion
 
@@ -508,7 +530,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total biomass</summary>
         [XmlIgnore]
         public Biomass Total { get { return Live + Dead; } }
-
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
@@ -742,19 +763,21 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NDemand = new BiomassPoolType();
-            DMDemand = new BiomassPoolType();
-            NSupply = new BiomassSupplyType();
-            DMSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
+            Live = new Biomass();
+            Dead = new Biomass();
             startLive = new Biomass();
+            DMDemand = new BiomassPoolType();
+            NDemand = new BiomassPoolType();
+            DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
             Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            Live = new Biomass();
-            Dead = new Biomass();
-            Clear();
+            Height = 0.0;
+            LAI = 0.0;
+            LeafInitialised = false;
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -763,13 +786,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-            }
+            if (parentPlant.IsAlive || parentPlant.IsEnding)
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -781,6 +799,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 Clear();
+                ClearBiomassFlows();
                 MicroClimatePresent = false;
                 Live.StructuralWt = initialWtFunction.Value();
                 Live.StorageWt = 0.0;
@@ -820,8 +839,11 @@ namespace Models.PMF.Organs
 
                 // Do maintenance respiration
                 MaintenanceRespiration = 0;
-                MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                }
             }
         }
 
@@ -829,7 +851,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
+        protected void OnPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {
@@ -885,7 +907,7 @@ namespace Models.PMF.Organs
                 IModel MaxN = Apsim.Child(this, "MaximumNConc");
                 AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
                 IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
-                if (NDemSwitch.GetType() == typeof(Constant))
+                if (NDemSwitch is Constant)
                 {
                     if ((NDemSwitch as Constant).Value() == 1.0)
                     {
@@ -905,7 +927,7 @@ namespace Models.PMF.Organs
                 // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
                 IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
-                if (DMReallocFac.GetType() == typeof(Constant))
+                if (DMReallocFac is Constant)
                 {
                     if ((DMReallocFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
@@ -918,7 +940,7 @@ namespace Models.PMF.Organs
                     AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
                 }
                 IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
-                if (DMRetransFac.GetType() == typeof(Constant))
+                if (DMRetransFac is Constant)
                 {
                     if ((DMRetransFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
@@ -938,7 +960,7 @@ namespace Models.PMF.Organs
                 // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
                 IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
-                if (NReallocFac.GetType() == typeof(Constant))
+                if (NReallocFac is Constant)
                 {
                     if ((NReallocFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
@@ -951,7 +973,7 @@ namespace Models.PMF.Organs
                     AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
                 }
                 IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
-                if (NRetransFac.GetType() == typeof(Constant))
+                if (NRetransFac is Constant)
                 {
                     if ((NRetransFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
@@ -986,7 +1008,7 @@ namespace Models.PMF.Organs
                 // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
                 IModel SenRate = Apsim.Child(this, "SenescenceRate");
-                if (SenRate.GetType() == typeof(Constant))
+                if (SenRate is Constant)
                 {
                     if ((SenRate as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
@@ -1000,7 +1022,7 @@ namespace Models.PMF.Organs
                 }
 
                 IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
-                if (DetRate.GetType() == typeof(Constant))
+                if (DetRate is Constant)
                 {
                     if ((DetRate as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));

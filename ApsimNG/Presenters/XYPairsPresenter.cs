@@ -74,17 +74,18 @@ namespace UserInterface.Presenters
             (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
             (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
             this.graphPresenter = new GraphPresenter();
+            this.presenter.ApsimXFile.Links.Resolve(graphPresenter);
             this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN);
+                xYPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN);
+                xYPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             }
 
             xYPairsView.Graph.FormatTitle(xYPairs.Parent.Name);
@@ -411,7 +412,16 @@ namespace UserInterface.Presenters
                     }
 
                     // add a total to the column header if necessary.
-                    double total = property.Total;
+                    double total;
+                    try
+                    {
+                        total = property.Total;
+                    }
+                    catch (Exception err)
+                    {
+                        total = double.NaN;
+                        presenter.MainPresenter.ShowError(err);
+                    }
                     if (!double.IsNaN(total))
                     {
                         string columnName = property.Description;

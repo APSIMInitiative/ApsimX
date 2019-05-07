@@ -1,19 +1,15 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ExcelInput.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using System;
     using System.Data;
     using System.IO;
     using ExcelDataReader;
     using Models.Core;
-    using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
     using Storage;
     using System.Collections.Generic;
+    using Models.Core.Run;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -23,9 +19,15 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class ExcelInput : Model, IRunnable, IReferenceExternalFiles
     {
         private string _filename;
+
+        /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
 
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -70,16 +72,21 @@ namespace Models.PostSimulationTools
             }
             set
             {
-                string[] formattedSheetNames = new string[value.Length];
-                for (int i = 0; i < value.Length; i++)
+                if (value == null)
+                    sheetNames = new string[0];
+                else
                 {
-                    if (Char.IsNumber(value[i][0]))
-                        formattedSheetNames[i] = "\"" + value[i] + "\"";
-                    else
-                        formattedSheetNames[i] = value[i];
-                }
+                    string[] formattedSheetNames = new string[value.Length];
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        if (Char.IsNumber(value[i][0]))
+                            formattedSheetNames[i] = "\"" + value[i] + "\"";
+                        else
+                            formattedSheetNames[i] = value[i];
+                    }
 
-                sheetNames = formattedSheetNames;
+                    sheetNames = formattedSheetNames;
+                }
             }
         }
 
@@ -92,11 +99,20 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Gets the parent simulation or null if not found
         /// </summary>
-        private Simulation Simulation
+        private IStorageWriter StorageWriter
         {
             get
             {
-                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                // The JobRunnerAsync will not resolve links, so we need to
+                // go looking for the data store ourselves. This is an ugly
+                // hack, no doubt about it, but this infrastructure is about to
+                // be changed/refactored anyway, so hopefully this won't stay
+                // here for too long.
+                if (storage == null)
+                    storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                if (storage == null)
+                    throw new Exception("Cannot find a datastore");
+                return storage.Writer;
             }
         }
 
@@ -113,8 +129,8 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        /// <param name="dataStore">The data store to store the data</param>
-        public void Run(IStorageReader dataStore)
+        /// <param name="cancelToken">The cancel token.</param>
+        public void Run(CancellationTokenSource cancelToken)
         {
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
@@ -149,14 +165,16 @@ namespace Models.PostSimulationTools
                     if (keep)
                     {
                         TruncateDates(table);
-
-                        dataStore.DeleteDataInTable(table.TableName);
-                        dataStore.WriteTable(table);
+                        StorageWriter.WriteTable(table);
                     }
                 }
 
                 // Close the reader and free resources.
                 excelReader.Close();
+            }
+            else
+            {
+                throw new ApsimXException(this, string.Format("Unable to read Excel file '{0}': file does not exist.", fullFileName));
             }
         }
 
@@ -180,5 +198,6 @@ namespace Models.PostSimulationTools
                             row[icol] = Convert.ToDateTime(row[icol]).Date;
                 }
         }
+
     }
 }

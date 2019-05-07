@@ -17,6 +17,7 @@
     using System.Text.RegularExpressions;
     using EventArguments;
     using Utility;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -27,7 +28,7 @@
     public class MainPresenter
     {
         /// <summary>A list of presenters for tabs on the left.</summary>
-        public List<IPresenter> presenters1 = new List<IPresenter>();
+        public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
@@ -117,7 +118,7 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.presenters1.OfType<ExplorerPresenter>())
+            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
@@ -143,9 +144,9 @@
         /// </summary>
         /// <param name="code">The script code</param>
         /// <returns>Any exception message or null</returns>
-        public string ProcessStartupScript(string code)
+        public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
+            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -166,16 +167,7 @@
 
             // Call Execute on our newly created script instance.
             object[] arguments = new object[] { this };
-            try
-            {
-                executeMethod.Invoke(script, arguments);
-            }
-            catch (TargetInvocationException except)
-            {
-                return except.InnerException.ToString();
-            }
-
-            return null;
+            executeMethod.Invoke(script, arguments);
         }
 
         /// <summary>
@@ -422,11 +414,12 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = Simulations.Read(fileName);
+                    List<Exception> creationExceptions;
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (simulations.LoadErrors.Count > 0)
+                    if (creationExceptions.Count > 0)
                     {
-                        ShowError(simulations.LoadErrors);
+                        ShowError(creationExceptions);
                     }
 
                     // Add to MRU list and update display
@@ -539,6 +532,10 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
+            startPage.AddButton(
+                                "Toggle Theme",
+                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                        OnToggleTheme);
 
             startPage.AddButton(
                                 "Help",
@@ -745,17 +742,9 @@
             foreach (string argument in commandLineArguments)
             {
                 if (Path.GetExtension(argument) == ".cs")
-                {
-                    string result = this.ProcessStartupScript(File.ReadAllText(argument));
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        throw new Exception(result);
-                    }
-                }
+                    ProcessStartupScript(File.ReadAllText(argument));
                 else if (Path.GetExtension(argument) == ".apsimx")
-                {
-                    this.OpenApsimXFileInTab(argument, onLeftTabControl: true);
-                }
+                    OpenApsimXFileInTab(argument, onLeftTabControl: true);
             }
         }
 
@@ -768,7 +757,7 @@
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {            
-            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
+            List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
                 if (presenter.ApsimXFile.FileName == fileName)
@@ -786,9 +775,8 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(contents);
-            Simulations simulations = Simulations.Read(doc.DocumentElement);
+            List<Exception> creationExceptions;
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -820,7 +808,7 @@
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
             {
-                this.presenters1.Add(newPresenter);
+                this.Presenters1.Add(newPresenter);
             }
             else
             {
@@ -888,13 +876,13 @@
         {
             if (e.LeftTabControl)
             {
-                IPresenter presenter = presenters1[e.Index - 1];
+                IPresenter presenter = Presenters1[e.Index - 1];
                 e.AllowClose = true;
                 if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
                 if (e.AllowClose)
                 {
                     presenter.Detach();
-                    this.presenters1.RemoveAt(e.Index - 1);
+                    this.Presenters1.RemoveAt(e.Index - 1);
                 }
             }
             else
@@ -1006,15 +994,38 @@
         }
 
         /// <summary>
+        /// Toggles between the default and dark themes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnToggleTheme(object sender, EventArgs e)
+        {
+            try
+            {
+                Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
+                view.ToggleTheme(sender, e);
+                // Might be better to restart automatically (after asking the user),
+                // but I haven't been able to figure out a reliable cross-platform 
+                // way of attaching the debugger to the new process. I leave this
+                // as an exercise to the reader.
+                view.ShowMsgDialog("Theme changes will be applied upon restarting Apsim.", "Theme Changes", Gtk.MessageType.Info, Gtk.ButtonsType.Ok);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Opens the ApsimX online documentation.
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         private void OnHelp(object sender, EventArgs args)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
-            process.Start();
+            Process getHelp = new Process();
+            getHelp.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
+            getHelp.Start();
         }
 
         /// <summary>
@@ -1096,13 +1107,10 @@
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    using (Stream inStream = Models.Core.ApsimFile.Converter.ConvertToVersion(file, version))
-                    {
-                        using (FileStream fileWriter = File.Open(file, FileMode.Create))
-                        {
-                            inStream.CopyTo(fileWriter);
-                        }
-                    }
+                    string contents = File.ReadAllText(file);
+                    var converter = Converter.DoConvert(contents, version, file);
+                    if (converter.DidConvert)
+                        File.WriteAllText(file, converter.Root.ToString());
                     view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
                 }
                 view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);

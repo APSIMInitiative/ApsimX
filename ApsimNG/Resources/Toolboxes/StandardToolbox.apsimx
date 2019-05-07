@@ -614,6 +614,13 @@
   </Folder>
   <Folder>
     <Name>Crops</Name>
+    <Plant>
+      <Name>Barley</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <ResourceName>Barley</ResourceName>
+      <CropType>Barley</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
 	<Plant>
 	  <Name>Wheat</Name>
 	  <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -621,6 +628,13 @@
 	  <CropType>Wheat</CropType>
 	  <SowingDate>0001-01-01T00:00:00</SowingDate>
 	</Plant>
+	<Plant>
+      <Name>Eucalyptus</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>Eucalyptus</ResourceName>
+      <CropType>Eucalyptus</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
     <OilPalm>
       <Name>OilPalm</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1273,12 +1287,12 @@
       <Sheep />
       <Cattle />
       <PaddockList>
-        <TPaddInit>
+        <PaddockInit>
           <forages />
           <name />
           <area>1</area>
           <slope>0</slope>
-        </TPaddInit>
+        </PaddockInit>
       </PaddockList>
       <EnterpriseList />
       <GrazingPeriods />
@@ -1404,33 +1418,6 @@
     <Name>Tests</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Tests>
-  <Experiment>
-    <Name>Experiment</Name>
-    <Factors>
-      <Name>Factors</Name>
-      <Factor>
-        <Name>Factor</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Specifications />
-      </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Factors>
-    <Simulation>
-      <Name>Base</Name>
-      <Clock>
-        <Name>Clock</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <StartDate>1940-01-01T00:00:00</StartDate>
-        <EndDate>1989-12-31T00:00:00</EndDate>
-      </Clock>
-      <Summary>
-        <Name>Summary</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Summary>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Simulation>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

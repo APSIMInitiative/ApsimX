@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,14 +10,19 @@ using System.Text;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Individual filter term for ruminant group of filters to identify individul ruminants
+    /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantFilterGroup))]
+    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
+    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/filters/ruminantfilter.htm")]
     public class RuminantFilter: CLEMModel
     {
         /// <summary>
@@ -33,7 +39,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 parameter = value;
-                UpdateName();
             }
         }
         private RuminantFilterParameters parameter;
@@ -53,7 +58,6 @@ namespace Models.CLEM.Groupings
             set
             {
                 operatr = value;
-                UpdateName();
             }
         }
         private FilterOperators operatr;
@@ -72,16 +76,111 @@ namespace Models.CLEM.Groupings
             set
             {
                 _value = value;
-                UpdateName();
             }
         }
         private string _value;
 
-
-        private void UpdateName()
+        /// <summary>
+        /// Convert filter to string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
         {
-            this.Name = String.Format("Filter[{0}{1}{2}]", Parameter.ToString(), Operator.ToSymbol(), Value);
+            string str = "";
+            if (Value == null)
+            {
+                str = "FILTER NOT DEFINED";
+            }
+            else
+            {
+
+                if (Value.ToUpper() == "TRUE" || Value.ToUpper() == "FALSE")
+                {
+                    str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") || (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? "Not " : "";
+                    str += Parameter;
+                }
+                else
+                {
+                    str += Parameter;
+                    switch (Operator)
+                    {
+                        case FilterOperators.Equal:
+                            str += "=";
+                            break;
+                        case FilterOperators.NotEqual:
+                            str += "<>";
+                            break;
+                        case FilterOperators.LessThan:
+                            str += "<";
+                            break;
+                        case FilterOperators.LessThanOrEqual:
+                            str += "<=";
+                            break;
+                        case FilterOperators.GreaterThan:
+                            str += ">";
+                            break;
+                        case FilterOperators.GreaterThanOrEqual:
+                            str += ">=";
+                            break;
+                        default:
+                            break;
+                    }
+                    str += Value;
+                }
+            }
+            return str;
         }
+
+        /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        public RuminantFilter Clone()
+        {
+            RuminantFilter clone = new RuminantFilter()
+            {
+                Parameter = this.Parameter,
+                Operator = this.Operator,
+                Value = this.Value
+            };
+            return clone;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            if (this.Value == null)
+            {
+                return "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
+            }
+            else
+            {
+                return "<div class=\"filter\">" + this.ToString() + "</div>";
+            }
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
     }
 
     /// <summary>
@@ -137,6 +236,10 @@ namespace Models.CLEM.Groupings
         /// Is female pregnant
         /// </summary>
         IsPregnant,
+        /// <summary>
+        /// Is female a heifer (weaned, >= breed age and weight, no offspring)
+        /// </summary>
+        IsHeifer,
         /// <summary>
         /// Is male draught individual
         /// </summary>

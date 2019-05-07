@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
@@ -20,39 +21,10 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminanttrade.htm")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        ISummary Summary = null;
-
-        ///// <summary>
-        ///// Name of herd to trade
-        ///// </summary>
-        //[Description("Name of herd to trade")]
-        //      [Required]
-        //      public string HerdName { get; set; }
-
-  //      /// <summary>
-  //      /// Weight of inividuals to buy
-  //      /// </summary>
-  //      [Description("Weight of inividuals to buy")]
-  //      [Required]
-  //      public double BuyWeight { get; set; }
-
-        ///// <summary>
-        ///// Animal age at purchase (months)
-        ///// </summary>
-        //[Description("Animal age at purchase (months)")]
-  //      [Required]
-  //      public int BuyAge { get; set; }
-
-        ///// <summary>
-        ///// Trade price (purchase/sell price /kg LWT)
-        ///// </summary>
-        //[Description("Trade price (purchase/sell price /kg LWT)")]
-  //      [Required]
-  //      public double TradePrice { get; set; }
-
         /// <summary>
         /// Months kept before sale
         /// </summary>
@@ -67,19 +39,9 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double TradeWeight { get; set; }
 
-        ///// <summary>
-        ///// Purchase month
-        ///// </summary>
-        //[System.ComponentModel.DefaultValueAttribute(11)]
-        //[Description("Purchase month")]
-  //      [Required, Range(1, 12, ErrorMessage = "Value must represent a month from 1 (Jan) to 12 (Dec)")]
-  //      public int PurchaseMonth { get; set; }
-
         private RuminantType herdToUse;
-        private List<LabourFilterGroupSpecified> labour { get; set; }
 
-
-        //TODO: devide how many to stock.
+        //TODO: decide how many to stock.
         // stocking rate for paddock
         // fixed number
 
@@ -118,8 +80,6 @@ namespace Models.CLEM.Activities
                     results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
                 }
             }
-
-
             return results;
         }
 
@@ -131,19 +91,12 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(false, false);
 
-            // check if labour and warn it is not used for this activity
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour != null)
-            {
-                Summary.WriteWarning(this, "Warning: Labour was supplied for activity ["+this.Name+"] but is not used for Trade activities. Please add labour requirements to the Buy/Sell Activity associated with this trade herd.");
-            }
-
             // get herd to add to 
             herdToUse = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
             if(!herdToUse.PricingAvailable())
             {
-                Summary.WriteWarning(this, "Warning: No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
+                Summary.WriteWarning(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
             }
         }
 
@@ -157,38 +110,36 @@ namespace Models.CLEM.Activities
             if(TimingOK)
             {
                 // remove any old potential sales from list as these will be updated here
-                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed & a.SaleFlag == HerdChangeReason.TradePurchase);
+                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
                 foreach (RuminantTypeCohort purchasetype in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
                 {
                     for (int i = 0; i < purchasetype.Number; i++)
                     {
                         object ruminantBase = null;
-                        if (purchasetype.Gender == Sex.Male)
-                        {
-                            ruminantBase = new RuminantMale();
-                        }
-                        else
-                        {
-                            ruminantBase = new RuminantFemale();
-                        }
-
-                        Ruminant ruminant = ruminantBase as Ruminant;
-                        ruminant.ID = 0;
-                        ruminant.BreedParams = herdToUse;
-                        ruminant.Breed = this.PredictedHerdBreed;
-                        ruminant.HerdName = this.PredictedHerdName;
-                        ruminant.Gender = purchasetype.Gender;
-                        ruminant.Age = purchasetype.Age;
-                        ruminant.PurchaseAge = purchasetype.Age;
-                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
-                        ruminant.Location = "";
 
                         double u1 = ZoneCLEM.RandomGenerator.NextDouble();
                         double u2 = ZoneCLEM.RandomGenerator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                      Math.Sin(2.0 * Math.PI * u2);
-                        ruminant.Weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+                        double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+
+                        if (purchasetype.Gender == Sex.Male)
+                        {
+                            ruminantBase = new RuminantMale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        }
+                        else
+                        {
+                            ruminantBase = new RuminantFemale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        }
+
+                        Ruminant ruminant = ruminantBase as Ruminant;
+                        ruminant.ID = 0;
+                        ruminant.Breed = this.PredictedHerdBreed;
+                        ruminant.HerdName = this.PredictedHerdName;
+                        ruminant.PurchaseAge = purchasetype.Age;
+                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
+                        ruminant.Location = "";
                         ruminant.PreviousWeight = ruminant.Weight;
 
                         switch (purchasetype.Gender)
@@ -210,12 +161,11 @@ namespace Models.CLEM.Activities
                         Resources.RuminantHerd().PurchaseIndividuals.Add(ruminantBase as Ruminant);
                     }
                 }
-                //this.TriggerOnActivityPerformed();
             }
             // sale details any timestep when conditions are met.
             foreach (Ruminant ind in this.CurrentHerd(true))
             {
-                if (ind.Age - ind.PurchaseAge >= MinMonthsKept & ind.Weight >= TradeWeight)
+                if (ind.Age - ind.PurchaseAge >= MinMonthsKept && ind.Weight >= TradeWeight)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
                 }
@@ -228,7 +178,6 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            // check for labour
             return null;
         }
 
@@ -236,6 +185,24 @@ namespace Models.CLEM.Activities
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
+        /// </summary>
+        public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
@@ -260,8 +227,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnShortfallOccurred(EventArgs e)
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
+            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
@@ -275,9 +241,22 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
+            ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Trade individuals are kept for at least ";
+            html += "<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months or until";
+            html += "<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg ";
+            html += "</div>";
+            return html;
+        }
     }
 }

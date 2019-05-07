@@ -14,12 +14,15 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models;
+    using Models.CLEM;
     using Models.Core;
     using Models.Surface;
     using Utility;
     using Views;
     using Commands;
     using System.Drawing;
+    using Models.CLEM.Resources;
+    using Models.Storage;
 
     /// <summary>
     /// <para>
@@ -41,7 +44,7 @@ namespace UserInterface.Presenters
         /// Linked storage reader
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
 
         /// <summary>
         /// The model we're going to examine for properties.
@@ -52,6 +55,16 @@ namespace UserInterface.Presenters
         /// A list of all properties found in the Model.
         /// </summary>
         private List<IVariable> properties = new List<IVariable>();
+
+        /// <summary>
+        /// The category name to filter for on the Category Attribute for the properties
+        /// </summary>
+        public string CategoryFilter { get; set; }
+
+        /// <summary>
+        /// The subcategory name to filter for on the Category Attribute for the properties
+        /// </summary>
+        public string SubcategoryFilter { get; set; }
 
         /// <summary>
         /// The completion form.
@@ -114,13 +127,18 @@ namespace UserInterface.Presenters
         /// </summary>
         public override void Detach()
         {
-            base.Detach();
-            grid.EndEdit();
-            grid.CellsChanged -= OnCellValueChanged;
-            grid.ButtonClick -= OnFileBrowseClick;
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            intellisense.Cleanup();
+            try
+            {
+                base.Detach();
+                grid.CellsChanged -= OnCellValueChanged;
+                grid.ButtonClick -= OnFileBrowseClick;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                intellisense.Cleanup();
+            }
+            catch (NullReferenceException)
+            {
+            }
         }
 
         /// <summary>
@@ -162,7 +180,6 @@ namespace UserInterface.Presenters
                     properties.RemoveAt(i);
                 }
             }
-
             PopulateGrid(model);
         }
 
@@ -187,6 +204,8 @@ namespace UserInterface.Presenters
         {
             this.model = model;
             properties.Clear();
+            bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
+            bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
             if (this.model != null)
             {
                 var orderedMembers = GetMembers(model);
@@ -207,14 +226,59 @@ namespace UserInterface.Presenters
                         {
                             includeProperty = property.DataType == typeof(double[]) ||
                                               property.DataType == typeof(int[]) ||
-                                              property.DataType == typeof(string[]);
+                                              property.DataType == typeof(string[]) ||
+                                              property.DataType == typeof(DateTime[]);
                         }
 
                         if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
                         {
-                            SeparatorAttribute separator = Attribute.GetCustomAttribute(member, typeof(SeparatorAttribute)) as SeparatorAttribute;
-                            properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
+                            SeparatorAttribute[] separators = Attribute.GetCustomAttributes(member, typeof(SeparatorAttribute)) as SeparatorAttribute[];
+                            foreach (SeparatorAttribute separator in separators)
+                                properties.Add(new VariableObject(separator.ToString()));  // use a VariableObject for separators
                         }
+
+                        //If the above conditions have been met and,
+                        //If a CategoryFilter has been specified. 
+                        //filter only those properties with a [Catagory] attribute that matches the filter.
+
+                        if (includeProperty && filterByCategory)
+                        {
+                            bool hasCategory = Attribute.IsDefined(member,typeof(CategoryAttribute), false);
+                            if (hasCategory)
+                            {
+                                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(member,typeof(CategoryAttribute));
+                                if (catAtt.Category == this.CategoryFilter)
+                                {
+                                    if (filterBySubcategory)
+                                    {
+                                        //the catAtt.Subcategory is by default given a value of 
+                                        //"Unspecified" if the Subcategory is not assigned in the Category Attribute.
+                                        //so this line below will also handle "Unspecified" subcategories.
+                                        includeProperty = (catAtt.Subcategory == this.SubcategoryFilter);
+                                    }
+                                    else
+                                    {
+                                        includeProperty = true;
+                                    }
+                                } 
+                                else
+                                {
+                                    includeProperty = false;
+                                }
+                                
+                            }
+                            else
+                            {
+                                //if we are filtering on "Unspecified" category then there is no Category Attribute
+                                // just a Description Attribute on the property in the model.
+                                //So we still may need to include it in this case.
+                                if (this.CategoryFilter == "Unspecified")
+                                    includeProperty = true;
+                                else
+                                    includeProperty = false;
+                            }
+                        }
+			
                         if (includeProperty)
                             properties.Add(property);
 
@@ -292,11 +356,16 @@ namespace UserInterface.Presenters
             foreach (IVariable property in properties)
             {
                 if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value , null });
+                    table.Rows.Add(new object[] { property.Value, null });
                 else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
+                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
                 else
-                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+                {
+                    string description = property.Description;
+                    if (!string.IsNullOrEmpty(property.Units))
+                        description += " (" + property.Units + ")";
+                    table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
+                }
             }
         }
 
@@ -332,7 +401,7 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = storage.TableNames.ToArray();
+                    cell.DropDownStrings = storage.Reader.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.CultivarName)
@@ -371,6 +440,51 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
+                else if (properties[i].Display != null &&  
+					(properties[i].Display.Type == DisplayType.CLEMResourceName))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceNameResourceGroups));
+
+                    // add any extras elements provided to the list.
+                    if (this.properties[i].Display.CLEMExtraEntries != null)
+                    {
+                        fieldNames.AddRange(this.properties[i].Display.CLEMExtraEntries);
+                    }
+
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }
+                else if (properties[i].Display != null && 
+					(properties[i].Display.Type == DisplayType.CLEMCropFileName))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    // get crop file names
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }
+                else if (properties[i].Display != null &&  
+					(properties[i].Display.Type == DisplayType.CLEMGraspFileName))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    // get GRASP file names
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }				
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
@@ -415,6 +529,13 @@ namespace UserInterface.Presenters
                         List<string> plantNames = Apsim.FindAll(model, typeof(IPlant)).Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
+                    }
+                    else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
+                    {
+                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
+                        string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = values;
                     }
                     else
                     {
@@ -477,12 +598,9 @@ namespace UserInterface.Presenters
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
                         string tableName = cell.Value.ToString();
-                        DataTable data = null;
-                        if (storage.TableNames.Contains(tableName))
-                            data = storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
-                        if (data != null)
+                        if (storage.Reader.TableNames.Contains(tableName))
                         {
-                            fieldNames = DataTableUtilities.GetColumnNames(data).ToList();
+                            fieldNames = storage.Reader.ColumnNames(tableName).ToList();
                             if (fieldNames.Contains("SimulationID"))
                                 fieldNames.Add("SimulationName");
                         }
@@ -528,6 +646,58 @@ namespace UserInterface.Presenters
             return null;
         }
 
+        /// <summary>
+        /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
+        /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
+        /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// 
+        /// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
+        /// </summary>
+        /// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
+        private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
+        {
+            List<string> result = new List<string>();
+            ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
+            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            if (resourceNameResourceGroups != null)
+            {
+                // resource groups specified (use them)
+                foreach (Type resGroupType in resourceNameResourceGroups)
+                {
+                    IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                    if (resGroup != null)  //see if this group type is included in this particular simulation.
+                    {
+                        foreach (IModel item in resGroup.Children)
+                        {
+                            if (item.GetType() != typeof(Memo))
+                            {
+                                result.Add(resGroup.Name + "." + item.Name);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // no resource groups specified so use all avaliable resources
+                foreach (IModel resGroup in Apsim.Children(resHolder, typeof(IModel)))
+                {
+                    foreach (IModel item in resGroup.Children)
+                    {
+                        if (item.GetType() != typeof(Memo))
+                        {
+                            result.Add(resGroup.Name + "." + item.Name);
+                        }
+                    }
+                }
+
+            }
+            return result.ToArray();
+        }
+
         private string[] GetModelNames(Type t)
         {
             List<IModel> models;
@@ -549,8 +719,6 @@ namespace UserInterface.Presenters
         /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-
             foreach (IGridCell cell in e.ChangedCells)
             {
                 try
@@ -565,8 +733,6 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowError(ex);
                 }
             }
-            
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -592,6 +758,10 @@ namespace UserInterface.Presenters
                 else if (property.DataType == typeof(string[]))
                 {
                     value = stringValues;
+                }
+                else if (property.DataType == typeof(DateTime[]))
+                {
+                    value = stringValues.Select(d => DateTime.Parse(d)).ToArray();
                 }
                 else
                 {

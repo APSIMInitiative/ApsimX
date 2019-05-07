@@ -45,11 +45,14 @@ namespace UserInterface.Presenters
         /// </summary>
         public virtual void Detach()
         {
-            grid.EndEdit();
-            grid.CopyCells -= CopyCells;
-            grid.PasteCells -= PasteCells;
-            grid.DeleteCells -= DeleteCells;
-            grid.Dispose();
+            if (grid != null)
+            {
+                grid.EndEdit();
+                grid.CopyCells -= CopyCells;
+                grid.PasteCells -= PasteCells;
+                grid.DeleteCells -= DeleteCells;
+                grid.Dispose();
+            }
         }
 
         /// <summary>

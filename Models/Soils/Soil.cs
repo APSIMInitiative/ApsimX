@@ -1,18 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Soil.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Soils
+﻿namespace Models.Soils
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Xml.Serialization;
-    using Models.Core;
     using APSIM.Shared.Utilities;
     using Interfaces;
+    using Models.Core;
+    using System;
+    using System.Linq;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -31,14 +24,6 @@ namespace Models.Soils
     {
         /// <summary>Gets the water.</summary>
         private Water waterNode;
-
-
-        /// <summary>
-        /// Soil Nitrogen model
-        /// </summary>
-        [XmlIgnore]
-        public SoilNitrogen SoilNitrogen { get; private set; }
-
 
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
@@ -139,15 +124,10 @@ namespace Models.Soils
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
-        [NonSerialized]
-        private SoluteManager SoluteManager;
-
-        /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
 
-        /// <summary>Called when [loaded].</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, LoadedEventArgs args)
+        /// <summary>Called when model has been created.</summary>
+        public override void OnCreated()
         {
             FindChildren();
         }
@@ -169,8 +149,6 @@ namespace Models.Soils
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
-            SoluteManager = Apsim.Find(this, typeof(SoluteManager)) as SoluteManager;
-            SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
@@ -912,6 +890,30 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Organic nitrogen. Units: %</summary>
+        /// <value>The on.</value>
+        [Units("%")]
+        public double[] ON
+        {
+            get
+            {
+                double[] SoilOC = SoilOrganicMatter.OCTotal;
+                double[] SoilOCThickness = SoilOrganicMatter.Thickness;
+
+                // Try and find a sample with OC in it.
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    if (MathUtilities.ValuesInArray(Sample.OC) &&
+                        OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
+                        break;
+                if (SoilOC == null)
+                    return null;
+                double[] SoilON = MathUtilities.Divide(SoilOC, SoilOrganicMatter.SoilCN);
+
+                return Map(SoilON, SoilOCThickness, Thickness,
+                           MapType.Concentration, SoilON.Last());
+            }
+        }
+
         /// <summary>FBiom. Units: 0-1</summary>
         /// <value>The f biom.</value>
         [Units("0-1")]
@@ -937,6 +939,31 @@ namespace Models.Soils
                            MapType.Concentration, LastValue(SoilOrganicMatter.FInert));
             }
         }
+
+        /// <summary>Initial Root Wt</summary>
+        /// <value>Initial Root Wt</value>
+        [Units("kg/ha")]
+        public double[] InitialRootWt
+        {
+            get
+            {
+                if (SoilOrganicMatter.RootWt == null) return null;
+                return Map(SoilOrganicMatter.RootWt, SoilOrganicMatter.Thickness, Thickness,
+                           MapType.Mass, LastValue(SoilOrganicMatter.RootWt));
+            }
+        }
+
+        /// <summary>Initial Root Wt</summary>
+        /// <value>Initial Root Wt</value>
+        [Units("kg/ha")]
+        public double[] InitialSoilCNR
+        {
+            get
+            {
+                return MathUtilities.Divide(OC, ON);
+            }
+        }
+
         #endregion
 
         #region Analysis
@@ -1023,60 +1050,6 @@ namespace Models.Soils
                     }
                 }
                 return null;
-            }
-        }
-
-        /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
-        [XmlIgnore]
-        [Units("kg/ha")]
-        public double[] NO3N
-        {
-            get
-            {
-                if (SoluteManager == null)
-                    return new double[0];
-                else
-                    return SoluteManager.GetSolute("NO3");
-            }
-            set
-            {
-                SoluteManager.SetSolute("NO3", SoluteManager.SoluteSetterType.Soil, value);
-            }
-        }
-
-        /// <summary>Gets or sets the ammonia N for each layer (kg/ha)</summary>
-        [XmlIgnore]
-        [Units("kg/ha")]
-        public double[] NH4N
-        {
-            get
-            {
-                if (SoluteManager == null)
-                    return new double[0];
-                else
-                    return SoluteManager.GetSolute("NH4");
-            }
-            set
-            {
-                SoluteManager.SetSolute("NH4", SoluteManager.SoluteSetterType.Soil, value);
-            }
-        }
-
-        /// <summary>Gets the or sets urea N for each layer (kg/ha)</summary>
-        [XmlIgnore]
-        [Units("kg/ha")]
-        public double[] UreaN
-        {
-            get
-            {
-                if (SoluteManager == null)
-                    return new double[0];
-                else
-                    return SoluteManager.GetSolute("urea");
-            }
-            set
-            {
-                SoluteManager.SetSolute("urea", SoluteManager.SoluteSetterType.Soil, value);
             }
         }
 

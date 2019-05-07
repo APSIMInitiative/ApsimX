@@ -29,6 +29,8 @@ namespace Models.Core
         /// <returns>The units (no brackets) or any empty string.</returns>
         public static string GetUnits(IModel model, string fieldName)
         {
+            if (model == null || string.IsNullOrEmpty(fieldName))
+                return string.Empty;
             FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (field != null)
             {
@@ -46,6 +48,8 @@ namespace Models.Core
         /// <returns>The description or any empty string.</returns>
         public static string GetDescription(IModel model, string fieldName)
         {
+            if (model == null || string.IsNullOrEmpty(fieldName))
+                return string.Empty;
             FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (field != null)
             {
@@ -70,6 +74,8 @@ namespace Models.Core
         /// </param>
         public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
         {
+            if (model == null)
+                return;
             if (force || (model.IncludeInDocumentation && model.Enabled) )
             {
                 if (model is ICustomDocumentation)
@@ -89,6 +95,8 @@ namespace Models.Core
         /// <param name="documentAllChildren">Document all children?</param>
         public static void DocumentModelSummary(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren)
         {
+            if (model == null)
+                return;
             if (doc == null)
             {
                 string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
@@ -114,6 +122,8 @@ namespace Models.Core
         /// <param name="documentAllChildren">Ensure all children are documented?</param>
         public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim=false)
         {
+            if (string.IsNullOrEmpty(stringToParse) || model == null)
+                return;
             List<IModel> childrenDocumented = new List<Core.IModel>();
             int numSpacesStartOfLine = -1;
             string paragraphSoFar = string.Empty;
@@ -211,6 +221,8 @@ namespace Models.Core
 
         private static string RemoveMacros(IModel model, string line)
         {
+            if (model == null || string.IsNullOrEmpty(line))
+                return string.Empty;
             int posMacro = line.IndexOf('[');
             while (posMacro != -1)
             {
@@ -252,7 +264,13 @@ namespace Models.Core
         /// <returns></returns>
         private static bool GetHeadingFromLine(string st, out string heading, out int headingLevel)
         {
-            // st = st.Trim();
+            if (string.IsNullOrEmpty(st))
+            {
+                heading = string.Empty;
+                headingLevel = 0;
+                return false;
+            }
+
             heading = st.Replace("#", string.Empty);
             headingLevel = 0;
             if (st.StartsWith("####"))
@@ -288,6 +306,8 @@ namespace Models.Core
         /// <param name="childTypesToExclude">An optional list of Types to exclude from documentation.</param>
         public static void DocumentChildren(IModel model, List<AutoDocumentation.ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
         {
+            if (model == null)
+                return;
             foreach (IModel child in model.Children)
                 if (child.IncludeInDocumentation && 
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))

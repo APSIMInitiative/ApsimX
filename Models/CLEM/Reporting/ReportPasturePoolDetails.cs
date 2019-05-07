@@ -9,6 +9,9 @@ using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
+using Models.Core.Run;
+using Models.Storage;
 
 namespace Models.CLEM.Reporting
 {
@@ -18,27 +21,22 @@ namespace Models.CLEM.Reporting
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Zones.CircularZone))]
-    [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
+    [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/reporting/pasturepooldetails.htm")]
     public class ReportPasturePoolDetails: Models.Report.Report
     {
         [Link]
         private ResourcesHolder Resources = null;
-        //        [Link]
-        //        ISummary Summary = null;
 
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
         private List<IReportColumn> columns = null;
-
-        /// <summary>An array of column names to write to storage.</summary>
-        private IEnumerable<string> columnNames = null;
-
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IEnumerable<string> columnUnits = null;
+        [NonSerialized]
+        private ReportData dataToWriteToDb = null;
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -50,7 +48,7 @@ namespace Models.CLEM.Reporting
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        private IStorageWriter storage = null;
+        private IDataStore storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
@@ -68,8 +66,10 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
+            variableNames.Add("Parent.Name as Zone");
             if (VariableNames != null)
             {
                 for (int i = 0; i < this.VariableNames.Length; i++)
@@ -93,7 +93,7 @@ namespace Models.CLEM.Reporting
                                 // make each pool entry
                                 for (int j = 0; j <= 12; j++)
                                 {
-                                    variableNames.Add(splitName[0]+"-"+j.ToString()+"-"+splitName[1]);
+                                    variableNames.Add(splitName[0] + "-" + j.ToString() + "-" + splitName[1]);
                                 }
                                 if (splitName[1] == "Amount")
                                 {
@@ -123,9 +123,19 @@ namespace Models.CLEM.Reporting
                 foreach (string eventName in EventNames)
                 {
                     if (eventName != string.Empty)
+                    {
                         events.Subscribe(eventName.Trim(), DoOutputEvent);
+                    }
                 }
             }
+        }
+
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (dataToWriteToDb != null)
+                storage.Writer.WriteTable(dataToWriteToDb);
+            dataToWriteToDb = null;
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
@@ -150,18 +160,36 @@ namespace Models.CLEM.Reporting
                     valuesToWrite[i] = columns[i].GetValue();
                 }
             }
-            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+			
+			if (dataToWriteToDb == null)
+                dataToWriteToDb = new ReportData()
+                {
+                    SimulationName = simulation.Name,
+                    TableName = Name,
+                    ColumnNames = columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                };
+				
+            // Add row to our table that will be written to the db file
+            dataToWriteToDb.Rows.Add(valuesToWrite.ToList());
+
+            // Write the table if we reach our threshold number of rows.
+            if (dataToWriteToDb.Rows.Count == 100)
+            {
+                storage.Writer.WriteTable(dataToWriteToDb);
+                dataToWriteToDb = null;
+            }
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IStorageReader storage, string fileName)
+        public static new void WriteAllTables(IDataStore storage, string fileName)
         {
             // Write out each table for this simulation.
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                DataTable data = storage.GetData(tableName);
+                DataTable data = storage.Reader.GetData(tableName);
                 if (data != null && data.Rows.Count > 0)
                 {
                     SortColumnsOfDataTable(data);
@@ -180,16 +208,22 @@ namespace Models.CLEM.Reporting
             table.Columns.CopyTo(columnArray, 0);
             var ordinal = -1;
             foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
+            {
                 orderedColumn.SetOrdinal(++ordinal);
+            }
 
             ordinal = -1;
             int i = table.Columns.IndexOf("SimulationName");
             if (i != -1)
+            {
                 table.Columns[i].SetOrdinal(++ordinal);
+            }
 
             i = table.Columns.IndexOf("SimulationID");
             if (i != -1)
+            {
                 table.Columns[i].SetOrdinal(++ordinal);
+            }
         }
 
 
@@ -211,19 +245,20 @@ namespace Models.CLEM.Reporting
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
+                {
+                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                }
             }
-            columnNames = columns.Select(c => c.Name);
-            columnUnits = columns.Select(c => c.Units);
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                foreach (var descriptor in simulation.Descriptors)
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
             }
         }
 

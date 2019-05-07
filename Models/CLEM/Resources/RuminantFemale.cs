@@ -24,6 +24,21 @@ namespace Models.CLEM.Resources
         public int NumberOfBirths { get; set; }
 
         /// <summary>
+        /// Number of offspring for the female
+        /// </summary>
+        public int NumberOfOffspring { get; set; }
+
+        /// <summary>
+        /// Number of weaned offspring for the female
+        /// </summary>
+        public int NumberOfWeaned { get; set; }
+
+        /// <summary>
+        /// Number of weaned offspring for the female
+        /// </summary>
+        public int NumberOfConceptions { get; set; }
+
+        /// <summary>
         /// Births this timestep
         /// </summary>
         public int NumberOfBirthsThisTimestep { get; set; }
@@ -49,6 +64,56 @@ namespace Models.CLEM.Resources
         public double WeightLossDueToCalf { get; set; }
 
         /// <summary>
+        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// </summary>
+        public double NumberOfBreedingMonths
+        {
+            get
+            {
+                return Age - Math.Max(this.BreedParams.MinimumAge1stMating,this.AgeEnteredSimulation);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a heifer
+        /// Heifer equals less than min breed age and no offspring
+        /// </summary>
+        public bool IsHeifer
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                return (this.Weaned && this.NumberOfBirths == 0 && this.Age < this.BreedParams.MinimumAge1stMating);
+            }
+        }
+
+        /// <summary>
+        /// Calculate the number of offspring this preganacy given multiple offspring rates
+        /// </summary>
+        /// <returns></returns>
+        public int CalulateNumberOfOffspringThisPregnancy()
+        {
+            int birthCount = 1;
+            if (this.BreedParams.MultipleBirthRate != null)
+            {
+                double rnd = ZoneCLEM.RandomGenerator.NextDouble();
+                double birthProb = 0;
+                foreach (double i in this.BreedParams.MultipleBirthRate)
+                {
+                    birthCount++;
+                    birthProb += i;
+                    if (rnd <= birthProb)
+                    {
+                        return birthCount;
+                    }
+                }
+                birthCount = 1;
+            }
+            return birthCount;
+        }
+
+
+        /// <summary>
         /// Indicates if birth is due this month
         /// Knows whether the feotus(es) have survived
         /// </summary>
@@ -58,7 +123,7 @@ namespace Models.CLEM.Resources
             {
                 if(SuccessfulPregnancy)
                 {
-                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength & this.AgeAtLastConception > this.AgeAtLastBirth;
+                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength && this.AgeAtLastConception > this.AgeAtLastBirth;
                 }
                 else
                 {
@@ -75,7 +140,8 @@ namespace Models.CLEM.Resources
             if (SuccessfulPregnancy)
             {
                 NumberOfBirths++;
-                NumberOfBirthsThisTimestep = (CarryingTwins ? 2 : 1);
+                NumberOfOffspring += CarryingCount;
+                NumberOfBirthsThisTimestep = CarryingCount;
             }
             AgeAtLastBirth = this.Age;
             MilkingPerformed = false;
@@ -88,47 +154,44 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength & this.SuccessfulPregnancy);
+                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength && this.SuccessfulPregnancy);
             }
         }
 
         /// <summary>
-        /// Indicates if individual is carrying twins
+        /// Indicates if individual is carrying multiple feotus
         /// </summary>
-        public bool CarryingTwins { get; set; }
+        public int CarryingCount { get; set; }
 
         /// <summary>
         /// Method to remove one offspring that dies between conception and death
         /// </summary>
         public void OneOffspringDies()
         {
-            if(CarryingTwins)
-            {
-                CarryingTwins = false;
-            }
-            else
+            CarryingCount--;
+            if(CarryingCount <= 0)
             {
                 SuccessfulPregnancy = false;
                 AgeAtLastBirth = this.Age;
-
             }
         }
 
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(bool Twins, double Rate)
+        public void UpdateConceptionDetails(int number, double rate, int ageOffsett)
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
             {
                 SaleFlag = HerdChangeReason.None;
             }
-            PreviousConceptionRate = Rate;
-            CarryingTwins = Twins;
+            PreviousConceptionRate = rate;
+            CarryingCount = number;
             WeightAtConception = this.Weight;
-            AgeAtLastConception = this.Age;
+            AgeAtLastConception = this.Age + ageOffsett;
             SuccessfulPregnancy = true;
+            NumberOfConceptions++;
         }
 
         /// <summary>
@@ -148,7 +211,7 @@ namespace Models.CLEM.Resources
                 // Last pregnancy was successful
                 // Mother has suckling offspring OR
                 // Cow has been milked since weaning.
-                return (this.AgeAtLastBirth > this.AgeAtLastConception && (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays && SuccessfulPregnancy && (this.SucklingOffspring.Count() > 0 | this.MilkingPerformed));
+                return (this.AgeAtLastBirth > this.AgeAtLastConception & (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & SuccessfulPregnancy & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
             }            
         }
 
@@ -180,7 +243,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount of milk available in the month (L)
         /// </summary>
-        public double MilkAmount { get; set; }
+        public double MilkCurrentlyAvailable { get; set; }
+
+        /// <summary>
+        /// Potential amount of milk produced (L/day)
+        /// </summary>
+        public double MilkProductionPotential { get; set; }
 
         /// <summary>
         /// Amount of milk produced (L/day)
@@ -188,19 +256,46 @@ namespace Models.CLEM.Resources
         public double MilkProduction { get; set; }
 
         /// <summary>
+        /// Amount of milk produced this time step
+        /// </summary>
+        public double MilkProducedThisTimeStep { get; set; }
+
+        /// <summary>
+        /// Amount of milk suckled this time step
+        /// </summary>
+        public double MilkSuckledThisTimeStep { get; set; }
+
+        /// <summary>
+        /// Amount of milk milked this time step
+        /// </summary>
+        public double MilkMilkedThisTimeStep { get; set; }
+
+        /// <summary>
         /// Method to remove milk from female
         /// </summary>
         /// <param name="amount">Amount to take</param>
-        public void TakeMilk(double amount)
+        /// <param name="reason">Reason for taking milk</param>
+        public void TakeMilk(double amount, MilkUseReason reason)
         {
-            amount = Math.Min(amount, MilkAmount);
-            MilkAmount -= amount;
+            amount = Math.Min(amount, MilkCurrentlyAvailable);
+            MilkCurrentlyAvailable -= amount;
+            switch (reason)
+            {
+                case MilkUseReason.Suckling:
+                    MilkSuckledThisTimeStep += amount;
+                    break;
+                case MilkUseReason.Milked:
+                    MilkMilkedThisTimeStep += amount;
+                    break;
+                default:
+                    throw new ApplicationException("Unknown MilkUseReason [" + reason + "] in TakeMilk method of [r=RuminantFemale]");
+            }
         }
 
         /// <summary>
         /// A list of individuals currently suckling this female
         /// </summary>
-        public List<Ruminant> SucklingOffspring { get; set; }
+        public List<Ruminant> SucklingOffspringList { get; set; }
 
         /// <summary>
         /// Used to track successful preganacy
@@ -210,10 +305,26 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale()
+        public RuminantFemale(double setAge, Sex setGender, double setWeight, RuminantType setParams) : base(setAge, setGender, setWeight, setParams)
         {
             SuccessfulPregnancy = false;
-            SucklingOffspring = new List<Ruminant>();
+            SucklingOffspringList = new List<Ruminant>();
         }
     }
+
+    /// <summary>
+    /// Reasons for milk to be taken from female
+    /// </summary>
+    public enum MilkUseReason
+    {
+        /// <summary>
+        /// Consumed by sucklings
+        /// </summary>
+        Suckling,
+        /// <summary>
+        /// Milked
+        /// </summary>
+        Milked
+    }
+
 }

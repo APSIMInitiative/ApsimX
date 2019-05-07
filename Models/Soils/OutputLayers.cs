@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
-using Models.Core;
-
-namespace Models.Soils
+﻿namespace Models.Soils
 {
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
     /// The outputs can be used for producing summaries and to facilitate comparison with observed data.
@@ -20,6 +17,18 @@ namespace Models.Soils
     {
         [Link]
         private Soil Soil = null;
+
+        private ISolute NO3Solute = null;
+        private ISolute NH4Solute = null;
+        private ISolute UreaSolute = null;
+
+        /// <summary>Constructor</summary>
+        public OutputLayers()
+        {
+            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
+            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
+            UreaSolute = Apsim.Find(this, "Urea") as ISolute;
+        }
 
         /// <summary>Gets the depth boundaries of each layer.</summary>
         [XmlIgnore]
@@ -111,7 +120,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         public double[] Urea
         {
-            get { return Soil.Map(Soil.UreaN, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Soil.Map(UreaSolute.kgha, Soil.Thickness, Thickness, Soil.MapType.Mass); }
         }
 
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
@@ -119,7 +128,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         public double[] NH4
         {
-            get { return Soil.Map(Soil.NH4N, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Soil.Map(NH4Solute.kgha, Soil.Thickness, Thickness, Soil.MapType.Mass); }
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
@@ -127,7 +136,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         public double[] NO3
         {
-            get { return Soil.Map(Soil.NO3N, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Soil.Map(NO3Solute.kgha, Soil.Thickness, Thickness, Soil.MapType.Mass); }
         }
 
         ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>

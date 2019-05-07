@@ -14,6 +14,7 @@ namespace Models.PMF.Organs
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Plant))]
     public class ReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
     {
         #region Parameter Input Classes
@@ -23,7 +24,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        protected Plant Plant = null;
+        protected Plant parentPlant = null;
 
         /// <summary>The summary</summary>
         [Link]
@@ -232,7 +233,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 Number = NumberFunction.Value();
                 MaximumSize = MaximumPotentialGrainSize.Value();
@@ -245,7 +246,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            Clear();
+            if (data.Plant == parentPlant)
+            {
+                Clear();
+                ClearBiomassFlows();
+            }
         }
 
         #endregion
@@ -258,14 +263,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-
-            }
+            if (parentPlant.IsAlive || parentPlant.IsEnding)
+                ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is being cut.</summary>
@@ -274,7 +273,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name);
 
                 Live.Clear();
                 Dead.Clear();
@@ -288,12 +287,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            Biomass total = Live + Dead;
-            if (total.Wt > 0.0)
+            if (Wt > 0.0)
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(total.Wt * 10, total.N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
             }
 
             Clear();
@@ -323,15 +321,17 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Allocated = new PMF.Biomass();
+            Live = new Biomass();
+            Dead = new Biomass();
+            DMDemand = new BiomassPoolType();
+            NDemand = new BiomassPoolType();
+            DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
+            Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            NDemand = new BiomassPoolType();
-            DMDemand = new BiomassPoolType();
-            NSupply = new BiomassSupplyType();
-            DMSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
         }
 
 
@@ -344,16 +344,13 @@ namespace Models.PMF.Organs
             if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
 
-
-            MaintenanceRespiration = 0;
             //Do Maintenance respiration
-            if (MaintenanceRespirationFunction != null)
-
+            MaintenanceRespiration = 0;
+            if (MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
             {
                 MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
                 MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
             }
-
         }
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
@@ -444,10 +441,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="value">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        /// <param name="amountToRemove">The fractions of biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -455,6 +452,15 @@ namespace Models.PMF.Organs
         {
             Live = new Biomass();
             Dead = new Biomass();
+        }
+
+        /// <summary>Clears the transferring biomass amounts.</summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
         }
     }
 }

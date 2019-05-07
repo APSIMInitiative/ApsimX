@@ -1,9 +1,15 @@
 ﻿namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
+    using Models.Core.Run;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     /// <summary>A job manager that looks after running all simulations</summary>
     public class RunOrganiser : IJobManager
@@ -11,10 +17,19 @@
         private Simulations simulations;
         private IModel modelSelectedByUser;
         private bool runTests;
+
         private IEnumerator<Simulation> simulationEnumerator;
+        private List<IRunnable> toolsToRun = new List<IRunnable>();
+
+        /// <summary>A delegate that gets called to indicate progress during an operation.</summary>
+        /// <param name="percent">Percentage compete.</param>
+        public delegate void OnProgress(int percent);
 
         /// <summary>Simulation names being run</summary>
-        public List<string> SimulationNamesBeingRun { get; private set; }
+        public int NumSimulationNamesBeingRun { get; private set; }
+
+        /// <summary>A list of simulation names to run.</summary>
+        public List<string> SimulationNamesToRun { get; set; }
 
         /// <summary>
         /// Clocks of simulations that have begun running
@@ -27,18 +42,6 @@
                     return (simulationEnumerator as Runner.SimulationEnumerator).simClocks;
                 else
                     return null;
-            }
-        }
-
-        /// <summary>All known simulation names</summary>
-        public List<string> AllSimulationNames
-        {
-            get
-            {
-                List<string> AllSimulationNames = new List<string>();
-                List<ISimulationGenerator> allModels = Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>().ToList();
-                allModels.ForEach(model => AllSimulationNames.AddRange(model.GetSimulationNames(false)));
-                return AllSimulationNames;
             }
         }
 
@@ -60,32 +63,29 @@
             // First time through there. Get a list of things to run.
             if (simulationEnumerator == null)
             {
+                // Find runnable objects that aren't simulations e.g. ExcelInput
+                toolsToRun = Apsim.FindAll(simulations, typeof(IRunnable)).Cast<IRunnable>().ToList();
+
                 // Send event telling all models that we're about to begin running.
                 Events events = new Events(simulations);
                 events.Publish("BeginRun", null);
 
-                Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser);
+                Runner.SimulationEnumerator enumerator= new Runner.SimulationEnumerator(modelSelectedByUser, SimulationNamesToRun);
                 simulationEnumerator = enumerator;
-                SimulationNamesBeingRun = enumerator.SimulationNamesBeingRun;
+                NumSimulationNamesBeingRun = enumerator.NumSimulationsBeingRun;
+            }
 
-                // Send event telling all models that we're about to begin running.
-                Dictionary<string, string> simAndFolderNames = new Dictionary<string, string>();
-                foreach (ISimulationGenerator simulation in Apsim.ChildrenRecursively(simulations, typeof(ISimulationGenerator)).Cast<ISimulationGenerator>())
-                {
-                    string folderName = Apsim.Parent(simulation as IModel, typeof(Folder)).Name;
-                    foreach (string simulationName in simulation.GetSimulationNames())
-                    {
-                        if (simAndFolderNames.ContainsKey(simulationName))
-                            throw new Exception(string.Format("Duplicate simulation names found: {0} in simulation {1}", simulationName, (simulation as IModel).Name));
-                        simAndFolderNames.Add(simulationName, folderName);
-                    }
-                }
-                events.Publish("RunCommencing", new object[] { simAndFolderNames, SimulationNamesBeingRun });
+            // Are there any runnable things?
+            if (toolsToRun.Count > 0)
+            {
+                var toolToRun = toolsToRun[0];
+                toolsToRun.RemoveAt(0);
+                return toolToRun;
             }
 
             // If we didn't find anything to run then return null to tell job runner to exit.
             if (simulationEnumerator.MoveNext())
-                return new RunSimulation(simulations, simulationEnumerator.Current, false);
+                return new RunSimulation(simulations, simulationEnumerator.Current);
             else
                 return null;
         }
@@ -93,15 +93,122 @@
         /// <summary>Called by the job runner when all jobs completed</summary>
         public void Completed()
         {
-            Events events = new Events(simulations);
-            events.Publish("EndRun", new object[] {this, new EventArgs() });
+            var storage = Apsim.Find(simulations, typeof(IDataStore)) as IDataStore;
+
+            storage.Writer.WaitForIdle();
+
+            RunPostSimulationTools(simulations, storage);
+
+            storage.Writer.Stop();
 
             // Optionally run the tests
             if (runTests)
             {
-                foreach (Tests test in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
-                    test.Test();
+                foreach (ITest test in Apsim.ChildrenRecursively(simulations, typeof(ITest)))
+                {
+                    simulations.Links.Resolve(test);
+
+                    // If we run into problems, we will want to include the name of the test in the 
+                    // exception's message. However, tests may be manager scripts, which always have
+                    // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
+                    // manager's name instead.
+                    string testName = test.Parent is Manager ? test.Parent.Name : test.Name;
+                    try
+                    {
+                        test.Run();
+                    }
+                    catch (Exception err)
+                    {
+                        throw new Exception("Encountered an error while running test " + testName, err);
+                    }
+                }
             }
+
+            simulationEnumerator = null;
+            storage.Reader.Refresh();
+        }
+
+        /// <summary>
+        /// Run all post simulation tools.
+        /// </summary>
+        /// <param name="rootModel">The root model to look under for tools to run.</param>
+        /// <param name="storage">The data store.</param>
+        public static void RunPostSimulationTools(IModel rootModel, IDataStore storage)
+        {
+            storage.Writer.Stop();
+            List<Exception> errors = new List<Exception>();
+            // Call all post simulation tools.
+            foreach (IPostSimulationTool tool in Apsim.FindAll(rootModel, typeof(IPostSimulationTool)))
+            {
+                if ((tool as IModel).Enabled)
+                {
+                    try
+                    {
+                        tool.Run(storage);
+                    }
+                    catch (Exception error)
+                    {
+                        errors.Add(error);
+                    }
+                    storage.Writer.WaitForIdle();
+                }
+            }
+
+            if (errors.Count > 0)
+            {
+                StringBuilder message = new StringBuilder(string.Format("{0} errors thrown from post simulation tools:{1}{1}", errors.Count, Environment.NewLine));
+                foreach (Exception error in errors)
+                    message.AppendLine(error.ToString());
+                throw new Exception(message.ToString());
+            }
+            storage.Writer.Stop();
+        }
+
+
+        /// <summary>
+        /// Generates .apsimx files for each child model under a given model.
+        /// Returns false if errors were encountered, or true otherwise.
+        /// </summary>
+        /// <param name="path">
+        /// Path which the files will be saved to. 
+        /// If null, the user will be prompted to choose a directory.
+        /// </param>
+        /// <param name="progressCallBack">Invoked when the method needs to indicate progress.</param>
+        /// <returns>null for success or a list of exceptions.</returns>
+        public List<Exception> GenerateApsimXFiles(string path, OnProgress progressCallBack)
+        {
+            IEnumerable<ISimulationDescriptionGenerator> children;
+            if (modelSelectedByUser is ISimulationDescriptionGenerator)
+                children = new List<IModel> { modelSelectedByUser }.Cast<ISimulationDescriptionGenerator>();
+            else
+                children = Apsim.ChildrenRecursively(modelSelectedByUser, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>();
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            List<Exception> errors = null;
+            int i = 0;
+            foreach (var sim in children)
+            {
+                progressCallBack?.Invoke(100 * i / children.Count());
+                try
+                {
+                    foreach (var simDescription in sim.GenerateSimulationDescriptions())
+                    {
+                        string st = FileFormat.WriteToString(simDescription.ToSimulation(simulations));
+                        File.WriteAllText(Path.Combine(path, simDescription.Name + ".apsimx"), st);
+                    }
+                }
+                catch (Exception err)
+                {
+                    if (errors == null)
+                        errors = new List<Exception>();
+                    errors.Add(err);
+                }
+
+                i++;
+            }
+            return errors;
         }
     }
 }
