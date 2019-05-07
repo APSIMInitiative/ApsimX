@@ -168,6 +168,7 @@
     <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTests.AddModelTests.json" />
     <EmbeddedResource Include="Core\ApsimFile\OnCreatedError.apsimx" />
     <EmbeddedResource Include="Core\PostSimulationTool.apsimx" />
+    <EmbeddedResource Include="defective.apsim" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
