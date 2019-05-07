@@ -25,41 +25,6 @@ namespace Models.AgPasture
         [ChildLink]
         public GenericTissue[] Tissue;
 
-        /// <summary>Return live biomass. Used by STOCK. g/m^2</summary>
-        public Biomass Live
-        {
-            get
-            {
-                double availPropn = 1.0;
-                if (this.Name == "Stolons")
-                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
-                Biomass live = new Biomass();
-                live.StructuralWt = DMLive * 0.10 * availPropn;
-                live.StructuralN = NLive * 0.10 * availPropn;
-                live.DMDOfStructural = DigestibilityLive;
-                return live;
-            }
-        }
-
-        /// <summary>Return dead biomass. Used by STOCK. g/m^2</summary>
-        public Biomass Dead
-        {
-            get
-            {
-                double availPropn = 1.0;
-                if (this.Name == "Stolons")
-                    availPropn = ((PastureSpecies)(this.Parent)).FractionStolonStanding;
-                Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead * 0.10 * availPropn;
-                dead.StructuralN = NDead * 0.10 * availPropn;
-                dead.DMDOfStructural = DigestibilityDead;
-                return dead;
-            }
-        }
-
-        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
-
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
@@ -105,6 +70,35 @@ namespace Models.AgPasture
         #endregion ---------------------------------------------------------------------------------------------------------
 
         #region Organ properties (summary of tissues)  ---------------------------------------------------------------------
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+
+        /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
+        public Biomass Live
+        {
+            get
+            {
+                Biomass live = new Biomass();
+                live.StructuralWt = DMLive * 0.10 * FractionStanding;
+                live.StructuralN = NLive * 0.10 * FractionStanding;
+                live.DMDOfStructural = DigestibilityLive;
+                return live;
+            }
+        }
+
+        /// <summary>Return dead biomass. Used by STOCK (g/m2).</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                Biomass dead = new Biomass();
+                dead.StructuralWt = DMDead * 0.10 * FractionStanding;
+                dead.StructuralN = NDead * 0.10 * FractionStanding;
+                dead.DMDOfStructural = DigestibilityDead;
+                return dead;
+            }
+        }
 
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
         internal double DMTotal
@@ -458,12 +452,18 @@ namespace Models.AgPasture
         public Soil mySoil = null;
 
         /// <summary>Soil nitrogen model.</summary>
-        private SoilNitrogen SoilNitrogen;
+        private INutrient SoilNitrogen;
 
-        /// <summary>The solute manager in this zone</summary>
-        public SoluteManager solutes = null;
+        /// <summary>The NO3 solute.</summary>
+        public ISolute NO3 = null;
 
-        /// <summary>Initialise the tissues for the roots.</summary>
+        /// <summary>The NH4 solute.</summary>
+        public ISolute NH4 = null;
+
+        /// <summary>The collection of tissues for this organ.</summary>
+        internal RootTissue[] Tissue { get; set; }
+
+        /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="nameOfSpecies">Name of the pasture species</param>
         /// <param name="numTissues">Number of tissues in this organ</param>
         /// <param name="initialDM">Initial dry matter weight</param>
@@ -472,7 +472,7 @@ namespace Models.AgPasture
         /// <param name="minNconc">The minimum N concentration</param>
         /// <param name="maxNconc">The maximum N concentration</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        /// <param name="fractionNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
+        /// <param name="fractionLuxNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
         /// <param name="specificRootLength">The specific root length (m/g)</param>
         /// <param name="rootDepthMaximum">The maximum root depth</param>
         /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
@@ -492,7 +492,7 @@ namespace Models.AgPasture
         public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
                                        double initialDM, double initialDepth,
                                        double optNconc, double minNconc, double maxNconc,
-                                       double minLiveDM, double fractionNremobilisable,
+                                       double minLiveDM, double fractionLuxNremobilisable,
                                        double specificRootLength, double rootDepthMaximum,
                                        double rootDistributionDepthParam, double rootDistributionExponent,
                                        double rootBottomDistributionFactor,
@@ -503,18 +503,19 @@ namespace Models.AgPasture
                                        double referenceRLD, double exponentSoilMoisture,
                                        Soil theSoil)
         {
-            //Initialise the tissues (typically, there are two tissues below ground, one live and one dead)
+            // Typically two tissues below ground, one live and one dead
             Tissue = new RootTissue[numTissues];
             nLayers = theSoil.Thickness.Length;
             for (int t = 0; t < Tissue.Length; t++)
                 Tissue[t] = new RootTissue(nLayers);
 
             // save the parameters for this organ
+            mySpeciesName = nameOfSpecies;            
             NConcOptimum = optNconc;
             NConcMinimum = minNconc;
             NConcMaximum = maxNconc;
             MinimumLiveDM = minLiveDM;
-            Tissue[0].FractionNLuxuryRemobilisable = fractionNremobilisable;
+            Tissue[0].FractionNLuxuryRemobilisable = fractionLuxNremobilisable;
             mySpecificRootLength = specificRootLength;
             myRootDepthMaximum = rootDepthMaximum;
             myRootDistributionDepthParam = rootDistributionDepthParam;
@@ -531,56 +532,48 @@ namespace Models.AgPasture
             myReferenceRLD = referenceRLD;
             myExponentSoilMoisture = exponentSoilMoisture;
 
-            // Initialise variables and links to soil
+            // Link to soil and initialise variables
             mySoil = theSoil;
-            ZoneName = mySoil.Parent.Name;
+            myZoneName = mySoil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
-            solutes = Apsim.Find(mySoil, typeof(SoluteManager)) as SoluteManager;
-            if (solutes == null)
-                throw new Exception("Cannot find solute manager in zone");
+            NO3 = Apsim.Find(mySoil, "NO3") as ISolute;
+            NH4 = Apsim.Find(mySoil, "NH4") as ISolute;
 
-            SoilNitrogen = Apsim.Find(mySoil, typeof(SoilNitrogen)) as SoilNitrogen;
+            SoilNitrogen = Apsim.Find(mySoil, typeof(INutrient)) as INutrient;
             if (SoilNitrogen == null)
                 throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
-            mySpeciesName = nameOfSpecies;
-            myInitialDMWeight = initialDM;
-            myInitialRootDepth = initialDepth;
-            Depth = myInitialRootDepth;
-            RootDistributionTarget(myRootDepthMaximum, myRootDistributionDepthParam, myRootBottomDistributionFactor, myRootDistributionExponent);
-            double[] iniRootFraction = CurrentRootDistributionTarget(myRootDepthMaximum);
+            Depth = initialDepth;
+            TargetDistribution = RootDistributionTarget();
+            double[] iniRootFraction = CurrentRootDistributionTarget();
             for (int layer = 0; layer < nLayers; layer++)
-                Tissue[0].DMLayer[layer] = myInitialDMWeight * iniRootFraction[layer];
-            Tissue[0].Namount = myInitialDMWeight * optNconc;
+            {
+                Tissue[0].DMLayer[layer] = initialDM * iniRootFraction[layer];
+                Tissue[0].NamountLayer[layer] = NConcOptimum * Tissue[0].DMLayer[layer];
+            }
         }
-
-        /// <summary>The collection of tissues for this organ.</summary>
-        internal RootTissue[] Tissue { get; set; }
-
-        /// <summary>Amount of plant available water in the soil (mm).</summary>
-        internal double[] mySoilWaterAvailable { get; private set; }
-
-        /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
-        internal double[] mySoilNH4Available { get; private set; }
-
-        /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
-        internal double[] mySoilNO3Available { get; private set; }
-
-        /// <summary>Name of root zone.</summary>
-        internal string ZoneName { get; private set; }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
 
-        /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
-        private double myInitialDMWeight = 500.0;
-
-        /// <summary>Initial rooting depth (mm).</summary>
-        private double myInitialRootDepth = 750.0;
-
         /// <summary>Name of pasture species</summary>
         private string mySpeciesName;
+
+        /// <summary>Name of root zone.</summary>
+        internal string myZoneName { get; private set; }
+
+        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
+        internal double NConcOptimum = 2.0;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        internal double NConcMaximum = 2.5;
+
+        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
+        internal double NConcMinimum = 0.6;
+
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        internal double MinimumLiveDM = 0.0;
 
         /// <summary>Specific root length (m/gDM).</summary>
         private double mySpecificRootLength = 100.0;
@@ -630,28 +623,13 @@ namespace Models.AgPasture
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
 
-        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        internal double NConcOptimum = 2.0;
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        internal double NConcMaximum  = 2.5;
-
-        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        internal double NConcMinimum = 0.6;
-
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        internal double MinimumLiveDM = 0.0;
-
         /// <summary>Gets or sets the rooting depth (mm).</summary>
         internal double Depth { get; set; }
 
         /// <summary>Gets or sets the layer at the bottom of the root zone.</summary>
-        internal int BottomLayer
+        internal int BottomLayer 
         {
-            get
-            {
-                return RootZoneBottomLayer();
-            }
+            get { return RootZoneBottomLayer(); }
         }
 
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
@@ -926,28 +904,6 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
-        /// <param name="layer">The index for the layer being considered</param>
-        /// <returns>The fraction of the layer that is explored by roots (0-1)</returns>
-        internal double FractionLayerWithRoots(int layer)
-        {
-            double fractionInLayer = 0.0;
-            if (layer < BottomLayer)
-            {
-                fractionInLayer = 1.0;
-            }
-            else if (layer == BottomLayer)
-            {
-                double depthTillTopThisLayer = 0.0;
-                for (int z = 0; z < layer; z++)
-                    depthTillTopThisLayer += mySoil.Thickness[z];
-                fractionInLayer = (Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
-                fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
-            }
-
-            return fractionInLayer;
-        }
-
         /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
         public double[] RootLengthDensity
         {
@@ -964,178 +920,14 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
-        /// <param name="myZone">The soil information</param>
-        /// <param name="mySoilWaterUptake">Soil water uptake</param>
-        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
-        {
-            if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture)
-                PlantAvailableSoilNBasicAgPasture(myZone);
-            else if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.DefaultAPSIM)
-                PlantAvailableSoilNDefaultAPSIM(myZone);
-            else if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.AlternativeRLD)
-                PlantAvailableSoilNAlternativeRLD(myZone);
-            else if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.AlternativeWup)
-                PlantAvailableSoilNAlternativeWup(myZone, mySoilWaterUptake);
-        }
+        /// <summary>Amount of plant available water in the soil (mm).</summary>
+        internal double[] mySoilWaterAvailable { get; private set; }
 
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>This is a basic method, used as default in old AgPasture, all N in the root zone is available</remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNBasicAgPasture(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            for (int layer = 0; layer <= BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
-                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
-            }
-        }
+        /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
+        internal double[] mySoilNH4Available { get; private set; }
 
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>
-        /// This method approximates the default approach in APSIM plants (method 3 in Plant1 models)
-        /// Soil water status and uptake coefficient control the availability, which is a square function of N content.
-        /// Uptake is capped for a maximum value plants can take in one day.
-        /// </remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNDefaultAPSIM(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            double swFac;  // the soil water factor
-            double bdFac;  // the soil density factor
-            double potAvailableN; // potential available N
-            for (int layer = 0; layer <= BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= mySoil.DULmm[layer])
-                    swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
-                    swFac = 0.0;
-                else
-                {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
-                    waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
-                }
-
-                // get NH4 available
-                potAvailableN = Math.Pow(myZone.NH4N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNH4;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer] * layerFrac, potAvailableN);
-
-                // get NO3 available
-                potAvailableN = Math.Pow(myZone.NO3N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNO3;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer] * layerFrac, potAvailableN);
-            }
-
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > myMaximumNUptake)
-            {
-                double upFraction = myMaximumNUptake / potAvailableN;
-                for (int layer = 0; layer <= BottomLayer; layer++)
-                {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
-                }
-            }
-        }
-
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>
-        /// This method considers soil water status and root length density to define factors controlling N availability.
-        /// Soil water status is used to define a factor that varies from zero at LL, below which no uptake can happen, 
-        ///  to one at DUL, above which no restrictions to uptake exist.
-        /// Root length density is used to define a factor varying from zero if there are no roots to one when root length
-        ///  density is equal to a ReferenceRLD, above which there are no restrictions for uptake.
-        /// Factors for each N form can also alter the amount available.
-        /// Uptake is caped for a maximum value plants can take in one day.
-        /// </remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNAlternativeRLD(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            double swFac;  // the soil water factor
-            double rldFac;  // the root density factor
-            double potAvailableN; // potential available N
-            for (int layer = 0; layer <= BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                rldFac = Math.Min(1.0, MathUtilities.Divide(RootLengthDensity[layer], myReferenceRLD, 1.0));
-                if (myZone.Water[layer] >= mySoil.DULmm[layer])
-                    swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
-                    swFac = 0.0;
-                else
-                {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
-                }
-
-                // get NH4 available
-                potAvailableN = myZone.NH4N[layer] * layerFrac;
-                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNH4);
-
-                // get NO3 available
-                potAvailableN = myZone.NO3N[layer] * layerFrac;
-                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNO3);
-            }
-
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > myMaximumNUptake)
-            {
-                double upFraction = myMaximumNUptake / potAvailableN;
-                for (int layer = 0; layer <= BottomLayer; layer++)
-                {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
-                }
-            }
-        }
-
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>
-        /// This method considers soil water as the main factor controlling N availability/uptake.
-        /// Availability is given by the proportion of water taken up in each layer, further modified by uptake factors
-        /// Uptake is caped for a maximum value plants can take in one day.
-        /// </remarks>
-        /// <param name="myZone">The soil information</param>
-        /// <param name="mySoilWaterUptake">Soil water uptake</param>
-        private void PlantAvailableSoilNAlternativeWup(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            double potAvailableN; // potential available N
-            for (int layer = 0; layer <= BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                double swuFac = MathUtilities.Divide(mySoilWaterUptake[layer], myZone.Water[layer], 0.0);
-
-                // get NH4 available
-                potAvailableN = myZone.NH4N[layer] * layerFrac;
-                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNH4);
-
-                // get NO3 available
-                potAvailableN = myZone.NO3N[layer] * layerFrac;
-                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNO3);
-            }
-
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > myMaximumNUptake)
-            {
-                double upFraction = myMaximumNUptake / potAvailableN;
-                for (int layer = 0; layer <= BottomLayer; layer++)
-                {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
-                }
-            }
-        }
+        /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
+        internal double[] mySoilNO3Available { get; private set; }
 
         #endregion ---------------------------------------------------------------------------------------------------------
 
@@ -1205,30 +997,33 @@ namespace Models.AgPasture
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
         /// <param name="amountDM">The DM amount to send (kg/ha)</param>
         /// <param name="amountN">The N amount to send (kg/ha)</param>
-        public void DoDetachBiomassToSoilFOM(double amountDM, double amountN)
+        public void DoDetachBiomass(double amountDM, double amountN)
         {
-            FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
+            if (amountDM + amountN > 0.0)
             {
-                FOMType fomData = new FOMType();
-                fomData.amount = amountDM * Tissue[0].FractionWt[layer];
-                fomData.N = amountN * Tissue[0].FractionWt[layer];
-                fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
-                fomData.P = 0.0; // P not considered here
-                fomData.AshAlk = 0.0; // Ash not considered here
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = amountDM * Tissue[0].FractionWt[layer];
+                    fomData.N = amountN * Tissue[0].FractionWt[layer];
+                    fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
+                    fomData.P = 0.0; // P not considered here
+                    fomData.AshAlk = 0.0; // Ash not considered here
 
-                FOMLayerLayerType layerData = new FOMLayerLayerType();
-                layerData.FOM = fomData;
-                layerData.CNR = 0.0; // not used here
-                layerData.LabileP = 0.0; // not used here
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0; // not used here
+                    layerData.LabileP = 0.0; // not used here
 
-                FOMdataLayer[layer] = layerData;
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = mySpeciesName;
+                FOMData.Layer = FOMdataLayer;
+                SoilNitrogen.DoIncorpFOM(FOMData);
             }
-
-            FOMLayerType FOMData = new FOMLayerType();
-            FOMData.Type = mySpeciesName;
-            FOMData.Layer = FOMdataLayer;
-            SoilNitrogen.DoIncorpFOM(FOMData);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -1293,6 +1088,200 @@ namespace Models.AgPasture
             return (dmIsOk || nIsOk);
         }
 
+        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
+        /// <param name="myZone">The soil information</param>
+        /// <param name="mySoilWaterUptake">Soil water uptake</param>
+        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
+        {
+            if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture)
+                PlantAvailableSoilNBasicAgPasture(myZone);
+            else if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.DefaultAPSIM)
+                PlantAvailableSoilNDefaultAPSIM(myZone);
+            else if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.AlternativeRLD)
+                PlantAvailableSoilNAlternativeRLD(myZone);
+            else if (myNitrogenAvailableMethod == PastureSpecies.PlantAvailableNitrogenMethod.AlternativeWup)
+                PlantAvailableSoilNAlternativeWup(myZone, mySoilWaterUptake);
+        }
+
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
+        /// <remarks>This is a basic method, used as default in old AgPasture, all N in the root zone is available</remarks>
+        /// <param name="myZone">The soil information</param>
+        private void PlantAvailableSoilNBasicAgPasture(ZoneWaterAndN myZone)
+        {
+            double layerFrac; // the fraction of layer within the root zone
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                layerFrac = FractionLayerWithRoots(layer);
+                mySoilNH4Available[layer] = myZone.PlantAvailableNH4N[layer] * layerFrac;
+                mySoilNO3Available[layer] = myZone.PlantAvailableNO3N[layer] * layerFrac;
+            }
+        }
+
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
+        /// <remarks>
+        /// This method approximates the default approach in APSIM plants (method 3 in Plant1 models)
+        /// Soil water status and uptake coefficient control the availability, which is a square function of N content.
+        /// Uptake is capped for a maximum value plants can take in one day.
+        /// </remarks>
+        /// <param name="myZone">The soil information</param>
+        private void PlantAvailableSoilNDefaultAPSIM(ZoneWaterAndN myZone)
+        {
+            double layerFrac; // the fraction of layer within the root zone
+            double swFac;  // the soil water factor
+            double bdFac;  // the soil density factor
+            double potAvailableN; // potential available N
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                layerFrac = FractionLayerWithRoots(layer);
+                bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
+                if (myZone.Water[layer] >= mySoil.DULmm[layer])
+                    swFac = 1.0;
+                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
+                    swFac = 0.0;
+                else
+                {
+                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
+                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
+                }
+
+                // get NH4 available
+                potAvailableN = Math.Pow(myZone.PlantAvailableNH4N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNH4;
+                mySoilNH4Available[layer] = Math.Min(myZone.PlantAvailableNH4N[layer] * layerFrac, potAvailableN);
+
+                // get NO3 available
+                potAvailableN = Math.Pow(myZone.PlantAvailableNO3N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNO3;
+                mySoilNO3Available[layer] = Math.Min(myZone.PlantAvailableNO3N[layer] * layerFrac, potAvailableN);
+            }
+
+            // check for maximum uptake
+            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
+            if (potAvailableN > myMaximumNUptake)
+            {
+                double upFraction = myMaximumNUptake / potAvailableN;
+                for (int layer = 0; layer <= BottomLayer; layer++)
+                {
+                    mySoilNH4Available[layer] *= upFraction;
+                    mySoilNO3Available[layer] *= upFraction;
+                }
+            }
+        }
+
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
+        /// <remarks>
+        /// This method considers soil water status and root length density to define factors controlling N availability.
+        /// Soil water status is used to define a factor that varies from zero at LL, below which no uptake can happen, 
+        ///  to one at DUL, above which no restrictions to uptake exist.
+        /// Root length density is used to define a factor varying from zero if there are no roots to one when root length
+        ///  density is equal to a ReferenceRLD, above which there are no restrictions for uptake.
+        /// Factors for each N form can also alter the amount available.
+        /// Uptake is caped for a maximum value plants can take in one day.
+        /// </remarks>
+        /// <param name="myZone">The soil information</param>
+        private void PlantAvailableSoilNAlternativeRLD(ZoneWaterAndN myZone)
+        {
+            double layerFrac; // the fraction of layer within the root zone
+            double swFac;  // the soil water factor
+            double rldFac;  // the root density factor
+            double potAvailableN; // potential available N
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                layerFrac = FractionLayerWithRoots(layer);
+                rldFac = Math.Min(1.0, MathUtilities.Divide(RootLengthDensity[layer], myReferenceRLD, 1.0));
+                if (myZone.Water[layer] >= mySoil.DULmm[layer])
+                    swFac = 1.0;
+                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
+                    swFac = 0.0;
+                else
+                {
+                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
+                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
+                }
+
+                // get NH4 available
+                potAvailableN = myZone.PlantAvailableNH4N[layer] * layerFrac;
+                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNH4);
+
+                // get NO3 available
+                potAvailableN = myZone.PlantAvailableNO3N[layer] * layerFrac;
+                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNO3);
+            }
+
+            // check for maximum uptake
+            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
+            if (potAvailableN > myMaximumNUptake)
+            {
+                double upFraction = myMaximumNUptake / potAvailableN;
+                for (int layer = 0; layer <= BottomLayer; layer++)
+                {
+                    mySoilNH4Available[layer] *= upFraction;
+                    mySoilNO3Available[layer] *= upFraction;
+                }
+            }
+        }
+
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
+        /// <remarks>
+        /// This method considers soil water as the main factor controlling N availability/uptake.
+        /// Availability is given by the proportion of water taken up in each layer, further modified by uptake factors
+        /// Uptake is caped for a maximum value plants can take in one day.
+        /// </remarks>
+        /// <param name="myZone">The soil information</param>
+        /// <param name="mySoilWaterUptake">Soil water uptake</param>
+        private void PlantAvailableSoilNAlternativeWup(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
+        {
+            double layerFrac; // the fraction of layer within the root zone
+            double potAvailableN; // potential available N
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                layerFrac = FractionLayerWithRoots(layer);
+                double swuFac = MathUtilities.Divide(mySoilWaterUptake[layer], myZone.Water[layer], 0.0);
+
+                // get NH4 available
+                potAvailableN = myZone.PlantAvailableNH4N[layer] * layerFrac;
+                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNH4);
+
+                // get NO3 available
+                potAvailableN = myZone.PlantAvailableNO3N[layer] * layerFrac;
+                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNO3);
+            }   
+
+            // check for maximum uptake
+            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
+            if (potAvailableN > myMaximumNUptake)
+            {
+                double upFraction = myMaximumNUptake / potAvailableN;
+                for (int layer = 0; layer <= BottomLayer; layer++)
+                {
+                    mySoilNH4Available[layer] *= upFraction;
+                    mySoilNO3Available[layer] *= upFraction;
+                }
+            }
+        }
+
+        /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
+        /// <param name="layer">The index for the layer being considered</param>
+        /// <returns>The fraction of the layer that is explored by roots (0-1)</returns>
+        internal double FractionLayerWithRoots(int layer)
+        {
+            double fractionInLayer = 0.0;
+            if (layer < BottomLayer)
+            {
+                fractionInLayer = 1.0;
+            }
+            else if (layer == BottomLayer)
+            {
+                double depthTillTopThisLayer = 0.0;
+                for (int z = 0; z < layer; z++)
+                    depthTillTopThisLayer += mySoil.Thickness[z];
+                fractionInLayer = (Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
+            }
+
+            return fractionInLayer;
+        }
 
         /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
         /// <returns>The index of a layer</returns>
@@ -1319,13 +1308,8 @@ namespace Models.AgPasture
         /// This distribution is solely based on root parameters (maximum depth and distribution parameters)
         /// These values will be used to allocate initial rootDM as well as any growth over the profile
         /// </remarks>
-        /// <param name="myRootDepthMaximum"></param>
-        /// <param name="myRootDistributionDepthParam"></param>
-        /// <param name="rootBottomDistributionFactor"></param>
-        /// <param name="myRootDistributionExponent"></param>
         /// <returns>A weighting factor for each soil layer (mm equivalent)</returns>
-        public void RootDistributionTarget(double myRootDepthMaximum, double myRootDistributionDepthParam, 
-                                           double rootBottomDistributionFactor, double myRootDistributionExponent)
+        public double[] RootDistributionTarget()
         {
             // 1. Base distribution calculated using a combination of linear and power functions:
             //  It considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion),
@@ -1356,7 +1340,7 @@ namespace Models.AgPasture
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = myRootDepthMaximum * rootBottomDistributionFactor;
+                    double maxRootDepth = myRootDepthMaximum * myRootBottomDistributionFactor;
                     result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), myRootDistributionExponent + 1)
                                   - Math.Pow(maxRootDepth - Math.Min(depthBottom, myRootDepthMaximum), myRootDistributionExponent + 1);
                     result[layer] /= (myRootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, myRootDistributionExponent);
@@ -1372,18 +1356,16 @@ namespace Models.AgPasture
                 depthTop += mySoil.Thickness[layer];
             }
 
-            TargetDistribution = result;
+            return result;
         }
-
 
         /// <summary>Computes the current target distribution of roots in the soil profile.</summary>
         /// <remarks>
         /// This distribution is a correction of the target distribution, taking into account the depth of soil
         /// as well as the current rooting depth
         /// </remarks>
-        /// <param name="myRootDepthMaximum"></param>
         /// <returns>The proportion of root mass expected in each soil layer (0-1)</returns>
-        public double[] CurrentRootDistributionTarget(double myRootDepthMaximum)
+        public double[] CurrentRootDistributionTarget()
         {
             double cumProportion = 0.0;
             double topLayersDepth = 0.0;
@@ -1542,7 +1524,7 @@ namespace Models.AgPasture
         const double CNratioCellWall = 100.0;
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double MyPrecision = 0.000000001;
+        internal const double MyPrecision = 0.0000000001;
 
         #endregion ---------------------------------------------------------------------------------------------------------
     }
@@ -1651,7 +1633,7 @@ namespace Models.AgPasture
             // additions need to consider distribution over the profile
             DMTransferedIn = DMLayersTransferedIn.Sum();
             NTransferedIn = NLayersTransferedIn.Sum();
-            if ((DMTransferedIn > MyPrecision) && (NTransferedIn > MyPrecision))
+            if ((DMTransferedIn > MyPrecision) || (NTransferedIn > MyPrecision))
             {
                 for (int layer = 0; layer < nLayers; layer++)
                 {

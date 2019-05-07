@@ -29,20 +29,20 @@ namespace UserInterface.Views
             Grid1 = new GridView(owner);
             Grid2 = new GridView(owner);
 
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
             VPaned vpaned1 = (VPaned)builder.GetObject("vpaned1");
             VPaned vpaned2 = (VPaned)builder.GetObject("vpaned2");
             VBox vbox1 = (VBox)builder.GetObject("vbox1");
-            _mainWidget = vpaned1;
+            mainWidget = vpaned1;
             vbox1.PackStart((Grid1 as GridView).MainWidget, true, true, 0);
             vpaned2.Pack1((Grid2 as GridView).MainWidget, true, true);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
     }
 }

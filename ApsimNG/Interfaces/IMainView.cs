@@ -95,7 +95,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
-        /// <param name="Message">Message to be displayed.</param>
+        /// <param name="message">Message to be displayed.</param>
         /// <param name="errorLevel">Error level of the message. Affects the colour of message text.</param>
         /// <param name="overwrite">
         /// If true, all existing messages will be overridden.
@@ -106,7 +106,7 @@ namespace UserInterface.Interfaces
         /// Whether or not a 'more info' button should be drawn under the message. 
         /// If the message is not an error, this parameter has no effect.
         /// </param>
-        void ShowMessage(string Message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
+        void ShowMessage(string message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
 
         /// <summary>
         /// Displays an error message with a 'more info' button.
@@ -125,13 +125,6 @@ namespace UserInterface.Interfaces
         /// <param name="name">Name of the resource.</param>
         /// <returns>True if the assembly contains the resource. False otherwise.</returns>
         bool HasResource(string name);
-
-        /// <summary>
-        /// Loads a Gtk builder object from a resource.
-        /// </summary>
-        /// <param name="resourceName">Name of the resource.</param>
-        /// <returns>Gtk builder object.</returns>
-        Builder BuilderFromResource(string resourceName);
 
         /// <summary>
         /// Show progress bar with the specified percent.
@@ -169,6 +162,11 @@ namespace UserInterface.Interfaces
         void SelectTabContaining(object o);
 
         /// <summary>
+        /// Toggles between the default and dark GTK themes.
+        /// </summary>
+        void RefreshTheme();
+
+        /// <summary>
         /// Gets the text from a clipboard.
         /// </summary>
         /// <param name="clipboardName">Name of the clipboard.</param>
@@ -181,6 +179,14 @@ namespace UserInterface.Interfaces
         /// <param name="text">Text to be copied.</param>
         /// <param name="clipboardName">Name of the clipboard.</param>
         void SetClipboardText(string text, string clipboardName);
+
+        /// <summary>
+        /// Invoked when theme is toggled.
+        /// Toggles the icon displayed on the "toggle theme" button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        void ToggleTheme(object sender, EventArgs args);
 
         /// <summary>
         /// Invoked when application tries to close

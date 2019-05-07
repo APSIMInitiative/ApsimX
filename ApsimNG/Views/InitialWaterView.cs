@@ -35,7 +35,7 @@ namespace UserInterface.Views
         /// </summary>
         public InitialWaterView(ViewBase owner) : base(owner)
         {
-            Builder builder = MasterView.BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.InitialWaterView.glade");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             spinbutton1 = (SpinButton)builder.GetObject("spinbutton1");
             entry1 = (Entry)builder.GetObject("entry1");
@@ -45,7 +45,7 @@ namespace UserInterface.Views
             radiobutton1 = (RadioButton)builder.GetObject("radiobutton1");
             radiobutton2 = (RadioButton)builder.GetObject("radiobutton2");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
-            _mainWidget = hpaned1;
+            mainWidget = hpaned1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
@@ -63,7 +63,7 @@ namespace UserInterface.Views
             spinbutton1.Changed += OnNumericUpDown1ValueChanged;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
             frameRadio1.Toggled += FrameRadio_Toggled;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -78,8 +78,8 @@ namespace UserInterface.Views
             comboRender.Destroy();
             graphView1.MainWidget.Destroy();
             graphView1 = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

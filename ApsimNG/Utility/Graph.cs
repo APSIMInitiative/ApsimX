@@ -21,10 +21,10 @@
 
             if (graphXmL != null)
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(graphXmL);
-
-                Models.Graph.Graph graph = XmlUtilities.Deserialise(doc.DocumentElement, typeof(Models.Graph.Graph)) as Models.Graph.Graph;
+                List<Exception> errors = null;
+                Models.Graph.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph.Graph>(graphXmL, out errors);
+                if (errors != null && errors.Any())
+                    throw errors.First();
                 Apsim.ParentAllChildren(graph);
                 return graph;
             }

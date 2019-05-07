@@ -82,21 +82,14 @@ namespace Models.Soils
         {
             get
             {
-                try
+                Soil parentSoil = Soil;
+                if (parentSoil != null)
                 {
-                    Soil parentSoil = Soil;
-                    if (parentSoil != null)
-                    {
-                        double[] PAWCALLlayers = MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
-                        return Soil.Map(PAWCALLlayers, Soil.Thickness, Thickness, Soil.MapType.Mass);
-                    }
-                    else
-                        return new double[0];
+                    double[] PAWCALLlayers = MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
+                    return Soil.Map(PAWCALLlayers, Soil.Thickness, Thickness, Soil.MapType.Mass);
                 }
-                catch (Exception)
-                {
+                else
                     return new double[0];
-                }
             }
         }
 

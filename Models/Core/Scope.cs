@@ -28,34 +28,41 @@ namespace Models.Core
             if (cache.TryGetValue(relativeToFullPath, out modelsInScope))
                 return modelsInScope.ToArray();
 
-            // The algorithm is to find the parent Zone of the specified model.
-            // Then return all children of this zone recursively and then recursively 
-            // the direct children of the parents of the zone.
-            IModel parentZone = FindScopedParentModel(relativeTo);
-            if (parentZone == null)
+            // The algorithm is to find the parent scoped model of the specified model.
+            // Then return all descendants of the scoped model and then recursively
+            // the direct children of the parents of the scoped model. For any direct
+            // child of the parents of the scoped model, we also return its descendants
+            // if it is not a scoped model.
+
+            IModel scopedParent = FindScopedParentModel(relativeTo);
+            if (scopedParent == null)
                 throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
 
-            // return all models in zone and all direct children of zones parent.
+            // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
-            modelsInScope.Add(parentZone);
-            modelsInScope.AddRange(Apsim.ChildrenRecursively(parentZone));
-            while (parentZone.Parent != null)
+            modelsInScope.Add(scopedParent);
+            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent));
+            while (scopedParent.Parent != null)
             {
-                parentZone = parentZone.Parent;
-                modelsInScope.Add(parentZone);
-                foreach (IModel child in parentZone.Children)
+                scopedParent = scopedParent.Parent;
+                modelsInScope.Add(scopedParent);
+                foreach (IModel child in scopedParent.Children)
                 {
                     if (!modelsInScope.Contains(child))
                     {
                         modelsInScope.Add(child);
+
+                        // Return the child's descendants if it is not a scoped model.
+                        // This ensures that a soil's water node will be in scope of
+                        // a manager inside a folder inside a zone.
                         if (!IsScopedModel(child))
                             modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
                     }
                 }
             }
 
-            if (!modelsInScope.Contains(parentZone))
-                modelsInScope.Add(parentZone); // top level simulation
+            if (!modelsInScope.Contains(scopedParent))
+                modelsInScope.Add(scopedParent); // top level simulation
 
             // add to cache for next time.
             cache.Add(relativeToFullPath, modelsInScope);
@@ -87,7 +94,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="relativeTo"></param>
         /// <returns></returns>
-        private static bool IsScopedModel(IModel relativeTo)
+        public static bool IsScopedModel(IModel relativeTo)
         {
             return relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
         }

@@ -13,7 +13,7 @@
     using System.Reflection;
     using System.Text;
 
-    class HtmlToMigraDoc
+    public class HtmlToMigraDoc
     {
         private static bool foundCode = false;
 
@@ -146,7 +146,7 @@
             string path = Path.Combine(imageDirectory, imageName);
             using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources." + imageName).CopyTo(file);
+                GetImageResource(imageName).CopyTo(file);
             }
 
             return path;
@@ -273,6 +273,20 @@
         }
 
         #endregion
+
+        /// <summary>
+        /// Fetches an image from a resource, using a case-insensitive search.
+        /// </summary>
+        /// <param name="imageName">Name of the iamge.</param>
+        /// <returns></returns>
+        private static Stream GetImageResource(string imageName)
+        {
+            string imagePath = "ApsimNG.Resources." + imageName;
+            foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
+                    return Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            throw new Exception("Unable to locate resource: " + imageName);
+        }
 
         /// <summary>
         /// Add a paragraph.
@@ -562,10 +576,10 @@
             if (doc.Styles["HorizontalRule"] == null)
             { 
                 var hr = doc.AddStyle("HorizontalRule", "Normal");
-                var hrBorder = new MigraDoc.DocumentObjectModel.Border();
-                hrBorder.Width = "1pt";
-                hrBorder.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
-                hr.ParagraphFormat.Borders.Bottom = hrBorder;
+                var border = new MigraDoc.DocumentObjectModel.Border();
+                border.Width = "1pt";
+                border.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+                hr.ParagraphFormat.Borders.Bottom = border;
                 hr.ParagraphFormat.LineSpacing = 0;
                 hr.ParagraphFormat.SpaceBefore = 15;
             }

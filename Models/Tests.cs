@@ -54,10 +54,10 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            IStorageReader DS = PO.Parent as IStorageReader;
+            IDataStore DS = PO.Parent as IDataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            DataTable POtable = DS.GetData(PO.Name);
+            DataTable POtable = DS.Reader.GetData(PO.Name);
             List<string> columnNames;
             string sigIdent = "X";
 
@@ -253,7 +253,8 @@ namespace Models
         {
             if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
+                if (Parent != null)
+                    tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
 
                 // Run test suite so that data table is full.
                 Test(accept: false, GUIrun: true);
@@ -274,7 +275,7 @@ namespace Models
                 }
 
                 int rowIndex = 0;
-                while (rowIndex < Table.Rows.Count)
+                while (Table != null && rowIndex < Table.Rows.Count)
                 {
                     DataRow row = dataForDoc.NewRow();
                     dataForDoc.Rows.Add(row);

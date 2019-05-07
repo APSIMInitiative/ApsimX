@@ -1,24 +1,17 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ExplorerPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
+    using Commands;
+    using Interfaces;
+    using Models.Core;
+    using Models.Core.ApsimFile;
+    using Models.Core.Runners;
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using Importer;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using System.Linq;
     using Utility;
     using Views;
 
@@ -148,7 +141,6 @@ namespace UserInterface.Presenters
         public void Refresh()
         {
             view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
-            this.WriteLoadErrors();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -198,9 +190,7 @@ namespace UserInterface.Presenters
 
                         // need to test is ApsimXFile has changed and only prompt when changes have occured.
                         // serialise ApsimXFile to buffer
-                        StringWriter o = new StringWriter();
-                        this.ApsimXFile.Write(o);
-                        string newSim = o.ToString();
+                        string newSim = FileFormat.WriteToString(ApsimXFile);
 
                         StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
                         string origSim = simStream.ReadToEnd(); // read original file to buffer2
@@ -327,7 +317,7 @@ namespace UserInterface.Presenters
 
             // Get a complete list of all models in this file.
             List<IModel> allModels = Apsim.ChildrenRecursivelyVisible(this.ApsimXFile);
-
+            allModels.Insert(0, ApsimXFile);
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
             if (this.view.Tree.SelectedNode == string.Empty)
@@ -401,84 +391,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Pastes the contents of the clipboard.
+        /// Adds a model to a parent model.
         /// </summary>
-        /// <param name="xml">The XML document text</param>
+        /// <param name="st">The string representation (JSON or XML) of a model.</param>
         /// <param name="parentPath">Path to the parent</param>
-        public void Add(string xml, string parentPath)
+        public void Add(string st, string parentPath)
         {
-            try
-            {
-                XmlDocument document = new XmlDocument();
-                try
-                {
-                    document.LoadXml(xml);
-                }
-                catch (XmlException err)
-                {
-                    MainPresenter.ShowError(new Exception("Invalid XML. Are you sure you're trying to paste an APSIM model?", err));
-                }
-
-                object newModel = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly);
-
-                // See if the presenter is happy with this model being added.
-                Model parentModel = Apsim.Get(ApsimXFile, parentPath) as Model;
-                AllowDropArgs allowDropArgs = new AllowDropArgs();
-                allowDropArgs.NodePath = parentPath;
-                allowDropArgs.DragObject = new DragObject()
-                {
-                    NodePath = null,
-                    ModelType = newModel.GetType(),
-                    Xml = GetClipboardText()
-                };
-
-                OnAllowDrop(null, allowDropArgs);
-
-                // If it is happy then issue an AddModelCommand.
-                if (allowDropArgs.Allow)
-                {
-                    // If the model xml is a soil object then try and convert from old
-                    // APSIM format to new.
-                    if (document.DocumentElement.Name == "Soil" && XmlUtilities.Attribute(document.DocumentElement, "Name") != string.Empty)
-                    {
-                        XmlDocument newDoc = new XmlDocument();
-                        newDoc.AppendChild(newDoc.CreateElement("D"));
-                        APSIMImporter importer = new APSIMImporter();
-                        importer.ImportSoil(document.DocumentElement, newDoc.DocumentElement, newDoc.DocumentElement);
-                        XmlNode soilNode = XmlUtilities.FindByType(newDoc.DocumentElement, "Soil");
-                        if (soilNode != null &&
-                            XmlUtilities.FindByType(soilNode, "Sample") == null &&
-                            XmlUtilities.FindByType(soilNode, "InitialWater") == null)
-                        {
-                            // Add in an initial water and initial conditions models.
-                            XmlNode initialWater = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("InitialWater"));
-                            XmlUtilities.SetValue(initialWater, "Name", "Initial water");
-                            XmlUtilities.SetValue(initialWater, "PercentMethod", "FilledFromTop");
-                            XmlUtilities.SetValue(initialWater, "FractionFull", "1");
-                            XmlUtilities.SetValue(initialWater, "DepthWetSoil", "NaN");
-                            XmlNode initialConditions = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("Sample"));
-                            XmlUtilities.SetValue(initialConditions, "Name", "Initial conditions");
-                            XmlUtilities.SetValue(initialConditions, "Thickness/double", "1800");
-                            XmlUtilities.SetValue(initialConditions, "NO3/double", "10");
-                            XmlUtilities.SetValue(initialConditions, "NH4/double", "1");
-                            XmlUtilities.SetValue(initialConditions, "NO3Units", "kgha");
-                            XmlUtilities.SetValue(initialConditions, "NH4Units", "kgha");
-                            XmlUtilities.SetValue(initialConditions, "SWUnits", "Volumetric");
-                        }
-
-                        document.LoadXml(newDoc.DocumentElement.InnerXml);
-                    }
-
-                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly) as IModel;
-
-                    AddModelCommand command = new AddModelCommand(parentModel, document.DocumentElement, GetNodeDescription(child), view);
-                    CommandHistory.Add(command, true);
-                }
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
-            }
+            AddModelCommand command = new AddModelCommand(parentPath, st, view, this);
+            CommandHistory.Add(command, true);
         }
 
         /// <summary>Deletes the specified model.</summary>
@@ -524,6 +444,15 @@ namespace UserInterface.Presenters
             {
                 MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Move a node to a new parent node.
+        /// </summary>
+        public void Move(string originalPath, IModel toParent, TreeViewNode nodeDescription)
+        {
+            view.Tree.Delete(originalPath);
+            view.Tree.AddChild(Apsim.FullPath(toParent), nodeDescription);
         }
 
         /// <summary>
@@ -631,16 +560,6 @@ namespace UserInterface.Presenters
         /// </param>
         public bool GenerateApsimXFiles(IModel model, string path = null)
         {
-            List<IModel> children;
-            if (model is ISimulationGenerator)
-            {
-                children = new List<IModel> { model };
-            }
-            else
-            {
-                children = Apsim.ChildrenRecursively(model, typeof(ISimulationGenerator));
-            }
-
             if (string.IsNullOrEmpty(path))
             {
                 IFileDialog fileChooser = new FileDialog()
@@ -649,40 +568,29 @@ namespace UserInterface.Presenters
                     Action = FileDialog.FileActionType.SelectFolder
                 };
                 path = fileChooser.GetFile();
-                if (string.IsNullOrEmpty(path))
-                    return false;
-            }
-            
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            List<Exception> errors = new List<Exception>();
-            int i = 0;
-            foreach (IModel sim in children)
-            {
-                MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
-                MainPresenter.ShowProgress(100 * i / children.Count, false);
-                while (GLib.MainContext.Iteration()) ;
-                try
+                if (!string.IsNullOrEmpty(path))
                 {
-                    (sim as ISimulationGenerator).GenerateApsimXFile(path);
-                }
-                catch (Exception err)
-                {
-                    errors.Add(err);
-                }
+                    MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                i++;
+                    RunOrganiser organiser = new RunOrganiser(ApsimXFile, model, false);
+                    var errors = organiser.GenerateApsimXFiles(path, (int percent) => 
+                    {
+                        MainPresenter.ShowProgress(percent, false);
+                    });
+
+                    if (errors == null || errors.Count == 0)
+                    {
+                        MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
+                        return true;
+                    }
+                    else
+                    {
+                        MainPresenter.ShowError(errors);
+                        return false;
+                    }
+                }
             }
-            if (errors.Count < 1)
-            {
-                MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
-                return true;
-            }
-            else
-            {
-                MainPresenter.ShowError(errors);
-                return false;
-            }
+            return true;
         }
 
         /// <summary>Hide the right hand panel.</summary>
@@ -808,6 +716,16 @@ namespace UserInterface.Presenters
             }
         }
 
+        public void DownloadSoil()
+        {
+            Models.Soils.Soil currentSoil = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Models.Soils.Soil;
+            if (currentSoil != null)
+            {
+                Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
+                dlg.ShowFor(currentSoil, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+            }
+        }
+
         /// <summary>
         /// The view wants us to return a list of menu descriptions for the
         /// main menu.
@@ -867,13 +785,13 @@ namespace UserInterface.Presenters
             Model obj = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
             if (obj != null)
             {
-                string xml = Apsim.Serialise(obj);
-                this.SetClipboardText(xml);
+                string st = FileFormat.WriteToString(obj);
+                this.SetClipboardText(st);
 
                 DragObject dragObject = new DragObject();
                 dragObject.NodePath = e.NodePath;
                 dragObject.ModelType = obj.GetType();
-                dragObject.Xml = xml;
+                dragObject.ModelString = st;
                 e.DragObject = dragObject;
             }
         }
@@ -891,13 +809,13 @@ namespace UserInterface.Presenters
                 DragObject dragObject = e.DragObject as DragObject;
                 if (dragObject != null && toParent != null)
                 {
-                    string fromModelXml = dragObject.Xml;
+                    string modelString = dragObject.ModelString;
                     string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
 
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        this.Add(fromModelXml, toParentPath);
+                        this.Add(modelString, toParentPath);
                     }
                     else if (e.Moved)
                     {
@@ -906,7 +824,7 @@ namespace UserInterface.Presenters
                             Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
                             if (fromModel != null)
                             {
-                                cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this.view);
+                                cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
                                 CommandHistory.Add(cmd);
                             }
                         }
@@ -1007,32 +925,48 @@ namespace UserInterface.Presenters
         #region Privates        
 
         /// <summary>
-        /// Write all errors thrown during the loading of the <code>.apsimx</code> file.
-        /// </summary>
-        private void WriteLoadErrors()
-        {
-            if (this.ApsimXFile.LoadErrors != null)
-            {
-                MainPresenter.ShowError(ApsimXFile.LoadErrors);
-            }
-        }
-
-        /// <summary>
         /// A helper function for creating a node description object for the specified model.
         /// </summary>
         /// <param name="model">The model</param>
         /// <returns>The description</returns>
-        private TreeViewNode GetNodeDescription(IModel model)
+        public TreeViewNode GetNodeDescription(IModel model)
         {
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
 
-            description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
+            // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
+            // an image with the same name as the model.
+            // Otherwise, we attempt to find an icon with the same name as the model's type.
+            // e.g. A Graph called Biomass should use an icon called Graph.png
+            // e.g. A Plant called Wheat should use an icon called Wheat.png
+
+            if (model is ModelCollectionFromResource)
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
+            else
+            {
+                string modelNamespace = model.GetType().FullName.Split('.')[1] + ".";
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + model.GetType().Name + ".png";
+
+                if (!MainView.MasterView.HasResource(description.ResourceNameForImage))
+                {
+                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
+                }
+
+            }
+           
+
+            //Check to see if you can find the image in the resource for this project.
             ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
-            if (info == null || (typeof(IModel).Assembly.DefinedTypes.Any(t => string.Equals(t.Name, model.Name, StringComparison.Ordinal)) && model.GetType().Name != model.Name))
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
-            if (typeof(Models.Functions.IFunction).IsAssignableFrom(model.GetType()))
-                description.ToolTip = model.GetType().Name;
+            if (info == null)
+            {
+                // Try the opposite.
+                if (model is ModelCollectionFromResource)
+                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
+                else
+                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
+            }
+
+            description.ToolTip = model.GetType().Name;
 
             description.Children = new List<TreeViewNode>();
             foreach (Model child in model.Children)
@@ -1044,6 +978,7 @@ namespace UserInterface.Presenters
             }
             description.Strikethrough = !model.Enabled;
             description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Colour = System.Drawing.Color.Empty;
             /*
             // Set the colour here
             System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
@@ -1061,38 +996,14 @@ namespace UserInterface.Presenters
     [Serializable]
     public sealed class DragObject : ISerializable
     {
-        /// <summary>Path to the node</summary>
-        private string nodePath;
-
-        /// <summary>Xml string</summary>
-        private string xml;
-
-        /// <summary>Type of the model</summary>
-        private Type modelType;
-
         /// <summary>Gets or sets the path to the node</summary>
-        /// <value>The node path.</value>
-        public string NodePath
-        {
-            get { return this.nodePath; }
-            set { this.nodePath = value; }
-        }
+        public string NodePath { get; set; }
 
-        /// <summary>Gets or sets the xml string</summary>
-        /// <value>The XML.</value>
-        public string Xml
-        {
-            get { return this.xml; }
-            set { this.xml = value; }
-        }
+        /// <summary>Gets or sets the string representation of a model.</summary>
+        public string ModelString { get; set; }
 
         /// <summary>Gets or sets the type of model</summary>
-        /// <value>The type of the model.</value>
-        public Type ModelType
-        {
-            get { return this.modelType; }
-            set { this.modelType = value; }
-        }
+        public Type ModelType { get; set; }
 
         /// <summary>Get data for the specified object in the xml</summary>
         /// <param name="info">Serialized object</param>
@@ -1100,7 +1011,7 @@ namespace UserInterface.Presenters
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("NodePath", this.NodePath);
-            info.AddValue("Xml", this.Xml);
+            info.AddValue("Xml", this.ModelString);
         }
     }
 }

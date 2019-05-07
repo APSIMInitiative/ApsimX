@@ -26,7 +26,7 @@ namespace Models.Agroforestry
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
     /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
-    /// * Tree daily nitrogen demand (g/tree/day)
+    /// * Tree daily nitrogen demand (g/m2/day for tree zone area)
     /// 
     /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering [smethurst1997paste;smethurst1999phase;van1990defining].
     /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm<sup>3</sup> and spatial water uptake is scales using this value and the user-input of tree root length density.
@@ -114,6 +114,7 @@ namespace Models.Agroforestry
         /// <value>The root radius.</value>
         [Summary]
         [Description("Root Radius (cm)")]
+        [Units("cm")]
         public double RootRadius { get; set; }
 
         /// <summary>Number of Trees in the System</summary>
@@ -126,12 +127,14 @@ namespace Models.Agroforestry
         /// <value>Adsoption Cofficient for NO3</value>
         [Summary]
         [Description("Adsoption Cofficient for NO3 (m3/g)")]
+        [Units("m3/g")]
         public double Kd { get; set; }
 
         /// <summary>The uptake coefficient.</summary>
         /// <value>KL Value at RLD of 1 cm/cm3.</value>
         [Summary]
         [Description("Base KL (KL at RLD of 1) (/d/cm/cm3)")]
+        [Units("/d/cm/cm3")]
         public double BaseKL { get; set; }
 
         /// <summary>Extinction Coefficient.</summary>
@@ -166,6 +169,7 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         [Summary]
+        [Units("%")]
         public double[] Shade { get { return shade.Values.ToArray(); } }
 
         /// <summary>
@@ -184,13 +188,14 @@ namespace Models.Agroforestry
         /// Tree N demands
         /// </summary>
         [Summary]
+        [Units("g/m2")]
         public double[] NDemands { get; set; }
 
         /// <summary>
         /// Tree canopy widths
         /// </summary>
         [Summary]
-        public double[] CanopyWidths { get; set; }
+        public double[] CanopyWidths { get; set; } = new double[0];
 
         /// <summary>
         /// Tree leaf areas
@@ -356,6 +361,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// Calculate the total intercepted radiation by the tree canopy (MJ)
         /// </summary>
+        [Units("mm")]
         public double InterceptedRadiation
         {
             get
@@ -433,7 +439,7 @@ namespace Models.Agroforestry
 
             SWDemand = 0;
             foreach (Zone ZI in ZoneList)
-                SWDemand += Etz*GetShade(ZI) / 100 * ZI.Area * 10000;
+                SWDemand += Etz * (GetShade(ZI) / 100) * (ZI.Area * 10000);    // 100 converts from %, 10000 converts from ha to m2
 
             IndividualTreeWaterDemand = SWDemand / NumberOfTrees;
 
@@ -460,6 +466,8 @@ namespace Models.Agroforestry
                         double[] SW = Z.Water;
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
+                        Uptake.PlantAvailableNO3N = new double[SW.Length];
+                        Uptake.PlantAvailableNH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
                         double[] RLD = GetRLD(ZI);
@@ -510,7 +518,7 @@ namespace Models.Agroforestry
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)
             
-            double NDemandkg = GetNDemandToday()*10 * treeZone.Area * 10000;
+            double NDemandkg = GetNDemandToday()*10 * treeZone.Area;
 
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
@@ -533,6 +541,8 @@ namespace Models.Agroforestry
                         
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
+                        Uptake.PlantAvailableNO3N = new double[SW.Length];
+                        Uptake.PlantAvailableNH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
                         double[] BD = ThisSoil.BD;
@@ -541,14 +551,15 @@ namespace Models.Agroforestry
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
                             Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
-                            PotNO3Supply += Uptake.NO3N[i] * ZI.Area * 10000;
+                            Uptake.NO3N[i] *= 10; // convert from g/m2 to kg/ha
+                            PotNO3Supply += Uptake.NO3N[i] * ZI.Area;
                         }
                         Uptakes.Add(Uptake);
                         break;
                     }
                 }
             }
-            // Now scale back uptakes if supply > demand
+            // Now scale back uptakes if demand > supply
             double F = 0;  // Uptake scaling factor
             if (PotNO3Supply > 0)
             {
@@ -583,10 +594,11 @@ namespace Models.Agroforestry
             double BD_gm3 = BD * 1000000.0;
 
             //Potential Uptake (g/m2)
-            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))))*10; // 10 converts g/m2 to kg/ha
+            double U = (Math.PI * L * D0 * tau * theta * H * Nconc)/((BD_gm3*Kd+theta)*(-3.0/8.0 + 1.0/2.0*Math.Log(1.0/(R0*Math.Pow(Math.PI*L,0.5)))));
 
-            if (U > NO3N)
-                U = NO3N;
+            // Now check that U is less than NO3 in soil (which is in kg/ha)
+            if (U > (NO3N/10))
+                U = (NO3N/10);
             return U;
         }
 
@@ -630,14 +642,13 @@ namespace Models.Agroforestry
             {
                 foreach (Zone SearchZ in forestryZones)
                 {
-                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        var NO3Solute = Apsim.Find(SearchZ, "NO3") as ISolute;
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
-                            NewNO3[i] = ThisSoil.NO3N[i] - ZI.NO3N[i];
-                        ThisSoil.NO3N = NewNO3;
+                            NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
+                        NO3Solute.kgha = NewNO3;
                     }
                 }
             }

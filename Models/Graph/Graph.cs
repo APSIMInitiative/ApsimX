@@ -12,6 +12,8 @@ namespace Models.Graph
     using Models.Core;
     using Factorial;
     using System.Data;
+    using System.Linq;
+    using Models.Storage;
 
     /// <summary>
     /// Represents a graph
@@ -24,6 +26,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Factorial.Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
+    [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
     public class Graph : Model, AutoDocumentation.ITag, ICustomDocumentation
     {
@@ -65,8 +68,7 @@ namespace Models.Graph
         /// <summary>
         /// Gets or sets a list of all axes
         /// </summary>
-        [XmlElement("Axis")]
-        public List<Axis> Axes { get; set; }
+        public List<Axis> Axis { get; set; }
 
         /// <summary>
         /// Gets or sets a list of all series
@@ -92,7 +94,7 @@ namespace Models.Graph
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
                 series.GetSeriesToPutOnGraph(storage, definitions);
 
             return definitions;
@@ -103,7 +105,7 @@ namespace Models.Graph
         public List<Annotation> GetAnnotationsToGraph()
         {
             List<Annotation> annotations = new List<Annotation>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
                 series.GetAnnotationsToPutOnGraph(annotations);
 
             return annotations;
@@ -136,9 +138,11 @@ namespace Models.Graph
 
             // Go through all graph axis objects. For each, check to see if it is still needed and
             // if so copy to our list.
+            if (Axis == null)
+                Axis = new List<Axis>();
             List<Axis> allAxes = new List<Axis>();
             bool unNeededAxisFound = false;
-            foreach (Axis axis in Axes)
+            foreach (Axis axis in Axis)
             {
                 if (allAxisTypes.Contains(axis.Type))
                     allAxes.Add(axis);
@@ -167,7 +171,7 @@ namespace Models.Graph
             }
 
             if (unNeededAxisFound || axisWasAdded)
-                Axes = allAxes;
+                Axis = allAxes;
         }
     }
 

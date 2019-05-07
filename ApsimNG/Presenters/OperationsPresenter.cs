@@ -77,13 +77,14 @@ namespace UserInterface.Presenters
         private void PopulateEditorView()
         {
             string st = string.Empty;
-            foreach (Operation operation in this.operations.Schedule)
-            {
-                // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                string dateStr = DateUtilities.validateDateString(operation.Date);
-                string commentChar = operation.Enabled ? string.Empty : "// ";
-                st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
-            }
+            if (operations.Operation != null)
+                foreach (Operation operation in this.operations.Operation)
+                {
+                    // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                    string dateStr = DateUtilities.validateDateString(operation.Date);
+                    string commentChar = operation.Enabled ? string.Empty : "// ";
+                    st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
+                }
 
             this.view.Text = st;
         }
@@ -121,7 +122,7 @@ namespace UserInterface.Presenters
                     }
                 }
 
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Schedule", operations));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Operation", operations));
                 this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             }
             catch (Exception err)

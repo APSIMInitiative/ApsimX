@@ -23,6 +23,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(IOrgan))]
     [ValidParent(ParentType = typeof(Morris))]
+    [ValidParent(ParentType = typeof(Sobol))]
     public class Folder : Model, ICustomDocumentation
     {
         /// <summary>Show page of graphs?</summary>
@@ -67,7 +68,9 @@ namespace Models.Core
                                     Design += " x ";
                                 Design += factor.Name;
                             }
-                            Design += " (" + (child as Experiment).GetSimulationNames().ToArray().Length + ")";
+
+                            var simulationNames = (child as Experiment).GenerateSimulationDescriptions().Select(s => s.Name);
+                            Design += " (" + simulationNames.ToArray().Length + ")";
 
                             DataRow row = tableData.NewRow();
                             row[0] = child.Name;

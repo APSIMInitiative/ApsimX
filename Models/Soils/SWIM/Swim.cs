@@ -8,6 +8,7 @@ using Models;
 using System.Xml.Serialization;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Soils
 {
@@ -33,8 +34,9 @@ namespace Models.Soils
         [Link]
         private Soil soil = null;
 
+        /// <summary>Link to NO3.</summary>
         [Link]
-        private SoluteManager soluteManager = null;
+        private List<ISolute> solutes = null;
 
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
@@ -2354,10 +2356,10 @@ namespace Models.Soils
 
         private void ReadSoluteParams()
         {
-            ResizeSoluteArrays(soluteManager.SoluteNames.Length);
-            for (int i = 0; i < soluteManager.SoluteNames.Length; i++)
+            ResizeSoluteArrays(solutes.Count);
+            for (int i = 0; i < solutes.Count; i++)
             {
-                solute_names[i] = soluteManager.SoluteNames[i];
+                solute_names[i] = solutes[i].Name;
                 SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
@@ -2657,60 +2659,63 @@ namespace Models.Soils
 
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
-                for (int node = 0; node <= n; node++)
+                if (!solute_names[solnum].StartsWith("PlantAvailable"))
                 {
-                    // Step One - calculate total solute in node from solute in
-                    // water and Freundlich isotherm.
-
-                    if (csl[solnum][node] < 0.0)
+                    for (int node = 0; node <= n; node++)
                     {
-                        string mess = String.Format(" solution {0}({1,3}) = {2,12:G6}",
-                                     solute_names[solnum],
-                                     node,
-                                     csl[solnum][node]);
-                        throw new Exception("-ve concentration in apswim_set_solute_variables" + Environment.NewLine + mess);
+                        // Step One - calculate total solute in node from solute in
+                        // water and Freundlich isotherm.
+
+                        if (csl[solnum][node] < 0.0)
+                        {
+                            string mess = String.Format(" solution {0}({1,3}) = {2,12:G6}",
+                                         solute_names[solnum],
+                                         node,
+                                         csl[solnum][node]);
+                            throw new Exception("-ve concentration in apswim_set_solute_variables" + Environment.NewLine + mess);
+                        }
+                        double Ctot, dCtot;
+                        Freundlich(node, solnum, ref csl[solnum][node], out Ctot, out dCtot);
+
+                        // Note:- Sometimes small numerical errors can leave
+                        // -ve concentrations. Test if values are within limits.
+
+                        if (Math.Abs(Ctot) < 1e-100)
+                        {
+                            // Ctot is REALLY small, its value can be disregarded
+                            // set to zero to avoid underflow with reals
+
+                            Ctot = 0.0;
+                        }
+
+                        else if (Ctot < 0.0)
+                        {
+                            // Ctot is negative and a fatal error is thrown. Should not happen as it has been tested on apswim_freundlich
+                            string mess = String.Format(" Total {0}({1,3}) = {2,12:G6}",
+                                                solute_names[solnum],
+                                                node,
+                                                Ctot);
+                            throw new Exception("-ve value for solute concentration" + Environment.NewLine + mess);
+                            //Ctot = 0.0;
+                        }
+                        //else Ctot is positive
+
+                        // convert solute ug/cc soil to kg/ha for node
+                        //
+                        //  kg      ug        cc soil      kg
+                        //  -- = -------- p%x -------- p%x --
+                        //  ha    cc soil        ha        ug
+
+                        Ctot = Ctot                   // ug/cc soil
+                             * (dx[node] * 1.0e8)     // cc soil/ha
+                             * 1e-9;                  // kg/ug
+
+                        // finished testing - assign value to array element
+                        solute_n[node] = Ctot;
+                        dlt_solute_s[node] = Ctot - cslstart[solnum][node];
                     }
-                    double Ctot, dCtot;
-                    Freundlich(node, solnum, ref csl[solnum][node], out Ctot, out dCtot);
-
-                    // Note:- Sometimes small numerical errors can leave
-                    // -ve concentrations. Test if values are within limits.
-
-                    if (Math.Abs(Ctot) < 1e-100)
-                    {
-                        // Ctot is REALLY small, its value can be disregarded
-                        // set to zero to avoid underflow with reals
-
-                        Ctot = 0.0;
-                    }
-
-                    else if (Ctot < 0.0)
-                    {
-                        // Ctot is negative and a fatal error is thrown. Should not happen as it has been tested on apswim_freundlich
-                        string mess = String.Format(" Total {0}({1,3}) = {2,12:G6}",
-                                            solute_names[solnum],
-                                            node,
-                                            Ctot);
-                        throw new Exception("-ve value for solute concentration" + Environment.NewLine + mess);
-                        //Ctot = 0.0;
-                    }
-                    //else Ctot is positive
-
-                    // convert solute ug/cc soil to kg/ha for node
-                    //
-                    //  kg      ug        cc soil      kg
-                    //  -- = -------- p%x -------- p%x --
-                    //  ha    cc soil        ha        ug
-
-                    Ctot = Ctot                   // ug/cc soil
-                         * (dx[node] * 1.0e8)     // cc soil/ha
-                         * 1e-9;                  // kg/ug
-
-                    // finished testing - assign value to array element
-                    solute_n[node] = Ctot;
-                    dlt_solute_s[node] = Ctot - cslstart[solnum][node];
+                    solutes[solnum].SetKgHa(SoluteSetterType.Soil, solute_n);
                 }
-                soluteManager.SetSolute(solute_names[solnum], SoluteManager.SoluteSetterType.Soil, solute_n);
             }
         }
 
@@ -4447,7 +4452,7 @@ namespace Models.Soils
 
             if (solnum >= 0)
             {
-                solute_n = soluteManager.GetSolute(solute_names[solnum]);
+                solute_n = solutes[solnum].kgha;
 
                 for (int node = 0; node <= n; node++)
                 {

@@ -32,9 +32,11 @@
         [Link]
         private IWeather weather = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
+        /// <summary>Link to NO3 solute.</summary>
+        private ISolute NO3Solute = null;
+
+        /// <summary>Link to NH4 solute.</summary>
+        private ISolute NH4Solute = null;
 
         /// <summary>Link to the soil N model</summary>
         [Link]
@@ -377,6 +379,8 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
+            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
             Reset();
         }
 
@@ -429,15 +433,6 @@
                 DecomposeSurfom(actualSOMDecomp);
         }
 
-        /// <summary>Model has been loaded.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The event data</param>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded(object sender, EventArgs args)
-        {
-            //Children.ForEach(child => child.IsHidden = true);
-        }
-
         /// <summary>
         /// Read in all parameters from parameter file
         /// </summary>
@@ -447,7 +442,7 @@
             double totN = 0;  // total N in residue;
             double totP = 0;  // total P in residue;
 
-            if (InitialResidueMass > 0.0)
+            if (InitialResidueMass >= 0.0)
             {
                 // Normally the residue shouldn't already exist, and we
                 // will need to add it, and normally this should result in SOMNo == i
@@ -661,8 +656,12 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                solutes.AddToLayer(0, "NH4", SoluteManager.SoluteSetterType.Soil, nh4Incorp);
-                solutes.AddToLayer(0, "NO3", SoluteManager.SoluteSetterType.Soil, no3Incorp);
+                var delta = new double[soil.Thickness.Length];
+                delta[0] = no3Incorp;
+                NO3Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
+
+                delta[0] = nh4Incorp;
+                NH4Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
             }
 
             for (int i = 0; i < numSurfom; i++)
@@ -837,33 +836,30 @@
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
             
-            if (MathUtilities.Sum(CPool) > 0.0)
+            FPoolProfile.Layer = new FOMPoolLayerType[deepestLayer + 1];
+
+            for (int layer = 0; layer <= deepestLayer; layer++)
             {
-                FPoolProfile.Layer = new FOMPoolLayerType[deepestLayer + 1];
-
-                for (int layer = 0; layer <= deepestLayer; layer++)
+                FPoolProfile.Layer[layer] = new FOMPoolLayerType()
                 {
-                    FPoolProfile.Layer[layer] = new FOMPoolLayerType()
-                    {
-                        thickness = soil.Thickness[layer],
-                        no3 = no3[layer],
-                        nh4 = nh4[layer],
-                        po4 = po4[layer],
-                        Pool = new FOMType[maxFr]
-                    };
+                    thickness = soil.Thickness[layer],
+                    no3 = no3[layer],
+                    nh4 = nh4[layer],
+                    po4 = po4[layer],
+                    Pool = new FOMType[maxFr]
+                };
 
-                    for (int i = 0; i < maxFr; i++)
-                        FPoolProfile.Layer[layer].Pool[i] = new FOMType()
-                        {
-                            C = CPool[i, layer],
-                            N = NPool[i, layer],
-                            P = PPool[i, layer],
-                            AshAlk = AshAlkPool[i, layer]
-                        };
-                }
-                if (IncorpFOMPool != null)
-                    IncorpFOMPool.Invoke(FPoolProfile);
+                for (int i = 0; i < maxFr; i++)
+                    FPoolProfile.Layer[layer].Pool[i] = new FOMType()
+                    {
+                        C = CPool[i, layer],
+                        N = NPool[i, layer],
+                        P = PPool[i, layer],
+                        AshAlk = AshAlkPool[i, layer]
+                    };
             }
+            if (IncorpFOMPool != null)
+                IncorpFOMPool.Invoke(FPoolProfile);
 
             for (int pool = 0; pool < maxFr; pool++)
             {

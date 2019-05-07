@@ -1,0 +1,22 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Manager, Models",
+      "Name": "SowingFertiliser",
+      "Parameters": [
+        {
+          "Key": "Amount",
+          "Value": "160"
+        },
+        {
+          "Key": "CropName",
+          "Value": "wheat"
+        }
+      ],
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n    }\r\n}\r\n"
+    }
+  ]
+}

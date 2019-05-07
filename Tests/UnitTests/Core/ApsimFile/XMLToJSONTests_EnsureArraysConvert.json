@@ -1,0 +1,49 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Report.Report, Models",
+      "Name": "Report",
+      "IncludeInDocumentation": true,
+      "ExperimentFactorNames": null,
+      "ExperimentFactorValues": null,
+      "VariableNames": [
+        "[Clock].Today",
+        "[Wheat].Phenology.Zadok.Stage",
+        "[Wheat].Phenology.CurrentStageName",
+        "[Wheat].AboveGround.Wt",
+        "[Wheat].AboveGround.N",
+        "[Wheat].Grain.Total.Wt*10 as Yield",
+        "[Wheat].Grain.Protein",
+        "[Wheat].Grain.Size",
+        "[Wheat].Grain.Number",
+        "[Wheat].Grain.Total.Wt",
+        "[Wheat].Grain.Total.N",
+        "[Wheat].Total.Wt"
+      ],
+      "EventNames": [
+        "[Wheat].Harvesting"
+      ],
+      "Thickness": [
+        150.0,
+        150.0,
+        300.0,
+        300.0,
+        300.0,
+        300.0,
+        300.0
+      ],
+      "PH": [
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN"
+      ]
+    }
+  ]
+}

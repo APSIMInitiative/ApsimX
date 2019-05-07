@@ -198,13 +198,15 @@ namespace UserInterface.Interfaces
         /// <param name="minimum">Minimum axis scale</param>
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
+        /// <param name="crossAtZero">Axis crosses at zero?</param>
         void FormatAxis(
             Models.Graph.Axis.AxisType axisType, 
             string title,
             bool inverted,
             double minimum,
             double maximum,
-            double interval);
+            double interval,
+            bool crossAtZero);
 
         /// <summary>
         /// Format the legend.

@@ -13,7 +13,7 @@ namespace Utility
         private static Configuration instance = null;
 
         /// <summary>The configuration file</summary>
-        private string ConfigurationFile = null;
+        private string configurationFile = null;
 
         /// <summary>The location for the form</summary>
         public Point MainFormLocation { get; set; }
@@ -28,13 +28,16 @@ namespace Utility
         public List<string> MruList { get; set; }
 
         /// <summary>The maximum number of files allowed in the mru list</summary>
-        private int FilesInHistory; // this could be a user setting
+        public int FilesInHistory { get; set; }
 
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
         /// <summary>The previous height of the status panel</summary>
         public int StatusPanelHeight { get; set; }
+
+        /// <summary>Keeps track of whether the dark theme is enabled.</summary>
+        public bool DarkTheme { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
@@ -196,9 +199,9 @@ namespace Utility
                 if (instance != null)
                     return instance;
 
-                string ConfigurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
+                string configurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
                 // deserialise the file
-                if (File.Exists(ConfigurationFile))
+                if (File.Exists(configurationFile))
                 {
                     System.Xml.Serialization.XmlSerializer xmlreader = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
                     StreamReader filereader = null;
@@ -208,14 +211,14 @@ namespace Utility
                     // configuration file.
                     try
                     {
-                        filereader = new StreamReader(ConfigurationFile);
+                        filereader = new StreamReader(configurationFile);
                         instance = (Configuration)xmlreader.Deserialize(filereader);
                         filereader.Close();
                     }
                     catch (Exception)
                     {
                         filereader.Close();
-                        File.Delete(ConfigurationFile);
+                        File.Delete(configurationFile);
                     }
                     
                 }
@@ -227,10 +230,10 @@ namespace Utility
                     instance.MainFormMaximized = true;
                     instance.MruList = new List<string>();
                     instance.PreviousFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    instance.FilesInHistory = 20;
                 }
 
-                instance.FilesInHistory = 20;
-                instance.ConfigurationFile = ConfigurationFile;
+                instance.configurationFile = configurationFile;
                 return instance;
             }
         }
@@ -238,10 +241,10 @@ namespace Utility
         /// <summary>Store the configuration settings to file</summary>
         public void Save()
         {
-            string ConfigPath = Path.GetDirectoryName(ConfigurationFile);
-            if (!Directory.Exists(ConfigPath))
-                Directory.CreateDirectory(ConfigPath);
-            StreamWriter filewriter = new StreamWriter(ConfigurationFile);
+            string configPath = Path.GetDirectoryName(configurationFile);
+            if (!Directory.Exists(configPath))
+                Directory.CreateDirectory(configPath);
+            StreamWriter filewriter = new StreamWriter(configurationFile);
             System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
