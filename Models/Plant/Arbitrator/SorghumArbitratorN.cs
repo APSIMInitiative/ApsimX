@@ -91,7 +91,7 @@ namespace Models.PMF
         {
             if(organDemand < 0 || totalDemand < 0)
             {
-                throw new Exception("Imvalid demand property");
+                throw new Exception("Invalid demand property");
             }
             return notAllocated * MathUtilities.Divide(organDemand, totalDemand, 0.0);
         }

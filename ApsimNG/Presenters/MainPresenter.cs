@@ -948,28 +948,40 @@
         /// <param name="e">Event arguments.</param>
         private void OnImport(object sender, EventArgs e)
         {
-            string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
-
-            APSIMImporter importer = new APSIMImporter();
             try
             {
+                string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
                 this.view.ShowWaitCursor(true);
-                try
-                {
-                    importer.ProcessFile(fileName);
+                this.Import(fileName);
 
-                    string newFileName = Path.ChangeExtension(fileName, ".apsimx");
-                    bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                    this.OpenApsimXFileInTab(newFileName, onLeftTabControl);
-                }
-                finally
-                {
-                    this.view.ShowWaitCursor(false);
-                }
+                string newFileName = Path.ChangeExtension(fileName, ".apsimx");
+                this.OpenApsimXFileInTab(newFileName, this.view.IsControlOnLeft(sender));
             }
-            catch (Exception exp)
+            catch (Exception err)
             {
-                throw new Exception("Failed import: " + exp.Message);
+                ShowError(err);
+            }
+            finally
+            {
+                this.view.ShowWaitCursor(false);
+            }
+        }
+
+        /// <summary>
+        /// Runs the importer on a file, then opens it in a new tab.
+        /// </summary>
+        /// <param name="fileName">Path to the file to be imported.</param>
+        /// <param name="leftTab">Should the file be opened in the left tabset?</param>
+        public void Import(string fileName)
+        {
+            try
+            {
+                APSIMImporter importer = new APSIMImporter();
+                importer.ProcessFile(fileName);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

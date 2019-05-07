@@ -960,7 +960,7 @@ namespace Models.PMF.Organs
             int leafIndex = 2;
 
             double laiToday = calcLAI();
-            //wether the retranslocation is added or removed is confusing
+            //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
             double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] - DltRetranslocatedN;
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
