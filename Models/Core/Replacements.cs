@@ -12,6 +12,7 @@ namespace Models.Core
     /// </summary>
     [ValidParent(ParentType=typeof(Simulations))]
     [Serializable]
+    [ScopedModel]
     public class Replacements : Model
     {
 
