@@ -122,6 +122,10 @@ namespace Models.PMF.Organs
         /// <summary>The luxary n conc</summary>
         private double LuxaryNConc;
 
+        /// <summary>The summary</summary>
+        [Link]
+        private ISummary Summary = null;
+
         /// <summary>The structural fraction</summary>
         [XmlIgnore]
         public double StructuralFraction;
@@ -758,7 +762,15 @@ namespace Models.PMF.Organs
             StorageFraction = leafCohortParameters.StorageFraction.Value();
             InitialNConc = leafCohortParameters.InitialNConc.Value();
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
+            {
+                if (Area > MaxArea)
+                {
+                    Summary.WriteWarning(this, "Initial area is more than max area for cohort " + Rank.ToString() + ".");
+                    Area = MaxArea;
+                }
+
                 Age = Area / MaxArea * GrowthDuration;
+            }
             //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
