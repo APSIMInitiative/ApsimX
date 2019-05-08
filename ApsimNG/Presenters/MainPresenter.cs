@@ -1108,6 +1108,9 @@
         {
             try
             {
+                if (fileConverter == null || fileConverter.Files == null)
+                    return;
+
                 // The file converter view has an option to automatically select the latest version.
                 // If the user has enabled this option, we will upgrade the file to the latest version. 
                 // Otherwise, we will upgrade to the version they have specified.
