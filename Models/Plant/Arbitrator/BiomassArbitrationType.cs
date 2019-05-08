@@ -82,6 +82,9 @@ namespace Models.PMF
         /// <summary>Gets or sets the fixation.</summary>
         /// <value>The actual uptake of biomass by the whole crop</value>
         public double[] Fixation { get; set; }
+        /// <summary>Gets or sets the total Fixation.</summary>
+        /// <value>The total amount of biomass fixed by the crop</value>
+        public double TotalFixation { get; set; }
         /// <summary>Gets or sets the retranslocation.</summary>
         /// <value>The actual retranslocation or biomass from each oragan</value>
         public double[] Retranslocation { get; set; }

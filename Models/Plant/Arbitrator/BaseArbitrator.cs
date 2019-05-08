@@ -486,13 +486,16 @@ namespace Models.PMF
                 arbitrator.DoAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
 
                 //Then calculate how much biomass is realloced from each supplying organ based on relative reallocation supply
-                for (int i = 0; i < Organs.Length; i++)
-                    if (BAT.ReallocationSupply[i] > 0)
-                    {
-                        double RelativeSupply = BAT.ReallocationSupply[i] / BAT.TotalReallocationSupply;
-                        BAT.Reallocation[i] += BiomassReallocated * RelativeSupply;
-                    }
-                BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
+                if (BAT.BiomassType == "N")
+                {
+                    for (int i = 0; i < Organs.Length; i++)
+                        if (BAT.ReallocationSupply[i] > 0)
+                        {
+                            double RelativeSupply = BAT.ReallocationSupply[i] / BAT.TotalReallocationSupply;
+                            BAT.Reallocation[i] += BiomassReallocated * RelativeSupply;
+                        }
+                    BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
+                }
             }
         }
 
@@ -523,12 +526,15 @@ namespace Models.PMF
             {
                 arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
                 // Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
-                for (int i = 0; i < Organs.Length; i++)
-                    if (BAT.RetranslocationSupply[i] > 0.00000000001)
-                    {
-                        double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
-                        BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
-                    }
+                if (BAT.BiomassType == "N")
+                {
+                    for (int i = 0; i < Organs.Length; i++)
+                        if (BAT.RetranslocationSupply[i] > 0.00000000001)
+                        {
+                            double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
+                            BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
+                        }
+                }
             }
         }
 
@@ -548,15 +554,18 @@ namespace Models.PMF
                 BAT.SinkLimitation = BAT.NotAllocated;
 
                 // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
-                if (BiomassFixed > 0)
-                    for (int i = 0; i < Organs.Length; i++)
-                    {
-                        if (BAT.FixationSupply[i] > 0.00000000001)
+                if (BAT.BiomassType == "N")
+                {
+                    if (BiomassFixed > 0)
+                        for (int i = 0; i < Organs.Length; i++)
                         {
-                            double RelativeSupply = BAT.FixationSupply[i] / BAT.TotalFixationSupply;
-                            BAT.Fixation[i] = BiomassFixed * RelativeSupply;
+                            if (BAT.FixationSupply[i] > 0.00000000001)
+                            {
+                                double RelativeSupply = BAT.FixationSupply[i] / BAT.TotalFixationSupply;
+                                BAT.Fixation[i] = BiomassFixed * RelativeSupply;
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -564,6 +573,37 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         virtual public void SetDryMatterAllocations(IArbitration[] Organs)
         {
+            //Work out what supplies all the allocated DM will come from
+            double dmToAllocate = DM.Allocated;
+            double BiomassReallocated = Math.Min(dmToAllocate, DM.TotalReallocationSupply);
+            for (int i = 0; i < Organs.Length; i++)
+                if (DM.ReallocationSupply[i] > 0)
+                {
+                    double RelativeSupply = DM.ReallocationSupply[i] / DM.TotalReallocationSupply;
+                    DM.Reallocation[i] += BiomassReallocated * RelativeSupply;
+                }
+            DM.TotalReallocation = MathUtilities.Sum(DM.Reallocation);
+
+            dmToAllocate -= BiomassReallocated;
+            double BiomassFixed = Math.Min(dmToAllocate, DM.TotalFixationSupply);
+            for (int i = 0; i < Organs.Length; i++)
+                if (DM.FixationSupply[i] > 0)
+                {
+                    double RelativeSupply = DM.FixationSupply[i] / DM.TotalFixationSupply;
+                    DM.Fixation[i] += BiomassFixed * RelativeSupply;
+                }
+            DM.TotalFixation = MathUtilities.Sum(DM.Fixation);
+
+            dmToAllocate -= BiomassFixed;
+            double BiomassRetranslocated = dmToAllocate;
+            for (int i = 0; i < Organs.Length; i++)
+                if (DM.RetranslocationSupply[i] > 0)
+                {
+                    double RelativeSupply = DM.RetranslocationSupply[i] / DM.TotalRetranslocationSupply;
+                    DM.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
+                }
+            DM.TotalRetranslocation = MathUtilities.Sum(DM.Retranslocation);
+
             // Send DM allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
                 Organs[i].SetDryMatterAllocation(new BiomassAllocationType
