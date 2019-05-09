@@ -142,8 +142,12 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnChooseFile(object sender, EventArgs e)
         {
-            FileName.Value = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db) | *.db | All Files (*.*) | *.*");
-            FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+            string newFileName = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db)|*.db|All Files (*.*)|*.*");
+            if (!string.IsNullOrEmpty(newFileName))
+            {
+                FileName.Value = newFileName;
+                FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+            }
         }
 
         /// <summary>
