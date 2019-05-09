@@ -194,7 +194,7 @@
             if (ProcessUtilities.CurrentOS.IsMac)
             {
                 InitMac();
-                Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
             }
             RefreshTheme();
         }
