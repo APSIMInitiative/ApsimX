@@ -580,7 +580,7 @@ namespace Models.PMF
                 if (DM.ReallocationSupply[i] > 0)
                 {
                     double RelativeSupply = DM.ReallocationSupply[i] / DM.TotalReallocationSupply;
-                    DM.Reallocation[i] += BiomassReallocated * RelativeSupply;
+                    DM.Reallocation[i] = BiomassReallocated * RelativeSupply;
                 }
             DM.TotalReallocation = MathUtilities.Sum(DM.Reallocation);
 
@@ -590,7 +590,7 @@ namespace Models.PMF
                 if (DM.FixationSupply[i] > 0)
                 {
                     double RelativeSupply = DM.FixationSupply[i] / DM.TotalFixationSupply;
-                    DM.Fixation[i] += BiomassFixed * RelativeSupply;
+                    DM.Fixation[i] = BiomassFixed * RelativeSupply;
                 }
             DM.TotalFixation = MathUtilities.Sum(DM.Fixation);
 
@@ -600,7 +600,7 @@ namespace Models.PMF
                 if (DM.RetranslocationSupply[i] > 0)
                 {
                     double RelativeSupply = DM.RetranslocationSupply[i] / DM.TotalRetranslocationSupply;
-                    DM.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
+                    DM.Retranslocation[i] = BiomassRetranslocated * RelativeSupply;
                 }
             DM.TotalRetranslocation = MathUtilities.Sum(DM.Retranslocation);
 
