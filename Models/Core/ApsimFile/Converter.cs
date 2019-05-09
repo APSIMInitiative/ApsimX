@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -14,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 56; } }
+        public static int LatestVersion { get { return 57; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -532,6 +533,20 @@
                 if (factorToVaryLines != null && factorToVaryLines.Value<string>() == "Simulation")
                     series["FactorToVaryLines"] = "SimulationName";
             }
+        }
+
+        /// <summary>
+        /// Upgrades to version 57. Adds a RetranslocateNonStructural node to
+        /// all GenericOrgans which do not have a child called
+        /// RetranslocateNitrogen.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion57(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+                if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
+                    JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
         }
 
         /// <summary>

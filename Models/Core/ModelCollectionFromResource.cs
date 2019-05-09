@@ -29,11 +29,18 @@
                 if (contents != null)
                 {
                     List<Exception> creationExceptions;
-                    Model ModelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
+                    Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
+                    if (this.GetType() != modelFromResource.GetType())
+                    {
+                        // Top-level model may be a simulations node. Search for a child of the correct type.
+                        Model child = Apsim.Child(modelFromResource, this.GetType()) as Model;
+                        if (child != null)
+                            modelFromResource = child;
+                    }
                     Children.Clear();
-                    Children.AddRange(ModelFromResource.Children);
-                    CopyPropertiesFrom(ModelFromResource);
-                    SetNotVisible(ModelFromResource);
+                    Children.AddRange(modelFromResource.Children);
+                    CopyPropertiesFrom(modelFromResource);
+                    SetNotVisible(modelFromResource);
                     Apsim.ParentAllChildren(this);
                     DoSerialiseChildren = false;
                 }

@@ -369,10 +369,11 @@ namespace Models.PMF.Struct
             CohortParams = new ApparingLeafParams() { };
             CohortParams.CohortToAppear = TipToAppear;
             CohortParams.TotalStemPopn = TotalStemPopn;
-            if ((Math.Truncate(LeafTipsAppeared) + 1) == leaf.InitialisedCohortNo)
-                CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * phyllochron.Value();
-            else
-                CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * phyllochron.Value();
+            // if ((Math.Truncate(LeafTipsAppeared) + 1) == leaf.InitialisedCohortNo)
+            //    CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * phyllochron.Value();
+            // else
+            //     CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * phyllochron.Value();
+            CohortParams.CohortAge = 0;
             CohortParams.FinalFraction = NextLeafProportion;
             if (LeafTipAppearance != null)
                 LeafTipAppearance.Invoke(this, CohortParams);

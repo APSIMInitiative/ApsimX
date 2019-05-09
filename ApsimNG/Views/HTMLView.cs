@@ -593,6 +593,41 @@ namespace UserInterface.Views
             //
             disposed = true;
         }
+
+        /// <summary>
+        /// Sets the background colour of the document.
+        /// </summary>
+        /// <value></value>
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.color = \"{colour}\";");
+            }
+        }
     }
 
     /// <summary>
@@ -855,6 +890,15 @@ namespace UserInterface.Views
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
                 ieBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
                 ieBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+            }
+            else if (browser is TWWebBrowserWK)
+            {
+                TWWebBrowserWK wkBrowser = browser as TWWebBrowserWK;
+                if (wkBrowser.Browser != null)
+                {
+                    wkBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Insensitive));
+                    wkBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+                }
             }
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
