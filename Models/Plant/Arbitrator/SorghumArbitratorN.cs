@@ -89,9 +89,9 @@ namespace Models.PMF
         /// <param name="totalDemand">Total N demand for Leaf, Stem and Rachis as calculated in old Sorghum in g/m^2</param>
         private double CalcPoportionalAllocation(double notAllocated, double organDemand, double totalDemand)
         {
-            if(organDemand < 0 || totalDemand < 0)
+            if(MathUtilities.IsLessThan(organDemand, 0) || MathUtilities.IsLessThan(totalDemand, 0))
             {
-                throw new Exception("Imvalid demand property");
+                throw new Exception("Invalid demand property");
             }
             return notAllocated * MathUtilities.Divide(organDemand, totalDemand, 0.0);
         }

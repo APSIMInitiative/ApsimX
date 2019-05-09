@@ -608,6 +608,41 @@ namespace UserInterface.Views
             //
             disposed = true;
         }
+
+        /// <summary>
+        /// Sets the background colour of the document.
+        /// </summary>
+        /// <value></value>
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.color = \"{colour}\";");
+            }
+        }
     }
 
     /// <summary>
@@ -869,6 +904,7 @@ namespace UserInterface.Views
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
             }
+
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
             browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
