@@ -192,7 +192,10 @@
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
+            {
                 InitMac();
+                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+            }
             RefreshTheme();
         }
 
@@ -760,12 +763,14 @@
         {
             if (Utility.Configuration.Settings.DarkTheme)
             {
+                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
                 using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
                 {
                     using (StreamReader darkTheme = new StreamReader(rcStream))
-                        Rc.ParseString(darkTheme.ReadToEnd());
+                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
                 }
 
+                Rc.Parse(tempFile);
                 // Remove black colour from colour pallete.
                 Color black = Color.FromArgb(0, 0, 0);
                 ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();

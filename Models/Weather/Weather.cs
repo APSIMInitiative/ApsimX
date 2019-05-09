@@ -198,6 +198,23 @@
             }
         }
 
+        private int WinterSolsticeDOY
+        {
+            get {
+                if (Latitude <= 0)
+                    return 173;
+                else
+                    return 356;
+                }
+        }
+        
+        /// <summary>
+        /// Number of days lapsed since the winter solstice
+        /// </summary>
+        [Units("d")]
+        [XmlIgnore]
+        public int DaysSinceWinterSolstice { get; set; }
+        
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
@@ -495,6 +512,10 @@
 
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+
+            if (clock.Today.DayOfYear == WinterSolsticeDOY)
+                DaysSinceWinterSolstice = 0;
+            else DaysSinceWinterSolstice += 1;
         }
 
         /// <summary>

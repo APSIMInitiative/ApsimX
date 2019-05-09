@@ -8,6 +8,8 @@
 
     class DatabaseTableDetails
     {
+        private static readonly string[] indexColumns = { "ID", "CheckpointID", "SimulationID" };
+
         /// <summary>The datastore connection.</summary>
         private IDatabaseConnection connection;
 
@@ -54,10 +56,15 @@
             foreach (DataColumn column in table.Columns)
             { 
                 columnNamesInDb.Add(column.ColumnName);
-                colTypes.Add(connection.GetDBDataTypeName(column.DataType));
+                bool allowLongStrings = table.TableName.StartsWith("_");
+                colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
             }
-
             connection.CreateTable(Name, columnNamesInDb.ToList(), colTypes);
+
+            if (table.Columns.Contains("ID") && table.TableName.StartsWith("_"))
+                connection.CreateIndex(table.TableName, new List<string>() { "ID" }, true);
+            else if (table.Columns.Contains("CheckpointID") && table.Columns.Contains("SimulationID"))
+                connection.CreateIndex(table.TableName, new List<string>() { "CheckpointID", "SimulationID" }, false);
 
             TableExistsInDb = true;
         }
@@ -79,7 +86,8 @@
                     }
 
                     // Column is missing from database file - write it.
-                    connection.AddColumn(Name, column.ColumnName, connection.GetDBDataTypeName(column.DataType));
+                    bool allowLongStrings = table.TableName.StartsWith("_");
+                    connection.AddColumn(Name, column.ColumnName, connection.GetDBDataTypeName(column.DataType, allowLongStrings));
                     columnNamesInDb.Add(column.ColumnName);
                 }
             }

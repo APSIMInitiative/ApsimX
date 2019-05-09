@@ -168,7 +168,7 @@ namespace UserInterface.Presenters
                         {
                             type = "Ok";
                             title = "Success";
-                            DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
+                            DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM [_InitialConditions] WHERE [Name] = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                             DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][8].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }

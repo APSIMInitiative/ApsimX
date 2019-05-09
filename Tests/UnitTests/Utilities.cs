@@ -72,7 +72,7 @@ namespace UnitTests
                     sql += fieldName;
                 }
             }
-            sql += " FROM " + tableName;
+            sql += " FROM [" + tableName + "]";
             var orderByFieldNames = new List<string>();
             if (database.GetColumnNames(tableName).Contains("CheckpointID"))
                 orderByFieldNames.Add("[CheckpointID]");
