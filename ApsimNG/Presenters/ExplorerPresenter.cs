@@ -5,6 +5,7 @@
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
     using Models.Core.Runners;
     using System;
     using System.Collections.Generic;
@@ -123,7 +124,7 @@
             this.view = view as IExplorerView;
             this.mainMenu = new MainMenu(this);
             this.contextMenu = new ContextMenu(this);
-            ApsimXFile.Links.Resolve(contextMenu);
+            Links.Resolve(contextMenu, ApsimXFile);
 
             this.view.Tree.SelectedNodeChanged += this.OnNodeSelected;
             this.view.Tree.DragStarted += this.OnDragStart;
@@ -572,8 +573,8 @@
                 {
                     MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                    RunOrganiser organiser = new RunOrganiser(ApsimXFile, model, false);
-                    var errors = organiser.GenerateApsimXFiles(path, (int percent) => 
+                    var runner = new Runner(model);
+                    var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) => 
                     {
                         MainPresenter.ShowProgress(percent, false);
                     });
@@ -665,7 +666,7 @@
                 if (newView != null && this.currentRightHandPresenter != null)
                 {
                     // Resolve links in presenter.
-                    ApsimXFile.Links.Resolve(currentRightHandPresenter);
+                    Links.Resolve(currentRightHandPresenter, ApsimXFile);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
                 }

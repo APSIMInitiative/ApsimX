@@ -132,10 +132,10 @@ namespace Models.Core
         /// <param name="doClone">Clone the simulation before running?</param>
         public void Run(Simulation simulation, bool doClone)
         {
-            Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation);
-            Links.Resolve(simulationRunner);
-            simulationRunner.Run(new System.Threading.CancellationTokenSource());
+            //Apsim.ParentAllChildren(simulation);
+            //RunSimulation simulationRunner = new RunSimulation(this, simulation);
+            //Links.Resolve(simulationRunner);
+            //simulationRunner.Run(new System.Threading.CancellationTokenSource());
         }
 
 
@@ -204,7 +204,7 @@ namespace Models.Core
                 services.Add(storage);
             services.Add(this);
             services.Add(checkpoints);
-            links = new Links(services);
+            //links = new Links(services);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation, true);
+                    //Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
@@ -285,7 +285,7 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation, allLinks: true);
+                    Links.Unresolve(clonedSimulation);
                 }
             }
         }

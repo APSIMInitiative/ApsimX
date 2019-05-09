@@ -4,13 +4,13 @@ using Models.Core;
 using Models.Core.Runners;
 using APSIM.Shared.Utilities;
 using NUnit.Framework;
-using System.Collections.Generic;
-using Models.Core.ApsimFile;
-using Models.Storage;
-using System.IO;
-
 namespace UnitTests
 {
+    using System.Collections.Generic;
+    using Models.Core.ApsimFile;
+    using Models.Storage;
+    using System.IO;
+
     /// <summary>
     /// Unit Tests for manager scripts.
     /// </summary>
@@ -23,15 +23,26 @@ namespace UnitTests
         [Test]
         public void TestManagerWithError()
         {
-            List<Exception> errors = null;
-            Simulations sims = sims = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("UnitTests.ManagerTestsFaultyManager.apsimx"), out errors);
-            DataStore storage = Apsim.Find(sims, typeof(DataStore)) as DataStore;
-            sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
-            
-            IJobManager jobManager = Runner.ForSimulations(sims, sims, false);
-            IJobRunner jobRunner = new JobRunnerSync();
-            jobRunner.JobCompleted += EnsureJobRanRed;
-            jobRunner.Run(jobManager, true);
+            var simulation = new Simulation()
+            {
+                Name = "Sim",
+                FileName = Path.GetTempFileName(),
+                Children = new List<Model>()
+                {
+                    new Clock()
+                    {
+                        StartDate = new DateTime(2019, 1, 1),
+                        EndDate = new DateTime(2019, 1, 2)
+                    },
+                    new MockSummary(),
+                    new Manager()
+                    {
+                        Code = "asdf"
+                    }
+                }
+            };
+
+            Assert.Throws<Exception>(() => simulation.Run());
         }
 
         /// <summary>

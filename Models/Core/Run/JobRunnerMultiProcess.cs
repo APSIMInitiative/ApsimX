@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="JobManagerMultiProcess.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core.Runners
+﻿namespace Models.Core.Run
 {
     using APSIM.Shared.Utilities;
     using Models.Storage;
@@ -27,26 +22,16 @@ namespace Models.Core.Runners
         /// <summary>A token for cancelling running of jobs</summary>
         private CancellationTokenSource cancelToken;
 
-        /// <summary>Write child process' output to standard output?</summary>
-        private bool verbose;
-
         /// <summary>Non simulation errors thrown by runners or this class on socket threads</summary>
         private string errors;
 
-        private Dictionary<Guid, IRunnable> runningJobs = new Dictionary<Guid, IRunnable>();
+        private Dictionary<Guid, Job> runningJobs = new Dictionary<Guid, Job>();
 
         /// <summary>Occurs when all jobs completed.</summary>
         public event EventHandler<AllCompletedArgs> AllJobsCompleted;
 
         /// <summary>Invoked when a job is completed.</summary>
         public event EventHandler<JobCompleteArgs> JobCompleted;
-
-        /// <summary>Constructor</summary>
-        /// <param name="verbose">Write child process' output to standard output?</param>
-        public JobRunnerMultiProcess(bool verbose)
-        {
-            this.verbose = verbose;
-        }
 
         /// <summary>Run the specified jobs</summary>
         /// <param name="jobManager">An instance of a class that manages all jobs.</param>
@@ -127,7 +112,7 @@ namespace Models.Core.Runners
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), verbose, verbose);
+                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), false, false);
             }
         }
 
@@ -158,61 +143,38 @@ namespace Models.Core.Runners
         {
             try
             {
-                IRunnable jobToRun;
+                Job jobToRun;
                 Guid jobKey = Guid.Empty;
                 lock (this)
                 {
-                    jobToRun = jobs.GetNextJobToRun();
                     jobKey = Guid.NewGuid();
-                    runningJobs.Add(jobKey, jobToRun);
+                    jobToRun = new Job();
+                    jobToRun.RunnableJob = jobs.GetNextJobToRun();
+                    if (jobToRun.RunnableJob is Simulation)
+                    {
+                        // At this point DataStore should be a child of the simulation. Store the
+                        // DataStore in our jobToRun and then remove it from the simulation. We
+                        // don't want to pass the DataStore to the runner process via a socket.
+                        jobToRun.DataStore = Apsim.Child(jobToRun.RunnableJob as Simulation, typeof(DataStore)) as DataStore;
+                        (jobToRun.RunnableJob as IModel).Children.Remove(jobToRun.DataStore);
+                        runningJobs.Add(jobKey, jobToRun);
+                    }
                 }
 
-                if (jobToRun == null)
+                if (jobToRun.RunnableJob == null)
                     server.Send(args.socket, "NULL");
                 else
                 {
-                    if (jobToRun is RunSimulation)
-                    {
-                        RunSimulation runner = jobToRun as RunSimulation;
-                        IModel savedParent = runner.SetParentOfSimulation(null);
-                        GetJobReturnData returnData = new GetJobReturnData();
-                        returnData.key = jobKey;
-                        returnData.job = runner;
-                        server.Send(args.socket, returnData);
-                        runner.SetParentOfSimulation(savedParent);
-                    }
-                    else
-                    {
-                        GetJobReturnData returnData = new GetJobReturnData()
-                        {
-                            key = jobKey,
-                            job = jobToRun
-                        };
-                        server.Send(args.socket, returnData);
-                    }
+                    GetJobReturnData returnData = new GetJobReturnData();
+                    returnData.key = jobKey;
+                    returnData.job = jobToRun.RunnableJob;
+                    server.Send(args.socket, returnData);
                 }
             }
             catch (Exception err)
             {
                 errors += err.ToString() + Environment.NewLine;
             }
-        }
-
-        /// <summary>
-        /// Attempts to locate a DataStore which can be used to write data
-        /// received from a job.
-        /// </summary>
-        /// <param name="job">Job which has sent data.</param>
-        private IDataStore GetDataStore(IRunnable job)
-        {
-            if (job is RunSimulation)
-                return (job as RunSimulation).DataStore;
-
-            if (job is IModel)
-                return Apsim.Find(job as IModel, typeof(IDataStore)) as IDataStore;
-
-            // What should we do here? For now, just throw.
-            throw new Exception(string.Format("Unable to locate DataStore for '{0}' model.", job.GetType().Name));
         }
 
         /// <summary>Called by a runner process to send its output data.</summary>
@@ -222,15 +184,18 @@ namespace Models.Core.Runners
         {
             try
             {
+                Job jobToRun;
                 if (args.obj is TransferReportData)
                 {
                     var transferData = args.obj as TransferReportData;
-                    GetDataStore(runningJobs[transferData.key]).Writer.WriteTable(transferData.data);
+                    jobToRun = runningJobs[transferData.key];
+                    jobToRun.DataStore.Writer.WriteTable(transferData.data);
                 }
                 else if (args.obj is TransferDataTable)
                 {
                     var transferData = args.obj as TransferDataTable;
-                    GetDataStore(runningJobs[transferData.key]).Writer.WriteTable(transferData.data);
+                    jobToRun = runningJobs[transferData.key];
+                    jobToRun.DataStore.Writer.WriteTable(transferData.data);
                 }
                 else
                     throw new Exception("Invalid socket transfer method.");
@@ -252,7 +217,7 @@ namespace Models.Core.Runners
             {
                 EndJobArguments arguments = args.obj as EndJobArguments;
                 JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
-                jobCompleteArguments.job = runningJobs[arguments.key];
+                jobCompleteArguments.job = runningJobs[arguments.key].RunnableJob;
                 if (arguments.errorMessage != null)
                     jobCompleteArguments.exceptionThrowByJob = new Exception(arguments.errorMessage);
                 lock (this)
@@ -333,6 +298,15 @@ namespace Models.Core.Runners
 
             /// <summary>Simulation name</summary>
             public DataTable data;
+        }
+
+        private class Job
+        {
+            /// <summary>The job being run.</summary>
+            public IRunnable RunnableJob { get; set; }
+
+            /// <summary>The data store relating to the job</summary>
+            public DataStore DataStore { get; set; }
         }
     }
 }

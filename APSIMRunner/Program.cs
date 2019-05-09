@@ -1,14 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Program.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIMRunner
+﻿namespace APSIMRunner
 {
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Core.Runners;
+    using Models.Core.Run;
     using System;
     using System.Threading;
 
@@ -30,25 +25,21 @@ namespace APSIMRunner
                     // Run the simulation.
                     Exception error = null;
                     string simulationName = null;
-                    StorageViaSockets storage = new StorageViaSockets(job.key);
-                    object[] services = new object[] { storage };
+                    var storage = new StorageViaSockets(job.key);
 
                     try
                     {
                         IRunnable jobToRun = job.job;
-                        if (jobToRun is RunSimulation)
+                        if (jobToRun is IModel)
                         {
-                            RunSimulation simulationRunner = job.job as RunSimulation;
+                            IModel model = job.job as IModel;
 
-                            // Replace datastore with a socket writer
-                            simulationRunner.Services = services;
-                            simulationName = simulationRunner.simulationToRun.Name;
+                            // Add in a socket datastore to satisfy links.
+                            model.Children.Add(storage);
+                            Links.Resolve(jobToRun, model);
                         }
                         else
-                        {
-                            Links links = new Links(services);
-                            links.Resolve(jobToRun);
-                        }
+                            throw new Exception("Unknown job type: " + jobToRun.GetType().Name);
 
                         jobToRun.Run(new CancellationTokenSource());
                     }

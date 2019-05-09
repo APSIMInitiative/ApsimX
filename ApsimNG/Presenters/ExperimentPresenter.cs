@@ -244,9 +244,9 @@
                 var selectedSimulations = GetSelectedSimulationNamesFromView();
 
                 // Before running the simulations, disable all simulations except for those which are selected.
-                RunCommand runner = new RunCommand(experiment, explorerPresenter, false);
-                runner.SimulationNamesToRun = selectedSimulations;
-                runner.Do(explorerPresenter.CommandHistory);
+                var runner = new Runner(experiment, simulationNamesToRun: selectedSimulations, wait: false);
+                RunCommand runCmd = new RunCommand(experiment.Name, runner, explorerPresenter);
+                runCmd.Do(explorerPresenter.CommandHistory);
             }
             catch (Exception e)
             {

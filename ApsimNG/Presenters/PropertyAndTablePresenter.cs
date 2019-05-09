@@ -3,6 +3,7 @@
     using Commands;
     using EventArguments;
     using Interfaces;
+    using Models.Core;
     using Models.Interfaces;
     using System;
     using System.Collections.Generic;
@@ -41,7 +42,7 @@
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
-            explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
+            Links.Resolve(propertyPresenter, explorerPresenter.ApsimXFile);
             propertyPresenter.Attach(model, view.Grid1, parentPresenter);
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, view.Grid2, parentPresenter);

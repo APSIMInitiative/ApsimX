@@ -106,14 +106,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\PostSimulationToolTests.cs" />
-    <Compile Include="Functions\HoldFunctionTests.cs" />
+    <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
+    <Compile Include="Core\Run\SimulationTests.cs" />
+    <Compile Include="Functions\HoldFunctionTests.cs" />    
     <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
     <Compile Include="Graph\SeriesTests.cs" />
     <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
     <Compile Include="Factorial\ExperimentTests.cs" />
+<<<<<<< HEAD
     <Compile Include="IrrigationTests.cs" />
     <Compile Include="Soils\MockNutrientPool.cs" />
+=======
+    <Compile Include="MockPostSimulationTool.cs" />
+    <Compile Include="MockModelThatThrows.cs" />
+>>>>>>> New runner class working with unit tests and in user interface
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
@@ -125,7 +131,6 @@
     <Compile Include="Storage\DataStoreTests.cs" />
     <Compile Include="TextStorageReader.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
-    <Compile Include="TestsTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
     <Compile Include="Core\DocumentationTests.cs" />
     <Compile Include="Core\ApsimFile\ManagerConverterTests.cs" />
@@ -170,14 +175,12 @@
     <None Include="app.config" />
     <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTests.AddModelTests.json" />
     <EmbeddedResource Include="Core\ApsimFile\OnCreatedError.apsimx" />
-    <EmbeddedResource Include="Core\PostSimulationTool.apsimx" />
     <EmbeddedResource Include="defective.apsim" />
     <EmbeddedResource Include="ImporterTestsOldAPSIM.xml" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsWriteSingleModel.json" />
-    <EmbeddedResource Include="ManagerTestsFaultyManager.apsimx" />
     <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureParentChildRelationshipConverts.json" />
     <EmbeddedResource Include="Core\ApsimTests.xml" />
     <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureParentChildRelationshipConverts.xml">

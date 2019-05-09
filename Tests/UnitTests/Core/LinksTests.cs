@@ -121,8 +121,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks:true);
+            Links.Resolve(sim, sim);
 
             var links = sim.Children[4] as ModelWithLinks;
             Assert.AreEqual(links.zones.Length, 2);
@@ -168,8 +167,7 @@ namespace UnitTests.Core
             Apsim.ParentAllChildren(sim);
 
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             var links = sim.Children[4] as ModelWithIFunctions;
 
@@ -193,8 +191,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             var links = sim.Children[4] as ModelWithScopedLinkByName;
             Assert.AreEqual(links.zone2.Name, "zone2");
@@ -217,8 +214,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             // Should find the closest match.
             var links = sim.Children[4] as ModelWithScopedLink;
@@ -246,8 +242,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             // Should find zone1 as a match i.e. not use the zones name when doing a match.
             var links = sim.Children[2] as ModelWithChildLink;
@@ -256,7 +251,7 @@ namespace UnitTests.Core
             // If we now add another child, resolve should fail as there are two matches.
             links.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
             Apsim.ParentAllChildren(sim);
-            Assert.Throws<Exception>(() => linksAlgorithm.Resolve(sim, allLinks:true) );
+            Assert.Throws<Exception>(() => Links.Resolve(sim, sim) );
         }
 
         /// <summary>Ensure a [ChildLinkByName] finds works</summary>
@@ -281,8 +276,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             // Should find zone2 as a match as it uses the fields name.
             var links = sim.Children[2] as ModelWithChildLinkByName;
@@ -312,8 +306,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             // Should find the closest match.
             var links = sim.Children[2].Children[0] as ModelWithParentLink;
@@ -352,8 +345,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            Links.Resolve(sim, sim);
 
             var links = sim.Children[2].Children[0] as ModelWithLinkByPath;
             var zone2 = sim.Children[3];
@@ -384,7 +376,7 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(simulations);
 
-            simulations.Links.Resolve(simulations.Children[1], allLinks:true);
+            Links.Resolve(simulations.Children[1], simulations);
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.IsNotNull(modelWithServices.storage);

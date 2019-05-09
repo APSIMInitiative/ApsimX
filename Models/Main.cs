@@ -15,6 +15,7 @@ namespace Models
     using System.Linq;
     using Models.Storage;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -98,59 +99,60 @@ namespace Models
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
 
+                throw new NotImplementedException();
                 // If the filename argument has a wildcard then create a IJobManager to go look for matching files to run.
                 // Otherwise, create a JobManager to open the filename and run it in a separate, external process
-                IJobManager job;
-                bool hasWildcard = fileName.Contains('*') || fileName.Contains('?');
-                if (hasWildcard)
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"), args.Contains("/m"));
-                else
-                    job = Runner.ForFile(fileName, args.Contains("/RunTests"));
+                //IJobManager job;
+                //bool hasWildcard = fileName.Contains('*') || fileName.Contains('?');
+                //if (hasWildcard)
+                //    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"), args.Contains("/m"));
+                //else
+                //    job = Runner.ForFile(fileName, args.Contains("/RunTests"));
 
-                // Run the job created above using either a single thread or multi threaded (default)
-                IJobRunner jobRunner;
-                if (args.Contains("/SingleThreaded"))
-                    jobRunner = new JobRunnerSync();
-                else if (args.Contains("/m"))
-                {
-                    // If the multi-process switch has been provided as well as a wildcard in the filename,
-                    // we want to use the single threaded job runner, but run each job in multi-process mode.
-                    // TODO : might be useful to allow users to run a directory of apsimx files via the multi-
-                    // process job runner. This could be faster if they have many small files.
-                    if (hasWildcard)
-                        jobRunner = new JobRunnerSync();
-                    else
-                        jobRunner = new JobRunnerMultiProcess(args.Contains("/Verbose"));
-                }
-                else
-                    jobRunner = new JobRunnerAsync();
-                if (args.Select(arg => arg.ToLower()).Contains("/csv"))
-                {
-                    string dir = Path.GetDirectoryName(fileName);
-                    if (dir == "")
-                        dir = Directory.GetCurrentDirectory();
-                    files = Directory.GetFiles(
-                        dir,
-                        Path.GetFileName(fileName),
-                        args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToList();
-                    jobRunner.AllJobsCompleted += GenerateCsvFiles;
-                }
-                jobRunner.JobCompleted += OnJobCompleted;
-                jobRunner.AllJobsCompleted += OnAllJobsCompleted;
-                jobRunner.Run(job, wait: true);
+                //// Run the job created above using either a single thread or multi threaded (default)
+                //IJobRunner jobRunner;
+                //if (args.Contains("/SingleThreaded"))
+                //    jobRunner = new JobRunnerSync();
+                //else if (args.Contains("/m"))
+                //{
+                //    // If the multi-process switch has been provided as well as a wildcard in the filename,
+                //    // we want to use the single threaded job runner, but run each job in multi-process mode.
+                //    // TODO : might be useful to allow users to run a directory of apsimx files via the multi-
+                //    // process job runner. This could be faster if they have many small files.
+                //    if (hasWildcard)
+                //        jobRunner = new JobRunnerSync();
+                //    else
+                //        jobRunner = new JobRunnerMultiProcess(args.Contains("/Verbose"));
+                //}
+                //else
+                //    jobRunner = new JobRunnerAsync();
+                //if (args.Select(arg => arg.ToLower()).Contains("/csv"))
+                //{
+                //    string dir = Path.GetDirectoryName(fileName);
+                //    if (dir == "")
+                //        dir = Directory.GetCurrentDirectory();
+                //    files = Directory.GetFiles(
+                //        dir,
+                //        Path.GetFileName(fileName),
+                //        args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToList();
+                //    jobRunner.AllJobsCompleted += GenerateCsvFiles;
+                //}
+                //jobRunner.JobCompleted += OnJobCompleted;
+                //jobRunner.AllJobsCompleted += OnAllJobsCompleted;
+                //jobRunner.Run(job, wait: true);
 
                 // If errors occurred, write them to the console.
-                if (errors != string.Empty)
-                {
-                    Console.WriteLine("ERRORS FOUND!!");
-                    Console.WriteLine(errors);
-                    exitCode = 1;
-                }
-                else
-                    exitCode = 0;
+                //if (errors != string.Empty)
+                //{
+                //    Console.WriteLine("ERRORS FOUND!!");
+                //    Console.WriteLine(errors);
+                //    exitCode = 1;
+                //}
+                //else
+                //    exitCode = 0;
 
-                timer.Stop();
-                Console.WriteLine("Finished running simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
+                //timer.Stop();
+                //Console.WriteLine("Finished running simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
             }
             catch (Exception err)
             {
@@ -201,6 +203,42 @@ namespace Models
                     errors += e.exceptionThrown.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
             }
         }
+
+
+
+        //public void WriteCommenceMessage(string fileName)
+        //{
+        //    var message = new StringBuilder();
+        //    WriteDetailsToMessage(fileName, message);
+        //    message.Append(" has commenced.");
+        //    Console.WriteLine(message);
+        //}
+
+        //public void WriteCompleteMessage(string fileName)
+        //{
+        //    var message = new StringBuilder();
+        //    WriteDetailsToMessage(fileName, message);
+        //    message.Append(" has finished. Elapsed time was ");
+        //    var elapsedTime = DateTime.Now - startTime;
+        //    message.Append(elapsedTime.Seconds);
+        //    message.Append(" seconds.");
+        //    Console.WriteLine(message);
+        //}
+
+        //private void WriteDetailsToMessage(string fileName, StringBuilder message)
+        //{
+        //    if (descriptionOfSimulation != null)
+        //        message.Append(descriptionOfSimulation.Name);
+        //    else if (runnableJob is IModel)
+        //        message.Append((runnableJob as IModel).Name);
+
+        //    if (string.IsNullOrEmpty(fileName))
+        //    {
+        //        message.Append(" (");
+        //        message.Append(fileName);
+        //        message.Append(')');
+        //    }
+        //}
 
     }
 }

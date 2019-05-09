@@ -44,16 +44,13 @@ namespace UserInterface.Commands
         public void Do(CommandHistory commandHistory)
         {
             Simulation clonedSimulation = null;
-            IEvent events = null;
             try
             {
                 List<Simulation> sims = new List<Models.Core.Simulation>();
                 var sim = new SimulationDescription(simulation);
                 sims.Add(sim.ToSimulation(explorerPresenter.ApsimXFile));
 
-                events = explorerPresenter.ApsimXFile.GetEventService(clonedSimulation);
-                events.ConnectEvents();
-                explorerPresenter.ApsimXFile.Links.Resolve(clonedSimulation);
+                Events.ConnectEvents(clonedSimulation);
 
                 List<ModelDoc> models = new List<ModelDoc>();
                 foreach (IModel model in Apsim.ChildrenRecursively(clonedSimulation))
@@ -91,8 +88,8 @@ namespace UserInterface.Commands
             {
                 if (clonedSimulation != null)
                 {
-                    events.DisconnectEvents();
-                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedSimulation, allLinks:true);
+                    Events.DisconnectEvents(clonedSimulation);
+                    Links.Unresolve(clonedSimulation);
                 }
             }
         }

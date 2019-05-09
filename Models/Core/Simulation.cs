@@ -13,6 +13,7 @@ using Models.Core.Runners;
 using System.Linq;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
+using System.Threading;
 
 namespace Models.Core
 {
@@ -26,10 +27,22 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, ISimulationDescriptionGenerator
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator
     {
+        [Link]
+        private ISummary summary = null;
+
         [NonSerialized]
         private ScopingRules scope = null;
+
+        /// <summary>Invoked when simulation is about to commence.</summary>
+        public event EventHandler Commencing;
+
+        /// <summary>Invoked to signal start of simulation.</summary>
+        public event EventHandler<CommenceArgs> DoCommence;
+
+        /// <summary>Invoked when the simulation is completed.</summary>
+        public event EventHandler Completed;
 
         /// <summary>Return total area.</summary>
         public double Area
@@ -131,6 +144,9 @@ namespace Models.Core
         [XmlIgnore]
         public string FileName { get; set; }
 
+        /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
+        public List<object> Services { get; set; } = new List<object>();
+
         /// <summary>
         /// Simulation has completed. Clear scope and locator
         /// </summary>
@@ -169,13 +185,85 @@ namespace Models.Core
             return new List<SimulationDescription>() { simulationDescription };
         }
 
-        /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
+        /// <summary>
+        /// Runs the simulation on the current thread and waits for the simulation
+        /// to complete before returning to caller. Simulation is NOT cloned before
+        /// running. Use instance of Runner to get more options for running a 
+        /// simulation or groups of simulations. 
+        /// </summary>
+        /// <param name="cancelToken">Is cancellation pending?</param>
+        public void Run(CancellationTokenSource cancelToken = null)
         {
-            if (Parent is ISimulationDescriptionGenerator)
-                return new string[0];
-            return new string[] { Name };
+            // If the cancelToken is null then give it a default one. This can happen 
+            // when called from the unit tests.
+            if (cancelToken == null)
+                cancelToken = new CancellationTokenSource();
+
+            // If this simulation was not created from deserialisation then we need
+            // to parent all child models correctly and call OnCreated for each model.
+            bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
+            if (!hasBeenDeserialised)
+            {
+                // Parent all models.
+                Apsim.ParentAllChildren(this);
+
+                // Call OnCreated in all models.
+                Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
+            }
+
+            // Connect all events.
+            Events.ConnectEvents(this);
+
+            // Resolve all links
+            Links.Resolve(this, this);
+
+            try
+            {
+                // Invoke our commencing event to let all models know we're about to start.
+                Commencing?.Invoke(this, new EventArgs());
+
+                // Begin running the simulation.
+                DoCommence?.Invoke(this, new CommenceArgs() { CancelToken = cancelToken });
+            }
+            catch (Exception err)
+            {
+                // Exception occurred. Write error to summary.
+                string errorMessage = "ERROR in file: " + FileName + Environment.NewLine +
+                                      "Simulation name: " + Name + Environment.NewLine;
+                if (err.InnerException == null)
+                    errorMessage += err.Message;
+                else
+                    errorMessage += err.InnerException.Message;
+
+                summary?.WriteError(this, errorMessage);
+
+                // Rethrow exception
+                throw new Exception(errorMessage, err);
+            }
+            finally
+            {
+                // Signal that the simulation is complete.
+                Completed?.Invoke(this, new EventArgs());
+
+                // Disconnect our events.
+                Events.DisconnectEvents(this);
+
+                // Unresolve all links.
+                Links.Unresolve(this);
+            }
         }
 
+        /// <summary>Gets the simulation fraction complete.</summary>
+        public double FractionComplete
+        {
+            get
+            {
+                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
+                if (c == null)
+                    return 0;
+                else
+                    return c.FractionComplete;
+            }
+        }
     }
 }

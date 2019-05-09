@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
                 {
                     GraphView graphView = new GraphView();
                     GraphPresenter presenter = new GraphPresenter();
-                    explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                    Links.Resolve(presenter, explorerPresenter.ApsimXFile);
                     presenter.Attach(graph, graphView, explorerPresenter);
                     presenters.Add(presenter);
                     views.Add(graphView);
