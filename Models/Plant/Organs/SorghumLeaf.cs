@@ -955,14 +955,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate the amount of N to retranslocate</summary>
-        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN)
+        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             int leafIndex = 2;
 
             double laiToday = calcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
-            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] - DltRetranslocatedN;
+            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] + DltRetranslocatedN; //dltRetranslocation is -ve
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
@@ -974,12 +974,12 @@ namespace Models.PMF.Organs
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
                 double nProvided = Math.Min(dilutionN, requiredN / 2.0);
                 requiredN -= nProvided;
-                nGreenToday += nProvided; //jkb
+                nGreenToday -= nProvided; //jkb
                 DltRetranslocatedN -= nProvided;
                 if (requiredN <= 0.0001) return nProvided;
 
                 // take from decreasing dltLai 
-                if (DltLAI > 0)
+                if (!forLeaf && DltLAI > 0)
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
@@ -987,6 +987,7 @@ namespace Models.PMF.Organs
                     requiredN -= laiN;
                     nProvided += laiN;
                     BAT.StructuralAllocation[leafIndex] -= laiN;
+                    nGreenToday -= laiN;
                 }
 
                 // recalc the SLN after this N has been removed
@@ -1004,6 +1005,7 @@ namespace Models.PMF.Organs
                 DltSenescedLaiN += senescenceLAI;
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                 DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+
                 return nProvided;
             }
             else
