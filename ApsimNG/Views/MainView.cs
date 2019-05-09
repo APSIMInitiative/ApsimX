@@ -192,9 +192,11 @@
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
+            {
                 InitMac();
-            if ((uint)Environment.OSVersion.Platform <= 3)
-                RefreshTheme();
+                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+            }
+            RefreshTheme();
         }
 
         /// <summary>
@@ -761,17 +763,21 @@
         {
             if (Utility.Configuration.Settings.DarkTheme)
             {
+                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
                 using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
                 {
                     using (StreamReader darkTheme = new StreamReader(rcStream))
-                        Rc.ParseString(darkTheme.ReadToEnd());
+                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
                 }
 
+                Rc.Parse(tempFile);
                 // Remove black colour from colour pallete.
                 Color black = Color.FromArgb(0, 0, 0);
                 ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
             }
-            else
+            else if (ProcessUtilities.CurrentOS.IsWindows)
+                // Apsim's default gtk theme uses the 'wimp' rendering engine,
+                // which doesn't play nicely on non-windows systems.
                 Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
         }
 
