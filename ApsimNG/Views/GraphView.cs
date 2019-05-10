@@ -182,11 +182,14 @@ namespace UserInterface.Views
         {
             get
             {
+                if (plot1 == null || plot1.Model == null)
+                    return OxyColors.White;
                 return this.plot1.Model.Background;
             }
             set
             {
-                this.plot1.Model.Background = value;
+                if (plot1 != null && plot1.Model != null)
+                    this.plot1.Model.Background = value;
             }
         }
 
@@ -197,11 +200,14 @@ namespace UserInterface.Views
         {
             get
             {
+                if (plot1 == null || plot1.Model == null)
+                    return OxyColors.Black; // Fallback to black
                 return this.plot1.Model.TextColor;
             }
             set
             {
-                this.plot1.Model.TextColor = value;
+                if (plot1 != null && plot1.Model != null)
+                    this.plot1.Model.TextColor = value;
             }
         }
 
