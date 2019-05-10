@@ -401,7 +401,7 @@
                 }
                 else
                 {
-                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                    cell.CellBackgroundGdk = Grid.Style.Background(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                     textRenderer.Editable = true;
                 }
@@ -429,7 +429,7 @@
                         CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
                         if (toggleRend != null)
                         {
-                            toggleRend.CellBackgroundGdk = Grid.Style.Base(cellState);
+                            toggleRend.CellBackgroundGdk = Grid.Style.Background(cellState);
                             toggleRend.Active = (bool)dataVal;
                             toggleRend.Activatable = true;
                             cell.Visible = false;
@@ -455,7 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
-                                comboRend.CellBackgroundGdk = Grid.Style.Base(cellState);
+                                comboRend.CellBackgroundGdk = Grid.Style.Background(cellState);
                                 return;
                             }
                         }
