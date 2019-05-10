@@ -263,13 +263,13 @@
                     foreach (var descriptor in Descriptors)
                     {
                         if (fieldsThatExist.Contains(descriptor.Name))
-                            filter = AddToFilter(filter, descriptor.Name + " = '" + descriptor.Value + "'");
+                            filter = AddToFilter(filter, "[" + descriptor.Name + "] = '" + descriptor.Value + "'");
                         else
                             filter = AddSimulationNameClauseToFilter(filter, descriptor, simulationDescriptions);
                     }
 
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
-                    if (!filter.Contains("SimulationName IN"))
+                    if (!filter.Contains("[SimulationName] IN"))
                         filter = AddToFilter(filter, scopeFilter);
                 }
                 else
@@ -334,7 +334,7 @@
         private string AddSimulationNameClauseToFilter(string filter, SimulationDescription.Descriptor descriptor, List<SimulationDescription> simulationDescriptions)
         {
             var simulationNames = simulationDescriptions.FindAll(sim => sim.HasDescriptor(descriptor)).Select(sim => sim.Name);
-            return AddToFilter(filter, "SimulationName IN (" +
+            return AddToFilter(filter, "[SimulationName] IN (" +
                                 StringUtilities.Build(simulationNames, ",", "'", "'") +
                                 ")");
         }

@@ -207,6 +207,11 @@
 
             bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
             bool hasCheckpointName = fieldNamesInTable.Contains("CheckpointID") || fieldNamesInTable.Contains("CheckpointName") || checkpointName != null;
+            if (filter != null)
+            {
+                hasSimulationName |= filter.Contains("SimulationID") || filter.Contains("SimulationName");
+                hasCheckpointName |= filter.Contains("CheckpointID") || filter.Contains("CheckpointName");
+            }
 
             sql.Append("SELECT ");
 
@@ -237,6 +242,7 @@
                 firstField = false;
             }
 
+            fieldList.Remove("CheckpointName");
             fieldList.Remove("CheckpointID");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
@@ -248,16 +254,11 @@
                     if (!firstField)
                         sql.Append(", ");
                     firstField = false;
-                    sql.Append("T.");
-                    sql.Append("[");
-                    if (!(Connection is Firebird) || tableName.StartsWith("_")
-                      || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
-                      || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
-                      || fieldName.Equals("CheckpointID", StringComparison.OrdinalIgnoreCase)
-                      || fieldName.Equals("CheckpointName", StringComparison.OrdinalIgnoreCase))
+                    sql.Append("T.[");
+                    if (!(Connection is Firebird) || tableName.StartsWith("_"))
                         sql.Append(fieldName);
                     else
-                        sql.Append("COL_" + (Connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
+                        sql.Append((Connection as Firebird).GetShortColumnName(tableName, fieldName));
                     sql.Append(']');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
