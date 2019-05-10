@@ -79,22 +79,25 @@
         /// <summary>Stop all jobs currently running</summary>
         public void Stop()
         {
-            lock (this)
+            if (server != null)
             {
-                if (server != null)
+                lock (this)
                 {
-                    cancelToken.Cancel();
-                    server.StopListening();
-                    server = null;
-                    DeleteRunners();
-                    runningJobs.Clear();
-                    jobs.Completed();
-                    if (AllJobsCompleted != null)
+                    if (server != null)
                     {
-                        AllCompletedArgs args = new AllCompletedArgs();
-                        if (errors != null)
-                            args.exceptionThrown = new Exception(errors);
-                        AllJobsCompleted.Invoke(this, args);
+                        cancelToken.Cancel();
+                        server.StopListening();
+                        server = null;
+                        DeleteRunners();
+                        runningJobs.Clear();
+                        jobs.AllCompleted(new AllCompletedArgs());
+                        if (AllJobsCompleted != null)
+                        {
+                            AllCompletedArgs args = new AllCompletedArgs();
+                            if (errors != null)
+                                args.exceptionThrown = new Exception(errors);
+                            AllJobsCompleted.Invoke(this, args);
+                        }
                     }
                 }
             }
@@ -224,6 +227,7 @@
                 {
                     if (JobCompleted != null)
                         JobCompleted.Invoke(this, jobCompleteArguments);
+                    jobs.JobCompleted(jobCompleteArguments);
                     runningJobs.Remove(arguments.key);
                 }
                 server.Send(args.socket, "OK");

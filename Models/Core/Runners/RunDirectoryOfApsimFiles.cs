@@ -89,8 +89,14 @@
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>
-        public void Completed()
+        void IJobManager.AllCompleted(AllCompletedArgs e)
         {
         }
+
+        /// <summary>Called by the job runner when all jobs completed</summary>
+        void IJobManager.JobCompleted(JobCompleteArgs args)
+        {
+        }
+
     }
 }

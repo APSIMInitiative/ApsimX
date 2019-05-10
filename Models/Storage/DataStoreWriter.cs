@@ -179,7 +179,7 @@
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>
-        public void Completed() { }
+        public void AllCompleted() { }
 
         /// <summary>Return the next command to run.</summary>
         public IRunnable GetNextJobToRun()
@@ -603,6 +603,14 @@
                 }
                 WriteTable(checkpointsTable);
             }
+        }
+
+        void IJobManager.JobCompleted(JobCompleteArgs args)
+        {
+        }
+
+        void IJobManager.AllCompleted(AllCompletedArgs args)
+        {
         }
 
         /// <summary>

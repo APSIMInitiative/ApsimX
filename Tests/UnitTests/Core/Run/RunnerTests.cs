@@ -46,7 +46,8 @@
         [Test]
         public void EnsureSimulationRuns()
         {
-            foreach (var typeOfRun in runTypes)
+            var typeOfRun = RunTypeEnum.SingleThreaded;
+            //foreach (var typeOfRun in runTypes)
             {
                 // Open an in-memory database.
                 database = new SQLite();
@@ -432,18 +433,10 @@
                 // Run simulations.
                 Runner runner = new Runner(simulation, typeOfRun);
 
-                JobCompletedArgs argsOfCompletedJob = null;
-                runner.JobCompleted += (sender, e) => { argsOfCompletedJob = e; };
-
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllJobsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 runner.Run();
-
-                // Make sure the expected exception was sent through the job completed event.
-                Assert.IsTrue(argsOfCompletedJob.ExceptionThrowByJob.ToString().Contains("Intentional exception"));
-                Assert.IsTrue(argsOfCompletedJob.ElapsedTime.Milliseconds > 0);
-                Assert.AreEqual((argsOfCompletedJob.Job as Simulation).Name, "Sim");
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
@@ -487,9 +480,6 @@
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
 
-                var argsOfCompletedJobs = new List<JobCompletedArgs>();
-                runner.JobCompleted += (sender, e) => { argsOfCompletedJobs.Add(e); };
-
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllJobsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
@@ -500,16 +490,6 @@
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 1);
                 Assert.AreEqual(runner.PercentComplete(), 100);
-
-                // The JobCompleted event should have been invoked twice, once for the simulation
-                // and once for the post simulation tool.
-                Assert.AreEqual(argsOfCompletedJobs.Count, 2);
-                Assert.AreEqual(argsOfCompletedJobs[0].Job.Name, "Sim");
-                Assert.AreEqual(argsOfCompletedJobs[1].Job.Name, "PostSim");
-
-                // Make sure the expected exception was sent through the job completed event.
-                Assert.IsNull(argsOfCompletedJobs[0].ExceptionThrowByJob);
-                Assert.IsTrue(argsOfCompletedJobs[1].ExceptionThrowByJob.ToString().Contains("Intentional exception"));
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
@@ -553,9 +533,6 @@
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
 
-                var argsOfCompletedJobs = new List<JobCompletedArgs>();
-                runner.JobCompleted += (sender, e) => { argsOfCompletedJobs.Add(e); };
-
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllJobsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
@@ -570,10 +547,6 @@
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
                 Assert.AreEqual(runner.PercentComplete(), 0);
-
-                // The JobCompleted event should have been invoked once for the post simulation tool.
-                Assert.AreEqual(argsOfCompletedJobs.Count, 1);
-                Assert.AreEqual(argsOfCompletedJobs[0].Job.Name, "PostSim");
 
                 database.CloseDatabase();
             }
