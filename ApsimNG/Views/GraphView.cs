@@ -614,6 +614,19 @@ namespace UserInterface.Views
             bool crossAtZero)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
+
+            oxyAxis.AxislineColor = this.ForegroundColour;
+
+            oxyAxis.ExtraGridlineColor = this.ForegroundColour;
+            oxyAxis.MajorGridlineColor = this.ForegroundColour;
+            oxyAxis.MinorGridlineColor = this.ForegroundColour;
+
+            oxyAxis.TicklineColor = this.ForegroundColour;
+            oxyAxis.MinorTicklineColor = this.ForegroundColour;
+
+            oxyAxis.TitleColor = this.ForegroundColour;
+            oxyAxis.TextColor = this.ForegroundColour;
+
             if (oxyAxis != null)
             {
                 oxyAxis.Title = title.Trim();
