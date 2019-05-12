@@ -196,7 +196,9 @@
                 InitMac();
                 //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
             }
-            RefreshTheme();
+
+            if (!ProcessUtilities.CurrentOS.IsLinux)
+                RefreshTheme();
         }
 
         /// <summary>
