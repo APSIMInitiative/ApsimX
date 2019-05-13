@@ -401,7 +401,7 @@
                 }
                 else
                 {
-                    cell.CellBackgroundGdk = Grid.Style.Background(cellState);
+                    cell.CellBackgroundGdk = MainWidget.Style.Base(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                     textRenderer.Editable = true;
                 }
@@ -429,7 +429,7 @@
                         CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
                         if (toggleRend != null)
                         {
-                            toggleRend.CellBackgroundGdk = Grid.Style.Background(cellState);
+                            toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                             toggleRend.Active = (bool)dataVal;
                             toggleRend.Activatable = true;
                             cell.Visible = false;
@@ -455,7 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
-                                comboRend.CellBackgroundGdk = Grid.Style.Background(cellState);
+                                comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                                 return;
                             }
                         }
@@ -1456,7 +1456,8 @@
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-            
+            Grid.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
+            fixedColView.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
