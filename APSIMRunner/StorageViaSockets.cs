@@ -16,9 +16,10 @@
         List<JobRunnerMultiProcess.TransferRowInTable> data = new List<JobRunnerMultiProcess.TransferRowInTable>();
         private Guid jobKey;
 
-        public StorageViaSockets(Guid key)
+        public StorageViaSockets(Guid key, string filename)
         {
             jobKey = key;
+            FileName = filename;
         }
 
         /// <summary>Write to permanent storage.</summary>
@@ -64,7 +65,7 @@
             }
         }
 
-        public string FileName { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public string FileName { get; set; }
 
         public IStorageReader Reader => throw new System.NotImplementedException();
 

@@ -148,17 +148,20 @@
             {
                 Job jobToRun;
                 Guid jobKey = Guid.Empty;
+                string fileName = null;
                 lock (this)
                 {
                     jobKey = Guid.NewGuid();
                     jobToRun = new Job();
                     jobToRun.RunnableJob = jobs.GetNextJobToRun();
-                    if (jobToRun.RunnableJob is Simulation)
+
+                    // At this point DataStore should be a child of the simulation. Store the
+                    // DataStore in our jobToRun and then remove it from the simulation. We
+                    // don't want to pass the DataStore to the runner process via a socket.
+                    if (jobToRun.RunnableJob != null)
                     {
-                        // At this point DataStore should be a child of the simulation. Store the
-                        // DataStore in our jobToRun and then remove it from the simulation. We
-                        // don't want to pass the DataStore to the runner process via a socket.
-                        jobToRun.DataStore = Apsim.Child(jobToRun.RunnableJob as Simulation, typeof(DataStore)) as DataStore;
+                        jobToRun.DataStore = Apsim.Child(jobToRun.RunnableJob as IModel, typeof(DataStore)) as DataStore;
+                        fileName = jobToRun.DataStore.FileName;
                         (jobToRun.RunnableJob as IModel).Children.Remove(jobToRun.DataStore);
                         runningJobs.Add(jobKey, jobToRun);
                     }
@@ -171,6 +174,7 @@
                     GetJobReturnData returnData = new GetJobReturnData();
                     returnData.key = jobKey;
                     returnData.job = jobToRun.RunnableJob;
+                    returnData.fileName = fileName;
                     server.Send(args.socket, returnData);
                 }
             }
@@ -247,6 +251,9 @@
 
             /// <summary>Table name</summary>
             public IRunnable job;
+
+            /// <summary>File name</summary>
+            public string fileName;
         }
 
         /// <summary>An class for encapsulating arguments to an EndJob command</summary>

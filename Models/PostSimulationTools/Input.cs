@@ -46,10 +46,8 @@
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null && this.FileName != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-                return null;
+                var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
             }
 
             set

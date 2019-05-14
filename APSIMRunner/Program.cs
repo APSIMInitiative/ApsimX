@@ -25,7 +25,7 @@
                     // Run the simulation.
                     Exception error = null;
                     string simulationName = null;
-                    var storage = new StorageViaSockets(job.key);
+                    var storage = new StorageViaSockets(job.key, job.fileName);
 
                     try
                     {

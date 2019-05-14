@@ -1,28 +1,37 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Encapsulates a collection of jobs.
+    /// Encapsulates a collection of jobs. A job can be a simulation run or 
+    /// a EXCEL input run.
     /// </summary>
     public class JobCollection : IJobManager
-    {       
+    {
         /// <summary>The model to use to search for simulations to run.</summary>
         private IModel relativeTo;
-        
+
         /// <summary>Top level model.</summary>
         private IModel rootModel;
 
+        /// <summary>Run simulations?</summary>
+        private bool runSimulations;
+
         /// <summary>Run post simulation tools?</summary>
-        bool runPostSimulationTools;
+        private bool runPostSimulationTools;
 
         /// <summary>Run tests?</summary>
-        bool runTests;
+        private bool runTests;
+
+        /// <summary>Specific simulation names to run.</summary>
+        private IEnumerable<string> simulationNamesToRun;
 
         /// <summary>The collection of jobs still to run.</summary>
         private List<Job> pendingModels = new List<Job>();
@@ -30,11 +39,11 @@
         /// <summary>The collection of jobs that are currently running. Needed for percent complete.</summary>
         private List<Job> runningModels = new List<Job>();
 
-        /// <summary>Name of file where the jobs came from.</summary>
-        private string fileName;
-
         /// <summary>The related storage model.</summary>
         private IDataStore storage;
+
+        /// <summary>Time when job collection first started.</summary>
+        private DateTime startTime;
 
         /// <summary>Contstructor</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
@@ -49,8 +58,140 @@
                              IEnumerable<string> simulationNamesToRun = null)
         {
             this.relativeTo = relativeTo;
+            this.runSimulations = runSimulations;
             this.runPostSimulationTools = runPostSimulationTools;
             this.runTests = runTests;
+            this.simulationNamesToRun = simulationNamesToRun;
+
+            Initialise();
+        }
+
+        /// <summary>Contstructor</summary>
+        /// <param name="fileName">The name of the file to run.</param>
+        /// <param name="runTests">Run tests?</param>
+        public JobCollection(string fileName,
+                             bool runTests = true)
+        {
+            this.FileName = fileName;
+            this.runSimulations = true;
+            this.runPostSimulationTools = true;
+            this.runTests = runTests;
+        }
+
+
+        /// <summary>Name of file where the jobs came from.</summary>
+        public string FileName { get; set; }
+
+        /// <summary>Invoked every time a job has completed.</summary>
+        public event EventHandler<JobHasCompletedArgs> JobHasCompleted;
+
+        /// <summary>Invoked when the job collection has completed.</summary>
+        public event EventHandler<JobCollectionHasCompletedArgs> JobCollectionHasCompleted;
+
+        /// <summary>The number of simulations to run.</summary>
+        public int TotalNumberOfSimulations { get; private set; }
+
+        /// <summary>The number of simulations completed running.</summary>
+        public int NumberOfSimulationsCompleted { get; private set; }
+
+        /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
+        public List<Exception> ExceptionsThrown { get; private set; }
+
+        /// <summary>Return the next job to run or null if nothing to run.</summary>
+        /// <returns>Job to run or null if no more.</returns>
+        public IRunnable GetNextJobToRun()
+        {
+            if (rootModel == null)
+                Initialise();
+
+            if (pendingModels.Count > 0)
+            {
+                // Remove next model to run from our pending list.
+                var modelToRun = pendingModels.First();
+                pendingModels.Remove(modelToRun);
+
+                // Add model to our running list.
+                lock (runningModels)
+                {
+                    runningModels.Add(modelToRun);
+                }
+
+                return modelToRun.ToRunnable(storage, FileName);
+            }
+            else
+                return null;
+        }
+
+        /// <summary>Job has completed.</summary>
+        void IJobManager.JobCompleted(JobCompleteArgs e)
+        {
+            var completedJob = runningModels.Find(m => m.Equals(e.job));
+            if (completedJob != null)
+            {
+                if (e.exceptionThrowByJob != null)
+                    AddException(e.exceptionThrowByJob);
+                lock (runningModels)
+                {
+                    runningModels.Remove(completedJob);
+                    if (e.job is Simulation)
+                        NumberOfSimulationsCompleted++;
+                }
+
+                JobHasCompleted?.Invoke(this, new JobHasCompletedArgs()
+                {
+                    Job = e.job as IModel,
+                    ElapsedTime = completedJob.ElapsedTime,
+                    ExceptionThrown = e.exceptionThrowByJob
+                });
+            }
+        }
+
+        /// <summary>Job has completed.</summary>
+        void IJobManager.AllCompleted(AllCompletedArgs e)
+        {
+            if (runPostSimulationTools)
+                RunPostSimulationTools();
+
+            if (runTests)
+                RunTests();
+
+            storage?.Writer.Stop();
+            storage?.Reader.Refresh();
+
+            JobCollectionHasCompleted?.Invoke(this,
+                new JobCollectionHasCompletedArgs()
+                {
+                    JobCollection = this,
+                    ElapsedTime = startTime - DateTime.Now,
+                    ExceptionsThrown = ExceptionsThrown
+                });
+        }
+
+        /// <summary>Initialise the instance.</summary>
+        private void Initialise()
+        {
+            startTime = DateTime.Now;
+
+            if (relativeTo == null)
+            {
+                if (!File.Exists(FileName))
+                    throw new Exception("Cannot find file: " + FileName);
+                List<Exception> exceptions;
+                relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
+                Exception err = null;
+                if (exceptions != null && exceptions.Count > 0)
+                {
+                    ExceptionsThrown = new List<Exception>();
+                    ExceptionsThrown.AddRange(exceptions);
+                    err = exceptions[0];
+                }
+                JobHasCompleted?.Invoke(this, new JobHasCompletedArgs()
+                {
+                    Job = null,
+                    ElapsedTime = new TimeSpan(),
+                    ExceptionThrown = err
+                });
+            }
 
             // Find the root model.
             rootModel = relativeTo;
@@ -58,9 +199,9 @@
                 rootModel = rootModel.Parent;
 
             if (rootModel is Simulations)
-                fileName = (rootModel as Simulations).FileName;
+                FileName = (rootModel as Simulations).FileName;
             else if (rootModel is Simulation)
-                fileName = (rootModel as Simulation).FileName;
+                FileName = (rootModel as Simulation).FileName;
 
             if (runPostSimulationTools)
                 FindIRunnablesToRun(relativeTo);
@@ -83,67 +224,6 @@
                 // Call OnCreated in all models.
                 Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
             }
-        }
-
-        /// <summary>The number of simulations to run.</summary>
-        public int TotalNumberOfSimulations { get; private set; }
-
-        /// <summary>The number of simulations completed running.</summary>
-        public int NumberOfSimulationsCompleted { get; private set; }
-
-        /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
-        public List<Exception> ExceptionsThrown { get; private set; }
-
-        /// <summary>Return the next job to run or null if nothing to run.</summary>
-        /// <returns>Job to run or null if no more.</returns>
-        public IRunnable GetNextJobToRun()
-        {
-            if (pendingModels.Count > 0)
-            {
-                // Remove next model to run from our pending list.
-                var modelToRun = pendingModels.First();
-                pendingModels.Remove(modelToRun);
-
-                // Add model to our running list.
-                lock (runningModels)
-                {
-                    runningModels.Add(modelToRun);
-                }
-
-                return modelToRun.ToRunnable(storage, fileName);
-            }
-            else
-                return null;
-        }
-
-        /// <summary>Job has completed.</summary>
-        void IJobManager.JobCompleted(JobCompleteArgs e)
-        {
-            var completedJob = runningModels.Find(m => m.Equals(e.job));
-            if (completedJob != null)
-            {
-                if (e.exceptionThrowByJob != null)
-                    AddException(e.exceptionThrowByJob);
-                lock (runningModels)
-                {
-                    runningModels.Remove(completedJob);
-                    if (e.job is Simulation)
-                        NumberOfSimulationsCompleted++;
-                }
-            }
-        }
-
-        /// <summary>Job has completed.</summary>
-        void IJobManager.AllCompleted(AllCompletedArgs e)
-        {
-            if (runPostSimulationTools)
-                RunPostSimulationTools();
-
-            if (runTests)
-                RunTests();
-
-            storage?.Writer.Stop();
-            storage?.Reader.Refresh();
         }
 
         /// <summary>Determine the list of IRunnable jobs to run</summary>
@@ -206,13 +286,13 @@
                     AddException(err);
                 }
 
-                //JobCompleted?.Invoke(this,
-                //    new JobCompletedArgs()
-                //    {
-                //        Job = tool as IModel,
-                //        ExceptionThrowByJob = exception,
-                //        ElapsedTime = DateTime.Now - startTime
-                //    });
+                JobHasCompleted?.Invoke(this,
+                    new JobHasCompletedArgs()
+                    {
+                        Job = tool as IModel,
+                        ExceptionThrown = exception,
+                        ElapsedTime = DateTime.Now - startTime
+                    });
 
             }
         }
@@ -220,32 +300,37 @@
         /// <summary>Run all tests.</summary>
         private void RunTests()
         {
-            try
-            {
-                storage?.Writer.WaitForIdle();
+            storage?.Writer.WaitForIdle();
 
-                foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
+            foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
+            {
+                DateTime startTime = DateTime.Now;
+
+                Links.Resolve(test as IModel, rootModel);
+
+                // If we run into problems, we will want to include the name of the test in the 
+                // exception's message. However, tests may be manager scripts, which always have
+                // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
+                // manager's name instead.
+                string testName = test.Parent is Manager ? test.Parent.Name : test.Name;
+                Exception exception = null;
+                try
                 {
-                    Links.Resolve(test as IModel, rootModel);
-
-                    // If we run into problems, we will want to include the name of the test in the 
-                    // exception's message. However, tests may be manager scripts, which always have
-                    // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
-                    // manager's name instead.
-                    string testName = test.Parent is Manager ? test.Parent.Name : test.Name;
-                    try
-                    {
-                        test.Run();
-                    }
-                    catch (Exception err)
-                    {
-                        AddException(new Exception("Encountered an error while running test " + testName, err));
-                    }
+                    test.Run();
                 }
-            }
-            catch (Exception err)
-            {
-                AddException(err);
+                catch (Exception err)
+                {
+                    exception = err;
+                    AddException(new Exception("Encountered an error while running test " + testName, err));
+                }
+
+                JobHasCompleted?.Invoke(this,
+                    new JobHasCompletedArgs()
+                    {
+                        Job = test as IModel,
+                        ExceptionThrown = exception,
+                        ElapsedTime = DateTime.Now - startTime
+                    });
             }
         }
 
@@ -264,10 +349,40 @@
         }
 
         /// <summary>
+        /// Event arguments for a JobHasCompleted event.
+        /// </summary>
+        public class JobHasCompletedArgs : EventArgs
+        {
+            /// <summary>The job that was run.</summary>
+            public IModel Job { get; set; }
+
+            /// <summary>Exception thrown (if any). Can be null.</summary>
+            public Exception ExceptionThrown { get; set; }
+
+            /// <summary>The elapsed time.</summary>
+            public TimeSpan ElapsedTime { get; set; }
+        }
+
+        /// <summary>
+        /// Event arguments for a JobCollectionHasCompleted event.
+        /// </summary>
+        public class JobCollectionHasCompletedArgs : EventArgs
+        {
+            /// <summary>The job collection that was run.</summary>
+            public JobCollection JobCollection { get; set; }
+
+            /// <summary>Exception thrown (if any). Can be null.</summary>
+            public List<Exception> ExceptionsThrown { get; set; }
+
+            /// <summary>The elapsed time.</summary>
+            public TimeSpan ElapsedTime { get; set; }
+        }
+
+        /// <summary>
         /// This class encapsulates a running job. It can either be an IRunnable
         /// e.g. like ExcelInput or a SimulationDescription.
         /// </summary>
-        public class Job
+        private class Job
         {
             private IRunnable runnableJob;
             private SimulationDescription descriptionOfSimulation;
@@ -297,23 +412,27 @@
                 {
                     Simulation simulationToRun = descriptionOfSimulation.ToSimulation();
 
-                    // Give the datastore to the simulation so that links can be resolved.
-                    if (storage != null)
-                    {
-                        var storageInSimulation = Apsim.Find(simulationToRun, typeof(IDataStore)) as Model;
-                        if (storageInSimulation != null)
-                            Apsim.Delete(storageInSimulation);
-                        simulationToRun.Children.Add(storage as Model);
-                    }
-
                     // Give the file name to the simulation.
                     simulationToRun.FileName = fileName;
 
                     runnableJob = simulationToRun;
                 }
+                else
+                {
+                    (runnableJob as IModel).Parent = null;
+                }
+
+                // Give the datastore to the simulation so that links can be resolved.
+                if (storage != null)
+                {
+                    var storageInSimulation = Apsim.Find(runnableJob as IModel, typeof(IDataStore)) as Model;
+                    if (storageInSimulation != null)
+                        Apsim.Delete(storageInSimulation);
+                    (runnableJob as IModel).Children.Add(storage as Model);
+                }
 
                 startTime = DateTime.Now;
-                return runnableJob;
+                return runnableJob as IRunnable;
             }
 
             /// <summary>Return true if this job is the same job as the one specified.</summary>
@@ -322,6 +441,10 @@
             {
                 return runnableJob == compareTo;
             }
+
+            /// <summary>Gets the time the job took to run.</summary>
+            public TimeSpan ElapsedTime { get { return DateTime.Now - startTime; } }
         }
+
     }
 }

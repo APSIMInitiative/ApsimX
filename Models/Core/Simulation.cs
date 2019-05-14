@@ -230,10 +230,7 @@ namespace Models.Core
                 // Exception occurred. Write error to summary.
                 string errorMessage = "ERROR in file: " + FileName + Environment.NewLine +
                                       "Simulation name: " + Name + Environment.NewLine;
-                if (err.InnerException == null)
-                    errorMessage += err.Message;
-                else
-                    errorMessage += err.InnerException.Message;
+                errorMessage += err.ToString();
 
                 summary?.WriteError(this, errorMessage);
 

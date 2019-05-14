@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Storage;
     using NUnit.Framework;
@@ -46,8 +47,7 @@
         [Test]
         public void EnsureSimulationRuns()
         {
-            var typeOfRun = RunTypeEnum.SingleThreaded;
-            //foreach (var typeOfRun in runTypes)
+            foreach (var typeOfRun in runTypes)
             {
                 // Open an in-memory database.
                 database = new SQLite();
@@ -550,6 +550,66 @@
 
                 database.CloseDatabase();
             }
+        }
+
+        /// <summary>Ensure a folder of simulation files can be run.</summary>
+        [Test]
+        public void RunDirectoryOfFiles()
+        {
+            var simulations = new Simulations()
+            {
+                Name = "Simulations",
+                Version = Converter.LatestVersion,
+                Children = new List<Model>()
+                {
+                    new Simulation()
+                    {
+                        Name = "Sim1",
+                        FileName = Path.GetTempFileName(),
+                        Children = new List<Model>()
+                        {
+                            new Clock()
+                            {
+                                StartDate = new DateTime(1980, 1, 1),
+                                EndDate = new DateTime(1980, 1, 2)
+                            },
+                            new Summary()
+                        }
+                    },
+                    new DataStore(),
+                }
+            };
+
+            // Create a temporary directory.
+            var path = Path.Combine(Path.GetTempPath(), "RunDirectoryOfFiles");
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+            Directory.CreateDirectory(path);
+
+            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), FileFormat.WriteToString(simulations));
+
+            simulations.Children[0].Name = "Sim2";
+            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), FileFormat.WriteToString(simulations));
+
+            var runner = new Runner(Path.Combine(path, "*.apsimx"));
+            runner.Run();
+
+            // Check simulation 1 database
+            database = new SQLite();
+            database.OpenDatabase(Path.Combine(path, "Sim1.db"), readOnly: true);
+            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
+                   "                       Message\r\n" +
+                   "Simulation terminated normally\r\n");
+
+            database.CloseDatabase();
+
+            // Check simulation 2 database
+            database = new SQLite();
+            database.OpenDatabase(Path.Combine(path, "Sim2.db"), readOnly: true);
+            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
+                   "                       Message\r\n" +
+                   "Simulation terminated normally\r\n");
+            database.CloseDatabase();
         }
     }
 }
