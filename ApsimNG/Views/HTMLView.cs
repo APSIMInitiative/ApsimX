@@ -354,8 +354,32 @@ namespace UserInterface.Views
         public Gtk.Socket WebSocket { get; set; } = new Gtk.Socket();
         public ScrolledWindow ScrollWindow { get; set; } = new ScrolledWindow();
         public Widget HoldingWidget { get; set; }
-        public Color ForegroundColour { get; set; } // TODO
-        public Color BackgroundColour { get; set; } // TODO
+        public Color ForegroundColour
+        {
+            get
+            {
+                return Color.Empty; // TODO
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.color = \"{colour}\";");
+            }
+        }
+
+
+        public Color BackgroundColour
+        {
+            get
+            {
+                return Color.Empty; // TODO
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
 
         /// <summary>
         /// The find form
