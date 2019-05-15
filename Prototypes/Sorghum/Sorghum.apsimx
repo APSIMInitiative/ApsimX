@@ -7737,7 +7737,8 @@
             "[Sorghum].Stem.Live.Wt as StemGreenWt",
             "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
             "[Sorghum].Grain.Live.Wt as GrainGreenWt",
-            "// biomass_n?",
+            "[Sorghum].Total.N as BiomassN",
+            "[Sorghum].TotalLive.N as biomass_n",
             "[Sorghum].Root.Live.N as RootGreenN",
             "[Sorghum].Leaf.Live.N as LeafGreenN",
             "[Sorghum].Stem.Live.N as StemGreenN",
@@ -8050,11 +8051,77 @@
             {
               "$type": "Models.Graph.Graph, Models",
               "Caption": null,
-              "Axis": [],
-              "LegendPosition": 0,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
               "DisabledSeries": [],
               "Name": "BiomassN",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.biomass_n",
+                  "YFieldName": "Predicted.biomass_n",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
