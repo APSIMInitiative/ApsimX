@@ -811,9 +811,7 @@ namespace Models.PMF.Organs
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
 
-            if (MathUtilities.FloatsAreEqual(startPopulation, 0))
-                throw new Exception("StartPopulation cannot be zero in LeafCohort.");
-
+            
             if (Structure.ProportionPlantMortality > 0)
                 CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
@@ -822,7 +820,7 @@ namespace Models.PMF.Organs
                 //Ensure we there are some branches.
                 CohortPopulation -= Math.Min(Structure.ProportionBranchMortality * (CohortPopulation - Structure.MainStemPopn), CohortPopulation - Plant.Population);
 
-            double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
+            double propnStemMortality = MathUtilities.Divide(startPopulation - CohortPopulation, startPopulation, 0);
 
             //Calculate Accumulated Stress Factor for reducing potential leaf size
             if (IsNotAppeared)
