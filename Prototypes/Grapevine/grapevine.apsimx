@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
-  "Version": 56,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
@@ -222,7 +222,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 155.0,
+                          "FixedValue": 45.0,
                           "Units": null,
                           "Name": "Base",
                           "Children": [],
@@ -401,7 +401,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 20.0,
+                          "FixedValue": 31.0,
                           "Units": null,
                           "Name": "Base",
                           "Children": [],
@@ -2884,6 +2884,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3335,6 +3343,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3773,6 +3789,14 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6928,8 +6952,13 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n  \"$type\": \"Models.Core.Simulations, Models\",\r\n  \"ExplorerWidth\": 278,\r\n  \"Version\": 54,\r\n  \"Name\": \"Simulations\",\r\n  \"Children\": [\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n   \r\n   \r\n     }\r\n}\r\n",
-              "Parameters": null,
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \tzone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "CordonDiameter",
+                  "Value": "10"
+                }
+              ],
               "Name": "ExtraVariables",
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8336,22 +8365,12 @@
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
+              "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
               "Name": "Initiated",
-              "Children": [
-                {
-                  "$type": "Models.Graph.EventNamesOnGraph, Models",
-                  "ColumnName": "[Grapevine].Phenology.CurrentStageName",
-                  "Name": "EventNamesOnGraph",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -9519,6 +9538,7 @@
                 {
                   "$type": "Models.Graph.EventNamesOnGraph, Models",
                   "ColumnName": "CurrentStageName",
+                  "SimulationName": null,
                   "Name": "EventNamesOnGraph",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -9702,6 +9722,7 @@
                 {
                   "$type": "Models.Graph.EventNamesOnGraph, Models",
                   "ColumnName": "CurrentStageName",
+                  "SimulationName": null,
                   "Name": "EventNamesOnGraph",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -9742,6 +9763,7 @@
                 {
                   "$type": "Models.Graph.EventNamesOnGraph, Models",
                   "ColumnName": "CurrentStageName",
+                  "SimulationName": null,
                   "Name": "EventNamesOnGraph",
                   "Children": [],
                   "IncludeInDocumentation": true,
