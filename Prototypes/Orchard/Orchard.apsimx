@@ -729,6 +729,7 @@
               "Gsmax350": 0.006,
               "R50": 100.0,
               "Height": 0.0,
+              "Depth": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -1676,7 +1677,13 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0,125,130,240,320,321,365",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 0.4,0.4,0.55,1,1,0.4,0.4",
+                "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,3,10",
+                "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 1000,2200,2200",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 0,125,200,250,290,320,365",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0, 0, 10, 10, 7.2,0,0",
+                "[Leaf].ExtinctionCoefficientFunction.FixedValue = 1"
               ],
               "Name": "Grape",
               "Children": [
@@ -5867,7 +5874,7 @@
         {
           "$type": "Models.Zones.RectangularZone, Models",
           "Length": 100.0,
-          "Width": 0.6,
+          "Width": 0.8,
           "Slope": 0.0,
           "Name": "Row",
           "Children": [
@@ -5877,8 +5884,8 @@
                 "[Clock].Today",
                 "[SimpleFruitTree].Leaf.Height as height",
                 "[SimpleFruitTree].Leaf.LAI as lai",
-                "([SimpleFruitTree].Leaf.RadIntTot * 0.6) / ([Weather].Radn * (0.6+1.8)) as f.rad.int",
-                "[SimpleFruitTree].Leaf.Transpiration * 0.6/2.4 as transpiration",
+                "([SimpleFruitTree].Leaf.RadIntTot * 0.8) / ([Weather].Radn * (0.8+1.6)) as f.rad.int",
+                "[SimpleFruitTree].Leaf.Transpiration * 0.8/2.4 as transpiration",
                 "sum([Soil].SoilWater.SWmm[1:5]) as psw",
                 "[Soil].OutputLayers.SW",
                 "[SimpleFruitTree].Root.Depth as rootDepth"
@@ -6527,7 +6534,7 @@
         {
           "$type": "Models.Zones.RectangularZone, Models",
           "Length": 100.0,
-          "Width": 1.8,
+          "Width": 1.6,
           "Slope": 0.0,
           "Name": "Alley",
           "Children": [
