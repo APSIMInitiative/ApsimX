@@ -362,6 +362,7 @@ namespace Models
             {
                 double Ht = MathUtilities.Sum(tallest.DeltaZ);                // Height of tallest strip
                 double Hs = MathUtilities.Sum(shortest.DeltaZ);               // Height of shortest strip
+                double Bht = Ht - tallest.Canopies[0].Canopy.Depth;           // Bottom of the canopy of tallest strip
                 double Wt = (tallest.zone as Zones.RectangularZone).Width;    // Width of tallest strip
                 double Ws = (shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip
                 double Ft = Wt / (Wt + Ws);                                   // Fraction of space in tallest strip
@@ -370,8 +371,8 @@ namespace Models
                 double LAIs = MathUtilities.Sum(shortest.LAItotsum);          // LAI of shortest strip
                 double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
                 double Ks = shortest.Canopies[0].Ktot;                         // Extinction Coefficient of the shortest strip
-                double Httop = Ht - Hs;                                       // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
-                double LAIttop = Httop / Ht * LAIt;                           // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
+                double Httop = Ht-Hs;                                          // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
+                double LAIttop = (Bht > Hs) ? LAIt : (Ht - Hs) / (Ht - Bht) * LAIt;  // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
                 double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
                 double LAIttophomo = Ft * LAIttop;                            // LAI of top layer of tallest strip if spread homogeneously across all of the space
                 double Ftblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Wt, 2)) - Httop) / Wt;  // View factor for top layer of tallest strip
