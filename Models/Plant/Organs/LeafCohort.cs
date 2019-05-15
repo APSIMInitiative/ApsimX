@@ -748,6 +748,9 @@ namespace Models.PMF.Organs
             IsAppeared = true;
 
             MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
+            if (MathUtilities.FloatsAreEqual(MaxArea, 0))
+                throw new Exception("LeafCohortParameters.MaxArea is zero. This is invalid due to the equation:  Age = Area / MaxArea * GrowthDuration");
+
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
             LagDuration = leafCohortParameters.LagDuration.Value();
