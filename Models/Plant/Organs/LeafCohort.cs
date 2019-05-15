@@ -748,10 +748,6 @@ namespace Models.PMF.Organs
             IsAppeared = true;
 
             MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
-            if (MathUtilities.FloatsAreEqual(MaxArea, 0))
-                throw new Exception("LeafCohortParameters.MaxArea is zero. This is invalid due to the equation:  Age = Area / MaxArea * GrowthDuration");
-
-            //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
             LagDuration = leafCohortParameters.LagDuration.Value();
             SenescenceDuration = leafCohortParameters.SenescenceDuration.Value();
@@ -764,6 +760,16 @@ namespace Models.PMF.Organs
             MinimumNConc = leafCohortParameters.MinimumNConc.Value();
             StorageFraction = leafCohortParameters.StorageFraction.Value();
             InitialNConc = leafCohortParameters.InitialNConc.Value();
+
+            if (MathUtilities.FloatsAreEqual(MaxArea, 0))
+                throw new Exception("LeafCohortParameters.MaxArea is zero. This is invalid due to the equation:  Age = Area / MaxArea * GrowthDuration");
+            if (MathUtilities.FloatsAreEqual(MaxArea, 0))
+                throw new Exception("LeafCohortParameters.SpecificLeafAreaMax+LeafCohortParameters.SpecificLeafAreaMin cannot be zero.");
+            if (MathUtilities.FloatsAreEqual(StructuralFraction, 1))
+                throw new Exception("LeafCohortParameters.StructuralFraction cannot have a value of 1.");
+            if (MathUtilities.FloatsAreEqual(StructuralFraction, 0))
+                throw new Exception("LeafCohortParameters.StructuralFraction cannot have a value of 0.");
+
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
             {
                 if (Area > MaxArea)
@@ -804,6 +810,9 @@ namespace Models.PMF.Organs
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
+
+            if (MathUtilities.FloatsAreEqual(startPopulation, 0))
+                throw new Exception("StartPopulation cannot be zero in LeafCohort.");
 
             if (Structure.ProportionPlantMortality > 0)
                 CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
