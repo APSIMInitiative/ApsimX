@@ -358,6 +358,7 @@ namespace Models.CLEM.Activities
                 {
                     detach = LinkedNativeFoodType.DetachRate;
                     pool.Age++;
+                    pool.Growth = 0;
                 }
                 double detachedAmount = pool.Amount * (1 - detach);
                 pool.Set(detachedAmount);

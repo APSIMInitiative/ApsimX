@@ -99,7 +99,7 @@ namespace Models.CLEM.Reporting
                                 {
                                     // add amounts
                                     variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total amount");
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KgPerHa as Total kgPerHa");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as Total kgPerHa");
                                 }
                             }
                             else
@@ -108,6 +108,11 @@ namespace Models.CLEM.Reporting
                             }
                         }
                     }
+                }
+                // check if clock.today was included.
+                if(!variableNames.Contains("[Clock].Today"))
+                {
+                    variableNames.Insert(0, "[Clock].Today");
                 }
             }
             base.VariableNames = variableNames.ToArray();
@@ -134,7 +139,9 @@ namespace Models.CLEM.Reporting
         private void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
+            {
                 storage.Writer.WriteTable(dataToWriteToDb);
+            }
             dataToWriteToDb = null;
         }
 
@@ -160,8 +167,9 @@ namespace Models.CLEM.Reporting
                     valuesToWrite[i] = columns[i].GetValue();
                 }
             }
-			
-			if (dataToWriteToDb == null)
+
+            if (dataToWriteToDb == null)
+            {
                 dataToWriteToDb = new ReportData()
                 {
                     SimulationName = simulation.Name,
@@ -169,7 +177,8 @@ namespace Models.CLEM.Reporting
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
-				
+            }
+
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite.ToList());
 

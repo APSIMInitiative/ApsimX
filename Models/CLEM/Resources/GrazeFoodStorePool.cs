@@ -125,6 +125,7 @@ namespace Models.CLEM.Resources
                     Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
+                Growth += pool.Amount;
             }
         }
 
