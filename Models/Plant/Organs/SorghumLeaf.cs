@@ -1127,7 +1127,7 @@ namespace Models.PMF.Organs
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             // Check retranslocation
-            if (dryMatter.Retranslocation - StartLive.StructuralWt > BiomassToleranceValue)
+            if (MathUtilities.IsGreaterThan(dryMatter.Retranslocation, StartLive.StructuralWt))
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // allocate structural DM
