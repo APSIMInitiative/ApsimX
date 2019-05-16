@@ -31,7 +31,7 @@ namespace Models
         /// <param name="layerLAI">LAI within the current layer (m2/m2)</param>
         /// <param name="layerSolRad">solar radiation arriving at the top of the current layer(W/m2)</param>
         /// </summary>
-        private double CropCanopyConductance(double cropGsMax, double cropR50, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
+        private double CanopyConductance(double cropGsMax, double cropR50, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
         {
             double numerator = layerSolRad + cropR50;
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
@@ -264,13 +264,13 @@ namespace Models
         private void CalculateSoilHeatRadiation(ZoneMicroClimate ZoneMC)
         {
             double radnint = ZoneMC.sumRs;   // Intercepted SW radiation
-            ZoneMC.SoilHeatFlux = CalculateSoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
+            ZoneMC.soil_heat = SoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
             for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
-                    ZoneMC.Canopies[j].Rsoil[i] = MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.SoilHeatFlux;
+                    ZoneMC.Canopies[j].Rsoil[i] = MathUtilities.Divide(ZoneMC.Canopies[j].Rs[i], weather.Radn, 0.0) * ZoneMC.soil_heat;
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Models
         /// <param name="radnint">(INPUT) Intercepted incoming radiation</param>
         /// <param name="soilHeatFluxFraction">(INPUT) Fraction of surface radiation absorbed</param>
         /// </summary>
-        private double CalculateSoilHeatFlux(double radn, double radnint, double soilHeatFluxFraction)
+        private double SoilHeatFlux(double radn, double radnint, double soilHeatFluxFraction)
         {
             return Math.Max(-radn * 0.1, Math.Min(0.0, -soilHeatFluxFraction * (radn - radnint)));
         }

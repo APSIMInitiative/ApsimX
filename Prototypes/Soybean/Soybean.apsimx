@@ -7103,7 +7103,7 @@
             "[Soil].Temperature[4] as ST15cm",
             "([Soil].Temperature[6]+[Soil].Temperature[7])/2 as ST45cm",
             "[Soil].SoilWater.WaterTable",
-            "([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
+            "([Soybean].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
             "[Soybean].Nodule.FixationRate",
             "[Soybean].Root.Depth",
             "[Soybean].Leaf.CohortSize",
