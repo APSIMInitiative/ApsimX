@@ -33,6 +33,12 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
+        /// Warning log for this CLEM model
+        /// </summary>
+        [XmlIgnore]
+        public WarningLog Warnings = new WarningLog();
+
+        /// <summary>
         /// Allows unique id of activity to be set 
         /// </summary>
         /// <param name="id"></param>
