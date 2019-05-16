@@ -80,13 +80,16 @@ namespace Models
                     double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
                     double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
                     double canopyBase = HeightMetres - DepthMetres;
-                    if (Array.IndexOf(nodes, HeightMetres) == -1 | Array.IndexOf(nodes, canopyBase) == -1)
+                    if (Array.IndexOf(nodes, HeightMetres) == -1)
                     {
-                        nodes[numNodes-1] = HeightMetres;
-                        nodes[numNodes ]  = canopyBase;
+                        nodes[numNodes] = HeightMetres;
                         numNodes = numNodes + 1;
                     }
-      
+                    if (Array.IndexOf(nodes, canopyBase) == -1)
+                    {
+                        nodes[numNodes] = canopyBase;
+                        numNodes = numNodes + 1;
+                    }
                 }
                 Array.Resize<double>(ref nodes, numNodes);
                 Array.Sort(nodes);
