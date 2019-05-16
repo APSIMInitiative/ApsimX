@@ -729,7 +729,6 @@
               "Gsmax350": 0.006,
               "R50": 100.0,
               "Height": 0.0,
-              "Depth": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -1687,12 +1686,12 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0,125,130,240,320,321,365",
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 900, 900,1100,2200,2200,900,900",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0,110,115,240,320,321,365",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 900,900,1100,2200,2200,900,900",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,3,10",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.7,1,1",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 0,125,200,250,290,320,365",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0, 0, 10, 10, 7.2,0,0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 0,110,200,250,290,320,365",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0, 0, 9, 9, 6.4,0,0",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 1"
               ],
               "Name": "Grape",
@@ -5829,7 +5828,7 @@
         {
           "$type": "Models.Clock, Models",
           "StartDate": "2001-07-01T00:00:00",
-          "EndDate": "2006-07-01T00:00:00",
+          "EndDate": "2005-07-01T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": false,
