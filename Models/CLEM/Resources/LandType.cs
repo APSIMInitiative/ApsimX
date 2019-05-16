@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -42,10 +40,7 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(0.0)]
         [Description("Proportion taken up with buildings etc.")]
         [Required, Proportion]
-        public double PortionBuildings
-        {
-            get; set;
-        }
+        public double PortionBuildings { get; set; }
 
         /// <summary>
         /// Allocate only proportion of Land area
@@ -53,10 +48,7 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Allocate only proportion of Land area")]
         [Required, Proportion]
-        public double ProportionOfTotalArea
-        {
-            get; set;
-        }
+        public double ProportionOfTotalArea { get; set; }
 
         /// <summary>
         /// Soil Type (1-5) 
