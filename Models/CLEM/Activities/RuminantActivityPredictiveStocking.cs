@@ -299,7 +299,7 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"errorlink\">No month set";
             }
             html += "</span> for a dry season of ";
-            if (DrySeasonLength <= 0)
+            if (DrySeasonLength > 0)
             {
                 html += "<span class=\"setvalue\">";
                 html += DrySeasonLength.ToString("#0");
