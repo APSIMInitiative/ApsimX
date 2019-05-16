@@ -74,6 +74,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             (view.MaximumNumberRecords as EditView).EndEdit();
+            (view.FileName as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.RowFilter.Changed -= OnColumnFilterChanged;
@@ -176,7 +177,8 @@ namespace UserInterface.Presenters
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
                     if (ExperimentFilter != null)
                     {
-                        string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        var names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                        string filter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
                         if (!string.IsNullOrEmpty(view.RowFilter.Value))
                             filter += " AND " + view.RowFilter.Value;
                         data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
@@ -271,9 +273,8 @@ namespace UserInterface.Presenters
                 {
                     Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
                 }
-                catch (Exception)
-                {  // If there are any errors, return 0
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
+                catch (FormatException)
+                {
                 }
             }
 

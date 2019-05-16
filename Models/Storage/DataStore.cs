@@ -163,27 +163,27 @@
             if (connection == null)
                 Open();
         }
-         
+        
+        /// <summary>
+        /// Updates the file name of the database file, based on the file name
+        /// of the parent Simulations object.
+        /// </summary>
+        public void UpdateFileName()
+        {
+            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            if (simulations == null || simulations.FileName == null)
+                FileName = ":memory:";
+            else if (useFirebird)
+                FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+            else
+                FileName = Path.ChangeExtension(simulations.FileName, ".db");
+        }
+
         /// <summary>Open the database.</summary>
         public void Open()
         {
-
             if (FileName == null)
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    FileName = simulations.FileName;
-                    if (useFirebird)
-                        FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
-                    else
-                        FileName = Path.ChangeExtension(simulations.FileName, ".db");
-                }
-            }
-
-            // If still no file was specified, then throw.
-            if (FileName == null)
-                FileName = ":memory:";
+                UpdateFileName();
 
             if (useFirebird)
                 connection = new Firebird();
@@ -192,8 +192,25 @@
 
             connection.OpenDatabase(FileName, readOnly: false);
 
-            dbReader.SetConnection(connection);
-            dbWriter.SetConnection(connection);
+            Exception caughtException = null;
+            try
+            {
+                dbReader.SetConnection(connection);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+            try
+            {
+                dbWriter.SetConnection(connection);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+            if (caughtException != null)
+                throw caughtException;
         }
 
         /// <summary>Close the database.</summary>

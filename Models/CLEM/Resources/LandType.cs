@@ -24,6 +24,12 @@ namespace Models.CLEM.Resources
     public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units")]
+        public new string Units { get {return (Parent as Land).UnitsOfArea; } }
+
+        /// <summary>
         /// Total Area
         /// </summary>
         [Description("Land area")]

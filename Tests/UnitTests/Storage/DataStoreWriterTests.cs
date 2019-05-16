@@ -144,7 +144,7 @@
             writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM Report ORDER BY Col"),
+            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM [Report] ORDER BY [Col]"),
                            "CheckpointID,SimulationID,Col\r\n" +
                            "           1,           1,  3\r\n");
         }
@@ -260,6 +260,42 @@
                                         "CheckpointID,Col1,Col2\r\n" +
                                         "           1, 100, 200\r\n" +
                                         "           1, 110, 210\r\n");
+        }
+
+        /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
+        [Test]
+        public void CleanupOldColumns()
+        {
+            DataTable data = new DataTable("Report1");
+            data.Columns.Add("Col1", typeof(int));
+            data.Columns.Add("Col2", typeof(int));
+            DataRow row = data.NewRow();
+            row["Col1"] = 10;
+            row["Col2"] = 20;
+            data.Rows.Add(row);
+
+            DataStoreWriter writer = new DataStoreWriter(database);
+            writer.WriteTable(data);
+            writer.Stop();
+
+            // Change the structure of the data.
+            data = new DataTable("Report1");
+            data.Columns.Add("Col1", typeof(int));
+            data.Columns.Add("Col3", typeof(int));
+            row = data.NewRow();
+            row["Col1"] = 100;
+            row["Col3"] = 200;
+            data.Rows.Add(row);
+            
+            // Write the table a second time.
+            writer = new DataStoreWriter(database);
+            writer.WriteTable(data);
+            writer.Stop();
+
+            // Make sure the old data was removed and we only have new data.
+            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
+                                        "CheckpointID,Col1,Col3\r\n" +
+                                        "           1, 100, 200\r\n");
         }
 
         /// <summary>Empty the datastore.</summary>

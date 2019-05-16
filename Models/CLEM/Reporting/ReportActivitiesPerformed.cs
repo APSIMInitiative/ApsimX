@@ -91,13 +91,16 @@ namespace Models.CLEM.Reporting
         private void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
+            {
                 storage.Writer.WriteTable(dataToWriteToDb);
+            }
             dataToWriteToDb = null;
         }
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public new void DoOutput()
         {
             if (dataToWriteToDb == null)
+            {
                 dataToWriteToDb = new ReportData()
                 {
                     SimulationName = simulation.Name,
@@ -105,9 +108,12 @@ namespace Models.CLEM.Reporting
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
+            }
             List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
+            {
                 valuesToWrite.Add(columns[i].GetValue());
+            }
 
             dataToWriteToDb.Rows.Add(valuesToWrite);
 
@@ -191,12 +197,11 @@ namespace Models.CLEM.Reporting
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                {
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
-                }
+                foreach (var descriptor in simulation.Descriptors)
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
             }
         }
 

@@ -584,6 +584,8 @@ namespace Models.CLEM.Activities
                         lt.LastActivityRequestID = request.ActivityID;
                         lt.LastActivityRequestAmount = amount;
                         lt.Remove(removeRequest);
+                        request.Provided += removeRequest.Provided;
+                        request.Value += request.Provided * lt.PayRate();
                     }
                 }
 
@@ -619,6 +621,8 @@ namespace Models.CLEM.Activities
                                     item.LastActivityRequestID = request.ActivityID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
+                                    request.Provided += removeRequest.Provided;
+                                    request.Value += request.Provided * item.PayRate();
                                 }
                             }
                             else

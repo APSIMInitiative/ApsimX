@@ -12,6 +12,7 @@ namespace Models.Graph
     using Models.Core;
     using Factorial;
     using System.Data;
+    using System.Linq;
     using Models.Storage;
 
     /// <summary>
@@ -88,12 +89,12 @@ namespace Models.Graph
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
-        public List<SeriesDefinition> GetDefinitionsToGraph(IDataStore storage)
+        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
         {
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
                 series.GetSeriesToPutOnGraph(storage, definitions);
 
             return definitions;
@@ -104,7 +105,7 @@ namespace Models.Graph
         public List<Annotation> GetAnnotationsToGraph()
         {
             List<Annotation> annotations = new List<Annotation>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
                 series.GetAnnotationsToPutOnGraph(annotations);
 
             return annotations;

@@ -2,6 +2,9 @@
 namespace UnitTests
 {
     using APSIM.Shared.Utilities;
+    using Models;
+    using Models.Core;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -69,7 +72,7 @@ namespace UnitTests
                     sql += fieldName;
                 }
             }
-            sql += " FROM " + tableName;
+            sql += " FROM [" + tableName + "]";
             var orderByFieldNames = new List<string>();
             if (database.GetColumnNames(tableName).Contains("CheckpointID"))
                 orderByFieldNames.Add("[CheckpointID]");
@@ -98,6 +101,51 @@ namespace UnitTests
             return writer.ToString();
         }
 
-
+        /// <summary>
+        /// Returns a lightweight skeleton simulation which can be run.
+        /// </summary>
+        public static Simulations GetRunnableSim()
+        {
+            Simulations sims = new Simulations()
+            {
+                FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
+                Children = new List<Model>()
+                {
+                    new DataStore(),
+                    new Simulation()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2017, 1, 10) // January 10
+                            },
+                            new Summary(),
+                            new Zone()
+                            {
+                                Area = 1,
+                                Children = new List<Model>()
+                                {
+                                    new Models.Report.Report()
+                                    {
+                                        VariableNames = new string[]
+                                        {
+                                            "[Clock].Today.DayOfYear as n"
+                                        },
+                                        EventNames = new string[]
+                                        {
+                                            "[Clock].DoReport"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(sims);
+            return sims;
+        }
     }
 }

@@ -46,9 +46,6 @@
         /// </summary>
         private double baseFontSize = 12.5;
 
-        /// <summary>
-        /// Step by which we do font size changes (in points)
-        /// </summary>
         private double scrollSizeStep = 0.5;
 
         /// <summary>
@@ -67,7 +64,7 @@
         private ListButtonView listButtonView2;
 
         /// <summary>
-        /// Main Gtk window.
+        /// The main Gtk Window.
         /// </summary>
         private Window window1 = null;
 
@@ -79,7 +76,7 @@
         /// <summary>
         /// Status window used to display error messages and other information.
         /// </summary>
-        private TextView StatusWindow = null;
+        private TextView statusWindow = null;
 
         /// <summary>
         /// Button to stop a simulation.
@@ -122,24 +119,29 @@
         private Pango.FontDescription baseFont;
 
         /// <summary>
+        /// Dark theme icon.
+        /// </summary>
+        private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
+
+        /// <summary>
+        /// Default theme Icon.
+        /// </summary>
+        private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
             MasterView = this;
             numberOfButtons = 0;
-            if ((uint)Environment.OSVersion.Platform <= 3)
-            {
-                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                      ".gtkrc"));
-            }
             baseFont = Rc.GetStyle(new Label()).FontDescription.Copy();
             defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
             FontSize = Utility.Configuration.Settings.BaseFontSize;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
-            StatusWindow = (TextView)builder.GetObject("StatusWindow");
+            statusWindow = (TextView)builder.GetObject("StatusWindow");
             stopButton = (Button)builder.GetObject("stopButton");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             notebook2 = (Notebook)builder.GetObject("notebook2");
@@ -147,7 +149,7 @@
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            _mainWidget = window1;
+            mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
@@ -155,7 +157,8 @@
             EventBox labelBox = new EventBox();
             Label label = new Label("NOTE: This version of APSIM writes .apsimx files as JSON, not XML. These files cannot be opened with older versions of APSIM.");
             labelBox.Add(label);
-            labelBox.ModifyBg(StateType.Normal, new Gdk.Color(0xff, 0xff, 0x00)); // yellow
+            if (!Utility.Configuration.Settings.DarkTheme)
+                labelBox.ModifyBg(StateType.Normal, new Gdk.Color(0xff, 0xff, 0x00)); // yellow
             vbox1.PackStart(labelBox, false, true, 0);
             vbox1.PackEnd(listButtonView1.MainWidget, true, true, 0);
             listButtonView2 = new ListButtonView(this);
@@ -171,14 +174,13 @@
 
             TextTag tag = new TextTag("error");
             tag.Foreground = "red";
-            StatusWindow.Buffer.TagTable.Add(tag);
+            statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
             tag.Foreground = "brown";
-            StatusWindow.Buffer.TagTable.Add(tag);
+            statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("normal");
             tag.Foreground = "blue";
-            StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
-            StatusWindow.Visible = false;
+            statusWindow.Visible = false;
             stopButton.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Delete.png", 12, 12));
             stopButton.ImagePosition = PositionType.Right;
             stopButton.Image.Visible = true;
@@ -190,7 +192,13 @@
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
+            {
                 InitMac();
+                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+            }
+
+            if (!ProcessUtilities.CurrentOS.IsLinux)
+                RefreshTheme();
         }
 
         /// <summary>
@@ -312,7 +320,7 @@
             EventBox eventbox = new EventBox();
             eventbox.HasTooltip = text.Contains(Path.DirectorySeparatorChar.ToString());
             eventbox.TooltipText = text;
-            eventbox.ButtonPressEvent += on_eventbox1_button_press_event;
+            eventbox.ButtonPressEvent += OnEventbox1ButtonPress;
             eventbox.Add(headerBox);
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
             // Attach an icon to the context menu
@@ -352,7 +360,7 @@
         /// </summary>
         /// <param name="o">The object issuing the event</param>
         /// <param name="e">Button press event arguments</param>
-        public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
+        public void OnEventbox1ButtonPress(object o, ButtonPressEventArgs e)
         {
             if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
             {
@@ -462,7 +470,7 @@
             listButtonView2.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
             listButtonView1.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
             listButtonView2.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
-            _mainWidget.Destroy();
+            mainWidget.Destroy();
 
             // Let all the destruction stuff be carried out, just in 
             // case we've got any unmanaged resources that should be 
@@ -558,7 +566,7 @@
             if (tabPage >= 0 && notebook != null)
                 notebook.CurrentPage = tabPage;
         }
-
+        
         /// <summary>Gets or set the main window position.</summary>
         public Point WindowLocation
         {
@@ -693,11 +701,11 @@
         {
             Application.Invoke(delegate
             {
-                StatusWindow.Visible = message != null;
+                statusWindow.Visible = message != null;
                 if (overwrite || message == null)
                 {
                     numberOfButtons = 0;
-                    StatusWindow.Buffer.Clear();
+                    statusWindow.Buffer.Clear();
                 }
 
                 if (message != null)
@@ -720,17 +728,17 @@
                     message += Environment.NewLine;
                     TextIter insertIter;
                     if (overwrite)
-                        insertIter = StatusWindow.Buffer.StartIter;
+                        insertIter = statusWindow.Buffer.StartIter;
                     else
-                        insertIter = StatusWindow.Buffer.EndIter;
+                        insertIter = statusWindow.Buffer.EndIter;
 
-                    StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
+                    statusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
                     if (errorLevel == Simulation.ErrorLevel.Error && withButton)
                         AddButtonToStatusWindow("More Information", numberOfButtons++);
                     if (addSeparator)
                     {
-                        insertIter = StatusWindow.Buffer.EndIter;
-                        StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, Environment.NewLine + "----------------------------------------------" + Environment.NewLine, tagName);
+                        insertIter = statusWindow.Buffer.EndIter;
+                        statusWindow.Buffer.InsertWithTagsByName(ref insertIter, Environment.NewLine + "----------------------------------------------" + Environment.NewLine, tagName);
                     }
                 }
 
@@ -750,15 +758,40 @@
             OnError?.Invoke(this, new ErrorArgs { Error = err });
         }
 
+        /// <summary>
+        /// Sets the Gtk theme based on the user's previous choice.
+        /// </summary>
+        public void RefreshTheme()
+        {
+            if (Utility.Configuration.Settings.DarkTheme)
+            {
+                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
+                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
+                {
+                    using (StreamReader darkTheme = new StreamReader(rcStream))
+                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
+                }
+
+                Rc.Parse(tempFile);
+                // Remove black colour from colour pallete.
+                Color black = Color.FromArgb(0, 0, 0);
+                ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
+            }
+            else if (ProcessUtilities.CurrentOS.IsWindows)
+                // Apsim's default gtk theme uses the 'wimp' rendering engine,
+                // which doesn't play nicely on non-windows systems.
+                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
+        }
+
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
         {
-            TextIter iter = StatusWindow.Buffer.EndIter;
-            TextChildAnchor anchor = StatusWindow.Buffer.CreateChildAnchor(ref iter);
+            TextIter iter = statusWindow.Buffer.EndIter;
+            TextChildAnchor anchor = statusWindow.Buffer.CreateChildAnchor(ref iter);
             EventBox box = new EventBox();
             ApsimNG.Classes.CustomButton moreInfo = new ApsimNG.Classes.CustomButton(buttonName, buttonID);
             moreInfo.Clicked += ShowDetailedErrorMessage;
             box.Add(moreInfo);
-            StatusWindow.AddChildAtAnchor(box, anchor);
+            statusWindow.AddChildAtAnchor(box, anchor);
             box.ShowAll();
             box.Realize();
             box.ShowAll();
@@ -769,6 +802,22 @@
         private void ShowDetailedErrorMessage(object sender, EventArgs args)
         {
             ShowDetailedError?.Invoke(sender, args);
+        }
+
+        /// <summary>
+        /// Invoked when theme is toggled.
+        /// Toggles the icon displayed on the "toggle theme" button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        public void ToggleTheme(object sender, EventArgs args)
+        {
+            if (sender is ToolButton)
+            {
+                ToolButton button = sender as ToolButton;
+                button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
+                button.IconWidget.ShowAll();
+            }
         }
 
         /// <summary>
@@ -900,8 +949,8 @@
             baseFont.Size = newVal;
 
             // Iterate through all existing controls, setting the new base font
-            if (_mainWidget != null)
-                SetWidgetFont(_mainWidget, baseFont);
+            if (mainWidget != null)
+                SetWidgetFont(mainWidget, baseFont);
 
             // Reset the style machinery to apply the new base font to all
             // newly created Widgets.
@@ -936,6 +985,7 @@
             MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
                 msgType, buttonType, message);
             md.Title = title;
+            md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
             md.Destroy();
             return result;

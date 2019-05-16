@@ -40,7 +40,7 @@
                     tables.Add(dataToWrite.TableName, table);
                 }
 
-                var query = new InsertQuery(dataToWrite.TableName);
+                var query = new InsertQuery(dataToWrite);
 
                 // Make sure the table has the correct columns.
                 table.EnsureTableExistsAndHasRequiredColumns(dataToWrite);

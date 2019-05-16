@@ -29,24 +29,28 @@
                 FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
                 Children = new List<Model>()
                 {
-                    new DataStore(),
+                    new DataStore() { Name = "DataStore" },
                     new Simulation()
                     {
+                        Name = "Simulation",
                         Children = new List<Model>()
                         {
                             new Clock()
                             {
+                                Name = "Clock",
                                 StartDate = new DateTime(2017, 1, 1),
                                 EndDate = new DateTime(2017, 1, 10) // January 10
                             },
-                            new Summary(),
+                            new Summary() { Name = "Summary" },
                             new Zone()
                             {
+                                Name = "Zone",
                                 Area = 1,
                                 Children = new List<Model>()
                                 {
                                     new Report()
                                     {
+                                        Name = "Report",
                                         VariableNames = new string[]
                                         {
                                             "[Clock].Today.DayOfYear as n",

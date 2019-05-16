@@ -890,6 +890,30 @@
             }
         }
 
+        /// <summary>Organic nitrogen. Units: %</summary>
+        /// <value>The on.</value>
+        [Units("%")]
+        public double[] ON
+        {
+            get
+            {
+                double[] SoilOC = SoilOrganicMatter.OCTotal;
+                double[] SoilOCThickness = SoilOrganicMatter.Thickness;
+
+                // Try and find a sample with OC in it.
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    if (MathUtilities.ValuesInArray(Sample.OC) &&
+                        OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
+                        break;
+                if (SoilOC == null)
+                    return null;
+                double[] SoilON = MathUtilities.Divide(SoilOC, SoilOrganicMatter.SoilCN);
+
+                return Map(SoilON, SoilOCThickness, Thickness,
+                           MapType.Concentration, SoilON.Last());
+            }
+        }
+
         /// <summary>FBiom. Units: 0-1</summary>
         /// <value>The f biom.</value>
         [Units("0-1")]
@@ -926,6 +950,17 @@
                 if (SoilOrganicMatter.RootWt == null) return null;
                 return Map(SoilOrganicMatter.RootWt, SoilOrganicMatter.Thickness, Thickness,
                            MapType.Mass, LastValue(SoilOrganicMatter.RootWt));
+            }
+        }
+
+        /// <summary>Initial Root Wt</summary>
+        /// <value>Initial Root Wt</value>
+        [Units("kg/ha")]
+        public double[] InitialSoilCNR
+        {
+            get
+            {
+                return MathUtilities.Divide(OC, ON);
             }
         }
 

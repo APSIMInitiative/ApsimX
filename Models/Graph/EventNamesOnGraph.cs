@@ -34,18 +34,73 @@ namespace Models.Graph
         /// Gets or sets the column name to plot.
         /// </summary>
         [Description("The column name to plot")]
+        [Display(Values = "GetValidColumnNames")]
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the simulation name to plot.
+        /// </summary>
+        [Description("Name of the simulation to plot")]
+        [Display(Values = "GetValidSimNames")]
+        public string SimulationName { get; set; }
+
+        /// <summary>
+        /// Gets a list of valid column names.
+        /// </summary>
+        public string[] GetValidColumnNames()
+        {
+            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            if (storage == null)
+                return null;
+
+            Series series = Apsim.Parent(this, typeof(Series)) as Series;
+            if (series == null)
+                return null;
+
+            return storage.Reader.ColumnNames(series.TableName).ToArray();
+        }
+
+        /// <summary>
+        /// Gets a list of names of simulations in scope.
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetValidSimNames()
+        {
+            return (Apsim.Parent(this, typeof(Series)) as Series)?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
+        }
+
+
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        public IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition)
+        {
+            if (string.IsNullOrEmpty(ColumnName))
+                return new string[0];
+            else
+                return new string[] { ColumnName };
+        }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        public void GetSeriesToPutOnGraph(IDataStore storage, List<SeriesDefinition> definitions)
+        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions)
         {
-            if (definitions.Count > 0)
+            if (definitions != null && definitions.Count > 0)
             {
-                data = definitions[0].data;
-                xFieldName = definitions[0].xFieldName;
+                // Try to find a definition that has the correct simulation name.
+                foreach (var definition in definitions)
+                {
+                    var simulationNameDescriptor = definition.Descriptors.Find(desc => desc.Name == "SimulationName");
+                    if (simulationNameDescriptor != null && simulationNameDescriptor.Value == SimulationName)
+                        data = definition.Data;
+                }
+
+                if (data == null)
+                    data = definitions.FirstOrDefault(d => d.Data != null)?.Data;
+                xFieldName = definitions[0].XFieldName;
             }
+
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
@@ -99,6 +154,9 @@ namespace Models.Graph
         /// <param name="data">The data table to search</param>
         private string FindPhenologyStageColumn(DataTable data)
         {
+            if (ColumnName == null || ColumnName == string.Empty)
+                return null;
+
             var columnNames = data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
             return columnNames.Find(name => name.Contains(ColumnName));
         }

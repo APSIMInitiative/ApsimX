@@ -79,7 +79,7 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             table1 = (Table)builder.GetObject("table1");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
             gridView = new GridView(this)
             {
                 ReadOnly = true,
@@ -105,7 +105,7 @@ namespace UserInterface.Views
             table1.Attach(rowFilter.MainWidget, 1, 2, 3, 4);
             editView2 = new EditView(this);
             hbox1.PackStart(editView2.MainWidget, false, false, 0);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
 
@@ -127,9 +127,9 @@ namespace UserInterface.Views
             editView2 = null;
             rowFilter.MainWidget.Destroy();
             rowFilter = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
             chooseFile.Clicked -= OnChooseFile;
-            _owner = null;
+            owner = null;
         }
 
         /// <summary>
@@ -142,8 +142,12 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnChooseFile(object sender, EventArgs e)
         {
-            FileName.Value = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db) | *.db | All Files (*.*) | *.*");
-            FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+            string newFileName = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db)|*.db|All Files (*.*)|*.*");
+            if (!string.IsNullOrEmpty(newFileName))
+            {
+                FileName.Value = newFileName;
+                FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+            }
         }
 
         /// <summary>

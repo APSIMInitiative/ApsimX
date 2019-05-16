@@ -16,7 +16,6 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
     [Description("Defines the labour required for an Activity where details are provided by the Activity")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"content/features/activities/labour/labourrequirementsimple.htm")]

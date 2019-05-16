@@ -717,20 +717,21 @@ namespace Models.PMF.Organs
                 double accuDepth = 0;
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    if (MassFlow == null || MassFlow.Length != myZone.soil.Thickness.Length)
-                        MassFlow = new double[myZone.soil.Thickness.Length];
-                    if (Diffusion == null || Diffusion.Length != myZone.soil.Thickness.Length)
-                        Diffusion = new double[myZone.soil.Thickness.Length];
+                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.soil.Thickness.Length)
+                        myZone.MassFlow = new double[myZone.soil.Thickness.Length];
+                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.soil.Thickness.Length)
+                        myZone.Diffusion = new double[myZone.soil.Thickness.Length];
 
                     var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
-                        var swdep = water[layer];
+                        var swdep = water[layer]; //mm
                         var flow = myZone.WaterUptake[layer];
                         var yest_swdep = swdep - flow;
+                        //NO3N is in kg/ha - old sorghum used g/m^2
                         var no3conc = zone.NO3N[layer] * kgha2gsm / yest_swdep; //to equal old sorghum
                         var no3massFlow = no3conc * (-flow);
-                        MassFlow[layer] = no3massFlow;
+                        myZone.MassFlow[layer] = no3massFlow;
 
                         //diffusion
                         var swAvailFrac = RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
@@ -743,7 +744,7 @@ namespace Models.PMF.Organs
                             no3Diffusion *= proportion;
                         }
 
-                        Diffusion[layer] = no3Diffusion;
+                        myZone.Diffusion[layer] = no3Diffusion;
 
                         //NH4Supply[layer] = no3massFlow;
                         //onyl 2 fields passed in for returning data. 
@@ -782,19 +783,19 @@ namespace Models.PMF.Organs
         public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             double totalStructuralNDemand = 0;
-            double totalNDemand = 0;
+            double totalStorageNDemand = 0;
 
             foreach (ZoneState Z in Zones)
             {
                 totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.StorageNDemand);
+                totalStorageNDemand += MathUtilities.Sum(Z.StorageNDemand);
             }
             NTakenUp = nitrogen.Uptake;
             Allocated.StructuralN = nitrogen.Structural;
             Allocated.StorageN = nitrogen.Storage;
             Allocated.MetabolicN = nitrogen.Metabolic;
 
-            double surplus = Allocated.N - totalNDemand;
+            double surplus = Allocated.N - totalStructuralNDemand - totalStorageNDemand;
             if (surplus > 0.000000001)
                 throw new Exception("N Allocation to roots exceeds Demand");
             double NAllocated = 0;
@@ -809,7 +810,7 @@ namespace Models.PMF.Organs
                         Z.LayerLive[i].StructuralN += nitrogen.Structural * StructFrac;
                         NAllocated += nitrogen.Structural * StructFrac;
                     }
-                    double totalStorageNDemand = MathUtilities.Sum(Z.StorageNDemand);
+
                     if (totalStorageNDemand > 0)
                     {
                         double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;
@@ -938,13 +939,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootFront</summary>
         public double SWAvailabilityRatio { get; set; }
 
-        /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
-        [XmlIgnore]
-        public double[] MassFlow { get; private set; }
-
-        /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
-        [XmlIgnore]
-        public double[] Diffusion { get; private set; }
 
         /// <summary>Link to the KNO3 link</summary>
         [ChildLinkByName(IsOptional = true)]
@@ -1116,7 +1110,7 @@ namespace Models.PMF.Organs
             double[] supply = new double[PlantZone.soil.Thickness.Length];
 
             var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
-            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer-1);
+            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, Math.Max(0, currentLayer - 1));
             var layerBottom = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
 

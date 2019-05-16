@@ -94,9 +94,13 @@ namespace UserInterface.Presenters
                 // Get a list of series definitions.
                 try
                 {
-                    seriesDefinitions = graph.GetDefinitionsToGraph(storage);
+                    seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader);
                 }
                 catch (SQLiteException e)
+                {
+                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+                }
+                catch (FirebirdException e)
                 {
                     explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
                 }
@@ -138,7 +142,7 @@ namespace UserInterface.Presenters
                 // they are no longer valid i.e. not on the graph.
                 if (graph.DisabledSeries == null)
                     graph.DisabledSeries = new List<string>();
-                IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.title);
+                IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.Title);
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
                 this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
@@ -170,7 +174,7 @@ namespace UserInterface.Presenters
         /// <returns>A list of series names.</returns>
         public string[] GetSeriesNames()
         {
-            return seriesDefinitions.Select(s => s.title).ToArray();
+            return seriesDefinitions.Select(s => s.Title).ToArray();
         }
 
         /// <summary>Draws the specified series definition on the view.</summary>
@@ -178,50 +182,50 @@ namespace UserInterface.Presenters
         private void DrawOnView(SeriesDefinition definition)
         {
             if (graph.DisabledSeries == null ||
-                !graph.DisabledSeries.Contains(definition.title))
+                !graph.DisabledSeries.Contains(definition.Title))
             {
                 try
                 {
                     // Create the series and populate it with data.
-                    if (definition.type == SeriesType.Bar)
+                    if (definition.Type == SeriesType.Bar)
                     {
                         graphView.DrawBar(
-                                          definition.title,
-                                          definition.x,
-                                          definition.y,
-                                          definition.xAxis,
-                                          definition.yAxis,
-                                          definition.colour,
-                                          definition.showInLegend);
+                                          definition.Title,
+                                          definition.X,
+                                          definition.Y,
+                                          definition.XAxis,
+                                          definition.YAxis,
+                                          definition.Colour,
+                                          definition.ShowInLegend);
                     }
-                    else if (definition.type == SeriesType.Scatter)
+                    else if (definition.Type == SeriesType.Scatter)
                     {
                         graphView.DrawLineAndMarkers(
-                                                    definition.title,
-                                                    definition.x,
-                                                    definition.y,
-                                                    definition.error,
-                                                    definition.xAxis,
-                                                    definition.yAxis,
-                                                    definition.colour,
-                                                    definition.line,
-                                                    definition.marker,
-                                                    definition.lineThickness,
-                                                    definition.markerSize,
-                                                    definition.showInLegend);
+                                                    definition.Title,
+                                                    definition.X,
+                                                    definition.Y,
+                                                    definition.Error,
+                                                    definition.XAxis,
+                                                    definition.YAxis,
+                                                    definition.Colour,
+                                                    definition.Line,
+                                                    definition.Marker,
+                                                    definition.LineThickness,
+                                                    definition.MarkerSize,
+                                                    definition.ShowInLegend);
                     }
-                    else if (definition.type == SeriesType.Area)
+                    else if (definition.Type == SeriesType.Area)
                     {
                         graphView.DrawArea(
-                                            definition.title,
-                                            definition.x,
-                                            definition.y,
-                                            definition.x2,
-                                            definition.y2,
-                                            definition.xAxis,
-                                            definition.yAxis,
-                                            definition.colour,
-                                            definition.showInLegend);
+                                            definition.Title,
+                                            definition.X,
+                                            definition.Y,
+                                            definition.X2,
+                                            definition.Y2,
+                                            definition.XAxis,
+                                            definition.YAxis,
+                                            definition.Colour,
+                                            definition.ShowInLegend);
                     }
                 }
                 catch (Exception err)
@@ -241,7 +245,6 @@ namespace UserInterface.Presenters
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
-            
             for (int i = 0; i < annotations.Count; i++)
             {
                 if (annotations[i] is TextAnnotation)
@@ -259,8 +262,8 @@ namespace UserInterface.Presenters
                                             textAnnotation.leftAlign, 
                                             textAnnotation.textRotation,
                                             Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left, 
-                                            textAnnotation.colour);
+                                            Axis.AxisType.Left,
+                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                     else
                     {
@@ -271,8 +274,8 @@ namespace UserInterface.Presenters
                                             textAnnotation.leftAlign, 
                                             textAnnotation.textRotation,
                                             Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left, 
-                                            textAnnotation.colour);
+                                            Axis.AxisType.Left,
+                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                 }
                 else
@@ -285,8 +288,8 @@ namespace UserInterface.Presenters
                                         lineAnnotation.x2, 
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
-                                        lineAnnotation.thickness, 
-                                        lineAnnotation.colour);
+                                        lineAnnotation.thickness,
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour);
                 }
             }
         }
@@ -304,29 +307,29 @@ namespace UserInterface.Presenters
 
                 foreach (SeriesDefinition definition in seriesDefinitions)
                 {
-                    if (definition.x != null && definition.xAxis == axis.Type && definition.xFieldName != null)
+                    if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
                     {
-                        IEnumerator enumerator = definition.x.GetEnumerator();
+                        IEnumerator enumerator = definition.X.GetEnumerator();
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
-                        string xName = definition.xFieldName;
-                        if (definition.xFieldUnits != null)
+                        string xName = definition.XFieldName;
+                        if (definition.XFieldUnits != null)
                         {
-                            xName = xName + " " + definition.xFieldUnits;
+                            xName = xName + " " + definition.XFieldUnits;
                         }
 
                         names.Add(xName);
                     }
 
-                    if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
+                    if (definition.Y != null && definition.YAxis == axis.Type && definition.YFieldName != null)
                     {
-                        IEnumerator enumerator = definition.y.GetEnumerator();
+                        IEnumerator enumerator = definition.Y.GetEnumerator();
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
-                        string yName = definition.yFieldName;
-                        if (definition.yFieldUnits != null)
+                        string yName = definition.YFieldName;
+                        if (definition.YFieldUnits != null)
                         {
-                            yName = yName + " " + definition.yFieldUnits;
+                            yName = yName + " " + definition.YFieldUnits;
                         }
 
                         names.Add(yName);
@@ -433,7 +436,7 @@ namespace UserInterface.Presenters
             // Find the correct series.
             foreach (SeriesDefinition definition in seriesDefinitions)
             {
-                if (definition.title == e.SeriesName)
+                if (definition.Title == e.SeriesName)
                 {
                     e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
                     if (e.HoverText == null)
@@ -473,11 +476,11 @@ namespace UserInterface.Presenters
         {
             foreach (SeriesDefinition definition in seriesDefinitions)
             {
-                if (definition.simulationNamesForEachPoint != null)
+                if (definition.SimulationNamesForEachPoint != null)
                 {
-                    IEnumerator xEnum = definition.x.GetEnumerator();
-                    IEnumerator yEnum = definition.y.GetEnumerator();
-                    IEnumerator simNameEnum = definition.simulationNamesForEachPoint.GetEnumerator();
+                    IEnumerator xEnum = definition.X.GetEnumerator();
+                    IEnumerator yEnum = definition.Y.GetEnumerator();
+                    IEnumerator simNameEnum = definition.SimulationNamesForEachPoint.GetEnumerator();
 
                     while (xEnum.MoveNext() && yEnum.MoveNext() && simNameEnum.MoveNext())
                     {

@@ -71,11 +71,6 @@ namespace UnitTests.Storage
             return null;
         }
 
-        public IEnumerable<string> ColumnNames(string tableName)
-        {
-            return null;
-        }
-
         public void DeleteAllTables(bool cleanSlate = false)
         {
         }
