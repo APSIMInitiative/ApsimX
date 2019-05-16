@@ -729,6 +729,7 @@
               "Gsmax350": 0.006,
               "R50": 100.0,
               "Height": 0.0,
+              "Depth": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
