@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
+  "ExplorerWidth": 281,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -1853,7 +1853,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Sorghum].Total.Wt",
+                      "VariableName": "[Sorghum].TotalLive.Wt",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -71624,7 +71624,7 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "CropET",
-                      "YFieldName": "Wheat.AboveGround.Wt",
+                      "YFieldName": "Sorghum.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,

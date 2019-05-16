@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 55,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
@@ -1816,7 +1816,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Sorghum].Total.Wt",
+                      "VariableName": "[Sorghum].TotalLive.Wt",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5814,6 +5814,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -7679,8 +7687,6 @@
         },
         {
           "$type": "Models.Report.Report, Models",
-          "ExperimentFactorNames": null,
-          "ExperimentFactorValues": null,
           "VariableNames": [
             "[Clock].Today",
             "[Clock].Today.Year as Year",
@@ -7927,6 +7933,7 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Sorghum_SomeStress",
           "Children": [
             {
@@ -8615,8 +8622,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "Leaf.LAI",
                     "[HRS].SoilNitrogen.NO3.kgha",
@@ -14914,6 +14919,7 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Sorghum_NoStress",
           "Children": [
             {
@@ -15602,8 +15608,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "Leaf.LAI",
                     "[HRS].SoilNitrogen.NO3.kgha",
@@ -22865,6 +22869,7 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Sorghum_NStress",
           "Children": [
             {
@@ -23553,8 +23558,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "Leaf.LAI",
                     "[HRS].SoilNitrogen.NO3.kgha",
@@ -30044,6 +30047,7 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Sorghum_WaterStress",
           "Children": [
             {
@@ -30732,8 +30736,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "Leaf.LAI",
                     "[HRS].SoilNitrogen.NO3.kgha",
