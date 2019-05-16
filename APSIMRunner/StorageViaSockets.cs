@@ -13,13 +13,12 @@
 
     class StorageViaSockets : Model, IDataStore, IStorageWriter
     {
-        List<JobRunnerMultiProcess.TransferRowInTable> data = new List<JobRunnerMultiProcess.TransferRowInTable>();
-        private Guid jobKey;
+        private Guid id;
 
-        public StorageViaSockets(Guid key, string filename)
+        public StorageViaSockets(string filename, Guid jobId)
         {
-            jobKey = key;
             FileName = filename;
+            id = jobId;
         }
 
         /// <summary>Write to permanent storage.</summary>
@@ -28,8 +27,8 @@
         {
             var rowData = new JobRunnerMultiProcess.TransferReportData()
             {
-                key = jobKey,
-                data = data
+                data = data,
+                id = id
             };
 
             if (data.Rows.Count > 0)
@@ -43,25 +42,14 @@
         {
             var rowData = new JobRunnerMultiProcess.TransferDataTable()
             {
-                key = jobKey,
-                data = data
+                data = data,
+                id = id
             };
 
             if (data.Rows.Count > 0)
             {
                 SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
                 SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-            }
-        }
-
-        /// <summary>Write all the data we stored</summary>
-        public void WriteAllData()
-        {
-            if (data.Count > 0)
-            {
-                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
-                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-                data.Clear();
             }
         }
 

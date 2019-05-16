@@ -16,6 +16,7 @@
         private static List<string> ignorePaths = new List<string>() { "UnitTests", "UserInterface", "ApsimNG" };
         private static string[] arguments;
         private static int exitCode = 0;
+        private static List<Exception> exceptionsWrittenToConsole = new List<Exception>();
 
         private static string fileName { get { return arguments[0]; } }
         private static bool recurse { get { return arguments.Contains("/Recurse"); } }
@@ -76,6 +77,7 @@
                     var runner = new Runner(fileName, ignorePaths, recurse, runType, runTests, true, numberOfProcessors);
                     runner.JobCompleted += OnJobCompleted;
                     runner.JobCollectionCompleted += OnJobCollectionCompleted;
+                    runner.AllJobsCompleted += OnAllJobsCompleted;
                     runner.Run();
 
                     // If errors occurred, write them to the console.
@@ -155,6 +157,7 @@
             {
                 lock (lockObject)
                 {
+                    exceptionsWrittenToConsole.Add(e.ExceptionThrown);
                     Console.WriteLine("----------------------------------------------");
                     Console.WriteLine(e.ExceptionThrown.ToString());
                     if (verbose)
@@ -166,7 +169,7 @@
                 WriteCompleteMessage(e);
         }
 
-        /// <summary>All jobs have completed</summary>
+        /// <summary>All jobs for a file have completed</summary>
         private static void OnJobCollectionCompleted(object sender, JobCollection.JobCollectionHasCompletedArgs e)
         {
             if (csv)
@@ -175,6 +178,23 @@
                 var storage = new Storage.DataStore(fileName);
                 Report.Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
+            }
+        }
+
+        /// <summary>All jobs have completed</summary>
+        private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
+        {
+            if (e.AllExceptionsThrown != null)
+            {
+                foreach (var exception in e.AllExceptionsThrown)
+                {
+                    if (!exceptionsWrittenToConsole.Contains(exception))
+                    {
+                        Console.WriteLine("----------------------------------------------");
+                        Console.WriteLine(exception.ToString());
+                        exitCode = 1;
+                    }
+                }
             }
         }
 

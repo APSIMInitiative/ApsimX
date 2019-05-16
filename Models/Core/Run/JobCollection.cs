@@ -102,24 +102,25 @@
         public IRunnable GetNextJobToRun()
         {
             if (rootModel == null)
-                Initialise();
+                lock (this)
+                    if (rootModel == null)
+                        Initialise();
 
             if (pendingModels.Count > 0)
             {
-                // Remove next model to run from our pending list.
-                var modelToRun = pendingModels.First();
-                pendingModels.Remove(modelToRun);
-
-                // Add model to our running list.
-                lock (runningModels)
+                // Move next model that needs to run from pending to running lists.to run from our pending list.
+                Job modelToRun;
+                lock (this)
                 {
+                    modelToRun = pendingModels.First();
+                    pendingModels.Remove(modelToRun);
                     runningModels.Add(modelToRun);
                 }
 
                 return modelToRun.ToRunnable(storage, FileName);
             }
-            else
-                return null;
+
+            return null;
         }
 
         /// <summary>Job has completed.</summary>
@@ -130,7 +131,7 @@
             {
                 if (e.exceptionThrowByJob != null)
                     AddException(e.exceptionThrowByJob);
-                lock (runningModels)
+                lock (this)
                 {
                     runningModels.Remove(completedJob);
                     if (e.job is Simulation)
@@ -267,6 +268,7 @@
         private void RunPostSimulationTools()
         {
             storage?.Writer.WaitForIdle();
+            storage?.Reader.Refresh();
 
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
@@ -301,6 +303,7 @@
         private void RunTests()
         {
             storage?.Writer.WaitForIdle();
+            storage?.Reader.Refresh();
 
             foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
             {

@@ -22,10 +22,11 @@
         /// <summary>A token for cancelling running of jobs</summary>
         private CancellationTokenSource cancelToken;
 
-        /// <summary>Non simulation errors thrown by runners or this class on socket threads</summary>
-        private string errors;
-
+        /// <summary>A mapping of job IDs (Guid) to job  instances.</summary>
         private Dictionary<Guid, Job> runningJobs = new Dictionary<Guid, Job>();
+
+        /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
+        private List<Exception> exceptionsThrown;
 
         /// <summary>Occurs when all jobs completed.</summary>
         public event EventHandler<AllCompletedArgs> AllJobsCompleted;
@@ -90,18 +91,16 @@
                         server = null;
                         DeleteRunners();
                         runningJobs.Clear();
-                        jobs.AllCompleted(new AllCompletedArgs());
+                        AllCompletedArgs args = new AllCompletedArgs();
+                        if (exceptionsThrown != null)
+                            args.exceptionsThrown = exceptionsThrown;
+                        jobs.AllCompleted(args);
                         if (AllJobsCompleted != null)
-                        {
-                            AllCompletedArgs args = new AllCompletedArgs();
-                            if (errors != null)
-                                args.exceptionThrown = new Exception(errors);
                             AllJobsCompleted.Invoke(this, args);
-                        }
+                        allStopped = true;
                     }
                 }
             }
-            allStopped = true;
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
@@ -115,7 +114,7 @@
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), false, false);
+                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), true, false);
             }
         }
 
@@ -133,7 +132,10 @@
         {
             ProcessUtilities.ProcessWithRedirectedOutput p = sender as ProcessUtilities.ProcessWithRedirectedOutput;
             if (p.ExitCode != 0)
-                errors += p.StdOut + Environment.NewLine;
+            {
+                var exception = new Exception(p.StdOut + Environment.NewLine + p.StdErr);
+                AddException(exception);
+            }
 
             if (Process.GetProcessesByName("APSIMRunner").Length == 0)
                 Stop();
@@ -146,41 +148,45 @@
         {
             try
             {
-                Job jobToRun;
-                Guid jobKey = Guid.Empty;
+                var jobKey = Guid.NewGuid();
+                var runnableJob = jobs.GetNextJobToRun();
                 string fileName = null;
-                lock (this)
-                {
-                    jobKey = Guid.NewGuid();
-                    jobToRun = new Job();
-                    jobToRun.RunnableJob = jobs.GetNextJobToRun();
 
-                    // At this point DataStore should be a child of the simulation. Store the
-                    // DataStore in our jobToRun and then remove it from the simulation. We
-                    // don't want to pass the DataStore to the runner process via a socket.
-                    if (jobToRun.RunnableJob != null)
+                // At this point DataStore should be a child of the simulation. Store the
+                // DataStore in our jobToRun and then remove it from the simulation. We
+                // don't want to pass the DataStore to the runner process via a socket.
+                if (runnableJob != null)
+                {
+                    var dataStore = Apsim.Child(runnableJob as IModel, typeof(DataStore)) as DataStore;
+                    fileName = dataStore.FileName;
+                    (runnableJob as IModel).Children.Remove(dataStore);
+
+                    var job = new Job()
                     {
-                        jobToRun.DataStore = Apsim.Child(jobToRun.RunnableJob as IModel, typeof(DataStore)) as DataStore;
-                        fileName = jobToRun.DataStore.FileName;
-                        (jobToRun.RunnableJob as IModel).Children.Remove(jobToRun.DataStore);
-                        runningJobs.Add(jobKey, jobToRun);
-                    }
+                        RunnableJob = runnableJob,
+                        DataStore = dataStore
+                    };
+
+                    lock (runningJobs)
+                        runningJobs.Add(jobKey, job);
                 }
 
-                if (jobToRun.RunnableJob == null)
+                if (runnableJob == null)
                     server.Send(args.socket, "NULL");
                 else
                 {
-                    GetJobReturnData returnData = new GetJobReturnData();
-                    returnData.key = jobKey;
-                    returnData.job = jobToRun.RunnableJob;
-                    returnData.fileName = fileName;
+                    GetJobReturnData returnData = new GetJobReturnData
+                    {
+                        id = jobKey,
+                        job = runnableJob,
+                        fileName = fileName
+                    };
                     server.Send(args.socket, returnData);
                 }
             }
             catch (Exception err)
             {
-                errors += err.ToString() + Environment.NewLine;
+                AddException(err);
             }
         }
 
@@ -191,18 +197,20 @@
         {
             try
             {
-                Job jobToRun;
+                IDataStore dataStore;
                 if (args.obj is TransferReportData)
                 {
                     var transferData = args.obj as TransferReportData;
-                    jobToRun = runningJobs[transferData.key];
-                    jobToRun.DataStore.Writer.WriteTable(transferData.data);
+                    lock (runningJobs)
+                        dataStore = runningJobs[transferData.id].DataStore;
+                    dataStore.Writer.WriteTable(transferData.data);
                 }
                 else if (args.obj is TransferDataTable)
                 {
                     var transferData = args.obj as TransferDataTable;
-                    jobToRun = runningJobs[transferData.key];
-                    jobToRun.DataStore.Writer.WriteTable(transferData.data);
+                    lock (runningJobs)
+                        dataStore = runningJobs[transferData.id].DataStore;
+                    dataStore.Writer.WriteTable(transferData.data);
                 }
                 else
                     throw new Exception("Invalid socket transfer method.");
@@ -211,7 +219,7 @@
             }
             catch (Exception err)
             {
-                errors += err.ToString() + Environment.NewLine;
+                AddException(err);
             }
         }
 
@@ -223,22 +231,40 @@
             try
             {
                 EndJobArguments arguments = args.obj as EndJobArguments;
-                JobCompleteArgs jobCompleteArguments = new JobCompleteArgs();
-                jobCompleteArguments.job = runningJobs[arguments.key].RunnableJob;
-                if (arguments.errorMessage != null)
-                    jobCompleteArguments.exceptionThrowByJob = new Exception(arguments.errorMessage);
-                lock (this)
+
+                Job job;
+                lock (runningJobs)
+                    job = runningJobs[arguments.id];
+
+                JobCompleteArgs jobCompleteArguments = new JobCompleteArgs
                 {
-                    if (JobCompleted != null)
-                        JobCompleted.Invoke(this, jobCompleteArguments);
-                    jobs.JobCompleted(jobCompleteArguments);
-                    runningJobs.Remove(arguments.key);
-                }
+                    job = job.RunnableJob,
+                    exceptionThrowByJob = arguments.errorMessage
+                };
+
+                if (JobCompleted != null)
+                    JobCompleted.Invoke(this, jobCompleteArguments);
+                jobs.JobCompleted(jobCompleteArguments);
+
                 server.Send(args.socket, "OK");
             }
             catch (Exception err)
             {
-                errors += err.ToString() + Environment.NewLine;
+                AddException(err);
+            }
+        }
+
+        /// <summary>
+        /// Add an exception to our list of exceptions.
+        /// </summary>
+        /// <param name="err">The exception to add.</param>
+        private void AddException(Exception err)
+        {
+            if (err != null)
+            {
+                if (exceptionsThrown == null)
+                    exceptionsThrown = new List<Exception>();
+                exceptionsThrown.Add(err);
             }
         }
 
@@ -246,55 +272,37 @@
         [Serializable]
         public class GetJobReturnData
         {
-            /// <summary>Simulation name</summary>
-            public Guid key;
+            /// <summary>Job ID</summary>
+            public Guid id;
 
             /// <summary>Table name</summary>
             public IRunnable job;
 
             /// <summary>File name</summary>
             public string fileName;
+
+            /// <summary>Name of job completed</summary>
+            public string jobName;
         }
 
         /// <summary>An class for encapsulating arguments to an EndJob command</summary>
         [Serializable]
         public class EndJobArguments
         {
-            /// <summary>Job Key</summary>
-            public Guid key;
-
+            /// <summary>Job ID</summary>
+            public Guid id;
+            
             /// <summary>Error message</summary>
-            public string errorMessage;
-
-            /// <summary>Simulation name of job completed</summary>
-            public string simulationName;
+            public Exception errorMessage;
         }
-
-        /// <summary>An class for encapsulating a row in a table</summary>
-        [Serializable]
-        public class TransferRowInTable
-        {
-            /// <summary>Key to the job</summary>
-            public Guid key;
-            /// <summary>Simulation name</summary>
-            public string SimulationName;
-            /// <summary>Table name</summary>
-            public string TableName;
-            /// <summary>Column names</summary>
-            public IList<string> ColumnNames;
-            /// <summary>Column units</summary>
-            public IList<string> columnUnits;
-            /// <summary>Row values for each column</summary>
-            public IList<object> Values;
-        }
-
 
         /// <summary>An class for encapsulating a ReportData</summary>
         [Serializable]
         public class TransferReportData
         {
-            /// <summary>Key to the job</summary>
-            public Guid key;
+            /// <summary>Job ID</summary>
+            public Guid id;
+            
             /// <summary>Simulation name</summary>
             public ReportData data;
         }
@@ -304,9 +312,9 @@
         [Serializable]
         public class TransferDataTable
         {
-            /// <summary>Key to the job</summary>
-            public Guid key;
-
+            /// <summary>Job ID</summary>
+            public Guid id;
+            
             /// <summary>Simulation name</summary>
             public DataTable data;
         }

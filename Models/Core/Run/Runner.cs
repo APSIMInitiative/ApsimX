@@ -128,23 +128,7 @@
         public int NumberOfSimulationsCompleted { get { return jobs.Sum(j => j.NumberOfSimulationsCompleted); } }
 
         /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
-        public List<Exception> ExceptionsThrown
-        {
-            get
-            {
-                List<Exception> exceptions = null;
-                foreach (var job in jobs)
-                {
-                    if (job.ExceptionsThrown != null)
-                    {
-                        if (exceptions == null)
-                            exceptions = new List<Exception>();
-                        exceptions.AddRange(job.ExceptionsThrown);
-                    }
-                }
-                return exceptions;
-            }
-        }
+        public List<Exception> ExceptionsThrown { get; private set; }
 
         /// <summary>The time the run took.</summary>
         public TimeSpan ElapsedTime { get; private set; }
@@ -227,6 +211,7 @@
         /// <param name="e">The event arguments.</param>
         private void OnJobCompleted(object sender, JobCollection.JobHasCompletedArgs e)
         {
+            AddException(e.ExceptionThrown);
             JobCompleted?.Invoke(this, e);
         }
 
@@ -251,13 +236,27 @@
 
             Stop();
 
+            e.exceptionsThrown?.ForEach(ex => AddException(ex));
             AllJobsCompleted?.Invoke(this,
                 new AllJobsCompletedArgs()
                 {
                     AllExceptionsThrown = ExceptionsThrown,
                     ElapsedTime = ElapsedTime
                 });
+        }
 
+        /// <summary>
+        /// Add an exception to our list of exceptions.
+        /// </summary>
+        /// <param name="err">The exception to add.</param>
+        private void AddException(Exception err)
+        {
+            if (err != null)
+            {
+                if (ExceptionsThrown == null)
+                    ExceptionsThrown = new List<Exception>();
+                ExceptionsThrown.Add(err);
+            }
         }
 
         /// <summary>Arguments for all jobs completed event.</summary>

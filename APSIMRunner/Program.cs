@@ -24,19 +24,18 @@
 
                     // Run the simulation.
                     Exception error = null;
-                    string simulationName = null;
-                    var storage = new StorageViaSockets(job.key, job.fileName);
-
+                    var storage = new StorageViaSockets(job.fileName, job.id);
+                    IModel modelToRun = null;
                     try
                     {
                         IRunnable jobToRun = job.job;
                         if (jobToRun is IModel)
                         {
-                            IModel model = job.job as IModel;
+                            modelToRun = job.job as IModel;
 
                             // Add in a socket datastore to satisfy links.
-                            model.Children.Add(storage);
-                            Links.Resolve(jobToRun, model);
+                            modelToRun.Children.Add(storage);
+                            Links.Resolve(jobToRun, modelToRun);
                         }
                         else
                             throw new Exception("Unknown job type: " + jobToRun.GetType().Name);
@@ -48,15 +47,12 @@
                         error = err;
                     }
 
-                    // Signal we have completed writing data for this sim.
-                    storage.WriteAllData();
-
                     // Signal end of job.
-                    JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();
-                    endJobArguments.key = job.key;
-                    if (error != null)
-                        endJobArguments.errorMessage = error.ToString();
-                    endJobArguments.simulationName = simulationName;
+                    JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments
+                    {
+                        errorMessage = error,
+                        id = job.id
+                    };
                     SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
                     SocketServer.Send("127.0.0.1", 2222, endJobCommand);
 
