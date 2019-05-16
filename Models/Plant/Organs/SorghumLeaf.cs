@@ -652,16 +652,19 @@ namespace Models.PMF.Organs
         {
             // Derives seneseced plant dry matter (g/m^2) for the day
             //Should not include any retranloocated biomass
-            double laiToday = LAI + DltLAI - DltSenescedLai;
+            double laiToday = LAI + DltLAI - DltSenescedLai; // how much LAI we will end up with at end of day
             double dmGreenLeafToday = Live.Wt;   // Live.Wt should be already calculated
-            double slaToday = MathUtilities.Divide(laiToday, dmGreenLeafToday, 0.0);
-
-            if (Live.Wt > 0.0)
+            double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
+            double sla = MathUtilities.Divide(LAI, Live.Wt, 0);
+            if (MathUtilities.IsPositive(Live.Wt))
             {
-                var DltSenescedBiomass = MathUtilities.Divide(DltSenescedLai, slaToday, 0.0);
+                // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
+                // However, DltSenescedLai can be greater than slaToday if we senesce most of the leaf.
+                // In this scenario, DltSenescedLai could end up greater than Live.Wt (!)
+                var DltSenescedBiomass = MathUtilities.Divide(DltSenescedLai, sla, 0);
                 var SenescingProportion = DltSenescedBiomass / Live.Wt;
 
-                if (DltSenescedBiomass > 0)
+                if (MathUtilities.IsPositive(DltSenescedBiomass))
                 {
                     var structuralWtSenescing = Live.StructuralWt * SenescingProportion;
                     Live.StructuralWt -= structuralWtSenescing;
