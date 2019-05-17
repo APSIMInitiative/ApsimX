@@ -12,6 +12,7 @@ namespace Models.PostSimulationTools
     using System.Data;
     using System.Linq;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -28,6 +29,9 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(Folder))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>Gets or sets the name of the predicted table.</summary>
         [Description("Predicted table")]
         [Display(Type = DisplayType.TableName)]
@@ -54,13 +58,7 @@ namespace Models.PostSimulationTools
         public string FieldName3UsedForMatch { get; set; }
 
         /// <summary>Main run method for performing our calculations and storing data.</summary>
-        /// <param name="dataStore">The data store.</param>
-        /// <exception cref="ApsimXException">
-        /// Could not find model data table:  + PredictedTableName
-        /// or
-        /// Could not find observed data table:  + ObservedTableName
-        /// </exception>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {

@@ -14,7 +14,7 @@
         {
             this.doThrow = doThrow;
         }
-        public void Run(IDataStore store)
+        public void Run()
         {
             if (doThrow)
                 throw new Exception("Intentional exception");

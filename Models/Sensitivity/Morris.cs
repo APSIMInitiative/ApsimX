@@ -27,6 +27,9 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class Morris : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
@@ -231,8 +234,7 @@
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
             DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)

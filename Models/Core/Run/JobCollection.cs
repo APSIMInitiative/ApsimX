@@ -214,8 +214,6 @@
                 else if (rootModel is Simulation)
                     FileName = (rootModel as Simulation).FileName;
 
-                if (runPostSimulationTools)
-                    FindIRunnablesToRun(relativeTo);
                 if (runSimulations)
                     FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
                 TotalNumberOfSimulations = pendingModels.Count;
@@ -235,19 +233,6 @@
                     // Call OnCreated in all models.
                     Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
                 }
-            }
-        }
-
-        /// <summary>Determine the list of IRunnable jobs to run</summary>
-        /// <param name="relativeTo">The model to use to search under.</param>
-        private void FindIRunnablesToRun(IModel relativeTo)
-        {
-            foreach (IRunnable runnableJob in Apsim.FindAll(rootModel, typeof(IRunnable)))
-            {
-                if (runnableJob is Simulation)
-                { }
-                else
-                    pendingModels.Add(new Job(runnableJob));
             }
         }
 
@@ -278,20 +263,20 @@
         /// <summary>Run all post simulation tools.</summary>
         private void RunPostSimulationTools()
         {
-            storage?.Writer.WaitForIdle();
-            storage?.Reader.Refresh();
-
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
             foreach (IPostSimulationTool tool in Apsim.ChildrenRecursively(rootModel, typeof(IPostSimulationTool)))
             {
+                storage?.Writer.WaitForIdle();
+                storage?.Reader.Refresh();
+
                 DateTime startTime = DateTime.Now;
                 Exception exception = null;
                 try
                 {
                     Links.Resolve(tool, rootModel);
                     if ((tool as IModel).Enabled)
-                        tool.Run(storage);
+                        tool.Run();
                 }
                 catch (Exception err)
                 {
