@@ -35,6 +35,17 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Probability, Models",
+          "TableName": "BugeseraSensibility",
+          "Exceedence": false,
+          "FieldToSplitOn": "SimulationName",
+          "Name": "Probability",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
@@ -71790,7 +71801,7 @@
                       "EventNames": [
                         "[Sorghum].Harvesting"
                       ],
-                      "Name": "SensibilityReport",
+                      "Name": "BugeseraSensibility",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -72583,7 +72594,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Yield CDF",
               "Children": [
                 {
@@ -72591,7 +72602,7 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
+                  "ColourArgb": -990142,
                   "FactorToVaryColours": "NRate",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
@@ -72601,7 +72612,7 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "Probability",
-                  "XFieldName": "Maize.Grain.Wt",
+                  "XFieldName": "Sorghum.Grain.Wt",
                   "YFieldName": "Probability",
                   "X2FieldName": null,
                   "Y2FieldName": null,
