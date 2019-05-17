@@ -393,15 +393,11 @@ namespace UserInterface.Commands
                                      System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
+            graph.ForegroundColour = OxyPlot.OxyColors.Black;
+            graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.ForegroundColour = OxyPlot.OxyColors.Black;
-            graph.BackColor = OxyPlot.OxyColors.White;
-            /*
-            graph.ForegroundColour = Configuration.Settings.DarkTheme ? OxyPlot.OxyColors.White : OxyPlot.OxyColors.Black;
-            graph.BackColor = Configuration.Settings.DarkTheme ? OxyPlot.OxyColors.Black : OxyPlot.OxyColors.White;
-            */
             graph.FontSize = 10;
             graph.Refresh();
 
