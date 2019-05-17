@@ -23,13 +23,18 @@
         /// <summary>Series definition filter.</summary>
         private string scopeFilter;
 
+        /// <summary>User specified filter.</summary>
+        private string userFilter;
+
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
         /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
+        /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
         /// <param name="customTitle">The title to use for the definition.</param>
         public SeriesDefinition(Series series, 
                                 string whereClauseForInScopeData = null,
+                                string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
         {
@@ -69,6 +74,7 @@
                 Title += " (" + series.Checkpoint + ")";
 
             scopeFilter = whereClauseForInScopeData;
+            userFilter = filter;
         }
 
         /// <summary>Constructor</summary>
@@ -271,6 +277,9 @@
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
                     if (!filter.Contains("SimulationName IN"))
                         filter = AddToFilter(filter, scopeFilter);
+
+                    if (userFilter != null)
+                        filter = AddToFilter(filter, userFilter);
                 }
                 else
                     filter = AddToFilter(filter, scopeFilter);
