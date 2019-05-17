@@ -76,15 +76,23 @@
         private static object GetNextJob()
         {
             SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
-            object response = SocketServer.Send("127.0.0.1", 2222, command);
+            object response = null;
 
-            if (response is string && response.ToString() == "NULL")
-                return null;
-
-            while (response is string)
+            while (response == null)
             {
-                Thread.Sleep(300);
-                response = SocketServer.Send("127.0.0.1", 2222, command);
+                try
+                {
+                    response = SocketServer.Send("127.0.0.1", 2222, command);
+
+                    if (response is string && response.ToString() == "NULL")
+                        return null;
+                }
+                catch (Exception)
+                {
+                    // connection forcibly closed?
+                    response = null;
+                    Thread.Sleep(200);
+                }
             }
             return response;
         }

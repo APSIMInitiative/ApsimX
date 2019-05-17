@@ -45,7 +45,7 @@
                 {
                     var index = argument.IndexOf("/NumberOfProcessors:");
                     if (index != -1)
-                        return Convert.ToInt32(argument.Substring(index + 1));
+                        return Convert.ToInt32(argument.Substring("/NumberOfProcessors:".Length));
                 }
                 return -1;
             }

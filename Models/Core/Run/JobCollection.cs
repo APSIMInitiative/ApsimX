@@ -30,14 +30,17 @@
         /// <summary>Run tests?</summary>
         private bool runTests;
 
+        /// <summary>Has this instance been initialised?</summary>
+        private bool initialised = false;
+
         /// <summary>Specific simulation names to run.</summary>
         private IEnumerable<string> simulationNamesToRun;
 
         /// <summary>The collection of jobs still to run.</summary>
         private List<Job> pendingModels = new List<Job>();
 
-        /// <summary>The collection of jobs that are currently running. Needed for percent complete.</summary>
-        private List<Job> runningModels = new List<Job>();
+        /// <summary>Index into the job list.</summary>
+        private int jobIndex;
 
         /// <summary>The related storage model.</summary>
         private IDataStore storage;
@@ -101,40 +104,37 @@
         /// <returns>Job to run or null if no more.</returns>
         public IRunnable GetNextJobToRun()
         {
-            if (rootModel == null)
+            if (!initialised)
                 lock (this)
-                    if (rootModel == null)
+                    if (!initialised)
                         Initialise();
 
-            if (pendingModels.Count > 0)
+            Job jobToReturn = null;
+            lock (this)
             {
-                // Move next model that needs to run from pending to running lists.to run from our pending list.
-                Job modelToRun;
-                lock (this)
+                if (jobIndex < pendingModels.Count)
                 {
-                    modelToRun = pendingModels.First();
-                    pendingModels.Remove(modelToRun);
-                    runningModels.Add(modelToRun);
+                    jobToReturn = pendingModels[jobIndex];
+                    jobIndex++;
                 }
-
-                return modelToRun.ToRunnable(storage, FileName);
             }
 
-            return null;
+            if (jobToReturn == null)
+                return null;
+            else
+                return jobToReturn.ToRunnable(storage, FileName);
         }
 
         /// <summary>Job has completed.</summary>
         void IJobManager.JobCompleted(JobCompleteArgs e)
         {
-            var completedJob = runningModels.Find(m => m.Equals(e.job));
+            var completedJob = pendingModels.Find(m => m.Equals(e.job));
             if (completedJob != null)
             {
                 if (e.exceptionThrowByJob != null)
                     AddException(e.exceptionThrowByJob);
                 lock (this)
                 {
-                    runningModels.Remove(completedJob);
-                    if (e.job is Simulation)
                         NumberOfSimulationsCompleted++;
                 }
 
@@ -171,6 +171,7 @@
         /// <summary>Initialise the instance.</summary>
         private void Initialise()
         {
+            initialised = true;
             startTime = DateTime.Now;
 
             if (relativeTo == null)
@@ -178,52 +179,62 @@
                 if (!File.Exists(FileName))
                     throw new Exception("Cannot find file: " + FileName);
                 List<Exception> exceptions;
-                relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
+                try
+                {
+                    relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
+                }
+                catch (Exception readException)
+                {
+                    exceptions = new List<Exception>() { readException };
+                }
                 Exception err = null;
                 if (exceptions != null && exceptions.Count > 0)
                 {
                     ExceptionsThrown = new List<Exception>();
                     ExceptionsThrown.AddRange(exceptions);
                     err = exceptions[0];
+
+                    //JobHasCompleted?.Invoke(this, new JobHasCompletedArgs()
+                    //{
+                    //    Job = null,
+                    //    ElapsedTime = new TimeSpan(),
+                    //    ExceptionThrown = err
+                    //});
                 }
-                JobHasCompleted?.Invoke(this, new JobHasCompletedArgs()
-                {
-                    Job = null,
-                    ElapsedTime = new TimeSpan(),
-                    ExceptionThrown = err
-                });
             }
-
-            // Find the root model.
-            rootModel = relativeTo;
-            while (rootModel.Parent != null)
-                rootModel = rootModel.Parent;
-
-            if (rootModel is Simulations)
-                FileName = (rootModel as Simulations).FileName;
-            else if (rootModel is Simulation)
-                FileName = (rootModel as Simulation).FileName;
-
-            if (runPostSimulationTools)
-                FindIRunnablesToRun(relativeTo);
-            if (runSimulations)
-                FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
-            TotalNumberOfSimulations = pendingModels.Count;
-
-            // Find a storage model.
-            storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
-
-            // If this simulation was not created from deserialisation then we need
-            // to parent all child models correctly and call OnCreated for each model.
-            bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
-                                       relativeTo.Children[0].Parent == relativeTo;
-            if (!hasBeenDeserialised)
+            if (relativeTo != null)
             {
-                // Parent all models.
-                Apsim.ParentAllChildren(relativeTo);
+                // Find the root model.
+                rootModel = relativeTo;
+                while (rootModel.Parent != null)
+                    rootModel = rootModel.Parent;
 
-                // Call OnCreated in all models.
-                Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
+                if (rootModel is Simulations)
+                    FileName = (rootModel as Simulations).FileName;
+                else if (rootModel is Simulation)
+                    FileName = (rootModel as Simulation).FileName;
+
+                if (runPostSimulationTools)
+                    FindIRunnablesToRun(relativeTo);
+                if (runSimulations)
+                    FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
+                TotalNumberOfSimulations = pendingModels.Count;
+
+                // Find a storage model.
+                storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
+
+                // If this simulation was not created from deserialisation then we need
+                // to parent all child models correctly and call OnCreated for each model.
+                bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
+                                           relativeTo.Children[0].Parent == relativeTo;
+                if (!hasBeenDeserialised)
+                {
+                    // Parent all models.
+                    Apsim.ParentAllChildren(relativeTo);
+
+                    // Call OnCreated in all models.
+                    Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
+                }
             }
         }
 
@@ -272,7 +283,7 @@
 
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
-            foreach (IPostSimulationTool tool in Apsim.FindAll(rootModel, typeof(IPostSimulationTool)))
+            foreach (IPostSimulationTool tool in Apsim.ChildrenRecursively(rootModel, typeof(IPostSimulationTool)))
             {
                 DateTime startTime = DateTime.Now;
                 Exception exception = null;
