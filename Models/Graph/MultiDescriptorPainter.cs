@@ -61,16 +61,19 @@
         public void Paint(SeriesDefinition seriesDefinition)
         {
             var descriptor1 = seriesDefinition.Descriptors.Find(d => d.Name == descriptorName1);
-            string descriptorValue1 = descriptor1.Value;
-
-            int index1 = values1.IndexOf(descriptorValue1);
-            if (index1 == -1)
+            if (descriptor1 != null)
             {
-                values1.Add(descriptorValue1);
-                index1 = values1.Count - 1;
+                string descriptorValue1 = descriptor1.Value;
+
+                int index1 = values1.IndexOf(descriptorValue1);
+                if (index1 == -1)
+                {
+                    values1.Add(descriptorValue1);
+                    index1 = values1.Count - 1;
+                }
+                index1 = index1 % maximumIndex1;
+                setter1(seriesDefinition, index1);
             }
-            index1 = index1 % maximumIndex1;
-            setter1(seriesDefinition, index1);
 
             var descriptor2 = seriesDefinition.Descriptors.Find(d => d.Name == descriptorName2);
             if (descriptor2 != null)

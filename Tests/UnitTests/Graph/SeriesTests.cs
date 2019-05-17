@@ -966,6 +966,54 @@
             Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 10 });
         }
 
+        /// <summary>Create xy series definitions with a filter.</summary>
+        [Test]
+        public void SeriesWithFilter2()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1"),
+                        new Description("Sim2", "SimulationName", "Sim2")
+                    }),
+                    new Series()
+                    {
+                        Name = "Series",
+                        TableName = "Report",
+                        XFieldName = "Col1",
+                        YFieldName = "Col2",
+                        FactorToVaryColours = "SimulationName",
+                        Filter = "A='a'"
+                    },
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
+                "            ()              ()      ()  ()    ()   (g)\r\n" +
+                "       Current               1    Exp1   a     1    10\r\n" +
+                "       Current               1    Exp1   a     1    10\r\n" +
+                "       Current               2    Exp2   b     2    20\r\n" +
+                "       Current               2    Exp2   b     2    20\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series = folder.Children[1] as Series;
+
+            var definitions = new List<SeriesDefinition>();
+            series.GetSeriesToPutOnGraph(reader, definitions);
+
+            Assert.AreEqual(definitions.Count, 1);
+
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 10 });
+        }
+
         /// <summary>
         /// Create a single xy series definition with a 'Vary By Simulation'.
         /// Ensure it only pulls in simulations in scope.
