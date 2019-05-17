@@ -684,13 +684,13 @@ namespace UserInterface.Commands
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin;
+                            Gtk.Window popupWin = null;
                             if (view is MapView)
                             {
-                                popupWin = (view as MapView).GetPopupWin();
-                                popupWin.SetSizeRequest(515, 500);
+                                popupWin = (view as MapView)?.GetPopupWin();
+                                popupWin?.SetSizeRequest(515, 500);
                             }
-                            else
+                            if (popupWin == null)
                             {
                                 popupWin = new Gtk.Window(Gtk.WindowType.Popup);
                                 popupWin.SetSizeRequest(800, 800);
