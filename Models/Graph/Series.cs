@@ -152,7 +152,7 @@ namespace Models.Graph
                 {
                     // No vary by fields. Just plot the whole table in a single
                     // series with data that is in scope.
-                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData) };
+                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData, Filter) };
                 }
                 else
                 {
@@ -233,7 +233,7 @@ namespace Models.Graph
                 for (int i = 0; i < combination.Count; i++)
                     descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
                                                                          combination[i]));
-                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, descriptors));
+                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, Filter, descriptors));
             }
 
             return definitions;
@@ -252,12 +252,9 @@ namespace Models.Graph
                 // Extract all the simulation names from all descriptions.
                 var simulationNames = simulationDescriptions.Select(d => d.Name).Distinct();
 
-                string whereClause = null;
-                if (Filter != null && Filter != string.Empty)
-                    whereClause = Filter + " AND ";
-                whereClause += "SimulationName IN (" +
-                                StringUtilities.Build(simulationNames, ",", "'", "'") +
-                                ")";
+                string whereClause =  "SimulationName IN (" +
+                                      StringUtilities.Build(simulationNames, ",", "'", "'") +
+                                      ")";
                 return whereClause;
             }
             else if (Filter != string.Empty)
@@ -300,6 +297,7 @@ namespace Models.Graph
                     // Create the definition.
                     definitions.Add(new SeriesDefinition(this,
                                                          whereClauseForInScopeData,
+                                                         Filter,
                                                          descriptorsForDefinition));
                 }
             }
