@@ -1837,7 +1837,7 @@
                 },
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartGrainFill",
+                  "SetEvent": "FloralInitiation",
                   "ReSetEvent": null,
                   "Name": "GreenWtAtFI",
                   "Children": [
