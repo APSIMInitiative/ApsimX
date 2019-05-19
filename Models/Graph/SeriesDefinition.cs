@@ -278,7 +278,7 @@
                     if (!filter.Contains("SimulationName IN"))
                         filter = AddToFilter(filter, scopeFilter);
 
-                    if (userFilter != null)
+                    if (!string.IsNullOrEmpty(userFilter))
                         filter = AddToFilter(filter, userFilter);
                 }
                 else
