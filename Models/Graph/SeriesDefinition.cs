@@ -198,7 +198,7 @@
         public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
 
         /// <summary>Gets the error values</summary>
-        public IEnumerable Error { get; private set; }
+        public IEnumerable<double> Error { get; private set; }
 
         /// <summary>Add a clause to the filter.</summary>
         /// <param name="filter">The filter to add to.</param>
@@ -294,11 +294,13 @@
                     fieldsToRead.Add(Y2FieldName);
 
                 // Add any error fields to the list of fields to read.
+                var fieldsToAdd = new List<string>();
                 foreach (var fieldName in fieldsToRead)
                 {
                     if (fieldsThatExist.Contains(fieldName + "Error"))
-                        fieldsToRead.Add(fieldName + "Error");
+                        fieldsToAdd.Add(fieldName + "Error");
                 }
+                fieldsToRead.AddRange(fieldsToAdd);
 
                 // Add any field names from the filter.
                 fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
@@ -461,12 +463,13 @@
         /// <param name="data">The table</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <returns>The column of data.</returns>
-        private IEnumerable GetErrorDataFromTable(DataTable data, string fieldName)
+        private IEnumerable<double> GetErrorDataFromTable(DataTable data, string fieldName)
         {
             string errorFieldName = fieldName + "Error";
             if (fieldName != null && data != null && data.Columns.Contains(errorFieldName))
             {
-                if (data.Columns[errorFieldName].DataType == typeof(double))
+                if (data.Columns[errorFieldName].DataType == typeof(float) ||
+                    data.Columns[errorFieldName].DataType == typeof(double))
                     return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
