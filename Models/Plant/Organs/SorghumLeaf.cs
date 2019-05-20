@@ -284,13 +284,24 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Stress.</summary>
-        [Description("Nitrogen Stress")]
-        public double NitrogenStress
+        [Description("Nitrogen Photosynthesis Stress")]
+        public double NitrogenPhotoStress
         {
             get
             {
                 var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
                 return Math.Max(photoStress, 0.0);
+            }
+        }
+
+        /// <summary>Stress.</summary>
+        [Description("Nitrogen Phenology Stress")]
+        public double NitrogenPhenoStress
+        {
+            get
+            {
+                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+                return MathUtilities.Bound(phenoStress, 0.0, 1.0);
             }
         }
 
@@ -582,8 +593,8 @@ namespace Models.PMF.Organs
 
         private double calcLaiSenescenceWater()
         {
-            /* TODO : Direct translation sort of. needs work */
-            Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
+            //watSupply is calculated in SorghumArbitrator:StoreWaterVariablesForNitrogenUptake
+            //Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
             double dlt_dm_transp = PotentialBiomassTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
