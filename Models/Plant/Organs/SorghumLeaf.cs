@@ -915,6 +915,9 @@ namespace Models.PMF.Organs
             var leafWtAvail = leafWt - MinPlantWt.Value() * SowingDensity;
 
             double availableDM = Math.Max(0.0,  leafWtAvail);
+
+            // Don't retranslocate more DM than we have available.
+            availableDM = Math.Min(availableDM, StartLive.Wt);
             return availableDM;
         }
 
@@ -973,7 +976,7 @@ namespace Models.PMF.Organs
 
             var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
             var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
-
+            dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
@@ -1004,6 +1007,7 @@ namespace Models.PMF.Organs
                 slnToday = calcSLN(laiToday, nGreenToday);
 
                 var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
                 double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
