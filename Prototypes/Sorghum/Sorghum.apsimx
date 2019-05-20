@@ -87,6 +87,9 @@
               "WatSupply": 0.0,
               "NMassFlowSupply": 0.0,
               "NDiffusionSupply": 0.0,
+              "SWAvailRatio": 0.0,
+              "SDRatio": 0.0,
+              "PhotoStress": 0.0,
               "Name": "Arbitrator",
               "Children": [
                 {
@@ -126,6 +129,244 @@
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "ThermalTime",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "TT",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Germination",
+                          "End": "Flowering",
+                          "Name": "BeforeFlowering",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AirTemperatureFunction, Models",
+                              "Name": "ThermalTime",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    11.0,
+                                    30.0,
+                                    42.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    19.0,
+                                    0.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Flowering",
+                          "End": "HarvestRipe",
+                          "Name": "PostFlowering",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                              "MaximumTemperatureWeighting": 0.5,
+                              "Name": "WeightedTemperatureFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    5.7,
+                                    23.5
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    17.8
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "Stress",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Sowing",
+                          "End": "EndJuvenile",
+                          "Name": "TT",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "XProperty": "[Arbitrator].SWAvailRatio",
+                              "Name": "WaterStress",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    0.2,
+                                    1.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "EndJuvenile",
+                          "End": "Flowering",
+                          "Name": "PreFlowering",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "MinimumFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "XProperty": "[Arbitrator].SWAvailRatio",
+                                  "Name": "WaterStress",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.2,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MaximumFunction, Models",
+                                  "Name": "MaximumFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.5,
+                                      "Units": null,
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].NitrogenPhenoStress",
+                                      "Name": "VariableReference",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Flowering",
+                          "End": "HarvestRipe",
+                          "Name": "PostFlowering",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "ThermalTimeFM",
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookup, Models",
@@ -1559,7 +1800,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].ThermalTime.Value()",
+                                  "VariableName": "[Phenology].ThermalTimeFM.Value()",
                                   "Name": "ThermalTime",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1873,8 +2114,17 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Sorghum].TotalLive.Wt",
+                      "VariableName": "[Sorghum].Total.Wt",
                       "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Definitely [Sorghum].Total.Wt",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1898,7 +2148,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1934,7 +2184,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2046,7 +2296,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3242,7 +3492,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].sdRatio",
+                      "XProperty": "[Arbitrator].SDRatio",
                       "Name": "WaterStressEffect",
                       "Children": [
                         {
@@ -3281,33 +3531,6 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "PhosphorusStressEffect",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "sdRatio",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].WatSupply",
-                      "Name": "WSupply",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].WaterDemandFunction",
-                      "Name": "WDemand",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3422,7 +3645,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NitrogenStress",
+                      "VariableName": "[Leaf].NitrogenPhotoStress",
                       "Name": "FN",
                       "Children": [],
                       "IncludeInDocumentation": true,
