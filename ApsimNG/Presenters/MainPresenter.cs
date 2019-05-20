@@ -532,11 +532,13 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
-            startPage.AddButton(
+            if (!ProcessUtilities.CurrentOS.IsLinux)
+            {
+                startPage.AddButton(
                                 "Toggle Theme",
-                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
-                                        OnToggleTheme);
-
+                                new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                OnToggleTheme);
+            }
             startPage.AddButton(
                                 "Help",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),

@@ -10,6 +10,7 @@ using UserInterface.EventArguments;
 using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
+using System.Drawing;
 
 namespace UserInterface.Views
 {
@@ -55,6 +56,18 @@ namespace UserInterface.Views
         string GetTitle();
 
         Widget HoldingWidget { get; set; }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        System.Drawing.Color ForegroundColour { get; set; }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        System.Drawing.Color BackgroundColour { get; set; }
 
         void ExecJavaScript(string command, object[] args);
 
@@ -341,8 +354,34 @@ namespace UserInterface.Views
         public Gtk.Socket WebSocket { get; set; } = new Gtk.Socket();
         public ScrolledWindow ScrollWindow { get; set; } = new ScrolledWindow();
         public Widget HoldingWidget { get; set; }
+        public Color ForegroundColour
+        {
+            get
+            {
+                return Color.Empty; // TODO
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.color = \"{colour}\";");
+            }
+        }
 
-		/// <summary>
+
+        public Color BackgroundColour
+        {
+            get
+            {
+                return Color.Empty; // TODO
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
+
+        /// <summary>
         /// The find form
         /// </summary>
         private Utility.FindInBrowserForm findForm = new Utility.FindInBrowserForm();
@@ -592,6 +631,41 @@ namespace UserInterface.Views
             // Free any unmanaged objects here. 
             //
             disposed = true;
+        }
+
+        /// <summary>
+        /// Sets the background colour of the document.
+        /// </summary>
+        /// <value></value>
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.color = \"{colour}\";");
+            }
         }
     }
 
@@ -853,9 +927,10 @@ namespace UserInterface.Views
                 keyPressObject = ieBrowser.Browser.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
-                ieBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
-                ieBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             }
+
+            browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+            browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 

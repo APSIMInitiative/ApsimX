@@ -1816,7 +1816,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Sorghum].Total.Wt",
+                      "VariableName": "[Sorghum].TotalLive.Wt",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
