@@ -981,17 +981,22 @@ namespace Models.PMF.Organs
                 requiredN -= nProvided;
                 nGreenToday += nProvided; //jkb
                 DltRetranslocatedN -= nProvided;
-                if (requiredN <= 0.0001) return nProvided;
+                if (requiredN <= 0.0001)
+                    return nProvided;
 
                 // take from decreasing dltLai 
-                if (DltLAI > 0)
+                if (MathUtilities.IsPositive(DltLAI))
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
-                    DltLAI = (n - laiN) / NewLeafSLN.Value();
-                    requiredN -= laiN;
-                    nProvided += laiN;
-                    BAT.StructuralAllocation[leafIndex] -= laiN;
+                    laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
+                    if (MathUtilities.IsPositive(laiN))
+                    {
+                        DltLAI = (n - laiN) / NewLeafSLN.Value();
+                        requiredN -= laiN;
+                        nProvided += laiN;
+                        BAT.StructuralAllocation[leafIndex] -= laiN;
+                    }
                 }
 
                 // recalc the SLN after this N has been removed
