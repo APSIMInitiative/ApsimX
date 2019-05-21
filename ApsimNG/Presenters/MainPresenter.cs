@@ -549,6 +549,13 @@
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif
+            startPage.AddButtonWithMenu("Settings",
+                                        "settings-menu",
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.svg"));
+            startPage.AddButtonToMenu("settings-menu",
+                                      "Change Font",
+                                      new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                      this.OnChooseFont);
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
@@ -1077,6 +1084,16 @@
                 this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
                 reader.Close();
             }
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks the 'choose font' button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnChooseFont(object sender, EventArgs args)
+        {
+            view.ShowFontChooser();
         }
 
         /// <summary>

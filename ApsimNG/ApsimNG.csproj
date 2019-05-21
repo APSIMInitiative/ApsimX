@@ -458,6 +458,9 @@
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\MenuImages\Settings.svg" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Resources\notes.wav" />
   </ItemGroup>
   <ItemGroup>

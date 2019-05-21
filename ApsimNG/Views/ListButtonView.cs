@@ -25,6 +25,23 @@ namespace UserInterface.Views
         /// <param name="image">Image for button</param>
         /// <param name="handler">Handler to call when user clicks on button</param>
         void AddButton(string text, Image image, EventHandler handler);
+        
+        /// <summary>
+        /// Adds a button with a submenu.
+        /// </summary>
+        /// <param name="text">Text for button.</param>
+        /// <param name="menuId">ID of the submenu.</param>
+        /// <param name="image">Image for button.</param>
+        void AddButtonWithMenu(string text, string menuId, Image image);
+
+        /// <summary>
+        /// Adds a button to a sub-menu.
+        /// </summary>
+        /// <param name="menuId">ID of the sub-menu.</param>
+        /// <param name="text">Text on the button.</param>
+        /// <param name="image">Image on the button.</param>
+        /// <param name="handler">Handler to call when button is clicked.</param>
+        void AddButtonToMenu(string menuId, string text, Image image, EventHandler handler);
 
         /// <summary>
         /// Invoked when the filter is changed.
@@ -138,6 +155,25 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler FilterChanged;
 
+        /// <summary>Creates a button according to given parameters.</summary>
+        /// <param name="text">Text for button</param>
+        /// <param name="image">Image for button</param>
+        /// <param name="handler">Handler to call when user clicks on button</param>
+        private ToolButton CreateButton(string text, Image image, EventHandler handler)
+        {
+            ToolButton button = new ToolButton(image, null);
+            button.Homogeneous = false;
+            Label btnLabel = new Label(text);
+            btnLabel.LineWrap = true;
+            btnLabel.LineWrapMode = Pango.WrapMode.Word;
+            btnLabel.Justify = Justification.Center;
+            btnLabel.Realized += BtnLabel_Realized;
+            button.LabelWidget = btnLabel;
+            if (handler != null)
+                button.Clicked += handler;
+            return button;
+        }
+
         /// <summary>Add a button to the button bar</summary>
         /// <param name="text">Text for button</param>
         /// <param name="image">Image for button</param>
@@ -152,16 +188,7 @@ namespace UserInterface.Views
                     btnToolbar.ToolbarStyle = ToolbarStyle.Both;
                     buttonPanel.PackStart(btnToolbar, true, true, 0);
                 }
-                ToolButton button = new ToolButton(image, null);
-                button.Homogeneous = false;
-                Label btnLabel = new Label(text);
-                btnLabel.LineWrap = true;
-                btnLabel.LineWrapMode = Pango.WrapMode.Word;
-                btnLabel.Justify = Justification.Center;
-                btnLabel.Realized += BtnLabel_Realized;
-                button.LabelWidget = btnLabel;
-                if (handler != null)
-                    button.Clicked += handler;
+                ToolButton button = CreateButton(text, image, handler);
                 btnToolbar.Add(button);
             }
             else
@@ -180,6 +207,57 @@ namespace UserInterface.Views
             }
             buttonPanel.ShowAll();
 
+        }
+
+        /// <summary>
+        /// Adds a button with a submenu.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="menuId"></param>
+        /// <param name="image"></param>
+        /// <param name="handler"></param>
+        public void AddButtonWithMenu(string text, string menuId, Image image)
+        {
+            AddButton(text, image, null);
+            if (!ButtonsAreToolbar)
+                throw new NotImplementedException();
+
+            ToolButton button = btnToolbar.Children.OfType<ToolButton>().Last();
+            Menu menu = new Menu();
+            button.SetProxyMenuItem(menuId, menu);
+        }
+
+        /// <summary>
+        /// Adds a button to a sub-menu.
+        /// </summary>
+        /// <param name="menuId">ID of the sub-menu.</param>
+        /// <param name="text">Text on the button.</param>
+        /// <param name="image">Image on the button.</param>
+        /// <param name="handler">Handler to call when button is clicked.</param>
+        public void AddButtonToMenu(string menuId, string text, Image image, EventHandler handler)
+        {
+            if (!ButtonsAreToolbar)
+                throw new NotImplementedException();
+
+            string[] buttons = btnToolbar.AllChildren.OfType<ToolButton>().Select(b => b.Label).ToArray();
+            ToolButton toplevel = btnToolbar.AllChildren.OfType<ToolButton>().FirstOrDefault(b => b.Label == menuId);
+            ToolButton menuItem = CreateButton(text, image, handler);
+            toplevel.SetProxyMenuItem("asdf", menuItem);
+        }
+
+        /// <summary>
+        /// Finds a button's submenu with a given ID.
+        /// </summary>
+        /// <param name="menuId">ID of the menu.</param>
+        private Widget FindMenu(string menuId)
+        {
+            foreach (ToolButton button in btnToolbar.Children.OfType<ToolButton>())
+            {
+                Widget menu = button.GetProxyMenuItem(menuId);
+                if (menu != null)
+                    return menu;
+            }
+            return null;
         }
 
         /// <summary>

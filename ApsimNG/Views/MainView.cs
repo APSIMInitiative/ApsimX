@@ -129,6 +129,11 @@
         private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
 
         /// <summary>
+        /// Dialog which allows the user to change fonts.
+        /// </summary>
+        private FontSelectionDialog fontDialog;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
@@ -818,6 +823,48 @@
                 button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
                 button.IconWidget.ShowAll();
             }
+        }
+
+        /// <summary>
+        /// Shows the font selection dialog.
+        /// </summary>
+        public void ShowFontChooser()
+        {
+            fontDialog = new FontSelectionDialog("Select a font");
+            fontDialog.OkButton.Clicked += OnChangeFont;
+            fontDialog.ApplyButton.Clicked += OnChangeFont;
+            fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks OK or Apply in the font selection
+        /// dialog. Changes the font on all widgets and saves the new font
+        /// in the config file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnChangeFont(object sender, EventArgs args)
+        {
+            Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+            Utility.Configuration.Settings.Font = newFont;
+            SetWidgetFont(MainWidget, newFont);
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks cancel in the font selection dialog.
+        /// Closes the dialog.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnDestroyFontDialog(object sender, EventArgs args)
+        {
+            if (fontDialog == null)
+                return;
+            
+            fontDialog.OkButton.Clicked -= OnChangeFont;
+            fontDialog.ApplyButton.Clicked -= OnChangeFont;
+            fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
+            fontDialog.Destroy();
         }
 
         /// <summary>

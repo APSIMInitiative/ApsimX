@@ -189,6 +189,11 @@ namespace UserInterface.Interfaces
         void ToggleTheme(object sender, EventArgs args);
 
         /// <summary>
+        /// Shows the font selection dialog.
+        /// </summary>
+        void ShowFontChooser();
+
+        /// <summary>
         /// Invoked when application tries to close
         /// </summary>
         event EventHandler<AllowCloseArgs> AllowClose;
