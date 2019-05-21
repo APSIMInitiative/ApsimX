@@ -326,23 +326,34 @@ namespace Models.PMF.Phen
         }
 
 
-        ///7. Private methods
-        /// -----------------------------------------------------------------------------------------------------------
+        // 7. Private methods
+        // -----------------------------------------------------------------------------------------------------------
+        //
 
+        /// <summary>
+        /// Refreshes the list of phases.
+        /// </summary>
+        private void RefreshPhases()
+        {
+            if (phases == null)
+                phases = new List<IPhase>();
+            else
+                phases.Clear();
+
+            foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
+                phases.Add(phase);
+        }
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
-            if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
-                foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
-                {
-                    phases.Add(phase);
-                }
+            RefreshPhases();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            RefreshPhases();
             Clear();
         }
 

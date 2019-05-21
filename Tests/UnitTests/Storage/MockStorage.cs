@@ -41,7 +41,7 @@ namespace UnitTests.Storage
         public IStorageReader Reader => throw new NotImplementedException();
 
         public IStorageWriter Writer { get { return this; } }
-
+         
         [Serializable]
         internal class Row
         {

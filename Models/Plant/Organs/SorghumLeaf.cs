@@ -453,7 +453,7 @@ namespace Models.PMF.Organs
             //UpdateVars
             SenescedLai += DltSenescedLai;
             LAI += DltLAI - DltSenescedLai;
-            SLN = Live.N / LAI;
+            SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
 
         }
@@ -652,16 +652,21 @@ namespace Models.PMF.Organs
         {
             // Derives seneseced plant dry matter (g/m^2) for the day
             //Should not include any retranloocated biomass
-            double laiToday = LAI + DltLAI - DltSenescedLai;
-            double dmGreenLeafToday = Live.Wt;   // Live.Wt should be already calculated
-            double slaToday = MathUtilities.Divide(laiToday, dmGreenLeafToday, 0.0);
-
-            if (Live.Wt > 0.0)
+            double laiToday = LAI + DltLAI - DltSenescedLai; // how much LAI we will end up with at end of day
+            double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
+            double sla = MathUtilities.Divide(LAI, Live.Wt, 0);
+            if (MathUtilities.IsPositive(Live.Wt))
             {
-                var DltSenescedBiomass = MathUtilities.Divide(DltSenescedLai, slaToday, 0.0);
+                // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
+                // However, DltSenescedLai can be greater than slaToday if we senesce most of the leaf.
+                // In this scenario, DltSenescedBiomass could end up greater than Live.Wt (!)
+                // To fix this, we divide start-of-day (pre-senescence) sla.
+                var DltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, LAI, 0);
                 var SenescingProportion = DltSenescedBiomass / Live.Wt;
 
-                if (DltSenescedBiomass > 0)
+                if (MathUtilities.IsGreaterThan(DltSenescedBiomass, Live.Wt))
+                    throw new Exception($"Attempted to senesce more biomass than exists on leaf '{Name}'");
+                if (MathUtilities.IsPositive(DltSenescedBiomass))
                 {
                     var structuralWtSenescing = Live.StructuralWt * SenescingProportion;
                     Live.StructuralWt -= structuralWtSenescing;
@@ -678,10 +683,14 @@ namespace Models.PMF.Organs
                     Dead.StorageWt += storageWtSenescing;
                     Senesced.StructuralWt += structuralWtSenescing;
 
-                    double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    double sln = MathUtilities.Divide(Live.N, LAI, 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max((sln - SenescedLeafSLN.Value()), 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
+
+                    if (MathUtilities.IsGreaterThan(DltSenescedN, Live.N))
+                        throw new Exception($"Attempted to senesce more N than exists on leaf '{Name}'");
+
                     var structuralNSenescing = Live.StructuralN * SenescingProportion;
                     Live.StructuralN -= structuralNSenescing;
                     Dead.StructuralN += structuralNSenescing;
@@ -937,6 +946,8 @@ namespace Models.PMF.Organs
         /// </summary>
         public double calculateClassicDemandDelta()
         {
+            if (MathUtilities.IsNegative(Live.N))
+                throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
             var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
@@ -944,12 +955,6 @@ namespace Models.PMF.Organs
 
             var structural = nDemands.Structural.Value();
             var diff = classicLeafDemand - pmfLeafDemand;
-            var diffdiff = structural + diff;
-            if (Math.Abs(diffdiff) > 0.0001)
-            {
-                double tmp = diffdiff;
-            }
-                
 
             return classicLeafDemand - pmfLeafDemand;
         }
@@ -1127,7 +1132,7 @@ namespace Models.PMF.Organs
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             // Check retranslocation
-            if (dryMatter.Retranslocation - StartLive.StructuralWt > BiomassToleranceValue)
+            if (MathUtilities.IsGreaterThan(dryMatter.Retranslocation, StartLive.StructuralWt))
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // allocate structural DM
