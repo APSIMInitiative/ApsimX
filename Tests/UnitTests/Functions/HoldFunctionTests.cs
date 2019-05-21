@@ -86,8 +86,7 @@
                 }
             };
             Apsim.ParentAllChildren(f);
-            var links = new Links();
-            links.Resolve(f, true, true);
+            Links.Resolve(f, f);
 
             Utilities.CallEvent(f.Children[1], "Commencing", new object[] { this, new EventArgs() });
 
