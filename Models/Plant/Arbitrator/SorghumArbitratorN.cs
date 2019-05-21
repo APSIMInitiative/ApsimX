@@ -133,7 +133,7 @@ namespace Models.PMF
         private void AllocateStorage(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
         {
             double StorageRequirement = Math.Max(0.0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
-            if (StorageRequirement > 0.0)
+            if (MathUtilities.IsPositive(StorageRequirement))
             {
                 double StorageAllocation = Math.Min(NotAllocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
                 BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
@@ -181,7 +181,7 @@ namespace Models.PMF
             var tmpcheck = BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink];
 
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
-            if ((StructuralRequirement) > 0.0)
+            if (MathUtilities.IsPositive(StructuralRequirement))
             {
                 //only allocate as much structural as demanded - cyclical process so allow for any amounts already allocated to Retranslocation
                 double StructuralAllocation = Math.Min(StructuralRequirement, BAT.RetranslocationSupply[iSupply] - BAT.Retranslocation[iSupply]);
@@ -201,7 +201,7 @@ namespace Models.PMF
         {
             //leaf called
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
-            if ((StructuralRequirement) > 0.0)
+            if (MathUtilities.IsPositive(StructuralRequirement))
             {
                 double currentRetranslocatedN = leaf.DltRetranslocatedN; //-ve number
 
