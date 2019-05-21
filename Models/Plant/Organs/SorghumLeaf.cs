@@ -284,13 +284,24 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Stress.</summary>
-        [Description("Nitrogen Stress")]
-        public double NitrogenStress
+        [Description("Nitrogen Photosynthesis Stress")]
+        public double NitrogenPhotoStress
         {
             get
             {
                 var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
                 return Math.Max(photoStress, 0.0);
+            }
+        }
+
+        /// <summary>Stress.</summary>
+        [Description("Nitrogen Phenology Stress")]
+        public double NitrogenPhenoStress
+        {
+            get
+            {
+                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+                return MathUtilities.Bound(phenoStress, 0.0, 1.0);
             }
         }
 
@@ -453,7 +464,7 @@ namespace Models.PMF.Organs
             //UpdateVars
             SenescedLai += DltSenescedLai;
             LAI += DltLAI - DltSenescedLai;
-            SLN = Live.N / LAI;
+            SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
 
         }
@@ -582,8 +593,8 @@ namespace Models.PMF.Organs
 
         private double calcLaiSenescenceWater()
         {
-            /* TODO : Direct translation sort of. needs work */
-            Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
+            //watSupply is calculated in SorghumArbitrator:StoreWaterVariablesForNitrogenUptake
+            //Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
             double dlt_dm_transp = PotentialBiomassTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
@@ -652,16 +663,21 @@ namespace Models.PMF.Organs
         {
             // Derives seneseced plant dry matter (g/m^2) for the day
             //Should not include any retranloocated biomass
-            double laiToday = LAI + DltLAI - DltSenescedLai;
-            double dmGreenLeafToday = Live.Wt;   // Live.Wt should be already calculated
-            double slaToday = MathUtilities.Divide(laiToday, dmGreenLeafToday, 0.0);
-
-            if (Live.Wt > 0.0)
+            double laiToday = LAI + DltLAI - DltSenescedLai; // how much LAI we will end up with at end of day
+            double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
+            double sla = MathUtilities.Divide(LAI, Live.Wt, 0);
+            if (MathUtilities.IsPositive(Live.Wt))
             {
-                var DltSenescedBiomass = MathUtilities.Divide(DltSenescedLai, slaToday, 0.0);
+                // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
+                // However, DltSenescedLai can be greater than slaToday if we senesce most of the leaf.
+                // In this scenario, DltSenescedBiomass could end up greater than Live.Wt (!)
+                // To fix this, we divide start-of-day (pre-senescence) sla.
+                var DltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, LAI, 0);
                 var SenescingProportion = DltSenescedBiomass / Live.Wt;
 
-                if (DltSenescedBiomass > 0)
+                if (MathUtilities.IsGreaterThan(DltSenescedBiomass, Live.Wt))
+                    throw new Exception($"Attempted to senesce more biomass than exists on leaf '{Name}'");
+                if (MathUtilities.IsPositive(DltSenescedBiomass))
                 {
                     var structuralWtSenescing = Live.StructuralWt * SenescingProportion;
                     Live.StructuralWt -= structuralWtSenescing;
@@ -678,10 +694,14 @@ namespace Models.PMF.Organs
                     Dead.StorageWt += storageWtSenescing;
                     Senesced.StructuralWt += structuralWtSenescing;
 
-                    double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    double sln = MathUtilities.Divide(Live.N, LAI, 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max((sln - SenescedLeafSLN.Value()), 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
+
+                    if (MathUtilities.IsGreaterThan(DltSenescedN, Live.N))
+                        throw new Exception($"Attempted to senesce more N than exists on leaf '{Name}'");
+
                     var structuralNSenescing = Live.StructuralN * SenescingProportion;
                     Live.StructuralN -= structuralNSenescing;
                     Dead.StructuralN += structuralNSenescing;
@@ -906,6 +926,9 @@ namespace Models.PMF.Organs
             var leafWtAvail = leafWt - MinPlantWt.Value() * SowingDensity;
 
             double availableDM = Math.Max(0.0,  leafWtAvail);
+
+            // Don't retranslocate more DM than we have available.
+            availableDM = Math.Min(availableDM, StartLive.Wt);
             return availableDM;
         }
 
@@ -937,6 +960,8 @@ namespace Models.PMF.Organs
         /// </summary>
         public double calculateClassicDemandDelta()
         {
+            if (MathUtilities.IsNegative(Live.N))
+                throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
             var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
@@ -944,49 +969,48 @@ namespace Models.PMF.Organs
 
             var structural = nDemands.Structural.Value();
             var diff = classicLeafDemand - pmfLeafDemand;
-            var diffdiff = structural + diff;
-            if (Math.Abs(diffdiff) > 0.0001)
-            {
-                double tmp = diffdiff;
-            }
-                
 
             return classicLeafDemand - pmfLeafDemand;
         }
 
         /// <summary>Calculate the amount of N to retranslocate</summary>
-        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN)
+        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             int leafIndex = 2;
 
             double laiToday = calcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
-            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] - DltRetranslocatedN;
+            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] + DltRetranslocatedN; //dltRetranslocation is -ve
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
             var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
             var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
-
+            dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
                 double nProvided = Math.Min(dilutionN, requiredN / 2.0);
                 requiredN -= nProvided;
-                nGreenToday += nProvided; //jkb
+                nGreenToday -= nProvided; //jkb
                 DltRetranslocatedN -= nProvided;
-                if (requiredN <= 0.0001) return nProvided;
+                if (requiredN <= 0.0001)
+                    return nProvided;
 
                 // take from decreasing dltLai 
-                if (DltLAI > 0)
+                if (MathUtilities.IsPositive(DltLAI))
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
-                    DltLAI = (n - laiN) / NewLeafSLN.Value();
-                    requiredN -= laiN;
-                    nProvided += laiN;
-                    BAT.StructuralAllocation[leafIndex] -= laiN;
+                    laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
+                    if (MathUtilities.IsPositive(laiN))
+                    {
+                        DltLAI = (n - laiN) / NewLeafSLN.Value();
+                        requiredN -= laiN;
+                        nProvided += laiN;
+                        BAT.StructuralAllocation[leafIndex] -= laiN;
+                    }
                 }
 
                 // recalc the SLN after this N has been removed
@@ -994,6 +1018,7 @@ namespace Models.PMF.Organs
                 slnToday = calcSLN(laiToday, nGreenToday);
 
                 var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
                 double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1004,6 +1029,7 @@ namespace Models.PMF.Organs
                 DltSenescedLaiN += senescenceLAI;
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                 DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+
                 return nProvided;
             }
             else
@@ -1127,7 +1153,7 @@ namespace Models.PMF.Organs
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
             // Check retranslocation
-            if (dryMatter.Retranslocation - StartLive.StructuralWt > BiomassToleranceValue)
+            if (MathUtilities.IsGreaterThan(dryMatter.Retranslocation, StartLive.StructuralWt))
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // allocate structural DM

@@ -351,7 +351,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnCommencing(object sender, EventArgs e)
         {
             RefreshPhases();
             Clear();

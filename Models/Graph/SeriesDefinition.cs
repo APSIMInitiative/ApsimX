@@ -23,13 +23,18 @@
         /// <summary>Series definition filter.</summary>
         private string scopeFilter;
 
+        /// <summary>User specified filter.</summary>
+        private string userFilter;
+
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
         /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
+        /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
         /// <param name="customTitle">The title to use for the definition.</param>
         public SeriesDefinition(Series series, 
                                 string whereClauseForInScopeData = null,
+                                string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
         {
@@ -69,6 +74,7 @@
                 Title += " (" + series.Checkpoint + ")";
 
             scopeFilter = whereClauseForInScopeData;
+            userFilter = filter;
         }
 
         /// <summary>Constructor</summary>
@@ -192,7 +198,7 @@
         public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
 
         /// <summary>Gets the error values</summary>
-        public IEnumerable Error { get; private set; }
+        public IEnumerable<double> Error { get; private set; }
 
         /// <summary>Add a clause to the filter.</summary>
         /// <param name="filter">The filter to add to.</param>
@@ -271,6 +277,9 @@
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
                     if (!filter.Contains("SimulationName IN"))
                         filter = AddToFilter(filter, scopeFilter);
+
+                    if (!string.IsNullOrEmpty(userFilter))
+                        filter = AddToFilter(filter, userFilter);
                 }
                 else
                     filter = AddToFilter(filter, scopeFilter);
@@ -285,11 +294,13 @@
                     fieldsToRead.Add(Y2FieldName);
 
                 // Add any error fields to the list of fields to read.
+                var fieldsToAdd = new List<string>();
                 foreach (var fieldName in fieldsToRead)
                 {
                     if (fieldsThatExist.Contains(fieldName + "Error"))
-                        fieldsToRead.Add(fieldName + "Error");
+                        fieldsToAdd.Add(fieldName + "Error");
                 }
+                fieldsToRead.AddRange(fieldsToAdd);
 
                 // Add any field names from the filter.
                 fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
@@ -452,12 +463,13 @@
         /// <param name="data">The table</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <returns>The column of data.</returns>
-        private IEnumerable GetErrorDataFromTable(DataTable data, string fieldName)
+        private IEnumerable<double> GetErrorDataFromTable(DataTable data, string fieldName)
         {
             string errorFieldName = fieldName + "Error";
             if (fieldName != null && data != null && data.Columns.Contains(errorFieldName))
             {
-                if (data.Columns[errorFieldName].DataType == typeof(double))
+                if (data.Columns[errorFieldName].DataType == typeof(float) ||
+                    data.Columns[errorFieldName].DataType == typeof(double))
                     return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
