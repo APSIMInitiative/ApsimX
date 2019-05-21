@@ -205,7 +205,8 @@ namespace Models.PMF
             {
                 double currentRetranslocatedN = leaf.DltRetranslocatedN; //-ve number
 
-                double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement);
+                bool forLeaf = iSupply == iSink;
+                double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement, forLeaf);
                 BAT.StructuralAllocation[iSink] += providedN;
 
                 double afterRetranslocatedN = leaf.DltRetranslocatedN;

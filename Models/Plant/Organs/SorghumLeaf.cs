@@ -284,13 +284,24 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Stress.</summary>
-        [Description("Nitrogen Stress")]
-        public double NitrogenStress
+        [Description("Nitrogen Photosynthesis Stress")]
+        public double NitrogenPhotoStress
         {
             get
             {
                 var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
                 return Math.Max(photoStress, 0.0);
+            }
+        }
+
+        /// <summary>Stress.</summary>
+        [Description("Nitrogen Phenology Stress")]
+        public double NitrogenPhenoStress
+        {
+            get
+            {
+                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+                return MathUtilities.Bound(phenoStress, 0.0, 1.0);
             }
         }
 
@@ -582,8 +593,8 @@ namespace Models.PMF.Organs
 
         private double calcLaiSenescenceWater()
         {
-            /* TODO : Direct translation sort of. needs work */
-            Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
+            //watSupply is calculated in SorghumArbitrator:StoreWaterVariablesForNitrogenUptake
+            //Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
             double dlt_dm_transp = PotentialBiomassTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
@@ -963,14 +974,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate the amount of N to retranslocate</summary>
-        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN)
+        public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             int leafIndex = 2;
 
             double laiToday = calcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
-            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] - DltRetranslocatedN;
+            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] + DltRetranslocatedN; //dltRetranslocation is -ve
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
@@ -982,7 +993,7 @@ namespace Models.PMF.Organs
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
                 double nProvided = Math.Min(dilutionN, requiredN / 2.0);
                 requiredN -= nProvided;
-                nGreenToday += nProvided; //jkb
+                nGreenToday -= nProvided; //jkb
                 DltRetranslocatedN -= nProvided;
                 if (requiredN <= 0.0001)
                     return nProvided;
@@ -1018,6 +1029,7 @@ namespace Models.PMF.Organs
                 DltSenescedLaiN += senescenceLAI;
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                 DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+
                 return nProvided;
             }
             else

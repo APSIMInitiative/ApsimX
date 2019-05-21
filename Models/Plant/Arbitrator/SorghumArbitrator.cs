@@ -156,23 +156,58 @@ namespace Models.PMF
             ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
             if (myZone != null)
             {
-
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
                 myZone.StartWater = new double[myZone.soil.Thickness.Length];
                 myZone.AvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
+                myZone.Supply = new double[myZone.soil.Thickness.Length];
 
-                for(int layer = 0; layer < myZone.soil.Thickness.Length; ++layer)
+                double[] kl = myZone.soil.KL(Plant.Name);
+
+                if (root.Depth != myZone.Depth)
+                {
+                    myZone.Depth += 0;
+                }
+                var currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+                for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
                     myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
+
+                    var proportion = root.rootProportionInLayer(layer, myZone);
+                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
+                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                myZone.AvailableSW[currentLayer] *= currentLayerProportion;
+                myZone.PotentialAvailableSW[currentLayer] *= currentLayerProportion;
+
+                var totalAvail = myZone.AvailableSW.Sum();
+                var totalAvailPot = myZone.PotentialAvailableSW.Sum();
+                var totalSupply = myZone.Supply.Sum();
+                WatSupply = totalSupply; 
+                //used for SWDef PhenologyStress table lookup
+                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,1.0);
+
+                //used for SWDef ExpansionStress table lookup
+                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
+
+                //used for SwDefPhoto Stress
+                PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
             }
         }
-        
+
+        ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table
+        public double SWAvailRatio { get; set; }
+
+        ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
+        public double SDRatio { get; set; }
+
+        ///Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
+        public double PhotoStress { get; set; }
+
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
         /// </summary>
