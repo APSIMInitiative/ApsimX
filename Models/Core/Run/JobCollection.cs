@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -79,8 +80,8 @@
             this.runSimulations = true;
             this.runPostSimulationTools = true;
             this.runTests = runTests;
+            Task.Run(() => { Initialise(); });
         }
-
 
         /// <summary>Name of file where the jobs came from.</summary>
         public string FileName { get; set; }
@@ -105,9 +106,7 @@
         public IRunnable GetNextJobToRun()
         {
             if (!initialised)
-                lock (this)
-                    if (!initialised)
-                        Initialise();
+                SpinWait.SpinUntil(() => initialised);
 
             Job jobToReturn = null;
             lock (this)
@@ -171,69 +170,64 @@
         /// <summary>Initialise the instance.</summary>
         private void Initialise()
         {
-            initialised = true;
             startTime = DateTime.Now;
 
-            if (relativeTo == null)
+            List<Exception> exceptions = null;
+            try
             {
-                if (!File.Exists(FileName))
-                    throw new Exception("Cannot find file: " + FileName);
-                List<Exception> exceptions;
-                try
+                if (relativeTo == null)
                 {
+
+                    if (!File.Exists(FileName))
+                        throw new Exception("Cannot find file: " + FileName);
                     relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
                 }
-                catch (Exception readException)
-                {
-                    exceptions = new List<Exception>() { readException };
-                }
-                Exception err = null;
-                if (exceptions != null && exceptions.Count > 0)
-                {
-                    ExceptionsThrown = new List<Exception>();
-                    ExceptionsThrown.AddRange(exceptions);
-                    err = exceptions[0];
 
-                    //JobHasCompleted?.Invoke(this, new JobHasCompletedArgs()
-                    //{
-                    //    Job = null,
-                    //    ElapsedTime = new TimeSpan(),
-                    //    ExceptionThrown = err
-                    //});
+                if (relativeTo != null)
+                {
+                    // Find the root model.
+                    rootModel = relativeTo;
+                    while (rootModel.Parent != null)
+                        rootModel = rootModel.Parent;
+
+                    if (rootModel is Simulations)
+                        FileName = (rootModel as Simulations).FileName;
+                    else if (rootModel is Simulation)
+                        FileName = (rootModel as Simulation).FileName;
+
+                    if (runSimulations)
+                        FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
+                    TotalNumberOfSimulations = pendingModels.Count;
+
+                    // Find a storage model.
+                    storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
+
+                    // If this simulation was not created from deserialisation then we need
+                    // to parent all child models correctly and call OnCreated for each model.
+                    bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
+                                                relativeTo.Children[0].Parent == relativeTo;
+                    if (!hasBeenDeserialised)
+                    {
+                        // Parent all models.
+                        Apsim.ParentAllChildren(relativeTo);
+
+                        // Call OnCreated in all models.
+                        Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
+                    }
                 }
             }
-            if (relativeTo != null)
+            catch (Exception readException)
             {
-                // Find the root model.
-                rootModel = relativeTo;
-                while (rootModel.Parent != null)
-                    rootModel = rootModel.Parent;
-
-                if (rootModel is Simulations)
-                    FileName = (rootModel as Simulations).FileName;
-                else if (rootModel is Simulation)
-                    FileName = (rootModel as Simulation).FileName;
-
-                if (runSimulations)
-                    FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
-                TotalNumberOfSimulations = pendingModels.Count;
-
-                // Find a storage model.
-                storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
-
-                // If this simulation was not created from deserialisation then we need
-                // to parent all child models correctly and call OnCreated for each model.
-                bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
-                                           relativeTo.Children[0].Parent == relativeTo;
-                if (!hasBeenDeserialised)
-                {
-                    // Parent all models.
-                    Apsim.ParentAllChildren(relativeTo);
-
-                    // Call OnCreated in all models.
-                    Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
-                }
+                exceptions = new List<Exception>() { readException };
             }
+            Exception err = null;
+            if (exceptions != null && exceptions.Count > 0)
+            {
+                ExceptionsThrown = new List<Exception>();
+                ExceptionsThrown.AddRange(exceptions);
+                err = exceptions[0];
+            }   
+            initialised = true;
         }
 
         /// <summary>Determine the list of jobs to run</summary>
@@ -244,13 +238,13 @@
             if (relativeTo is Simulation)
             {
                 if (simulationNamesToRun == null || simulationNamesToRun.Contains(relativeTo.Name))
-                    pendingModels.Add(new Job(new SimulationDescription(relativeTo as Simulation)));
+                    pendingModels.Add(new Job(new SimulationDescription(relativeTo as Simulation), rootModel as Simulations));
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
                     if (simulationNamesToRun == null || simulationNamesToRun.Contains(description.Name))
-                        pendingModels.Add(new Job(description));
+                        pendingModels.Add(new Job(description, rootModel as Simulations));
             }
             else if (relativeTo is Folder || relativeTo is Simulations)
             {
@@ -386,6 +380,7 @@
             private IRunnable runnableJob;
             private SimulationDescription descriptionOfSimulation;
             private DateTime startTime;
+            private Simulations simulations;
 
             /// <summary>Constructor</summary>
             /// <param name="job">The job that will be run.</param>
@@ -396,9 +391,11 @@
 
             /// <summary>Constructor</summary>
             /// <param name="description">A description of a simulation.</param>
-            public Job(SimulationDescription description)
+            /// <param name="rootSimulations">Top level simulations object.</param>
+            public Job(SimulationDescription description, Simulations rootSimulations)
             {
                 descriptionOfSimulation = description;
+                simulations = rootSimulations;
             }
 
             /// <summary>Convert the job to something that is runnable by a JobRunner.</summary>
@@ -409,7 +406,7 @@
             {
                 if (descriptionOfSimulation != null)
                 {
-                    Simulation simulationToRun = descriptionOfSimulation.ToSimulation();
+                    Simulation simulationToRun = descriptionOfSimulation.ToSimulation(simulations);
 
                     // Give the file name to the simulation.
                     simulationToRun.FileName = fileName;

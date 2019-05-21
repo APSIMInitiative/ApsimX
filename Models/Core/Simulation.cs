@@ -211,14 +211,14 @@ namespace Models.Core
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
             }
 
-            // Connect all events.
-            Events.ConnectEvents(this);
-
-            // Resolve all links
-            Links.Resolve(this, this);
-
             try
             {
+                // Connect all events.
+                Events.ConnectEvents(this);
+
+                // Resolve all links
+                Links.Resolve(this, this);
+
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
 
