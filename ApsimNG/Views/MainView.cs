@@ -197,7 +197,7 @@
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
 
             // Can't set font until widgets are initialised.
-            SetWidgetFont(MainWidget, Utility.Configuration.Settings.Font);
+            ChangeFont(Utility.Configuration.Settings.Font);
 
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
@@ -835,11 +835,20 @@
         public void ShowFontChooser()
         {
             fontDialog = new FontSelectionDialog("Select a font");
+
+            // Center the dialog on the main window.
             fontDialog.TransientFor = MainWidget as Window;
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
+
+            // Select the current font.
+            fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
+
+            // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
             fontDialog.ApplyButton.Clicked += OnChangeFont;
             fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+
+            // Show the dialog.
             fontDialog.ShowAll();
         }
 
@@ -854,7 +863,7 @@
         {
             Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
             Utility.Configuration.Settings.Font = newFont;
-            SetWidgetFont(MainWidget, newFont);
+            ChangeFont(newFont);
         }
 
         /// <summary>
@@ -972,6 +981,17 @@
         }
 
         /// <summary>
+        /// Change Apsim's default font, and apply the new font to all existing
+        /// widgets.
+        /// </summary>
+        /// <param name="font">The new default font.</param>
+        private void ChangeFont(Pango.FontDescription font)
+        {
+            SetWidgetFont(mainWidget, font);
+            Rc.ParseString("gtk-font-name = " + font.ToString());
+        }
+
+        /// <summary>
         /// Recursively applies a new FontDescription to all widgets
         /// </summary>
         /// <param name="widget"></param>
@@ -1004,7 +1024,7 @@
 
             // Iterate through all existing controls, setting the new base font
             if (mainWidget != null)
-                SetWidgetFont(mainWidget, baseFont);
+                ChangeFont(baseFont);
 
             // Reset the style machinery to apply the new base font to all
             // newly created Widgets.
