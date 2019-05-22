@@ -195,6 +195,10 @@
             listButtonView2.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
             listButtonView1.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
+
+            // Can't set font until widgets are initialised.
+            SetWidgetFont(MainWidget, Utility.Configuration.Settings.Font);
+
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
             {
@@ -831,9 +835,12 @@
         public void ShowFontChooser()
         {
             fontDialog = new FontSelectionDialog("Select a font");
+            fontDialog.TransientFor = MainWidget as Window;
+            fontDialog.WindowPosition = WindowPosition.CenterOnParent;
             fontDialog.OkButton.Clicked += OnChangeFont;
             fontDialog.ApplyButton.Clicked += OnChangeFont;
             fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+            fontDialog.ShowAll();
         }
 
         /// <summary>

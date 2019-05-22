@@ -458,9 +458,6 @@
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\MenuImages\Settings.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\notes.wav" />
   </ItemGroup>
   <ItemGroup>
@@ -737,6 +734,7 @@
     <EmbeddedResource Include="Resources\AgPastureRemoveBiomass.png" />
     <EmbeddedResource Include="Resources\AgPastureRootDistribution.png" />
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

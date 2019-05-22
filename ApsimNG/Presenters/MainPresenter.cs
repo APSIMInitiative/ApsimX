@@ -532,31 +532,39 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
-            if (!ProcessUtilities.CurrentOS.IsLinux)
-            {
-                startPage.AddButton(
-                                "Toggle Theme",
-                                new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
-                                OnToggleTheme);
-            }
-            startPage.AddButton(
-                                "Help",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
-                                        this.OnHelp);
+
 #if DEBUG
             startPage.AddButton(
                                 "Convert XML File",
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif
-            startPage.AddButtonWithMenu("Settings",
+
+            // Settings menu
+            startPage.AddButtonWithMenu(
+                                        "Settings",
                                         "settings-menu",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.svg"));
-            startPage.AddButtonToMenu("settings-menu",
-                                      "Change Font",
-                                      new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
-                                      this.OnChooseFont);
-            
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"));
+
+            startPage.AddButtonToMenu(
+                                        "Settings",
+                                        "Change Font",
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                        this.OnChooseFont);
+
+            if (!ProcessUtilities.CurrentOS.IsLinux)
+            {
+                startPage.AddButtonToMenu(
+                                        "Settings",
+                                        "Toggle Theme",
+                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                        OnToggleTheme);
+            }
+
+            startPage.AddButton(
+                            "Help",
+                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                            this.OnHelp);
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
 

@@ -174,6 +174,20 @@ namespace UserInterface.Views
             return button;
         }
 
+        private void AddButton(ToolButton button)
+        {
+            if (ButtonsAreToolbar)
+            {
+                if (btnToolbar == null)
+                {
+                    btnToolbar = new Toolbar();
+                    btnToolbar.ToolbarStyle = ToolbarStyle.Both;
+                    buttonPanel.PackStart(btnToolbar, true, true, 0);
+                }
+                btnToolbar.Add(button);
+            }
+        }
+
         /// <summary>Add a button to the button bar</summary>
         /// <param name="text">Text for button</param>
         /// <param name="image">Image for button</param>
@@ -188,8 +202,7 @@ namespace UserInterface.Views
                     btnToolbar.ToolbarStyle = ToolbarStyle.Both;
                     buttonPanel.PackStart(btnToolbar, true, true, 0);
                 }
-                ToolButton button = CreateButton(text, image, handler);
-                btnToolbar.Add(button);
+                AddButton(CreateButton(text, image, handler));
             }
             else
             {
@@ -218,13 +231,19 @@ namespace UserInterface.Views
         /// <param name="handler"></param>
         public void AddButtonWithMenu(string text, string menuId, Image image)
         {
-            AddButton(text, image, null);
             if (!ButtonsAreToolbar)
                 throw new NotImplementedException();
 
-            ToolButton button = btnToolbar.Children.OfType<ToolButton>().Last();
-            Menu menu = new Menu();
-            button.SetProxyMenuItem(menuId, menu);
+            MenuToolButton button = new MenuToolButton(image, null);
+            button.Homogeneous = false;
+            Label btnLabel = new Label(text);
+            btnLabel.LineWrap = true;
+            btnLabel.LineWrapMode = Pango.WrapMode.Word;
+            btnLabel.Justify = Justification.Center;
+            btnLabel.Realized += BtnLabel_Realized;
+            button.LabelWidget = btnLabel;
+
+            AddButton(button);
         }
 
         /// <summary>
@@ -234,15 +253,41 @@ namespace UserInterface.Views
         /// <param name="text">Text on the button.</param>
         /// <param name="image">Image on the button.</param>
         /// <param name="handler">Handler to call when button is clicked.</param>
-        public void AddButtonToMenu(string menuId, string text, Image image, EventHandler handler)
+        public void AddButtonToMenu(string parentButtonText, string text, Image image, EventHandler handler)
         {
             if (!ButtonsAreToolbar)
                 throw new NotImplementedException();
 
-            string[] buttons = btnToolbar.AllChildren.OfType<ToolButton>().Select(b => b.Label).ToArray();
-            ToolButton toplevel = btnToolbar.AllChildren.OfType<ToolButton>().FirstOrDefault(b => b.Label == menuId);
-            ToolButton menuItem = CreateButton(text, image, handler);
-            toplevel.SetProxyMenuItem("asdf", menuItem);
+            MenuToolButton toplevel = btnToolbar.AllChildren.OfType<MenuToolButton>().FirstOrDefault(b => (b.LabelWidget as Label).Text == parentButtonText);
+            if (toplevel.Menu as Menu == null)
+                toplevel.Menu = new Menu();
+            Menu menu = toplevel.Menu as Menu;
+
+            //ToolButton menuItem = CreateButton(text, image, handler);
+            ImageMenuItem menuItem = new ImageMenuItem(text);
+            menuItem.Image = image;
+            menuItem.Activated += handler;
+            menu.Append(menuItem);
+            toplevel.ShowMenu += OnShowMenu;
+            //toplevel.RebuildMenu();
+        }
+
+        private void OnShowMenu(object sender, EventArgs e)
+        {
+            try
+            {
+                MenuToolButton toplevel = sender as MenuToolButton;
+                Menu menu = toplevel.Menu as Menu;
+                if (toplevel == null || menu == null)
+                    return;
+
+                foreach (MenuItem item in menu.AllChildren.OfType<MenuItem>())
+                    item.ShowAll();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
