@@ -1472,6 +1472,34 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.02,
+                      "Units": "g/m^2/d",
+                      "Name": "FixationCoefficiency",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.Value()",
+                      "Name": "VariableReference",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "FixationRate2",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.5,
                       "Units": "g/m^2/d",
                       "Name": "MaximumFixationRate",
