@@ -7,6 +7,7 @@ namespace UserInterface.Views
 {
     using System;
     using System.Linq;
+    using Classes;
     using Gtk;
 
     /// <summary>An interface for a list with a button bar</summary>
@@ -30,14 +31,13 @@ namespace UserInterface.Views
         /// Adds a button with a submenu.
         /// </summary>
         /// <param name="text">Text for button.</param>
-        /// <param name="menuId">ID of the submenu.</param>
         /// <param name="image">Image for button.</param>
-        void AddButtonWithMenu(string text, string menuId, Image image);
+        void AddButtonWithMenu(string text, Image image);
 
         /// <summary>
         /// Adds a button to a sub-menu.
         /// </summary>
-        /// <param name="menuId">ID of the sub-menu.</param>
+        /// <param name="menuId">Text on the menu button.</param>
         /// <param name="text">Text on the button.</param>
         /// <param name="image">Image on the button.</param>
         /// <param name="handler">Handler to call when button is clicked.</param>
@@ -159,9 +159,10 @@ namespace UserInterface.Views
         /// <param name="text">Text for button</param>
         /// <param name="image">Image for button</param>
         /// <param name="handler">Handler to call when user clicks on button</param>
-        private ToolButton CreateButton(string text, Image image, EventHandler handler)
+        /// <param name="withDropDown">Should the button have a drop-down arrow for a sub-menu?</param>
+        private ToolButton CreateButton(string text, Image image, EventHandler handler, bool withDropDown)
         {
-            ToolButton button = new ToolButton(image, null);
+            ToolButton button = withDropDown ? new CustomMenuToolButton(image, null) : new ToolButton(image, null);
             button.Homogeneous = false;
             Label btnLabel = new Label(text);
 
@@ -208,7 +209,7 @@ namespace UserInterface.Views
                     btnToolbar.ToolbarStyle = ToolbarStyle.Both;
                     buttonPanel.PackStart(btnToolbar, true, true, 0);
                 }
-                AddButton(CreateButton(text, image, handler));
+                AddButton(CreateButton(text, image, handler, false));
             }
             else
             {
@@ -235,25 +236,16 @@ namespace UserInterface.Views
         /// <param name="menuId"></param>
         /// <param name="image"></param>
         /// <param name="handler"></param>
-        public void AddButtonWithMenu(string text, string menuId, Image image)
+        public void AddButtonWithMenu(string text, Image image)
         {
             if (!ButtonsAreToolbar)
                 throw new NotImplementedException();
 
-            MenuToolButton button = new MenuToolButton(image, null);
-            button.Homogeneous = false;
-            Label btnLabel = new Label(text);
-            btnLabel.LineWrap = true;
-            btnLabel.LineWrapMode = Pango.WrapMode.Word;
-            btnLabel.Justify = Justification.Center;
-            btnLabel.Realized += BtnLabel_Realized;
-            button.LabelWidget = btnLabel;
-
-            AddButton(button);
+            AddButton(CreateButton(text, image, null, true));
         }
 
         /// <summary>
-        /// Adds a button to a sub-menu.
+        /// Adds a menu item button to a menu button.
         /// </summary>
         /// <param name="menuId">ID of the sub-menu.</param>
         /// <param name="text">Text on the button.</param>
@@ -264,51 +256,17 @@ namespace UserInterface.Views
             if (!ButtonsAreToolbar)
                 throw new NotImplementedException();
 
+            // Find the top-level menu button (the button which, when clicked, causes the menu to appear).
             MenuToolButton toplevel = btnToolbar.AllChildren.OfType<MenuToolButton>().FirstOrDefault(b => (b.LabelWidget as Label).Text == parentButtonText);
             if (toplevel.Menu as Menu == null)
                 toplevel.Menu = new Menu();
             Menu menu = toplevel.Menu as Menu;
 
-            //ToolButton menuItem = CreateButton(text, image, handler);
             ImageMenuItem menuItem = new ImageMenuItem(text);
             menuItem.Image = image;
             menuItem.Activated += handler;
             menu.Append(menuItem);
-            toplevel.ShowMenu += OnShowMenu;
-            //toplevel.RebuildMenu();
-        }
-
-        private void OnShowMenu(object sender, EventArgs e)
-        {
-            try
-            {
-                MenuToolButton toplevel = sender as MenuToolButton;
-                Menu menu = toplevel.Menu as Menu;
-                if (toplevel == null || menu == null)
-                    return;
-
-                foreach (MenuItem item in menu.AllChildren.OfType<MenuItem>())
-                    item.ShowAll();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Finds a button's submenu with a given ID.
-        /// </summary>
-        /// <param name="menuId">ID of the menu.</param>
-        private Widget FindMenu(string menuId)
-        {
-            foreach (ToolButton button in btnToolbar.Children.OfType<ToolButton>())
-            {
-                Widget menu = button.GetProxyMenuItem(menuId);
-                if (menu != null)
-                    return menu;
-            }
-            return null;
+            menuItem.ShowAll();
         }
 
         /// <summary>

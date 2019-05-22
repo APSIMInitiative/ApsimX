@@ -543,7 +543,6 @@
             // Settings menu
             startPage.AddButtonWithMenu(
                                         "Settings",
-                                        "settings-menu",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"));
 
             startPage.AddButtonToMenu(

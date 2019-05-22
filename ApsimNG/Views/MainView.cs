@@ -992,7 +992,7 @@
         private void ChangeFont(Pango.FontDescription font)
         {
             SetWidgetFont(mainWidget, font);
-            Rc.ParseString("gtk-font-name = " + font.ToString());
+            Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
 
         /// <summary>
@@ -1021,18 +1021,18 @@
         /// <param name="newSize">New base font size, in points</param>
         private void SetFontSize(double newSize)
         {
-            //newSize = Math.Min(40.0, Math.Max(4.0, newSize));
-            //// Convert the new size from points to Pango units
-            //int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
-            //baseFont.Size = newVal;
-            //
-            //// Iterate through all existing controls, setting the new base font
-            //if (mainWidget != null)
-            //    ChangeFont(baseFont);
-            //
-            //// Reset the style machinery to apply the new base font to all
-            //// newly created Widgets.
-            //Rc.ReparseAllForSettings(Settings.Default, true);
+            newSize = Math.Min(40.0, Math.Max(4.0, newSize));
+            // Convert the new size from points to Pango units
+            int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
+            baseFont.Size = newVal;
+
+            // Iterate through all existing controls, setting the new base font
+            if (mainWidget != null)
+                ChangeFont(baseFont);
+
+            // Reset the style machinery to apply the new base font to all
+            // newly created Widgets.
+            Rc.ReparseAllForSettings(Settings.Default, true);
         }
 
         /// <summary>
