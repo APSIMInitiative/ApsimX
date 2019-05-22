@@ -66,11 +66,6 @@ namespace UserInterface.Interfaces
         int StatusPanelHeight { get; set; }
 
         /// <summary>
-        ///  Default font size, in points.
-        /// </summary>
-        double FontSize { get; set; }
-
-        /// <summary>
         /// Used to modify the cursor. If set to true, the waiting cursor will be displayed.
         /// If set to false, the default cursor will be used.
         /// </summary>
