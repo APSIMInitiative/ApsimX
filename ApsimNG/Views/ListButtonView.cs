@@ -164,6 +164,12 @@ namespace UserInterface.Views
             ToolButton button = new ToolButton(image, null);
             button.Homogeneous = false;
             Label btnLabel = new Label(text);
+
+            // Unsure why, but sometimes the label's font is incorrect
+            // (inconsistent with default font).
+            Pango.FontDescription font = Utility.Configuration.Settings.Font;
+            if (font != null && font != btnLabel.Style.FontDescription)
+                btnLabel.ModifyFont(Utility.Configuration.Settings.Font);
             btnLabel.LineWrap = true;
             btnLabel.LineWrapMode = Pango.WrapMode.Word;
             btnLabel.Justify = Justification.Center;

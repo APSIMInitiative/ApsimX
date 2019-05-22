@@ -1101,7 +1101,14 @@
         /// <param name="args">Event arguments.</param>
         private void OnChooseFont(object sender, EventArgs args)
         {
-            view.ShowFontChooser();
+            try
+            {
+                view.ShowFontChooser();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

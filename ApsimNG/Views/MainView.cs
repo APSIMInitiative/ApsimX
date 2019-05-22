@@ -197,7 +197,8 @@
             listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
 
             // Can't set font until widgets are initialised.
-            ChangeFont(Utility.Configuration.Settings.Font);
+            if (Utility.Configuration.Settings.Font != null)
+                ChangeFont(Utility.Configuration.Settings.Font);
 
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
@@ -841,10 +842,12 @@
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
 
             // Select the current font.
-            fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
+            if (Utility.Configuration.Settings.Font != null)
+                fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
 
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
+            fontDialog.OkButton.Clicked += OnDestroyFontDialog;
             fontDialog.ApplyButton.Clicked += OnChangeFont;
             fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
 
@@ -878,6 +881,7 @@
                 return;
             
             fontDialog.OkButton.Clicked -= OnChangeFont;
+            fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
             fontDialog.ApplyButton.Clicked -= OnChangeFont;
             fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
             fontDialog.Destroy();
@@ -1017,18 +1021,18 @@
         /// <param name="newSize">New base font size, in points</param>
         private void SetFontSize(double newSize)
         {
-            newSize = Math.Min(40.0, Math.Max(4.0, newSize));
-            // Convert the new size from points to Pango units
-            int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
-            baseFont.Size = newVal;
-
-            // Iterate through all existing controls, setting the new base font
-            if (mainWidget != null)
-                ChangeFont(baseFont);
-
-            // Reset the style machinery to apply the new base font to all
-            // newly created Widgets.
-            Rc.ReparseAllForSettings(Settings.Default, true);
+            //newSize = Math.Min(40.0, Math.Max(4.0, newSize));
+            //// Convert the new size from points to Pango units
+            //int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
+            //baseFont.Size = newVal;
+            //
+            //// Iterate through all existing controls, setting the new base font
+            //if (mainWidget != null)
+            //    ChangeFont(baseFont);
+            //
+            //// Reset the style machinery to apply the new base font to all
+            //// newly created Widgets.
+            //Rc.ReparseAllForSettings(Settings.Default, true);
         }
 
         /// <summary>
