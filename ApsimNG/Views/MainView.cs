@@ -902,7 +902,8 @@
         private void ChangeFont(Pango.FontDescription font)
         {
             SetWidgetFont(mainWidget, font);
-            Rc.ParseString($"gtk-font-name = \"{font}\"");
+            Settings.Default.SetStringProperty($"gtk-font-name", font.ToString(), "");
+            //Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
 
         /// <summary>
