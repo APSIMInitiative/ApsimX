@@ -16,7 +16,7 @@
 
         /// <summary>Constructor</summary>
         /// <param name="relativeTo">The model this events instance is relative to</param>
-        internal Events(IModel relativeTo)
+        public Events(IModel relativeTo)
         {
             this.relativeTo = relativeTo;
         }
@@ -114,7 +114,7 @@
         /// </summary>
         /// <param name="eventName">The name of the event</param>
         /// <param name="args">The event arguments. Can be null</param>
-        internal void Publish(string eventName, object[] args)
+        public void Publish(string eventName, object[] args)
         {
             List<Subscriber> subscribers = Subscriber.FindAll(eventName, relativeTo, scope);
 
