@@ -69,6 +69,11 @@ namespace UserInterface.Views
         /// <value></value>
         System.Drawing.Color BackgroundColour { get; set; }
 
+        /// <summary>
+        /// Sets the font of the document.
+        /// </summary>
+        Pango.FontDescription Font { get; set; }
+
         void ExecJavaScript(string command, object[] args);
 
         void ExecJavaScript(string command);
@@ -207,6 +212,21 @@ namespace UserInterface.Views
                 BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
                 ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
             }
+            /*
+            string script = "var sheet = window.document.styleSheets[0]; ";
+            Pango.FontDescription font = HoldingWidget.Style.FontDescription;
+            //if (browser is TWWebBrowserIE)
+            //{
+                // IE (naturally) does its own thing here.
+                script += $"sheet.addRule('*', 'color: red;', -1);";
+            //}
+            //else
+            //    script += "sheet.insertRule('* { color: red; }', sheet.cssRules.length);";
+            ExecJavaScript(script);
+            */
+            //Pango.FontDescription font = HoldingWidget.Style.FontDescription;
+            //Browser.Document.Body.Style = $"font-family: {font.Family}; font-size: {1.5 * font.Size / Pango.Scale.PangoScale}px;";
+            //ExecJavaScript($"document.body.style.fontFamily = \"{font.Family}\";");
         }
 
         public System.Drawing.Color BackgroundColour
@@ -230,6 +250,23 @@ namespace UserInterface.Views
             set
             {
                 Browser.Document.ForeColor = value;
+            }
+        }
+
+        public Pango.FontDescription Font
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                if (Browser == null || Browser.Document == null || Browser.Document.Body == null)
+                    return;
+
+                if (Browser.Document.Body.Style == null)
+                    Browser.Document.Body.Style = "";
+                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {1.5 * value.Size / Pango.Scale.PangoScale}px;";
             }
         }
 
@@ -387,6 +424,10 @@ namespace UserInterface.Views
                 Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.backgroundColor = \"{colour}\";");
             }
         }
+
+        public Pango.FontDescription Font { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        System.Drawing.Color IBrowserWidget.ForegroundColour { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        System.Drawing.Color IBrowserWidget.BackgroundColour { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// The find form
@@ -685,6 +726,8 @@ namespace UserInterface.Views
                 Browser.ExecuteScript($"document.body.style.color = \"{colour}\";");
             }
         }
+
+        public Pango.FontDescription Font { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 
     /// <summary>
@@ -950,16 +993,7 @@ namespace UserInterface.Views
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
             browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
 
-            string script = "var sheet = window.document.styleSheets[0]; ";
-            Pango.FontDescription font = MainWidget.Style.FontDescription;
-            if (browser is TWWebBrowserIE)
-            {
-                // IE (naturally) does its own thing here.
-                script += $"sheet.addRule('*', 'color: red;', -1);";
-            }
-            else
-                script += "sheet.insertRule('* { color: red; }', sheet.cssRules.length);";
-            browser.ExecJavaScript(script);
+            browser.Font = MainWidget.Style.FontDescription;
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 
