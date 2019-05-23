@@ -71,6 +71,8 @@ namespace UserInterface.Views
 
         void ExecJavaScript(string command, object[] args);
 
+        void ExecJavaScript(string command);
+
         bool Search(string forString, bool forward, bool caseSensitive, bool wrap);
     }
 
@@ -255,6 +257,11 @@ namespace UserInterface.Views
         public void ExecJavaScript(string command, object[] args)
         {
             Browser.Document.InvokeScript(command, args);
+        }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.Document.InvokeScript(script);
         }
 
         // Flag: Has Dispose already been called? 
@@ -470,6 +477,11 @@ namespace UserInterface.Views
             Browser.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
         }
 
+        public void ExecJavaScript(string script)
+        {
+            Browser.StringByEvaluatingJavaScriptFromString(script);
+        }
+
         // Flag: Has Dispose already been called? 
         bool disposed = false;
 
@@ -585,6 +597,12 @@ namespace UserInterface.Views
             }
             Browser.ExecuteScript(command + "(" + argString + ")");
         }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.ExecuteScript(script);
+        }
+
         // Flag: Has Dispose already been called? 
         bool disposed = false;
 
@@ -931,6 +949,17 @@ namespace UserInterface.Views
 
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
             browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+
+            string script = "var sheet = window.document.styleSheets[0]; ";
+            Pango.FontDescription font = MainWidget.Style.FontDescription;
+            if (browser is TWWebBrowserIE)
+            {
+                // IE (naturally) does its own thing here.
+                script += $"sheet.addRule('*', 'color: red;', -1);";
+            }
+            else
+                script += "sheet.insertRule('* { color: red; }', sheet.cssRules.length);";
+            browser.ExecJavaScript(script);
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 
