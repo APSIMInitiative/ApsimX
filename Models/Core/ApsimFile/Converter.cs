@@ -232,7 +232,11 @@
         {
             foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
             {
-                double rootWt = Convert.ToDouble(SOM["RootWt"]);
+                double rootWt;
+                if (SOM["RootWt"] is JArray)
+                    rootWt = Convert.ToDouble(SOM["RootWt"][0]); // This can happen when importing old APSIM file.
+                else
+                    rootWt = Convert.ToDouble(SOM["RootWt"]);
                 SOM.Remove("RootWt");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 
@@ -447,7 +451,11 @@
         {
             foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
             {
-                double soilcnr = Convert.ToDouble(SOM["SoilCN"]);
+                double soilcnr;
+                if (SOM["SoilCN"] is JArray)
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"][0]); // This can happen when importing old APSIM file.
+                else
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"]);
                 SOM.Remove("SoilCN");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 
