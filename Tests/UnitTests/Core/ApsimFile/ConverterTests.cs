@@ -349,5 +349,6 @@
                 Assert.AreEqual(writer.ToString(), expectedXml);
             }
         }
+
     }
 }
