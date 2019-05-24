@@ -166,21 +166,31 @@
             internal static List<Subscriber> FindAll(string name, IModel relativeTo, ScopingRules scope)
             {
                 List<Subscriber> subscribers = new List<Subscriber>();
+                string destModel = "";
+                string eventName = name;
+                if (name.Contains("."))
+                {
+                    eventName = name.Substring(name.LastIndexOf(".") + 1);
+                    Model component = Apsim.Get(relativeTo, name.Substring(0, name.LastIndexOf("."))) as Model;
+                    destModel = component.Name;
+                }
                 foreach (IModel modelNode in scope.FindAll(relativeTo as IModel))
                 {
-                    foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    if (destModel == "" || modelNode.Name == destModel) //FIXME : what's the go on upper/lower case?
                     {
-                        EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
-                        if (subscriberAttribute != null && subscriberAttribute.ToString() == name)
-                            subscribers.Add(new Subscriber()
-                            {
-                                Name = subscriberAttribute.ToString(),
-                                methodInfo = method,
-                                Model = modelNode
-                            });
+                        foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                        {
+                            EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                            if (subscriberAttribute != null && subscriberAttribute.ToString() == eventName)
+                                subscribers.Add(new Subscriber()
+                                {
+                                    Name = subscriberAttribute.ToString(),
+                                    methodInfo = method,
+                                    Model = modelNode
+                                });
+                        }
                     }
                 }
-
                 return subscribers;
             }
 

@@ -27,5 +27,7 @@ namespace Models.Core
         /// <summary>Connect all events in the specified simulation.</summary>
         void DisconnectEvents();
 
+        /// <summary>Publish an event.</summary>
+        void Publish(string eventName, object[] args);
     }
 }
