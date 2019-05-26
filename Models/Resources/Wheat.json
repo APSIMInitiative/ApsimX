@@ -4291,7 +4291,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.5,
+                  "FixedValue": 0.45,
                   "Units": null,
                   "Name": "VegetativePhase",
                   "Children": [],
