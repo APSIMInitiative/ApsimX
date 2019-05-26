@@ -27,5 +27,9 @@ namespace UnitTests.Core
         public void Unsubscribe(string eventName, EventHandler handler)
         {
         }
+
+        public void Publish(string eventName, object [] args)
+        {
+        }
     }
 }
