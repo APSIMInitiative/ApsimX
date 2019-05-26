@@ -426,8 +426,6 @@ namespace UserInterface.Views
         }
 
         public Pango.FontDescription Font { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        System.Drawing.Color IBrowserWidget.ForegroundColour { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        System.Drawing.Color IBrowserWidget.BackgroundColour { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// The find form
