@@ -66,11 +66,6 @@ namespace UserInterface.Interfaces
         int StatusPanelHeight { get; set; }
 
         /// <summary>
-        ///  Default font size, in points.
-        /// </summary>
-        double FontSize { get; set; }
-
-        /// <summary>
         /// Used to modify the cursor. If set to true, the waiting cursor will be displayed.
         /// If set to false, the default cursor will be used.
         /// </summary>
@@ -187,6 +182,11 @@ namespace UserInterface.Interfaces
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         void ToggleTheme(object sender, EventArgs args);
+
+        /// <summary>
+        /// Shows the font selection dialog.
+        /// </summary>
+        void ShowFontChooser();
 
         /// <summary>
         /// Invoked when application tries to close

@@ -92,6 +92,12 @@ namespace Utility
         /// </summary>
         public double BaseFontSize { get; set; } = 12.5;
 
+        /// <summary>
+        /// Stores the user's preferred font.
+        /// </summary>
+        /// <value></value>
+        public Pango.FontDescription Font { get; set; }
+
         /// <summary>Add a filename to the list.</summary>
         /// <param name="filename">File path</param>
         public void AddMruFile(string filename)
