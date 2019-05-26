@@ -187,7 +187,7 @@
                                  bool distinct = false)
         {
             if (!Connection.TableExists(tableName))
-                throw new Exception($"Error: no such table '{tableName}'");
+                return null;
 
             var fieldNamesInTable = Connection.GetColumnNames(tableName);
 
