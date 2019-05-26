@@ -393,15 +393,11 @@ namespace UserInterface.Commands
                                      System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
+            graph.ForegroundColour = OxyPlot.OxyColors.Black;
+            graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.ForegroundColour = OxyPlot.OxyColors.Black;
-            graph.BackColor = OxyPlot.OxyColors.White;
-            /*
-            graph.ForegroundColour = Configuration.Settings.DarkTheme ? OxyPlot.OxyColors.White : OxyPlot.OxyColors.Black;
-            graph.BackColor = Configuration.Settings.DarkTheme ? OxyPlot.OxyColors.Black : OxyPlot.OxyColors.White;
-            */
             graph.FontSize = 10;
             graph.Refresh();
 
@@ -676,7 +672,7 @@ namespace UserInterface.Commands
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { null }, null, null) as ViewBase;
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
@@ -684,13 +680,13 @@ namespace UserInterface.Commands
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin;
+                            Gtk.Window popupWin = null;
                             if (view is MapView)
                             {
-                                popupWin = (view as MapView).GetPopupWin();
-                                popupWin.SetSizeRequest(515, 500);
+                                popupWin = (view as MapView)?.GetPopupWin();
+                                popupWin?.SetSizeRequest(515, 500);
                             }
-                            else
+                            if (popupWin == null)
                             {
                                 popupWin = new Gtk.Window(Gtk.WindowType.Popup);
                                 popupWin.SetSizeRequest(800, 800);

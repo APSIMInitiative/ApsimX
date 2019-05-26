@@ -3965,7 +3965,7 @@
                   "StructuralDMAllocation": 0.0,
                   "MetabolicDMAllocation": 0.0,
                   "Rank": 1,
-                  "Area": 224.0,
+                  "Area": 50.0,
                   "MaintenanceRespiration": 0.0,
                   "Name": "InitialLeaf1",
                   "Children": [],
@@ -3999,7 +3999,7 @@
                   "StructuralDMAllocation": 0.0,
                   "MetabolicDMAllocation": 0.0,
                   "Rank": 2,
-                  "Area": 224.0,
+                  "Area": 50.0,
                   "MaintenanceRespiration": 0.0,
                   "Name": "InitialLeaf2",
                   "Children": [],
@@ -4033,7 +4033,7 @@
                   "StructuralDMAllocation": 0.0,
                   "MetabolicDMAllocation": 0.0,
                   "Rank": 3,
-                  "Area": 224.0,
+                  "Area": 50.0,
                   "MaintenanceRespiration": 0.0,
                   "Name": "InitialLeaf3",
                   "Children": [],
@@ -4113,6 +4113,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             1.0,
+                            3.0,
                             7.0,
                             10.0,
                             14.0,
@@ -4121,6 +4122,7 @@
                             40.0
                           ],
                           "Y": [
+                            50.0,
                             50.0,
                             350.0,
                             500.0,
