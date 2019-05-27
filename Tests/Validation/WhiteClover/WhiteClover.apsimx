@@ -3331,7 +3331,6 @@
                           "DaysAfterEnding": 0,
                           "ResourceName": "WhiteClover",
                           "Name": "WhiteClover",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22854,7 +22853,6 @@
                           "DaysAfterEnding": 0,
                           "ResourceName": "WhiteClover",
                           "Name": "WhiteClover",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
