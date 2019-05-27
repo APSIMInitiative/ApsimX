@@ -172,11 +172,11 @@
                 {
                     eventName = name.Substring(name.LastIndexOf(".") + 1);
                     Model component = Apsim.Get(relativeTo, name.Substring(0, name.LastIndexOf("."))) as Model;
-                    destModel = component.Name;
+                    destModel = Apsim.FullPath(component);
                 }
                 foreach (IModel modelNode in scope.FindAll(relativeTo as IModel))
                 {
-                    if (destModel == "" || modelNode.Name == destModel) //FIXME : what's the go on upper/lower case?
+                    if (destModel == "" || Apsim.FullPath(modelNode) == destModel) 
                     {
                         foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
                         {
