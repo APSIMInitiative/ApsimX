@@ -549,7 +549,7 @@ namespace UserInterface.Presenters
             // Populate filter textbox.
             this.seriesView.Filter.Value = series.Filter;
 
-            this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+            this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
