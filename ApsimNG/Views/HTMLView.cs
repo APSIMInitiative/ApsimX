@@ -425,9 +425,15 @@ namespace UserInterface.Views
             }
         }
 
-        public Pango.FontDescription Font { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        System.Drawing.Color IBrowserWidget.ForegroundColour { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        System.Drawing.Color IBrowserWidget.BackgroundColour { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Pango.FontDescription Font
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.fontFamily = \"{value.Family}\";");
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.fontSize = {1.5 * value.Size / Pango.Scale.PangoScale}");
+            }
+        }
 
         /// <summary>
         /// The find form
