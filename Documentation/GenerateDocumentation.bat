@@ -44,7 +44,7 @@ for /r %1 %%f in (*.apsimx) do (
 	set "FileToDocument=%%f"
 	echo Generating documentation for %%~nxf
 	echo %~dp0
-	"%bin%\ApsimNG.exe" "%documentation%\DocumentFile.cs"
+	"%apsimx%\Bin\ApsimNG.exe" "%documentation%\DocumentFile.cs"
 	if errorlevel 1 goto error
 
 	:: The script will always output .pdfs into %documentation%\PDF.
