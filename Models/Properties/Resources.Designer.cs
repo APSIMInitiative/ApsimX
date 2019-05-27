@@ -200,7 +200,7 @@ namespace Models.Properties {
         ///  &quot;Children&quot;: [
         ///    {
         ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///      &quot;CropType&quot;: &quot;Oats&quot;,
+        ///      &quot;CropType&quot;: &quot;Wheat&quot;,
         ///      &quot;IsEnding&quot;: false,
         ///      &quot;DaysAfterEnding&quot;: 0,
         ///      &quot;ResourceName&quot;: null,
@@ -419,33 +419,6 @@ namespace Models.Properties {
         internal static string Wheat {
             get {
                 return ResourceManager.GetString("Wheat", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
-        ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
-        ///  &quot;Name&quot;: &quot;Simulations&quot;,
-        ///  &quot;Children&quot;: [
-        ///    {
-        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///      &quot;CropType&quot;: &quot;WhiteClover&quot;,
-        ///      &quot;IsEnding&quot;: false,
-        ///      &quot;DaysAfterEnding&quot;: 0,
-        ///      &quot;ResourceName&quot;: null,
-        ///      &quot;Name&quot;: &quot;WhiteClover&quot;,
-        ///      &quot;Children&quot;: [
-        ///        {
-        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///          &quot;Text&quot;: &quot;\n# The APSIM WhiteClover Model\n \n White clover (*Trifolium repens*) is a herbaceous perennial herb [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string WhiteClover
-        {
-            get
-            {
-                return ResourceManager.GetString("WhiteClover", resourceCulture);
             }
         }
     }
