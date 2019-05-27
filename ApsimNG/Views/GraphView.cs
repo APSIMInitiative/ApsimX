@@ -458,7 +458,8 @@ namespace UserInterface.Views
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
-
+            if (showOnLegend)
+                series.Title = title;
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
