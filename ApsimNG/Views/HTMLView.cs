@@ -212,21 +212,6 @@ namespace UserInterface.Views
                 BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
                 ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
             }
-            /*
-            string script = "var sheet = window.document.styleSheets[0]; ";
-            Pango.FontDescription font = HoldingWidget.Style.FontDescription;
-            //if (browser is TWWebBrowserIE)
-            //{
-                // IE (naturally) does its own thing here.
-                script += $"sheet.addRule('*', 'color: red;', -1);";
-            //}
-            //else
-            //    script += "sheet.insertRule('* { color: red; }', sheet.cssRules.length);";
-            ExecJavaScript(script);
-            */
-            //Pango.FontDescription font = HoldingWidget.Style.FontDescription;
-            //Browser.Document.Body.Style = $"font-family: {font.Family}; font-size: {1.5 * font.Size / Pango.Scale.PangoScale}px;";
-            //ExecJavaScript($"document.body.style.fontFamily = \"{font.Family}\";");
         }
 
         public System.Drawing.Color BackgroundColour
