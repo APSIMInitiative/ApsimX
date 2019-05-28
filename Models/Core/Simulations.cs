@@ -9,7 +9,6 @@ using Models.Factorial;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Core.Interfaces;
-using Models.Core.Runners;
 using Models.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -266,7 +265,7 @@ namespace Models.Core
                     // Clone the simulation
                     SimulationDescription simDescription = new SimulationDescription(simulation);
 
-                    Simulation clonedSimulation = simDescription.ToSimulation(this);
+                    Simulation clonedSimulation = simDescription.ToSimulation();
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

@@ -1,7 +1,6 @@
 ﻿using System;
 using Models;
 using Models.Core;
-using Models.Core.Runners;
 using APSIM.Shared.Utilities;
 using NUnit.Framework;
 namespace UnitTests
@@ -10,6 +9,7 @@ namespace UnitTests
     using Models.Core.ApsimFile;
     using Models.Storage;
     using System.IO;
+    using APSIM.Shared.JobRunning;
 
     /// <summary>
     /// Unit Tests for manager scripts.
@@ -71,9 +71,9 @@ namespace UnitTests
             Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
         }
 
-        private void EnsureJobRanRed(object sender, JobCompleteArgs args)
+        private void EnsureJobRanRed(object sender, JobCompleteArguments args)
         {
-            Assert.NotNull(args.exceptionThrowByJob, "Simulation with a faulty manager script has run green.");
+            Assert.NotNull(args.ExceptionThrowByJob, "Simulation with a faulty manager script has run green.");
         }
     }
 }

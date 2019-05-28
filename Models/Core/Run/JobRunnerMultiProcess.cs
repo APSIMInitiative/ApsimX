@@ -1,5 +1,6 @@
 ﻿namespace Models.Core.Run
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using System;
@@ -13,38 +14,23 @@
 
     /// <summary>A class for managing asynchronous running of jobs transferred via a socket connection</summary>
     [Serializable]
-    public class JobRunnerMultiProcess : IJobRunner
+    public class JobRunnerMultiProcess : JobRunner
     {
         private SocketServer server;
-        private IJobManager jobs;
         private bool allStopped;
-
-        /// <summary>A token for cancelling running of jobs</summary>
-        private CancellationTokenSource cancelToken;
+        private int numberOfProcessors;
 
         /// <summary>A mapping of job IDs (Guid) to job  instances.</summary>
-        private Dictionary<Guid, Job> runningJobs = new Dictionary<Guid, Job>();
+        private Dictionary<Guid, MultiProcessJob> runningJobs = new Dictionary<Guid, MultiProcessJob>();
 
         /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
         private List<Exception> exceptionsThrown;
 
-        /// <summary>Occurs when all jobs completed.</summary>
-        public event EventHandler<AllCompletedArgs> AllJobsCompleted;
-
-        /// <summary>Invoked when a job is completed.</summary>
-        public event EventHandler<JobCompleteArgs> JobCompleted;
-
-        /// <summary>Run the specified jobs</summary>
-        /// <param name="jobManager">An instance of a class that manages all jobs.</param>
-        /// <param name="wait">Wait until all jobs finished before returning?</param>
-        /// <param name="numberOfProcessors">The maximum number of cores to use.</param>
-        public void Run(IJobManager jobManager, bool wait = false, int numberOfProcessors = -1)
+        /// <summary>Constructor.</summary>
+        /// <param name="numOfProcessors">The maximum number of cores to use.</param>
+        public JobRunnerMultiProcess(int numOfProcessors = -1)
         {
-            jobs = jobManager;
-            allStopped = false;
-            // If the job manager is a RunExternal, then we don't need to worry about storage - 
-            // each ApsimRunner will launch its own Models.exe which will manage storage itself.
-
+            numberOfProcessors = numOfProcessors;
             // Determine number of threads to use
             if (numberOfProcessors == -1)
             {
@@ -55,9 +41,11 @@
                 else
                     numberOfProcessors = System.Math.Max(Environment.ProcessorCount - 1, 1);
             }
+        }
 
-            cancelToken = new CancellationTokenSource();
-
+        /// <summary>Main worker thread.</summary>
+        protected override void WorkerThread()
+        {
             // Spin up a job manager server.
             server = new SocketServer();
             server.AddCommand("GetJob", OnGetJob);
@@ -68,44 +56,25 @@
             Task t = Task.Run(() => server.StartListening(2222));
 
             DeleteRunners();
-            CreateRunners(numberOfProcessors);
+            CreateRunners();
 
             AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
-            if (wait)
-                while (!allStopped)
-                    Thread.Sleep(200);
-        }
+            SpinWait.SpinUntil(() => allStopped);
 
-        /// <summary>Stop all jobs currently running</summary>
-        public void Stop()
-        {
-            if (server != null)
-            {
-                lock (this)
-                {
-                    if (server != null)
-                    {
-                        cancelToken.Cancel();
-                        server.StopListening();
-                        server = null;
-                        DeleteRunners();
-                        runningJobs.Clear();
-                        AllCompletedArgs args = new AllCompletedArgs();
-                        if (exceptionsThrown != null)
-                            args.exceptionsThrown = exceptionsThrown;
-                        jobs.AllCompleted(args);
-                        if (AllJobsCompleted != null)
-                            AllJobsCompleted.Invoke(this, args);
-                        allStopped = true;
-                    }
-                }
-            }
+            server.StopListening();
+            server = null;
+            DeleteRunners();
+            runningJobs.Clear();
+
+            ElapsedTime = DateTime.Now - startTime;
+            InvokeAllCompleted();
+
+            completed = true;
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
-        /// <param name="numberOfProcessors">The maximum number of cores to use</param>
-        private void CreateRunners(int numberOfProcessors)
+        private void CreateRunners()
         {
             int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
             for (int i = numRunners; i < numberOfProcessors; i++)
@@ -138,7 +107,43 @@
             }
 
             if (Process.GetProcessesByName("APSIMRunner").Length == 0)
-                Stop();
+                allStopped = true;
+        }
+
+        private int jobManagerIndex;
+        private IEnumerator<IRunnable> currentEnumerator;
+
+        /// <summary>
+        /// Return the next job to run.
+        /// </summary>
+        /// <returns>The job to run or null if no more.</returns>
+        private MultiProcessJob GetNextJobToRun()
+        {
+            lock (runningJobs)
+            {
+                if (currentEnumerator == null)
+                    currentEnumerator = jobManagers[jobManagerIndex].GetJobs().GetEnumerator();
+                bool ok = currentEnumerator.MoveNext();
+
+                while (!ok && jobManagerIndex < jobManagers.Count)
+                {
+                    jobManagerIndex++;
+                    if (jobManagerIndex < jobManagers.Count)
+                    {
+                        currentEnumerator = jobManagers[jobManagerIndex].GetJobs().GetEnumerator();
+                        ok = currentEnumerator.MoveNext();
+                    }
+                }
+                if (ok)
+                    return new MultiProcessJob()
+                    {
+                        JobManagerIndex = jobManagerIndex,
+                        RunnableJob = currentEnumerator.Current,
+                        StartTime = DateTime.Now
+                    };
+                else
+                    return null;
+            }
         }
 
         /// <summary>Called by a runner process to get the next job to run.</summary>
@@ -149,36 +154,35 @@
             try
             {
                 var jobKey = Guid.NewGuid();
-                var runnableJob = jobs.GetNextJobToRun();
+                var job = GetNextJobToRun();
                 string fileName = null;
 
                 // At this point DataStore should be a child of the simulation. Store the
                 // DataStore in our jobToRun and then remove it from the simulation. We
                 // don't want to pass the DataStore to the runner process via a socket.
-                if (runnableJob != null)
-                {
-                    var dataStore = Apsim.Child(runnableJob as IModel, typeof(DataStore)) as DataStore;
-                    fileName = dataStore.FileName;
-                    (runnableJob as IModel).Children.Remove(dataStore);
-
-                    var job = new Job()
-                    {
-                        RunnableJob = runnableJob,
-                        DataStore = dataStore
-                    };
-
-                    lock (runningJobs)
-                        runningJobs.Add(jobKey, job);
-                }
-
-                if (runnableJob == null)
+                if (job == null)
                     server.Send(args.socket, "NULL");
                 else
                 {
+                    if (job.RunnableJob is SimulationDescription)
+                    {
+                        var simulation = (job.RunnableJob as SimulationDescription).ToSimulation();
+                        var dataStore = Apsim.Child(simulation, typeof(DataStore)) as DataStore;
+                        fileName = dataStore.FileName;
+                        simulation.Children.Remove(dataStore);
+                        job.DataStore = dataStore;
+                        job.JobSentToClient = simulation;
+                    }
+                    else
+                        job.JobSentToClient = job.RunnableJob;
+
+                    lock (runningJobs)
+                        runningJobs.Add(jobKey, job);
+
                     GetJobReturnData returnData = new GetJobReturnData
                     {
                         id = jobKey,
-                        job = runnableJob,
+                        job = job.JobSentToClient,
                         fileName = fileName
                     };
                     server.Send(args.socket, returnData);
@@ -232,19 +236,29 @@
             {
                 EndJobArguments arguments = args.obj as EndJobArguments;
 
-                Job job;
+                MultiProcessJob processJob;
                 lock (runningJobs)
-                    job = runningJobs[arguments.id];
+                    processJob = runningJobs[arguments.id];
 
-                JobCompleteArgs jobCompleteArguments = new JobCompleteArgs
+                JobCompleteArguments jobCompleteArguments = new JobCompleteArguments
                 {
-                    job = job.RunnableJob,
-                    exceptionThrowByJob = arguments.errorMessage
+                    Job = processJob.JobSentToClient,
+                    ExceptionThrowByJob = arguments.errorMessage
                 };
 
-                if (JobCompleted != null)
-                    JobCompleted.Invoke(this, jobCompleteArguments);
-                jobs.JobCompleted(jobCompleteArguments);
+
+                var finishTime = DateTime.Now;
+                var completeArguments = new JobCompleteArguments()
+                {
+                    Job = processJob.JobSentToClient,
+                    ExceptionThrowByJob = arguments.errorMessage,
+                    ElapsedTime = finishTime - processJob.StartTime
+                };
+
+                InvokeJobCompleted(processJob.RunnableJob, 
+                                   jobManagers[processJob.JobManagerIndex], 
+                                   processJob.StartTime, 
+                                   arguments.errorMessage);
 
                 server.Send(args.socket, "OK");
             }
@@ -319,13 +333,22 @@
             public DataTable data;
         }
 
-        private class Job
+        private class MultiProcessJob
         {
-            /// <summary>The job being run.</summary>
+            /// <summary>The index of the owining job manager.</summary>
+            public int JobManagerIndex { get; set; }
+
+            /// <summary>The job to run.</summary>
             public IRunnable RunnableJob { get; set; }
+
+            /// <summary>The job that was sent to the APSIM Runner client.</summary>
+            public IRunnable JobSentToClient { get; set; }
 
             /// <summary>The data store relating to the job</summary>
             public DataStore DataStore { get; set; }
+
+            /// <summary>The time the job was started.</summary>
+            public DateTime StartTime { get; set; }
         }
     }
 }

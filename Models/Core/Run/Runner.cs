@@ -1,5 +1,6 @@
 ﻿namespace Models.Core.Run
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using System;
@@ -14,24 +15,23 @@
     /// </summary>
     public class Runner
     {
+        /// <summary>The descriptions of simulations that we are going to run.</summary>
+        private List<SimulationGroup> jobs = new List<SimulationGroup>();
+        
+        /// <summary>The job runner being used.</summary>
+        private JobRunner jobRunner = null;
+
+        /// <summary>The stop watch we can use to time all runs.</summary>
+        private DateTime startTime;
+
         /// <summary>How should the simulations be run?</summary>
         private RunTypeEnum runType;
 
         /// <summary>Wait until all simulations are complete?</summary>
-        bool wait = true;
+        private bool wait = true;
 
         /// <summary>Number of CPU processes to use. -1 indicates all processes.</summary>
-        int numberOfProcessors;
-
-        /// <summary>The descriptions of simulations that we are going to run.</summary>
-        private List<JobCollection> jobs = new List<JobCollection>();
-
-        private JobManagerCollection jobCollection; 
-        /// <summary>The job runner being used.</summary>
-        private IJobRunner jobRunner = null;
-
-        /// <summary>The stop watch we can use to time all runs.</summary>
-        private DateTime startTime;
+        private int numberOfProcessors = -1;
 
         /// <summary>An enumerated type for specifying how a series of simulations are run.</summary>
         public enum RunTypeEnum
@@ -48,19 +48,19 @@
 
         /// <summary>Constructor</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
-        /// <param name="runType">How should the simulations be run?</param>
         /// <param name="runSimulations">Run simulations?</param>
         /// <param name="runPostSimulationTools">Run post simulation tools?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
+        /// <param name="runType">How should the simulations be run?</param>
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         public Runner(IModel relativeTo,
-                      RunTypeEnum runType = RunTypeEnum.MultiThreaded, 
                       bool runSimulations = true,
                       bool runPostSimulationTools = true,
                       bool runTests = true,
                       IEnumerable<string> simulationNamesToRun = null,
+                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
                       int numberOfProcessors = -1)
         {
@@ -68,32 +68,30 @@
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
 
-            var job = new JobCollection(relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun);
-            job.JobHasCompleted += OnJobCompleted;
-            job.JobCollectionHasCompleted += OnJobCollectionCompleted;
-            jobs.Add(job);
-            jobCollection = new JobManagerCollection(new List<IJobManager>() { job });
+            var simulationGroup = new SimulationGroup(relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun);
+            simulationGroup.Completed += OnSimulationGroupCompleted;
+            jobs.Add(simulationGroup);
         }
 
         /// <summary>Constructor</summary>
         /// <param name="pathAndFileSpec">Path and file specification for finding files.</param>
         /// <param name="ignorePaths">Ignore these paths when looking for files to run.</param>
         /// <param name="recurse">Recurse into child folder?</param>
-        /// <param name="runType">How should the simulations be run?</param>
         /// <param name="runTests">Run tests?</param>
+        /// <param name="runType">How should the simulations be run?</param>
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         public Runner(string pathAndFileSpec,
                       List<string> ignorePaths = null,
                       bool recurse = true,
-                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool runTests = true,
+                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
                       int numberOfProcessors = -1)
         {
             this.runType = runType;
-            this.numberOfProcessors = numberOfProcessors;
             this.wait = wait;
+            this.numberOfProcessors = numberOfProcessors;
 
             List<string> files = new List<string>();
             DirectoryUtilities.FindFiles(Path.GetDirectoryName(pathAndFileSpec), 
@@ -104,22 +102,20 @@
                 if (ignorePaths == null ||
                     !ignorePaths.Contains(Path.GetDirectoryName(fileName), StringComparer.InvariantCultureIgnoreCase))
                 {
-                    var job = new JobCollection(fileName, runTests);
-                    job.JobHasCompleted += OnJobCompleted;
-                    jobs.Add(job);
+                    var simulationGroup = new SimulationGroup(fileName, runTests);
+                    jobs.Add(simulationGroup);
                 }
             }
-            jobCollection = new JobManagerCollection(jobs.Cast<IJobManager>().ToList());
         }
 
         /// <summary>Invoked every time a job has completed.</summary>
-        public event EventHandler<JobCollection.JobHasCompletedArgs> JobCompleted;
+        public event EventHandler<JobCompleteArguments> SimulationCompleted;
 
         /// <summary>Invoked every time a job has completed.</summary>
-        public event EventHandler<JobCollection.JobCollectionHasCompletedArgs> JobCollectionCompleted;
+        public event EventHandler<EventArgs> SimulationGroupCompleted;
 
         /// <summary>Invoked when all jobs are completed.</summary>
-        public event EventHandler<AllJobsCompletedArgs> AllJobsCompleted;
+        public event EventHandler<AllJobsCompletedArgs> AllSimulationsCompleted;
 
         /// <summary>The number of simulations to run.</summary>
         public int TotalNumberOfSimulations { get { return jobs.Sum(j => j.TotalNumberOfSimulations); } }
@@ -133,11 +129,17 @@
         /// <summary>The time the run took.</summary>
         public TimeSpan ElapsedTime { get; private set; }
 
-        /// <summary>Return the next job to run or null if nothing to run.</summary>
-        /// <returns>Job to run or null if no more.</returns>
-        public IRunnable GetNextJobToRun()
+        /// <summary>An enumerator for simulations in the collection.</summary>
+        public IEnumerable<Simulation> Simulations()
         {
-            return jobCollection.GetNextJobToRun();
+            foreach (var manager in jobs)
+            {
+                foreach (var job in manager.GetJobs())
+                {
+                    if (job is SimulationDescription)
+                        yield return (job as SimulationDescription).ToSimulation();
+                }
+            }
         }
 
         /// <summary>
@@ -155,23 +157,25 @@
                 switch (runType)
                 {
                     case RunTypeEnum.SingleThreaded:
-                        jobRunner = new JobRunnerSync();
+                        jobRunner = new JobRunner(numProcessors:1);
                         break;
                     case RunTypeEnum.MultiThreaded:
-                        jobRunner = new JobRunnerAsync();
+                        jobRunner = new JobRunner(numberOfProcessors);
                         break;
                     case RunTypeEnum.MultiProcess:
-                        jobRunner = new JobRunnerMultiProcess();
+                        jobRunner = new JobRunnerMultiProcess(numberOfProcessors);
                         break;
                 }
 
-                jobRunner.AllJobsCompleted += OnAllCompleted;
+                jobRunner.JobCompleted += OnJobCompleted;
+                jobRunner.AllCompleted += OnAllCompleted;
 
                 // Run all simulations.
-                jobRunner.Run(jobCollection, wait, numberOfProcessors);
+                jobs.ForEach(j => jobRunner.Add(j));
+                jobRunner.Run(wait);
             }
             else
-                OnAllCompleted(this, new AllCompletedArgs());
+                OnAllCompleted(this, new AllCompleteArguments());
 
             return ExceptionsThrown;
         }
@@ -183,12 +187,7 @@
         {
             if (jobRunner != null)
             {
-                foreach (var job in jobs)
-                {
-                    job.JobHasCompleted -= OnJobCompleted;
-                    job.JobCollectionHasCompleted -= OnJobCollectionCompleted;
-                }
-                jobRunner.AllJobsCompleted -= OnAllCompleted;
+                jobRunner.AllCompleted -= OnAllCompleted;
                 jobRunner?.Stop();
                 jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
@@ -209,35 +208,36 @@
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void OnJobCompleted(object sender, JobCollection.JobHasCompletedArgs e)
+        private void OnJobCompleted(object sender, JobCompleteArguments e)
         {
-            AddException(e.ExceptionThrown);
-            JobCompleted?.Invoke(this, e);
+            AddException(e.ExceptionThrowByJob);
+            SimulationCompleted?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Invoked when an entire job collection has completed running.
+        /// Invoked when an entire simulation group has completed running.
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnJobCollectionCompleted(object sender, JobCollection.JobCollectionHasCompletedArgs e)
+        private void OnSimulationGroupCompleted(object sender, EventArgs e)
         {
-            JobCollectionCompleted?.Invoke(this, e);
+            SimulationGroupCompleted?.Invoke(sender, e);
         }
 
         /// <summary>Handler for when all simulations have completed.</summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnAllCompleted(object sender, AllCompletedArgs e)
+        private void OnAllCompleted(object sender, AllCompleteArguments e)
         {
-            // Unsubscribe from our job completion events.
-            if (jobRunner != null)
-                jobRunner.AllJobsCompleted -= OnAllCompleted;
-
             Stop();
 
-            e.exceptionsThrown?.ForEach(ex => AddException(ex));
-            AllJobsCompleted?.Invoke(this,
+            AddException(e.ExceptionThrowByRunner);
+
+            foreach (var job in jobs)
+                if (job.PrePostExceptionsThrown != null)
+                    job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
+
+            AllSimulationsCompleted?.Invoke(this,
                 new AllJobsCompletedArgs()
                 {
                     AllExceptionsThrown = ExceptionsThrown,

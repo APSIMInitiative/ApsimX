@@ -21,7 +21,6 @@ namespace UserInterface.Presenters
     using Utility;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
-    using Models.Core.Runners;
     using System.Reflection;
     using System.Linq;
     using System.Text;
@@ -297,7 +296,7 @@ namespace UserInterface.Presenters
                         typeOfRun = Runner.RunTypeEnum.MultiProcess;
 
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    var runner = new Runner(model, typeOfRun, wait: false);
+                    var runner = new Runner(model, runType:typeOfRun, wait: false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do(null);
                 }

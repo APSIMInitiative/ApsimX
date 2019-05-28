@@ -106,9 +106,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APSIMShared\JobRunning\JobManagerTests.cs" />
+    <Compile Include="APSIMShared\JobRunning\JobRunnerTests.cs" />
+    <Compile Include="APSIMShared\MockJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
+    <Compile Include="Core\Run\RunnerTests.cs" />
     <Compile Include="Core\Run\SimulationTests.cs" />
-    <Compile Include="Functions\HoldFunctionTests.cs" />    
+    <Compile Include="Functions\HoldFunctionTests.cs" />
     <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
     <Compile Include="Graph\SeriesTests.cs" />
     <Compile Include="Core\Run\SimulationDescriptionTests.cs" />

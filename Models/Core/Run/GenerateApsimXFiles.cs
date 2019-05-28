@@ -30,29 +30,22 @@
                 Directory.CreateDirectory(path);
 
                 int i = 0;
-                var job = runner.GetNextJobToRun();
-                while (job != null)
+                foreach (var simulation in runner.Simulations())
                 {
-                    if (job is Simulation)
+                    try
                     {
-                        var simulation = job as Simulation;
-                        try
-                        {
-                            string st = FileFormat.WriteToString(simulation);
-                            File.WriteAllText(Path.Combine(path, simulation.Name + ".apsimx"), st);
-                        }
-                        catch (Exception err)
-                        {
-                            if (errors == null)
-                                errors = new List<Exception>();
-                            errors.Add(err);
-                        }
-
-                        i++;
-                        progressCallBack?.Invoke(100 * i / runner.TotalNumberOfSimulations);
-
+                        string st = FileFormat.WriteToString(simulation);
+                        File.WriteAllText(Path.Combine(path, simulation.Name + ".apsimx"), st);
                     }
-                    job = runner.GetNextJobToRun();
+                    catch (Exception err)
+                    {
+                        if (errors == null)
+                            errors = new List<Exception>();
+                        errors.Add(err);
+                    }
+
+                    i++;
+                    progressCallBack?.Invoke(100 * i / runner.TotalNumberOfSimulations);
                 }
             }
             return errors;

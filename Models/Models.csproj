@@ -230,7 +230,7 @@
     <Compile Include="Core\Run\CommenceArgs.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
-    <Compile Include="Core\Run\JobCollection.cs" />
+    <Compile Include="Core\Run\SimulationGroup.cs" />
     <Compile Include="Core\Run\ModelReplacement.cs" />
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
@@ -255,8 +255,6 @@
     <Compile Include="Core\Run\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelTypes.cs" />
-    <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
-    <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Functions\AccumulateAtEvent.cs" />

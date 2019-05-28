@@ -1,6 +1,6 @@
 ﻿namespace Models.Core.Run
 {
-    using APSIM.Shared.Utilities;
+    using APSIM.Shared.JobRunning;
     using Models.Core.ApsimFile;
     using Models.Storage;
     using System;
@@ -11,10 +11,10 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Encapsulates a collection of jobs. A job can be a simulation run or 
-    /// a EXCEL input run.
+    /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
+    /// a class instance that implements IRunnable e.g. EXCEL input run.
     /// </summary>
-    public class JobCollection : IJobManager
+    public class SimulationGroup : JobManager
     {
         /// <summary>The model to use to search for simulations to run.</summary>
         private IModel relativeTo;
@@ -37,12 +37,6 @@
         /// <summary>Specific simulation names to run.</summary>
         private IEnumerable<string> simulationNamesToRun;
 
-        /// <summary>The collection of jobs still to run.</summary>
-        private List<Job> pendingModels = new List<Job>();
-
-        /// <summary>Index into the job list.</summary>
-        private int jobIndex;
-
         /// <summary>The related storage model.</summary>
         private IDataStore storage;
 
@@ -55,7 +49,7 @@
         /// <param name="runPostSimulationTools">Run post simulation tools?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
-        public JobCollection(IModel relativeTo,
+        public SimulationGroup(IModel relativeTo,
                              bool runSimulations = true,
                              bool runPostSimulationTools = true,
                              bool runTests = true,
@@ -73,7 +67,7 @@
         /// <summary>Contstructor</summary>
         /// <param name="fileName">The name of the file to run.</param>
         /// <param name="runTests">Run tests?</param>
-        public JobCollection(string fileName,
+        public SimulationGroup(string fileName,
                              bool runTests = true)
         {
             this.FileName = fileName;
@@ -86,68 +80,31 @@
         /// <summary>Name of file where the jobs came from.</summary>
         public string FileName { get; set; }
 
-        /// <summary>Invoked every time a job has completed.</summary>
-        public event EventHandler<JobHasCompletedArgs> JobHasCompleted;
-
-        /// <summary>Invoked when the job collection has completed.</summary>
-        public event EventHandler<JobCollectionHasCompletedArgs> JobCollectionHasCompleted;
-
         /// <summary>The number of simulations to run.</summary>
         public int TotalNumberOfSimulations { get; private set; }
 
         /// <summary>The number of simulations completed running.</summary>
         public int NumberOfSimulationsCompleted { get; private set; }
 
-        /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
-        public List<Exception> ExceptionsThrown { get; private set; }
+        /// <summary>A list of exceptions thrown before and after the simulation runs. Will be null when no exceptions found.</summary>
+        public List<Exception> PrePostExceptionsThrown { get; private set; }
 
-        /// <summary>Return the next job to run or null if nothing to run.</summary>
-        /// <returns>Job to run or null if no more.</returns>
-        public IRunnable GetNextJobToRun()
+        /// <summary>Called once to do initialisation before any jobs are run. Should throw on error.</summary>
+        protected override void PreRun()
         {
             if (!initialised)
                 SpinWait.SpinUntil(() => initialised);
-
-            Job jobToReturn = null;
-            lock (this)
-            {
-                if (jobIndex < pendingModels.Count)
-                {
-                    jobToReturn = pendingModels[jobIndex];
-                    jobIndex++;
-                }
-            }
-
-            if (jobToReturn == null)
-                return null;
-            else
-                return jobToReturn.ToRunnable(storage, FileName);
         }
 
-        /// <summary>Job has completed.</summary>
-        void IJobManager.JobCompleted(JobCompleteArgs e)
+        /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
+        protected override void PostRun(JobCompleteArguments args)
         {
-            var completedJob = pendingModels.Find(m => m.Equals(e.job));
-            if (completedJob != null)
-            {
-                if (e.exceptionThrowByJob != null)
-                    AddException(e.exceptionThrowByJob);
-                lock (this)
-                {
-                        NumberOfSimulationsCompleted++;
-                }
-
-                JobHasCompleted?.Invoke(this, new JobHasCompletedArgs()
-                {
-                    Job = e.job as IModel,
-                    ElapsedTime = completedJob.ElapsedTime,
-                    ExceptionThrown = e.exceptionThrowByJob
-                });
-            }
+            lock (this)
+                NumberOfSimulationsCompleted++;
         }
 
-        /// <summary>Job has completed.</summary>
-        void IJobManager.AllCompleted(AllCompletedArgs e)
+        /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
+        protected override void PostAllRuns()
         {
             if (runPostSimulationTools)
                 RunPostSimulationTools();
@@ -157,14 +114,7 @@
 
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
-
-            JobCollectionHasCompleted?.Invoke(this,
-                new JobCollectionHasCompletedArgs()
-                {
-                    JobCollection = this,
-                    ElapsedTime = startTime - DateTime.Now,
-                    ExceptionsThrown = ExceptionsThrown
-                });
+           
         }
 
         /// <summary>Initialise the instance.</summary>
@@ -181,6 +131,8 @@
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
                     relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
+                    if (exceptions.Count > 0)
+                        throw exceptions[0];
                 }
 
                 if (relativeTo != null)
@@ -197,7 +149,6 @@
 
                     if (runSimulations)
                         FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
-                    TotalNumberOfSimulations = pendingModels.Count;
 
                     // Find a storage model.
                     storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
@@ -218,15 +169,11 @@
             }
             catch (Exception readException)
             {
-                exceptions = new List<Exception>() { readException };
+                Exception exceptionToStore = readException;
+                if (FileName != null)
+                    exceptionToStore = new Exception("Error in file:" + FileName, readException);
+                AddException(exceptionToStore);
             }
-            Exception err = null;
-            if (exceptions != null && exceptions.Count > 0)
-            {
-                ExceptionsThrown = new List<Exception>();
-                ExceptionsThrown.AddRange(exceptions);
-                err = exceptions[0];
-            }   
             initialised = true;
         }
 
@@ -238,13 +185,19 @@
             if (relativeTo is Simulation)
             {
                 if (simulationNamesToRun == null || simulationNamesToRun.Contains(relativeTo.Name))
-                    pendingModels.Add(new Job(new SimulationDescription(relativeTo as Simulation), rootModel as Simulations));
+                {
+                    Add(new SimulationDescription(relativeTo as Simulation));
+                    TotalNumberOfSimulations++;
+                }
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
                     if (simulationNamesToRun == null || simulationNamesToRun.Contains(description.Name))
-                        pendingModels.Add(new Job(description, rootModel as Simulations));
+                    {
+                        Add(description);
+                        TotalNumberOfSimulations++;
+                    }
             }
             else if (relativeTo is Folder || relativeTo is Simulations)
             {
@@ -277,15 +230,6 @@
                     exception = err;
                     AddException(err);
                 }
-
-                JobHasCompleted?.Invoke(this,
-                    new JobHasCompletedArgs()
-                    {
-                        Job = tool as IModel,
-                        ExceptionThrown = exception,
-                        ElapsedTime = DateTime.Now - startTime
-                    });
-
             }
         }
 
@@ -316,14 +260,6 @@
                     exception = err;
                     AddException(new Exception("Encountered an error while running test " + testName, err));
                 }
-
-                JobHasCompleted?.Invoke(this,
-                    new JobHasCompletedArgs()
-                    {
-                        Job = test as IModel,
-                        ExceptionThrown = exception,
-                        ElapsedTime = DateTime.Now - startTime
-                    });
             }
         }
 
@@ -335,112 +271,10 @@
         {
             if (err != null)
             {
-                if (ExceptionsThrown == null)
-                    ExceptionsThrown = new List<Exception>();
-                ExceptionsThrown.Add(err);
+                if (PrePostExceptionsThrown == null)
+                    PrePostExceptionsThrown = new List<Exception>();
+                PrePostExceptionsThrown.Add(err);
             }
         }
-
-        /// <summary>
-        /// Event arguments for a JobHasCompleted event.
-        /// </summary>
-        public class JobHasCompletedArgs : EventArgs
-        {
-            /// <summary>The job that was run.</summary>
-            public IModel Job { get; set; }
-
-            /// <summary>Exception thrown (if any). Can be null.</summary>
-            public Exception ExceptionThrown { get; set; }
-
-            /// <summary>The elapsed time.</summary>
-            public TimeSpan ElapsedTime { get; set; }
-        }
-
-        /// <summary>
-        /// Event arguments for a JobCollectionHasCompleted event.
-        /// </summary>
-        public class JobCollectionHasCompletedArgs : EventArgs
-        {
-            /// <summary>The job collection that was run.</summary>
-            public JobCollection JobCollection { get; set; }
-
-            /// <summary>Exception thrown (if any). Can be null.</summary>
-            public List<Exception> ExceptionsThrown { get; set; }
-
-            /// <summary>The elapsed time.</summary>
-            public TimeSpan ElapsedTime { get; set; }
-        }
-
-        /// <summary>
-        /// This class encapsulates a running job. It can either be an IRunnable
-        /// e.g. like ExcelInput or a SimulationDescription.
-        /// </summary>
-        private class Job
-        {
-            private IRunnable runnableJob;
-            private SimulationDescription descriptionOfSimulation;
-            private DateTime startTime;
-            private Simulations simulations;
-
-            /// <summary>Constructor</summary>
-            /// <param name="job">The job that will be run.</param>
-            public Job(IRunnable job)
-            {
-                runnableJob = job;
-            }
-
-            /// <summary>Constructor</summary>
-            /// <param name="description">A description of a simulation.</param>
-            /// <param name="rootSimulations">Top level simulations object.</param>
-            public Job(SimulationDescription description, Simulations rootSimulations)
-            {
-                descriptionOfSimulation = description;
-                simulations = rootSimulations;
-            }
-
-            /// <summary>Convert the job to something that is runnable by a JobRunner.</summary>
-            /// <param name="storage">The datastore. Can be null.</param>
-            /// <param name="fileName">The filename where the job came from.</param>
-            /// <returns></returns>
-            public IRunnable ToRunnable(IDataStore storage, string fileName)
-            {
-                if (descriptionOfSimulation != null)
-                {
-                    Simulation simulationToRun = descriptionOfSimulation.ToSimulation(simulations);
-
-                    // Give the file name to the simulation.
-                    simulationToRun.FileName = fileName;
-
-                    runnableJob = simulationToRun;
-                }
-                else
-                {
-                    (runnableJob as IModel).Parent = null;
-                }
-
-                // Give the datastore to the simulation so that links can be resolved.
-                if (storage != null)
-                {
-                    var storageInSimulation = Apsim.Find(runnableJob as IModel, typeof(IDataStore)) as Model;
-                    if (storageInSimulation != null)
-                        Apsim.Delete(storageInSimulation);
-                    (runnableJob as IModel).Children.Add(storage as Model);
-                }
-
-                startTime = DateTime.Now;
-                return runnableJob as IRunnable;
-            }
-
-            /// <summary>Return true if this job is the same job as the one specified.</summary>
-            /// <param name="compareTo">Job to compare this job to.</param>
-            public bool Equals(IRunnable compareTo)
-            {
-                return runnableJob == compareTo;
-            }
-
-            /// <summary>Gets the time the job took to run.</summary>
-            public TimeSpan ElapsedTime { get { return DateTime.Now - startTime; } }
-        }
-
     }
 }

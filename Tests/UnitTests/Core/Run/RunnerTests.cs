@@ -77,7 +77,7 @@
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, typeOfRun);
+                Runner runner = new Runner(simulation, runType: typeOfRun);
                 Assert.IsNull(runner.Run());
 
                 // Check that data was written to database.
@@ -124,7 +124,6 @@
                                     VariableNames = new string[] {"[Clock].Today"},
                                     EventNames = new string[] {"[Clock].DoReport"}
                                 },
-                                new DataStore(database)
                             }
                         },
                         new Simulation()
@@ -145,13 +144,12 @@
                                     VariableNames = new string[] {"[Clock].Today"},
                                     EventNames = new string[] {"[Clock].DoReport"}
                                 },
-                                new DataStore(database)
                             }
                         }
                     }
                 };
 
-                Runner runner = new Runner(folder, typeOfRun);
+                Runner runner = new Runner(folder, runType: typeOfRun);
 
                 // Ensure number of simulations is correct before any are run.
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 2);
@@ -211,7 +209,6 @@
                                     VariableNames = new string[] {"[Clock].Today"},
                                     EventNames = new string[] {"[Clock].DoReport"}
                                 },
-                                new DataStore(database)
                             }
                         },
                         new Simulation()
@@ -232,13 +229,12 @@
                                     VariableNames = new string[] {"[Clock].Today"},
                                     EventNames = new string[] {"[Clock].DoReport"}
                                 },
-                                new DataStore(database)
                             }
                         }
                     }
                 };
 
-                Runner runner = new Runner(folder, typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
+                Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
                 // Ensure number of simulations is correct before any are run.
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
@@ -291,7 +287,7 @@
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, typeOfRun);
+                Runner runner = new Runner(simulation, runType: typeOfRun);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -341,7 +337,7 @@
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, typeOfRun, runTests: true);
+                Runner runner = new Runner(simulation, runType: typeOfRun, runTests: true);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -393,7 +389,7 @@
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, typeOfRun, runTests:true);
+                Runner runner = new Runner(simulation, runType: typeOfRun, runTests:true);
                 Assert.IsNull(runner.Run());
 
                 // Make sure an exception is returned.
@@ -431,10 +427,10 @@
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, typeOfRun);
+                Runner runner = new Runner(simulation, runType: typeOfRun);
 
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
-                runner.AllJobsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
+                runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 runner.Run();
 
@@ -474,14 +470,14 @@
                     }
                 };
 
-                Runner runner = new Runner(simulation, typeOfRun);
+                Runner runner = new Runner(simulation, runType: typeOfRun);
 
                 // Ensure number of simulations is correct before any are run.
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
 
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
-                runner.AllJobsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
+                runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.
                 runner.Run();
@@ -527,14 +523,14 @@
                     }
                 };
 
-                Runner runner = new Runner(simulation, typeOfRun, runSimulations:false);
+                Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
                 // Ensure number of simulations is correct before any are run.
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
 
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
-                runner.AllJobsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
+                runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.
                 runner.Run();

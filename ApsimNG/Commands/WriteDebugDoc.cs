@@ -48,7 +48,7 @@ namespace UserInterface.Commands
             {
                 List<Simulation> sims = new List<Models.Core.Simulation>();
                 var sim = new SimulationDescription(simulation);
-                sims.Add(sim.ToSimulation(explorerPresenter.ApsimXFile));
+                sims.Add(sim.ToSimulation());
 
                 Events.ConnectEvents(clonedSimulation);
 

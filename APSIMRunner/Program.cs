@@ -1,5 +1,6 @@
 ﻿namespace APSIMRunner
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;

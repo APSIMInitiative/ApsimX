@@ -1,5 +1,6 @@
 ﻿namespace Models
 {
+    using APSIM.Shared.JobRunning;
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
@@ -74,17 +75,17 @@
                 else
                 {
                     // Run simulations
-                    var runner = new Runner(fileName, ignorePaths, recurse, runType, runTests, true, numberOfProcessors);
-                    runner.JobCompleted += OnJobCompleted;
-                    runner.JobCollectionCompleted += OnJobCollectionCompleted;
-                    runner.AllJobsCompleted += OnAllJobsCompleted;
+                    var runner = new Runner(fileName, ignorePaths, recurse, runTests, runType);
+                    runner.SimulationCompleted += OnJobCompleted;
+                    runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+                    runner.AllSimulationsCompleted += OnAllJobsCompleted;
                     runner.Run();
 
                     // If errors occurred, write them to the console.
                     if (exitCode != 0)
                         Console.WriteLine("ERRORS FOUND!!");
                     if (verbose)
-                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.Seconds + " seconds");
+                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
                 }
             }
             catch (Exception err)
@@ -151,15 +152,15 @@
         }
 
         /// <summary>Job has completed</summary>
-        private static void OnJobCompleted(object sender, JobCollection.JobHasCompletedArgs e)
+        private static void OnJobCompleted(object sender, JobCompleteArguments e)
         {
-            if (e.ExceptionThrown != null)
+            if (e.ExceptionThrowByJob != null)
             {
                 lock (lockObject)
                 {
-                    exceptionsWrittenToConsole.Add(e.ExceptionThrown);
+                    exceptionsWrittenToConsole.Add(e.ExceptionThrowByJob);
                     Console.WriteLine("----------------------------------------------");
-                    Console.WriteLine(e.ExceptionThrown.ToString());
+                    Console.WriteLine(e.ExceptionThrowByJob.ToString());
                     if (verbose)
                         WriteCompleteMessage(e);
                     exitCode = 1;
@@ -170,11 +171,11 @@
         }
 
         /// <summary>All jobs for a file have completed</summary>
-        private static void OnJobCollectionCompleted(object sender, JobCollection.JobCollectionHasCompletedArgs e)
+        private static void OnSimulationGroupCompleted(object sender, EventArgs e)
         {
             if (csv)
             {
-                string fileName = Path.ChangeExtension(e.JobCollection.FileName, ".db");
+                string fileName = Path.ChangeExtension((sender as SimulationGroup).FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
                 Report.Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
@@ -202,14 +203,14 @@
         /// Write a complete message to the console.
         /// </summary>
         /// <param name="e">The event arguments of the completed job.</param>
-        private static void WriteCompleteMessage(JobCollection.JobHasCompletedArgs e)
+        private static void WriteCompleteMessage(JobCompleteArguments e)
         {
             var message = new StringBuilder();
             WriteDetailsToMessage(e, message);
             if (e.Job != null)
             {
                 message.Append(" has finished. Elapsed time was ");
-                message.Append(e.ElapsedTime.Seconds);
+                message.Append(e.ElapsedTime.TotalSeconds.ToString("F1"));
                 message.Append(" seconds.");
             }
             Console.WriteLine(message);
@@ -220,14 +221,17 @@
         /// </summary>
         /// <param name="e">The event arguments of the completed job.</param>
         /// <param name="message">The string builder to write to.</param>
-        private static void WriteDetailsToMessage(JobCollection.JobHasCompletedArgs e, StringBuilder message)
+        private static void WriteDetailsToMessage(JobCompleteArguments e, StringBuilder message)
         {
-            message.Append((e.Job as IModel).Name);
-            if (string.IsNullOrEmpty(fileName))
+            if (e.Job is SimulationDescription)
             {
-                message.Append(" (");
-                message.Append(fileName);
-                message.Append(')');
+                message.Append((e.Job as SimulationDescription).Name);
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    message.Append(" (");
+                    message.Append(fileName);
+                    message.Append(')');
+                }
             }
         }
 
