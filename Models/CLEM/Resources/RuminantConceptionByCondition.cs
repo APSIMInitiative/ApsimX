@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double ConceptionRate(RuminantFemale female)
         {
-            bool isConceptionReady = false;
+            bool isConceptionReady;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;

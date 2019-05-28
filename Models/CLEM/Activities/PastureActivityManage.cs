@@ -184,18 +184,19 @@ namespace Models.CLEM.Activities
             }
             if (Area == 0 && AreaRequested > 0)
             {
-                ResourceRequestList = new List<ResourceRequest>();
-                ResourceRequestList.Add(new ResourceRequest()
+                ResourceRequestList = new List<ResourceRequest>
                 {
-                    AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                    ResourceType = typeof(Land),
-                    ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
-                    ActivityModel = this,
-                    Reason = "Assign",
-                    FilterDetails = null
-                }
-                );
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                        ResourceType = typeof(Land),
+                        ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
+                        ActivityModel = this,
+                        Reason = "Assign",
+                        FilterDetails = null
+                    }
+                };
             }
 
             // if we get here we assume some land has been supplied
@@ -270,15 +271,17 @@ namespace Models.CLEM.Activities
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
                 // convert from kg/ha to kg/area unit
-                growth = growth * unitsOfArea2Ha;
+                growth *= unitsOfArea2Ha;
 
                 Cover = pasturedata.Cover;
 
                 if (growth > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-                    newPasture.Age = 0;
+                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                    {
+                        Age = 0
+                    };
                     newPasture.Set(growth * Area);  
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;

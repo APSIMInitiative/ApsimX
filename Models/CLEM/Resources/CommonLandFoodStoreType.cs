@@ -278,12 +278,14 @@ namespace Models.CLEM.Resources
                 //// update biomass available
                 //biomassAddedThisYear += pool.Amount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = pool.Amount;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = pool.Amount,
+                    Activity = activity.Name,
+                    ActivityType = activity.GetType().Name,
+                    Reason = reason,
+                    ResourceType = this.Name
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -311,22 +313,26 @@ namespace Models.CLEM.Resources
             // grazing does not access pools by breed by gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket();
-            additionalDetails.PercentN = this.Nitrogen;
-            additionalDetails.DMD = this.dryMatterDigestibility;
-            additionalDetails.Amount = request.Required;
+            FoodResourcePacket additionalDetails = new FoodResourcePacket
+            {
+                PercentN = this.Nitrogen,
+                DMD = this.dryMatterDigestibility,
+                Amount = request.Required
+            };
             request.AdditionalDetails = additionalDetails;
 
             // other non grazing activities requesting common land pasture
             request.Provided = request.Required;
 
             // report 
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = request.Provided;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this.Name,
+                Loss = request.Provided,
+                Activity = request.ActivityModel.Name,
+                ActivityType = request.ActivityModel.GetType().Name,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

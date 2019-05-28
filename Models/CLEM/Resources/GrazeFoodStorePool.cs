@@ -139,7 +139,7 @@ namespace Models.CLEM.Resources
         {
             removeAmount = Math.Min(this.amount, removeAmount);
             this.Consumed += removeAmount;
-            this.amount = this.amount - removeAmount;
+            this.amount -= removeAmount;
 
             return removeAmount;
         }

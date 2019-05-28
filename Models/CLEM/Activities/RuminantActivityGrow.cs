@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
-        private Clock Clock = null;
+        private readonly Clock Clock = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
             // Reference: SCA p.
             double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
             double milkTime = ind.DaysLactating;
-            double milkCurve = 0;
+            double milkCurve;
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
@@ -329,8 +329,7 @@ namespace Models.CLEM.Activities
                     // This is now done in RuminantActivityGrazePasture
 
                     // calculate energy
-                    double methane = 0;
-                    CalculateEnergy(ind, out methane);
+                    CalculateEnergy(ind, out double methane);
 
                     // Sum and produce one event for breed at end of loop
                     totalMethane += methane;
@@ -376,7 +375,6 @@ namespace Models.CLEM.Activities
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
             double intakeDaily = ind.Intake / 30.4;
-            double potentialIntakeDaily = ind.PotentialIntake / 30.4;
 
             // Sme 1 for females and castrates
             // TODO: castrates not implemented
@@ -395,9 +393,8 @@ namespace Models.CLEM.Activities
             double km = ind.BreedParams.EMaintEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EMaintEfficiencyIntercept;
             // Reference: SCA p.49
             double kg = ind.BreedParams.EGrowthEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EGrowthEfficiencyIntercept;
-
-            double energyPredictedBodyMassChange = 0;
-            double energyMaintenance = 0;
+            double energyPredictedBodyMassChange;
+            double energyMaintenance;
             if (!ind.Weaned)
             {
                 // calculate engergy and growth from milk intake
@@ -426,8 +423,7 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
-
-                double feedingValue = 0;
+                double feedingValue;
                 if (ind.EnergyBalance > 0)
                 {
                     feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
@@ -454,7 +450,7 @@ namespace Models.CLEM.Activities
                     if (femaleind.IsLactating)
                     {
                         // recalculate milk production based on DMD of food provided
-                        energyMilk = CalculateMilkProduction(femaleind); 
+                        energyMilk = CalculateMilkProduction(femaleind);
                     }
                     else
                     {
@@ -484,9 +480,9 @@ namespace Models.CLEM.Activities
                 // 0.000082 is -0.03 Age in Years/365 for days 
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
                 ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
+                double feedingValue;
 
                 // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
-                double feedingValue = 0;
                 if (ind.EnergyBalance > 0)
                 {
                     feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
@@ -500,7 +496,6 @@ namespace Models.CLEM.Activities
                 // Reference:  MJ of Energy required per kg Empty body gain (SCA p.43)
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept1 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
                 // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
-                energyPredictedBodyMassChange = 0;
                 if (ind.EnergyBalance > 0)
                 {
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * kg * ind.EnergyBalance / energyEmptyBodyGain;
@@ -590,7 +585,7 @@ namespace Models.CLEM.Activities
                         // if mother's weight >= criticalCowWeight * SFR
                         mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent));
                     }
-                    mortalityRate = mortalityRate + ind.BreedParams.MortalityBase;
+                    mortalityRate += ind.BreedParams.MortalityBase;
                     mortalityRate = Math.Min(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
                 }
                 else

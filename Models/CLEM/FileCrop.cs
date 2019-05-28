@@ -220,12 +220,14 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> cropProps = new List<string>();
-                cropProps.Add("SoilNum");
-                cropProps.Add("CropName");
-                cropProps.Add("Year");
-                cropProps.Add("Month");
-                cropProps.Add("AmtKg");
+                List<string> cropProps = new List<string>
+                {
+                    "SoilNum",
+                    "CropName",
+                    "Year",
+                    "Month",
+                    "AmtKg"
+                };
                 //Npct column is optional 
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
@@ -297,14 +299,14 @@ namespace Models.CLEM
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
-            CropDataType cropdata = new CropDataType();
-
-            cropdata.SoilNum = int.Parse(dr["SoilNum"].ToString());
-            cropdata.CropName = dr["CropName"].ToString();
-            cropdata.Year = int.Parse(dr["Year"].ToString());
-            cropdata.Month = int.Parse(dr["Month"].ToString());
-
-            cropdata.AmtKg = double.Parse(dr["AmtKg"].ToString());
+            CropDataType cropdata = new CropDataType
+            {
+                SoilNum = int.Parse(dr["SoilNum"].ToString()),
+                CropName = dr["CropName"].ToString(),
+                Year = int.Parse(dr["Year"].ToString()),
+                Month = int.Parse(dr["Month"].ToString()),
+                AmtKg = double.Parse(dr["AmtKg"].ToString())
+            };
 
             //Npct column is optional 
             //Only try to read it in if it exists in the file.

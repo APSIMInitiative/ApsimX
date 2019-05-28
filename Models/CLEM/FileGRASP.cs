@@ -347,26 +347,28 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> pastureProps = new List<string>();
-                pastureProps.Add("Region");
-                pastureProps.Add("Soil");
-                pastureProps.Add("ForageNo");
-                pastureProps.Add("GrassBA");
-                pastureProps.Add("LandCon");
-                pastureProps.Add("StkRate");
-                pastureProps.Add("YearNum");
-                pastureProps.Add("Year");
-                pastureProps.Add("CutNum");
-                pastureProps.Add("Month");
-                pastureProps.Add("Growth");
-                pastureProps.Add("BP1");
-                pastureProps.Add("BP2");
-                pastureProps.Add("Utilisn");
-                pastureProps.Add("SoilLoss");
-                pastureProps.Add("Cover");
-                pastureProps.Add("TreeBA");
-                pastureProps.Add("Rainfall");
-                pastureProps.Add("Runoff");
+                List<string> pastureProps = new List<string>
+                {
+                    "Region",
+                    "Soil",
+                    "ForageNo",
+                    "GrassBA",
+                    "LandCon",
+                    "StkRate",
+                    "YearNum",
+                    "Year",
+                    "CutNum",
+                    "Month",
+                    "Growth",
+                    "BP1",
+                    "BP2",
+                    "Utilisn",
+                    "SoilLoss",
+                    "Cover",
+                    "TreeBA",
+                    "Rainfall",
+                    "Runoff"
+                };
 
                 DataTable table = this.reader.ToTable(pastureProps);
 
@@ -597,27 +599,28 @@ namespace Models.CLEM
 
         private static PastureDataType DataRow2PastureDataType(DataRow dr)
         {
-            PastureDataType pasturedata = new PastureDataType();
-
-            pasturedata.Region = int.Parse(dr["Region"].ToString());
-            pasturedata.Soil = int.Parse(dr["Soil"].ToString());
-            pasturedata.ForageNo = int.Parse(dr["ForageNo"].ToString());
-            pasturedata.GrassBA = int.Parse(dr["GrassBA"].ToString());
-            pasturedata.LandCon = int.Parse(dr["LandCon"].ToString());
-            pasturedata.StkRate = int.Parse(dr["StkRate"].ToString());
-            pasturedata.YearNum = int.Parse(dr["YearNum"].ToString());
-            pasturedata.Year = int.Parse(dr["Year"].ToString());
-            pasturedata.CutNum = int.Parse(dr["CutNum"].ToString());
-            pasturedata.Month = int.Parse(dr["Month"].ToString());
-            pasturedata.Growth = double.Parse(dr["Growth"].ToString());
-            pasturedata.BP1 = double.Parse(dr["BP1"].ToString());
-            pasturedata.BP2 = double.Parse(dr["BP2"].ToString());
-            pasturedata.Utilisn = double.Parse(dr["Utilisn"].ToString());
-            pasturedata.SoilLoss = double.Parse(dr["SoilLoss"].ToString());
-            pasturedata.Cover = double.Parse(dr["Cover"].ToString());
-            pasturedata.TreeBA = double.Parse(dr["TreeBA"].ToString());
-            pasturedata.Rainfall = double.Parse(dr["Rainfall"].ToString());
-            pasturedata.Runoff = double.Parse(dr["Runoff"].ToString());
+            PastureDataType pasturedata = new PastureDataType
+            {
+                Region = int.Parse(dr["Region"].ToString()),
+                Soil = int.Parse(dr["Soil"].ToString()),
+                ForageNo = int.Parse(dr["ForageNo"].ToString()),
+                GrassBA = int.Parse(dr["GrassBA"].ToString()),
+                LandCon = int.Parse(dr["LandCon"].ToString()),
+                StkRate = int.Parse(dr["StkRate"].ToString()),
+                YearNum = int.Parse(dr["YearNum"].ToString()),
+                Year = int.Parse(dr["Year"].ToString()),
+                CutNum = int.Parse(dr["CutNum"].ToString()),
+                Month = int.Parse(dr["Month"].ToString()),
+                Growth = double.Parse(dr["Growth"].ToString()),
+                BP1 = double.Parse(dr["BP1"].ToString()),
+                BP2 = double.Parse(dr["BP2"].ToString()),
+                Utilisn = double.Parse(dr["Utilisn"].ToString()),
+                SoilLoss = double.Parse(dr["SoilLoss"].ToString()),
+                Cover = double.Parse(dr["Cover"].ToString()),
+                TreeBA = double.Parse(dr["TreeBA"].ToString()),
+                Rainfall = double.Parse(dr["Rainfall"].ToString()),
+                Runoff = double.Parse(dr["Runoff"].ToString())
+            };
             pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
             return pasturedata;
         }

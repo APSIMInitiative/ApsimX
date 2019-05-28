@@ -94,8 +94,8 @@ namespace Models.CLEM.Resources
         /// <param name="reason">Name of individual adding resource</param>
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            double addAmount = 0;
-            double nAdded = 0;
+            double addAmount;
+            double nAdded;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
             // update N based on new input added
             CurrentStoreNitrogen = ((CurrentStoreNitrogen*Amount) + (nAdded * addAmount)) / (Amount + addAmount);
 
-            this.amount = this.amount + addAmount;
+            this.amount += addAmount;
 
             ResourceTransaction details = new ResourceTransaction
             {

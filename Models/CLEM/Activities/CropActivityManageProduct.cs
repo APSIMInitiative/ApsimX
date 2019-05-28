@@ -335,8 +335,9 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            double daysNeeded = 0;
-            double numberUnits = 0;
+
+            double daysNeeded;
+            double numberUnits;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:

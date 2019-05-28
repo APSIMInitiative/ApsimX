@@ -362,8 +362,7 @@ namespace Models.CLEM.Activities
         private double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-
-            bool isConceptionReady = false;
+            bool isConceptionReady;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;

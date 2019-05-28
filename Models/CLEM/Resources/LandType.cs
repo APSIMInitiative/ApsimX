@@ -150,7 +150,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                this.areaAvailable = this.areaAvailable + addAmount;
+                this.areaAvailable += addAmount;
             }
             ResourceTransaction details = new ResourceTransaction
             {

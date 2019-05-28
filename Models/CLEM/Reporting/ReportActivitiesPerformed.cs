@@ -65,12 +65,14 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-            variableNames.Add("[Clock].Today as Date");
-            variableNames.Add("[Activities].LastActivityPerformed.Name as Name");
-            variableNames.Add("[Activities].LastActivityPerformed.Status as Status");
-            variableNames.Add("[Activities].LastActivityPerformed.UniqueID as UniqueID");
+            List<string> variableNames = new List<string>
+            {
+                "Parent.Name as Zone",
+                "[Clock].Today as Date",
+                "[Activities].LastActivityPerformed.Name as Name",
+                "[Activities].LastActivityPerformed.Status as Status",
+                "[Activities].LastActivityPerformed.UniqueID as UniqueID"
+            };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
 
@@ -200,8 +202,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
 

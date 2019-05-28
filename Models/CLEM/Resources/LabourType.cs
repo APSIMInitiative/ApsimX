@@ -168,7 +168,7 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
             double addAmount = (double)resourceAmount;
-            this.AvailableDays = this.AvailableDays + addAmount;
+            this.AvailableDays += addAmount;
             ResourceTransaction details = new ResourceTransaction
             {
                 Gain = addAmount,

@@ -104,13 +104,12 @@ namespace Models.CLEM.Resources
             {
                 for (int i = 1; i <= Number; i++)
                 {
-                    object ruminantBase = null;
                     double u1 = ZoneCLEM.RandomGenerator.NextDouble();
                     double u2 = ZoneCLEM.RandomGenerator.NextDouble();
                     double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                  Math.Sin(2.0 * Math.PI * u2);
                     double weight = Weight + WeightSD * randStdNormal;
-
+                    object ruminantBase;
                     if (this.Gender == Sex.Male)
                     {
                         ruminantBase = new RuminantMale(Age, Gender, weight, parent);

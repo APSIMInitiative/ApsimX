@@ -282,14 +282,15 @@ namespace Models.CLEM
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
-            CropDataType cropdata = new CropDataType();
+            CropDataType cropdata = new CropDataType
+            {
+                SoilNum = int.Parse(dr["SoilNum"].ToString()),
+                CropName = dr["CropName"].ToString(),
+                Year = int.Parse(dr["Year"].ToString()),
+                Month = int.Parse(dr["Month"].ToString()),
 
-            cropdata.SoilNum = int.Parse(dr["SoilNum"].ToString());
-            cropdata.CropName = dr["CropName"].ToString();
-            cropdata.Year = int.Parse(dr["Year"].ToString());
-            cropdata.Month = int.Parse(dr["Month"].ToString());
-
-            cropdata.AmtKg = double.Parse(dr["AmtKg"].ToString());
+                AmtKg = double.Parse(dr["AmtKg"].ToString())
+            };
 
             //Npct column is optional 
             //Only try to read it in if it exists in the file.

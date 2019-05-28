@@ -68,8 +68,10 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
+            List<string> variableNames = new List<string>
+            {
+                "Parent.Name as Zone"
+            };
             if (VariableNames != null)
             {
                 for (int i = 0; i < this.VariableNames.Length; i++)
@@ -266,8 +268,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
 
