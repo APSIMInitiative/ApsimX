@@ -35,7 +35,7 @@ namespace Models.CLEM
     [Description("This model holds a crop data file for the CLEM simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"content/features/datareaders/cropdatareader.htm")]
-    public class FileCrop : CLEMModel
+    public class FileCrop : CLEMModel, IFileCrop
     {
         /// <summary>
         /// A reference to the text file reader object
@@ -264,7 +264,7 @@ namespace Models.CLEM
         /// <returns>A struct called CropDataType containing the crop data for this month.
         /// This struct can be null. 
         /// </returns>
-        public List<CropDataType> GetCropDataForEntireRun(int soilNumber, string cropName,
+        public List<CropDataType> GetCropDataForEntireRun(string soilNumber, string cropName,
                                         DateTime startDate, DateTime endDate)
         {
             int startYear = startDate.Year;
