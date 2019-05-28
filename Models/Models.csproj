@@ -227,7 +227,8 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
-    <Compile Include="GRange.cs" />
+    <Compile Include="GRange\GRange.cs" />
+    <Compile Include="GRange\Parms.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
@@ -749,6 +750,7 @@
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <EmbeddedResource Include="Resources\Eucalyptus.json" />
     <None Include="Resources\Barley.json" />
+    <Content Include="Resources\GRangeLandUnits.txt" />
     <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.json">
       <SubType>Designer</SubType>

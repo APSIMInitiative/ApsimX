@@ -19,7 +19,7 @@ namespace Models.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -62,24 +62,25 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Barley&quot;,
-        ///  &quot;IsEnding&quot;: false,
-        ///  &quot;DaysAfterEnding&quot;: 0,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Barley&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
-        ///      &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Barley&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Barley&quot;,
         ///      &quot;Children&quot;: [
         ///        {
-        ///          &quot;$type&quot;: &quot;Models.PMF.RelativeAllocation, Models&quot;,
-        ///          &quot;Name&quot;: &quot;NArbitrator&quot;,
-        ///          &quot;Children&quot;: [],
-        ///          &quot;IncludeInDocumentation&quot;: false,
-        ///          &quot;Enabled&quot;: true,
-        ///          &quot;ReadOnl [rest of string was truncated]&quot;;.
+        ///          &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
+        ///          &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///          &quot;Children&quot;: [
+        ///            {
+        ///              &quot;$type&quot;: &quot;Mo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Barley {
             get {
@@ -89,14 +90,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Chicory&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Chicory&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n# Presentation\n\nThis model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future release [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Chicory&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Chicory&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n# Presentation\n\nThis model has been developed to simulate the growth of a forage chicory  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Chicory {
             get {
@@ -106,14 +115,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Eucalyptus&quot;,
-        ///  &quot;ResourceName&quot;: &quot;Eucalyptus&quot;,
-        ///  &quot;Name&quot;: &quot;Eucalyptus&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;Root:shoot ratio, and allometric relationships for height (Ht, m), stem diameter (DBH, cm, over bark at 1.3 m height), and their derivatives (stem volume Vol, and mean annual increment MAI) were developed as a function of above-ground biomass from [almeida2003application], [almeida2004parameterisation], [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Eucalyptus&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Eucalyptus&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;Root:shoot ratio, and allometric relationships for height (Ht, m), stem diameter (DBH,  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Eucalyptus {
             get {
@@ -122,26 +139,37 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1                                                                                  //***//**range_type**  TROPICAL EVERGREEN FOREST / WOODLAND                   10010     NAME      The landscape unit identifier
+        ///8.00                                                                               //01*// prcp_threshold                                             PRECRO     10020   The amount of precipitation required for there to be runoff (in cm)
+        ///0.15                                                           [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GRangeLandUnits {
+            get {
+                return ResourceManager.GetString("GRangeLandUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Maize&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Maize&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
-        ///      &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Maize&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Maize&quot;,
         ///      &quot;Children&quot;: [
         ///        {
-        ///          &quot;$type&quot;: &quot;Models.PMF.RelativeAllocation, Models&quot;,
-        ///          &quot;Name&quot;: &quot;NArbitrator&quot;,
-        ///          &quot;Children&quot;: [],
-        ///          &quot;IncludeInDocumentation&quot;: true,
-        ///          &quot;Enabled&quot;: true,
-        ///          &quot;ReadOnly&quot;: false
-        ///        },
-        ///        {
-        ///          &quot;$type [rest of string was truncated]&quot;;.
+        ///          &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
+        ///          &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///          &quot;Children&quot;: [
+        ///            {
+        ///              &quot;$type&quot;: &quot;Mode [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {
@@ -151,27 +179,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.Soils.Nutrients.Nutrient, Models&quot;,
-        ///  &quot;DirectedGraphInfo&quot;: {
-        ///	&quot;$type&quot;: &quot;Models.Graph.DirectedGraph, Models&quot;,
-        ///	&quot;Nodes&quot;: [
-        ///	  {
-        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
-        ///		&quot;Name&quot;: &quot;Inert&quot;,
-        ///		&quot;Location&quot;: &quot;50, 50&quot;,
-        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
-        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
-        ///	  },
-        ///	  {
-        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
-        ///		&quot;Name&quot;: &quot;SurfaceResidue&quot;,
-        ///		&quot;Location&quot;: &quot;200, 50&quot;,
-        ///		&quot;Colour&quot;: &quot;LightGreen&quot;,
-        ///		&quot;OutlineColour&quot;: &quot;Black&quot;
-        ///	  },
-        ///	  {
-        ///		&quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
-        ///	 [rest of string was truncated]&quot;;.
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
+        ///  &quot;Children&quot;: [
+        ///    {
+        ///      &quot;$type&quot;: &quot;Models.Soils.Nutrients.Nutrient, Models&quot;,
+        ///      &quot;DirectedGraphInfo&quot;: {
+        ///        &quot;$type&quot;: &quot;Models.Graph.DirectedGraph, Models&quot;,
+        ///        &quot;Nodes&quot;: [
+        ///          {
+        ///            &quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
+        ///            &quot;Name&quot;: &quot;Inert&quot;,
+        ///            &quot;Location&quot;: &quot;65, 426&quot;,
+        ///            &quot;Colour&quot;: &quot;0, 114, 178&quot;,
+        ///            &quot;OutlineColour&quot;: &quot;Black&quot;,        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Nutrient {
             get {
@@ -181,14 +204,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Wheat&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Oats&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n# The APSIM Oats Model\n \n_Allan Peake, Hamish Brown, Rob Zyskowski, Edmar I. Teixeira, Neil Huth_\n\nThe APSIM oats model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to co [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Wheat&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Oats&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n# The APSIM Oats Model\n \n_Allan Peake, Hamish Brown, Rob Zyskowski, Edmar I. Teixeira, Neil Hu [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Oats {
             get {
@@ -198,23 +229,23 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.OilPalm.OilPalm, Models&quot;,
-        ///  &quot;interception&quot;: 0.0,
-        ///  &quot;UnderstoryCoverMax&quot;: 0.4,
-        ///  &quot;UnderstoryLegumeFraction&quot;: 1.0,
-        ///  &quot;InterceptionFraction&quot;: 0.0,
-        ///  &quot;MaximumRootDepth&quot;: 5000.0,
-        ///  &quot;RootDepth&quot;: 0.0,
-        ///  &quot;DltDM&quot;: 0.0,
-        ///  &quot;ReproductiveGrowthFraction&quot;: 0.0,
-        ///  &quot;UnderstoryCoverGreen&quot;: 0.0,
-        ///  &quot;UnderstoryPotNUptake&quot;: null,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;OilPalm&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;The base configuration of the oil palm m [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.OilPalm.OilPalm, Models&quot;,
+        ///      &quot;interception&quot;: 0.0,
+        ///      &quot;UnderstoryCoverMax&quot;: 0.4,
+        ///      &quot;UnderstoryLegumeFraction&quot;: 1.0,
+        ///      &quot;InterceptionFraction&quot;: 0.0,
+        ///      &quot;MaximumRootDepth&quot;: 5000.0,
+        ///      &quot;RootDepth&quot;: 0.0,
+        ///      &quot;DltDM&quot;: 0.0,
+        ///      &quot;ReproductiveGrowthFraction&quot;: 0.0,
+        ///      &quot;UnderstoryCoverGreen&quot;: 0.0,
+        ///      &quot;UnderstoryPot [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string OilPalm {
             get {
@@ -224,14 +255,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Plantain&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Plantain&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n## Presentation\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, witho [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Plantain&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Plantain&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n## Presentation\n\nThis model has been built using the Plant Modelling Framework (PMF) of [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Plantain {
             get {
@@ -241,14 +280,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Potato&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Potato&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n# The APSIM Potato Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n#Building the model.\nThe APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process subm [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Potato&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Potato&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n# The APSIM Potato Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n#Building the mo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Potato {
             get {
@@ -275,14 +322,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;SCRUM&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;SCRUM&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n# SCRUM: the Simple Crop Resource Uptake Model\n\n_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;SCRUM&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;SCRUM&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n# SCRUM: the Simple Crop Resource Uptake Model\n\n_Hamish Brown and Rob Zyskowski, Plant and Fo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SCRUM {
             get {
@@ -292,14 +347,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Slurp&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Slurp&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n# SLURP: the Sound of a crop using water\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model doe [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Slurp&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Slurp&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n# SLURP: the Sound of a crop using water\n\nThis model has been built using the Plant Modelling [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Slurp {
             get {
@@ -321,23 +384,23 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.Surface.SurfaceOrganicMatter, Models&quot;,
-        ///  &quot;InitialResidueName&quot;: null,
-        ///  &quot;InitialResidueType&quot;: null,
-        ///  &quot;InitialResidueMass&quot;: 0.0,
-        ///  &quot;InitialStandingFraction&quot;: 0.0,
-        ///  &quot;InitialCPR&quot;: 0.0,
-        ///  &quot;InitialCNR&quot;: 0.0,
-        ///  &quot;FractionFaecesAdded&quot;: 0.5,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;SurfaceOrganicMatter&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Surface.ResidueTypes, Models&quot;,
-        ///      &quot;ResidueType&quot;: [
-        ///        {
-        ///          &quot;$type&quot;: &quot;Models.Surface.ResidueType, Models&quot;,
-        ///          &quot;fom_t [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.Surface.SurfaceOrganicMatter, Models&quot;,
+        ///      &quot;InitialResidueName&quot;: null,
+        ///      &quot;InitialResidueType&quot;: null,
+        ///      &quot;InitialResidueMass&quot;: 0.0,
+        ///      &quot;InitialStandingFraction&quot;: 0.0,
+        ///      &quot;InitialCPR&quot;: 0.0,
+        ///      &quot;InitialCNR&quot;: 0.0,
+        ///      &quot;FractionFaecesAdded&quot;: 0.5,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;SurfaceOrganicMatter&quot;,
+        ///      &quot;Chi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SurfaceOrganicMatter {
             get {
@@ -347,14 +410,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;Wheat&quot;,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;Wheat&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 56,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\n# The APSIM Wheat Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much t [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;Wheat&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;Wheat&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\n# The APSIM Wheat Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat mod [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {
