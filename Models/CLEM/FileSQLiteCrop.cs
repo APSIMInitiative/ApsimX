@@ -43,16 +43,7 @@ namespace Models.CLEM
     [HelpUri(@"content/features/datareaders/cropsqlitedatareader.htm")]
     public class FileSQLiteCrop : CLEMModel, IFileCrop
     {
-        ////// <summary>
-        ////// APSIMx SQLite class
-        ////// </summary>
-        /////[NonSerialized]
-        ////SQLite SQLiteReader = null;
-
-        ///// <summary>
-        ///// The entire Crop File read in as a DataTable with Primary Keys assigned.
-        ///// </summary>
-        //private DataTable cropFileAsTable;
+        private readonly bool nitrogenColumnExists;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -69,6 +60,59 @@ namespace Models.CLEM
         [Description("Database table name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Database table name must be supplied")]
         public string TableName { get; set; }
+
+        /// <summary>
+        /// Name of column holding year data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("Year")]
+        [Description("Column name for year")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
+        public string YearColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding month data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("Month")]
+        [Description("Column name for month")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
+        public string MonthColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding crop name data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("CropName")]
+        [Description("Column name for crop name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
+        public string CropNameColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding soil type data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("Simulation")]
+        [Description("Column name for soil type")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Soil type column name must be supplied")]
+        public string SoilTypeColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding amount data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("Amount")]
+        [Description("Column name for amount")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
+        public string AmountColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding nitrogen data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("")]
+        [Description("Column name for percent nitrogen")]
+        public string PercentNitrogenColumnName { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -125,32 +169,32 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (!this.FileExists)
+            SQLite sQLiteReader = new SQLite();
+            try
             {
-                string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
+                sQLiteReader.OpenDatabase(FullFileName, true);
+
+                // check table exists
+                if(!sQLiteReader.GetTableNames().Contains(TableName))
+                {
+                    string errorMsg = "@error:The specified table named ["+TableName+ "] was not found in the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n";
+                    throw new ApsimXException(this, errorMsg);
+                }
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
-
-            //this.cropFileAsTable = GetAllData();
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            //if (this.reader != null)
-            //{
-            //    this.reader.Close();
-            //    this.reader = null;
-            //}
+            if(sQLiteReader.IsOpen)
+            {
+                sQLiteReader.CloseDatabase();
+            }
         }
 
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
         /// When the user selects a file using the browse button in the UserInterface 
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
@@ -166,118 +210,65 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public DataTable GetTable()
-        {
-            try
-            {
-                return GetAllData();
-            }
-            catch (Exception err)
-            {
-                ErrorMessage = err.Message;
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the DataTable view of this data
-        /// </summary>
-        /// <returns>The DataTable</returns>
-        public DataTable GetAllData()
-        {
-            //this.reader = null;
-
-            //if (this.OpenDataFile())
-            //{
-            //    List<string> cropProps = new List<string>();
-            //    cropProps.Add("SoilNum");
-            //    cropProps.Add("CropName");
-            //    cropProps.Add("Year");
-            //    cropProps.Add("Month");
-            //    cropProps.Add("AmtKg");
-            //    //Npct column is optional 
-            //    //Only try to read it in if it exists in the file.
-            //    //if (nitrogenPercentIndex != -1)
-            //    //{
-            //    //    cropProps.Add("Npct");
-            //    //}
-
-            //    DataTable table = this.reader.ToTable(cropProps);
-
-            //    DataColumn[] primarykeys = new DataColumn[5];
-            //    primarykeys[0] = table.Columns["SoilNum"];
-            //    primarykeys[1] = table.Columns["CropName"];
-            //    primarykeys[2] = table.Columns["Year"];
-            //    primarykeys[3] = table.Columns["Month"]; 
-
-            //    table.PrimaryKey = primarykeys;
-
-            //    CloseDataFile();
-
-            //    return table;
-            //}
-            //else
-            //{
-                return null;
-            //}
-        }
-
-        /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.
         /// <returns></returns>
         /// </summary>
-        /// <param name="soilNumber"></param>
-        /// <param name="cropName"></param>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
+        /// <param name="soilId">Name of soil or run name in database</param>
+        /// <param name="cropName">Name of crop in database</param>
+        /// <param name="startDate">Start date of the simulation</param>
+        /// <param name="endDate">End date of the simulation</param>
         /// <returns>A struct called CropDataType containing the crop data for this month.
         /// This struct can be null. 
         /// </returns>
-        public List<CropDataType> GetCropDataForEntireRun(string soilNumber, string cropName,
+        public List<CropDataType> GetCropDataForEntireRun(string soilId, string cropName,
                                         DateTime startDate, DateTime endDate)
         {
-            int startYear = startDate.Year;
-            int startMonth = startDate.Month;
-            int endYear = endDate.Year;
-            int endMonth = endDate.Month;
+            // check SQL file
+            SQLite sQLiteReader = new SQLite();
+            try
+            {
+                sQLiteReader.OpenDatabase(FullFileName, true);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\n" + ex.Message;
+            }
 
-            // load data from database based on filter
+            // check if Npct column exists in database
+            bool nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains("Npct");
+
+            // define SQL filter to load data
+            string sqlQuery = "SELECT Year,Month,Crop,Amount"+(nitrogenColumnExists?",Npct":"")+" FROM " + TableName
+                + " WHERE SoilNum = " + soilId;
+
+            if (startDate.Year == endDate.Year)
+            {
+                sqlQuery += " AND (( Year = " + startDate.Year + " AND Month >= " + startDate.Month + " AND Month < " + endDate.Month + ")"
+                + ")";
+            }
+            else
+            {
+                sqlQuery += " AND (( Year = " + startDate.Year + " AND Month >= " + startDate.Month + ")"
+                + " OR  ( Year > " + startDate.Year + " AND Year < " + endDate.Year + ")"
+                + " OR  ( Year = " + endDate.Year + " AND Month < " + endDate.Month + ")"
+                + ")";
+            }
+
+            DataTable results = sQLiteReader.ExecuteQuery(sqlQuery);
+            if (sQLiteReader.IsOpen)
+            {
+                sQLiteReader.CloseDatabase();
+            }
+
+            results.DefaultView.Sort = "Year, Month";
 
             // convert to list<CropDataType>
-
-
-
-
-
-
-
-
-
-            //http://www.csharp-examples.net/dataview-rowfilter/
-
-            //string filter = "(SoilNum = " + soilNumber + ") AND (CropName = " +  "'" + cropName + "'" + ")"
-            //    + " AND (" 
-            //    +      "( Year = " + startYear + " AND Month >= " + startMonth + ")" 
-            //    + " OR  ( Year > " + startYear + " AND Year < " + endYear +")"
-            //    + " OR  ( Year = " + endYear + " AND Month <= " + endMonth + ")"
-            //    +      ")";
-
-            //DataRow[] foundRows = this.cropFileAsTable.Select(filter);
-
-            //List<CropDataType> filtered = new List<CropDataType>(); 
-
-            //foreach (DataRow dr in foundRows)
-            //{
-            //    filtered.Add(DataRow2CropData(dr));
-            //}
-
-            //filtered.Sort( (r,s) => DateTime.Compare(r.HarvestDate, s.HarvestDate) );
-
-            //return filtered;
-            return null;
+            List<CropDataType> cropDetails = new List<CropDataType>();
+            foreach (DataRow row in results.DefaultView)
+            {
+                cropDetails.Add(DataRow2CropData(row));
+            }
+            return cropDetails;
         }
 
         private CropDataType DataRow2CropData(DataRow dr)
@@ -291,106 +282,15 @@ namespace Models.CLEM
 
                 AmtKg = double.Parse(dr["AmtKg"].ToString())
             };
-
-            //Npct column is optional 
-            //Only try to read it in if it exists in the file.
-            //if (nitrogenPercentIndex != -1)
-            //{
-            //    cropdata.Npct = double.Parse(dr["Npct"].ToString());
-            //}
-            //else
-            //{
-            //    cropdata.Npct = double.NaN;
-            //}
-
-            cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
-
-            return cropdata;
-        }
-
-        /// <summary>
-        /// Open the forage data file.
-        /// </summary>
-        /// <returns>True if the file was successfully opened</returns>
-        public bool OpenDataFile()
-        {
-            if (System.IO.File.Exists(this.FullFileName))
+            if(nitrogenColumnExists)
             {
-                //if (this.reader == null)
-                //{
-                //    this.reader = new ApsimTextFile();
-                //    //this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
-
-                //    //this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "SoilNum");
-                //    //this.cropNameIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "CropName");
-                //    //this.yearIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Year");
-                //    //this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Month");
-                //    //this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "AmtKg");
-                //    //this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Npct");
-
-                //    //if (this.soilNumIndex == -1)
-                //    //{
-                //    //    if (this.reader == null || this.reader.Constant("SoilNum") == null)
-                //    //    {
-                //    //        throw new Exception("@error:Cannot find [o=SoilNum] column in crop file [x=" + this.FullFileName.Replace("\\","\\&shy;")+"]");
-                //    //    }
-                //    //}
-
-                //    //if (this.cropNameIndex == -1)
-                //    //{
-                //    //    if (this.reader == null || this.reader.Constant("CropName") == null)
-                //    //    {
-                //    //        throw new Exception("@error:Cannot find [o=CropName] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
-                //    //    }
-                //    //}
-
-                //    //if (this.yearIndex == -1)
-                //    //{
-                //    //    if (this.reader == null || this.reader.Constant("Year") == null)
-                //    //    {
-                //    //        throw new Exception("@error:Cannot find [o=Year] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
-                //    //    }
-                //    //}
-
-                //    //if (this.monthIndex == -1)
-                //    //{
-                //    //    if (this.reader == null || this.reader.Constant("Month") == null)
-                //    //    {
-                //    //        throw new Exception("@error:Cannot find [o=Month] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
-                //    //    }
-                //    //}
-
-                //    //if (this.amountKgIndex == -1)
-                //    //{
-                //    //    if (this.reader == null || this.reader.Constant("AmtKg") == null)
-                //    //    {
-                //    //        throw new Exception("@error:Cannot find [o=AmtKg] column in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]");
-                //    //    }
-                //    //}
-                //}
-                //else
-                //{
-                //    if (this.reader.IsExcelFile != true)
-                //    {
-                //        this.reader.SeekToDate(this.reader.FirstDate);
-                //    }
-                //}
-                return true;
+                cropdata.Npct = double.Parse(dr["Npct"].ToString());
             }
             else
             {
-                return false;
+                cropdata.Npct = double.NaN;
             }
-        }
-
-        /// <summary>Close the datafile.</summary>
-        public void CloseDataFile()
-        {
-            //if (reader != null)
-            //{
-            //    reader.Close();
-            //    reader = null;
-            //}
+            return cropdata;
         }
 
         /// <summary>
@@ -408,11 +308,20 @@ namespace Models.CLEM
             }
             else if (!this.FileExists)
             {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
+                html += "The database <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
             }
             else
             {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
+                if (TableName == null || TableName == "")
+                {
+                    html += "Using <span class=\"errorlink\">[TABLE NOT SET]</span>";
+                }
+                else
+                {
+                    html += "Using table <span class=\"setvalue\">" + TableName + "</span>";
+                }
+
+                html += "in database <span class=\"filelink\">" + FileName + "</span>";
             }
             html += "\n</div>";
             return html;
