@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Use artificial insemination (no bulls required)
         /// </summary>
-        [Description("Use artificial insemination (no bulls required)")]
+        [Description("Use controlled maiting/artificial insemination (no bulls required)")]
         [Required]
         public bool UseAI { get; set; }
 
