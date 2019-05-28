@@ -69,7 +69,14 @@ namespace UserInterface.Views
         /// <value></value>
         System.Drawing.Color BackgroundColour { get; set; }
 
+        /// <summary>
+        /// Sets the font of the document.
+        /// </summary>
+        Pango.FontDescription Font { get; set; }
+
         void ExecJavaScript(string command, object[] args);
+
+        void ExecJavaScript(string command);
 
         bool Search(string forString, bool forward, bool caseSensitive, bool wrap);
     }
@@ -231,6 +238,23 @@ namespace UserInterface.Views
             }
         }
 
+        public Pango.FontDescription Font
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                if (Browser == null || Browser.Document == null || Browser.Document.Body == null)
+                    return;
+
+                if (Browser.Document.Body.Style == null)
+                    Browser.Document.Body.Style = "";
+                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {1.5 * value.Size / Pango.Scale.PangoScale}px;";
+            }
+        }
+
         public TWWebBrowserIE(Gtk.Box w)
         {
             InitIE(w);
@@ -255,6 +279,11 @@ namespace UserInterface.Views
         public void ExecJavaScript(string command, object[] args)
         {
             Browser.Document.InvokeScript(command, args);
+        }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.Document.InvokeScript(script);
         }
 
         // Flag: Has Dispose already been called? 
@@ -381,6 +410,16 @@ namespace UserInterface.Views
             }
         }
 
+        public Pango.FontDescription Font
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.fontFamily = \"{value.Family}\";");
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.fontSize = {1.5 * value.Size / Pango.Scale.PangoScale}");
+            }
+        }
+
         /// <summary>
         /// The find form
         /// </summary>
@@ -468,6 +507,11 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             Browser.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
+        }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.StringByEvaluatingJavaScriptFromString(script);
         }
 
         // Flag: Has Dispose already been called? 
@@ -585,6 +629,12 @@ namespace UserInterface.Views
             }
             Browser.ExecuteScript(command + "(" + argString + ")");
         }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.ExecuteScript(script);
+        }
+
         // Flag: Has Dispose already been called? 
         bool disposed = false;
 
@@ -665,6 +715,16 @@ namespace UserInterface.Views
             {
                 string colour = Utility.Colour.ToHex(value);
                 Browser.ExecuteScript($"document.body.style.color = \"{colour}\";");
+            }
+        }
+
+        public Pango.FontDescription Font
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                Browser.ExecuteScript($"document.body.style.fontFamily = \"{value.Family}\";");
+                Browser.ExecuteScript($"document.body.style.fontSize = \"{1.5 * value.Size / Pango.Scale.PangoScale}\";");
             }
         }
     }
@@ -931,6 +991,8 @@ namespace UserInterface.Views
 
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
             browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+
+            browser.Font = MainWidget.Style.FontDescription;
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 
