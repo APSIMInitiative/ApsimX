@@ -24,12 +24,12 @@ namespace UserInterface.Views
         /// <summary>
         /// The currently selected node/object.
         /// </summary>
-        private DGObject selectedObject;
+        public DGObject selectedObject { get; private set; }
 
         /// <summary>
         /// Keeps track of whether the mouse button is currently down.
         /// </summary>
-        private bool mouseDown = false;
+        private bool isDragging = false;
 
         /// <summary>
         /// Drawing area upon which the graph is rendered.
@@ -50,6 +50,11 @@ namespace UserInterface.Views
         /// List of arcs which connect the nodes.
         /// </summary>
         private List<DGArc> arcs = new List<DGArc>();
+
+        /// <summary>
+        /// List of arcs which connect the nodes.
+        /// </summary>
+        public event EventHandler<EventArgs> OnButtonDown;
 
         /// <summary>Initializes a new instance of the <see cref="DirectedGraphView" /> class.</summary>
         public DirectedGraphView(ViewBase owner = null) : base(owner)
@@ -75,10 +80,18 @@ namespace UserInterface.Views
             
             mainWidget = scroller;
             drawable.Realized += OnRealized;
+            mainWidget.Destroyed += OnDestroyed;
+            ContextMenu = null;
+
             DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
             DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
         }
 
+        private void OnDestroyed(object sender, EventArgs e)
+        {
+            mainWidget.Destroyed -= OnDestroyed;
+            ContextMenu = null;
+        }
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
         public DirectedGraph DirectedGraph
         {
@@ -133,6 +146,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Mouse button has been pressed</summary>
+        [GLib.ConnectBefore]
         private void OnMouseButtonPress(object o, ButtonPressEventArgs args)
         {
             // Get the point clicked by the mouse.
@@ -153,22 +167,24 @@ namespace UserInterface.Views
             if (selectedObject != null)
             {
                 selectedObject.Selected = true;
-                mouseDown = true;
+                if (args.Event.Button == 1)
+                    isDragging = true;
                 lastPos = clickPoint;
             }
-
+            if (OnButtonDown != null) { OnButtonDown(this, new EventArgs()); };
             // Redraw area.
             (o as DrawingArea).QueueDraw();
         }
 
         /// <summary>Mouse has been moved</summary>
+        [GLib.ConnectBefore]
         private void OnMouseMove(object o, MotionNotifyEventArgs args)
         {
             // Get the point clicked by the mouse.
             PointD movePoint = new PointD(args.Event.X, args.Event.Y);
 
             // If an object is under the mouse then move it
-            if (mouseDown && selectedObject != null)
+            if (isDragging && selectedObject != null)
             {
                 lastPos.X = movePoint.X;
                 lastPos.Y = movePoint.Y;
@@ -179,10 +195,14 @@ namespace UserInterface.Views
         }
 
         /// <summary>Mouse button has been released</summary>
+        /// Displays the popup menu when the right mouse button is released
+        [GLib.ConnectBefore]
         private void OnMouseButtonRelease(object o, ButtonReleaseEventArgs args)
         {
-            mouseDown = false;
+            isDragging = false;
             CheckSizing();
+            if (args.Event.Button == 3 && ContextMenu != null)
+                ContextMenu.Show();
         }
 
         /// <summary>
@@ -212,5 +232,9 @@ namespace UserInterface.Views
                     drawable.HeightRequest = 2 * drawable.Allocation.Height;
             }
         }
+
+        /// <summary>Gets or sets the popup menu of the view.</summary>
+        public MenuView ContextMenu { get; set /*{ value.AttachToWidget(drawable); } */ ; }
+
     }
 }
