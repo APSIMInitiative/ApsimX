@@ -54,7 +54,7 @@
         /// Summary file Link
         /// </summary>
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         /// <summary>The surface organic matter</summary>
         [Link]
@@ -65,13 +65,13 @@
         private Soil Soil = null;
 
         [ChildLinkByName]
-        NutrientPool FOMCellulose = null;
+        INutrientPool FOMCellulose = null;
         [ChildLinkByName]
-        NutrientPool FOMCarbohydrate = null;
+        INutrientPool FOMCarbohydrate = null;
         [ChildLinkByName]
-        NutrientPool FOMLignin = null;
+        INutrientPool FOMLignin = null;
         [ChildLinkByName]
-        NutrientPool SurfaceResidue = null;
+        INutrientPool SurfaceResidue = null;
         [ScopedLinkByName]
         private ISolute NO3 = null;
         [ScopedLinkByName]

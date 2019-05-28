@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\CustomMenuToolButton.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -734,6 +735,7 @@
     <EmbeddedResource Include="Resources\AgPastureRemoveBiomass.png" />
     <EmbeddedResource Include="Resources\AgPastureRootDistribution.png" />
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

@@ -8,7 +8,7 @@
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
-    <Name>Chicory</Name>
+    <Name>Simulation</Name>
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
