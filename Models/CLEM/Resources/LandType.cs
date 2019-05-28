@@ -55,7 +55,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Soil type index")]
         [Required]
-        public int SoilType { get; set; }
+        public string SoilType { get; set; }
 
         /// <summary>
         /// Area not currently being used (ha)

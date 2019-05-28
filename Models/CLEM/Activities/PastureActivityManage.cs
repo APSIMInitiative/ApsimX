@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
         private double unitsOfArea2Ha;
         private IFileGRASP FileGRASP = null;
         private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-        private int soilIndex = 0; // obtained from LandType used
+        private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
         private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
@@ -358,8 +358,8 @@ namespace Models.CLEM.Activities
                 {
                     detach = LinkedNativeFoodType.DetachRate;
                     pool.Age++;
-                    pool.Growth = 0;
                 }
+                pool.Growth = 0;
                 double detachedAmount = pool.Amount * (1 - detach);
                 pool.Set(detachedAmount);
                 pool.Detached = detachedAmount;
