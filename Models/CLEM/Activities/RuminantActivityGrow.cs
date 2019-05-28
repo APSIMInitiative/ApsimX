@@ -316,8 +316,8 @@ namespace Models.CLEM.Activities
                         //double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
-
-                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
+                        // Used to be 1.2 * Potential
+                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
                     }
                     else
                     {
