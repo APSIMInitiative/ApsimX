@@ -43,7 +43,7 @@ namespace Models.CLEM
     [HelpUri(@"content/features/datareaders/cropsqlitedatareader.htm")]
     public class FileSQLiteCrop : CLEMModel, IFileCrop
     {
-        private readonly bool nitrogenColumnExists;
+        private bool nitrogenColumnExists = false;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -235,7 +235,7 @@ namespace Models.CLEM
             }
 
             // check if Npct column exists in database
-            bool nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains("Npct");
+            nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains("Npct");
 
             // define SQL filter to load data
             string sqlQuery = "SELECT Year,Month,Crop,Amount"+(nitrogenColumnExists?",Npct":"")+" FROM " + TableName
