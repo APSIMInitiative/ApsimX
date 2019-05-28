@@ -6,6 +6,7 @@
 namespace UserInterface.Views
 {
     using System;
+    using System.Collections.Generic;
     using Interfaces;
     using Gtk;
 
@@ -42,12 +43,15 @@ namespace UserInterface.Views
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
             vbox1.PackStart(combobox1, false, false, 0);
-            vbox1.Show();
-            vpaned1.Pack2(vbox1, false, false);
+            Alignment halign = new Alignment(0, 0, 0, 1);
+            halign.Add(vbox1);
+
+            vpaned1.Pack2(halign, false, false);
             vpaned1.Show();
 
+            graph.ContextMenu = new MenuView();
+            graph.OnButtonDown += OnGraphButtonClick;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
-
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -59,7 +63,25 @@ namespace UserInterface.Views
             owner = null;
         }
 
+        // The graph is telling us it's made a selection on the down click, and is
+        // about to post a menu when the user lets go.
+        public void OnGraphButtonClick(object sender, EventArgs e)
+        {
 
+            var mnu = new List<MenuDescriptionArgs>();
+
+            MenuDescriptionArgs desc = new MenuDescriptionArgs();
+            desc.Name = "Add Node";
+            //desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
+
+            //EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mun, method);
+            EventHandler handler = delegate (object s, EventArgs x) { Console.WriteLine("Test"); };
+            desc.OnClick = handler;
+
+            mnu.Add(desc);
+            graph.ContextMenu.Populate(mnu);
+
+        }
         private void OnComboBox1SelectedValueChanged(object sender, EventArgs e)
         {
             if (OnInitialStateChanged != null)

@@ -50,8 +50,9 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
-                    if (info != null)
+                    var resourceName = description.ResourceNameForImage;
+                    if (resourceName != null &&
+                        Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceName) != null)
                     {
                         ImageMenuItem imageItem = new ImageMenuItem(description.Name);
                         imageItem.Image = new Gtk.Image(null, description.ResourceNameForImage);
