@@ -71,7 +71,8 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user double clicks the selection</summary>
         public event EventHandler DoubleClicked;
 
-        public IkonView listview;
+        public IkonView Listview { get; set; }
+
         private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
 
         /// <summary>
@@ -81,41 +82,41 @@ namespace UserInterface.Views
 
         private const string modelMime = "application/x-model-component";
         private GCHandle dragSourceHandle;
-        private bool _isModels = false;
-        private Menu Popup = new Menu();
+        private bool isModels = false;
+        private Menu popup = new Menu();
         private AccelGroup accel = new AccelGroup();
 
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
         {
-            listview = new IkonView(listmodel);
+            Listview = new IkonView(listmodel);
             //listview = new TreeView(listmodel);
-            _mainWidget = listview;
-            listview.MarkupColumn = 0;
-            listview.PixbufColumn = 1;
-            listview.TooltipColumn = 2;
-            listview.SelectionMode = SelectionMode.Browse;
-            listview.Orientation = Gtk.Orientation.Horizontal;
-            listview.RowSpacing = 0;
-            listview.ColumnSpacing = 0;
-            listview.ItemPadding = 0;
+            mainWidget = Listview;
+            Listview.MarkupColumn = 0;
+            Listview.PixbufColumn = 1;
+            Listview.TooltipColumn = 2;
+            Listview.SelectionMode = SelectionMode.Browse;
+            Listview.Orientation = Gtk.Orientation.Horizontal;
+            Listview.RowSpacing = 0;
+            Listview.ColumnSpacing = 0;
+            Listview.ItemPadding = 0;
 
-            listview.SelectionChanged += OnSelectionChanged;
-            listview.ButtonPressEvent += OnDoubleClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            Listview.SelectionChanged += OnSelectionChanged;
+            Listview.ButtonPressEvent += OnDoubleClick;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             //listview.CursorChanged -= OnSelectionChanged;
-            listview.SelectionChanged -= OnSelectionChanged;
-            listview.ButtonPressEvent -= OnDoubleClick;
+            Listview.SelectionChanged -= OnSelectionChanged;
+            Listview.ButtonPressEvent -= OnDoubleClick;
             ClearPopup();
-            Popup.Destroy();
+            popup.Destroy();
             listmodel.Dispose();
             accel.Dispose();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Get or sets the list of valid values.</summary>
@@ -148,7 +149,7 @@ namespace UserInterface.Views
                     {
                         text = AddFileNameListItem(val, ref image);
                     }
-                    else if (_isModels)
+                    else if (isModels)
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
                         string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
@@ -174,10 +175,8 @@ namespace UserInterface.Views
         {
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
             List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
-
-            string result = "<span font_weight='normal'>" + Path.GetFileName(fileName) + "</span>\n<span font_weight='light' size='smaller' style='italic'>" + Path.GetDirectoryName(fileName) + "</span>";
-
-            listview.ItemPadding = 6; // Restore padding if we have images to display
+            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            Listview.ItemPadding = 6; // Restore padding if we have images to display
 
             image = null;
             // Add an image index.
@@ -200,7 +199,7 @@ namespace UserInterface.Views
         {
             get
             {
-                TreePath[] selPath = listview.SelectedItems;
+                TreePath[] selPath = Listview.SelectedItems;
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
@@ -218,7 +217,7 @@ namespace UserInterface.Views
             }
             set
             {
-                TreePath[] selPath = listview.SelectedItems;
+                TreePath[] selPath = Listview.SelectedItems;
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
@@ -235,8 +234,8 @@ namespace UserInterface.Views
         /// <summary>Return true if the listview is visible.</summary>
         public bool IsVisible
         {
-            get { return listview.Visible; }
-            set { listview.Visible = value; }
+            get { return Listview.Visible; }
+            set { Listview.Visible = value; }
         }
 
 
@@ -245,26 +244,26 @@ namespace UserInterface.Views
         /// </summary>
         public bool IsModelList
         {
-            get { return _isModels; }
+            get { return isModels; }
             set
             {
-                bool wasModels = _isModels;
-                _isModels = value;
+                bool wasModels = isModels;
+                isModels = value;
                 if (value)
                 {
                     TargetEntry[] target_table = new TargetEntry[] { new TargetEntry(modelMime, TargetFlags.App, 0) };
 
-                    Drag.SourceSet(listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
-                    listview.DragBegin += OnDragBegin;
-                    listview.DragDataGet += OnDragDataGet;
-                    listview.DragEnd += OnDragEnd;
+                    Drag.SourceSet(Listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
+                    Listview.DragBegin += OnDragBegin;
+                    Listview.DragDataGet += OnDragDataGet;
+                    Listview.DragEnd += OnDragEnd;
                 }
                 else if (wasModels)
                 {
-                    Drag.SourceUnset(listview);
-                    listview.DragBegin -= OnDragBegin;
-                    listview.DragDataGet -= OnDragDataGet;
-                    listview.DragEnd -= OnDragEnd;
+                    Drag.SourceUnset(Listview);
+                    Listview.DragBegin -= OnDragBegin;
+                    Listview.DragDataGet -= OnDragDataGet;
+                    Listview.DragEnd -= OnDragEnd;
                 }
             }
         }
@@ -289,12 +288,12 @@ namespace UserInterface.Views
                 DoubleClicked.Invoke(sender, e);
             if (e.Event.Button == 3)
             {
-                TreePath path = listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
+                TreePath path = Listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
                 if (path != null)
                 {
-                    listview.SelectPath(path);
-                    if (Popup.Children.Count() > 0)
-                        Popup.Popup();
+                    Listview.SelectPath(path);
+                    if (popup.Children.Count() > 0)
+                        popup.Popup();
                 }
                 e.RetVal = true;
             }
@@ -352,30 +351,30 @@ namespace UserInterface.Views
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
             ClearPopup();
-            foreach (MenuDescriptionArgs Description in menuDescriptions)
+            foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
-                if (Description.ShowCheckbox)
+                if (description.ShowCheckbox)
                 {
-                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
-                    checkItem.Active = Description.Checked;
+                    CheckMenuItem checkItem = new CheckMenuItem(description.Name);
+                    checkItem.Active = description.Checked;
                     item = checkItem;
                 }
-                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && MasterView.HasResource(Description.ResourceNameForImage))
+                else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
-                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    ImageMenuItem imageItem = new ImageMenuItem(description.Name);
+                    imageItem.Image = new Image(null, description.ResourceNameForImage);
                     item = imageItem;
                 }
                 else
                 {
-                    item = new MenuItem(Description.Name);
+                    item = new MenuItem(description.Name);
                 }
-                if (!String.IsNullOrEmpty(Description.ShortcutKey))
+                if (!String.IsNullOrEmpty(description.ShortcutKey))
                 {
                     string keyName = String.Empty;
                     Gdk.ModifierType modifier = Gdk.ModifierType.None;
-                    string[] keyNames = Description.ShortcutKey.Split(new Char[] { '+' });
+                    string[] keyNames = description.ShortcutKey.Split(new Char[] { '+' });
                     foreach (string name in keyNames)
                     {
                         if (name == "Ctrl")
@@ -398,18 +397,18 @@ namespace UserInterface.Views
                     {
                     }
                 }
-                item.Activated += Description.OnClick;
-                Popup.Append(item);
+                item.Activated += description.OnClick;
+                popup.Append(item);
 
             }
-            if (Popup.AttachWidget == null)
-                Popup.AttachToWidget(listview, null);
-            Popup.ShowAll();
+            if (popup.AttachWidget == null)
+                popup.AttachToWidget(Listview, null);
+            popup.ShowAll();
         }
 
         private void ClearPopup()
         {
-            foreach (Widget w in Popup)
+            foreach (Widget w in popup)
             {
                 if (w is MenuItem)
                 {
@@ -424,7 +423,7 @@ namespace UserInterface.Views
                         }
                     }
                 }
-                Popup.Remove(w);
+                popup.Remove(w);
                 w.Destroy();
             }
         }

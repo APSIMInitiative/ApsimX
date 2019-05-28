@@ -33,13 +33,6 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
-            if (!Path.GetTempPath().Contains("ApsimX"))
-            {
-                string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-                Directory.CreateDirectory(tempFolder);
-                Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
-            }
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             int exitCode = 0;
             try
@@ -178,8 +171,7 @@ namespace Models
             foreach (string file in files)
             {
                 string fileName = Path.ChangeExtension(file, ".db");
-                Storage.DataStore storage = new Storage.DataStore(fileName);
-                storage.Open(true);
+                Storage.IDataStore storage = new Storage.DataStore(fileName);
                 Report.Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }

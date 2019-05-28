@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/pasture/cutandcarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]
@@ -358,7 +359,7 @@ namespace Models.CLEM.Activities
             ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
-                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) | model.Parent.GetType() == typeof(ActivitiesHolder))
+                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
                 {
                     limiterFound = LocateCutAndCarryLimiter(model.Parent);
                 }

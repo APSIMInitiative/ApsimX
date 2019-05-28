@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -21,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages weaning of suckling ruminant individuals.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantwean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         /// <summary>
@@ -97,7 +99,8 @@ namespace Models.CLEM.Activities
                 {
                     if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
                     {
-                        ind.Wean();
+                        string reason = (ind.Age >= WeaningAge)? "Age" : "Weight";
+                        ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
                         Status = ActivityStatus.Success;
@@ -231,6 +234,8 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>";
             }
             html += "</div>";
+            // warn if natural weaning will take place
+
             return html;
         }
     }

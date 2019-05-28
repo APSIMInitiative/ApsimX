@@ -40,6 +40,9 @@
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
 
+        /// <summary>A list of simulation names to run.</summary>
+        public List<string> SimulationNamesToRun { get; set; }
+
         public event EventHandler Finished;
 
         /// <summary>Constructor</summary>
@@ -63,9 +66,10 @@
         }
 
         /// <summary>Perform the command</summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do(CommandHistory commandHistory)
         {
             IsRunning = true;
+            jobManager.SimulationNamesToRun = SimulationNamesToRun;
 
             stopwatch.Start();
                 
@@ -79,7 +83,7 @@
         }
 
         /// <summary>Undo the command</summary>
-        public void Undo(CommandHistory CommandHistory)
+        public void Undo(CommandHistory commandHistory)
         {
         }
 
@@ -88,7 +92,9 @@
         {
             lock (this)
             {
-                numSimulationsRun++;
+                if (e.job is RunSimulation)
+                    numSimulationsRun++;
+
                 if (e.exceptionThrowByJob != null)
                     errors.Add(e.exceptionThrowByJob);
             }
@@ -162,8 +168,7 @@
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             int numSimulations = 0;
-            if (jobManager?.SimulationNamesBeingRun != null)
-                numSimulations = jobManager.SimulationNamesBeingRun.Count;
+            numSimulations = jobManager.NumSimulationNamesBeingRun;
 
             double numberComplete = 0.0;
             if (jobManager.SimClocks != null)

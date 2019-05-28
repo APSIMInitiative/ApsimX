@@ -344,7 +344,7 @@ namespace Models.Soils
         /// The clock
         /// </summary>
         [Link]
-        private Clock Clock = null;
+        private IClock Clock = null;
 
         /// <summary>
         /// The weather
@@ -371,7 +371,7 @@ namespace Models.Soils
         /// The paddock
         /// </summary>
         [Link]
-        private Simulation paddock = null;
+        private Zone paddock = null;
 
         //Needed for SurfaceCover
         /// <summary>
@@ -1543,7 +1543,7 @@ namespace Models.Soils
             {
             constants = new Constants();
 
-            constants.Summary = (Summary)Summary;
+            constants.Summary = Summary;
             constants.thismodel = this;
 
             constants.min_crit_temp                  = min_crit_temp;          
@@ -1577,7 +1577,7 @@ namespace Models.Soils
         /// SoilWater module has detected that the Soil has no layers.
         /// </exception>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnCommencing(object sender, EventArgs e)
         {
 
             SaveModuleConstants();

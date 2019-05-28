@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.IO;
-using System.Data;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using Models.Storage;
-
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
-
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Run;
+    using Models.Storage;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Threading;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -26,8 +24,14 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class Input : Model, IRunnable, IReferenceExternalFiles
     {
+        /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
+
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
@@ -62,21 +66,41 @@ namespace Models.PostSimulationTools
         }
 
         /// <summary>
+        /// Gets the parent simulation or null if not found
+        /// </summary>
+        private IStorageWriter StorageWriter
+        {
+            get
+            {
+                // The JobRunnerAsync will not resolve links, so we need to
+                // go looking for the data store ourselves. This is an ugly
+                // hack, no doubt about it, but this infrastructure is about to
+                // be changed/refactored anyway, so hopefully this won't stay
+                // here for too long.
+                if (storage == null)
+                    storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                if (storage == null)
+                    throw new Exception("Cannot find a datastore");
+                return storage.Writer;
+            }
+        }
+
+        /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(IStorageReader dataStore)
+        /// <param name="cancelToken">The cancel token.</param>
+        public void Run(CancellationTokenSource cancelToken)
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
-                dataStore.DeleteDataInTable(Name);
                 DataTable data = GetTable();
                 if (data != null)
                 {
                     data.TableName = this.Name;
-                    dataStore.WriteTable(data);
+                    StorageWriter.WriteTable(data);
                 }
             }
         }

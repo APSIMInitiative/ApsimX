@@ -22,6 +22,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all graze food store types (pastures) for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/graze food store/grazefoodstore.htm")]
     public class GrazeFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>

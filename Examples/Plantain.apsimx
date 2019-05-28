@@ -6,7 +6,7 @@
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </DataStore>
   <Simulation>
-    <Name>Plantain</Name>
+    <Name>Simulation</Name>
     <Clock>
       <Name>Clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

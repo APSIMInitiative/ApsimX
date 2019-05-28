@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all greehouse gas types for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/resources/greenhouse gases/greenhousegases.htm")]
     public class GreenhouseGases : ResourceBaseWithTransactions
     {
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

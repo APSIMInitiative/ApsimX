@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"content/features/activities/ruminant/ruminanttrade.htm")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -109,38 +110,36 @@ namespace Models.CLEM.Activities
             if(TimingOK)
             {
                 // remove any old potential sales from list as these will be updated here
-                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed & a.SaleFlag == HerdChangeReason.TradePurchase);
+                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
                 foreach (RuminantTypeCohort purchasetype in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
                 {
                     for (int i = 0; i < purchasetype.Number; i++)
                     {
                         object ruminantBase = null;
-                        if (purchasetype.Gender == Sex.Male)
-                        {
-                            ruminantBase = new RuminantMale();
-                        }
-                        else
-                        {
-                            ruminantBase = new RuminantFemale();
-                        }
-
-                        Ruminant ruminant = ruminantBase as Ruminant;
-                        ruminant.ID = 0;
-                        ruminant.BreedParams = herdToUse;
-                        ruminant.Breed = this.PredictedHerdBreed;
-                        ruminant.HerdName = this.PredictedHerdName;
-                        ruminant.Gender = purchasetype.Gender;
-                        ruminant.Age = purchasetype.Age;
-                        ruminant.PurchaseAge = purchasetype.Age;
-                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
-                        ruminant.Location = "";
 
                         double u1 = ZoneCLEM.RandomGenerator.NextDouble();
                         double u2 = ZoneCLEM.RandomGenerator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                      Math.Sin(2.0 * Math.PI * u2);
-                        ruminant.Weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+                        double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+
+                        if (purchasetype.Gender == Sex.Male)
+                        {
+                            ruminantBase = new RuminantMale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        }
+                        else
+                        {
+                            ruminantBase = new RuminantFemale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        }
+
+                        Ruminant ruminant = ruminantBase as Ruminant;
+                        ruminant.ID = 0;
+                        ruminant.Breed = this.PredictedHerdBreed;
+                        ruminant.HerdName = this.PredictedHerdName;
+                        ruminant.PurchaseAge = purchasetype.Age;
+                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
+                        ruminant.Location = "";
                         ruminant.PreviousWeight = ruminant.Weight;
 
                         switch (purchasetype.Gender)
@@ -166,7 +165,7 @@ namespace Models.CLEM.Activities
             // sale details any timestep when conditions are met.
             foreach (Ruminant ind in this.CurrentHerd(true))
             {
-                if (ind.Age - ind.PurchaseAge >= MinMonthsKept & ind.Weight >= TradeWeight)
+                if (ind.Age - ind.PurchaseAge >= MinMonthsKept && ind.Weight >= TradeWeight)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
                 }

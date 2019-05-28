@@ -21,6 +21,7 @@ namespace UserInterface.Views
     using OxyPlot.GtkSharp;
     using EventArguments;
     using APSIM.Shared.Utilities;
+    using System.Linq;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -63,7 +64,7 @@ namespace UserInterface.Views
         private Label captionLabel = null;
         private EventBox captionEventBox = null;
         private Label label2 = null;
-        private Menu Popup = new Menu();
+        private Menu popup = new Menu();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
@@ -77,7 +78,7 @@ namespace UserInterface.Views
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
-            _mainWidget = vbox1;
+            mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
@@ -93,12 +94,14 @@ namespace UserInterface.Views
             plot1.Model.MouseDown += OnChartClick;
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
-            Popup.AttachToWidget(plot1, null);
+            popup.AttachToWidget(plot1, null);
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
-            BackColor = OxyPlot.OxyColors.White;
+            Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+            ForegroundColour = Utility.Colour.ToOxy(foreground);
+            if (!Utility.Configuration.Settings.DarkTheme)
+                BackColor = Utility.Colour.ToOxy(Color.White);
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -112,7 +115,7 @@ namespace UserInterface.Views
             // We can do this via reflection. Here's how it currently can be done in Gtk#.
             // Windows.Forms would do it differently.
             // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in Popup)
+            foreach (Widget w in popup)
             {
                 if (w is MenuItem)
                 {
@@ -129,10 +132,10 @@ namespace UserInterface.Views
                 }
             }
             Clear();
-            Popup.Dispose();
+            popup.Dispose();
             plot1.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -173,10 +176,40 @@ namespace UserInterface.Views
         /// </summary>
         public int LeftRightPadding { get; set; }
 
+        /// <summary>
+        /// Controls the background colour of the graph.
+        /// </summary>
         public OxyColor BackColor
         {
-            get { return this.plot1.Model.Background; }
-            set { this.plot1.Model.Background = value; }
+            get
+            {
+                if (plot1 == null || plot1.Model == null)
+                    return OxyColors.White;
+                return this.plot1.Model.Background;
+            }
+            set
+            {
+                if (plot1 != null && plot1.Model != null)
+                    this.plot1.Model.Background = value;
+            }
+        }
+
+        /// <summary>
+        /// Controls the foreground colour of the graph.
+        /// </summary>
+        public OxyColor ForegroundColour
+        {
+            get
+            {
+                if (plot1 == null || plot1.Model == null)
+                    return OxyColors.Black; // Fallback to black
+                return this.plot1.Model.TextColor;
+            }
+            set
+            {
+                if (plot1 != null && plot1.Model != null)
+                    this.plot1.Model.TextColor = value;
+            }
         }
 
         public int Width
@@ -293,6 +326,8 @@ namespace UserInterface.Views
                     series.Title = title;
                 else
                     series.ToolTip = title;
+                if (colour == Color.Empty)
+                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
@@ -384,6 +419,12 @@ namespace UserInterface.Views
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+                // By default, clicking on a datapoint (a bar) of a bar graph
+                // will create a pop-up showing the x/y values at the beginning
+                // and end of the bar. We override this here, so that it only
+                // shows the x/y pair at the end of the bar. Perhaps we should
+                // accept the tracker string as an argument to this function?
+                series.TrackerFormatString = "{0}\n{1}: {3}\n{4}: {6}";
                 this.plot1.Model.Series.Add(series);
             }
         }
@@ -401,7 +442,7 @@ namespace UserInterface.Views
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        public void DrawArea(
+        public void DrawRegion(
             string title,
             IEnumerable x1,
             IEnumerable y1,
@@ -417,7 +458,8 @@ namespace UserInterface.Views
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
-
+            if (showOnLegend)
+                series.Title = title;
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
@@ -433,6 +475,33 @@ namespace UserInterface.Views
             series.CanTrackerInterpolatePoints = false;
 
             this.plot1.Model.Series.Add(series);
+        }
+
+        /// <summary>
+        /// Draw an  area series with the specified arguments. Similar to a
+        /// line series, but the area under the curve will be filled with colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawArea(
+            string title,
+            double[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend)
+        {
+            // Just use a region series (colours area between two curves), and use y = 0 for the second curve.
+            List<double> y2 = new List<double>();
+            y2.AddRange(Enumerable.Repeat(0d, y.Length));
+
+            DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
         }
 
         /// <summary>
@@ -484,8 +553,12 @@ namespace UserInterface.Views
             else
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
-            annotation.TextColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-            //annotation.Text += "\r\n\r\n";
+
+            if (colour == Color.Empty)
+                annotation.TextColor = ForegroundColour;
+            else
+                annotation.TextColor = Utility.Colour.ToOxy(colour);
+
             this.plot1.Model.Annotations.Add(annotation);
         }
         /// <summary>
@@ -576,8 +649,18 @@ namespace UserInterface.Views
             bool crossAtZero)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
+
             if (oxyAxis != null)
             {
+                oxyAxis.AxislineColor = this.ForegroundColour;
+                oxyAxis.ExtraGridlineColor = this.ForegroundColour;
+                oxyAxis.MajorGridlineColor = this.ForegroundColour;
+                oxyAxis.MinorGridlineColor = this.ForegroundColour;
+                oxyAxis.TicklineColor = this.ForegroundColour;
+                oxyAxis.MinorTicklineColor = this.ForegroundColour;
+                oxyAxis.TitleColor = this.ForegroundColour;
+                oxyAxis.TextColor = this.ForegroundColour;
+
                 oxyAxis.Title = title.Trim();
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
@@ -625,7 +708,48 @@ namespace UserInterface.Views
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
-            // this.plot1.Model.LegendSymbolLength = 60;
+            this.plot1.Model.LegendSymbolLength = 30;
+
+            // If 2 series have the same title then remove their titles (this will
+            // remove them from the legend) and create a new series solely for the
+            // legend that has line type and marker type combined.
+            var newSeriesToAdd = new List<LineSeries>();
+            foreach (var series in plot1.Model.Series)
+            {
+                if (series is LineSeries && !string.IsNullOrEmpty(series.Title))
+                {
+                    var matchingSeries = FindMatchingSeries(series);
+                    if (matchingSeries != null)
+                    {
+                        var newFakeSeries = new LineSeries();
+                        newFakeSeries.Title = series.Title;
+                        newFakeSeries.Color = (series as LineSeries).Color;
+                        newFakeSeries.LineStyle = (series as LineSeries).LineStyle;
+                        if (newFakeSeries.LineStyle == LineStyle.None)
+                            (series as LineSeries).LineStyle = (matchingSeries as LineSeries).LineStyle;
+                        if ((series as LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                        {
+                            newFakeSeries.MarkerType = (matchingSeries as LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (matchingSeries as LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (matchingSeries as LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (matchingSeries as LineSeries).MarkerSize;
+                        }
+                        else
+                        {
+                            newFakeSeries.MarkerType = (series as LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (series as LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (series as LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (series as LineSeries).MarkerSize;
+                        }
+
+                        newSeriesToAdd.Add(newFakeSeries);
+
+                        series.Title = null;          // remove from legend.
+                        matchingSeries.Title = null;  // remove from legend.
+                    }
+                }
+            }
+            newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
         }
 
         /// <summary>
@@ -709,14 +833,11 @@ namespace UserInterface.Views
         /// </summary>
         public void ExportToClipboard()
         {
-            MemoryStream stream = new MemoryStream();
-            PngExporter pngExporter = new PngExporter();
-            pngExporter.Width = 800;
-            pngExporter.Height = 600;
-            pngExporter.Export(plot1.Model, stream);
-            stream.Seek(0, SeekOrigin.Begin);
+            Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
+            string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
+            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-            cb.Image = new Gdk.Pixbuf(stream);
+            cb.Image = new Gdk.Pixbuf(fileName);
         }
 
         /// <summary>
@@ -729,8 +850,8 @@ namespace UserInterface.Views
         {
             ImageMenuItem item = new ImageMenuItem(menuText);
             item.Activated += onClick;
-            Popup.Append(item);
-            Popup.ShowAll();
+            popup.Append(item);
+            popup.ShowAll();
         }
 
         /// <summary>
@@ -741,7 +862,7 @@ namespace UserInterface.Views
         public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
         {
             CheckMenuItem item = null;
-            foreach (Widget w in Popup)
+            foreach (Widget w in popup)
             {
                 CheckMenuItem oldItem = w as CheckMenuItem;
                 if (oldItem != null)
@@ -769,8 +890,8 @@ namespace UserInterface.Views
             {
                 item = new CheckMenuItem(menuItemText);
                 item.DrawAsRadio = false;
-                Popup.Append(item);
-                Popup.ShowAll();
+                popup.Append(item);
+                popup.ShowAll();
             }
             // Be sure to set the Active property before attaching the Activated event, since
             // the event handler will call this function again when Active is changed.
@@ -778,6 +899,21 @@ namespace UserInterface.Views
             // (done above) when the item is already found in the menu
             item.Active = active;
             item.Activated += onClick;
+        }
+
+        /// <summary>
+        /// Find a graph series that has the same title as the specified series.
+        /// </summary>
+        /// <param name="series">The series to match.</param>
+        /// <returns>The series or null if not found.</returns>
+        private OxyPlot.Series.Series FindMatchingSeries(OxyPlot.Series.Series series)
+        {
+            foreach (var s in plot1.Model.Series)
+            {
+                if (s != series && s.Title == series.Title)
+                    return s;
+            }
+            return null;
         }
 
         /// <summary>
@@ -827,6 +963,7 @@ namespace UserInterface.Views
             }
 
             if (axis is LinearAxis &&
+                !(axis is DateTimeAxis) &&
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
                 // We want the axis labels to always have a leading 0 when displaying decimal places.
@@ -923,7 +1060,8 @@ namespace UserInterface.Views
         private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
         {
             List<double> dataPointValues = new List<double>();
-
+            double x; // Used only as an out parameter, to maintain backward
+                      // compatibility with older versions VS/C#.
             enumerator.MoveNext();
 
             if (enumerator.Current.GetType() == typeof(DateTime))
@@ -940,7 +1078,7 @@ namespace UserInterface.Views
                 }
                 while (enumerator.MoveNext());
             }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
@@ -1067,23 +1205,23 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnMouseDoubleClick(object sender, OxyMouseDownEventArgs e)
         {
-            Point Location = new Point((int)e.Position.X, (int)e.Position.Y);
+            Point location = new Point((int)e.Position.X, (int)e.Position.Y);
             Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
             Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
-            if (plotArea.Contains(Location))
+            if (plotArea.Contains(location))
             {
                 Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
                 Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                if (legendArea.Contains(Location))
+                if (legendArea.Contains(location))
                 {
-                    int y = Convert.ToInt32(Location.Y - this.plot1.Model.LegendArea.Top);
+                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top);
                     int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
                     int seriesIndex = y / itemHeight;
                     if (this.OnLegendClick != null)
                     {
                         LegendClickArgs args = new LegendClickArgs();
-                        args.seriesIndex = seriesIndex;
-                        args.controlKeyPressed = e.IsControlDown;
+                        args.SeriesIndex = seriesIndex;
+                        args.ControlKeyPressed = e.IsControlDown;
                         this.OnLegendClick.Invoke(sender, args);
                     }
                 }
@@ -1109,7 +1247,7 @@ namespace UserInterface.Views
 
                 Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
                 Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
-                if (titleArea.Contains(Location))
+                if (titleArea.Contains(location))
                 {
                     if (this.OnTitleClick != null)
                     {
@@ -1119,19 +1257,19 @@ namespace UserInterface.Views
 
                 if (this.OnAxisClick != null)
                 {
-                    if (leftAxisArea.Contains(Location))
+                    if (leftAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Left);
                     }
-                    else if (topAxisArea.Contains(Location))
+                    else if (topAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Top);
                     }
-                    else if (rightAxisArea.Contains(Location))
+                    else if (rightAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Right);
                     }
-                    else if (bottomAxisArea.Contains(Location))
+                    else if (bottomAxisArea.Contains(location))
                     {
                         this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Bottom);
                     }
@@ -1235,7 +1373,7 @@ namespace UserInterface.Views
         {
             e.Handled = false;
             if (inRightClick)
-                Popup.Popup();
+                popup.Popup();
             inRightClick = false;
         }
 

@@ -7,6 +7,7 @@ namespace Models.Core.ApsimFile
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Xml;
 
@@ -30,7 +31,12 @@ namespace Models.Core.ApsimFile
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
             string json = JsonConvert.SerializeXmlNode(doc);
-            JObject root = JObject.Parse(json);
+            var settings = new JsonSerializerSettings()
+            {
+                // This will tell the serializer not to attempt to localise dates.
+                DateParseHandling = DateParseHandling.None
+            };
+            JObject root = (JObject)JsonConvert.DeserializeObject(json, settings);
 
             JToken newRoot = CreateObject(root[doc.DocumentElement.Name]);
 
@@ -209,11 +215,11 @@ namespace Models.Core.ApsimFile
                     if (name == "string" || name == "Command")
                         newArray.Add(new JValue(element.ToString()));
                     else if (name == "double")
-                        newArray.Add(new JValue(double.Parse(element.ToString())));
+                        newArray.Add(new JValue(double.Parse(element.ToString(), CultureInfo.InvariantCulture)));
                     else if (name == "int")
-                        newArray.Add(new JValue(int.Parse(element.ToString())));
+                        newArray.Add(new JValue(int.Parse(element.ToString(), CultureInfo.InvariantCulture)));
                     else if (name == "dateTime")
-                        newArray.Add(new JValue(DateTime.Parse(element.ToString())));
+                        newArray.Add(new JValue(DateTime.Parse(element.ToString(), CultureInfo.InvariantCulture)));
                     else if (name == "ArrayOfString")
                     {
                         JArray nestedArray = new JArray();
@@ -234,7 +240,7 @@ namespace Models.Core.ApsimFile
                 if (name == "string" || name == "Command" || name == "Alias")
                     newArray.Add(new JValue(value.ToString()));
                 else if (name == "double")
-                    newArray.Add(new JValue(double.Parse(value.ToString())));
+                    newArray.Add(new JValue(double.Parse(value.ToString(), CultureInfo.InvariantCulture)));
             }
 
             return newArray;
@@ -303,7 +309,7 @@ namespace Models.Core.ApsimFile
                             if (elementType == "string")
                                 newArray.Add(new JValue(value.ToString()));
                             else if (elementType == "double")
-                                newArray.Add(new JValue(double.Parse(value.ToString())));
+                                newArray.Add(new JValue(double.Parse(value.ToString(), CultureInfo.InvariantCulture)));
                         }
                         toObject[propertyName] = newArray;
                     }

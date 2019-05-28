@@ -39,11 +39,11 @@
         {
             JsonSerializer serializer = new JsonSerializer()
             {
+                DateParseHandling = DateParseHandling.None,
                 TypeNameHandling = TypeNameHandling.Objects,
                 ContractResolver = new WritablePropertiesOnlyResolver(),
                 Formatting = Newtonsoft.Json.Formatting.Indented
             };
-
             string json;
             using (StringWriter s = new StringWriter())
                 using (var writer = new JsonTextWriter(s))
@@ -63,7 +63,7 @@
                 throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             string contents = File.ReadAllText(fileName);
-            T newModel = ReadFromString<T>(contents, out creationExceptions);
+            T newModel = ReadFromString<T>(contents, out creationExceptions, fileName);
 
             // Set the filename
             if (newModel is Simulations)
@@ -82,11 +82,15 @@
             var converter = Converter.DoConvert(st, -1, fileName);
 
             T newModel;
-            JsonSerializer serializer = new JsonSerializer()
+            JsonSerializerSettings settings = new JsonSerializerSettings()
             {
-                TypeNameHandling = TypeNameHandling.Auto
+                TypeNameHandling = TypeNameHandling.Auto,
+                DateParseHandling = DateParseHandling.None
             };
-            newModel = serializer.Deserialize<T>(converter.Root.CreateReader());
+            newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings);
+
+            if (newModel is Simulations)
+                (newModel as Simulations).FileName = fileName;
 
             // Parent all models.
             newModel.Parent = null;

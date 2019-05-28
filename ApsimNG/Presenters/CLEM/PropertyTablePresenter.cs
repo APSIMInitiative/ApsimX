@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     using Models.CLEM.Resources;
     using Utility;
     using Views;
+    using Models.Storage;
 
     /// <summary>
     /// <para>
@@ -37,7 +38,7 @@ namespace UserInterface.Presenters
         /// Linked storage reader
         /// </summary>
         [Link]
-        private IStorageReader storage = null;
+        private IDataStore storage = null;
 
         /// <summary>
         /// The underlying grid control to work with.
@@ -181,9 +182,12 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                Model firstChild = model.Children.First();
-                List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
-                return sameTypeChildren;
+                Model firstChild = model.Children.FirstOrDefault();
+                if (firstChild != null)
+                {
+                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    return sameTypeChildren;
+                }
             }
             return null;
         }
@@ -353,6 +357,10 @@ namespace UserInterface.Presenters
         private void FillTable(DataTable table)
         {
             int propIndex = 0;
+            if(this.properties.Count == 0)
+            {
+                return;
+            }
             foreach (VariableProperty property in this.properties[0])
             {
                 //set the number of columns to the number of lists
@@ -412,7 +420,7 @@ namespace UserInterface.Presenters
                 if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = this.storage.TableNames.ToArray();
+                    cell.DropDownStrings = this.storage.Reader.TableNames.ToArray();
                 }
                 else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.CultivarName)
                 {
@@ -553,16 +561,8 @@ namespace UserInterface.Presenters
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
                         string tableName = cell.Value.ToString();
-                        DataTable data = null;
-                        if (storage.TableNames.Contains(tableName))
-                        {
-                            data = this.storage.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
-                        }
-
-                        if (data != null)
-                        {
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
-                        }
+                        if (storage.Reader.TableNames.Contains(tableName))
+                            fieldNames = storage.Reader.ColumnNames(tableName).ToArray<string>();
                     }
                 }
             }

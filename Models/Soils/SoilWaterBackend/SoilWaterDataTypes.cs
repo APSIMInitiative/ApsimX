@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Models.Soils.SoilWaterBackend
             /// <summary>
             /// The summary
             /// </summary>
-        public Summary Summary;
+        public ISummary Summary;
         /// <summary>
         /// The thismodel
         /// </summary>

@@ -4,6 +4,7 @@ namespace Models.PostSimulationTools
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Factorial;
     using Models.Storage;
     using System;
@@ -59,14 +60,12 @@ namespace Models.PostSimulationTools
         /// or
         /// Could not find observed data table:  + ObservedTableName
         /// </exception>
-        public void Run(IStorageReader dataStore)
+        public void Run(IDataStore dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
-                dataStore.DeleteDataInTable(this.Name);
-
-                List<string> predictedDataNames = dataStore.GetTableColumns(PredictedTableName);
-                List<string> observedDataNames = dataStore.GetTableColumns(ObservedTableName);
+                IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
+                IEnumerable<string> observedDataNames = dataStore.Reader.ColumnNames(ObservedTableName);
 
                 if (predictedDataNames == null)
                     throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
@@ -77,57 +76,83 @@ namespace Models.PostSimulationTools
                 // get the common columns between these lists of columns
                 IEnumerable<string> commonCols = predictedDataNames.Intersect(observedDataNames);
 
+                IStorageReader reader = dataStore.Reader;
+                string match1ObsShort = reader.BriefColumnName(ObservedTableName, FieldNameUsedForMatch);
+                string match2ObsShort = reader.BriefColumnName(ObservedTableName, FieldName2UsedForMatch);
+                string match3ObsShort = reader.BriefColumnName(ObservedTableName, FieldName3UsedForMatch);
+
+                string match1PredShort = reader.BriefColumnName(PredictedTableName, FieldNameUsedForMatch);
+                string match2PredShort = reader.BriefColumnName(PredictedTableName, FieldName2UsedForMatch);
+                string match3PredShort = reader.BriefColumnName(PredictedTableName, FieldName3UsedForMatch);
+
                 StringBuilder query = new StringBuilder("SELECT ");
                 foreach (string s in commonCols)
                 {
+                    string obsColShort = reader.BriefColumnName(ObservedTableName, s);
+                    string predColShort = reader.BriefColumnName(PredictedTableName, s);
                     if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
-                        query.Append("I.'@field', ");
+                        query.Append("O.[" + obsColShort + "], ");
                     else
-                        query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
-
-                    query.Replace("@field", s);
+                        query.Append("O.[" + obsColShort + "] AS [Observed." + obsColShort + "], P.[" + predColShort + "] AS [Predicted." + predColShort +"], ");
                 }
 
-                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
+                query.Append("FROM [" + ObservedTableName + "] O INNER JOIN [" + PredictedTableName + "] P USING ([SimulationID]) WHERE O.[" + match1ObsShort + "] = P.[" + match1PredShort + "]");
                 if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
-                    query.Append(" AND I.'@match2' = R.'@match2'");
+                    query.Append(" AND O.[" + match2ObsShort + "] = P.[" + match2PredShort + "]");
                 if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
-                    query.Append(" AND I.'@match3' = R.'@match3'");
+                    query.Append(" AND O.[" + match3ObsShort + "] = P.[" + match3PredShort + "]");
 
-                int checkpointID = dataStore.GetCheckpointID("Current");
-                query.Append(" AND R.CheckpointID = " + checkpointID);
-
+                int checkpointID = dataStore.Writer.GetCheckpointID("Current");
+                query.Append(" AND P.[CheckpointID] = " + checkpointID);
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
-                query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
-
-                query = query.Replace("@match1", FieldNameUsedForMatch);
-                query = query.Replace("@match2", FieldName2UsedForMatch);
-                query = query.Replace("@match3", FieldName3UsedForMatch);
+                query.Replace("O.[SimulationID] AS [Observed.SimulationID], P.[SimulationID] AS [Predicted.SimulationID]", "O.[SimulationID] AS [SimulationID]");
 
                 if (Parent is Folder)
                 {
                     // Limit it to particular simulations in scope.
                     List<string> simulationNames = new List<string>();
                     foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
-                        simulationNames.AddRange(experiment.GetSimulationNames());
+                    {
+                        var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
+                        simulationNames.AddRange(names);
+                    }
+
                     foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
-                    query.Append(" AND I.SimulationID in (");
+                    query.Append(" AND O.[SimulationID] in (");
                     foreach (string simulationName in simulationNames)
                     {
                         if (simulationName != simulationNames[0])
                             query.Append(',');
-                        query.Append(dataStore.GetSimulationID(simulationName));
+                        query.Append(dataStore.Writer.GetSimulationID(simulationName));
                     }
                     query.Append(")");
                 }
 
-                DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
+                DataTable predictedObservedData = reader.GetDataUsingSql(query.ToString());
 
                 if (predictedObservedData != null)
                 {
+                    foreach (DataColumn column in predictedObservedData.Columns)
+                    {
+                        if (column.ColumnName.StartsWith("Predicted."))
+                        {
+                            string shortName = column.ColumnName.Substring("Predicted.".Length);
+                            column.ColumnName = "Predicted." + reader.FullColumnName(PredictedTableName, shortName);
+                        }
+                        else if (column.ColumnName.StartsWith("Observed."))
+                        {
+                            string shortName = column.ColumnName.Substring("Observed.".Length);
+                            column.ColumnName = "Observed." + reader.FullColumnName(ObservedTableName, shortName);
+                        }
+                        else if (column.ColumnName.Equals(match1ObsShort) || column.ColumnName.Equals(match2ObsShort) || column.ColumnName.Equals(match3ObsShort))
+                        {
+                            column.ColumnName = reader.FullColumnName(ObservedTableName, column.ColumnName);
+                        }
+                    }
+
                     // Add in error columns for each data column.
                     foreach (string columnName in commonCols)
                     {
@@ -145,11 +170,12 @@ namespace Models.PostSimulationTools
                                 predictedObservedData.Columns[errorColumnName].SetOrdinal(predictedObservedData.Columns["Predicted." + columnName].Ordinal + 1);
                             }
                         }
+
                     }
 
                     // Write table to datastore.
                     predictedObservedData.TableName = this.Name;
-                    dataStore.WriteTable(predictedObservedData);
+                    dataStore.Writer.WriteTable(predictedObservedData);
 
                     List<string> unitFieldNames = new List<string>();
                     List<string> unitNames = new List<string>();
@@ -157,7 +183,7 @@ namespace Models.PostSimulationTools
                     // write units to table.
                     foreach (string fieldName in commonCols)
                     {
-                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
+                        string units = reader.Units(PredictedTableName, fieldName);
                         if (units != null && units != "()")
                         {
                             string unitsMinusBrackets = units.Replace("(", "").Replace(")", "");
@@ -168,14 +194,13 @@ namespace Models.PostSimulationTools
                         }
                     }
                     if (unitNames.Count > 0)
-                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
+                        dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
                 }
-
                 else
                 {
                     // Determine what went wrong.
-                    DataTable predictedData = dataStore.RunQuery("SELECT * FROM " + PredictedTableName);
-                    DataTable observedData = dataStore.RunQuery("SELECT * FROM " + ObservedTableName);
+                    DataTable predictedData = reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
+                    DataTable observedData = reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
                     if (predictedData == null || predictedData.Rows.Count == 0)
                         throw new Exception(Name + ": Cannot find any predicted data.");
                     else if (observedData == null || observedData.Rows.Count == 0)

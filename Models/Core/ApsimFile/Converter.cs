@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -14,7 +15,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 54; } }
+        public static int LatestVersion { get { return 57; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -58,8 +59,10 @@
             {
                 int fileVersion = (int)returnData.Root["Version"];
 
-                // Update the xml if not at the latest version.
+                if (fileVersion > LatestVersion)
+                    throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
 
+                // Run converters if not at the latest version.
                 while (fileVersion < toVersion)
                 {
                     returnData.DidConvert = true;
@@ -229,7 +232,11 @@
         {
             foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
             {
-                double rootWt = Convert.ToDouble(SOM["RootWt"]);
+                double rootWt;
+                if (SOM["RootWt"] is JArray)
+                    rootWt = Convert.ToDouble(SOM["RootWt"][0]); // This can happen when importing old APSIM file.
+                else
+                    rootWt = Convert.ToDouble(SOM["RootWt"]);
                 SOM.Remove("RootWt");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 
@@ -433,12 +440,129 @@
                 }
             }
         }
+
+
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion55(JObject root, string fileName)
+        {
+            foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
+            {
+                double soilcnr;
+                if (SOM["SoilCN"] is JArray)
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"][0]); // This can happen when importing old APSIM file.
+                else
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"]);
+                SOM.Remove("SoilCN");
+                double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
+
+                double[] SoilCNVector = new double[thickness.Length];
+
+                for (int layer = 0; layer < thickness.Length; layer++)
+                    SoilCNVector[layer] = soilcnr;
+
+                JsonUtilities.SetValues(SOM, "SoilCN", SoilCNVector);
+            }
+
+        }
+
+        /// <summary>
+        /// Change Factor.Specifications to Factor.Specification. Also FactorValue
+        /// becomes CompositeFactor.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion56(JToken root, string fileName)
+        {
+            foreach (var factor in JsonUtilities.ChildrenRecursively(root as JObject, "Factor"))
+            {
+                var parent = JsonUtilities.Parent(factor);
+
+                string parentModelType = JsonUtilities.Type(parent);
+                if (parentModelType == "Factors")
+                {
+                    var specifications = factor["Specifications"] as JArray;
+                    if (specifications != null)
+                    {
+                        if (specifications.Count > 1)
+                        {
+                            // must be a compound factor. 
+
+                            // Change our Factor to a CompositeFactor
+                            factor["$type"] = "Models.Factorial.CompositeFactor, Models";
+
+                            // Remove the Factor from it's parent.
+                            var parentChildren = parent["Children"] as JArray;
+                            parentChildren.Remove(factor);
+
+                            // Create a new site factor and add our CompositeFactor to the children list.
+                            var siteFactor = JsonUtilities.ChildWithName(parent as JObject, "Site") as JObject;
+                            if (siteFactor == null)
+                            {
+                                // Create a site factor 
+                                siteFactor = new JObject();
+                                siteFactor["$type"] = "Models.Factorial.Factor, Models";
+                                siteFactor["Name"] = "Site";
+                                JArray siteFactorChildren = new JArray();
+                                siteFactor["Children"] = siteFactorChildren;
+
+                                // Add our new site factor to our models parent.
+                                parentChildren.Add(siteFactor);
+                            }
+                            (siteFactor["Children"] as JArray).Add(factor);
+
+                        }
+                        else
+                        {
+                            // Convert array to string.
+                            if (specifications.Count > 0)
+                                factor["Specification"] = specifications[0].ToString();
+                        }
+                    }
+                }
+                else if (parentModelType == "Factor")
+                {
+                    factor["$type"] = "Models.Factorial.CompositeFactor, Models";
+                }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenRecursively(root as JObject, "Series"))
+            {
+                var factorToVaryColours = series["FactorToVaryColours"];
+                if (factorToVaryColours != null && factorToVaryColours.Value<string>() == "Simulation")
+                    series["FactorToVaryColours"] = "SimulationName";
+                var factorToVaryMarkers = series["FactorToVaryMarkers"];
+                if (factorToVaryMarkers != null && factorToVaryMarkers.Value<string>() == "Simulation")
+                    series["FactorToVaryMarkers"] = "SimulationName";
+                var factorToVaryLines = series["FactorToVaryLines"];
+                if (factorToVaryLines != null && factorToVaryLines.Value<string>() == "Simulation")
+                    series["FactorToVaryLines"] = "SimulationName";
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 57. Adds a RetranslocateNonStructural node to
+        /// all GenericOrgans which do not have a child called
+        /// RetranslocateNitrogen.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion57(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+                if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
+                    JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
+        }
+
+        /// <summary>
+        /// Changes initial Root Wt to an array.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion99(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
@@ -453,8 +577,8 @@
             {
                 manager.Replace("using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
 
-                manager.Replace(".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                manager.Replace(".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                manager.Replace("SoilNitrogen.FOMN", ".Nutrient.FOMN");
+                manager.Replace("SoilNitrogen.FOMC", ".Nutrient.FOMC");
 
                 if (manager.Replace("Soil.SoilNitrogen.HumicN", "Humic.N"))
                     manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[ScopedLinkByName]" });
@@ -469,25 +593,25 @@
                 if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
                     manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
                 
-                manager.Replace(".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
+                manager.Replace("SoilNitrogen.MineralisedN", "Nutrient.MineralisedN");
 
-                manager.Replace(".SoilNitrogen.TotalN", ".Nutrient.TotalN");
+                manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN");
                 if (manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN"))
                 {
                     manager.RemoveDeclaration("SoilNitrogen");
                     manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
                 }
 
-                manager.Replace(".SoilNitrogen.TotalC", ".Nutrient.TotalC");
+                manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC");
                 if (manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC"))
                 {
                     manager.RemoveDeclaration("SoilNitrogen");
                     manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
                 }
 
-                manager.Replace(".SoilNitrogen.mineral_n", ".Nutrient.MineralN");
-                manager.Replace(".SoilNitrogen.Denitrification", ".Nutrient.Natm");
-                manager.Replace(".SoilNitrogen.n2o_atm", ".Nutrient.N2Oatm");
+                manager.Replace("SoilNitrogen.mineral_n", "Nutrient.MineralN");
+                manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm");
+                manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm");
                 manager.Save();
             }
 
