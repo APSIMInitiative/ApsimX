@@ -119,8 +119,26 @@ namespace Models.CLEM.Groupings
                 default:
                     break;
             }
-            html += "</span> is fed to the individuals that match the following conditions:";
+            html += "</span> ";
+            switch (ft)
+            {
+                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                    html += "combined is fed to all individuals";
+                    break;
+                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    html += "is fed to each individual";
+                    break;
+                default:
+                    html += "is fed to the individuals";
+                    break;
+            }
+            html += " that match the following conditions:";
+
             html += "</div>";
+            if (ft == RuminantFeedActivityTypes.SpecifiedDailyAmount)
+            {
+                html += "<div class=\"warningbanner\">Note: This is a specified daily amount fed to the entire herd. If insufficient, this will reduce individual's potential intake</div>";
+            }
             return html;
         }
 
