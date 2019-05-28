@@ -62,9 +62,16 @@ namespace UserInterface.Presenters
             Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
             if (parentGraph != null)
             {
-                graphPresenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                try
+                {
+                    graphPresenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
+                    graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
             }
 
             try
