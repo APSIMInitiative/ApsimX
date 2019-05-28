@@ -656,27 +656,27 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Adds a directory to a zip file?
         /// </summary>
-        /// <param name="sDir"></param>
+        /// <param name="dir"></param>
         /// <param name="baseDir"></param>
         /// <param name="za"></param>
-        private void ZipAddDir(string sDir, string baseDir, ZipArchive za)
+        private void ZipAddDir(string dir, string baseDir, ZipArchive za)
         {
             // TODO : figure out what this does and improve variable names
             try
             {
 
-                foreach (string f in Directory.GetFiles(sDir))
+                foreach (string file in Directory.GetFiles(dir))
                 {
 
-                    string fPath = f.Substring(baseDir.Length);
+                    string path = file.Substring(baseDir.Length);
 
                     ZipArchiveEntry fe;
-                    fe = za.CreateEntryFromFile(f, fPath);
+                    fe = za.CreateEntryFromFile(file, path);
 
                     //Console.WriteLine(f);
                 }
 
-                foreach (string d in Directory.GetDirectories(sDir))
+                foreach (string d in Directory.GetDirectories(dir))
                 {
                     ZipAddDir(d, baseDir, za);
                 }

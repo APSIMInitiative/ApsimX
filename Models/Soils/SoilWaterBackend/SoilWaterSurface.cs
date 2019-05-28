@@ -108,7 +108,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// The clock
         /// </summary>
-        public Clock Clock;
+        public IClock Clock;
         /// <summary>
         /// The met
         /// </summary>
@@ -205,7 +205,7 @@ namespace Models.Soils.SoilWaterBackend
             /// <param name="SoilObject">The soil object.</param>
             /// <param name="Clock">The clock.</param>
             /// <returns></returns>
-        public Surface GetSurface(SoilWaterSoil SoilObject, Clock Clock)
+        public Surface GetSurface(SoilWaterSoil SoilObject, IClock Clock)
             {
             Surface surface;
 
@@ -275,7 +275,7 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         /// <param name="SoilObject">The soil object.</param>
         /// <param name="Clock">The clock.</param>
-        public NormalSurface(SoilWaterSoil SoilObject, Clock Clock)
+        public NormalSurface(SoilWaterSoil SoilObject, IClock Clock)
             {
             SurfaceType = Surfaces.NormalSurface;
             base.constants = SoilObject.Constants;
@@ -430,7 +430,7 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         /// <param name="SoilObject">The soil object.</param>
         /// <param name="Clock">The clock.</param>
-        public PondSurface(SoilWaterSoil SoilObject, Clock Clock):base(SoilObject, Clock)
+        public PondSurface(SoilWaterSoil SoilObject, IClock Clock):base(SoilObject, Clock)
             {
             base.SurfaceType = Surfaces.PondSurface;
             pond = 0.0;

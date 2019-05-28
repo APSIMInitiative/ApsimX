@@ -67,6 +67,9 @@ namespace Models.PMF
         /// <summary>The list of organs</summary>
         protected List<IArbitration> Organs = new List<IArbitration>();
 
+        /// <summary>A list of organs or suborgans that have watardemands</summary>
+        protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
+
         /// <summary>The variables for DM</summary>
         [XmlIgnore]
         public BiomassArbitrationType DM { get; private set; }
@@ -110,17 +113,17 @@ namespace Models.PMF
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         [XmlIgnore]
-        public double WDemand { get; private set; }
+        public double WDemand { get; protected set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
         [XmlIgnore]
-        public double WSupply { get; private set; }
+        public double WSupply { get; protected set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
         [XmlIgnore]
-        public double WAllocated { get; private set; }
+        public double WAllocated { get; protected set; }
 
         #endregion
 
@@ -153,9 +156,9 @@ namespace Models.PMF
 
                 // Calculate total water demand.
                 double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-                foreach (IArbitration o in Organs)
-                    if (o is IHasWaterDemand)
-                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+
+                foreach (IHasWaterDemand WD in WaterDemands)
+                    waterDemand += WD.CalculateWaterDemand() * Plant.Zone.Area;
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
@@ -185,7 +188,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
+        public virtual void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
 
             // Calculate the total water supply across all zones.
@@ -208,12 +211,12 @@ namespace Models.PMF
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
-            foreach (IArbitration o in Organs)
-                if (o is IHasWaterDemand)
+  
+            foreach (IHasWaterDemand WD in WaterDemands)
                 {
-                    double demand = (o as IHasWaterDemand).CalculateWaterDemand();
+                    double demand = WD.CalculateWaterDemand();
                     double allocation = fraction * demand;
-                    (o as IHasWaterDemand).WaterAllocation = allocation;
+                    WD.WaterAllocation = allocation;
                     WAllocated += allocation;
                 }
 
@@ -292,6 +295,7 @@ namespace Models.PMF
                     NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
+                //NUptakeSupply units should be g/m^2
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
@@ -317,12 +321,18 @@ namespace Models.PMF
         virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
+           List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
+
+            foreach (Model Can in Apsim.FindAll(Plant, typeof(IHasWaterDemand)))
+                Waterdemands.Add(Can as IHasWaterDemand);
+
             foreach (IOrgan organ in Plant.Organs)
                 if (organ is IArbitration)
                     organsToArbitrate.Add(organ as IArbitration);
 
+            
             Organs = organsToArbitrate;
-
+            WaterDemands = Waterdemands;
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
         }

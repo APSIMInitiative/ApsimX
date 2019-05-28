@@ -28,7 +28,7 @@
     public class MainPresenter
     {
         /// <summary>A list of presenters for tabs on the left.</summary>
-        public List<IPresenter> presenters1 = new List<IPresenter>();
+        public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
@@ -118,7 +118,7 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.presenters1.OfType<ExplorerPresenter>())
+            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
@@ -146,7 +146,7 @@
         /// <returns>Any exception message or null</returns>
         public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, Path.GetTempFileName());
+            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -533,17 +533,37 @@
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
 
-            startPage.AddButton(
-                                "Help",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
-                                        this.OnHelp);
 #if DEBUG
             startPage.AddButton(
                                 "Convert XML File",
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif
-            
+
+            // Settings menu
+            startPage.AddButtonWithMenu(
+                                        "Settings",
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"));
+
+            startPage.AddButtonToMenu(
+                                        "Settings",
+                                        "Change Font",
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                        this.OnChooseFont);
+
+            if (!ProcessUtilities.CurrentOS.IsLinux)
+            {
+                startPage.AddButtonToMenu(
+                                        "Settings",
+                                        "Toggle Theme",
+                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                        OnToggleTheme);
+            }
+
+            startPage.AddButton(
+                            "Help",
+                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                            this.OnHelp);
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
 
@@ -753,7 +773,7 @@
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {            
-            List<ExplorerPresenter> presenters = onLeftTabControl ? this.presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
+            List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
                 if (presenter.ApsimXFile.FileName == fileName)
@@ -804,7 +824,7 @@
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
             {
-                this.presenters1.Add(newPresenter);
+                this.Presenters1.Add(newPresenter);
             }
             else
             {
@@ -872,13 +892,13 @@
         {
             if (e.LeftTabControl)
             {
-                IPresenter presenter = presenters1[e.Index - 1];
+                IPresenter presenter = Presenters1[e.Index - 1];
                 e.AllowClose = true;
                 if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
                 if (e.AllowClose)
                 {
                     presenter.Detach();
-                    this.presenters1.RemoveAt(e.Index - 1);
+                    this.Presenters1.RemoveAt(e.Index - 1);
                 }
             }
             else
@@ -944,28 +964,40 @@
         /// <param name="e">Event arguments.</param>
         private void OnImport(object sender, EventArgs e)
         {
-            string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
-
-            APSIMImporter importer = new APSIMImporter();
             try
             {
+                string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
                 this.view.ShowWaitCursor(true);
-                try
-                {
-                    importer.ProcessFile(fileName);
+                this.Import(fileName);
 
-                    string newFileName = Path.ChangeExtension(fileName, ".apsimx");
-                    bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                    this.OpenApsimXFileInTab(newFileName, onLeftTabControl);
-                }
-                finally
-                {
-                    this.view.ShowWaitCursor(false);
-                }
+                string newFileName = Path.ChangeExtension(fileName, ".apsimx");
+                this.OpenApsimXFileInTab(newFileName, this.view.IsControlOnLeft(sender));
             }
-            catch (Exception exp)
+            catch (Exception err)
             {
-                throw new Exception("Failed import: " + exp.Message);
+                ShowError(err);
+            }
+            finally
+            {
+                this.view.ShowWaitCursor(false);
+            }
+        }
+
+        /// <summary>
+        /// Runs the importer on a file, then opens it in a new tab.
+        /// </summary>
+        /// <param name="fileName">Path to the file to be imported.</param>
+        /// <param name="leftTab">Should the file be opened in the left tabset?</param>
+        public void Import(string fileName)
+        {
+            try
+            {
+                APSIMImporter importer = new APSIMImporter();
+                importer.ProcessFile(fileName);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -990,15 +1022,38 @@
         }
 
         /// <summary>
+        /// Toggles between the default and dark themes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnToggleTheme(object sender, EventArgs e)
+        {
+            try
+            {
+                Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
+                view.ToggleTheme(sender, e);
+                // Might be better to restart automatically (after asking the user),
+                // but I haven't been able to figure out a reliable cross-platform 
+                // way of attaching the debugger to the new process. I leave this
+                // as an exercise to the reader.
+                view.ShowMsgDialog("Theme changes will be applied upon restarting Apsim.", "Theme Changes", Gtk.MessageType.Info, Gtk.ButtonsType.Ok);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Opens the ApsimX online documentation.
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         private void OnHelp(object sender, EventArgs args)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
-            process.Start();
+            Process getHelp = new Process();
+            getHelp.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
+            getHelp.Start();
         }
 
         /// <summary>
@@ -1039,6 +1094,23 @@
         }
 
         /// <summary>
+        /// Invoked when the user clicks the 'choose font' button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnChooseFont(object sender, EventArgs args)
+        {
+            try
+            {
+                view.ShowFontChooser();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Shows the file converter view.
         /// </summary>
         /// <param name="sender"></param>
@@ -1069,6 +1141,9 @@
         {
             try
             {
+                if (fileConverter == null || fileConverter.Files == null)
+                    return;
+
                 // The file converter view has an option to automatically select the latest version.
                 // If the user has enabled this option, we will upgrade the file to the latest version. 
                 // Otherwise, we will upgrade to the version they have specified.
@@ -1130,7 +1205,6 @@
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
                 Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
-                Utility.Configuration.Settings.BaseFontSize = this.view.FontSize;
             }
         }
 

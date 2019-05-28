@@ -631,7 +631,7 @@ namespace Models.Core.ApsimFile
                         foreach (string tableName in tableNames)
                         {
                             List<string> columnNames = connection.GetColumnNames(tableName);
-                            if (columnNames.Contains("SimulationID"))
+                            if (columnNames.Contains("SimulationID") && !columnNames.Contains("CheckpointID"))
                             {
                                 connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
                             }
@@ -893,6 +893,11 @@ namespace Models.Core.ApsimFile
             public bool FactorParentIsFactor { get; set; }
         }
 
+        private class PathValuesPair
+        {
+            public string path;
+            public object value;
+        }
         private static List<FValue> CreateValues(XmlNode factorNode)
         {
             List<FValue> factorValues = new List<FValue>();
@@ -1072,15 +1077,27 @@ namespace Models.Core.ApsimFile
                 List<XmlNode> baseSimulations = XmlUtilities.ChildNodes(experiment, "Simulation");
                 if (baseSimulations.Count == 1)
                 {
-                    string childType = specification.Replace("[", "").Replace("]", "");
+                    string childName = specification.Replace("[", "").Replace("]", "");
 
-                    List<string> specifications = XmlUtilities.Values(factorNode, "Specifications/string");
+                    var childType = FindChildTypeFromName(childName, baseSimulations[0]);
 
+                    
                     foreach (XmlNode child in XmlUtilities.ChildNodes(factorNode, childType))
                         pairs.Add(new PathValuesPair() { path = specification, value = XmlUtilities.Value(child, "Name") });
                 }
             }
             return pairs;
+        }
+
+        private static string FindChildTypeFromName(string childName, XmlNode baseSimulation)
+        {
+            var nodes = XmlUtilities.ChildNodesRecursively(baseSimulation, "Name");
+            var foundNode = nodes.Find(n => n.InnerText == childName);
+
+            if (foundNode == null)
+                return null;
+            else
+                return foundNode.ParentNode.Name;
         }
 
 

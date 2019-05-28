@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 54,
+  "Version": 56,
   "Name": "Simulations",
   "Children": [
     {
@@ -28,8 +28,6 @@
       "Children": [
         {
           "$type": "Models.Report.Report, Models",
-          "ExperimentFactorNames": null,
-          "ExperimentFactorValues": null,
           "VariableNames": [
             "[Clock].Today",
             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -55,8 +53,6 @@
         },
         {
           "$type": "Models.Report.Report, Models",
-          "ExperimentFactorNames": null,
-          "ExperimentFactorValues": null,
           "VariableNames": [
             "[Clock].Today",
             "[Soil].SoilWater.SW",
@@ -1707,6 +1703,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -2175,7 +2172,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[Grain].DMDemand.Structural",
                       "Name": "DMDemand",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3261,6 +3258,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -3297,7 +3295,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Flowering.Target.NumberOfEarlyFloweringNodes.Value()",
+                          "VariableName": "[Phenology].EarlyFlowering.Target.NumberOfEarlyFloweringNodes.Value()",
                           "Name": "EarlyFloweringNodes",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3306,7 +3304,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Flowering.Target.NumberOfLateFloweringNodes.Value()",
+                          "VariableName": "[Phenology].EarlyPodDevelopment.Target.NumberOfLateFloweringNodes.Value()",
                           "Name": "LateFloweringNodes",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3967,7 +3965,7 @@
                   "StructuralDMAllocation": 0.0,
                   "MetabolicDMAllocation": 0.0,
                   "Rank": 1,
-                  "Area": 224.0,
+                  "Area": 50.0,
                   "MaintenanceRespiration": 0.0,
                   "Name": "InitialLeaf1",
                   "Children": [],
@@ -4001,7 +3999,7 @@
                   "StructuralDMAllocation": 0.0,
                   "MetabolicDMAllocation": 0.0,
                   "Rank": 2,
-                  "Area": 224.0,
+                  "Area": 50.0,
                   "MaintenanceRespiration": 0.0,
                   "Name": "InitialLeaf2",
                   "Children": [],
@@ -4035,7 +4033,7 @@
                   "StructuralDMAllocation": 0.0,
                   "MetabolicDMAllocation": 0.0,
                   "Rank": 3,
-                  "Area": 224.0,
+                  "Area": 50.0,
                   "MaintenanceRespiration": 0.0,
                   "Name": "InitialLeaf3",
                   "Children": [],
@@ -4115,6 +4113,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             1.0,
+                            3.0,
                             7.0,
                             10.0,
                             14.0,
@@ -4123,6 +4122,7 @@
                             40.0
                           ],
                           "Y": [
+                            50.0,
                             50.0,
                             350.0,
                             500.0,
@@ -5629,6 +5629,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -7622,6 +7623,8 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [
         {
@@ -7683,7 +7686,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = Apsim.Find(this, typeof(DataStore)) as DataStore;\r\n\r\n            var data = store.GetData(\"PredictedObserved\");\r\n            var predictedGrainWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.GrainWt\");\r\n            var observedGrainWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.GrainWt\");\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"Grain.Wt\", predictedGrainWt, observedGrainWt);\r\n\r\n            if (stats.R2 < 0.3)\r\n                throw new Exception(\"Test failed. R2 is below threshold. R2=\" + stats.R2);\r\n        }\r\n    }\r\n}",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = Apsim.Find(this, typeof(DataStore)) as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");\r\n            var predictedGrainWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.GrainWt\");\r\n            var observedGrainWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.GrainWt\");\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"Grain.Wt\", predictedGrainWt, observedGrainWt);\r\n\r\n            if (stats.R2 < 0.3)\r\n                throw new Exception(\"Test failed. R2 is below threshold. R2=\" + stats.R2);\r\n        }\r\n    }\r\n}",
       "Parameters": [],
       "Name": "Test",
       "IncludeInDocumentation": true,
@@ -9261,7 +9264,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "Lawes1990",
               "Children": [
                 {
@@ -9279,9 +9282,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Sowing",
                       "Children": [
                         {
@@ -9376,6 +9377,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Lawes1990",
                   "Children": [
                     {
@@ -9512,8 +9514,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -9818,7 +9818,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -9855,6 +9854,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -10061,8 +10071,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -10670,9 +10678,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Sowing",
                       "Children": [
                         {
@@ -10837,6 +10843,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Lawes1991",
                   "Children": [
                     {
@@ -10973,8 +10980,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -11268,7 +11273,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -11305,6 +11309,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -11511,8 +11526,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -14069,9 +14082,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[SowingRule]"
-                      ],
+                      "Specification": "[SowingRule]",
                       "Name": "SD",
                       "Children": [
                         {
@@ -14356,6 +14367,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Lawes1993",
                   "Children": [
                     {
@@ -14483,8 +14495,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -14772,7 +14782,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -14809,6 +14818,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -15015,8 +15035,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -16299,9 +16317,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Trt",
                       "Children": [
                         {
@@ -16426,6 +16442,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Lawes1995",
                   "Children": [
                     {
@@ -16540,8 +16557,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -16827,7 +16842,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -16864,6 +16878,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -17070,8 +17095,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -18307,9 +18330,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Sowing",
                       "Children": [
                         {
@@ -18486,6 +18507,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Hermitage1988",
                   "Children": [
                     {
@@ -18622,8 +18644,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -18909,7 +18929,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -18946,6 +18965,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -19152,8 +19182,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -19417,9 +19445,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Sowing",
                       "Children": [
                         {
@@ -19562,6 +19588,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Hermitage1989",
                   "Children": [
                     {
@@ -19698,8 +19725,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -19985,7 +20010,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -20022,6 +20046,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -20228,8 +20263,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -20493,9 +20526,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Sowing",
                       "Children": [
                         {
@@ -20554,6 +20585,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Hermitage1990",
                   "Children": [
                     {
@@ -20690,8 +20722,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -20977,7 +21007,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -21014,6 +21043,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -21220,8 +21260,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -21485,9 +21523,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[SowingRule].Script.Population=10, 20, 40, 70, 78, 110, 115 "
-                      ],
+                      "Specification": "[SowingRule].Script.Population=10, 20, 40, 70, 78, 110, 115 ",
                       "Name": "Population",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -21496,9 +21532,7 @@
                     },
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[SowingRule].Script.RowSpacing=170, 350, 700"
-                      ],
+                      "Specification": "[SowingRule].Script.RowSpacing=170, 350, 700",
                       "Name": "RowSpacing",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -21512,6 +21546,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Hermitage_92",
                   "Children": [
                     {
@@ -21642,8 +21677,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -21671,8 +21704,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -21980,7 +22011,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 80.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -22011,6 +22041,15 @@
                                 0.8
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.015,
@@ -22511,9 +22550,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[SowingRule]"
-                      ],
+                      "Specification": "[SowingRule]",
                       "Name": "S",
                       "Children": [
                         {
@@ -22648,6 +22685,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Bremar2003",
                   "Children": [
                     {
@@ -22762,8 +22800,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -22791,8 +22827,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",
@@ -23037,7 +23071,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 40.0,
-                              "SoilCN": 12.0,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -23068,6 +23101,15 @@
                                 0.261538461538462
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0
+                              ],
                               "FBiom": [
                                 0.04,
                                 0.02,
@@ -24666,9 +24708,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specifications": [
-                        "[Sowing]"
-                      ],
+                      "Specification": "[Sowing]",
                       "Name": "Trt",
                       "Children": [
                         {
@@ -24793,6 +24833,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "Descriptors": null,
                   "Name": "Lawes1995original",
                   "Children": [
                     {
@@ -24907,8 +24948,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Soil].SoilWater.SW",
@@ -25194,7 +25233,6 @@
                             {
                               "$type": "Models.Soils.SoilOrganicMatter, Models",
                               "RootCN": 45.0,
-                              "SoilCN": 14.5,
                               "EnrACoeff": 7.4,
                               "EnrBCoeff": 0.2,
                               "Thickness": [
@@ -25231,6 +25269,17 @@
                                 0.5
                               ],
                               "OCMetadata": null,
+                              "SoilCN": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
                               "FBiom": [
                                 0.02,
                                 0.01,
@@ -25437,8 +25486,6 @@
                         },
                         {
                           "$type": "Models.Report.Report, Models",
-                          "ExperimentFactorNames": null,
-                          "ExperimentFactorValues": null,
                           "VariableNames": [
                             "[Clock].Today",
                             "[Chickpea].Phenology.CurrentStageName as Stage",

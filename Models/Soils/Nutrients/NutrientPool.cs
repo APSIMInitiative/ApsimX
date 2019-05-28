@@ -20,7 +20,7 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
-    public class NutrientPool : Model
+    public class NutrientPool : Model, INutrientPool
     {
         [Link]
         Soil soil = null;

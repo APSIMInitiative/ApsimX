@@ -11,6 +11,9 @@
     using Models.Surface;
     using NUnit.Framework;
     using System;
+    using System.IO;
+    using UserInterface.Presenters;
+    using UserInterface.Views;
 
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
@@ -83,7 +86,7 @@
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            Weather w = sims.Children[0].Children[0] as Weather;
+            var w = sims.Children[0].Children[0] as Models.Weather;
             Assert.AreEqual(w.FileName, @"\Examples\MetFiles\Goond.met");
         }
 
@@ -111,7 +114,7 @@
         [Test]
         public void ImporterTests_SoilImports()
         {
-            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ImporterTests_SoilImports.xml");
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsSoilImports.xml");
 
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
@@ -280,7 +283,7 @@
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var r = sims.Children[0].Children[0] as Report;
+            var r = sims.Children[0].Children[0] as Models.Report.Report;
             Assert.IsNotNull(r);
             Assert.AreEqual(r.VariableNames[0], "[Clock].Today");
             Assert.AreEqual(r.VariableNames[1], "biomass");
@@ -348,5 +351,31 @@
             Assert.AreEqual(m.d_interception, 0.4);
         }
 
+        /// <summary>
+        /// This test ensures that failures in the importer do not cause the UI
+        /// to crash.
+        /// </summary>
+        [Test]
+        public void EnsureNoCrash()
+        {
+            // First, write the faulty .apsimx file to a temp file on disk.
+            string defective = ReflectionUtilities.GetResourceAsString("UnitTests.defective.apsim");
+            string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + "-defective.apsim");
+            File.WriteAllText(fileName, defective);
+            MainPresenter presenter = new MainPresenter();
+            Assert.DoesNotThrow(() => presenter.Import(fileName));
+        }
+
+        /// <summary>Ensure entire old APSIM file loads OK.</summary>
+        [Test]
+        public void EnsureOldAPSIMFileLoads()
+        {
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
+
+            APSIMImporter importer = new APSIMImporter();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+
+            Assert.IsNotNull(sims);
+        }
     }
 }

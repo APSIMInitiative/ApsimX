@@ -163,7 +163,7 @@
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
-            _mainWidget = hboxContainer;
+            mainWidget = hboxContainer;
             Grid.Model = gridModel;
             fixedColView.Model = gridModel;
             fixedColView.Selection.Mode = SelectionMode.None;
@@ -186,7 +186,7 @@
             fixedColView.EnableSearch = false;
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
-            _mainWidget.Destroyed += MainWidgetDestroyed;
+            mainWidget.Destroyed += MainWidgetDestroyed;
         }
 
         /// <summary>
@@ -395,13 +395,13 @@
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                    Color separatorColour = Color.LightSteelBlue;
+                    Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
                     cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                     textRenderer.Editable = false;
                 }
                 else
                 {
-                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                    cell.CellBackgroundGdk = MainWidget.Style.Base(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                     textRenderer.Editable = true;
                 }
@@ -429,7 +429,7 @@
                         CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
                         if (toggleRend != null)
                         {
-                            toggleRend.CellBackgroundGdk = Grid.Style.Base(cellState);
+                            toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                             toggleRend.Active = (bool)dataVal;
                             toggleRend.Activatable = true;
                             cell.Visible = false;
@@ -455,7 +455,7 @@
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
-                                comboRend.CellBackgroundGdk = Grid.Style.Base(cellState);
+                                comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                                 return;
                             }
                         }
@@ -881,8 +881,8 @@
             accel.Dispose();
             if (table != null)
                 table.Dispose();
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= MainWidgetDestroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -1113,7 +1113,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
                     }
                     else
                     {
@@ -1140,7 +1140,7 @@
                                 }
                             }
                         }
-                        while (GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox) || IsSeparator(nextRow));
+                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
                     }
 
                     EndEdit();
@@ -1456,7 +1456,8 @@
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-            
+            Grid.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
+            fixedColView.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
@@ -1921,6 +1922,7 @@
                     IGridCell currentCell = GetCurrentCell;
                     if (currentCell != null)
                         UpdateCellText(currentCell, (o as ComboBox).ActiveText);
+                    EndEdit();
                 };
             }
             catch (Exception err)

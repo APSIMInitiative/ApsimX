@@ -27,6 +27,12 @@
     public class Input : Model, IRunnable, IReferenceExternalFiles
     {
         /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
+
+        /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
         public string FileName { get; set; }
@@ -59,15 +65,23 @@
             return new string[] { FileName };
         }
 
-        /// <summary>Gets the parent simulation or null if not found</summary>
+        /// <summary>
+        /// Gets the parent simulation or null if not found
+        /// </summary>
         private IStorageWriter StorageWriter
         {
             get
             {
-                var dataStore = Apsim.Parent(this, typeof(IDataStore)) as IDataStore;
-                if (dataStore == null)
+                // The JobRunnerAsync will not resolve links, so we need to
+                // go looking for the data store ourselves. This is an ugly
+                // hack, no doubt about it, but this infrastructure is about to
+                // be changed/refactored anyway, so hopefully this won't stay
+                // here for too long.
+                if (storage == null)
+                    storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                if (storage == null)
                     throw new Exception("Cannot find a datastore");
-                return dataStore.Writer;
+                return storage.Writer;
             }
         }
 

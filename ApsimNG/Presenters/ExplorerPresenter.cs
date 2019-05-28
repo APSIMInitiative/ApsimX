@@ -5,6 +5,7 @@
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Runners;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -559,16 +560,6 @@
         /// </param>
         public bool GenerateApsimXFiles(IModel model, string path = null)
         {
-            List<IModel> children;
-            if (model is ISimulationGenerator)
-            {
-                children = new List<IModel> { model };
-            }
-            else
-            {
-                children = Apsim.ChildrenRecursively(model, typeof(ISimulationGenerator));
-            }
-
             if (string.IsNullOrEmpty(path))
             {
                 IFileDialog fileChooser = new FileDialog()
@@ -577,40 +568,29 @@
                     Action = FileDialog.FileActionType.SelectFolder
                 };
                 path = fileChooser.GetFile();
-                if (string.IsNullOrEmpty(path))
-                    return false;
-            }
-            
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            List<Exception> errors = new List<Exception>();
-            int i = 0;
-            foreach (IModel sim in children)
-            {
-                MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
-                MainPresenter.ShowProgress(100 * i / children.Count, false);
-                while (GLib.MainContext.Iteration()) ;
-                try
+                if (!string.IsNullOrEmpty(path))
                 {
-                    (sim as ISimulationGenerator).GenerateApsimXFile(path);
-                }
-                catch (Exception err)
-                {
-                    errors.Add(err);
-                }
+                    MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                i++;
+                    RunOrganiser organiser = new RunOrganiser(ApsimXFile, model, false);
+                    var errors = organiser.GenerateApsimXFiles(path, (int percent) => 
+                    {
+                        MainPresenter.ShowProgress(percent, false);
+                    });
+
+                    if (errors == null || errors.Count == 0)
+                    {
+                        MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
+                        return true;
+                    }
+                    else
+                    {
+                        MainPresenter.ShowError(errors);
+                        return false;
+                    }
+                }
             }
-            if (errors.Count < 1)
-            {
-                MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
-                return true;
-            }
-            else
-            {
-                MainPresenter.ShowError(errors);
-                return false;
-            }
+            return true;
         }
 
         /// <summary>Hide the right hand panel.</summary>
@@ -733,6 +713,16 @@
             {
                 DragObject dragObject = e.DragObject as DragObject;
                 e.Allow = Apsim.IsChildAllowable(parentModel, dragObject.ModelType);
+            }
+        }
+
+        public void DownloadSoil()
+        {
+            Models.Soils.Soil currentSoil = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Models.Soils.Soil;
+            if (currentSoil != null)
+            {
+                Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
+                dlg.ShowFor(currentSoil, (view as ExplorerView), this.view.Tree.SelectedNode, this);
             }
         }
 
@@ -988,6 +978,7 @@
             }
             description.Strikethrough = !model.Enabled;
             description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Colour = System.Drawing.Color.Empty;
             /*
             // Set the colour here
             System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;

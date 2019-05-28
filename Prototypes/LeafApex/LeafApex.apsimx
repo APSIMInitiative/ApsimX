@@ -5009,7 +5009,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Total.N</string>
         <string>[Wheat].Total.Wt</string>
         <string>[SurfaceOrganicMatter].Wt</string>
-        <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+        <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET</string>
         <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
       </VariableNames>
       <EventNames>

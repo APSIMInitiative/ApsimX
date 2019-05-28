@@ -119,7 +119,7 @@
         /// <param name="dataStore">The data store.</param>
         public void Run(IDataStore dataStore)
         {
-            string sql = "SELECT * FROM Report";
+            string sql = "SELECT * FROM [Report]";
             DataTable predictedData = dataStore.Reader.GetDataUsingSql(sql);
             if (predictedData != null)
             {

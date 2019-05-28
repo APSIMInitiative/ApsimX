@@ -259,14 +259,12 @@ namespace Models.CLEM.Reporting
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                {
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
-                }
+                foreach (var descriptor in simulation.Descriptors)
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
             }
         }
-
     }
 }

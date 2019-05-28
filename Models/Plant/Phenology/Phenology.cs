@@ -201,8 +201,8 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase))
-                        { throw new Exception("Can not rewind over phase of type " + phases[currentPhaseIndex].GetType()); }
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase))
+                        { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
                         IPhaseWithTarget rewindingPhase = phase as IPhaseWithTarget;
@@ -210,6 +210,8 @@ namespace Models.PMF.Phen
                         AccumulatedEmergedTT -= rewindingPhase.ProgressThroughPhase;
                         phase.ResetPhase();
                     }
+                    else
+                        phase.ResetPhase();
                 }
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
 
@@ -244,7 +246,7 @@ namespace Models.PMF.Phen
                 if (currentPhase.ProgressThroughPhase == 0)
                     stagesPassedToday.Add(currentPhase.Start);
             }
-            if (phases[currentPhaseIndex] is PhotoperiodPhase)
+            if ((phases[currentPhaseIndex] is PhotoperiodPhase) || (phases[currentPhaseIndex] is LeafDeathPhase))
                 stagesPassedToday.Add(phases[currentPhaseIndex].Start);
 
             StageWasReset?.Invoke(this, new EventArgs());
@@ -324,23 +326,34 @@ namespace Models.PMF.Phen
         }
 
 
-        ///7. Private methods
-        /// -----------------------------------------------------------------------------------------------------------
+        // 7. Private methods
+        // -----------------------------------------------------------------------------------------------------------
+        //
 
+        /// <summary>
+        /// Refreshes the list of phases.
+        /// </summary>
+        private void RefreshPhases()
+        {
+            if (phases == null)
+                phases = new List<IPhase>();
+            else
+                phases.Clear();
+
+            foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
+                phases.Add(phase);
+        }
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
-            if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
-                foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
-                {
-                    phases.Add(phase);
-                }
+            RefreshPhases();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnCommencing(object sender, EventArgs e)
         {
+            RefreshPhases();
             Clear();
         }
 
@@ -364,10 +377,14 @@ namespace Models.PMF.Phen
                 // Calculate progression through current phase
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+
+                //sorghum resets the stage variable to 0 on the day the phase changes
+                //it will resume again normally the day after
+                double resetSorghumStage = SorghumFlag != null && incrementPhase ? 0.0 : 1.0;
                 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) | (CurrentPhase.End == structure?.LeafInitialisationStage))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
                          Emerged = true;
                     }
@@ -382,21 +399,18 @@ namespace Models.PMF.Phen
                         PhaseChangedData.StageName = CurrentPhase.Start;
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
-                    incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
-
-                    if (SorghumFlag != null)
+                    if(SorghumFlag != null && CurrentPhase is EmergingPhase)
                     {
-                        //old sorghum model adjustment
-                        //excess thermal time was lost at change of phase
-                        CurrentPhase.ResetPhase();
+                        propOfDayToUse = 0.0;
                     }
+                    incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
 
                 AccumulatedTT += thermalTime.Value();
                 if (Emerged)
                     AccumulatedEmergedTT += thermalTime.Value();
 
-                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
 
                if (plant != null)
                     if (plant.IsAlive && PostPhenology != null)

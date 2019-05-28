@@ -43,28 +43,18 @@ namespace Models.Core
                 List<IModel> allModels = new List<IModel>() { rootNode };
                 allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
                 foreach (IModel modelNode in allModels)
-                    ResolveInternal(modelNode, null);
+                    ResolveInternal(modelNode);
             }
             else
-                ResolveInternal(rootNode, null);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootNode"></param>
-        public void Resolve(ModelWrapper rootNode)
-        {
-            List<ModelWrapper> allModels = rootNode.ChildrenRecursively;
-            foreach (ModelWrapper modelNode in allModels)
-                ResolveInternal(modelNode, allModels);
+                ResolveInternal(rootNode);
         }
 
         /// <summary>
         /// Resolve links in an unknown object e.g. user interface presenter
         /// </summary>
         /// <param name="obj"></param>
-        public void Resolve(object obj)
+        /// <param name="throwOnFail">Should an exception be thrown if a link fails to be resolved?</param>
+        public void Resolve(object obj, bool throwOnFail = true)
         {
             // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(obj, GetModel(obj).GetType(),
@@ -79,7 +69,7 @@ namespace Models.Core
                     object match = services.Find(s => field.DataType.IsAssignableFrom(s.GetType()));
                     if (match != null)
                         field.Value = GetModel(match);
-                    else if (!link.IsOptional)
+                    else if (!link.IsOptional && throwOnFail)
                         throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                 }
             }
@@ -113,31 +103,23 @@ namespace Models.Core
         /// Internal [link] resolution algorithm.
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="allModels">A collection of all model wrappers</param>
-        private void ResolveInternal(object obj, List<ModelWrapper> allModels)
+        private void ResolveInternal(object obj)
         {
-            // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
                                                      BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
                                                      allLinks: true))
             {
                 LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
-
                 if (link != null)
                 {
-                    // Get the field type or the array element if it is an array field.
                     Type fieldType = field.DataType;
                     if (fieldType.IsArray)
                         fieldType = fieldType.GetElementType();
                     else if (field.DataType.Name.StartsWith("List") && field.DataType.GenericTypeArguments.Length == 1)
                         fieldType = field.DataType.GenericTypeArguments[0];
-
-                    // Try and get a match from our services first.
                     List<object> matches;
                     matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
-
-                    // If no match on services then try other options.
                     if (matches.Count == 0 && obj is IModel)
                     {
                         Simulation parentSimulation = Apsim.Parent(obj as IModel, typeof(Simulation)) as Simulation;
@@ -146,11 +128,8 @@ namespace Models.Core
                         else if (fieldType.IsAssignableFrom(typeof(IEvent)) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
-
-                    // If no match on services then try other options.
                     if (matches.Count == 0)
                     {
-                        // Get a list of models that could possibly match.
                         if (link is ParentLinkAttribute)
                         {
                             matches = new List<object>();
@@ -163,25 +142,19 @@ namespace Models.Core
                                 matches.Add(match);
                         }
                         else if (link.IsScoped(field))
-                            matches = GetModelsInScope(obj, allModels);
+                            matches = Apsim.FindAll(obj as IModel).Cast<object>().ToList();
                         else
                             matches = GetChildren(obj);
                     }
-
-                    // Filter possible matches to those of the correct type.
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
-
-                    // If we should use name to match then filter matches to those with a matching name.
                     if (link.UseNameToMatch(field))
                         matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
-
                     if (field.DataType.IsArray)
                     {
                         Array array = Array.CreateInstance(fieldType, matches.Count);
                         for (int i = 0; i < matches.Count; i++)
                             array.SetValue(GetModel(matches[i]), i);
                         field.Value = array;
-                        
                     }
                     else if (field.DataType.Name.StartsWith("List") && field.DataType.GenericTypeArguments.Length == 1)
                     {
@@ -214,8 +187,6 @@ namespace Models.Core
         {
             if (obj is IModel)
                 return obj;
-            else if (obj is ModelWrapper)
-                return (obj as ModelWrapper).Model;
             else
                 return obj;
         }
@@ -230,7 +201,7 @@ namespace Models.Core
             if (obj is IModel)
                 return (obj as IModel).Name;
             else
-                return (obj as ModelWrapper).Name;
+                throw new NotImplementedException();
         }
 
         /// <summary>
@@ -243,8 +214,6 @@ namespace Models.Core
         {
             if (obj is IModel)
                 return Apsim.Parent(obj as IModel, type);
-            else if (obj is ModelWrapper && (obj as ModelWrapper).Model is IModel)
-                return Apsim.Parent((obj as ModelWrapper).Model as IModel, type);
             else
                 throw new NotImplementedException();
         }
@@ -258,24 +227,8 @@ namespace Models.Core
         {
             if (obj is IModel)
                 return Apsim.FullPath(obj as IModel);
-            else if (obj is ModelWrapper)
-                return (obj as ModelWrapper).Name;
             else
                 return obj.GetType().FullName;
-        }
-
-        /// <summary>
-        /// Determine the type of an object and return all models that are in scope.
-        /// </summary>
-        /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
-        /// <param name="allModels">A collection of all models</param>
-        /// <returns>The models that are in scope of obj.</returns>
-        private List<object> GetModelsInScope(object obj, List<ModelWrapper> allModels)
-        {
-            if (obj is IModel)
-                return Apsim.FindAll(obj as IModel).Cast<object>().ToList();
-            else
-                return (obj as ModelWrapper).FindModelsInScope(allModels).Cast<object>().ToList();
         }
 
         /// <summary>
@@ -288,7 +241,7 @@ namespace Models.Core
             if (obj is IModel)
                 return (obj as IModel).Children.Cast<object>().ToList();
             else
-                return (obj as ModelWrapper).Children.Cast<object>().ToList();
+                throw new NotImplementedException();
         }
 
         /// <summary>
