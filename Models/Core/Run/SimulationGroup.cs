@@ -221,7 +221,8 @@
                 Exception exception = null;
                 try
                 {
-                    Links.Resolve(tool, rootModel);
+                    if (rootModel is Simulations)
+                        (rootModel as Simulations).Links.Resolve(tool as IModel);
                     if ((tool as IModel).Enabled)
                         tool.Run();
                 }
@@ -243,7 +244,8 @@
             {
                 DateTime startTime = DateTime.Now;
 
-                Links.Resolve(test as IModel, rootModel);
+                if (rootModel is Simulations)
+                    (rootModel as Simulations).Links.Resolve(test as IModel);
 
                 // If we run into problems, we will want to include the name of the test in the 
                 // exception's message. However, tests may be manager scripts, which always have

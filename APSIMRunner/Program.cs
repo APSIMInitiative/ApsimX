@@ -36,7 +36,6 @@
 
                             // Add in a socket datastore to satisfy links.
                             modelToRun.Children.Add(storage);
-                            Links.Resolve(jobToRun, modelToRun);
                         }
                         else
                             throw new Exception("Unknown job type: " + jobToRun.GetType().Name);

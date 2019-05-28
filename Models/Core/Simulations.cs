@@ -125,20 +125,6 @@ namespace Models.Core
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
 
-
-        /// <summary>Run a simulation</summary>
-        /// <param name="simulation">The simulation to run</param>
-        /// <param name="doClone">Clone the simulation before running?</param>
-        public void Run(Simulation simulation, bool doClone)
-        {
-            //Apsim.ParentAllChildren(simulation);
-            //RunSimulation simulationRunner = new RunSimulation(this, simulation);
-            //Links.Resolve(simulationRunner);
-            //simulationRunner.Run(new System.Threading.CancellationTokenSource());
-        }
-
-
-
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
@@ -203,7 +189,7 @@ namespace Models.Core
                 services.Add(storage);
             services.Add(this);
             services.Add(checkpoints);
-            //links = new Links(services);
+            links = new Links(services);
         }
 
         /// <summary>
@@ -284,7 +270,7 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation);
+                    Links.Unresolve(clonedSimulation, true);
                 }
             }
         }

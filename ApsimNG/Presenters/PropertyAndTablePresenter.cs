@@ -42,7 +42,7 @@
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
-            Links.Resolve(propertyPresenter, explorerPresenter.ApsimXFile);
+            explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.Grid1, parentPresenter);
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, view.Grid2, parentPresenter);

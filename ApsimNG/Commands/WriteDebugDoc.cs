@@ -50,7 +50,7 @@ namespace UserInterface.Commands
                 var sim = new SimulationDescription(simulation);
                 sims.Add(sim.ToSimulation());
 
-                Events.ConnectEvents(clonedSimulation);
+                explorerPresenter.ApsimXFile.GetEventService(clonedSimulation).ConnectEvents();
 
                 List<ModelDoc> models = new List<ModelDoc>();
                 foreach (IModel model in Apsim.ChildrenRecursively(clonedSimulation))
@@ -88,8 +88,8 @@ namespace UserInterface.Commands
             {
                 if (clonedSimulation != null)
                 {
-                    Events.DisconnectEvents(clonedSimulation);
-                    Links.Unresolve(clonedSimulation);
+                    explorerPresenter.ApsimXFile.GetEventService(clonedSimulation).DisconnectEvents();
+                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedSimulation, true);
                 }
             }
         }

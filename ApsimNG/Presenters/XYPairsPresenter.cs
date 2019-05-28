@@ -74,7 +74,7 @@ namespace UserInterface.Presenters
             (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
             (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
             this.graphPresenter = new GraphPresenter();
-            Links.Resolve(graphPresenter, this.presenter.ApsimXFile);
+            this.presenter.ApsimXFile.Links.Resolve(graphPresenter);
             this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)

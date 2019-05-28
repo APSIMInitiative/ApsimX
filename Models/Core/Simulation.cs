@@ -203,13 +203,16 @@ namespace Models.Core
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
             }
 
+            var links = new Links();
+            var events = new Events(this);
+
             try
             {
                 // Connect all events.
-                Events.ConnectEvents(this);
+                events.ConnectEvents();
 
                 // Resolve all links
-                Links.Resolve(this, this);
+                links.Resolve(this, true);
 
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
@@ -235,10 +238,10 @@ namespace Models.Core
                 Completed?.Invoke(this, new EventArgs());
 
                 // Disconnect our events.
-                Events.DisconnectEvents(this);
+                events.DisconnectEvents();
 
                 // Unresolve all links.
-                Links.Unresolve(this);
+                links.Unresolve(this, true);
             }
         }
 

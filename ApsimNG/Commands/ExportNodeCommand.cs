@@ -453,7 +453,7 @@ namespace UserInterface.Commands
                     gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
                 }
                 GraphPresenter graphPresenter = new GraphPresenter();
-                Links.Resolve(graphPresenter, explorerPresenter.ApsimXFile);
+                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 GraphView graphView = new GraphView();
                 graphView.BackColor = OxyPlot.OxyColors.White;
                 graphView.ForegroundColour = OxyPlot.OxyColors.Black;
@@ -628,7 +628,7 @@ namespace UserInterface.Commands
                 else if (tag is Graph)
                 {
                     GraphPresenter graphPresenter = new GraphPresenter();
-                    Links.Resolve(graphPresenter, explorerPresenter.ApsimXFile);
+                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     GraphView graphView = new GraphView();
                     graphView.BackColor = OxyPlot.OxyColors.White;
                     graphView.ForegroundColour = OxyPlot.OxyColors.Black;
@@ -677,7 +677,7 @@ namespace UserInterface.Commands
 
                         if (view != null && presenter != null)
                         {
-                            Links.Resolve(presenter, explorerPresenter.ApsimXFile);
+                            explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
                             Gtk.Window popupWin = null;

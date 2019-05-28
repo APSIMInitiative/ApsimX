@@ -726,7 +726,7 @@ namespace UserInterface.Presenters
                             continue;
 
                         // Resolve links (this doesn't seem to work properly).
-                        Links.Resolve(child, explorerPresenter.ApsimXFile);
+                        explorerPresenter.ApsimXFile.Links.Resolve(child);
                         MemberInfo[] members = null;
                         Type childType = child.GetType();
 

@@ -163,7 +163,7 @@
                         }
                     }
 
-                    Links.Resolve(graphPresenter, explorerPresenter.ApsimXFile);
+                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                 }
             }

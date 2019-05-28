@@ -123,7 +123,7 @@
             this.view = view as IExplorerView;
             this.mainMenu = new MainMenu(this);
             this.contextMenu = new ContextMenu(this);
-            Links.Resolve(contextMenu, ApsimXFile);
+            ApsimXFile.Links.Resolve(contextMenu);
 
             this.view.Tree.SelectedNodeChanged += this.OnNodeSelected;
             this.view.Tree.DragStarted += this.OnDragStart;
@@ -665,7 +665,7 @@
                 if (newView != null && this.currentRightHandPresenter != null)
                 {
                     // Resolve links in presenter.
-                    Links.Resolve(currentRightHandPresenter, ApsimXFile);
+                    ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
                 }
