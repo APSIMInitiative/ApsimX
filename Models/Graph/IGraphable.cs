@@ -36,8 +36,15 @@
         /// <summary>A scatter series</summary>
         Scatter,
 
-        /// <summary>An area series</summary>
-        Area 
+        /// <summary>
+        /// A region series - two series with the area between them filled with colour.
+        /// </summary>
+        Region,
+
+        /// <summary>
+        /// An area series - a line series with the area between the line and the x-axis filled with colour.
+        /// </summary>
+        Area
     }
 
     /// <summary>An enumeration for the different types of markers</summary>
