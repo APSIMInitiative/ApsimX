@@ -12,23 +12,22 @@ if not exist %apsimx%\Documentation\PDF (
 	exit 1
 )
 
-:: Upload under review models' documentation
+rem Upload under review models' documentation
 for /r %apsimx%\Documentation\PDF\UnderReview %%D in (*.pdf) do (
 	set "NEW_NAME=%%~nD%ISSUE_NUMBER%%%~xD"
 	rename "%%D" "!NEW_NAME!"
 	set "FILE=%%~dpD!NEW_NAME!"
 	echo  Uploading "!FILE!"
 	@curl -s -u !APSIM_SITE_CREDS! -T !FILE! ftp://www.apsim.info/APSIM/ApsimXFiles/UnderReview/
-
-	:: Delete the file after uploading it
-	del %%D
 )
 
-for /r %apsimx%\Documentation\PDF %%D in (*.pdf) do (
+pushd %apsimx%\Documentation\PDF
+for /f %%D in (*.pdf) do (
 	set "NEW_NAME=%%~nD%ISSUE_NUMBER%%%~xD"
 	rename "%%D" "!NEW_NAME!"
 	set "FILE=%%~dpD!NEW_NAME!"
 	echo  Uploading "!FILE!"
 	@curl -s -u !APSIM_SITE_CREDS! -T !FILE! ftp://www.apsim.info/APSIM/ApsimXFiles/
 )
+popd
 endlocal
