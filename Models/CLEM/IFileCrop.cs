@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Models.CLEM
     /// <summary>
     /// Crop data reader interface
     /// </summary>
-    public interface IFileCrop
+    public interface IFileCrop: IModel
     {
         /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.
@@ -25,5 +26,9 @@ namespace Models.CLEM
         List<CropDataType> GetCropDataForEntireRun(string soilID, string cropName,
                                         DateTime startDate, DateTime endDate);
 
+        /// <summary>
+        /// Filename property
+        /// </summary>
+        string FileName { get; set; }
     }
 }

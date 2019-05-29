@@ -80,6 +80,10 @@ namespace UserInterface.Presenters
             {
                 return htmlString;
             }
+            if(ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
+            {
+                return htmlString;
+            }
             DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
             int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
             int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;

@@ -22,14 +22,14 @@ namespace Models.CLEM
 {
     ///<summary>
     /// Reads in crop growth data from an APSIM SQLite database and makes it available to other models.
-    /// Required columns are:
-    /// 
-    /// 
-    /// 
-    /// 
-    /// 
+    /// Required columns are (you can provide a link to each column name):
+    /// Year
+    /// Month
+    /// Soil id
+    /// Crop name
+    /// Amount harvested
+    /// Percent nitrogen (optional)
     ///</summary>
-    ///    
     ///<remarks>
     ///</remarks>
     [Serializable]
@@ -92,7 +92,7 @@ namespace Models.CLEM
         /// Name of column holding soil type data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Simulation")]
+        [System.ComponentModel.DefaultValueAttribute("SoilNum")]
         [Description("Column name for soil type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Soil type column name must be supplied")]
         public string SoilTypeColumnName { get; set; }
@@ -101,7 +101,7 @@ namespace Models.CLEM
         /// Name of column holding amount data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Amount")]
+        [System.ComponentModel.DefaultValueAttribute("AmtKg")]
         [Description("Column name for amount")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
         public string AmountColumnName { get; set; }
@@ -113,6 +113,8 @@ namespace Models.CLEM
         [System.ComponentModel.DefaultValueAttribute("")]
         [Description("Column name for percent nitrogen")]
         public string PercentNitrogenColumnName { get; set; }
+
+        
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -177,13 +179,35 @@ namespace Models.CLEM
                 // check table exists
                 if(!sQLiteReader.GetTableNames().Contains(TableName))
                 {
-                    string errorMsg = "@error:The specified table named ["+TableName+ "] was not found in the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n";
+                    string errorMsg = "The specified table named ["+TableName+ "] was not found\n. Please not these table names are case sensitive.";
                     throw new ApsimXException(this, errorMsg);
+                }
+
+                Dictionary<string, string> columnLinks = new Dictionary<string, string>()
+                {
+                    { "year", YearColumnName },
+                    { "month", MonthColumnName },
+                    { "soil", SoilTypeColumnName },
+                    { "crop", CropNameColumnName },
+                    { "amount", AmountColumnName },
+                    { "N", PercentNitrogenColumnName }
+                };
+                foreach (var item in columnLinks)
+                {
+                    // check each column name exists
+                    if (!(item.Key == "N" & item.Value == ""))
+                    {
+                        if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
+                        {
+                            string errorMsg = "The specified column [" + item.Key + "] does not exist in the table named [" + TableName + "]\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
+                            throw new ApsimXException(this, errorMsg);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                string errorMsg = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n" + ex.Message;
+                string errorMsg = "@error:There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
             if(sQLiteReader.IsOpen)
@@ -206,6 +230,7 @@ namespace Models.CLEM
         /// </summary>
         public FileSQLiteCrop()
         {
+            base.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
         }
 
@@ -235,11 +260,12 @@ namespace Models.CLEM
             }
 
             // check if Npct column exists in database
-            nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains("Npct");
+            nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(PercentNitrogenColumnName);
 
             // define SQL filter to load data
-            string sqlQuery = "SELECT Year,Month,Crop,Amount"+(nitrogenColumnExists?",Npct":"")+" FROM " + TableName
-                + " WHERE SoilNum = " + soilId;
+            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + " FROM " + TableName
+                + " WHERE " + SoilTypeColumnName + " = '" + soilId + "'"
+                + " AND " + CropNameColumnName + " = '" + cropName + "'";
 
             if (startDate.Year == endDate.Year)
             {
@@ -254,20 +280,34 @@ namespace Models.CLEM
                 + ")";
             }
 
-            DataTable results = sQLiteReader.ExecuteQuery(sqlQuery);
+            DataTable results;
+            try
+            {
+                results = sQLiteReader.ExecuteQuery(sqlQuery);
+            }
+            catch(Exception ex)
+            {
+                string errorMsg = "@error:There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n" + ex.Message;
+                throw new ApsimXException(this, errorMsg);
+            }
+
             if (sQLiteReader.IsOpen)
             {
                 sQLiteReader.CloseDatabase();
             }
 
-            results.DefaultView.Sort = "Year, Month";
-
-            // convert to list<CropDataType>
             List<CropDataType> cropDetails = new List<CropDataType>();
-            foreach (DataRow row in results.DefaultView)
+            if (results.Rows.Count > 0)
             {
-                cropDetails.Add(DataRow2CropData(row));
+                results.DefaultView.Sort = "Year, Month";
+
+                // convert to list<CropDataType>
+                foreach (DataRow row in results.DefaultView)
+                {
+                    cropDetails.Add(DataRow2CropData(row));
+                }
             }
+
             return cropDetails;
         }
 
@@ -275,16 +315,16 @@ namespace Models.CLEM
         {
             CropDataType cropdata = new CropDataType
             {
-                SoilNum = int.Parse(dr["SoilNum"].ToString()),
-                CropName = dr["CropName"].ToString(),
-                Year = int.Parse(dr["Year"].ToString()),
-                Month = int.Parse(dr["Month"].ToString()),
+                SoilNum = int.Parse(dr[SoilTypeColumnName].ToString()),
+                CropName = dr[CropNameColumnName].ToString(),
+                Year = int.Parse(dr[YearColumnName].ToString()),
+                Month = int.Parse(dr[MonthColumnName].ToString()),
 
-                AmtKg = double.Parse(dr["AmtKg"].ToString())
+                AmtKg = double.Parse(dr[AmountColumnName].ToString())
             };
             if(nitrogenColumnExists)
             {
-                cropdata.Npct = double.Parse(dr["Npct"].ToString());
+                cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString());
             }
             else
             {
@@ -321,7 +361,7 @@ namespace Models.CLEM
                     html += "Using table <span class=\"setvalue\">" + TableName + "</span>";
                 }
 
-                html += "in database <span class=\"filelink\">" + FileName + "</span>";
+                html += " in database <span class=\"filelink\">" + FileName + "</span>";
             }
             html += "\n</div>";
             return html;
