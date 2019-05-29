@@ -62,9 +62,16 @@ namespace UserInterface.Presenters
             Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
             if (parentGraph != null)
             {
-                graphPresenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                try
+                {
+                    graphPresenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
+                    graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
             }
 
             try
@@ -549,7 +556,7 @@ namespace UserInterface.Presenters
             // Populate filter textbox.
             this.seriesView.Filter.Value = series.Filter;
 
-            this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+            this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)

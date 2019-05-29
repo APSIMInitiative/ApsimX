@@ -850,18 +850,18 @@ namespace Models.PMF.Organs
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
+                var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
                     double[] kl = myZone.soil.KL(parentPlant.Name);
                     double[] ll = myZone.soil.LL(parentPlant.Name);
-                    var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
 
                     double[] lldep = new double[myZone.soil.Thickness.Length];
                     double[] available = new double[myZone.soil.Thickness.Length];
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
                     LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    for (int layer = 0; layer < currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
@@ -871,12 +871,11 @@ namespace Models.PMF.Organs
                             available[layer] *= layerproportion;
                         }
 
-                        if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
-                        {
-                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
-                                available[layer] * rootProportionInLayer(layer, myZone));
-                        }
+                        var proportionThroughLayer = rootProportionInLayer(layer, myZone);
+                        var klMod = klModifier.Value(layer);
+                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * available[layer] * proportionThroughLayer);
                     }
+
                     if (MathUtilities.Sum(supply) < 0.0)
                         return supply;
                     return supply;

@@ -1818,7 +1818,7 @@ namespace Models.PMF.Organs
                 double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
                 double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
 
-                if (resLeafCohort - totalBMLeafCohort > 0.00001)
+                if (resLeafCohort > Double.Epsilon && resLeafCohort - totalBMLeafCohort > 0.00001)
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
 
                 if (resLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)
