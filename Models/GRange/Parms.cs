@@ -29,7 +29,7 @@ namespace Models
         /// our location, we just need to work with a single set of parameters.
         /// </summary>
         [Serializable]
-        public class Parms
+        private class Parms
         {
             /// <summary>
             /// Melting temperature for snow, in C degrees
@@ -575,10 +575,356 @@ namespace Models
             public double[] indivPlantArea = new double[nFacets];
         }
 
+#pragma warning disable 0649
+
+        [Serializable]
+        private struct Globals
+        {
+            public int zone;                    // A unique ID, from 1 to N, for each cell.ZONE is a name that comes from ARC GRID.
+            public int elev;                    // Elevation, in meters ... commented out, not used.
+
+            public bool land;                   // Defining land versus ocean
+
+            public int coverClass;              // Land cover / land use class
+            public int landscapeType;           // Landscape type identifying the units for which parameters are given
+            public bool rangeland;              // A flag showing whether land is rangeland or not
+            public double latitude;             // The latitude of the center of the cell
+
+            public double precip;               // The total precipitation in the month, in mm
+            public double maxTemp;              // The average maximum temperature in the month, in C
+            public double minTemp;              // The average minimum temperature in the month, in C
+            public double precipAverage;        // The average annual precipitation, in mm / yr
+            public double temperatureAverage;   // The average annual temperature, in C
+            public double topSand;              // The percent sand in the top-soil
+            public double topSilt;              // The percent silt in the top-soil
+            public double topClay;              // The percent clay in the top-soil
+            public double topGravel;            // The percent rock in the top-soil
+            public double topBulkDensity;       // The bulk density of the top-soil
+            public double topOrganicCarbon;     // The percent organic matter carbon content in the top-soil
+            public double subSand;              // The percent sand in the sub-soil
+            public double subSilt;              // The percent silt in the sub-soil
+            public double subClay;              // The percent clay in the sub-soil
+            public double subGravel;            // The percent rock in the sub-soil
+            public double subBulkDensity;       // The bulk density of the sub-soil
+            public double subOrganicCarbon;     // The percent organic matter carbon content in the sub-soil
+            public double decidTreeCover;       // Deciduous tree cover, in percent, perhaps from DeFries, for example, which is from data from 1993-94, but only trees.
+            public double egreenTreeCover;      // Evergreen tree cover, in percent, perhaps from DeFries, for example, which is from data from 1993-94, but only trees.
+            public double shrubCover;           // DERIVED from other layers using MODIS 44B products and other layers.VERY poorly known.
+            public double herbCover;            // Herbaceous cover, from MODIS 44B product
+            public double propBurned;           // The proportion of the cell burned, as shown in maps(NOTE SCALE DEPENDENCE)
+            public double propFertilized;       // The proportion of the cell fertilized, as shown in maps(NOTE SCALE DEPENDENCE)
+            public double temporary;            // A temporary map location, used to read-in values
+        };
+
+        private Globals globe = new Globals();
         private Parms[] parmArray = null;
 
         /// <summary>
+        /// Transcoded from Initialize_Rangelands subroutine in Initialize_Model.f95
         /// 
+        /// !***** Take additional steps to initialize rangelands.  For example, wilting point and field capacity must
+        /// !***** be determined for the rangeland sites.
+        /// !***** (Facets were confirmed being reasonably populated through echoed statements)
+        /// 
+        /// Much of this shouldn't really be necessary once we start getting soil information from Apsim, but I'm porting it over now
+        /// as it let's us get started, and will make it easier to cross-check ApsimX and G-Range outputs.
+        /// </summary>
+        private void InitParms()
+        {
+            //// Work out where we are, what the vegetation type is, and load suitable params
+            parms = parmArray[globe.landscapeType - 1];
+
+            sand[0] = globe.topSand;  // The top and bottom layers get their values directly from the two HWSD layers
+            sand[3] = globe.subSand;  // The top and bottom layers get their values directly from the two HWSD layers
+            sand[1] = (globe.topSand * 0.6667) + (globe.subSand * 0.3333);  // The other layers get weighted values.
+            sand[2] = (globe.topSand * 0.3333) + (globe.subSand * 0.6667);  // The other layers get weighted values.
+            silt[0] = globe.topSilt;   // The top and bottom layers get their values directly from the two HWSD layers
+            silt[3] = globe.subSilt;   // The top and bottom layers get their values directly from the two HWSD layers
+            silt[1] = (globe.topSilt * 0.6667) + (globe.subSilt * 0.3333);  // The other layers get weighted values.
+            silt[2] = (globe.topSilt * 0.3333) + (globe.subSilt * 0.6667);  // The other layers get weighted values.
+            clay[0] = globe.topClay;   // The top and bottom layers get their values directly from the two HWSD layers
+            clay[3] = globe.subClay;   // The top and bottom layers get their values directly from the two HWSD layers
+            clay[1] = (globe.topClay * 0.6667) + (globe.subClay * 0.3333);  // The other layers get weighted values.
+            clay[2] = (globe.topClay * 0.3333) + (globe.subClay * 0.6667);  // The other layers get weighted values.
+            // The following are only used a few lines down, so not storing in Rng, for space - saving purposes.
+            double[] gravel = new double[4];
+            gravel[0] = globe.topGravel;   // The top and bottom layers get their values directly from the two HWSD layers
+            gravel[3] = globe.subGravel;   // The top and bottom layers get their values directly from the two HWSD layers
+            gravel[1] = (globe.topGravel * 0.6667) + (globe.subGravel * 0.3333);   // The other layers get weighted values.
+            gravel[2] = (globe.topGravel * 0.3333) + (globe.subGravel * 0.6667);   // The other layers get weighted values.
+            double[] bulkDensity = new double[4];
+            bulkDensity[0] = globe.topBulkDensity;   // The top and bottom layers get their values directly from the two HWSD layers
+            bulkDensity[3] = globe.subBulkDensity;   // The top and bottom layers get their values directly from the two HWSD layers
+            bulkDensity[1] = (globe.topBulkDensity * 0.6667) + (globe.subBulkDensity * 0.3333);  // The other layers get weighted values.
+            bulkDensity[2] = (globe.topBulkDensity * 0.3333) + (globe.subBulkDensity * 0.6667);  // The other layers get weighted values.
+            double[] organicCarbon = new double[4];
+            organicCarbon[0] = globe.topOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
+            organicCarbon[3] = globe.subOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
+            organicCarbon[1] = (globe.topOrganicCarbon * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
+            organicCarbon[2] = (globe.topOrganicCarbon * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+
+            // Century uses these soil parameters from 0 - 1, so...
+            for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
+            {
+                sand[iLayer] /= 100.0;
+                silt[iLayer] /= 100.0;
+                clay[iLayer] /= 100.0;
+                gravel[iLayer] /= 100.0;
+            }
+
+            // Calculate the field capacity and wilting point for the rangeland cells.
+            // This process comes from Century 4.5, where they cite Gupta and Larson(1979).          
+            // NB: The kg / dm3 for bulk density in the soils database is equal to g / cm3 in Gupta and Larson.            
+            // Field capacity is done at a Matric potential of - 0.33, as in Century, and includes only option SWFLAG = 1, where both wilting point and field capacity are calculated.            
+            // Wilting point is done at Matric potential of - 15.0.            
+            // (Century includes extra components, but the coefficients on those for SWFLAG = 1 are 0, so following Gupta and Larson(1979) is correct.)
+
+            rangeType = globe.landscapeType;
+            if (rangeType < 1)
+            {
+                Console.WriteLine("A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString());
+                rangeType = 1;
+                parms = parmArray[0];
+            }
+            // Calculating initial plant populations.  These are based on a 1 km ^ 2 area, and the coverage maps.
+            // Three facets, plus bare ground.
+            // The potential populations of the plants are higher than the aerial coverage of the facets, at least
+            // for herbs and shrubs.Tree cover and population are the same.This is due to herbs being in the understory
+            // of shrubs and trees, and shrubs being in the understory of trees.
+
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                // The following is the total population possible for the facet, if entirely dominated by that facet.
+                parms.indivPlantArea[iFacet] = parms.plantDimension[iFacet] * parms.plantDimension[iFacet];  // m x m = m ^ 2
+                parms.potPopulation[iFacet] = (int)(refArea / parms.indivPlantArea[iFacet]);  // (m x m) / m ^ 2 = #
+            }
+
+            for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
+            {
+                if (sand[iLayer] + silt[iLayer] + clay[iLayer] + gravel[iLayer] > 0.01)
+                {
+                    fieldCapacity[iLayer] = (sand[iLayer] * 0.3075) + (silt[iLayer] * 0.5886) +
+                                                      (clay[iLayer] * 0.8039) + (organicCarbon[iLayer] * 0.002208) +
+                                                      (bulkDensity[iLayer] * (-0.14340));
+                    wiltingPoint[iLayer] = (sand[iLayer] * (-0.0059)) + (silt[iLayer] * 0.1142) +
+                                           (clay[iLayer] * 0.5766) + (organicCarbon[iLayer] * 0.002228) +
+                                           (bulkDensity[iLayer] * 0.02671);
+                }
+                else
+                {
+                    fieldCapacity[iLayer] = 0.03;
+                    wiltingPoint[iLayer] = 0.01;
+                    Console.WriteLine("Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
+                    // The following is commented out, to avoid distracting warnings with minor effects on outcomes.But the error to ECHO.GOF is retained.
+                    // write(*, *) 'Warning, check GIS: soil information is not defined for cell: ',icell,' and layer: ',ilayer
+                }
+
+                // Correcting field capacity and wilting point based on gravel volume.
+                fieldCapacity[iLayer] = fieldCapacity[iLayer] * (1.0 - gravel[iLayer]);
+                wiltingPoint[iLayer] = wiltingPoint[iLayer] * (1.0 - gravel[iLayer]);
+
+                relativeWaterContent[iLayer] = 0.50;
+                // Initialize asmos to the range between capacity and wilting, plus the bottom value, wilting.
+                // Then multiply that by the relative water content, and finally soil depth.  The other measures are for 1 cm deep soil, essentially.
+                asmos[iLayer] = ((fieldCapacity[iLayer] - wiltingPoint[iLayer]) *
+                                relativeWaterContent[iLayer] + wiltingPoint[iLayer]) * soilDepth[iLayer];
+            }
+
+            // Calculate total carbon in the soil.  This uses average temperature and precipitation, which Century
+            // truncates to fairly low values, and so here we do the same. NOTE:  How incorrect it is to initialize
+            // forested soils using the grassland initialization is a question.  But we won't be simulating forests per sey.
+            double temper = Math.Min(23.0, globe.temperatureAverage);
+            double precip = Math.Min(120.0, globe.precipAverage);
+            double avgSilt = (silt[0] + silt[1] + silt[2] + silt[3]) / 4.0;
+            double avgClay = (clay[0] + clay[1] + clay[2] + clay[3]) / 4.0;
+
+            // Initialize total soil carbon in grams using the formula in Century, which combines som1c, som2c, and som3c
+            soilTotalCarbon = (-8.27E-01 * temper + 2.24E-02 * temper * temper + precip * 1.27E-01 - 9.38E-04
+                            * precip * precip + precip * avgSilt * 8.99E-02 + precip * avgClay * 6.00E-02 + 4.09) * 1000.0;
+            // Truncated as in Century.Not allowed to go below 500 g / m ^ 2
+            if (soilTotalCarbon < 500.0)
+                soilTotalCarbon = 500.0;
+            carbonNitrogenRatio[surfaceIndex] = parms.initSoilCNRatio;
+            carbonNitrogenRatio[soilIndex] = parms.initSoilCNRatio;
+
+            // Century cites equations by Burke to initialize carbon pool compartments
+            // Rng(icell) % fast_soil_carbon(SURFACE_INDEX) = &
+            // Rng(icell) % soil_total_carbon * 0.02 + ((Rng(icell) % soil_total_carbon * 0.02) * 0.011)
+            fastSoilCarbon[surfaceIndex] = 10.0 + (10.0 * 0.011);
+            fastSoilCarbon[soilIndex] = (soilTotalCarbon * 0.02) +
+                                               ((soilTotalCarbon * 0.02) * 0.011);
+            fastSoilNitrogen[surfaceIndex] = fastSoilCarbon[surfaceIndex] *
+                                                    (1.0 / carbonNitrogenRatio[surfaceIndex]);
+            fastSoilNitrogen[soilIndex] = fastSoilCarbon[soilIndex] *
+                                                    (1.0 / carbonNitrogenRatio[soilIndex]);
+            intermediateSoilCarbon = soilTotalCarbon * 0.64 +
+                                           ((soilTotalCarbon * 0.64) * 0.011);
+            passiveSoilCarbon = soilTotalCarbon * 0.34 + ((soilTotalCarbon * 0.34) * 0.011);
+            intermediateSoilNitrogen = intermediateSoilCarbon * (1.0 / parms.initSoilCNRatio);
+            passiveSoilNitrogen = passiveSoilCarbon * (1.0 / parms.initSoilCNRatio);
+
+            // Surface fast soil carbon was removed from the following, since it is assigned 10.11 by default.
+            double remainingC = soilTotalCarbon - fastSoilCarbon[soilIndex] -
+                    intermediateSoilCarbon - passiveSoilCarbon;
+            // See multiple cites for the following, including Parten et al. (1993)
+            double fractionMetab = 0.85 - (0.018 * parms.initLigninNRatio);
+            fractionMetab = Math.Max(0.2, fractionMetab);
+            // Assigning initial carbon and nitrogen concentrations
+            for (int iLayer = surfaceIndex; iLayer <= soilIndex; iLayer++)
+            {
+                // Values differ in Century parameter files.   100 appears typical, and spin - up should customize responses
+                litterStructuralCarbon[iLayer] = 100.0;
+                litterMetabolicCarbon[iLayer] = 100.0 * fractionMetab;
+                litterStructuralNitrogen[iLayer] = litterStructuralCarbon[iLayer] *
+                                                       parms.initLigninNRatio;
+                litterMetabolicNitrogen[iLayer] = litterStructuralNitrogen[iLayer] * fractionMetab;
+            }
+
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                leafCarbon[iFacet] = 200.0 + (200.0 * 0.011);
+                leafNitrogen[iFacet] = 3.0;
+                deadStandingCarbon[iFacet] = 80.0 + (80.0 * 0.011);
+                deadStandingNitrogen[iFacet] = 1.6;
+                fineRootCarbon[iFacet] = 200.0 + (200.0 * 0.011);
+                fineRootNitrogen[iFacet] = 3.0;
+                deadFineBranchCarbon[iFacet] = 0.0;   // Setting to 0, but really just for herbs.
+                deadCoarseBranchCarbon[iFacet] = 0.0;
+                deadCoarseRootCarbon[iFacet] = 0.0;
+                rootShootRatio[iFacet] = leafCarbon[iFacet] / fineRootCarbon[iFacet];
+            }
+
+            // Standardize the three surfaces in case they sum to greater than 1.0(they are allowed to be less than 1.0, with the remainder being bare ground)
+            double tempSum = globe.herbCover + globe.shrubCover + globe.decidTreeCover + globe.egreenTreeCover;
+            if (tempSum > 100.0) {
+                globe.herbCover = globe.herbCover * (100.0 / tempSum);
+                globe.shrubCover = globe.shrubCover * (100.0 / tempSum);
+                globe.decidTreeCover = globe.decidTreeCover * (100.0 / tempSum);
+                globe.egreenTreeCover = globe.egreenTreeCover * (100.0 / tempSum);
+            }
+            // Facet_cover is the straight proportion of each facet on the 1 km ^ 2.Facet_population includes understory plants.
+            facetCover[(int)Facet.tree] = (globe.decidTreeCover + globe.egreenTreeCover) / 100.0;
+            if (facetCover[(int)Facet.tree] > 0.0001)
+                propAnnualDecid[(int)Facet.tree] = globe.decidTreeCover / (globe.decidTreeCover + globe.egreenTreeCover);
+            else
+                propAnnualDecid[(int)Facet.tree] = 0.0;
+
+            // Shrub cover, which has no good surface to define it(confirmed by Dr.Hansen himself)
+            facetCover[(int)Facet.shrub] = globe.shrubCover / 100.0;
+            if (facetCover[(int)Facet.shrub] > 0.99)
+                facetCover[(int)Facet.shrub] = 0.99;   // Trim any cell that is 100 % shrubs to allow some herbs
+            // THE FOLLOWING COULD BE A PARAMETER.For now, setting shrub deciduous proporation equal to tree deciduous portion, which should capture large - scale biome variation.
+            propAnnualDecid[(int)Facet.shrub] = propAnnualDecid[(int)Facet.tree];
+            // NOTE: Putting 1 % cover into each cell, as an initial value only.
+            facetCover[(int)Facet.herb] = globe.herbCover / 100.0;
+            if (facetCover[(int)Facet.herb] < 0.01)
+                facetCover[(int)Facet.herb] = 0.01;
+            // The following is a parameter...
+            propAnnualDecid[(int)Facet.herb] = parms.propAnnuals;
+            // Shrubs are the largest unknown, so if there is a problem, subtract from shrubs
+            if ((facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]) > 1.0)
+                facetCover[(int)Facet.shrub] = 1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.herb]);
+            bareCover = (1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]));
+            // !    write(ECHO_FILE, '(A10,I6,5(F7.4,2X))') 'FACETS: ',icell,Rng(icell) % facet_cover(T_FACET),Rng(icell) % facet_cover(S_FACET), &
+            // !Rng(icell) % facet_cover(H_FACET), Rng(icell) % bare_cover, (Rng(icell) % facet_cover(T_FACET) + &
+            // !Rng(icell) % facet_cover(S_FACET) + Rng(icell) % facet_cover(H_FACET) + Rng(icell) % bare_cover)
+
+            // Calculate facet populations.   * *Initializing herbs in 1 / 3 understory of shrubs.Shrubs in 1 / 3 understory of trees, and
+            //                                   herbs in 1 / 6 understory of trees and shrubs** CONSIDER THIS AND ITS REPERCUSSIONS
+            // Ok for initialization, but in the simulation, woody cover.
+            // TREES
+            totalPopulation[(int)Layer.tree] = facetCover[(int)Facet.tree] * parms.potPopulation[(int)Facet.tree]; // Tree population and cover are directly related.
+            // SHRUBS
+            // Calculate number of shrubs under trees, if 1 / 3 what could be fitted with full packing(trunks etc.are ignored here)
+            double plantCount = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) /
+                                 parms.indivPlantArea[(int)Facet.shrub];
+            totalPopulation[(int)Layer.shrubUnderTree] = plantCount * 0.3334;
+            // Calculate total shrubs on shrub facet
+            totalPopulation[(int)Layer.shrub] = facetCover[(int)Facet.shrub] * parms.potPopulation[(int)Facet.shrub];
+            // HERBS
+            // Calculate number of herbs under trees, if 1 / 6 what could be fitted with full packing(trunks etc.are ignored here)
+            plantCount = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) /
+                     parms.indivPlantArea[(int)Facet.herb];
+            totalPopulation[(int)Layer.herbUnderTree] = plantCount * 0.16667;
+            // Calculate number of herbs under shrubs, if 1 / 3 what could be fitted with full packing(trunks etc.are ignored here)
+            double plant_count2 = (totalPopulation[(int)Layer.shrub] * parms.indivPlantArea[(int)Facet.shrub]) /
+                      parms.indivPlantArea[(int)Facet.herb];
+            totalPopulation[(int)Layer.herbUnderShrub] = plant_count2 * 0.3334;
+            // Calculate total herbs on herb facet, and sum those on tree and shrub facet to yield the total number of herbs
+            totalPopulation[(int)Layer.herb] = facetCover[(int)Facet.herb] * parms.potPopulation[(int)Facet.herb];
+
+            // Initialize lignin structural residue
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                plantLigninFraction[iFacet, surfaceIndex] = 0.25;
+                plantLigninFraction[iFacet, soilIndex] = 0.25;    // Alter what these should be initialized to, as needed
+            }
+        }
+
+        /// <summary>
+        /// Corresponds to subroutine Initialize_Globe in Initialize_Models.f95, but is implemented quite differently.
+        /// We read from an SQLite database, rather than a series of files, and we focus only on a single location
+        /// rather than reading in the entire globe.
+        /// </summary>
+        private void LoadGlobals()
+        {
+            double latitude = Latitude;
+            double longitude = Longitude;
+
+            // How should we handle knowing our location? We want to know early on - but the Weather component does start reading until weather is needed,
+            // and it doesn't always provide longitude in any case.
+            // For now, I'm usually going to rely on the user explicitly entering a latitude and longitude.
+            if (Double.IsNaN(latitude))
+                latitude = Weather.Latitude;
+            if (Double.IsNaN(longitude) && Weather is Weather)
+                longitude = (Weather as Weather).Longitude;
+
+            // We need to work out the "cell" that corresponds to our latitude and longitude
+            // The code below is roughly correct, but it might need a bit of additional thought about boundary cases.
+            X = Math.Max(1, Math.Min(720, (int)Math.Round(360 + longitude * 2.0)));
+            Y = Math.Max(1, Math.Min(360, (int)Math.Round(180.0 - latitude * 2.0)));
+            globe.zone = (Y - 1) * 720 + X;
+
+            SQLite sqlite = new SQLite();
+            sqlite.OpenDatabase(FullDatabaseName, true);
+            System.Data.DataTable dataTable = sqlite.ExecuteQuery("SELECT * FROM HalfDegree INNER JOIN SystemTypes ON HalfDegree.GoGe = SystemTypes.TypeId WHERE ZONE=" + globe.zone.ToString());
+            if (dataTable.Rows.Count != 1)
+                throw new ApsimXException(this, "Error reading G-Range database!");
+            System.Data.DataRow dataRow = dataTable.Rows[0];
+
+            rangeType = (int)dataRow["Sage"] - 1;
+            if (rangeType < 0)
+                throw new ApsimXException(this, "The specified location is not considered to be rangeland.");
+
+            globe.land = (int)dataRow["Land"] == 1;
+            globe.coverClass = (int)dataRow["Goge"];
+
+            globe.latitude = (double)dataRow["Lats"];
+            globe.topSand = (double)dataRow["Top_sand"];
+            globe.topSilt = (double)dataRow["Top_silt"];
+            globe.topClay = (double)dataRow["Top_clay"];
+            globe.topGravel = (double)dataRow["Top_gravel"];
+            globe.topBulkDensity = (double)dataRow["Top_bulk"];
+            globe.topOrganicCarbon = (double)dataRow["Top_carbon"];
+            globe.subSand = (double)dataRow["Sub_sand"];
+            globe.subSilt = (double)dataRow["Sub_silt"];
+            globe.subClay = (double)dataRow["Sub_clay"];
+            globe.subGravel = (double)dataRow["Sub_gravel"];
+            globe.subBulkDensity = (double)dataRow["Sub_bulk"];
+            globe.subOrganicCarbon = (double)dataRow["Sub_carbon"];
+            globe.landscapeType = (int)dataRow["Sage"];
+            globe.precipAverage = (double)dataRow["Prcp_avg"];
+            globe.temperatureAverage = (double)dataRow["Temp_avg"];
+            globe.decidTreeCover = (double)dataRow["Decid"];
+            globe.egreenTreeCover = (double)dataRow["Egreen"];
+            globe.shrubCover = (double)dataRow["Shrub"];
+            globe.herbCover = (double)dataRow["Herb"];
+        }
+
+        /// <summary>
+        /// Based on subroutine Initialize_Landscape_Parms in Initialize_Model.f95,
+        /// but reads from a resource rather than an external file, and does not 
+        /// echo the values.
         /// </summary>
         private void LoadParms()
         {
@@ -656,7 +1002,6 @@ namespace Models
                         case 9: parm.degreeDaysPhen[iFacet, iPoint] = 4.0; break;
                     }
                 }
-                // { { 0.0, 0.0, 200.0, 1.0, 300.0, 2.0, 400.0, 3.0, 700.0, 4.0 }, { 0.0, 0.0, 200.0, 1.0, 300.0, 2.0, 400.0, 3.0, 700.0, 4.0 }, { 0.0, 0.0, 200.0, 1.0, 300.0, 2.0, 400.0, 3.0, 700.0, 4.0 } };
                 ReadDoubleArray(parmsStrings[iLine++], out parm.degreeDaysReset);
                 parm.treeSitePotential = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.maxSymbioticNFixationRatio = ReadDoubleVal(parmsStrings[iLine++]);
@@ -665,13 +1010,11 @@ namespace Models
                 parm.minimumCNRatio = new double[nFacets, nWoodyParts];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.minimumCNRatio[i / nWoodyParts, i % nWoodyParts] = tempArray[i];
-                // { { 10.0, 13.0, 0.0, 0.0, 0.0 }, { 13.0, 20.0, 30.0, 50.0, 60.0 }, { 15.0, 21.0, 32.0, 52.0, 52.0 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.maximumCNRatio = new double[nFacets, nWoodyParts];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.maximumCNRatio[i / nWoodyParts, i % nWoodyParts] = tempArray[i];
-                //{ { 30.0, 33.0, 0.0, 0.0, 0.0 }, { 33.0, 40.0, 50.0, 80.0, 90.0 }, { 35.0, 51.0, 62.0, 92.0, 95.0 } };
 
                 parm.maximumLeafAreaIndex = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.kLeafAreaIndex = ReadDoubleVal(parmsStrings[iLine++]);
@@ -686,31 +1029,26 @@ namespace Models
                 parm.relativeSeedProduction = new double[nFacets];
                 for (int i = 0; i < nFacets; i++)
                     parm.relativeSeedProduction[i] = tempArray[i] / 10000.0;
-                //{ 0.4500, 0.2350, 0.2550 };  // FACTOR OF 10000!  
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.waterEffectOnEstablish = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.waterEffectOnEstablish[i / 4, i % 4] = tempArray[i];
-                // { { 0.43, 0.67, 3.0, 1.00 }, { 1.0, 0.66, 6.0, 1.00 }, { 1.0, 0.30, 4.0, 1.00 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.herbRootEffectOnEstablish = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.herbRootEffectOnEstablish[i / 4, i % 4] = tempArray[i];
-                // { { 50.0, 1.00, 300., 0.57 }, { 100.0, 1.00, 610.0, 0.10 }, { 150.0, 1.00, 550.0, 0.05 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.litterEffectOnEstablish = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.litterEffectOnEstablish[i / 4, i % 4] = tempArray[i];
-                // { { 300.0, 1.00, 1000.0, 0.49 }, { 340.0, 1.00, 1000.0, 0.50 }, { 400.0, 1.00, 1000.0, 0.20 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.woodyCoverEffectOnEstablish = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.woodyCoverEffectOnEstablish[i / 4, i % 4] = tempArray[i];
-                // { { 0.0, 1.00, 0.3, 0.40 }, { 0.0, 1.00, 0.39, 0.00 }, { 0.0, 1.00, 0.65, 0.00 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out parm.nominalPlantDeathRate);
 
@@ -718,19 +1056,16 @@ namespace Models
                 parm.waterEffectOnDeathRate = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.waterEffectOnDeathRate[i / 4, i % 4] = tempArray[i];
-                // { { 0.0, 0.05, 2.5, 0.000 }, { 0.0, 0.0050, 2.5, 0.000 }, { 0.0, 0.005, 2.5, 0.000 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.grazingEffectOnDeathRate = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.grazingEffectOnDeathRate[i / 4, i % 4] = tempArray[i];
-                //{ { 0.0, 0.0, 1.0, 0.040 }, { 0.0, 0.000, 1.0, 0.0050 }, { 0.0, 0.00, 1.0, 0.0050 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.shadingEffectOnDeathRate = new double[nFacets, 4];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.shadingEffectOnDeathRate[i / 4, i % 4] = tempArray[i];
-                // { { 0.0, 0.0, 4.0, 0.020 }, { 0.0, 0.000, 4.0, 0.025 }, { 0.0, 0.00, 4.0, 0.025 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out parm.fallRateOfStandingDead);
                 parm.deathRateOfDeciduousLeaves = ReadDoubleVal(parmsStrings[iLine++]);
@@ -754,31 +1089,26 @@ namespace Models
                 parm.greenVsIntensity = new double[2, fireSeverities];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.greenVsIntensity[i / fireSeverities, i % fireSeverities] = tempArray[i];
-                // { { 0.0, 1.0 }, { 0.3, 0.7 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.fractionShootsBurned = new double[nFacets, fireSeverities];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.fractionShootsBurned[i / fireSeverities, i % fireSeverities] = tempArray[i];
-                // { { 0.1, 1.0 }, { 0.1, 0.2 }, { 0.1, 0.2 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.fractionStandingDeadBurned = new double[nFacets, fireSeverities];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.fractionStandingDeadBurned[i / fireSeverities, i % fireSeverities] = tempArray[i];
-                // { { 0.4, 1.0 }, { 0.3, 0.9 }, { 0.3, 0.9 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.fractionPlantsBurnedDead = new double[nFacets, fireSeverities];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.fractionPlantsBurnedDead[i / fireSeverities, i % fireSeverities] = tempArray[i];
-                // { { 0.2, 0.5 }, { 0.0, 0.15 }, { 0.0, 0.15 } };
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.fractionLitterBurned = new double[nFacets, fireSeverities];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.fractionLitterBurned[i / fireSeverities, i % fireSeverities] = tempArray[i];
-                // { { 0.1, 0.5 }, { 0.1, 0.5 }, { 0.1, 0.5 } };
 
                 parm.fractionBurnedCarbonAsAsh = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.fractionBurnedNitrogenAsAsh = ReadDoubleVal(parmsStrings[iLine++]);

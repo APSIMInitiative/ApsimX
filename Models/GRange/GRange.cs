@@ -28,8 +28,8 @@ namespace Models
         //[Link]
         //private Clock Clock = null;
 
-        //[Link]
-        //private IWeather Weather = null;
+        [Link]
+        private IWeather Weather = null;
 
         //[Link]
         //private MicroClimate MicroClim; //added for fr_intc_radn_ , but don't know what the corresponding variable is in MicroClimate.
@@ -100,7 +100,7 @@ namespace Models
         /// <summary>Gets the LAI</summary>
         [Description("Leaf Area Index (m^2/m^2)")]
         [Units("m^2/m^2")]
-        public double LAI { get; set; }
+        public double LAI { get { return 1.7; } }
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI; } }
@@ -182,9 +182,13 @@ namespace Models
         // I've pulled in all the members of the original G-Range RangeCell structure, but not all are used (yet)
         // These pragmas disable warnings related to the declaration of unused variables.
 
+        // Once the entire model has been transcoded, these pragmas should be remove (and the associated warnings dealt with appropriately)
+
 #pragma warning disable 0414
 
 #pragma warning disable 0169
+
+#pragma warning disable 0649
 
         /// <summary>
         ///  Stores parameters unique to each landscape unit
@@ -221,7 +225,7 @@ namespace Models
             /// <summary>
             /// Tree layer index (T_LYR)
             /// </summary>
-            treeLayer
+            tree
         };
 
         /// <summary>
@@ -307,7 +311,7 @@ namespace Models
         /// </summary>
         public int Y;
 
-        private int rangeType = 3;                 // Identifier storing the type of rangeland cell, used as a key to the Parms strcuture
+        private int rangeType;                 // Identifier storing the type of rangeland cell, used as a key to the Parms strcuture
 
         private double lastMonthDayLength;     // The day length of the previous month, to know when spring and fall come.
         private bool dayLengthIncreasing;      // Increasing or decreasing day length, comparing the current to previous day lengths.
@@ -325,7 +329,7 @@ namespace Models
         private double evaporation;            // Water evaporated from the soil and vegetation(cm/month)
         private double snow;                   // Snowpack, in cm
         private double snowLiquid;             // Snowpack liquid water.
-        
+
         // Editing the model 01/02/2014 to prevent snow and snow liquid from skyrocketing.   Adding an field for OLD SNOW and ICE, prior to clearing out snow each year.
         private double oldSnow;                // Snow from past years, including glacial build up.   This will be an accumulator, but essentially outside of active process modeling
         private double oldSnowLiquid;          // Ditto
@@ -432,7 +436,7 @@ namespace Models
         private double[] ligninLeaf = new double[nFacets];             // Leaf lignin concentration
 
         private double[,] plantLigninFraction = new double[nFacets, 2];   // Lignin in structural residue, at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRLIG)
-        private double[] litteStructuralCarbon = new double[2];           // Litter structural carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRCIS, or in Savanna, SSTRCIS, with unlabeled and labeled merged)
+        private double[] litterStructuralCarbon = new double[2];           // Litter structural carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRCIS, or in Savanna, SSTRCIS, with unlabeled and labeled merged)
         private double[] litterMetabolicCarbon = new double[2];           // Litter metabolic carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (METCIS, or in Savanna, SMETCIS)
         private double[] litterStructuralNitrogen = new double[2];        // Litter structural nitrogen at the surface(1) and in the soil(2)  (STRUCE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
         private double[] litterMetabolicNitrogen = new double[2];         // Litter structural nitrogen at the surface(1) and in the soil(2)  (METABE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
@@ -494,6 +498,50 @@ namespace Models
 
         #endregion
 
+        /// <summary>
+        /// Gets or sets the latitude for the site being modelled. Should be in the range -90 to 90
+        /// </summary>
+        [Summary]
+        [Description("Latitude")]
+        public double Latitude { get; set; } = Double.NaN;
+
+        /// <summary>
+        /// Gets or sets the longitude for the site being modelled. Should be in the range -180 to 180
+        /// </summary>
+        [Summary]
+        [Description("Longitude")]
+        public double Longitude { get; set; } = Double.NaN;
+
+        /// <summary>
+        /// Gets or sets the file name. Should be relative filename where possible.
+        /// </summary>
+        [Summary]
+        [Description("G-Range database file name")]
+        public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// </summary>
+        [XmlIgnore]
+        public string FullDatabaseName
+        {
+            get
+            {
+                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.DatabaseName, simulation.FileName);
+                else
+                    return this.DatabaseName;
+            }
+            set
+            {
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                    this.DatabaseName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.DatabaseName = value;
+            }
+        }
         private Parms parms;
 
         //[EventHandler]
@@ -505,11 +553,9 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-
-            LoadParms();
-
-            //// Work out where we are, what the vegetation type is, and load suitable params
-            parms = parmArray[rangeType];
+            LoadParms();    // Initialize_Landscape_Parms
+            LoadGlobals();  // Initialize_Globe
+            InitParms();    // Initialize_Rangelands
         }
 
         /// <summary>EventHandler - preparation before the main daily processes.</summary>
@@ -518,6 +564,7 @@ namespace Models
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
+            UpdateVegetation();
             UpdateWeather();
         }
 
@@ -544,8 +591,209 @@ namespace Models
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         { }
 
+        /// <summary>
+        /// A linear interpolation routine, from Savanna ALINT.
+        /// Rewritten March 12, 2013 to ensure that values are going in the placed needed.
+        /// Typo fixed that had do i = l versus do i = 1 prior to the exit call.
+        /// </summary>
+        /// <param name="x">The value that needs a Y</param>
+        /// <param name="dataVal">Pairs of values that define the relationship, x1, y1, x2, y2, etc.</param>
+        /// <param name="imx">The number of pairs given, often 2</param>
+        /// <returns></returns>
+        private double Linear(double x, double[]dataVal, int imx)
+        {
+            double[,] dataV = new double[2, imx];
+            for (int m = 0; m < imx; m++)
+            {
+                int n = m * 2;
+                dataV[0, m] = dataVal[n];
+                dataV[1, m] = dataVal[n + 1];
+            }
+
+            if (x <= dataV[0, 0])
+                return dataV[1, 0];
+
+            if (x >= dataV[0, imx - 1])
+                return dataV[1, imx - 1];
+
+            int k = 0;
+            for (int i = 0; i < imx - 1; i++)
+            {
+                if (x <= dataV[0, i])
+                {
+                    k = i;
+                    break;
+                }
+            }
+
+            return dataV[1, k] + (dataV[1, k + 1] - dataV[1, k]) / (dataV[0, k + 1] - dataV[0, k]) * (x - dataV[1, k]);
+
+        }
+
+        /// <summary>
+        /// Update metrics that summarize vegetation.  Adapted from Century or from scratch
+        /// Transcoded from the subroutine in Misc_Material.f95
+        /// </summary>
+        private void UpdateVegetation()
+        {
+            // Update tree basal area
+            double wdbmas = (fineBranchCarbon[(int)Facet.tree] + coarseBranchCarbon[(int)Facet.tree]) * 2.0;
+            if (wdbmas <= 0.0)
+                wdbmas = 50.0;                              // Adjusted to allow trees to grow from zero and avoid underflows.
+
+            double basf = wdbmas / (0.88 * (Math.Pow(wdbmas * 0.01, 0.635)));   // Division by zero avoided above.
+            if (basf < 250.0)
+                basf = basf * parms.treeBasalAreaToWoodBiomass;
+            treeBasalArea = wdbmas / basf;                  // Setting WDBMAS and the use of a parameter should avoid division by 0.
+
+            waterFunction = 1.0 / (1.0 + 4.0 * Math.Exp(-6.0 * relativeWaterContent[0]));  // 1 + etc.should avoid division by zero error.
+            totalLitterCarbon[surfaceIndex] = litterStructuralCarbon[surfaceIndex] + litterMetabolicCarbon[surfaceIndex];
+            if (totalLitterCarbon[surfaceIndex] < 0.0)
+                totalLitterCarbon[surfaceIndex] = 0.0;
+            totalLitterCarbon[soilIndex] = litterStructuralCarbon[soilIndex] + litterMetabolicCarbon[soilIndex];
+            if (totalLitterCarbon[soilIndex] < 0.0)
+                totalLitterCarbon[soilIndex] = 0.0;
+            totalLitterNitrogen[surfaceIndex] = litterStructuralNitrogen[surfaceIndex] + litterMetabolicNitrogen[surfaceIndex];
+            if (totalLitterNitrogen[surfaceIndex] < 0.0)
+                totalLitterNitrogen[surfaceIndex] = 0.0;
+            totalLitterNitrogen[soilIndex] = litterStructuralNitrogen[soilIndex] + litterMetabolicNitrogen[soilIndex];
+            if (totalLitterNitrogen[soilIndex] < 0.0)
+                totalLitterNitrogen[soilIndex] = 0.0;
+
+            double[] dataVal = new double[10];
+            // Update the phenology of the plants
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                for (int i = 0; i < 10; i++)
+                    dataVal[i] = parms.degreeDaysPhen[iFacet, i];
+                phenology[iFacet] = Linear(heatAccumulation, dataVal, 5);
+                if (heatAccumulation >= parms.degreeDaysReset[iFacet])
+                    phenology[iFacet] = 0.0;
+            }
+
+            // The following is likely not very good for herbs, using the same values as trees, but still a helpful index.Could be expanded to include LAI to biomass relationship specific to herbs
+            // The following only considers the tallest facet.  Could(should ?) include shrubs and herbs in tree facet, etc?   Separated out from a facet loop here incase that change is made.
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+                leafAreaIndex[iFacet] = leafCarbon[iFacet] * (2.5 * parms.biomassToLeafAreaIndexFactor);
+
+            soilTotalCarbon = fastSoilCarbon[soilIndex] + intermediateSoilCarbon +
+                                           passiveSoilCarbon + litterStructuralCarbon[soilIndex] +
+                                           litterMetabolicCarbon[soilIndex];
+            // CHECK
+            // The Fortran code assigned to carbon_nitrogen_ratio, which is an array of 2 elements.
+            // Is that an error, or should both elements of the array receive the new value?
+            carbonNitrogenRatio[soilIndex] = (fastSoilCarbon[soilIndex] + intermediateSoilCarbon +
+                                   passiveSoilCarbon + litterStructuralCarbon[soilIndex] +
+                                   litterMetabolicCarbon[soilIndex]) /
+                                   (fastSoilNitrogen[soilIndex] + intermediateSoilNitrogen +
+                                    passiveSoilNitrogen + litterStructuralNitrogen[soilIndex] +
+                                    litterMetabolicNitrogen[soilIndex]);
+
+            // If the whole array was being set deliberately, then we also need
+            carbonNitrogenRatio[surfaceIndex] = carbonNitrogenRatio[soilIndex];
+            // CHECK
+
+            // Moving the following from WATER_LOSS, since it was only being done with no snow present.
+            double avgALiveBiomass = 0.0;
+            double avgBLiveBiomass = 0.0;
+            double[] biomassLivePerLayer = new double[vLayers];
+
+            // ABOVEGROUND
+            // Using method used in productivity.Does not use plant populations in layers, but uses the facets instead.Not at precise but less prone to vast swings.
+            double totalCover = facetCover[(int)Facet.herb] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree];
+            double fracCover;
+            if (totalCover > 0.000001) {
+                // HERBS
+                fracCover = facetCover[(int)Facet.herb] / totalCover;
+                biomassLivePerLayer[(int)Layer.herb] = (leafCarbon[(int)Facet.herb] + seedCarbon[(int)Facet.herb]) * 2.5 * fracCover;
+                fracCover = facetCover[(int)Facet.shrub] / totalCover;
+                biomassLivePerLayer[(int)Layer.herbUnderShrub] = (leafCarbon[(int)Facet.herb] + seedCarbon[(int)Facet.herb]) * 2.5 * fracCover;
+                fracCover = facetCover[(int)Facet.tree] / totalCover;
+                biomassLivePerLayer[(int)Layer.herbUnderTree] = (leafCarbon[(int)Facet.herb] + seedCarbon[(int)Facet.herb]) * 2.5 * fracCover;
+
+                // SHRUBS
+                if ((facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]) > 0.000001)
+                {
+                    fracCover = facetCover[(int)Facet.shrub] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
+                    biomassLivePerLayer[(int)Layer.shrub] = (leafCarbon[(int)Facet.shrub] + seedCarbon[(int)Facet.shrub] +
+                          fineBranchCarbon[(int)Facet.shrub] + coarseBranchCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
+                    fracCover = facetCover[(int)Facet.tree] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
+                    biomassLivePerLayer[(int)Layer.shrubUnderTree] = (leafCarbon[(int)Facet.shrub] + seedCarbon[(int)Facet.shrub] +
+                          fineBranchCarbon[(int)Facet.shrub] + coarseBranchCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
+                }
+                else
+                {
+                    biomassLivePerLayer[(int)Layer.shrub] = 0.0;
+                    biomassLivePerLayer[(int)Layer.tree] = 0.0;
+                }
+
+                // TREES
+                fracCover = facetCover[(int)Facet.tree];
+                biomassLivePerLayer[(int)Layer.tree] = (leafCarbon[(int)Facet.tree] + seedCarbon[(int)Facet.tree] +
+                          fineBranchCarbon[(int)Facet.tree] + coarseBranchCarbon[(int)Facet.tree]) * 2.5 * fracCover;
+
+                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                    avgALiveBiomass = avgALiveBiomass + biomassLivePerLayer[iLyr];
+            }
+            else
+                avgALiveBiomass = 0.0;       // There is no cover on the cell
+
+            // BELOWGROUND
+            if (totalCover > 0.000001)
+            {
+                // HERBS
+                fracCover = facetCover[(int)Facet.herb] / totalCover;
+                biomassLivePerLayer[(int)Layer.herb] = fineRootCarbon[(int)Facet.herb] * 2.5 * fracCover;
+                fracCover = facetCover[(int)Facet.shrub] / totalCover;
+                biomassLivePerLayer[(int)Layer.herbUnderShrub] = fineRootCarbon[(int)Facet.herb] * 2.5 * fracCover;
+                fracCover = facetCover[(int)Facet.tree] / totalCover;
+                biomassLivePerLayer[(int)Layer.herbUnderTree] = fineRootCarbon[(int)Facet.herb] * 2.5 * fracCover;
+                // SHRUBS
+                if ((facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]) > 0.000001)
+                {
+                    fracCover = facetCover[(int)Facet.shrub] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
+                    biomassLivePerLayer[(int)Layer.shrub] =
+                        (fineRootCarbon[(int)Facet.shrub] + coarseRootCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
+                    fracCover = facetCover[(int)Facet.tree] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
+                    biomassLivePerLayer[(int)Layer.shrubUnderTree] =
+                         (fineRootCarbon[(int)Facet.shrub] + coarseRootCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
+                }
+                else
+                {
+                    biomassLivePerLayer[(int)Layer.shrub] = 0.0;
+                    biomassLivePerLayer[(int)Layer.tree] = 0.0;
+                }
+
+                // TREES
+                fracCover = facetCover[(int)Facet.tree];
+                biomassLivePerLayer[(int)Layer.tree] =
+                         (fineRootCarbon[(int)Facet.tree] + coarseRootCarbon[(int)Facet.tree]) * 2.5 * fracCover;
+
+
+                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                    avgBLiveBiomass = avgBLiveBiomass + biomassLivePerLayer[iLyr];
+            }
+            else
+                avgBLiveBiomass = 0.0;   // There is no cover on the cell
+
+            // The following is used in Decomposition, and perhaps elsewhere.
+            totalAgroundLiveBiomass = avgALiveBiomass;
+            totalBgroundLiveBiomass = avgBLiveBiomass;
+
+            // Calculate monthly net primary productivity
+            monthlyNetPrimaryProduction =
+                (totalPotProdLimitedByN[(int)Layer.herb] * facetCover[(int)Facet.herb]) +
+                (totalPotProdLimitedByN[(int)Layer.herbUnderShrub] * facetCover[(int)Facet.shrub]) +
+                (totalPotProdLimitedByN[(int)Layer.herbUnderTree] * facetCover[(int)Facet.tree]) +
+                (totalPotProdLimitedByN[(int)Layer.shrub] * facetCover[(int)Facet.shrub]) +
+                (totalPotProdLimitedByN[(int)Layer.shrubUnderTree] * facetCover[(int)Facet.tree]) +
+                (totalPotProdLimitedByN[(int)Layer.tree] * facetCover[(int)Facet.tree]);
+        }
+
         private void UpdateWeather()
-        { }
+        {
+
+        }
 
         /// <summary>
         /// Processes that are required each year, prior to any process-based simulation steps.
@@ -554,7 +802,6 @@ namespace Models
         /// </summary>
         private void EachYear()
         {
-            int iunit = rangeType;
             annualEvapotranspiration = 0.0;
             negErrorCount = 0;
             largeErrorCount = 0;
@@ -628,50 +875,51 @@ namespace Models
                 respirationAnnual[iFacet] = 0.0;
                 nitrogenFixed[iFacet] = 0.0;
 
-                double precip_average = 100; // FIX THIS Globe(Rng(icell) % x, Rng(icell) % y) % precip_average
                 // Recalculate the proportion of residue that is lignin, which follows from annual precipitation (CMPLIG.F in Century.No equilvalent in Savanna)
                 plantLigninFraction[iFacet, surfaceIndex] = ligninLeaf[iFacet] +
                                        parms.ligninContentFractionAndPrecip[0, surfaceIndex] +
-                                       (parms.ligninContentFractionAndPrecip[1, surfaceIndex] * precip_average) / 2.0;
-            plantLigninFraction[iFacet, soilIndex] = ligninFineRoot[iFacet] +
-                                    parms.ligninContentFractionAndPrecip[0, soilIndex] +
-                                    (parms.ligninContentFractionAndPrecip[1, soilIndex] * precip_average) / 2.0;
-            plantLigninFraction[iFacet, surfaceIndex] = Math.Max(0.02, plantLigninFraction[iFacet, surfaceIndex]);
-            plantLigninFraction[iFacet, surfaceIndex] = Math.Min(0.50, plantLigninFraction[iFacet, surfaceIndex]);
-            plantLigninFraction[iFacet, soilIndex] = Math.Max(0.02, plantLigninFraction[iFacet, soilIndex]);
-            plantLigninFraction[iFacet, soilIndex] = Math.Min(0.50, plantLigninFraction[iFacet, soilIndex]);
+                                       (parms.ligninContentFractionAndPrecip[1, surfaceIndex] * 
+                                       globe.precipAverage) / 2.0;
+                plantLigninFraction[iFacet, soilIndex] = ligninFineRoot[iFacet] +
+                                        parms.ligninContentFractionAndPrecip[0, soilIndex] +
+                                        (parms.ligninContentFractionAndPrecip[1, soilIndex] * 
+                                        globe.precipAverage) / 2.0;
+                plantLigninFraction[iFacet, surfaceIndex] = Math.Max(0.02, plantLigninFraction[iFacet, surfaceIndex]);
+                plantLigninFraction[iFacet, surfaceIndex] = Math.Min(0.50, plantLigninFraction[iFacet, surfaceIndex]);
+                plantLigninFraction[iFacet, soilIndex] = Math.Max(0.02, plantLigninFraction[iFacet, soilIndex]);
+                plantLigninFraction[iFacet, soilIndex] = Math.Min(0.50, plantLigninFraction[iFacet, soilIndex]);
 
-            // Fire modeling
-            burnedCarbon = 0.0;
-            burnedNitrogen = 0.0;
-            fireSeverity = 0.0;
-        } // Facet loop
-/*
-  ! Opening the CO2 effects file each month, just for simplicity
-  open(SHORT_USE_FILE, FILE = parm_path(1:len_trim(parm_path))//Sim_Parm%co2effect_file_name, ACTION='READ', IOSTAT=ioerr)
-  if (ioerr == 0) then
-    in_year = -9999
-    read(SHORT_USE_FILE, *) unit_cnt! GRange never knows the number of landscape units, so required at the top of file or some other pathway
-    read(SHORT_USE_FILE, *)! Skip the header information
-    do while (in_year.ne.year)
-                    read(SHORT_USE_FILE, *) in_year, (Parms(unit_id) % effect_of_co2_on_production(H_FACET), &
-                      Parms(unit_id) % effect_of_co2_on_production(S_FACET), Parms(unit_id) % effect_of_co2_on_production(T_FACET), &
-                      unit_id = 1, unit_cnt)
-    end do
-                do icell = 1,range_cells! Process all of the cells classed as rangeland only
-   iunit = Rng(icell) % range_type
-      Rng(icell) % co2_effect_on_production(H_FACET) = Parms(iunit) % effect_of_co2_on_production(H_FACET)
-      Rng(icell) % co2_effect_on_production(S_FACET) = Parms(iunit) % effect_of_co2_on_production(S_FACET)
-      Rng(icell) % co2_effect_on_production(T_FACET) = Parms(iunit) % effect_of_co2_on_production(T_FACET)
-    end do
-                close(SHORT_USE_FILE)
-  else
-                write(*, *) 'There is a problem updating the CO2 effect on production values'
-    stop
-  end if
+                // Fire modeling
+                burnedCarbon = 0.0;
+                burnedNitrogen = 0.0;
+                fireSeverity = 0.0;
+            } // Facet loop
+              /*
+                ! Opening the CO2 effects file each month, just for simplicity
+                open(SHORT_USE_FILE, FILE = parm_path(1:len_trim(parm_path))//Sim_Parm%co2effect_file_name, ACTION='READ', IOSTAT=ioerr)
+                if (ioerr == 0) then
+                  in_year = -9999
+                  read(SHORT_USE_FILE, *) unit_cnt! GRange never knows the number of landscape units, so required at the top of file or some other pathway
+                  read(SHORT_USE_FILE, *)! Skip the header information
+                  do while (in_year.ne.year)
+                                  read(SHORT_USE_FILE, *) in_year, (Parms(unit_id) % effect_of_co2_on_production(H_FACET), &
+                                    Parms(unit_id) % effect_of_co2_on_production(S_FACET), Parms(unit_id) % effect_of_co2_on_production(T_FACET), &
+                                    unit_id = 1, unit_cnt)
+                  end do
+                              do icell = 1,range_cells! Process all of the cells classed as rangeland only
+                 iunit = Rng(icell) % range_type
+                    Rng(icell) % co2_effect_on_production(H_FACET) = Parms(iunit) % effect_of_co2_on_production(H_FACET)
+                    Rng(icell) % co2_effect_on_production(S_FACET) = Parms(iunit) % effect_of_co2_on_production(S_FACET)
+                    Rng(icell) % co2_effect_on_production(T_FACET) = Parms(iunit) % effect_of_co2_on_production(T_FACET)
+                  end do
+                              close(SHORT_USE_FILE)
+                else
+                              write(*, *) 'There is a problem updating the CO2 effect on production values'
+                  stop
+                end if
 
-  if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'EACH_YR')
-  */
+                if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'EACH_YR')
+                */
 
         }
 
