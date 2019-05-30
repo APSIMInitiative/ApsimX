@@ -468,6 +468,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\WhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CompositeFactor.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PivotTable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPriceGroup.png" />
@@ -736,6 +737,7 @@
     <EmbeddedResource Include="Resources\AgPastureRootDistribution.png" />
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
+    <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
