@@ -150,7 +150,7 @@
             "([AgLucerne].BelowGroundWt*0.1) as Lucerne.BelowGround.Wt",
             "([AgLucerne].AboveGroundLiveWt*0.1) as Lucerne.AboveGroundLive.Wt",
             "([AgLucerne].AboveGroundDeadWt*0.1) as Lucerne.AboveGroundDead.Wt",
-            "([AgLucerne].BelowGroundWt as Lucerne.BelowGroundLive.Wt",
+            "([AgLucerne].BelowGroundWt*0.1) as Lucerne.BelowGroundLive.Wt",
             "([AgLucerne].TotalN*0.1) as Lucerne.Total.N",
             "([AgLucerne].AboveGroundN*0.1) as Lucerne.AboveGround.N",
             "([AgLucerne].BelowGroundN*0.1) as Lucerne.BelowGround.N",
@@ -316,7 +316,7 @@
             "[WhiteClover].Arbitrator.WSupply",
             "[WhiteClover].Arbitrator.WDemand",
             "[WhiteClover].Arbitrator.WAllocated",
-            "[WhiteClover].Nodule.NFixed",
+            "[WhiteClover].Nodule.NFixed*10 as WhiteClover.Nodule.NFixed",
             "",
             "[Chicory].Leaf.Fw",
             "[Chicory].Leaf.Fn",
@@ -1045,7 +1045,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2014-11-15",
+                                  "Date": "2014-11-05",
                                   "Action": "[AgLucerne].Sow(population: 0, cultivar: \"R\", depth: 0, rowSpacing: 0)",
                                   "Enabled": true
                                 }
@@ -1546,13 +1546,13 @@
                                     0.083
                                   ],
                                   "KL": [
-                                    0.1,
-                                    0.08,
-                                    0.05,
-                                    0.035,
-                                    0.02,
-                                    0.02,
-                                    0.01
+                                    0.07,
+                                    0.058,
+                                    0.037,
+                                    0.025,
+                                    0.01,
+                                    0.004,
+                                    0.002
                                   ],
                                   "XF": [
                                     1.0,
@@ -1584,12 +1584,12 @@
                                     0.083
                                   ],
                                   "KL": [
-                                    0.1,
                                     0.08,
+                                    0.07,
                                     0.05,
-                                    0.035,
-                                    0.02,
+                                    0.03,
                                     0.01,
+                                    0.003,
                                     0.0
                                   ],
                                   "XF": [
@@ -1624,9 +1624,9 @@
                                   "KL": [
                                     0.1,
                                     0.085,
-                                    0.05,
-                                    0.03,
-                                    0.01,
+                                    0.055,
+                                    0.02,
+                                    0.005,
                                     0.0,
                                     0.0
                                   ],
@@ -1660,11 +1660,11 @@
                                     0.083
                                   ],
                                   "KL": [
-                                    0.1,
+                                    0.09,
                                     0.08,
-                                    0.05,
-                                    0.035,
-                                    0.005,
+                                    0.04,
+                                    0.01,
+                                    0.001,
                                     0.0,
                                     0.0
                                   ],
@@ -1698,13 +1698,13 @@
                                     0.083
                                   ],
                                   "KL": [
-                                    0.1,
-                                    0.08,
+                                    0.06,
                                     0.05,
                                     0.035,
-                                    0.005,
-                                    0.002,
-                                    0.001
+                                    0.025,
+                                    0.015,
+                                    0.01,
+                                    0.01
                                   ],
                                   "XF": [
                                     1.0,
@@ -1736,13 +1736,13 @@
                                     0.083
                                   ],
                                   "KL": [
-                                    0.1,
-                                    0.08,
+                                    0.06,
                                     0.05,
                                     0.035,
-                                    0.005,
-                                    0.002,
-                                    0.001
+                                    0.025,
+                                    0.015,
+                                    0.01,
+                                    0.01
                                   ],
                                   "XF": [
                                     1.0,
@@ -2152,7 +2152,7 @@
                           "PlantHeightExponent": 2.8,
                           "RootDepthMinimum": 50.0,
                           "RootDepthMaximum": 750.0,
-                          "RootElongationRate": 25.0,
+                          "RootElongationRate": 12.5,
                           "RootDistributionDepthParam": 90.0,
                           "RootDistributionExponent": 3.2,
                           "DigestibilitiesCellWall": [
@@ -5083,7 +5083,7 @@
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
-                                  "ColourArgb": -16777216,
+                                  "ColourArgb": -16747854,
                                   "FactorToVaryColours": null,
                                   "FactorToVaryMarkers": null,
                                   "FactorToVaryLines": "NRate",
@@ -7040,7 +7040,7 @@
                             {
                               "$type": "Models.Graph.Axis, Models",
                               "Type": 0,
-                              "Title": "N Applied (kg/ha)",
+                              "Title": null,
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
@@ -8708,6 +8708,36 @@
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
+                              "ColourArgb": -16747854,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "NRate",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "Lucerne.ShootRootRatio",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Lucerne",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
                               "ColourArgb": -3376729,
                               "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
@@ -8854,6 +8884,36 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Ryegrass",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16747854,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "NRate",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": "Report",
+                              "XFieldName": "Date",
+                              "YFieldName": "Lucerne.CurrentAboveGroundFraction",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Lucerne",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
