@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 265,
-  "Version": 54,
+  "ExplorerWidth": 300,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
@@ -10094,6 +10094,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -11422,6 +11423,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -12126,6 +12135,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -13371,6 +13381,14 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -14656,6 +14674,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -15175,6 +15194,14 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -16432,6 +16459,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -16977,6 +17005,14 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -17752,6 +17788,8 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [
         {
@@ -18860,16 +18898,18 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specification": null,
               "Name": "Nit",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[FertiliserSchedule]",
                     "[AdditionalActions].Script.NitFactor = 0",
                     "[CropOperations].Script.FertFactor = 0"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "0",
                   "Children": [
                     {
@@ -18887,12 +18927,14 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[FertiliserSchedule]",
                     "[AdditionalActions].Script.NitFactor = 50",
                     "[CropOperations].Script.FertFactor = 50"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "50",
                   "Children": [
                     {
@@ -18923,12 +18965,14 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[FertiliserSchedule]",
                     "[AdditionalActions].Script.NitFactor = 300",
                     "[CropOperations].Script.FertFactor = 300"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "300",
                   "Children": [
                     {
@@ -18971,16 +19015,18 @@
             },
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": null,
+              "Specification": null,
               "Name": "Irr",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[IrrigationSchedule]",
                     "[AdditionalActions].Script.IrrFactor = true",
                     "[CropOperations].Script.IrrgFactor = true"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "Full",
                   "Children": [
                     {
@@ -19141,12 +19187,14 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[IrrigationSchedule]",
                     "[AdditionalActions].Script.IrrFactor = false",
                     "[CropOperations].Script.IrrgFactor = false"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "Nil",
                   "Children": [
                     {
@@ -19185,6 +19233,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Rainshelter",
           "Children": [
             {
@@ -19935,7 +19984,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 30.0,
-                      "SoilCN": 11.0,
                       "EnrACoeff": 7.4,
                       "EnrBCoeff": 0.2,
                       "Thickness": [
@@ -19975,6 +20023,18 @@
                         0.1
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0
+                      ],
                       "FBiom": [
                         0.08,
                         0.04,
@@ -20132,8 +20192,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "",
@@ -20220,9 +20278,9 @@
                     "",
                     "[Weather].Rain",
                     "[Irrigation].IrrigationApplied",
-                    "([FodderBeet].Leaf.Transpiration + [Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET",
-                    "([FodderBeet].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as FodderBeet_ET",
-                    "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as Oats_ET",
+                    "([FodderBeet].Leaf.Transpiration + [Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
+                    "([FodderBeet].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as FodderBeet_ET",
+                    "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as Oats_ET",
                     "[MicroClimate].interception as Interception",
                     "[Soil].SoilWater.Es as Evaporation",
                     "([FodderBeet].Leaf.Transpiration + [Oats].Leaf.Transpiration) as Transpiration",
@@ -20299,7 +20357,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -20315,7 +20373,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "AboveGroundWt",
               "Children": [
                 {
@@ -20455,7 +20513,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -20471,7 +20529,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Phenology",
               "Children": [
                 {
@@ -20611,7 +20669,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -20627,7 +20685,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Height",
               "Children": [
                 {
@@ -20707,7 +20765,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -20723,7 +20781,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "RootDepth",
               "Children": [
                 {
