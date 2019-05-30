@@ -177,9 +177,9 @@ namespace Models.CLEM.Activities
                         // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                         // calculate intake from potential modified by pasture availability and hours grazed
                         indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                        // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
-                        // hours grazed is not adjusted for this reduced feeding.
-                        indAmount = Math.Min(ind.PotentialIntake * 1.2 - ind.Intake, indAmount);
+                        // assumes animals will stop eating at potential intake if they have been feed before grazing.
+                        // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
+                        indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
                         amount += indAmount;
                     }
                     if (amount > 0)
@@ -262,10 +262,10 @@ namespace Models.CLEM.Activities
                 if (herd.Count() > 0)
                 {
                     //Get total amount
-                    // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
-                    // hours grazed is not adjusted for this reduced feeding.
-                    double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
-                    double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
+                    // assumes animals will stop eating at potential intake if they have been feed before grazing.
+                    // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential
+                    double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
+                    double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
 
                     totalEaten *= GrazingCompetitionLimiter;
 

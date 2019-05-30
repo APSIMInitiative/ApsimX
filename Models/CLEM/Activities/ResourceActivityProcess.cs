@@ -127,7 +127,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:

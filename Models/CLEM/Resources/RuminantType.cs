@@ -18,13 +18,20 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
+    [HelpUri(@"content/features/resources/ruminants/ruminanttype.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link]
         private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get {return "NA"; }  }
 
         /// <summary>
         /// Breed
@@ -680,6 +687,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; }
         /// <summary>
+        /// Proportion offspring born male
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0.5)]
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion of offspring male")]
+        [Required, Proportion]
+        public double ProportionOffspringMale { get; set; }
+        /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
         [Category("Advanced", "Breeding")]
@@ -750,13 +765,6 @@ namespace Models.CLEM.Resources
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
-        /// <summary>
-        /// Maximum conception rate from uncontrolled breeding 
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Proportion]
-        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion
 

@@ -62,11 +62,13 @@ namespace Models.CLEM.Activities
                         double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
                         if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
                         {
-                            ResourceRequest interestRequest = new ResourceRequest();
-                            interestRequest.ActivityModel = this;
-                            interestRequest.Required = interest;
-                            interestRequest.AllowTransmutation = false;
-                            interestRequest.Reason = "Pay interest charged";
+                            ResourceRequest interestRequest = new ResourceRequest
+                            {
+                                ActivityModel = this,
+                                Required = interest,
+                                AllowTransmutation = false,
+                                Reason = "Pay interest charged"
+                            };
                             accnt.Remove(interestRequest);
     
                             // report status

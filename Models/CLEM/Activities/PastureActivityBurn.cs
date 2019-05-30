@@ -41,7 +41,6 @@ namespace Models.CLEM.Activities
         public string PaddockName { get; set; }
 
         private GrazeFoodStoreType pasture { get; set; }
-        private List<LabourRequirement> labour { get; set; }
         private GreenhouseGasesType methane { get; set; }
         private GreenhouseGasesType nox { get; set; }
 
@@ -146,15 +145,15 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
-            double numberUnits = 0;
+            double daysNeeded;
+            double numberUnits;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
-                    numberUnits = (pasture.Manager.Area * (Resources.GetResourceGroupByType(typeof(Land)) as Land).UnitsOfAreaToHaConversion ) / requirement.UnitSize;
+                    numberUnits = (pasture.Manager.Area * (Resources.GetResourceGroupByType(typeof(Land)) as Land).UnitsOfAreaToHaConversion) / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
                         numberUnits = Math.Ceiling(numberUnits);
