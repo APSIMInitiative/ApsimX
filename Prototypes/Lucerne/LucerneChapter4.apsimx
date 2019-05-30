@@ -3472,7 +3472,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
+                  "FixedValue": 0.05,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
@@ -6785,9 +6785,9 @@
             "[Lucerne].TapRoot.MaintenanceRespiration",
             "[Lucerne].Leaf.Live.N ",
             "[Lucerne].TapRoot.Live.NConc*100 as RootN ",
-            "[Lucerne].Leaf.Live.NConc as LeafN",
+            "[Lucerne].Leaf.Live.NConc*100 as LeafN",
             "[Lucerne].Root.Live.NConc ",
-            "[Lucerne].Stem.Live.NConc as StemN",
+            "[Lucerne].Stem.Live.NConc*100 as StemN",
             "[Lucerne].Root.WaterSupply",
             "[Lucerne].Root.WaterUptake",
             "([Lucerne].Leaf.Transpiration + [Soil].SoilWater.Es) as ET",
@@ -22478,7 +22478,7 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "Name": "SWC",
                       "Children": [
                         {
