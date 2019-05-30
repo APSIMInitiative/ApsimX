@@ -192,8 +192,25 @@
 
             connection.OpenDatabase(FileName, readOnly: false);
 
-            dbReader.SetConnection(connection);
-            dbWriter.SetConnection(connection);
+            Exception caughtException = null;
+            try
+            {
+                dbReader.SetConnection(connection);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+            try
+            {
+                dbWriter.SetConnection(connection);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+            if (caughtException != null)
+                throw caughtException;
         }
 
         /// <summary>Close the database.</summary>

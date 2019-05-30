@@ -137,19 +137,22 @@ namespace Models.Graph
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
+            {
                 seriesDefinitions.Add(new SeriesDefinition(this));
+                seriesDefinitions[0].ReadData(reader, simulationDescriptions);
+            }
             else
             {
                 // TableName exists so get the vary by fields and the simulation descriptions.
                 var varyByFieldNames = GetVaryByFieldNames();
                 simulationDescriptions = FindSimulationDescriptions();
                 var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationDescriptions);
-               
+
                 if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
                     // No vary by fields. Just plot the whole table in a single
                     // series with data that is in scope.
-                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData) };
+                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData, Filter) };
                 }
                 else
                 {
@@ -163,17 +166,17 @@ namespace Models.Graph
                 if (seriesDefinitions.Count == 0)
                     seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
 
+                // Paint all definitions. 
+                var painter = GetSeriesPainter();
+                foreach (var seriesDefinition in seriesDefinitions)
+                    painter.Paint(seriesDefinition);
+
                 // Tell each series definition to read its data.
                 foreach (var seriesDefinition in seriesDefinitions)
                     seriesDefinition.ReadData(reader, simulationDescriptions);
 
                 // Remove series that have no data.
                 seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
-
-                // Paint all definitions. 
-                var painter = GetSeriesPainter();
-                foreach (var seriesDefinition in seriesDefinitions)
-                    painter.Paint(seriesDefinition);
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -230,7 +233,7 @@ namespace Models.Graph
                 for (int i = 0; i < combination.Count; i++)
                     descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
                                                                          combination[i]));
-                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, descriptors));
+                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, Filter, descriptors));
             }
 
             return definitions;
@@ -249,16 +252,15 @@ namespace Models.Graph
                 // Extract all the simulation names from all descriptions.
                 var simulationNames = simulationDescriptions.Select(d => d.Name).Distinct();
 
-                string whereClause = null;
-                if (Filter != null && Filter != string.Empty)
-                    whereClause = Filter + " AND ";
-                whereClause += "SimulationName IN (" +
-                                StringUtilities.Build(simulationNames, ",", "'", "'") +
-                                ")";
+                string whereClause =  "SimulationName IN (" +
+                                      StringUtilities.Build(simulationNames, ",", "'", "'") +
+                                      ")";
                 return whereClause;
             }
-            else
+            else if (Filter != string.Empty)
                 return Filter;
+            else
+                return null;
         }
 
         /// <summary>
@@ -295,6 +297,7 @@ namespace Models.Graph
                     // Create the definition.
                     definitions.Add(new SeriesDefinition(this,
                                                          whereClauseForInScopeData,
+                                                         Filter,
                                                          descriptorsForDefinition));
                 }
             }

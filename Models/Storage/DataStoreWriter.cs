@@ -216,7 +216,15 @@
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
         public void Empty()
         {
-            Start();
+            try
+            {
+                Start();
+            }
+            catch
+            {
+                // The call to Start may fail if the database is corrupt, which may well be why we want to empty it.
+                // For that reason, catch any exceptions and proceed.
+            }
             commands.Add(new EmptyCommand(Connection));
             Stop();
         }
@@ -340,10 +348,13 @@
         /// <param name="dbConnection">The database connection to read from.</param>
         private void ReadExistingDatabase(IDatabaseConnection dbConnection)
         {
+            if (dbConnection == null)
+                return;
+
             simulationIDs.Clear();
             if (dbConnection.TableExists("_Simulations"))
             {
-                var data = dbConnection.ExecuteQuery("SELECT * FROM _Simulations");
+                var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
                     simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
@@ -351,7 +362,7 @@
             checkpointIDs.Clear();
             if (dbConnection.TableExists("_Checkpoints"))
             {
-                var data = dbConnection.ExecuteQuery("SELECT * FROM _Checkpoints");
+                var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
                     checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }

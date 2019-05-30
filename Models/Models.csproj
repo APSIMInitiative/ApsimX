@@ -234,6 +234,8 @@
     <Compile Include="Graph\SeriesDefinition.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
+    <Compile Include="Plant\Phenology\Scales\Age.cs" />
+    <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
@@ -712,6 +714,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="Resources\Oats1.json" />
+    <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

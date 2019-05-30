@@ -21,6 +21,7 @@ namespace UserInterface.Views
     using OxyPlot.GtkSharp;
     using EventArguments;
     using APSIM.Shared.Utilities;
+    using System.Linq;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -182,11 +183,14 @@ namespace UserInterface.Views
         {
             get
             {
+                if (plot1 == null || plot1.Model == null)
+                    return OxyColors.White;
                 return this.plot1.Model.Background;
             }
             set
             {
-                this.plot1.Model.Background = value;
+                if (plot1 != null && plot1.Model != null)
+                    this.plot1.Model.Background = value;
             }
         }
 
@@ -197,11 +201,14 @@ namespace UserInterface.Views
         {
             get
             {
+                if (plot1 == null || plot1.Model == null)
+                    return OxyColors.Black; // Fallback to black
                 return this.plot1.Model.TextColor;
             }
             set
             {
-                this.plot1.Model.TextColor = value;
+                if (plot1 != null && plot1.Model != null)
+                    this.plot1.Model.TextColor = value;
             }
         }
 
@@ -435,7 +442,7 @@ namespace UserInterface.Views
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        public void DrawArea(
+        public void DrawRegion(
             string title,
             IEnumerable x1,
             IEnumerable y1,
@@ -451,7 +458,8 @@ namespace UserInterface.Views
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
-
+            if (showOnLegend)
+                series.Title = title;
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
@@ -467,6 +475,33 @@ namespace UserInterface.Views
             series.CanTrackerInterpolatePoints = false;
 
             this.plot1.Model.Series.Add(series);
+        }
+
+        /// <summary>
+        /// Draw an  area series with the specified arguments. Similar to a
+        /// line series, but the area under the curve will be filled with colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawArea(
+            string title,
+            double[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend)
+        {
+            // Just use a region series (colours area between two curves), and use y = 0 for the second curve.
+            List<double> y2 = new List<double>();
+            y2.AddRange(Enumerable.Repeat(0d, y.Length));
+
+            DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
         }
 
         /// <summary>
@@ -614,8 +649,18 @@ namespace UserInterface.Views
             bool crossAtZero)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
+
             if (oxyAxis != null)
             {
+                oxyAxis.AxislineColor = this.ForegroundColour;
+                oxyAxis.ExtraGridlineColor = this.ForegroundColour;
+                oxyAxis.MajorGridlineColor = this.ForegroundColour;
+                oxyAxis.MinorGridlineColor = this.ForegroundColour;
+                oxyAxis.TicklineColor = this.ForegroundColour;
+                oxyAxis.MinorTicklineColor = this.ForegroundColour;
+                oxyAxis.TitleColor = this.ForegroundColour;
+                oxyAxis.TextColor = this.ForegroundColour;
+
                 oxyAxis.Title = title.Trim();
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
@@ -663,7 +708,48 @@ namespace UserInterface.Views
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
-            // this.plot1.Model.LegendSymbolLength = 60;
+            this.plot1.Model.LegendSymbolLength = 30;
+
+            // If 2 series have the same title then remove their titles (this will
+            // remove them from the legend) and create a new series solely for the
+            // legend that has line type and marker type combined.
+            var newSeriesToAdd = new List<LineSeries>();
+            foreach (var series in plot1.Model.Series)
+            {
+                if (series is LineSeries && !string.IsNullOrEmpty(series.Title))
+                {
+                    var matchingSeries = FindMatchingSeries(series);
+                    if (matchingSeries != null)
+                    {
+                        var newFakeSeries = new LineSeries();
+                        newFakeSeries.Title = series.Title;
+                        newFakeSeries.Color = (series as LineSeries).Color;
+                        newFakeSeries.LineStyle = (series as LineSeries).LineStyle;
+                        if (newFakeSeries.LineStyle == LineStyle.None)
+                            (series as LineSeries).LineStyle = (matchingSeries as LineSeries).LineStyle;
+                        if ((series as LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                        {
+                            newFakeSeries.MarkerType = (matchingSeries as LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (matchingSeries as LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (matchingSeries as LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (matchingSeries as LineSeries).MarkerSize;
+                        }
+                        else
+                        {
+                            newFakeSeries.MarkerType = (series as LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (series as LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (series as LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (series as LineSeries).MarkerSize;
+                        }
+
+                        newSeriesToAdd.Add(newFakeSeries);
+
+                        series.Title = null;          // remove from legend.
+                        matchingSeries.Title = null;  // remove from legend.
+                    }
+                }
+            }
+            newSeriesToAdd.ForEach(s => plot1.Model.Series.Add(s));
         }
 
         /// <summary>
@@ -813,6 +899,21 @@ namespace UserInterface.Views
             // (done above) when the item is already found in the menu
             item.Active = active;
             item.Activated += onClick;
+        }
+
+        /// <summary>
+        /// Find a graph series that has the same title as the specified series.
+        /// </summary>
+        /// <param name="series">The series to match.</param>
+        /// <returns>The series or null if not found.</returns>
+        private OxyPlot.Series.Series FindMatchingSeries(OxyPlot.Series.Series series)
+        {
+            foreach (var s in plot1.Model.Series)
+            {
+                if (s != series && s.Title == series.Title)
+                    return s;
+            }
+            return null;
         }
 
         /// <summary>

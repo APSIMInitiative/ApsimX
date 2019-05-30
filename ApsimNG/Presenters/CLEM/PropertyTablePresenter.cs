@@ -561,16 +561,8 @@ namespace UserInterface.Presenters
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
                         string tableName = cell.Value.ToString();
-                        DataTable data = null;
                         if (storage.Reader.TableNames.Contains(tableName))
-                        {
-                            data = this.storage.Reader.GetDataUsingSql("SELECT * FROM " + tableName + " LIMIT 1");
-                        }
-
-                        if (data != null)
-                        {
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
-                        }
+                            fieldNames = storage.Reader.ColumnNames(tableName).ToArray<string>();
                     }
                 }
             }

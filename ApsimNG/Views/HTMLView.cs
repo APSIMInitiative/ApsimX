@@ -10,6 +10,7 @@ using UserInterface.EventArguments;
 using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
+using System.Drawing;
 
 namespace UserInterface.Views
 {
@@ -56,7 +57,26 @@ namespace UserInterface.Views
 
         Widget HoldingWidget { get; set; }
 
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        System.Drawing.Color ForegroundColour { get; set; }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        System.Drawing.Color BackgroundColour { get; set; }
+
+        /// <summary>
+        /// Sets the font of the document.
+        /// </summary>
+        Pango.FontDescription Font { get; set; }
+
         void ExecJavaScript(string command, object[] args);
+
+        void ExecJavaScript(string command);
 
         bool Search(string forString, bool forward, bool caseSensitive, bool wrap);
     }
@@ -218,6 +238,23 @@ namespace UserInterface.Views
             }
         }
 
+        public Pango.FontDescription Font
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                if (Browser == null || Browser.Document == null || Browser.Document.Body == null)
+                    return;
+
+                if (Browser.Document.Body.Style == null)
+                    Browser.Document.Body.Style = "";
+                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {1.5 * value.Size / Pango.Scale.PangoScale}px;";
+            }
+        }
+
         public TWWebBrowserIE(Gtk.Box w)
         {
             InitIE(w);
@@ -242,6 +279,11 @@ namespace UserInterface.Views
         public void ExecJavaScript(string command, object[] args)
         {
             Browser.Document.InvokeScript(command, args);
+        }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.Document.InvokeScript(script);
         }
 
         // Flag: Has Dispose already been called? 
@@ -341,8 +383,44 @@ namespace UserInterface.Views
         public Gtk.Socket WebSocket { get; set; } = new Gtk.Socket();
         public ScrolledWindow ScrollWindow { get; set; } = new ScrolledWindow();
         public Widget HoldingWidget { get; set; }
+        public Color ForegroundColour
+        {
+            get
+            {
+                return Color.Empty; // TODO
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.color = \"{colour}\";");
+            }
+        }
 
-		/// <summary>
+
+        public Color BackgroundColour
+        {
+            get
+            {
+                return Color.Empty; // TODO
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
+
+        public Pango.FontDescription Font
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.fontFamily = \"{value.Family}\";");
+                Browser.StringByEvaluatingJavaScriptFromString($"document.body.style.fontSize = {1.5 * value.Size / Pango.Scale.PangoScale}");
+            }
+        }
+
+        /// <summary>
         /// The find form
         /// </summary>
         private Utility.FindInBrowserForm findForm = new Utility.FindInBrowserForm();
@@ -429,6 +507,11 @@ namespace UserInterface.Views
                 argString += obj.ToString();
             }
             Browser.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
+        }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.StringByEvaluatingJavaScriptFromString(script);
         }
 
         // Flag: Has Dispose already been called? 
@@ -546,6 +629,12 @@ namespace UserInterface.Views
             }
             Browser.ExecuteScript(command + "(" + argString + ")");
         }
+
+        public void ExecJavaScript(string script)
+        {
+            Browser.ExecuteScript(script);
+        }
+
         // Flag: Has Dispose already been called? 
         bool disposed = false;
 
@@ -592,6 +681,51 @@ namespace UserInterface.Views
             // Free any unmanaged objects here. 
             //
             disposed = true;
+        }
+
+        /// <summary>
+        /// Sets the background colour of the document.
+        /// </summary>
+        /// <value></value>
+
+        public System.Drawing.Color BackgroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.backgroundColor = \"{colour}\";");
+            }
+        }
+
+        /// <summary>
+        /// Sets the foreground colour of the document.
+        /// </summary>
+        /// <value></value>
+        public System.Drawing.Color ForegroundColour
+        {
+            get
+            {
+                return System.Drawing.Color.Empty;
+            }
+            set
+            {
+                string colour = Utility.Colour.ToHex(value);
+                Browser.ExecuteScript($"document.body.style.color = \"{colour}\";");
+            }
+        }
+
+        public Pango.FontDescription Font
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                Browser.ExecuteScript($"document.body.style.fontFamily = \"{value.Family}\";");
+                Browser.ExecuteScript($"document.body.style.fontSize = \"{1.5 * value.Size / Pango.Scale.PangoScale}\";");
+            }
         }
     }
 
@@ -853,9 +987,12 @@ namespace UserInterface.Views
                 keyPressObject = ieBrowser.Browser.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
-                ieBrowser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
-                ieBrowser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
             }
+
+            browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+            browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+
+            browser.Font = MainWidget.Style.FontDescription;
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 

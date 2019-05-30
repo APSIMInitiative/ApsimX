@@ -11,6 +11,9 @@
     using Models.Surface;
     using NUnit.Framework;
     using System;
+    using System.IO;
+    using UserInterface.Presenters;
+    using UserInterface.Views;
 
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
@@ -348,5 +351,31 @@
             Assert.AreEqual(m.d_interception, 0.4);
         }
 
+        /// <summary>
+        /// This test ensures that failures in the importer do not cause the UI
+        /// to crash.
+        /// </summary>
+        [Test]
+        public void EnsureNoCrash()
+        {
+            // First, write the faulty .apsimx file to a temp file on disk.
+            string defective = ReflectionUtilities.GetResourceAsString("UnitTests.defective.apsim");
+            string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + "-defective.apsim");
+            File.WriteAllText(fileName, defective);
+            MainPresenter presenter = new MainPresenter();
+            Assert.DoesNotThrow(() => presenter.Import(fileName));
+        }
+
+        /// <summary>Ensure entire old APSIM file loads OK.</summary>
+        [Test]
+        public void EnsureOldAPSIMFileLoads()
+        {
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
+
+            APSIMImporter importer = new APSIMImporter();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+
+            Assert.IsNotNull(sims);
+        }
     }
 }
