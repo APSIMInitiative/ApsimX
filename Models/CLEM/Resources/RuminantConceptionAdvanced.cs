@@ -49,6 +49,14 @@ namespace Models.CLEM.Resources
         public double[] ConceptionRateAsymptote { get; set; }
 
         /// <summary>
+        /// Maximum conception rate from uncontrolled breeding 
+        /// </summary>
+        [Category("Advanced", "Breeding")]
+        [Description("Maximum conception rate from uncontrolled breeding")]
+        [Required, Proportion]
+        public double MaximumConceptionUncontrolledBreeding { get; set; }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
@@ -70,8 +78,7 @@ namespace Models.CLEM.Resources
         public double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-
-            bool isConceptionReady = false;
+            bool isConceptionReady;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;

@@ -107,8 +107,7 @@ namespace Models.CLEM.Activities
             if (this.TimingOK)
             {
                 List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-
-                double sumneeded = 0;
+                double sumneeded;
                 switch (PaymentStyle)
                 {
                     case CropPaymentStyleType.Fixed:

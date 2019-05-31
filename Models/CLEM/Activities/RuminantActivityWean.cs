@@ -69,7 +69,6 @@ namespace Models.CLEM.Activities
             if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
             {
                 grazeStore = GrazeFoodStoreName.Split('.').Last();
-                var foodStore = Resources.GetResourceItem(this, GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
             else
             {

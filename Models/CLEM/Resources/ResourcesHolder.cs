@@ -428,11 +428,13 @@ namespace Models.CLEM.Resources
                                 {
                                     //remove cost
                                     // create new request for this transmutation cost
-                                    ResourceRequest transRequest = new ResourceRequest();
-                                    transRequest.Reason = trans.Name + " " + trans.Parent.Name;
-                                    transRequest.Required = transmutationCost;
-                                    transRequest.ResourceType = transcost.ResourceType;
-                                    transRequest.ActivityModel = request.ActivityModel;
+                                    ResourceRequest transRequest = new ResourceRequest
+                                    {
+                                        Reason = trans.Name + " " + trans.Parent.Name,
+                                        Required = transmutationCost,
+                                        ResourceType = transcost.ResourceType,
+                                        ActivityModel = request.ActivityModel
+                                    };
 
                                     // used to pass request, but this is not the transmutation cost
 

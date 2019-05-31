@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -153,11 +153,13 @@ namespace Models.CLEM.Activities
             if(units>0)
             {
                 // remove resource
-                ResourceRequest purchaseRequest = new ResourceRequest();
-                purchaseRequest.ActivityModel = this;
-                purchaseRequest.Required = units*price.PacketSize;
-                purchaseRequest.AllowTransmutation = false;
-                purchaseRequest.Reason = "Sell "+(resourceToSell as Model).Name;
+                ResourceRequest purchaseRequest = new ResourceRequest
+                {
+                    ActivityModel = this,
+                    Required = units * price.PacketSize,
+                    AllowTransmutation = false,
+                    Reason = "Sell " + (resourceToSell as Model).Name
+                };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned

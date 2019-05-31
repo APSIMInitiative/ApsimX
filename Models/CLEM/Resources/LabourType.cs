@@ -25,6 +25,12 @@ namespace Models.CLEM.Resources
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get { return "NA"; } }
+
+        /// <summary>
         /// Age in years.
         /// </summary>
         [Description("Initial Age")]
@@ -162,7 +168,7 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
             double addAmount = (double)resourceAmount;
-            this.AvailableDays = this.AvailableDays + addAmount;
+            this.AvailableDays += addAmount;
             ResourceTransaction details = new ResourceTransaction
             {
                 Gain = addAmount,

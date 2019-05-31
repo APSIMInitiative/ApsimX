@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "ApsimX.sln",
+    "projects": [
+      "..\\APSIM.Shared\\APSIM.Shared.csproj",
+      "ApsimNG\\ApsimNG.csproj",
+      "Models\\Importer\\Importer.csproj",
+      "Models\\Models.csproj"
+    ]
+  }
+}

@@ -63,14 +63,16 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-            variableNames.Add("[Clock].Today as Date");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.Reason as Reason");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.Required as Required");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.Available as Available");
+            List<string> variableNames = new List<string>
+            {
+                "Parent.Name as Zone",
+                "[Clock].Today as Date",
+                "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
+                "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
+                "[Activities].LastShortfallResourceRequest.Reason as Reason",
+                "[Activities].LastShortfallResourceRequest.Required as Required",
+                "[Activities].LastShortfallResourceRequest.Available as Available"
+            };
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
 

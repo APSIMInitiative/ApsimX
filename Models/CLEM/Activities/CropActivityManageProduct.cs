@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Model for the crop input file
         /// </summary>
-        private FileCrop fileCrop;
+        private IFileCrop fileCrop;
 
         /// <summary>
         /// Parent of this Model that gets the land for growing this crop.
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as FileCrop;
+            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
             {
                 throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop, this.Name));
@@ -335,8 +335,9 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            double daysNeeded = 0;
-            double numberUnits = 0;
+
+            double daysNeeded;
+            double numberUnits;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:

@@ -90,6 +90,10 @@ namespace Models.CLEM.Resources
             {
                 html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName+"</span></div>";
             }
+            else
+            {
+                html += "<div class=\"activityentry\">Currency is <span class=\"errorlink\">Not specified</span></div>";
+            }
             return html;
         }
 
