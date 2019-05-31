@@ -73,8 +73,14 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public string GetPivot()
         {
-            if (Pivots.Count > ID) return Pivots[ID];
-            else throw new IndexOutOfRangeException(ID.ToString());
+            if (Pivots.Count > ID)
+            {
+                return Pivots[ID];
+            }
+            else
+            {
+                throw new IndexOutOfRangeException(ID.ToString());
+            }
         }
 
     }

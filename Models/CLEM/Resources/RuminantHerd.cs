@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminantherd.htm")]
+    [HelpUri(@"content/features/resources/ruminants/ruminantherd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -240,13 +240,15 @@ namespace Models.CLEM.Resources
             Herd.Add(ind);
             LastIndividualChanged = ind;
 
-            ResourceTransaction details = new ResourceTransaction();
-            details.Gain = 1;
-            details.Activity = model.Name; 
-            details.ActivityType = model.GetType().Name; 
-            details.Reason = ind.SaleFlag.ToString(); 
-            details.ResourceType = this.Name;
-            details.ExtraInformation = ind;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Gain = 1,
+                Activity = model.Name,
+                ActivityType = model.GetType().Name,
+                Reason = ind.SaleFlag.ToString(),
+                ResourceType = this.Name,
+                ExtraInformation = ind
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -283,13 +285,15 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             // report transaction of herd change
-            ResourceTransaction details = new ResourceTransaction();
-            details.Loss = 1;
-            details.Activity = model.Name;
-            details.ActivityType = model.GetType().Name;
-            details.Reason = ind.SaleFlag.ToString();
-            details.ResourceType = this.Name;
-            details.ExtraInformation = ind;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Loss = 1,
+                Activity = model.Name,
+                ActivityType = model.GetType().Name,
+                Reason = ind.SaleFlag.ToString(),
+                ResourceType = this.Name,
+                ExtraInformation = ind
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

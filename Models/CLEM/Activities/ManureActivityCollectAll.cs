@@ -38,15 +38,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        private List<ResourceRequest> GetResourcesNeededForActivityLocal()
-        {
-            return null;
-        }
-
-        /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>

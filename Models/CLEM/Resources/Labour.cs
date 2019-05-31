@@ -149,7 +149,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            int currentmonth = Clock.Today.Month;
             foreach (LabourType item in Items)
             {
                 item.AvailabilityLimiter = 1.0;

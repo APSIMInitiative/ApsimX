@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminantadvancedconception.htm")]
+    [HelpUri(@"content/features/resources/ruminants/ruminantconceptioncondition.htm")]
     public class RuminantConceptionByCondition: CLEMModel, IConceptionModel
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Condition cutoff for conception
         /// </summary>
-        [Description("Condition (wt/normalised wt) below which no conception")]
+        [Description("Condition index (wt/normalised wt) below which no conception")]
         [Required, GreaterThanValue(0)]
         public double ConditionCutOff { get; set; }
 
@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double ConceptionRate(RuminantFemale female)
         {
-            bool isConceptionReady = false;
+            bool isConceptionReady;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;

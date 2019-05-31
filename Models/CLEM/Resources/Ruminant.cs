@@ -107,6 +107,12 @@ namespace Models.CLEM.Resources
             set
             {
                 weight = value;
+
+                // if highweight has not been defined set to initial weight
+                if (HighWeight == 0)
+                {
+                    HighWeight = weight;
+                }
                 HighWeight = Math.Max(HighWeight, weight);
             }
         }
@@ -463,11 +469,10 @@ namespace Models.CLEM.Resources
             this.Gender = setGender;
             this.BreedParams = setParams;
 
-            if (weight <= 0)
+            if (setWeight <= 0)
             {
                 // use normalised weight
-                weight = NormalisedAnimalWeight;
-
+                this.Weight = NormalisedAnimalWeight;
             }
             else
             {

@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
         private double unitsOfArea2Ha;
         private IFileGRASP FileGRASP = null;
         private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-        private int soilIndex = 0; // obtained from LandType used
+        private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
         private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
@@ -184,18 +184,19 @@ namespace Models.CLEM.Activities
             }
             if (Area == 0 && AreaRequested > 0)
             {
-                ResourceRequestList = new List<ResourceRequest>();
-                ResourceRequestList.Add(new ResourceRequest()
+                ResourceRequestList = new List<ResourceRequest>
                 {
-                    AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                    ResourceType = typeof(Land),
-                    ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
-                    ActivityModel = this,
-                    Reason = "Assign",
-                    FilterDetails = null
-                }
-                );
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                        ResourceType = typeof(Land),
+                        ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
+                        ActivityModel = this,
+                        Reason = "Assign",
+                        FilterDetails = null
+                    }
+                };
             }
 
             // if we get here we assume some land has been supplied
@@ -270,15 +271,17 @@ namespace Models.CLEM.Activities
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
                 // convert from kg/ha to kg/area unit
-                growth = growth * unitsOfArea2Ha;
+                growth *= unitsOfArea2Ha;
 
                 Cover = pasturedata.Cover;
 
                 if (growth > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-                    newPasture.Age = 0;
+                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                    {
+                        Age = 0
+                    };
                     newPasture.Set(growth * Area);  
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
@@ -359,6 +362,7 @@ namespace Models.CLEM.Activities
                     detach = LinkedNativeFoodType.DetachRate;
                     pool.Age++;
                 }
+                pool.Growth = 0;
                 double detachedAmount = pool.Amount * (1 - detach);
                 pool.Set(detachedAmount);
                 pool.Detached = detachedAmount;

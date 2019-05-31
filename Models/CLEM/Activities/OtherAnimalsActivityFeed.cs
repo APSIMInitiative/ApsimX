@@ -44,7 +44,6 @@ namespace Models.CLEM.Activities
         [Required]
         public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
-        private IResourceType foodSource { get; set; }
         /// <summary>
         /// Feed type
         /// </summary>
@@ -67,7 +66,6 @@ namespace Models.CLEM.Activities
         {
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            foodSource = FeedType;
         }
 
         /// <summary>
@@ -184,7 +182,7 @@ namespace Models.CLEM.Activities
                 allIndividuals += total;
             }
 
-            double daysNeeded = 0;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
