@@ -154,9 +154,14 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the height.</summary>
         [Units("mm")]
         public double Height { get; set; }
+
+        /// <summary>Gets or sets the height.</summary>
+        [Units("mm")]
+        public double BaseHeight { get; set; }
+        
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+        public double Depth { get { return Math.Max(0,Height-BaseHeight); } }
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
@@ -214,6 +219,9 @@ namespace Models.PMF.Organs
         /// <summary>The height function</summary>
         [Link]
         IFunction HeightFunction = null;
+        /// <summary>The height of the base of the canopy</summary>
+        [Link(IsOptional = true)]
+        IFunction BaseHeightFunction = null;
         /// <summary>The lai dead function</summary>
         [Link]
         IFunction LaiDeadFunction = null;
@@ -385,7 +393,10 @@ namespace Models.PMF.Organs
                     LAI = LAIFunction.Value();
 
                 Height = HeightFunction.Value();
-
+                if (BaseHeightFunction == null)
+                    BaseHeight = 0;
+                else
+                    BaseHeight = BaseHeightFunction.Value();
                 LAIDead = LaiDeadFunction.Value();
             }
         }
