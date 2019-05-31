@@ -87,7 +87,7 @@ namespace Models
                     }
                     if (Array.IndexOf(nodes, canopyBase) == -1)
                     {
-                        nodes[numNodes] = canopyBase;
+                        nodes[0] = canopyBase;
                         numNodes = numNodes + 1;
                     }
                 }
