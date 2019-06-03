@@ -5119,8 +5119,7 @@ namespace Models.AgPasture
                     double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
                     double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
                     heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
-                    TodaysHeight *= heightF;
-                    Math.Max(TodaysHeight, myPlantHeightMinimum);
+                    TodaysHeight = Math.Max(TodaysHeight* heightF, myPlantHeightMinimum);
                 }
             }
             else
