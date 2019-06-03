@@ -3218,8 +3218,8 @@ namespace Models.AgPasture
             get
             {
                 Biomass mass = new Biomass();
-                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead / 10; // to g/m2
-                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead / 10;    // to g/m2
+                mass.StructuralWt = (leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead) / 10.0; // to g/m2
+                mass.StructuralN = (leaves.NLive + leaves.NDead + stems.NLive + stems.NDead + stolons.NLive + stolons.NDead) / 10.0;    // to g/m2
                 mass.DMDOfStructural = leaves.DigestibilityLive;
                 return mass;
             }
@@ -5085,6 +5085,7 @@ namespace Models.AgPasture
         /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
         /// The depth increase rate is of zero-order type, given by the RootElongationRate, but it is adjusted for temperature
         ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
+        ///  - The effect of temperature was reduced (average between that of growth DM and one) as soil temp varies less than air
         /// </remarks>
         private void EvaluateRootElongation()
         {
@@ -5094,7 +5095,7 @@ namespace Models.AgPasture
             {
                 if (((dGrowthRootDM - detachedRootDM) > Epsilon) && (roots[0].Depth < myRootDepthMaximum))
                 {
-                    double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
+                    double tempFactor = 0.5 + 0.5 * TemperatureLimitingFactor(Tmean(0.5));
                     dRootDepth = myRootElongationRate * tempFactor;
                     roots[0].Depth = Math.Min(myRootDepthMaximum, Math.Max(myRootDepthMinimum, roots[0].Depth + dRootDepth));
                 }
@@ -5119,8 +5120,7 @@ namespace Models.AgPasture
                     double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
                     double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
                     heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
-                    TodaysHeight *= heightF;
-                    Math.Max(TodaysHeight, myPlantHeightMinimum);
+                    TodaysHeight = Math.Max(TodaysHeight* heightF, myPlantHeightMinimum);
                 }
             }
             else
