@@ -533,7 +533,7 @@
   <Type name="g_range">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
-      <class>GRange</class>
+      <class>G_Range</class>
     </MetaData>
   </Type>
   <Type name="grasp">

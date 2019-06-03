@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models
 {
-    using System.Xml.Serialization;
     using Models.Core;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
 
-    public partial class GRange : Model, IPlant, ICanopy, IUptake
+    public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
         /// <summary>
         /// Obtain the parameters associated with a specific vegetation type 
@@ -614,6 +608,8 @@ namespace Models
             public double propBurned;           // The proportion of the cell burned, as shown in maps(NOTE SCALE DEPENDENCE)
             public double propFertilized;       // The proportion of the cell fertilized, as shown in maps(NOTE SCALE DEPENDENCE)
             public double temporary;            // A temporary map location, used to read-in values
+            public int fireMapsUsed;            // [From SimParm] Whether fire maps will be used (1) or fire will be based on frequencies in the land unit
+            public int fertilizeMapsUsed;       // [From SimParm] Whether fertilize maps will be used (1) or fertilizing will be based on frequencies in the
         };
 
         private Globals globe = new Globals();
@@ -627,7 +623,7 @@ namespace Models
         /// !***** (Facets were confirmed being reasonably populated through echoed statements)
         /// 
         /// Much of this shouldn't really be necessary once we start getting soil information from Apsim, but I'm porting it over now
-        /// as it let's us get started, and will make it easier to cross-check ApsimX and G-Range outputs.
+        /// as it let's us get started, and will make it easier to cross-check ApsimX and G_Range outputs.
         /// </summary>
         private void InitParms()
         {
@@ -889,7 +885,7 @@ namespace Models
             sqlite.OpenDatabase(FullDatabaseName, true);
             System.Data.DataTable dataTable = sqlite.ExecuteQuery("SELECT * FROM HalfDegree INNER JOIN SystemTypes ON HalfDegree.GoGe = SystemTypes.TypeId WHERE ZONE=" + globe.zone.ToString());
             if (dataTable.Rows.Count != 1)
-                throw new ApsimXException(this, "Error reading G-Range database!");
+                throw new ApsimXException(this, "Error reading G_Range database!");
             System.Data.DataRow dataRow = dataTable.Rows[0];
 
             rangeType = (int)dataRow["Sage"] - 1;
@@ -946,7 +942,7 @@ namespace Models
                 Parms parm = parmArray[iParm];
                 int iType = ReadIntVal(parmsStrings[iLine++]);
                 if (iType != iParm + 1)
-                    throw new Exception("Error parsing G-Range parameters");
+                    throw new Exception("Error parsing G_Range parameters");
                 parm.prcpThreshold = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.prcpThresholdFraction = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.baseFlowFraction = ReadDoubleVal(parmsStrings[iLine++]);
@@ -1145,6 +1141,20 @@ namespace Models
                 if (!Double.TryParse(parts[i], out dest[i]))
                     dest[i] = Double.NaN;
             }
+        }
+
+        /// <summary>
+        /// The function for a line, yielding a Y value for a given X and the parameters for a line.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <returns></returns>
+        private double Line(double x, double x1, double y1, double x2, double y2)
+        {
+            return (y2 - y1) / (x2 - x1) * (x - x2) + y2;
         }
     }
 }

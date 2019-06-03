@@ -1,0 +1,1612 @@
+﻿using System;
+
+namespace Models
+{
+    using Models.Core;
+    using Models.Interfaces;
+
+    public partial class G_Range : Model, IPlant, ICanopy, IUptake
+    {
+        /// <summary>
+        /// Calculate potential production and the attributes that go into potential production.
+        /// This routine also includes a calculation of surface soil temperatures.
+        /// POTPROD uses a crop system and forest system approach.
+        /// (In CENTURY, cancvr is passed at each call, but I am using the structured approach)
+        /// </summary>
+        private void PotentialProduction()
+        {
+            double tmin = globe.minTemp;
+            double tmax = globe.maxTemp;
+            // Calculate temperature... in CENTURY, this uses three approaches(CURSYS), one for FOREST, on for SAVANNA, and one for GRASSLAND.
+            //                           Forest isn't represented here.  I am seeking to avoid the SAVANNA/GRASSLAND split.  
+            // Live biomass
+            double surface_litter_biomass = (litterStructuralCarbon[surfaceIndex] +
+                                             litterMetabolicCarbon[surfaceIndex]) * 2.25;    // Averaged over types
+
+            double avg_live_biomass = 0.0;
+            double avg_wood_biomass = 0.0;
+            double standing_dead_biomass = 0.0;
+            double temp_min_melt;
+            double temp_max_melt;
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                switch ((Facet)iFacet)
+                {
+                    case Facet.herb:
+                        avg_live_biomass = (leafCarbon[iFacet] + seedCarbon[iFacet]) * 2.5;
+                        avg_wood_biomass = 0.0;
+                        standing_dead_biomass = deadStandingCarbon[iFacet] * 2.5;
+                        break;
+                    case Facet.shrub:
+                        avg_live_biomass = (leafCarbon[iFacet] + seedCarbon[iFacet]) * 2.5;
+                        avg_wood_biomass = (shrubCarbon[(int)WoodyPart.coarseBranch] + shrubCarbon[(int)WoodyPart.fineBranch]) * 2.0;
+                        standing_dead_biomass = deadStandingCarbon[iFacet] * 2.5;
+                        break;
+                    case Facet.tree:
+                        avg_live_biomass = (leafCarbon[iFacet] + seedCarbon[iFacet]) * 2.5;
+                        avg_wood_biomass = (treeCarbon[(int)WoodyPart.coarseBranch] + treeCarbon[(int)WoodyPart.fineBranch]) * 2.0;
+                        standing_dead_biomass = deadStandingCarbon[iFacet] * 2.5;
+                        break;
+                }
+                // ** Calculating soil surface temperatures
+                // Century makes a call to a routine to calculate soil surface temperature.  It is only used here, and this is brief, so I will merge that into here.
+                // Total biomass
+                double biomass = avg_live_biomass + standing_dead_biomass +
+                    (surface_litter_biomass * parms.litterEffectOnSoilTemp);
+                biomass = Math.Min(biomass, parms.maximumBiomassSoilTemp);
+                double woody_biomass = Math.Min(avg_wood_biomass, 5000.0);  // Number hardwired in CENTURY
+
+                // Maximum temperature with leaf shading
+                double temp_max_leaf = tmax + (25.4 / (1.0 + 18.0 * Math.Exp(-0.20 * tmax))) *  // 1 + avoids division by 0.
+                                        (Math.Exp(parms.biomassEffectOnMaxSoilTemp * biomass) - 0.13);
+                // Minimum temperature with leaf shading
+                double temp_min_leaf = tmin + (parms.biomassEffectOnMinSoilTemp * biomass) - 1.78;
+
+                // Maximum temperature with wood shading
+                double temp_max_wood = tmax + (25.4 / (1.0 + 18.0 * Math.Exp(-0.20 * tmax))) *  // 1 + avoids division by 0.
+                                        (Math.Exp(parms.biomassEffectOnMaxSoilTemp * 0.1 * woody_biomass) - 0.13);
+                // Minimum temperature with wood shading
+                double temp_min_wood = tmin + (parms.biomassEffectOnMinSoilTemp * 0.1 * woody_biomass) - 1.78;
+
+                double maximum_soil_surface_temperature = Math.Min(temp_max_leaf, temp_max_wood);
+                double minimum_soil_surface_temperature = Math.Max(temp_min_leaf, temp_min_wood);
+
+                // Let soil surface temperature be affected by day length
+                if (dayLength < 12.0)
+                    temp_min_melt = ((12.0 - dayLength) * 3.0 + 12.0) / 24.0;
+                else
+                    temp_min_melt = ((12.0 - dayLength) * 1.2 + 12.0) / 24.0;
+                temp_min_melt = Math.Min(0.95, temp_min_melt);
+                temp_min_melt = Math.Max(0.05, temp_min_melt);
+                temp_max_melt = 1.0 - temp_min_melt;
+                soilSurfaceTemperature = temp_max_melt * maximum_soil_surface_temperature +
+                                                  temp_min_melt * minimum_soil_surface_temperature;
+            }
+
+            // End calculating soil surface temperatures
+
+            // if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'POT_PRD')
+
+            // Calculate potential production, using POTCRP as a guide, but not including cropping types.An edit included POTTREE as well, but mostly already present in the model.
+            Potential();
+        }
+
+        private void Potential()
+        {
+            double h2ogef;
+            double[] prop_live_per_layer = new double[vLayers]; // Filling the arrays in case something gets skipped below. (In C#, initialised to 0)
+
+            // From Century, the value for potential plant production is now calculated from the equation of a line whose intercept changes depending on water
+            // content based on soil type.
+            if (potEvap >= 0.01)
+                h2ogef = (waterAvailable[0] + globe.precip) / potEvap; // Irrigation was not included, unlike CENTURY
+            else
+                h2ogef = 0.01;
+
+            double water_content = fieldCapacity[0] - wiltingPoint[0];
+
+            // Doing PPRDWC in this subroutine, rather than another call to a function
+            // Regression points were confirmed as 0.0, 1.0, and 0.8(using the old method in Century to reduce parameters)
+            double intercept = parms.pptRegressionPoints[0] + (parms.pptRegressionPoints[1] * water_content);
+            double slope;
+            if (parms.pptRegressionPoints[2] != intercept)
+                slope = 1.0 / (parms.pptRegressionPoints[2] - intercept);
+            else
+                slope = 1.0;
+
+            // Do the correction, altering h2ogef based on these corrections.h2ogef is both x (in) and pprdwc(out) in the PPRDWC function in CENTURY
+            h2ogef = 1.0 + slope * (h2ogef - parms.pptRegressionPoints[2]);
+            if (h2ogef > 1.0)
+                h2ogef = 1.0;
+            else if (h2ogef < 0.01)
+                h2ogef = 0.01;
+
+            // Calculate how much live aboveground biomass is in each vegetation layer, and use that as a guide to distribute production
+            // Get the total cover, to allow ignoring bare ground.
+
+            double total_cover = facetCover[(int)Facet.herb] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree];
+            if (total_cover > 0.000001)
+            {
+                // Using an approach that provides production estimates for each facet independently.
+                // Also accounting for not looking at bare ground.
+                prop_live_per_layer[(int)Layer.herb] = 1.0;
+                prop_live_per_layer[(int)Layer.herbUnderShrub] = facetCover[(int)Facet.shrub] / total_cover;
+                prop_live_per_layer[(int)Layer.herbUnderTree] = facetCover[(int)Facet.tree] / total_cover;
+                double w_cover = facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree];
+                if (w_cover > 0.000001)
+                {
+                    prop_live_per_layer[(int)Layer.shrub] = 1.0;
+                    prop_live_per_layer[(int)Layer.shrubUnderTree] = facetCover[(int)Facet.tree] / w_cover;
+                    prop_live_per_layer[(int)Layer.tree] = 1.0;
+                }
+
+                Facet ifacet = Facet.herb;
+                double aisc = 0.0;
+                double woody_cover = 0.0;
+                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                {
+                    // Compute shading modifier.First, set woody cover
+                    switch ((Layer)iLyr)
+                    {
+                        case Layer.herb:
+                            ifacet = Facet.herb;
+                            woody_cover = 0.0;
+                            aisc = 0.0;
+                            break;
+                        case Layer.herbUnderShrub:  // NOTE that in the following, spatial cover is substituting for what would normally be a density measure of leaves at any one place.Use LAI instead ? No, canopy cover is used in Century.Across the entire landscape cell, this measure is appropriate.
+                            ifacet = Facet.herb;
+                            woody_cover = facetCover[(int)Facet.shrub];  // Facet cover should never go to 0, as it is counter to the definition.Perhaps include a catch-all in MISC_MATERIAL that makes sure a few shrubs are present, a few trees are present, in any cell.
+                            if (shrubCarbon[(int)WoodyPart.leaf] < 0.00001)
+                                aisc = 0.0;
+                            else
+                                aisc = 5.0 * Math.Exp(-0.0035 * (shrubCarbon[(int)WoodyPart.leaf] * 2.5) / woody_cover + 0.00000001);  // Shading by seeds ignored.
+                            break;
+                        case Layer.herbUnderTree:
+                            ifacet = Facet.herb;
+                            woody_cover = facetCover[(int)Facet.tree];
+                            if (treeCarbon[(int)WoodyPart.leaf] < 0.00001)
+                                aisc = 0.0;
+                            else
+                                aisc = 5.0 * Math.Exp(-0.0035 * (treeCarbon[(int)WoodyPart.leaf] * 2.5) / woody_cover + 0.00000001);
+                            break;
+                        case Layer.shrub:
+                            ifacet = Facet.shrub;
+                            woody_cover = 0.0;   // Assumes that shrubs aren't shaded, although they do shade themselves.  But really, all these types shade themselves.  Perhaps adjust.
+                            aisc = 0.0;
+                            break;
+                        case Layer.shrubUnderTree:
+                            ifacet = Facet.shrub;
+                            woody_cover = facetCover[(int)Facet.tree];
+                            if (treeCarbon[(int)WoodyPart.leaf] < 0.00001)
+                                aisc = 0.0;
+                            else
+                                aisc = 5.0 * Math.Exp(-0.0035 * (treeCarbon[(int)WoodyPart.leaf] * 2.5) / woody_cover + 0.00000001);
+                            break;
+                        case Layer.tree:
+                            ifacet = Facet.tree;
+                            woody_cover = 0.0;    // Assumes trees don't shade themselves.
+                            aisc = 0.0;
+                            break;
+                    }
+                    double shading_modifier = (1.0 - woody_cover) + (woody_cover * (aisc / (aisc + 1.0)));
+                    // I suspect the modifier should be less than 1.Check for this ?
+
+                    // Estimate plant production
+                    if (soilSurfaceTemperature > 0.0)
+                    {
+                        // Calculate temperature effect on growth
+                        // Account for removal of litter effects on soil temperature as it drives plant production
+                        // Century recalculates min, max, and average soil surface temperatures.I have those already, so using the existing.
+
+                        // Century uses a function call, but I will collapse it to here.  X is ctemp or average soil surface temperature.  a,b,c,d are PPDF values
+                        double a = parms.temperatureProduction[0];
+                        double b = parms.temperatureProduction[1];
+                        double c = parms.temperatureProduction[2];
+                        double d = parms.temperatureProduction[3];
+
+                        double frac = (b - soilSurfaceTemperature) / (b - a);   // Based mostly on parameters, so division by 0 unlikely.
+                        potentialProduction = 0.0;
+                        // The following appears appropriate for both herbs and woodies, based on Century documentation.
+                        if (frac > 0.0)
+                            potentialProduction = Math.Exp(c / d * (1.0 - Math.Pow(frac, d))) * Math.Pow(frac, c);
+
+                        // Calculate the potential effect of standing dead on plant growth, the effect of physical obstruction of litter and standing dead
+                        double bioc = deadStandingCarbon[(int)ifacet] + 0.1 * litterStructuralCarbon[0];
+                        if (bioc <= 0.0)
+                            bioc = 0.01;
+                        if (bioc > parms.maximumBiomassSoilTemp)
+                            bioc = parms.maximumBiomassSoilTemp;
+                        double bioprd = 1.0 - (bioc / (parms.standingDeadProductionHalved + bioc));   // Parameters, so division by 0 unlikely.
+
+                        // Calculate the effect of the ratio of live biomass to dead biomass on the reduction of potential growth rate.The intercept of this equation(highest negative effect of dead plant biomass) is equal to bioprd when the ratio is zero.
+                        double temp1 = (1.0 - bioprd);
+                        double temp2 = temp1 * 0.75;
+                        double temp3 = temp1 * 0.25;
+                        double ratlc = leafCarbon[(int)Facet.herb] / bioc;  // Logic above prevents 0.
+                        double biof = 0.0;
+                        if (ratlc <= 1.0)
+                            biof = bioprd + (temp2 * ratlc);
+                        if (ratlc > 1.0 && ratlc <= 2.0)
+                            biof = (bioprd + temp2) + temp3 * (ratlc - 1.0);
+                        if (ratlc > 2.0)
+                            biof = 1.0;
+
+                        totalPotProduction[iLyr] = Shortwave() * parms.radiationProductionCoefficient *
+                                potentialProduction * h2ogef * biof * shading_modifier * co2EffectOnProduction[(int)ifacet] *
+                                prop_live_per_layer[iLyr];
+                        // if (Rng(icell) % total_pot_production(2).gt. 10000.0) then
+                        //  write(*, *) 'ZZ TOT_POT_PROD: ', icell, ilyr, month, Rng(icell) % total_pot_production(2), total_biomass, total_cover, &
+                        // prop_live_per_layer(ilyr)
+                        //  write(*, *) 'ZZ          S_W: ', icell, ilyr, month, shortwave(icell)
+                        //  write(*, *) 'ZZ       h2ogef: ', icell, ilyr, month, h2ogef
+                        //  write(*, *) 'ZZ         biof: ', icell, ilyr, month, biof
+                        //  write(*, *) 'ZZ          S_M: ', icell, ilyr, month, shading_modifier
+                        //  write(*, *) 'ZZ         PLPL: ', icell, ilyr, month, prop_live_per_layer(ilyr)
+                        //  write(*, *) 'ZZ      RAD_P_C: ', icell, ilyr, month, Parms(iunit) % radiation_production_coefficient
+                        //  write(*, *) 'ZZ          P_P: ', icell, ilyr, month, Rng(icell) % potential_production
+                        //  write(*, *) 'ZZ          CO2: ', icell, ilyr, month, Rng(icell) % co2_effect_on_production(ifacet)
+                        //end if
+
+                        // Dynamic carbon allocation to compute root / shoot ratio
+                        if (totalPotProduction[iLyr] > 0.0)
+                        {
+                            // call Crop_Dynamic_Carbon(Rng(icell)% root_shoot_ratio, fracrc)      I WON'T BE INCLUDING DYNAMIC CARBON ALLOCATION BETWEEN SHOOTS AND ROOTS FOR NOW.  TOO COMPLEX, MUST SIMPLIFY.
+                            double fracrc = parms.fractionCarbonToRoots[(int)ifacet];   // Gross simplifaction, but required for completion.
+                            // Change root shoot ratio based on effects of co2
+                            // The following can't be the same as effect on production.  Distruptive.  I will turn this off for now.  Specific to crops and trees, incidentally.
+                            // rootShootRatio[(int)ifacet] = rootShootRatio[(int)ifacet] * co2EffectOnProduction[(int)ifacet];
+
+                            // Allocate production  
+                            belowgroundPotProduction[iLyr] = totalPotProduction[iLyr] * fracrc;
+                            abovegroundPotProduction[iLyr] = totalPotProduction[iLyr] - belowgroundPotProduction[iLyr];
+
+                            // Restrict production due to that taken by grazers
+                            GrazingRestrictions(ifacet, iLyr);
+
+                            // Update accumulators and compute potential C production
+                            // Skipping this for now.They seem to be detailed accumulators of C over the entire run, which may be of interest, but not now.
+                        }
+                        else
+                        {
+                            // No production this month... total potential production is 0.0
+                            totalPotProduction[iLyr] = 0.0;
+                            abovegroundPotProduction[iLyr] = 0.0;
+                            belowgroundPotProduction[iLyr] = 0.0;
+                        }
+                    }
+                    else
+                    {
+                        // No production this month... too cold
+                        totalPotProduction[iLyr] = 0.0;
+                        abovegroundPotProduction[iLyr] = 0.0;
+                        belowgroundPotProduction[iLyr] = 0.0;
+                    }
+                }
+            }
+            else
+            {
+                // No production this month... there is either zero cover or zero biomass
+                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                {
+                    prop_live_per_layer[iLyr] = 0.0;         // Nothing alive, so no production.  Or no facet cover, so no production
+                    totalPotProduction[iLyr] = 0.0;       // Note this is biomass
+                    abovegroundPotProduction[iLyr] = 0.0; // Note this is biomass
+                    belowgroundPotProduction[iLyr] = 0.0; // Note this is biomass.Divide by 2.5 or 2 for carbon.
+                }
+            }
+        }
+
+        private void GrazingRestrictions(Facet ifacet, int iLyr)
+        {
+            // Only to make things more compressed
+            double agrd = abovegroundPotProduction[iLyr];
+            double bgrd = belowgroundPotProduction[iLyr];
+            double fracrmv = fractionLiveRemovedGrazing;
+            double rtsht;
+            if (agrd > 0.0)
+                rtsht = bgrd / agrd;
+            else
+                rtsht = 0.0;
+            double graze_mult = parms.grazingEffectMultiplier;
+            double bop;
+
+            switch (parms.grazingEffect)      // Grazing effects 0 through 6 come right from CENTURY
+            {
+                //    case (0)! Grazing has no direct effect on production.Captured in 'case default'
+                case 1:     // Linear impact of grazing on aboveground potential production
+                    agrd = (1 - (2.21 * fracrmv)) * agrd;
+                    if (agrd < 0.02)
+                        agrd = 0.02;
+                    bgrd = rtsht * agrd;
+                    break;
+                case 2:    // Quadratic impact of grazing on aboveground potential production and root:shoot ratio
+                    agrd = (1 + (2.6 * fracrmv - (5.83 * Math.Pow(fracrmv, 2.0)))) * agrd;
+                    if (agrd < 0.02)
+                        agrd = 0.02;
+                    bop = rtsht + 3.05 * fracrmv - 11.78 * Math.Pow(fracrmv, 2.0);
+                    if (bop <= 0.01)
+                        bop = 0.01;
+                    bgrd = agrd * bop;
+                    break;
+                case 3:    // Quadratic impact of grazing of grazing on root:shoot ratio
+                    bop = rtsht + 3.05 * fracrmv - 11.78 * Math.Pow(fracrmv, 2.0);
+                    if (bop <= 0.01)
+                        bop = 0.01;
+                    bgrd = agrd * bop;
+                    break;
+                case 4:    // Linear impact of grazing on root:shoot ratio
+                    bop = 1 - (fracrmv * graze_mult);
+                    bgrd = agrd * bop;
+                    break;
+                case 5:    // Quadratic impact of grazing on aboveground potential production and linear impact on root: shoot ratio
+                    agrd = (1 + 2.6 * fracrmv - (5.83 * Math.Pow(fracrmv, 2.0))) * agrd;
+                    if (agrd < 0.02)
+                        agrd = 0.02;
+                    bop = 1 - (fracrmv * graze_mult);
+                    bgrd = agrd * bop;
+                    break;
+                case 6:    // Linear impact of grazing on aboveground potential production and root:shoot ratio
+                    agrd = (1 + 2.21 * fracrmv) * agrd;
+                    if (agrd < 0.02)
+                        agrd = 0.02;
+                    bop = 1 - (fracrmv * graze_mult);
+                    bgrd = agrd * bop;
+                    break;
+                default:
+                    // Do nothing.  grazing_effect = 0, and so values will be read and re-assigned without modification
+                    // This routine modifies the effects of grazing on above-and belowground potential production.It removes no forage.
+                    break;
+            }
+            abovegroundPotProduction[iLyr] = agrd;
+            belowgroundPotProduction[iLyr] = bgrd;
+            totalPotProduction[iLyr] = agrd + bgrd;
+            if (agrd > 0.0)
+                rootShootRatio[(int)ifacet] = bgrd / agrd;
+            else
+                rootShootRatio[(int)ifacet] = 1.0;
+        }
+
+        private void HerbGrowth()
+        {
+            double tolerance = 1.0E-30;
+            double[] uptake;
+            double[] cfrac = new double[nWoodyParts];
+            double amt;
+            double[] mcprd = new double[2];
+            mcprd[surfaceIndex] = 0.0;
+            mcprd[soilIndex] = 0.0;
+
+            maintainRespiration[(int)Facet.herb] = 0.0;
+            respirationFlows[(int)Facet.herb] = 0.0;
+
+            // Century includes flags set in the schedular to turn growth on or off.  I don't want to do that.  
+            // I wish to use degree - days, or topsoil available water to pet ratio, or temperature limits
+            // * **USE PHENOLOGY HERE?  USE DORMANCY INSTEAD? DAY LENGTH(which is in RNG)... no, not for herbs.
+            if (ratioWaterPet > 0.0 && globe.minTemp > 3.0 &&
+                 phenology[(int)Facet.herb] < 3.999)
+            {
+                double rimpct;
+                // Calculate effect of root biomass on available nutrients
+                if ((parms.rootInterceptOnNutrients * fineRootCarbon[(int)Facet.herb] * 2.5) > 33.0)
+                    rimpct = 1.0;
+                else
+                    rimpct = (1.0 - parms.rootInterceptOnNutrients *
+                            Math.Exp(-parms.rootEffectOnNutrients * fineRootCarbon[(int)Facet.herb] * 2.5));
+
+                // Calculate carbon fraction above and belowground
+                if (totalPotProduction[(int)Layer.herb] + totalPotProduction[(int)Layer.herbUnderShrub] +
+                        totalPotProduction[(int)Layer.herbUnderTree] > 0.0)
+                    cfrac[ABOVE] = abovegroundPotProduction[(int)Facet.herb] / (totalPotProduction[(int)Layer.herb] +
+                                   totalPotProduction[(int)Layer.herbUnderShrub] + totalPotProduction[(int)Layer.herbUnderTree]);  // Using ABOVE and BELOW in CFRAC when it is dimensioned as woody parts, but that is ok.
+                else
+                    cfrac[ABOVE] = 0.0;
+                cfrac[BELOW] = 1.0 - cfrac[ABOVE];
+
+                double availableNitrogen = 0.0;
+                for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)  // Nutrients will be used to calculate mineral availablity for all layers, since they are only 15 cm each, 4, across the globe.Recent CENTURY uses a parameter(CLAYPG) here.
+                {
+                    availableNitrogen = availableNitrogen + mineralNitrogen[iLayer];
+                }
+
+                // Determine actual production, restricted based on carbon to nitrogen ratios.Note CFRAC &UPTAKE are arrays.
+                RestrictProduction(Facet.herb, 2, availableNitrogen, rimpct, cfrac, out uptake);
+
+                // If growth occurs ...                       (Still stored in potential production ... move to actual production?)
+                // Get average potential production
+                double avg_total_pot_prod_carbon = ((totalPotProduction[(int)Layer.herb] + totalPotProduction[(int)Layer.herbUnderShrub] +
+                                  totalPotProduction[(int)Layer.herbUnderTree]) / 3.0) * 0.4;
+                double avg_aground_pot_prod_carbon = ((abovegroundPotProduction[(int)Layer.herb] +
+                                  abovegroundPotProduction[(int)Layer.herbUnderShrub] + abovegroundPotProduction[(int)Layer.herbUnderTree]) / 3.0) * 0.4;
+                if (avg_total_pot_prod_carbon > 0.0)  //  Wouldn't this be production limited by nitrogen?
+                {
+                    // Compute nitrogen fixation which actually occurs and add to accumulator
+                    nitrogenFixed[(int)Facet.herb] = nitrogenFixed[(int)Facet.herb] + plantNitrogenFixed[(int)Facet.herb];
+                    // Accumulators skipped for now.Will be added as needed (Century includes so many it is bound to confuse) EUPACC SNFXAC  NFIXAC TCNPRO
+
+                    // Maintenance respiration calculations
+                    // Growth of shoots
+                    double agfrac;
+                    if (avg_total_pot_prod_carbon > 0.0)
+                        agfrac = avg_aground_pot_prod_carbon / avg_total_pot_prod_carbon;
+                    else
+                        agfrac = 0.0;
+
+                    mcprd[ABOVE] = (totalPotProdLimitedByN[(int)Layer.herb] + totalPotProdLimitedByN[(int)Layer.herbUnderShrub] +
+                                    totalPotProdLimitedByN[(int)Layer.herbUnderTree]) * agfrac;
+                    double resp_flow_shoots = mcprd[ABOVE] * parms.fractionNppToRespiration[(int)Facet.herb];
+                    respirationFlows[(int)Facet.herb] = respirationFlows[(int)Facet.herb] + resp_flow_shoots;
+                    leafCarbon[(int)Facet.herb] = leafCarbon[(int)Facet.herb] +
+                           ((1.0 - parms.fractionAgroundNppToSeeds[(int)Facet.herb]) * mcprd[ABOVE]);    // Translated from CSHED call and complexity of CSRSNK and BGLCIS.  Not sure if interpretted correctly.
+                    seedCarbon[(int)Facet.herb] = seedCarbon[(int)Facet.herb] +
+                            (parms.fractionAgroundNppToSeeds[(int)Facet.herb] * mcprd[ABOVE]);           // Translated from CSHED call and complexity of CSRSNK and BGLCIS.  Not sure if interpretted correctly.
+                    carbonSourceSink = carbonSourceSink - mcprd[ABOVE];
+
+                    // Growth of roots
+                    double bgfrac = 1.0 - agfrac;
+                    mcprd[BELOW] = ((totalPotProdLimitedByN[(int)Layer.herb] + totalPotProdLimitedByN[(int)Layer.herbUnderShrub] +
+                                     totalPotProdLimitedByN[(int)Layer.herbUnderTree]) / 3.0) * bgfrac;
+                    double resp_flow_roots = mcprd[BELOW] * parms.fractionNppToRespiration[(int)Facet.herb];
+                    respirationFlows[(int)Facet.herb] = respirationFlows[(int)Facet.herb] + resp_flow_roots;
+                    fineRootCarbon[(int)Facet.herb] = fineRootCarbon[(int)Facet.herb] + mcprd[BELOW];     // Translated from CSHED call and complexity of CSRSNK and BGLCIS.  Not sure if interpretted correctly.
+                    carbonSourceSink = carbonSourceSink - mcprd[BELOW];
+                    // Store maintenance respiration to storage pool
+                    maintainRespiration[(int)Facet.herb] = maintainRespiration[(int)Facet.herb] + respirationFlows[(int)Facet.herb];
+                    carbonSourceSink = carbonSourceSink - respirationFlows[(int)Facet.herb];
+
+                    // Maintenance respiration fluxes reduce maintenance respiration storage pool
+                    double resp_temp_effect = 0.1 * Math.Exp(0.07 * globe.temperatureAverage);
+                    resp_temp_effect = Math.Min(1.0, resp_temp_effect);
+                    resp_temp_effect = Math.Max(0.0, resp_temp_effect);
+                    double[] cmrspflux = new double[2];
+                    cmrspflux[ABOVE] = parms.herbMaxFractionNppToRespiration[ABOVE] * resp_temp_effect * leafCarbon[(int)Facet.herb];
+                    cmrspflux[BELOW] = parms.herbMaxFractionNppToRespiration[BELOW] * resp_temp_effect * fineRootCarbon[(int)Facet.herb];
+
+                    respirationAnnual[(int)Facet.herb] = respirationAnnual[(int)Facet.herb] + cmrspflux[ABOVE] + cmrspflux[BELOW];
+                    carbonSourceSink = carbonSourceSink + cmrspflux[ABOVE];
+                    carbonSourceSink = carbonSourceSink + cmrspflux[BELOW];
+
+                    // Get average potential production
+                    double avg_total_prod_limited_n = (totalPotProdLimitedByN[(int)Layer.herb] +
+                            totalPotProdLimitedByN[(int)Layer.herbUnderShrub] + totalPotProduction[(int)Layer.herbUnderTree]) * 2.5;
+                    // Actual uptake
+                    double[] euf = new double[2];
+                    if (avg_total_prod_limited_n > 0.0)
+                    {
+                        euf[ABOVE] = eUp[(int)Facet.herb, ABOVE] / avg_total_prod_limited_n;
+                        euf[BELOW] = eUp[(int)Facet.herb, BELOW] / avg_total_prod_limited_n;
+                    }
+                    else
+                    {
+                        euf[ABOVE] = 0.0;
+                        euf[BELOW] = 0.0;
+                    }
+
+                    // Takeup nutrients from internal storage pool, and don't allow that if storage stored nitrogen (CRPSTG) is negative
+                    if (storedNitrogen[(int)Facet.herb] > 0.0)
+                    {
+                        amt = uptake[N_STORE] * euf[ABOVE];
+                        storedNitrogen[(int)Facet.herb] = storedNitrogen[(int)Facet.herb] - amt;
+                        leafNitrogen[(int)Facet.herb] = leafNitrogen[(int)Facet.herb] +
+                           ((1.0 - parms.fractionAgroundNppToSeeds[(int)Facet.herb]) * amt);
+                        seedNitrogen[(int)Facet.herb] = seedNitrogen[(int)Facet.herb] +
+                           (parms.fractionAgroundNppToSeeds[(int)Facet.herb] * amt);                 // Translated from CSHED call and complexity of CSRSNK and BGLCIS.Not sure if interpretted correctly.
+
+                        amt = uptake[N_STORE] * euf[BELOW];
+                        storedNitrogen[(int)Facet.herb] = storedNitrogen[(int)Facet.herb] - amt;
+                        fineRootNitrogen[(int)Facet.herb] = fineRootNitrogen[(int)Facet.herb] + amt;
+                    }
+
+                    // Takeup nutrients from the soil.
+                    for (int iLayer = 0; iLayer < 2; iLayer++)  // Herbs are taking nutrients from the top two layers
+                    {
+                        if (mineralNitrogen[iLayer] > tolerance)
+                        {
+                            double fsol = 1.0;
+                            double calcup;
+                            if (availableNitrogen > 0.00001)
+                                calcup = uptake[N_SOIL] * mineralNitrogen[iLayer] * fsol / availableNitrogen;
+                            else
+                                calcup = 0.0;
+                            amt = uptake[N_SOIL] * euf[ABOVE];
+                            mineralNitrogen[iLayer] = mineralNitrogen[iLayer] - amt;
+                            leafNitrogen[(int)Facet.herb] = leafNitrogen[(int)Facet.herb] +
+                                    ((1.0 - parms.fractionAgroundNppToSeeds[(int)Facet.herb]) * amt);
+                            seedNitrogen[(int)Facet.herb] = seedNitrogen[(int)Facet.herb] +
+                                    (parms.fractionAgroundNppToSeeds[(int)Facet.herb] * amt);                 // Translated from CSHED call and complexity of CSRSNK and BGLCIS.Not sure if interpretted correctly.
+
+                            amt = uptake[N_SOIL] * euf[BELOW];
+                            mineralNitrogen[iLayer] = mineralNitrogen[iLayer] - amt;
+                            fineRootNitrogen[(int)Facet.herb] = fineRootNitrogen[(int)Facet.herb] + amt;
+                        }
+                    }
+                    // Takeup nutrients from nitrogen fixation
+                    if (plantNitrogenFixed[(int)Facet.herb] > 0.0)
+                    {
+                        amt = uptake[N_FIX] * euf[ABOVE];
+                        nitrogenSourceSink = nitrogenSourceSink - amt;
+                        leafNitrogen[(int)Facet.herb] = leafNitrogen[(int)Facet.herb] +
+                           ((1.0 - parms.fractionAgroundNppToSeeds[(int)Facet.herb]) * amt);
+                        seedNitrogen[(int)Facet.herb] = seedNitrogen[(int)Facet.herb] +
+                           (parms.fractionAgroundNppToSeeds[(int)Facet.herb] * amt);                 // Translated from CSHED call and complexity of CSRSNK and BGLCIS.Not sure if interpretted correctly.
+
+                        amt = uptake[N_FIX] * euf[BELOW];
+                        nitrogenSourceSink = nitrogenSourceSink - amt;
+                        fineRootNitrogen[(int)Facet.herb] = fineRootNitrogen[(int)Facet.herb] + amt;
+                    }
+                }
+
+                // Update lignin in plant parts incorporating new carbon contributions
+                ligninLeaf[(int)Facet.herb] = leafCarbon[(int)Facet.herb] * plantLigninFraction[(int)Facet.herb, surfaceIndex];
+                ligninFineRoot[(int)Facet.herb] = fineRootCarbon[(int)Facet.herb] * plantLigninFraction[(int)Facet.herb, soilIndex];
+            }
+            else // else no production this month
+            {
+                totalPotProduction[(int)Layer.herb] = 0.0;
+                totalPotProdLimitedByN[(int)Layer.herb] = 0.0;
+                totalPotProduction[(int)Layer.herbUnderShrub] = 0.0;
+                totalPotProdLimitedByN[(int)Layer.herbUnderShrub] = 0.0;
+                totalPotProduction[(int)Layer.herbUnderTree] = 0.0;
+                totalPotProdLimitedByN[(int)Layer.herbUnderTree] = 0.0;
+            }                               // If it is too cold or plants are dormant
+
+        }
+
+        /// <summary>
+        /// Woody growth builds from potential production estimates to calculate actual woody growth, as limited by nutrients
+        /// </summary>
+        private void WoodyGrowth()
+        {
+            // Determine nitrogen available for growth... Woody plants can draw from all four layers
+            double available_nitrogen = 0.0;
+            for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
+            {
+                available_nitrogen = available_nitrogen + mineralNitrogen[iLayer];
+            }
+
+            double site_potential;
+            double avg_pot_production = 0.0;
+            double rimpct;
+            // Century's site potential
+            if (globe.precip < 20.0 / 6.0)
+                site_potential = 1500.0;
+            else if (globe.precip > 90.0 / 6.0)
+                site_potential = 3250.0;
+            else
+                site_potential = Line(globe.precip, 20.0 / 6.0, 1500.0, 90.0 / 6.0, 3250.0);
+            site_potential = site_potential * parms.treeSitePotential;
+
+            // Century includes a downward correction of available minerals for savanna trees.  A module that was in Growth, but shifted here because in Growth in Century it was specific to trees.
+            double tm = Math.Min(available_nitrogen, 1.5);
+            double gnfrac = Math.Exp(-1.664 * Math.Exp(-0.00102 * tm * site_potential) *
+                    parms.treeBasalAreaToGrassNitrogen * treeBasalArea);
+            if (gnfrac < 0.0 || gnfrac > 1.0)
+                gnfrac = 0.0;
+            available_nitrogen = available_nitrogen * gnfrac;
+
+            // Century includes flags set in the schedular to turn growth on or off.  I don't want to do that.  
+            // I wish to use degree - days, or topsoil available water to pet ratio, or temperature limits
+            // Phenology and proportion deciduous are now used to account for no growth by scenscent trees.Could use daylength.Right now, heat accumulation, presumably more sensitive to climate change
+            if (ratioWaterPet > 0.0 && globe.minTemp > 0.0)
+            {
+                double[] cfrac = new double[nWoodyParts];
+                double[] uptake;
+                for (int iFacet = (int)Facet.shrub; iFacet <= (int)Facet.tree; iFacet++)
+                {
+                    // Calculate actual production values, and impact of root biomass on available nitrogen
+                    if ((parms.rootInterceptOnNutrients * fineRootCarbon[iFacet] * 2.5) > 33)
+                        rimpct = 1.0;
+                    else
+                        rimpct = (1.0 - parms.rootInterceptOnNutrients *
+                                Math.Exp(-parms.rootEffectOnNutrients * leafCarbon[iFacet] * 2.5));
+                    // Determine actual production, restricted based on carbon to nitrogen ratios
+                    // The following uses TREE_CFRAC, which is modified through dynamic carbon allocation(TREEDYNC).I would like to skip that, so using a method like in Growth.
+                    // I am going to fill TREE_CFRAC with the values that come from initial distributions.  They will be static.  Those will be done in Each_Year, and may be updated in a given year if appropriate.
+                    // This TREE_CFAC that is static may be inappropriate for deciduous trees.  May need two sets or make it dynamic.
+                    for (int i = 0; i < nWoodyParts; i++)
+                        cfrac[i] = carbonAllocation[iFacet, i];
+
+                    RestrictProduction((Facet)iFacet, 2, available_nitrogen, rimpct, cfrac, out uptake);           // 2 is correct here, just looking at leaves and fine roots.
+
+                    // If the deciduous plants are in scenescence then decrease production by the proportion that are deciduous.  Those trees will not be growing.
+                    if (phenology[iFacet] >= 3.95)  // Comparison to 4.0 exactly may be causing an error.
+                    {
+                        if (iFacet == (int)Facet.shrub)
+                        {
+                            totalPotProduction[(int)Layer.shrub] = totalPotProduction[(int)Layer.shrub] *
+                                                    (1.0 - propAnnualDecid[iFacet]);
+                            totalPotProduction[(int)Layer.shrubUnderTree] = totalPotProduction[(int)Layer.shrubUnderTree] *
+                                                    (1.0 - propAnnualDecid[iFacet]);
+                        }
+                        else
+                        {
+                            totalPotProduction[(int)Layer.tree] = totalPotProduction[(int)Layer.tree] *
+                                                                     (1.0 - propAnnualDecid[iFacet]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                totalPotProduction[(int)Layer.shrub] = 0.0;
+                totalPotProduction[(int)Layer.shrubUnderTree] = 0.0;
+                totalPotProduction[(int)Layer.tree] = 0.0;
+            }
+
+            for (int iFacet = (int)Facet.shrub; iFacet <= (int)Facet.tree; iFacet++)
+            {
+                switch (iFacet)
+                {
+
+                    case (int)Facet.shrub:
+                        avg_pot_production = (totalPotProduction[(int)Layer.shrub] + totalPotProduction[(int)Layer.shrubUnderTree]) / 2.0;
+                        break;
+                    case (int)Facet.tree:
+                        avg_pot_production = totalPotProduction[(int)Layer.tree];
+                        break;
+                }
+
+                // If growth occurs ...
+                if (avg_pot_production > 0.0)
+                {
+                    // Compute carbon allocation fraction for each woody part.
+                    // * *RECALL that production is in biomass units * *but the bulk is proportions allocated, so units are ok.
+                    // Portion left after some is taken by leaves and fine roots.These get priority.This doesn't shift material, just does the preliminary calculations
+                    carbonAllocation[iFacet, (int)WoodyPart.fineRoot] = parms.fractionCarbonToRoots[iFacet];
+                    double cprod_left = avg_pot_production - (avg_pot_production * carbonAllocation[iFacet, (int)WoodyPart.fineRoot]);
+                    carbonAllocation[iFacet, (int)WoodyPart.leaf] = LeafAllocation(iFacet, cprod_left, avg_pot_production);
+
+                    double rem_c_frac = 1.0 - carbonAllocation[iFacet, (int)WoodyPart.fineRoot] - carbonAllocation[iFacet, (int)WoodyPart.leaf];
+                    if (rem_c_frac < 1.0E-05)
+                    {
+                        for (int iPart = (int)WoodyPart.fineBranch; iPart <= (int)WoodyPart.coarseRoot; iPart++) // No carbon left, so the remaining parts get 0 new growth.
+                            carbonAllocation[iFacet, iPart] = 0.0;
+                    }
+                    else
+                    {
+                        // A change from Century ... I don't want to include 10 more parameters controlling (juvenile and mature) carbon allocation to tree parts.
+                        // I am going to use the initial carbon allocation.
+                        double shrub_c_sum = 0.0;
+                        double tree_c_sum = 0.0;
+                        for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                        {
+                            shrub_c_sum = shrub_c_sum + shrubCarbon[iPart];
+                            tree_c_sum = tree_c_sum + treeCarbon[iPart];
+                        }
+                        switch (iFacet)
+                        {
+
+                            case (int)Facet.shrub:
+                                //  Shrubs
+                                if (shrub_c_sum > 0.0) // If a division by zero error would occur, just don't change carbon_allocation
+                                {
+                                    carbonAllocation[(int)Facet.shrub, (int)WoodyPart.fineBranch] = shrubCarbon[(int)WoodyPart.fineBranch] / shrub_c_sum;
+                                    carbonAllocation[(int)Facet.shrub, (int)WoodyPart.coarseBranch] = shrubCarbon[(int)WoodyPart.coarseBranch] / shrub_c_sum;
+                                    carbonAllocation[(int)Facet.shrub, (int)WoodyPart.coarseRoot] = shrubCarbon[(int)WoodyPart.coarseRoot] / shrub_c_sum;
+                                }
+                                break;
+                            case (int)Facet.tree:
+                                // Trees
+                                if (tree_c_sum > 0.0) // If a division by zero error would occur, just don't change carbon_allocation
+                                {
+                                    carbonAllocation[(int)Facet.tree, (int)WoodyPart.fineBranch] = treeCarbon[(int)WoodyPart.fineBranch] / tree_c_sum;
+                                    carbonAllocation[(int)Facet.tree, (int)WoodyPart.coarseBranch] = treeCarbon[(int)WoodyPart.coarseBranch] / tree_c_sum;
+                                    carbonAllocation[(int)Facet.tree, (int)WoodyPart.coarseRoot] = treeCarbon[(int)WoodyPart.coarseRoot] / tree_c_sum;
+                                }
+                                break;
+                        }
+
+                        double tot_cup = carbonAllocation[iFacet, (int)WoodyPart.fineBranch] +
+                                         carbonAllocation[iFacet, (int)WoodyPart.coarseBranch] +
+                                         carbonAllocation[iFacet, (int)WoodyPart.coarseRoot];
+                        if (tot_cup > 0.0)
+                        {
+                            for (int iPart = (int)WoodyPart.fineBranch; iPart <= (int)WoodyPart.coarseRoot; iPart++)
+                                carbonAllocation[iFacet, iPart] = carbonAllocation[iFacet, iPart] / tot_cup * rem_c_frac;
+                        }
+                    }
+
+                    // Calculate actual production values, and impact of root biomass on available nitrogen
+                    if ((parms.rootInterceptOnNutrients * fineRootCarbon[iFacet] * 2.5) > 33.0)
+                        rimpct = 1.0;
+                    else
+                        rimpct = (1.0 - parms.rootInterceptOnNutrients *
+                                  Math.Exp(-parms.rootEffectOnNutrients * fineRootCarbon[iFacet] * 2.5));
+                    // Determine actual production, restricted based on carbon to nitrogen ratios
+                    // The following uses TREE_CFRAC, which is modified through dynamic carbon allocation(TREEDYNC).I would like to skip that, so using a method like in Growth.
+                    // I am going to fill TREE_CFRAC with the values that come from initial distributions.  They will be static.  Those will be done in Each_Year, and may be updated in a given year if appropriate.
+                    // This TREE_CFAC that is static may be inappropriate for deciduous trees.  May need two sets or make it dynamic.
+                    double[] cfrac = new double[nWoodyParts];
+                    double[] uptake;
+                    for (int i = 0; i < nWoodyParts; i++)
+                        cfrac[i] = carbonAllocation[iFacet, i];
+                    RestrictProduction((Facet)iFacet, nWoodyParts, available_nitrogen, rimpct, cfrac, out uptake);
+
+                    // Calculate symbiotic N fixation accumulation
+                    nitrogenFixed[iFacet] = nitrogenFixed[iFacet] + plantNitrogenFixed[iFacet];
+                    // Accumulator was skipped... too many and potentially confusing, so added later.NFIXAC, EUPACC, EUPRT, TCNPRO
+
+                    // Calculate production for each tree part
+                    // This section deals with maintenance respiration calculations
+                    double[] mfprd = new double[nWoodyParts];
+                    for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                    {
+                        mfprd[iPart] = carbonAllocation[iFacet, iPart] * avg_pot_production;
+                        respirationFlows[iFacet] = respirationFlows[iFacet] + mfprd[iPart] + parms.fractionNppToRespiration[iFacet];
+                    }
+                    // Growth of forest parts, with carbon added to the part and removed from the source-sink
+                    for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                    {
+                        switch (iFacet)
+                        {
+                            case (int)Facet.shrub:
+                                shrubCarbon[iPart] = shrubCarbon[iPart] + mfprd[iPart];   // Translated from CSCHED... double-check as needed
+                                break;
+                            case (int)Facet.tree:
+                                treeCarbon[iPart] = treeCarbon[iPart] + mfprd[iPart];    // Translated from CSCHED... double-check as needed
+                                break;
+                        }
+                        carbonSourceSink = carbonSourceSink - mfprd[iPart];
+                    }
+                    fineRootCarbon[iFacet] = fineRootCarbon[iFacet] + mfprd[(int)WoodyPart.fineRoot];
+                    leafCarbon[iFacet] = leafCarbon[iFacet] + ((1.0 - parms.fractionAgroundNppToSeeds[iFacet]) * mfprd[(int)WoodyPart.leaf]);  // Translated from CSHED call and complexity of CSRSNK and BGLCIS.  Not sure if interpretted correctly.
+                    seedCarbon[iFacet] = seedCarbon[iFacet] + (parms.fractionAgroundNppToSeeds[iFacet] * mfprd[(int)WoodyPart.leaf]);   // Translated from CSHED call and complexity of CSRSNK and BGLCIS.  Not sure if interpretted correctly.
+                    fineBranchCarbon[iFacet] = fineBranchCarbon[iFacet] + mfprd[(int)WoodyPart.fineBranch];
+                    coarseBranchCarbon[iFacet] = coarseBranchCarbon[iFacet] + mfprd[(int)WoodyPart.coarseBranch];
+                    coarseRootCarbon[iFacet] = coarseRootCarbon[iFacet] + mfprd[(int)WoodyPart.coarseRoot];
+
+                    // Add maintenance respiration flow
+                    maintainRespiration[iFacet] = maintainRespiration[iFacet] + respirationFlows[iFacet];
+                    carbonSourceSink = carbonSourceSink - respirationFlows[iFacet];
+
+                    // Maintenance respiration fluxes reduce maintenance respiration storage pool
+                    double resp_temp_effect = 0.1 * Math.Exp(0.07 * globe.temperatureAverage);
+                    resp_temp_effect = Math.Min(1.0, resp_temp_effect);
+                    resp_temp_effect = Math.Max(0.0, resp_temp_effect);
+                    double[] fmrspflux = new double[nWoodyParts];
+                    for (int iPart = 0; iPart < nWoodyParts; iPart++) // Merged two looping structures, the first didn't exist in Century, but works with this logic.
+                    {
+                        switch (iFacet)
+                        {
+                            case (int)Facet.shrub:
+                                fmrspflux[iPart] = parms.woodyMaxFractionNppToRespiration[iPart] * resp_temp_effect * shrubCarbon[iPart];
+                                break;
+                            case (int)Facet.tree:
+                                fmrspflux[iPart] = parms.woodyMaxFractionNppToRespiration[iPart] * resp_temp_effect * treeCarbon[iPart];
+                                break;
+                        }
+                        respirationAnnual[iFacet] = respirationAnnual[iFacet] + fmrspflux[iPart];
+                        carbonSourceSink = carbonSourceSink - fmrspflux[iPart];
+                    }
+
+                    double[] euf = new double[nWoodyParts];
+                    // Actual uptake... using the average of the vegetation layer parts
+                    switch (iFacet)
+                    {
+                        case (int)Facet.shrub:
+                            if ((totalPotProdLimitedByN[(int)Layer.shrub] + totalPotProdLimitedByN[(int)Layer.shrubUnderTree] / 2.0) > 0.0)
+                            {
+                                for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                                    euf[iPart] = eUp[iFacet, iPart] / ((totalPotProdLimitedByN[(int)Layer.shrub] +
+                                                                        totalPotProdLimitedByN[(int)Layer.shrubUnderTree]) / 2.0);
+                            }
+                            else
+                            {
+                                for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                                    euf[iPart] = 1.0;      // Will cause no change later in the logic.
+                            }
+                            break;
+                        case (int)Facet.tree:
+                            if (totalPotProdLimitedByN[(int)Layer.tree] > 0.0)
+                            {
+                                for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                                    euf[iPart] = eUp[iFacet, iPart] / totalPotProdLimitedByN[(int)Layer.tree];
+                            }
+                            else
+                            {
+                                for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                                    euf[iPart] = 1.0;      // Will cause no change later in the logic.
+                            }
+                            break;
+                    }
+
+                    // Takeup nutrients from internal storage pool.
+                    double amt;
+                    if (storedNitrogen[iFacet] > 0.0)
+                    {
+                        for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                        {
+                            amt = uptake[N_STORE] * euf[iPart];
+                            switch (iFacet)
+                            {
+                                case (int)Facet.shrub:
+                                    shrubNitrogen[iPart] = shrubNitrogen[iPart] + amt;
+                                    break;
+                                case (int)Facet.tree:
+                                    treeNitrogen[iPart] = treeNitrogen[iPart] + amt;
+                                    break;
+                            }
+                            storedNitrogen[iFacet] = storedNitrogen[iFacet] - amt;
+                        }
+                    }
+                    fineRootNitrogen[iFacet] = fineRootNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.fineRoot]);
+                    leafNitrogen[iFacet] = leafNitrogen[iFacet] + (1.0 - parms.fractionAgroundNppToSeeds[iFacet]) * (uptake[N_STORE] * euf[(int)WoodyPart.leaf]);
+                    seedNitrogen[iFacet] = seedNitrogen[iFacet] + (parms.fractionAgroundNppToSeeds[iFacet]) * (uptake[N_STORE] * euf[(int)WoodyPart.leaf]);
+                    fineBranchNitrogen[iFacet] = fineBranchNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.fineBranch]);
+                    coarseBranchNitrogen[iFacet] = coarseBranchNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.coarseBranch]);
+                    coarseRootNitrogen[iFacet] = coarseRootNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.coarseRoot]);
+
+                    // Takeup nutrients from the soil. ... Woody plants take nutrients from all four layers
+                    double fsol;
+                    double calcup;
+                    for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
+                    {
+                        if (mineralNitrogen[iLayer] > 0.00001)
+                        {
+                            fsol = 1.0;
+                            if (available_nitrogen > 0.00001)
+                                calcup = uptake[N_SOIL] * mineralNitrogen[iLayer] * fsol / available_nitrogen;
+                            else
+                                calcup = 0.0;
+                            for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                            {
+                                amt = calcup * euf[iPart];
+                                switch (iFacet)
+                                {
+                                    case (int)Facet.shrub:
+                                        shrubNitrogen[iPart] = shrubNitrogen[iPart] + amt;
+                                        break;
+                                    case (int)Facet.tree:
+                                        treeNitrogen[iPart] = treeNitrogen[iPart] + amt;
+                                        break;
+                                }
+                                mineralNitrogen[iLayer] = mineralNitrogen[iLayer] - amt;
+                            }
+                            fineRootNitrogen[iFacet] = fineRootNitrogen[iFacet] + (calcup * euf[(int)WoodyPart.fineRoot]);
+                            leafNitrogen[iFacet] = leafNitrogen[iFacet] + (calcup * euf[(int)WoodyPart.leaf]);
+                            fineBranchNitrogen[iFacet] = fineBranchNitrogen[iFacet] + (calcup * euf[(int)WoodyPart.fineBranch]);
+                            coarseBranchNitrogen[iFacet] = coarseBranchNitrogen[iFacet] + (calcup * euf[(int)WoodyPart.coarseBranch]);
+                            coarseRootNitrogen[iFacet] = coarseRootNitrogen[iFacet] + (calcup * euf[(int)WoodyPart.coarseRoot]);
+                        }
+                    }
+
+                    // Takeup nutrients from nitrogen fixation.
+                    if (plantNitrogenFixed[iFacet] > 0.000001)
+                    {
+                        for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                        {
+                            amt = uptake[N_FIX] * euf[iPart];
+                            switch (iFacet)
+                            {
+                                case (int)Facet.shrub:
+                                    shrubNitrogen[iPart] = shrubNitrogen[iPart] + amt;
+                                    break;
+                                case (int)Facet.tree:
+                                    treeNitrogen[iPart] = treeNitrogen[iPart] + amt;
+                                    break;
+                            }
+                            nitrogenSourceSink = nitrogenSourceSink - amt;
+                        }
+                        fineRootNitrogen[iFacet] = fineRootNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.fineRoot]);
+                        leafNitrogen[iFacet] = leafNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.leaf]);
+                        fineBranchNitrogen[iFacet] = fineBranchNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.fineBranch]);
+                        coarseBranchNitrogen[iFacet] = coarseBranchNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.coarseBranch]);
+                        coarseRootNitrogen[iFacet] = coarseRootNitrogen[iFacet] + (uptake[N_STORE] * euf[(int)WoodyPart.coarseRoot]);
+                    }
+
+                    // Update lignin in plant parts incorporating new carbon contributions
+                    ligninLeaf[iFacet] = leafCarbon[iFacet] * plantLigninFraction[iFacet, surfaceIndex];
+                    ligninFineRoot[iFacet] = fineRootCarbon[iFacet] * plantLigninFraction[iFacet, soilIndex];
+                    ligninFineBranch[iFacet] = fineBranchCarbon[iFacet] * plantLigninFraction[iFacet, surfaceIndex];
+                    ligninCoarseBranch[iFacet] = coarseBranchCarbon[iFacet] * plantLigninFraction[iFacet, surfaceIndex];
+                    ligninCoarseRoot[iFacet] = coarseRootCarbon[iFacet] * plantLigninFraction[iFacet, soilIndex];
+                }
+                else
+                {
+                    // There is no production this month
+                    switch (iFacet)
+                    {
+                        case (int)Facet.shrub:
+                            totalPotProdLimitedByN[(int)Layer.shrub] = 0.0;
+                            totalPotProduction[(int)Layer.shrub] = 0.0;
+                            totalPotProdLimitedByN[(int)Layer.shrubUnderTree] = 0.0;
+                            totalPotProduction[(int)Layer.shrubUnderTree] = 0.0;
+                            break;
+                        case (int)Facet.tree:
+                            totalPotProdLimitedByN[(int)Layer.tree] = 0.0;
+                            totalPotProduction[(int)Layer.tree] = 0.0;
+                            break;
+                    }
+                    for (int iPart = 0; iPart < nWoodyParts; iPart++)
+                        eUp[iFacet, iPart] = 0.0;
+                }
+            }
+        }
+
+    /// <summary>
+    /// Restrict actual production for plants based on carbon to nitrogen ratios
+    /// Note, currently(and it could be changed for clarity), cfrac stores carbon allocation in ABOVE and BELOW for herbs,
+    /// in plant parts for woody plants.
+    /// </summary>
+    /// <param name="iFacet">Facet under consideration</param>
+    /// <param name="nparts"></param>
+    /// <param name="availableNitrogen"></param>
+    /// <param name="rimpct"></param>
+    /// <param name="cfrac"></param>
+    /// <param name="uptake"></param>
+    private void RestrictProduction(Facet iFacet, int nparts, double availableNitrogen, double rimpct, double[] cfrac, out double[] uptake)
+        {
+            uptake = new double[3];
+            if ((availableNitrogen <= 1E-4) && (parms.maxSymbioticNFixationRatio == 0.0))
+                return;     // Won't things go unset?  Set something to zero?
+
+            // Calculate available nitrogen based on maximum fraction and impact of root biomass
+            double n_available = (availableNitrogen * parms.fractionNitrogenAvailable * rimpct) + storedNitrogen[(int)iFacet];
+
+            // Compute weighted average carbon to biomass conversion factor.  
+            // The structure is a little odd here, because this section can be called for grasses or trees.
+
+            // ctob is a weighted average carbon to biomass conversion factor
+            // I don't trust the structure, replacing with a simplier structure (but the other now appears correct as well)
+            double ctob;
+            if (iFacet == Facet.herb)
+                ctob = 2.5;              // The same conversion is used above and below ground
+            else
+                ctob = (cfrac[(int)WoodyPart.leaf] * 2.5) + (cfrac[(int)WoodyPart.fineRoot] * 2.5) + (cfrac[(int)WoodyPart.fineBranch] * 2.0) +
+                       (cfrac[(int)WoodyPart.coarseBranch] * 2.0) + (cfrac[(int)WoodyPart.coarseRoot] * 2.0);       // Note conversion from carbon to biomass for wood parts is 2.0, rather than 2.5
+
+            // Calculate average N/ C of whole plant(grass, shrub, or tree)
+            double max_n = 0.0;
+            double[] min_n_ci = new double[nWoodyParts];
+            double[] max_n_ci = new double[nWoodyParts];
+            for (int iPart = 0; iPart < nWoodyParts; iPart++)
+            {
+                min_n_ci[iPart] = 1.0 / parms.maximumCNRatio[(int)iFacet, iPart];  // CHECK THIS.  IS IT IN ERROR?  Unusual formatting in CENTURY
+                max_n_ci[iPart] = 1.0 / parms.minimumCNRatio[(int)iFacet, iPart];  // Note that indicators maximum and minimum are flipped
+            }
+            // The following bases results on shoots and roots only.It works for herbs and woody as well given that the two values of interest are 1 and 2 regardless.
+            max_n = max_n + (cfrac[(int)WoodyPart.fineRoot] * max_n_ci[(int)WoodyPart.fineRoot]);      // CENTURY includes a biomass to carbon convertion on CFRAC(FROOT) * MAXECI.I'm not sure why.   I've removed them for now.
+            max_n = max_n + ((1.0 - cfrac[(int)WoodyPart.fineRoot]) * max_n_ci[(int)WoodyPart.leaf]);  // CENTURY includes a biomass to carbon convertion on CFRAC(FROOT) * MAXECI.I'm not sure why.   I've removed them for now.
+
+            // Calculate average nutrient content
+            //   max_n = max_n * ctob! Skipping this for now(counter to CENTURY RSTRP.F).So MAX_N is being passed as a weighted nitrogen concentration.Converting what I have to biomass doesn't make any sense.
+
+            // Compute the limitation on nutrients.Min_N need not be passed.It used in Century only for automatic fertilization.
+            NutrientLimitation(iFacet, nparts, max_n, min_n_ci, max_n_ci, cfrac, ref ctob, n_available);
+
+            // Calculate relative yield skipped for now.Not used in module.
+
+            double temp_prod = 0.0;
+            // Calculate uptake from all sources (storage, soil, plant n fixed)
+            switch (iFacet)   // Need to use the average of production.  
+            {
+                case Facet.herb:
+                    temp_prod = (totalPotProdLimitedByN[(int)Layer.herb] + totalPotProdLimitedByN[(int)Layer.herbUnderShrub] +
+                                 totalPotProdLimitedByN[(int)Layer.herbUnderTree]) / 3.0;
+                    break;
+                case Facet.shrub:
+                    temp_prod = (totalPotProdLimitedByN[(int)Layer.shrub] + totalPotProdLimitedByN[(int)Layer.shrubUnderTree]) / 2.0;
+                    break;
+                case Facet.tree:
+                    temp_prod = totalPotProdLimitedByN[(int)Layer.tree];
+                    break;
+            }
+            double ustorg = Math.Min(storedNitrogen[(int)iFacet], temp_prod);
+            // If the storage pool contains all that is needed for uptake, then...
+            if (temp_prod <= ustorg)
+            {
+                uptake[N_STORE] = temp_prod;
+                uptake[N_SOIL] = 0.0;
+            }
+            // Otherwise take what is needed from the storage pool(unneeded elseif in Century, skipped)
+            else
+            {
+                uptake[N_STORE] = storedNitrogen[(int)iFacet];
+                uptake[N_SOIL] = temp_prod - storedNitrogen[(int)iFacet] - plantNitrogenFixed[(int)iFacet];
+            }
+            uptake[N_FIX] = plantNitrogenFixed[(int)iFacet];
+        }
+
+        /// <summary>
+        /// Compute nutrient limitation on growth  (NUTRLM.F in Century)
+        /// </summary>
+        /// <param name="iFacet"></param>
+        /// <param name="nParts"></param>
+        /// <param name="maxN"></param>
+        /// <param name="minNCi"></param>
+        /// <param name="maxNCi"></param>
+        /// <param name="cFrac"></param>
+        /// <param name="ctob"></param>
+        /// <param name="availableNitrogen"></param>
+        private void NutrientLimitation(Facet iFacet, int nParts, double maxN, double[] minNCi, double[] maxNCi, double[] cFrac, ref double ctob, double availableNitrogen)
+        {
+            // A lengthy section within NUTRLM deals with P and S and was skipped
+
+            // Get the total production for the facet.  Include the different layers(i.e., do not take the average, as that will reduce total production by default)
+            double max_n_fix = 0.0;
+            double total_pot_production_biomass = 0.0;
+            switch (iFacet)
+            {
+                case Facet.herb:
+                    total_pot_production_biomass = totalPotProduction[(int)Layer.herb] + totalPotProduction[(int)Layer.herbUnderShrub] +
+                                                  totalPotProduction[(int)Layer.herbUnderTree];
+                    break;
+                case Facet.shrub:
+                    total_pot_production_biomass = totalPotProduction[(int)Layer.shrub] + totalPotProduction[(int)Layer.shrubUnderTree];
+                    break;
+                case Facet.tree:
+                    total_pot_production_biomass = totalPotProduction[(int)Layer.tree];
+                    break;
+            }
+
+            // Convert to carbon
+            double total_pot_production_carbon = total_pot_production_biomass / ctob;
+            // Demand based on the maximum nitrogen / carbon ratio
+            // Max_n is the maximum nitrogen to carbon ratio ... convert to carbon then multiply by N: C ratio.  so X:C yields demand
+            double demand = total_pot_production_carbon * maxN;  //  Weighted concentration of nitrogen in plant parts
+            max_n_fix = parms.maxSymbioticNFixationRatio * total_pot_production_carbon;
+            double totaln = availableNitrogen + max_n_fix;
+
+            // Calculation of a2drat(n) skipped.It appears associated with dynamic carbon allocation, not implemented here, and not used in this module.
+
+            double[] ecfor = new double[nWoodyParts];
+            double totaln_used = 0.0;
+            // New N/ C ratios based on nitrogen available
+            if (totaln > demand)
+            {
+                for (int iPart = 0; iPart < nParts; iPart++)
+                {
+                    ecfor[iPart] = maxNCi[iPart];    // Nitrogen is readily available, and the maximum concentration per part is appropriate
+                }
+                totaln_used = demand;   //  Setting a division equal to 1, essentially, used later
+            }
+            else
+            {
+                if (demand == 0.0)
+                {
+                    //       write(*, *) 'Error in Nutrient_Limitation, demand = 0.0'! Disabling warning ... in a global model, a cell with no demand is reasonable, in the high arctic, say.
+                    //       stop DEBUG
+                    // The following is part of the DEBUG, to avoid errors    !DEBUG
+                    demand = 0.001;   // DEBUG
+                }
+                for (int iPart = 0; iPart < nParts; iPart++)
+                {
+                    ecfor[iPart] = minNCi[iPart] + ((maxNCi[iPart] - minNCi[iPart]) * (totaln / demand));  // Nitrogen is limited, and so a fractional portion is assigned
+                    totaln_used = totaln;
+                }
+            }
+
+            double cpbe = 0.0;
+            ctob = 0.0;
+            // Total potential production with nutrient limitation.  Here CPBE remains a N to C ratio, but adjusted for demand.
+            for (int iPart = 0; iPart < nParts; iPart++)
+            {
+                if (iPart < (int)WoodyPart.fineBranch)
+                {
+                    cpbe = cpbe + ((cFrac[iPart] * ecfor[iPart]) / 2.5);     // Leaves and fine roots
+                    ctob = ctob + (cFrac[iPart] * 2.5);          // From RESTRP.F
+                }
+                else
+                {
+                    cpbe = cpbe + ((cFrac[iPart] * ecfor[iPart]) / 2.0);  // Fine and coarse branches and coarse roots
+                    ctob = ctob + (cFrac[iPart] * 2.0);          // From RESTRP.F
+                }
+            }
+
+            // Increase the nitrogen estimate in line with an increase in carbon to biomass conversion(i.e., between 2 and 2.5 based on plant parts involved)
+            // Send the cpbe value from carbon to biomass
+            cpbe = cpbe * ctob;
+            if (cpbe == 0.0)
+            {
+                //     write(*, *) 'Error in Nutrient Limitation, CPBE = 0.0'! Disabling warning ... in a global model, a cell with no demand is reasonable, in the high arctic, say.
+                //       stop DEBUG
+                // The following is part of the DEBUG, to avoid errors    !DEBUG
+                cpbe = 0.001;
+            }
+
+            // Calculate potential production for the nutrient limitation
+
+            cpbe = totaln_used / cpbe;
+
+            // Automatic fertilization methods skipped.
+            // See if production is limited by nutrients(works to compute limiting nutrient in Century, but just one here)
+            if (total_pot_production_biomass > cpbe)
+            {
+                total_pot_production_biomass = total_pot_production_biomass * (totaln_used / demand);
+            }
+
+            // Adjustments considering P skipped.P not considered here.
+            // Total potential production with nitrogen limitation
+            // First store nitrogen uptake per plant part.Note use of carbon here, rather than biomass as in Century.Carbon is being related to nitrogen here.
+            for (int iPart = 0; iPart < nParts; iPart++)
+            {
+                eUp[(int)iFacet, iPart] = total_pot_production_carbon * cFrac[iPart] * ecfor[iPart];
+                if (eUp[(int)iFacet, iPart] < 0.0)
+                    eUp[(int)iFacet, iPart] = 0.0;
+            }
+            // Then put in limited production estimates
+
+            double[] lfrac = new double[vLayers];
+            switch (iFacet)
+            {
+                case Facet.herb:
+                    // Assuming production is in-line with existing biomass, so using a weighted average.
+                    // Total_pot_production is calculated from first principles, so I will use that as a guide.Using a little brute force, for speed
+                    // Total_pot_production isn't limited by n, but assuming all the layers are equally affected by n limitation is appropriate.
+                    if ((totalPotProduction[(int)Layer.herb] + totalPotProduction[(int)Layer.herbUnderShrub] +
+                         totalPotProduction[(int)Layer.herbUnderTree]) >= 0.00001)
+                    {
+                        lfrac[(int)Layer.herb] = totalPotProduction[(int)Layer.herb] / (totalPotProduction[(int)Layer.herb] +
+                                                 totalPotProduction[(int)Layer.herbUnderShrub] + totalPotProduction[(int)Layer.herbUnderTree]);
+                        lfrac[(int)Layer.herbUnderShrub] = totalPotProduction[(int)Layer.herbUnderShrub] / (totalPotProduction[(int)Layer.herb] +
+                                                 totalPotProduction[(int)Layer.herbUnderShrub] + totalPotProduction[(int)Layer.herbUnderTree]);
+                        lfrac[(int)Layer.herbUnderTree] = totalPotProduction[(int)Layer.herbUnderTree] / (totalPotProduction[(int)Layer.herb] +
+                                                 totalPotProduction[(int)Layer.herbUnderShrub] + totalPotProduction[(int)Layer.herbUnderTree]);
+                    }
+                    else
+                    {
+                        lfrac[(int)Layer.herb] = 0.0;
+                        lfrac[(int)Layer.herbUnderShrub] = 0.0;
+                        lfrac[(int)Layer.herbUnderTree] = 0.0;
+                    }
+                    totalPotProdLimitedByN[(int)Layer.herb] = total_pot_production_biomass * lfrac[(int)Layer.herb];
+                    totalPotProdLimitedByN[(int)Layer.herbUnderShrub] = total_pot_production_biomass * lfrac[(int)Layer.herbUnderShrub];
+                    totalPotProdLimitedByN[(int)Layer.herbUnderTree] = total_pot_production_biomass * lfrac[(int)Layer.herbUnderTree];
+                    break;
+                case Facet.shrub:
+                    if ((totalPotProduction[(int)Layer.shrub] + totalPotProduction[(int)Layer.shrubUnderTree]) >= 0.00001)
+                    {
+                        lfrac[(int)Layer.shrub] = totalPotProduction[(int)Layer.shrub] / (totalPotProduction[(int)Layer.shrub] +
+                            totalPotProduction[(int)Layer.shrubUnderTree]);
+                        lfrac[(int)Layer.shrubUnderTree] = totalPotProduction[(int)Layer.shrubUnderTree] / (totalPotProduction[(int)Layer.shrub] +
+                            totalPotProduction[(int)Layer.shrubUnderTree]);
+                    }
+                    else
+                    {
+                        lfrac[(int)Layer.shrub] = 0.0;
+                        lfrac[(int)Layer.shrubUnderTree] = 0.0;
+                    }
+                    totalPotProdLimitedByN[(int)Layer.shrub] = total_pot_production_biomass * lfrac[(int)Layer.shrub];
+                    totalPotProdLimitedByN[(int)Layer.shrubUnderTree] = total_pot_production_biomass * lfrac[(int)Layer.shrubUnderTree];
+                    break;
+                case Facet.tree:
+                    totalPotProdLimitedByN[(int)Layer.tree] = total_pot_production_biomass;
+                    break;
+            }
+
+            // Compute nitrogen fixation that actually occurs(Using average for plant nitrogen fixed in shrubs
+            switch (iFacet)
+            {
+                case Facet.herb:
+                    plantNitrogenFixed[(int)iFacet] = Math.Max(totaln_used - availableNitrogen, 0.0);
+                    break;
+                case Facet.shrub:
+                    plantNitrogenFixed[(int)iFacet] = Math.Max(totaln_used - availableNitrogen, 0.0);
+                    break;
+                case Facet.tree:
+                    plantNitrogenFixed[(int)iFacet] = Math.Max(totaln_used - availableNitrogen, 0.0);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Compute optimum leaf area index, based on a maximum and available production
+        /// </summary>
+        /// <param name="iFacet"></param>
+        /// <param name="cProdLeft"></param>
+        /// <param name="cprodf"></param>
+        /// <returns></returns>
+        private double LeafAllocation(int iFacet, double cProdLeft, double cprodf)
+        {
+            if (coarseBranchCarbon[iFacet] > 0.0)
+            {
+                optimumLeafAreaIndex[iFacet] = parms.maximumLeafAreaIndex *
+                        (coarseBranchCarbon[iFacet] * 2.0) / (parms.kLeafAreaIndex +
+                        (coarseBranchCarbon[iFacet] * 2.0));
+                if (optimumLeafAreaIndex[iFacet] < 0.1)
+                    optimumLeafAreaIndex[iFacet] = 0.1;
+            }
+            else
+            {
+                optimumLeafAreaIndex[iFacet] = 0.1;
+            }
+
+            double leafprod;
+            double rleavc_opt = optimumLeafAreaIndex[iFacet] / (2.5 * parms.biomassToLeafAreaIndexFactor);
+            if (rleavc_opt > leafCarbon[iFacet])
+                leafprod = Math.Min((rleavc_opt - leafCarbon[iFacet]), cProdLeft);
+            else
+                leafprod = 0.0;
+
+            double result;
+            if (cprodf > 0.0)
+                result = leafprod / cprodf;
+            else
+                // !!NOTE!! CENTURY has this as 0, which is likely appropriate once trees get larger and optimum lia is more reasonable.
+                result = 0.01;
+            if (result < 0.01)
+                result = 0.01;    // This trims where Century throws errors.
+            if (result > 1.0)
+                result = 1.0;
+            return result;
+        }
+
+        /// <summary>
+        /// Remove forage that is grazed (GREM in Century).
+        /// </summary>
+        private void Grazing()
+        {
+            double total_carbon = 0.0;
+            double total_nitrogen = 0.0;
+            double carbon_removed;
+            double nitrogen_removed;
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                // Shoots removed.  Moving away from Century somewhat.
+                if (leafCarbon[iFacet] > 0.0)
+                    carbon_removed = leafCarbon[iFacet] * (fractionLiveRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                else
+                    carbon_removed = 0.0;
+                if (leafNitrogen[iFacet] > 0.0)
+                    nitrogen_removed = leafNitrogen[iFacet] * (fractionLiveRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                else
+                    nitrogen_removed = 0.0;
+                leafCarbon[iFacet] = leafCarbon[iFacet] - carbon_removed;
+                leafNitrogen[iFacet] = leafNitrogen[iFacet] - nitrogen_removed;
+                carbonSourceSink = carbonSourceSink + carbon_removed;
+                nitrogenSourceSink = nitrogenSourceSink + nitrogen_removed;
+                total_carbon = total_carbon + carbon_removed;
+                total_nitrogen = total_nitrogen + nitrogen_removed;
+
+                // Standing dead removed.
+                if (deadStandingCarbon[iFacet] > 0.0)
+                    carbon_removed = deadStandingCarbon[iFacet] * (fractionDeadRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                else
+                    carbon_removed = 0.0;
+                if (deadStandingNitrogen[iFacet] > 0.0)
+                    nitrogen_removed = deadStandingNitrogen[iFacet] * (fractionDeadRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                else
+                    nitrogen_removed = 0.0;
+                deadStandingCarbon[iFacet] = deadStandingCarbon[iFacet] - carbon_removed;
+                deadStandingNitrogen[iFacet] = deadStandingNitrogen[iFacet] - nitrogen_removed;
+                carbonSourceSink = carbonSourceSink + carbon_removed;
+                nitrogenSourceSink = nitrogenSourceSink + nitrogen_removed;
+                total_carbon = total_carbon + carbon_removed;
+                total_nitrogen = total_nitrogen + nitrogen_removed;
+            }
+
+            // Return portions of the carbon and nitrogen grazed back to the environment.  Carbon in the form of feces, urine includes nitrogen.
+            double nitrogen_returned;
+            double fraction_nitrogen_grazed_returned;
+            double carbon_returned = parms.fractionCarbonGrazedReturned * total_carbon;
+            if (carbon_returned <= 0.0)
+            {
+                carbon_returned = 0.0;
+                nitrogen_returned = 0.0;
+                fraction_nitrogen_grazed_returned = 0.0;
+            }
+            else
+            {
+                // The portion of nitrogen returned is a function of clay content(CENTURY GREM.F)
+                if (clay[surfaceIndex] < 0.0)
+                    fraction_nitrogen_grazed_returned = 0.7;
+                else if (clay[surfaceIndex] > 0.3)
+                    fraction_nitrogen_grazed_returned = 0.85;
+                else
+                    fraction_nitrogen_grazed_returned = (0.85 - 0.7) / (0.3 - 0.0) * (clay[surfaceIndex] - 0.3) + 0.85;
+            }
+            nitrogen_returned = fraction_nitrogen_grazed_returned * total_nitrogen;
+            double urine = (1.0 - parms.fractionExcretedNitrogenInFeces) * nitrogen_returned;
+            double feces = parms.fractionExcretedNitrogenInFeces * nitrogen_returned;
+
+            // Do flows
+            mineralNitrogen[surfaceIndex] = mineralNitrogen[surfaceIndex] + urine;
+            nitrogenSourceSink = nitrogenSourceSink - urine;
+
+            volatizedN = volatizedN * (parms.fractionUrineVolatized * urine);
+            urine = urine - volatizedN;
+
+            // Move materials into litter
+            double avg_lignin = (ligninLeaf[(int)Facet.herb] + ligninLeaf[(int)Facet.shrub] + ligninLeaf[(int)Facet.tree]) / 3.0;
+            avg_lignin = Math.Max(0.02, avg_lignin);   // From Century CmpLig.f
+            avg_lignin = Math.Min(0.50, avg_lignin);
+            PartitionLitter(surfaceIndex, feces, urine, avg_lignin);  
+        }
+
+        /// <summary>
+        /// Plant material dies for various reasons.  This routine includes a call to Woody_Plant_Part_Death.
+        /// </summary>
+        private void PlantPartDeath()
+        {
+            double deck5 = 5.0;         // Value appears standard in 100 files.Not documented anywhere I can find.
+            double death_rate;
+            double death_carbon;
+            double death_nitrogen;
+            // Death of herb fine roots(DROOT.F)
+            if ((fineRootCarbon[(int)Facet.herb] > 0.0) && soilSurfaceTemperature > 0.0)
+            {
+                // In the following, water_available(1) is for growth, 2 is for survival, 3 for the top two layers.
+                // For C#, make that: water_available[0] is for growth, 1 is for survival, 2 for the top two layers.
+                double rtdh = 1.0 - waterAvailable[0] / (deck5 + waterAvailable[0]);    // Deck5 is set, so no division by 0.Century uses the first layer... avh20(1) like here.
+                death_rate = parms.maxHerbRootDeathRate * rtdh;
+                if (death_rate > 0.95)
+                    death_rate = 0.95;
+                if (death_rate > 0.0)
+                    death_carbon = death_rate * fineRootCarbon[(int)Facet.herb];
+                else
+                    death_carbon = 0.0;
+                // Moving away from CENTURY here, which goes into labeled materials, etc.
+                if (death_rate > 0.0 && fineRootNitrogen[(int)Facet.herb] > 0.0)
+                    death_nitrogen = death_rate * fineRootNitrogen[(int)Facet.herb];
+                else
+                    death_nitrogen = 0.0;
+                // Do flows for plant parts
+                // Dead fine root carbon and nitrogen are short - term data holders, reset at the end of each month.The
+                // material is passed directly to litter.
+                deadFineRootCarbon[(int)Facet.herb] = deadFineRootCarbon[(int)Facet.herb] + death_carbon;
+                fineRootCarbon[(int)Facet.herb] = fineRootCarbon[(int)Facet.herb] - death_carbon;
+                deadFineRootNitrogen[(int)Facet.herb] = deadFineRootNitrogen[(int)Facet.herb] + death_nitrogen;
+                fineRootNitrogen[(int)Facet.herb] = fineRootNitrogen[(int)Facet.herb] - death_nitrogen;
+                // Do flows to litter, keeping track of structural and metabolic components
+                // Dead fine root carbon is already partitioned to litter in the main decomposition program.The same is true for seeds.
+                // A portion of stored carbon for maintence respiration is loss associated with death of plant part.                 ! FLOWS may be misnamed, or the wrong indicator.
+                respirationFlows[(int)Facet.herb] = respirationFlows[(int)Facet.herb] - (respirationFlows[(int)Facet.herb] * death_rate);
+            }
+
+            // Death of leaves and shoots(DSHOOT.F)
+            // *****INCLUDE STANDING DEAD HERE, RATHER THAN TRANSFERS TO BELOW - GROUND * ****
+            // (Century uses aboveground live carbon)  
+            if (leafCarbon[(int)Facet.herb] > 0.00001)
+            {
+                // Century increases to the maximum the death rate during month of senescencee.  I am going to experiment using phenology
+                // Century uses a series of four additional parameters for shoot death.  They describe losses due to 1) water stress, 2) phenology, and 3) shading as indicated in 4.
+                if (phenology[(int)Facet.herb] >= 3.95)   // Comparison to 4.0 exactly may be causing an issue.
+                    // Weighted so that annuals move entirely to standing dead, but are likely just a portion of the total herbs
+                    // Should include death rate
+                    // Edited to include water function in death rate for non - annual plants - 02 / 13 / 2013
+                    death_rate = parms.shootDeathRate[1] * (1.0 - propAnnualDecid[(int)Facet.herb]) * waterFunction;
+                else
+                    death_rate = parms.shootDeathRate[0] * waterFunction;
+                if (month == parms.monthToRemoveAnnuals)
+                    death_rate = death_rate + propAnnualDecid[(int)Facet.herb];    // A one-time loss, so not corrected by month
+                if (leafCarbon[(int)Facet.herb] > parms.shootDeathRate[3])          // Shoot death rate 4 [3 in C#] stores g / m ^ 2, a threshold for shading affecting shoot death, stored in 3
+                    death_rate = death_rate + parms.shootDeathRate[2];
+
+                death_rate = Math.Min(1.0, death_rate);
+                death_rate = Math.Max(0.0, death_rate);
+                death_carbon = death_rate * leafCarbon[(int)Facet.herb];
+                // Moving away from CENTURY here, which goes into labeled materials, etc.
+                death_nitrogen = death_rate * leafNitrogen[(int)Facet.herb];
+                //  Do flows for plant parts
+                // NOTE:  dead_leaf_carbon, dead_leaf_nitrogen are accumulators only, and cleared at the end of the month.They
+                //        are not used in modeling.Leaves go from living to standing dead, and standing dead is the main operator.
+                deadLeafCarbon[(int)Facet.herb] = deadLeafCarbon[(int)Facet.herb] + death_carbon;
+                deadStandingCarbon[(int)Facet.herb] = deadStandingCarbon[(int)Facet.herb] + death_carbon;
+                leafCarbon[(int)Facet.herb] = leafCarbon[(int)Facet.herb] - death_carbon;
+                deadStandingNitrogen[(int)Facet.herb] = deadStandingNitrogen[(int)Facet.herb] + death_nitrogen;
+                deadLeafNitrogen[(int)Facet.herb] = deadLeafNitrogen[(int)Facet.herb] + death_nitrogen;
+                leafNitrogen[(int)Facet.herb] = leafNitrogen[(int)Facet.herb] - death_nitrogen;
+                // Do flows to litter, keeping track of structural and metabolic components
+                // Not using Partition_Litter here.  The leaves and shoots from herbs go to standing dead biomass.That is handled elsewhere
+                // A portion of stored carbon for maintence respiration is loss associated with death of plant part.    ! FLOWS may be misnamed, or the wrong indicator.
+                respirationFlows[(int)Facet.herb] = respirationFlows[(int)Facet.herb] - (respirationFlows[(int)Facet.herb] * death_rate);
+                // Death of seeds
+                if (seedCarbon[(int)Facet.herb] > 0.00001)
+                    death_carbon = seedCarbon[(int)Facet.herb] * (parms.fractionSeedsNotGerminated[(int)Facet.herb] / 12.0);
+                else
+                    death_carbon = 0.0;
+
+                if (seedNitrogen[(int)Facet.herb] > 0.00001)
+                    death_nitrogen = seedNitrogen[(int)Facet.herb] * (parms.fractionSeedsNotGerminated[(int)Facet.herb] / 12.0);
+                else
+                    death_nitrogen = 0.0;
+                deadSeedCarbon[(int)Facet.herb] = deadSeedCarbon[(int)Facet.herb] + death_carbon;
+                seedCarbon[(int)Facet.herb] = seedCarbon[(int)Facet.herb] - death_carbon;
+                deadSeedNitrogen[(int)Facet.herb] = deadSeedNitrogen[(int)Facet.herb] + death_nitrogen;
+                seedNitrogen[(int)Facet.herb] = seedNitrogen[(int)Facet.herb] - death_nitrogen;
+                // Seeds won't play a role in respiration.  These seeds are destined for decomposition only.
+                // Do flows to litter for seeds, keeping track of structural and metabolic components
+                // Seeds are partitioned to litter in the main decomposition module, so removed here.
+            }
+
+            // Leaf death, Fine branch death, Coarse stem death, Fine root death, Coarse root death
+            WoodyPlantPartDeath();
+
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                // Simulate fall of standing dead to litter, for all facets
+                if (deadStandingCarbon[iFacet] > 0.00001)
+                    death_carbon = deadStandingCarbon[iFacet] * parms.fallRateOfStandingDead[iFacet];
+                else
+                    death_carbon = 0.0;
+                if (deadStandingNitrogen[iFacet] > 0.00001)
+                    death_nitrogen = deadStandingNitrogen[iFacet] * parms.fallRateOfStandingDead[iFacet];
+                else
+                    death_nitrogen = 0.0;
+
+                // Do flows for plant parts
+                deadStandingCarbon[iFacet] = deadStandingCarbon[iFacet] - death_carbon;
+                deadStandingNitrogen[iFacet] = deadStandingNitrogen[iFacet] - death_nitrogen;
+                // Do flows to litter, keeping track of structural and metabolic components
+                PartitionLitter(surfaceIndex, death_carbon, death_nitrogen, plantLigninFraction[iFacet, surfaceIndex]);
+            }
+
+            // Simulate fire for all the facets
+            // Decide whether fire is being modeled.   If maps are being used, then move ahead(too many possibilities to judge if fire is not occurring in the maps).
+            // If maps are not being used, then check to see that the frequency of fire and the fraction burned are both greater than 0.
+            // Otherwise, there is no fire.
+            double proportion_cell_burned = 0.0;
+            if (globe.fireMapsUsed != 0 || (globe.fireMapsUsed == 0 && parms.frequencyOfFire > 0.0 && parms.fractionBurned > 0.0))
+            {
+                if (globe.fireMapsUsed != 0)
+                {
+                    // Model fire, with their occurrence determined in maps.The maps will store the proportion of each cell burned.
+                    // No month is included here.  If someone wants to give detailed month - level fire maps, they may
+                    proportion_cell_burned = globe.propBurned;
+                }
+                else
+                {
+                    // Fire based on probabilies and percentages
+                    // Fire is confined to one month, otherwise the method would be overly complex, requiring checks to judge which months are appropriate.
+                    if (parms.burnMonth == month)
+                    {
+                        // The cell may burn
+                        double harvest = new Random().NextDouble();
+                        if (parms.frequencyOfFire > harvest)
+                            // Some portion of the cell will burn...
+                            proportion_cell_burned = parms.fractionBurned;
+                    }
+                }
+
+                // If some of the cell is to burn, do that
+                if (proportion_cell_burned > 0.0009)
+                {
+                    // Calculate the intensity of the fire, using the method in SAVANNA
+                    double fuel = 0.0;
+                    double green = 0.0;
+                    double prop_litter_burned = 0.0;
+                    double burned_ash_c = 0.0;
+                    double burned_ash_n = 0.0;
+                    double prop_burned_carbon_ash = 0.0;
+                    double prop_burned_nitrogen_ash = 0.0;
+                    double[] data_val = new double[4];
+
+                    for (int iFacet = 0; iFacet < nFacets; iFacet++)
+                    {
+                        fuel = fuel + leafCarbon[iFacet] + deadStandingCarbon[iFacet] +
+                                      fineBranchCarbon[iFacet] + coarseBranchCarbon[iFacet];
+                        green = green + leafCarbon[iFacet];
+
+                        double perc_green = green / (fuel + 0.000001);
+                        data_val[0] = parms.greenVsIntensity[0, 0];
+                        data_val[1] = parms.greenVsIntensity[0, 1];
+                        data_val[2] = parms.greenVsIntensity[1, 0];
+                        data_val[3] = parms.greenVsIntensity[1, 1];
+                        double effect_of_green = Linear(perc_green, data_val, 2);
+                        data_val[0] = parms.fuelVsIntensity[0];
+                        data_val[1] = 0.0;
+                        data_val[2] = parms.fuelVsIntensity[1];
+                        data_val[3] = 1.0;
+                        fireSeverity = Linear(fuel, data_val, 2);
+
+                        // Now calculate the proportion burned of different plant parts, and proportion ash
+                        // data_val(2) = 0.0 and data_val(4) = 1.0 still, and in all that follows
+                        data_val[0] = parms.fractionShootsBurned[iFacet, 0];
+                        data_val[2] = parms.fractionShootsBurned[iFacet, 1];
+                        // Proportion of cell burned is captured here, in these proportion burned entries that are used below.
+                        double prop_shoots_burned = Linear(fireSeverity, data_val, 2) * proportion_cell_burned;
+                        data_val[0] = parms.fractionStandingDeadBurned[iFacet, 0];
+                        data_val[2] = parms.fractionStandingDeadBurned[iFacet, 1];
+                        double prop_standing_dead_burned = Linear(fireSeverity, data_val, 2) * proportion_cell_burned;
+                        data_val[0] = parms.fractionLitterBurned[iFacet, 0];
+                        data_val[2] = parms.fractionLitterBurned[iFacet, 1];
+                        prop_litter_burned = Linear(fireSeverity, data_val, 2) * proportion_cell_burned;
+                        prop_burned_carbon_ash = parms.fractionBurnedCarbonAsAsh;
+                        prop_burned_nitrogen_ash = parms.fractionBurnedNitrogenAsAsh;
+
+                        // Burn the materials
+                        // LEAVES
+                        leafCarbon[iFacet] = leafCarbon[iFacet] - (leafCarbon[iFacet] * prop_shoots_burned);
+                        burnedCarbon = burnedCarbon + (leafCarbon[iFacet] * prop_shoots_burned);
+                        burned_ash_c = (leafCarbon[iFacet] * prop_shoots_burned) * prop_burned_carbon_ash;
+                        leafNitrogen[iFacet] = leafNitrogen[iFacet] - (leafNitrogen[iFacet] * prop_shoots_burned);
+                        burnedNitrogen = burnedNitrogen + (leafNitrogen[iFacet] * prop_shoots_burned);
+                        burned_ash_n = (leafNitrogen[iFacet] * prop_shoots_burned) * prop_burned_nitrogen_ash;
+                        // Do flows to litter, keeping track of structural and metabolic components
+                        // Assume the fraction lignin does not change with combustion ... EDIT AS NEEDED
+                        double frac_lignin = ligninLeaf[iFacet] / leafCarbon[iFacet];
+                        frac_lignin = Math.Max(0.02, frac_lignin);    // From Century CmpLig.f
+                        frac_lignin = Math.Min(0.50, frac_lignin);
+                        PartitionLitter(surfaceIndex, burned_ash_c, burned_ash_n, frac_lignin);
+                        // A portion of stored carbon for maintence respiration is loss associated with death of plant part.
+                        // This is done only once, otherwise there would be multiple occurrences of the transfer        
+                        respirationFlows[iFacet] = respirationFlows[iFacet] - (respirationFlows[iFacet] * prop_shoots_burned);
+
+                        // SEEDS
+                        seedCarbon[iFacet] = seedCarbon[iFacet] - (seedCarbon[iFacet] * prop_shoots_burned);
+                        burnedCarbon = burnedCarbon + (seedCarbon[iFacet] * prop_shoots_burned);
+                        burned_ash_c = (seedCarbon[iFacet] * prop_shoots_burned) * prop_burned_carbon_ash;
+                        seedNitrogen[iFacet] = seedNitrogen[iFacet] - (seedNitrogen[iFacet] * prop_shoots_burned);
+                        burnedNitrogen = burnedNitrogen + (seedNitrogen[iFacet] * prop_shoots_burned);
+                        burned_ash_n = (seedNitrogen[iFacet] * prop_shoots_burned) * prop_burned_nitrogen_ash;
+                        // Do flows to litter, keeping track of structural and metabolic components
+                        // Assume the fraction lignin does not change with combustion... EDIT AS NEEDED
+                        // Using leaf lignin for seed lignin, as an approximate
+                        frac_lignin = ligninLeaf[iFacet] / leafCarbon[iFacet];
+                        frac_lignin = Math.Max(0.02, frac_lignin);  // From Century CmpLig.f
+                        frac_lignin = Math.Min(0.50, frac_lignin);
+                        PartitionLitter(surfaceIndex, burned_ash_c, burned_ash_n, frac_lignin);
+
+                        // FINE BRANCHES
+                        fineBranchCarbon[iFacet] = fineBranchCarbon[iFacet] - (fineBranchCarbon[iFacet] * prop_shoots_burned);
+                        burnedCarbon = burnedCarbon + (fineBranchCarbon[iFacet] * prop_shoots_burned);
+                        burned_ash_c = (fineBranchCarbon[iFacet] * prop_shoots_burned) * prop_burned_carbon_ash;
+                        fineBranchNitrogen[iFacet] = fineBranchNitrogen[iFacet] - (fineBranchNitrogen[iFacet] * prop_shoots_burned);
+                        burnedNitrogen = burnedNitrogen + (fineBranchNitrogen[iFacet] * prop_shoots_burned);
+                        burned_ash_n = (fineBranchNitrogen[iFacet] * prop_shoots_burned) * prop_burned_nitrogen_ash;
+                        // Do flows to litter, keeping track of structural and metabolic components.BURNED MATERIALS are not going to standing dead
+                        // Assume the fraction lignin does not change with combustion... EDIT AS NEEDED
+                        frac_lignin = ligninFineBranch[iFacet] / fineBranchCarbon[iFacet];
+                        frac_lignin = Math.Max(0.02, frac_lignin);   // From Century CmpLig.f
+                        frac_lignin = Math.Min(0.50, frac_lignin);
+                        PartitionLitter(surfaceIndex, burned_ash_c, burned_ash_n, frac_lignin);
+
+                        // COARSE BRANCHES
+                        coarseBranchCarbon[iFacet] = coarseBranchCarbon[iFacet] - (coarseBranchCarbon[iFacet] * prop_shoots_burned);
+                        burnedCarbon = burnedCarbon + (coarseBranchCarbon[iFacet] * prop_shoots_burned);
+                        burned_ash_c = (coarseBranchCarbon[iFacet] * prop_shoots_burned) * prop_burned_carbon_ash;
+                        coarseBranchNitrogen[iFacet] = coarseBranchNitrogen[iFacet] - (coarseBranchNitrogen[iFacet] * prop_shoots_burned);
+                        burnedNitrogen = burnedNitrogen + (coarseBranchNitrogen[iFacet] * prop_shoots_burned);
+                        burned_ash_n = (coarseBranchNitrogen[iFacet] * prop_shoots_burned) * prop_burned_nitrogen_ash;
+                        // Do flows to litter, keeping track of structural and metabolic components.BURNED MATERIALS are not going to standing dead
+                        // Assume the fraction lignin does not change with combustion... EDIT AS NEEDED
+                        frac_lignin = ligninCoarseBranch[iFacet] / coarseBranchCarbon[iFacet];
+                        frac_lignin = Math.Max(0.02, frac_lignin);  // From Century CmpLig.f
+                        frac_lignin = Math.Min(0.50, frac_lignin);
+                        PartitionLitter(surfaceIndex, burned_ash_c, burned_ash_n, frac_lignin);
+
+                        // STANDING DEAD
+                        deadStandingCarbon[iFacet] = deadStandingCarbon[iFacet] - (deadStandingCarbon[iFacet] * prop_standing_dead_burned);
+                        burnedCarbon = burnedCarbon + (deadStandingCarbon[iFacet] * prop_standing_dead_burned);
+                        burned_ash_c = (deadStandingCarbon[iFacet] * prop_standing_dead_burned) * prop_burned_carbon_ash;
+                        deadStandingNitrogen[iFacet] = deadStandingNitrogen[iFacet] - (deadStandingNitrogen[iFacet] * prop_standing_dead_burned);
+                        burnedNitrogen = burnedNitrogen + (deadStandingNitrogen[iFacet] * prop_standing_dead_burned);
+                        burned_ash_n = (deadStandingNitrogen[iFacet] * prop_standing_dead_burned) * prop_burned_nitrogen_ash;
+                        // Do flows to litter, keeping track of structural and metabolic components.BURNED MATERIALS are not going to standing dead
+                        // Assume the fraction lignin does not change with combustion... EDIT AS NEEDED
+                        // Using leaf lignin for standing dead lignin, as an approximate
+                        frac_lignin = ligninLeaf[iFacet] / leafCarbon[iFacet];
+                        frac_lignin = Math.Max(0.02, frac_lignin);     // From Century CmpLig.f
+                        frac_lignin = Math.Min(0.50, frac_lignin);
+                        PartitionLitter(surfaceIndex, burned_ash_c, burned_ash_n, frac_lignin);
+                    } // End of facet loop
+
+                    // LITTER - STRUCTURAL CARBON
+                    litterStructuralCarbon[surfaceIndex] = litterStructuralCarbon[surfaceIndex] -
+                                                    (litterStructuralCarbon[surfaceIndex] * prop_litter_burned);
+                    burnedCarbon = burnedCarbon + (litterStructuralCarbon[surfaceIndex] * prop_litter_burned);
+                    burned_ash_c = (litterStructuralCarbon[surfaceIndex] * prop_litter_burned) * prop_burned_carbon_ash;
+                    litterStructuralNitrogen[surfaceIndex] = litterStructuralNitrogen[surfaceIndex] -
+                                     (litterStructuralNitrogen[surfaceIndex] * prop_litter_burned);
+                    burnedNitrogen = burnedNitrogen + (litterStructuralNitrogen[surfaceIndex] * prop_litter_burned);
+                    burned_ash_n = (litterStructuralNitrogen[surfaceIndex] * prop_litter_burned) * prop_burned_nitrogen_ash;
+
+                    // Flows to litter not required, given litter is burning
+                    // LITTER - METABOLIC CARBON
+                    litterMetabolicCarbon[surfaceIndex] = litterMetabolicCarbon[surfaceIndex] -
+                                   (litterMetabolicCarbon[surfaceIndex] * prop_litter_burned);
+                    burnedCarbon = burnedCarbon + (litterMetabolicCarbon[surfaceIndex] * prop_litter_burned);
+                    burned_ash_c = (litterMetabolicCarbon[surfaceIndex] + prop_litter_burned) * prop_burned_carbon_ash;
+                    litterMetabolicNitrogen[surfaceIndex] = litterMetabolicNitrogen[surfaceIndex] -
+                                   (litterMetabolicNitrogen[surfaceIndex] * prop_litter_burned);
+                    burnedNitrogen = burnedNitrogen + (litterMetabolicNitrogen[surfaceIndex] * prop_litter_burned);
+                    burned_ash_n = (litterStructuralNitrogen[surfaceIndex] * prop_litter_burned) * prop_burned_nitrogen_ash;
+                    // Flows to litter not required, given litter is burning
+                }
+            }
+            // else ... no fire
+        }
+
+        private void WoodyPlantPartDeath()
+        { }
+    }
+}

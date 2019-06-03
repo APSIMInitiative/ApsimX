@@ -227,8 +227,11 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
-    <Compile Include="GRange\GRange.cs" />
-    <Compile Include="GRange\Parms.cs" />
+    <Compile Include="G_Range\GRDecomp.cs" />
+    <Compile Include="G_Range\GRPlant.cs" />
+    <Compile Include="G_Range\GRWeather.cs" />
+    <Compile Include="G_Range\G_Range.cs" />
+    <Compile Include="G_Range\GRParms.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />

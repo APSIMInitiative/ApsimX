@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models
 {
     using System.Xml.Serialization;
     using Models.Core;
-    using Models.Soils;
     using Models.Soils.Arbitrator;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
 
     /// <summary>
-    /// Implements the plant growth model logic abstracted from G-Range
+    /// Implements the plant growth model logic abstracted from G_Range
     /// Currently this is just an empty stub
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public partial class GRange : Model, IPlant, ICanopy, IUptake
+    public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
         #region Links
 
-        //[Link]
-        //private Clock Clock = null;
+        [Link]
+        private Clock Clock = null;
 
         [Link]
         private IWeather Weather = null;
@@ -172,9 +168,9 @@ namespace Models
         #endregion
 
         /// <summary>Constructor</summary>
-        public GRange()
+        public G_Range()
         {
-            Name = "GRange";
+            Name = "G_Range";
         }
 
         #region Elements from Fortran code
@@ -301,6 +297,18 @@ namespace Models
         private const int ALIVE = 0;                                   // Plant material that is alive, index [Was 1 in Fortran]
         private const int DEAD = 1;                                    // Plant material that is dead, index [Was 2 in Fortran]
 
+        private const int ABOVE = 0;                                   // Aboveground index [Was 1 in Fortran]
+        private const int BELOW = 1;                                   // Belowground index [Was 2 in Fortran]
+
+        private const int N_STORE = 0;                                 // Element to storage, using in Growth, etc.
+        private const int N_SOIL = 1;                                  // Element to soil, used in Growth, etc.
+        private const int N_FIX = 2;                                   // Element to fix, used in Growth, etc.
+
+        private const double baseTemp = 4.4;
+        private const double vLarge = 1000000000.0;
+        static private readonly int[] julianDayMid = new int[] { 16, 46, 75, 106, 136, 167, 197, 228, 259, 289, 320, 350 };  // The Julian day at the middle of each month.
+        static private readonly int[] julianDayStart = new int[] { 1, 32, 61, 92, 122, 153, 183, 214, 245, 275, 306, 337 };  // The Julian day at the start of each month.
+
         /// <summary>
         /// X dimension of rangeland cell
         /// </summary>
@@ -310,6 +318,8 @@ namespace Models
         /// Y dimension of rangeland cell
         /// </summary>
         public int Y;
+
+        private int month;
 
         private int rangeType;                 // Identifier storing the type of rangeland cell, used as a key to the Parms strcuture
 
@@ -516,7 +526,7 @@ namespace Models
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
-        [Description("G-Range database file name")]
+        [Description("G_Range database file name")]
         public string DatabaseName { get; set; }
 
         /// <summary>
@@ -558,17 +568,35 @@ namespace Models
             InitParms();    // Initialize_Rangelands
         }
 
-        /// <summary>EventHandler - preparation before the main daily processes.</summary>
+        /// <summary>EventHandler - preparation before the main daily processes.
+        /// For G_Range, this means we need to store and aggregate weather data
+        /// into monthly values.
+        /// </summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            UpdateVegetation();
-            UpdateWeather();
+            ReadWeather();
         }
 
-        /// <summary>EventHandler - preparation before the main daily processes.</summary>
+        /// <summary>EventHandler - G_Range model logic run at the end of each month.</summary>
+        /// <param name="sender">The sender model</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        [EventSubscribe("EndOfMonth")]
+        private void OnEndOfMonth(object sender, EventArgs e)
+        {
+            month = Clock.Today.Month; // 1 to 12
+            UpdateVegetation();
+            UpdateWeather();
+            PotentialProduction();
+            HerbGrowth();
+            WoodyGrowth();
+            Grazing();
+            PlantPartDeath();
+        }
+
+        /// <summary>EventHandler - Tasks done at the start of each year.</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("StartOfYear")]
@@ -790,11 +818,6 @@ namespace Models
                 (totalPotProdLimitedByN[(int)Layer.tree] * facetCover[(int)Facet.tree]);
         }
 
-        private void UpdateWeather()
-        {
-
-        }
-
         /// <summary>
         /// Processes that are required each year, prior to any process-based simulation steps.
         /// 
@@ -894,6 +917,7 @@ namespace Models
                 burnedNitrogen = 0.0;
                 fireSeverity = 0.0;
             } // Facet loop
+              // Leaving out CO2 effects for now...
               /*
                 ! Opening the CO2 effects file each month, just for simplicity
                 open(SHORT_USE_FILE, FILE = parm_path(1:len_trim(parm_path))//Sim_Parm%co2effect_file_name, ACTION='READ', IOSTAT=ioerr)
