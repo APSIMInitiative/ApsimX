@@ -468,6 +468,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CompositeFactor.png" />

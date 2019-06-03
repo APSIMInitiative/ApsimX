@@ -230,6 +230,7 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
+    <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
