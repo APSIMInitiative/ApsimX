@@ -685,6 +685,13 @@
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>
+      <Name>WhiteClover</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>WhiteClover</ResourceName>
+      <CropType>WhiteClover</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
+    <Plant>
       <Name>Potato</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>Potato</ResourceName>
