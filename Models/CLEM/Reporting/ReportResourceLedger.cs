@@ -69,9 +69,11 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-            variableNames.Add("[Clock].Today");
+            List<string> variableNames = new List<string>
+            {
+                "Parent.Name as Zone",
+                "[Clock].Today"
+            };
             if (VariableNames != null && VariableNames.Count() > 0)
             {
                 if(VariableNames.Count() > 1)
@@ -147,8 +149,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
 
@@ -159,7 +165,10 @@ namespace Models.CLEM.Reporting
         private void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
+            {
                 storage.Writer.WriteTable(dataToWriteToDb);
+            }
+
             dataToWriteToDb = null;
         }
 
@@ -167,6 +176,7 @@ namespace Models.CLEM.Reporting
         public new void DoOutput()
         {
             if (dataToWriteToDb == null)
+            {
                 dataToWriteToDb = new ReportData()
                 {
                     SimulationName = simulation.Name,
@@ -174,11 +184,14 @@ namespace Models.CLEM.Reporting
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
+            }
 
             // Create a row ready for writing.
             List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
+            {
                 valuesToWrite.Add(columns[i].GetValue());
+            }
 
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite);

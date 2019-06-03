@@ -141,11 +141,6 @@ namespace Models.CLEM.Groupings
             return clone;
         }
 
-        private void UpdateName()
-        {
-            this.Name = String.Format("Filter[{0}{1}{2}]", Parameter.ToString(), Operator.ToSymbol(), Value );
-        }
-
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>

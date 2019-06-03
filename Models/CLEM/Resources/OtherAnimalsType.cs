@@ -23,6 +23,12 @@ namespace Models.CLEM.Resources
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Current cohorts of this Other Animal Type.
         /// </summary>
         [XmlIgnore]
@@ -139,16 +145,20 @@ namespace Models.CLEM.Resources
             }
 
             LastCohortChanged = cohortToAdd;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Gain = cohortToAdd.Number;
-            details.Activity = activityName;
-            details.ActivityType = "Unknown";
-            details.Reason = reason;
-            details.ResourceType = this.Name;
-            details.ExtraInformation = cohortToAdd;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Gain = cohortToAdd.Number,
+                Activity = activityName,
+                ActivityType = "Unknown",
+                Reason = reason,
+                ResourceType = this.Name,
+                ExtraInformation = cohortToAdd
+            };
             LastTransaction = details;
-            TransactionEventArgs eargs = new TransactionEventArgs();
-            eargs.Transaction = LastTransaction;
+            TransactionEventArgs eargs = new TransactionEventArgs
+            {
+                Transaction = LastTransaction
+            };
             OnTransactionOccurred(eargs);
         }
 
@@ -175,16 +185,20 @@ namespace Models.CLEM.Resources
             }
 
             LastCohortChanged = cohortToRemove;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Loss = cohortToRemove.Number;
-            details.Activity = activityName;
-            details.ActivityType = "Unknown";
-            details.Reason = reason;
-            details.ResourceType = this.Name;
-            details.ExtraInformation = cohortToRemove;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Loss = cohortToRemove.Number,
+                Activity = activityName,
+                ActivityType = "Unknown",
+                Reason = reason,
+                ResourceType = this.Name,
+                ExtraInformation = cohortToRemove
+            };
             LastTransaction = details;
-            TransactionEventArgs eargs = new TransactionEventArgs();
-            eargs.Transaction = LastTransaction;
+            TransactionEventArgs eargs = new TransactionEventArgs
+            {
+                Transaction = LastTransaction
+            };
             OnTransactionOccurred(eargs);
         }
 
