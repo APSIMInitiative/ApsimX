@@ -144,6 +144,8 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
     <Compile Include="CLEM\FileSQLiteCrop.cs" />
     <Compile Include="CLEM\Groupings\LabourPriceGroup.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
