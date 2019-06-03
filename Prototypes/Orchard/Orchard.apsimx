@@ -730,6 +730,7 @@
               "R50": 100.0,
               "Height": 0.0,
               "BaseHeight": 0.0,
+              "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -1655,6 +1656,73 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "WidthFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Weather].DaysSinceWinterSolstice",
+                      "Name": "SeasonalWidthPattern",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            140.0,
+                            250.0,
+                            360.0,
+                            361.0
+                          ],
+                          "Y": [
+                            1000.0,
+                            1000.0,
+                            2000.0,
+                            2000.0,
+                            1000.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Phenology].Age.Years",
+                      "Name": "AgeFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            5.0
+                          ],
+                          "Y": [
+                            0.4,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1673,7 +1741,11 @@
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
-                "[Leaf].BaseHeightFunction.FixedValue = 800"
+                "[Leaf].BaseHeightFunction.FixedValue = 800",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 0   , 140, 250, 360, 361",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 2800,2800,3500,3500,2800",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1"
               ],
               "Name": "Peach",
               "Children": [
@@ -1703,7 +1775,11 @@
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,3",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.7,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 1",
-                "[Leaf].BaseHeightFunction.FixedValue = 900"
+                "[Leaf].BaseHeightFunction.FixedValue = 900",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 900,2200,2200,900",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1"
               ],
               "Name": "Grape_2Cane",
               "Children": [
@@ -1733,7 +1809,11 @@
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,3",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y =  0.7,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 1",
-                "[Leaf].BaseHeightFunction.FixedValue = 900"
+                "[Leaf].BaseHeightFunction.FixedValue = 900",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 900,2200,2200,900",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1"
               ],
               "Name": "Grape_4Cane",
               "Children": [
@@ -1763,7 +1843,11 @@
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,3",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.7,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8",
-                "[Leaf].BaseHeightFunction.FixedValue = 1800"
+                "[Leaf].BaseHeightFunction.FixedValue = 1800",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 5000,5000,5000,5000",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1"
               ],
               "Name": "Kiwifruit",
               "Children": [
@@ -1793,7 +1877,11 @@
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
-                "[Leaf].BaseHeightFunction.FixedValue = 800"
+                "[Leaf].BaseHeightFunction.FixedValue = 800",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 0   , 125, 250, 360, 361",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 1800,1800,2200,2200,1800",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
+                "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1"
               ],
               "Name": "Apple",
               "Children": [

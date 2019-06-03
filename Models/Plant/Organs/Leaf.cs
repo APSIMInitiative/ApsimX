@@ -169,6 +169,9 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get { return Structure.Height; } }
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
         /// <summary>Gets  FRGR.</summary>
         [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
         [Units("0-1")]
