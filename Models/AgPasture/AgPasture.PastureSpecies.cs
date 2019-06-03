@@ -3218,8 +3218,8 @@ namespace Models.AgPasture
             get
             {
                 Biomass mass = new Biomass();
-                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead / 10; // to g/m2
-                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead / 10;    // to g/m2
+                mass.StructuralWt = (leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead) / 10.0; // to g/m2
+                mass.StructuralN = (leaves.NLive + leaves.NDead + stems.NLive + stems.NDead + stolons.NLive + stolons.NDead) / 10.0;    // to g/m2
                 mass.DMDOfStructural = leaves.DigestibilityLive;
                 return mass;
             }
