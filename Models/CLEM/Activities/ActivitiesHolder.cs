@@ -242,7 +242,10 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.ReportAllAllActivitiesPerformed();
+                if (child.Enabled)
+                {
+                    child.ReportAllAllActivitiesPerformed();
+                }
             }
 
             // add timestep activity for reporting
@@ -263,7 +266,10 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.ClearAllAllActivitiesPerformedStatus();
+                if (child.Enabled)
+                {
+                    child.ClearAllAllActivitiesPerformedStatus();
+                }
             }
         }
 

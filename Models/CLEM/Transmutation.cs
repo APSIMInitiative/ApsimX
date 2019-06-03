@@ -196,7 +196,10 @@ namespace Models.CLEM
         {
             // determine resource type from name
             object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
-            ResourceType = result.GetType();
+            if (result != null)
+            {
+                ResourceType = result.GetType();
+            }
         }
 
         /// <summary>
