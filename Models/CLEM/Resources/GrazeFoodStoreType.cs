@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/graze food store/grazefoodstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/Graze Food Store/GrazeFoodStoreType.htm")]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]

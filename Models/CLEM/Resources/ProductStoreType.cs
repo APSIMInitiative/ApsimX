@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a product store type (e.g. Cotton).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/products/productstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
         /// <summary>

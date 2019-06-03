@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     [Description("This resource represents a human food store (e.g. Eggs).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/human food store/humanfoodstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStoreType.htm")]
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
