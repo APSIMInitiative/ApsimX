@@ -1950,10 +1950,524 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "StartGrainFill",
+                  "ReSetEvent": null,
+                  "Name": "FinalGrainNum",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "PostEventValue",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "GrowthRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "PlantGrowth",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Sorghum].Total.Wt",
+                                  "Name": "TotalBiomass",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].GreenWtAtFI.Value()",
+                                  "Name": "GreenWtAtFI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "AddFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].DaysFIToStartGrainFill.Value()",
+                                  "Name": "DaysFIToStartGF",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "1DayOffset",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.00083,
+                          "Units": null,
+                          "Name": "DMPerSeed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "FloralInitiation",
+                  "EndStageName": "StartGrainFill",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "DaysFIToStartGrainFill",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "One",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "FloralInitiation",
+                  "ReSetEvent": null,
+                  "Name": "GreenWtAtFI",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Sorghum].Total.Wt",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Definitely [Sorghum].Total.Wt",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "StartGrainFill",
+                  "EndStageName": "Maturity",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "TTStartGrainToNow",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "DMCaryopsis",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Arbitrator].DM.TotalFixationSupply",
+                      "Name": "DMFixationSupply",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grain].NumberFunction.Value()",
+                      "Name": "GrainNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "PotGrainFillRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "MultiplyFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "AddFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "MultiplyFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].DMCaryopsis.Value()",
+                                  "Name": "DMCaryopsis",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.4026,
+                                  "Units": null,
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 3.19E-05,
+                              "Units": null,
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1000.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.09,
+                      "Units": null,
+                      "Name": "MaxGrainFillRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DMDemandFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grain].PotGrainFillRate.Value()",
+                      "Name": "GrainFillRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grain].NumberFunction.Value()",
+                      "Name": "GrainNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.001,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "Name": "BiomassRemovalDefaults",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.5,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.1,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Harvest",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.8,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Cut",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.6,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Prune",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.6,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.2,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Graze",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "DMConversionEfficiency",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "RemobilisationCost",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CarbonConcentration",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Weather].MaxT",
+                  "Name": "HeatSeverity",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        32.0,
+                        33.0,
+                        36.0,
+                        38.0
+                      ],
+                      "Y": [
+                        0.0,
+                        0.0,
+                        0.14,
+                        0.23,
+                        0.65
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -50.0,
+                  "Units": null,
+                  "Name": "GrainTempWindow0",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 100.0,
+                  "Units": null,
+                  "Name": "GrainTempWindow1",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DecumulateFunction, Models",
+                  "InitialValue": 1.0,
+                  "MinValue": 0.0,
+                  "StartStageName": "FlagLeaf",
+                  "ResetStageName": "Emergence",
+                  "StopStageName": null,
+                  "Name": "TemperatureFactor",
+                  "Children": [
+                    {
                       "$type": "Models.Functions.LessThanFunction, Models",
-                      "Name": "TemperatureFactor",
+                      "Name": "TempFactorCalc",
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
@@ -2408,454 +2922,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartGrainFill",
-                  "ReSetEvent": null,
-                  "Name": "FinalGrainNum",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.DivideFunction, Models",
-                      "Name": "PostEventValue",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "GrowthRate",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "PlantGrowth",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Sorghum].Total.Wt",
-                                  "Name": "TotalBiomass",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].GreenWtAtFI.Value()",
-                                  "Name": "GreenWtAtFI",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "AddFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].DaysFIToStartGrainFill.Value()",
-                                  "Name": "DaysFIToStartGF",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "1DayOffset",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.00083,
-                          "Units": null,
-                          "Name": "DMPerSeed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "FloralInitiation",
-                  "EndStageName": "StartGrainFill",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
-                  "Name": "DaysFIToStartGrainFill",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "FloralInitiation",
-                  "ReSetEvent": null,
-                  "Name": "GreenWtAtFI",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Sorghum].Total.Wt",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Definitely [Sorghum].Total.Wt",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "StartGrainFill",
-                  "EndStageName": "Maturity",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
-                  "Name": "TTStartGrainToNow",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "DMCaryopsis",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].DM.TotalFixationSupply",
-                      "Name": "DMFixationSupply",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].NumberFunction.Value()",
-                      "Name": "GrainNumber",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MinimumFunction, Models",
-                  "Name": "PotGrainFillRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "MultiplyFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "AddFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "MultiplyFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].DMCaryopsis.Value()",
-                                  "Name": "DMCaryopsis",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.4026,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 3.19E-05,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1000.0,
-                          "Units": null,
-                          "Name": "Constant",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.09,
-                      "Units": null,
-                      "Name": "MaxGrainFillRate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "DMDemandFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].PotGrainFillRate.Value()",
-                      "Name": "GrainFillRate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].NumberFunction.Value()",
-                      "Name": "GrainNumber",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
-                  "Name": "BiomassRemovalDefaults",
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "DMConversionEfficiency",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
