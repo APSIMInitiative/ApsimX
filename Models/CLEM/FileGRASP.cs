@@ -34,7 +34,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/datareaders/graspdatareader.htm")]
+    [HelpUri(@"Content/Features/DataReaders/GRASPDataReader.htm")]
     public class FileGRASP : CLEMModel, IFileGRASP
     {
         /// <summary>

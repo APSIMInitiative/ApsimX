@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether a pasture biomass (t/ha) is within a specified range.")]
-    [HelpUri(@"content/features/timers/pasturelevel.htm")]
+    [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {

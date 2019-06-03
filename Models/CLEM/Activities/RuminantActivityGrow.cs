@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantgrow.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]

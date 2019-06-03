@@ -22,7 +22,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(IResourceType))]
     [Description("This Transmutation will convert any other resource into the current resource where there is a shortfall. This is placed under any resource type where you need to provide a transmutation. For example to convert Finance Type (money) into a Animal Food Store Type (Lucerne) or effectively purchase fodder when low.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/transmutation/transmutation.htm")]
+    [HelpUri(@"Content/Features/Transmutation/Transmutation.htm")]
     public class Transmutation: CLEMModel, IValidatableObject
     {
         /// <summary>

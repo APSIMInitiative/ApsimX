@@ -17,6 +17,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourceActivityProcess))]
     [Description("This is a fee required to perform processing of a resource.")]
+    [HelpUri(@"Content/Features/Activities/All resources/ResourceFee.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityFee: CLEMModel
     {

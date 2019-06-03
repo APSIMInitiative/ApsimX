@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity marks the specified individuals for sale by RuminantAcitivtyBuySell.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantmarkforsale.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
     public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
     {
         private LabourRequirement labourRequirement;
