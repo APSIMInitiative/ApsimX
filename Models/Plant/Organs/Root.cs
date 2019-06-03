@@ -1311,9 +1311,49 @@ namespace Models.PMF.Organs
 
 
                     Biomass Loss = Live * senescedFrac;
-                    Live.Subtract(Loss);
-                    Dead.Add(Loss);
+                    //Live.Subtract(Loss);
+                    //Dead.Add(Loss);
                     Senesced.Add(Loss);
+
+                    var currentLayer = Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness);
+                    int layer = currentLayer;
+                    double dmSenesced = Live.StructuralWt * senescedFrac; //sorghum only uses structural
+                    double senNConc = Live.N / Live.Wt;
+                    double nSenesced = dmSenesced * senNConc;
+                    double nTest = Live.N * senescedFrac;
+
+                    while (layer >= 0 && dmSenesced > 0.0 && nSenesced > 0.0)
+                    {
+                        if (dmSenesced > 0.0)
+                        {
+                            if (PlantZone.LayerLive[layer].StructuralWt >= dmSenesced)
+                            {
+                                PlantZone.LayerLive[layer].StructuralWt -= dmSenesced;
+                                dmSenesced = 0.0;
+                            }
+                            else
+                            {
+                                dmSenesced -= PlantZone.LayerLive[layer].StructuralWt;
+                                PlantZone.LayerLive[layer].StructuralWt = 0.0;
+                            }
+                        }
+                        if(nSenesced > 0.0)
+                        { 
+                            if (PlantZone.LayerLive[layer].N >= nSenesced)
+                            {
+                                PlantZone.LayerLive[layer].StructuralN -= nSenesced;
+                                nSenesced = 0.0;
+                            }
+                            else
+                            {
+                                nSenesced -= PlantZone.LayerLive[layer].StructuralN;
+                                PlantZone.LayerLive[layer].StructuralN = 0.0;
+                            }
+                        }
+                        --layer;
+                    }
+
+                    needToRecalculateLiveDead = true;
                 }
                 else
                 {
