@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantgrow.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
@@ -276,6 +276,7 @@ namespace Models.CLEM.Activities
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
                 {
+                    ind.MetabilicIntake = ind.Intake;
                     this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
@@ -289,6 +290,7 @@ namespace Models.CLEM.Activities
                         // TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
                         // Our flow has already taken in supplements by this stage and cannot be distinguished
                         // Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
+                        // A Ash stated that the 75% limit is no longer required and DMD above 75% is possible even if unlikely.
 
                         // TODO: Check equation. NABSA doesn't include the 0.9
                         // Crude protein required generally 130g per kg of digestable feed.
@@ -309,7 +311,7 @@ namespace Models.CLEM.Activities
                             double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
                             //TODO: add min protein to parameters
                             ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-                            ind.Intake *= ratioSupplyRequired;
+                            ind.MetabilicIntake *= ratioSupplyRequired;
                         }
 
                         // old. I think IAT
@@ -318,11 +320,13 @@ namespace Models.CLEM.Activities
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                        ind.MetabilicIntake = Math.Min(ind.MetabilicIntake, ind.Intake);
                     }
                     else
                     {
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                        ind.MetabilicIntake = Math.Min(ind.MetabilicIntake, ind.Intake);
                     }
 
                     // TODO: nabsa adjusts potential intake for digestability of fodder here.
@@ -374,7 +378,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            double intakeDaily = ind.Intake / 30.4;
+            double intakeDaily = ind.MetabilicIntake / 30.4;
 
             // Sme 1 for females and castrates
             // TODO: castrates not implemented
@@ -410,7 +414,7 @@ namespace Models.CLEM.Activities
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 double kgl = 1;
-                if ((ind.Intake + ind.MilkIntake) > 0)
+                if ((ind.MetabilicIntake + ind.MilkIntake) > 0)
                 {
                     // average energy efficiency for maintenance
                     kml = ((ind.MilkIntake * 0.7) + (intakeDaily * km)) / (ind.MilkIntake + intakeDaily);
@@ -563,7 +567,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * (1.0 - a.BreedParams.ProportionOfMaxWeightToSurvive))).ToList();
+            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
             // set died flag
             died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
             ruminantHerd.RemoveRuminant(died, this);

@@ -34,7 +34,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/datareaders/cropdatareader.htm")]
+    [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
     public class FileCrop : CLEMModel, IFileCrop
     {
         /// <summary>

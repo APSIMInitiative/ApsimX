@@ -1,34 +1,30 @@
-﻿using Models.Core;
-using Models.CLEM.Groupings;
-using Models.CLEM.Resources;
+﻿using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
-using System.ComponentModel.DataAnnotations;
-using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant graze activity</summary>
-    /// <summary>This activity determines how a ruminant group will graze</summary>
-    /// <summary>It is designed to request food via a food store arbitrator</summary>
+    /// <summary>Mark specified individual ruminants for sale.</summary>
+    /// <summary>This activity is in addition to those identified in RuminantActivityManage</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
+    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the collection of manure from a specified paddock in the simulation.")]
+    [Description("This activity marks the specified individuals for sale by RuminantAcitivtyBuySell.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Manure/CollectManurePaddock.htm")]
-    public class ManureActivityCollectPaddock: CLEMActivityBase
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
+    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
     {
-        private ProductStoreTypeManure manureStore;
+        private LabourRequirement labourRequirement;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -36,15 +32,18 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
+            // get all ui tree herd filters that relate to this activity
+            this.InitialiseHerd(true, true);
         }
 
         /// <summary>
-        /// Name of paddock or pasture to collect from (blank is yards)
+        /// Method to determine resources required for this activity in the current month
         /// </summary>
-        [Description("Name of paddock (GrazeFoodStoreType) to collect from (blank is yards)")]
-        [Required]
-        public string GrazeFoodStoreTypeName { get; set; }
+        /// <returns>List of required resource requests</returns>
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        {
+            return null;
+        }
 
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
@@ -53,31 +52,26 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double amountAvailable = 0;
-            // determine wet weight to move
-            if (manureStore != null)
-            {
-                ManureStoreUncollected msu = manureStore.UncollectedStores.Where(a => a.Name.ToLower() == GrazeFoodStoreTypeName.ToLower()).FirstOrDefault();
-                if (msu != null)
-                {
-                    amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
-                }
-            }
+            List<Ruminant> herd = CurrentHerd(false);
+            int head = herd.Count();
+            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+
             double daysNeeded = 0;
             double numberUnits = 0;
+            labourRequirement = requirement;
             switch (requirement.UnitType)
             {
-                case LabourUnitType.perUnit:
-                    numberUnits = amountAvailable / requirement.UnitSize;
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
                         numberUnits = Math.Ceiling(numberUnits);
                     }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
@@ -93,49 +87,61 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        /// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalStock")]
+        private void OnCLEMAnimalStock(object sender, EventArgs e)
+        {
+            List<Ruminant> herd = CurrentHerd(false);
+            if (herd != null && herd.Count > 0)
+            {
+                double numberToTag = herd.Count();
+                if (LabourLimitProportion < 1 & labourRequirement.LabourShortfallAffectsActivity)
+                {
+                    switch (labourRequirement.UnitType)
+                    {
+                        case LabourUnitType.Fixed:
+                            // no individuals tagged
+                            numberToTag = 0;
+                            this.Status = ActivityStatus.Ignored;
+                            break;
+                        case LabourUnitType.perHead:
+                            numberToTag = Convert.ToInt32(herd.Count() * LabourLimitProportion);
+                            this.Status = ActivityStatus.Partial;
+                            break;
+                        default:
+                            throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+                    }
+                }
+                else
+                {
+                    this.Status = ActivityStatus.Success;
+                }
+
+                int cnt = 0;
+                foreach (var ind in herd)
+                {
+                    ind.SaleFlag = HerdChangeReason.MarkedSale;
+                    cnt++;
+                    if (cnt > numberToTag)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                this.Status = ActivityStatus.NotNeeded;
+            }
+        }
+
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
         public override void DoActivity()
         {
-            Status = ActivityStatus.Critical;
-            // get all shortfalls
-            double labourLimit = this.LabourLimitProportion;
-
-            if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
-            {
-                manureStore.Collect(manureStore.Name, labourLimit, this);
-                if (labourLimit == 1)
-                {
-                    SetStatusSuccess();
-                }
-                else
-                {
-                    this.Status = ActivityStatus.Partial;
-                }
-            }
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMCollectManure")]
-        private void OnCLEMCollectManure(object sender, EventArgs e)
-        {
-            if (manureStore != null)
-            {
-                // get resources
-                GetResourcesRequiredForActivity();
-            }
-        }
-
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
+            // nothing to do. This is performed in the AnimalStock event.
         }
 
         /// <summary>
@@ -183,19 +189,9 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Collect manure from ";
-            if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>";
-            }
+            html += "\n<div class=\"activityentry\">Mark individuals in the following groups for sale";
             html += "</div>";
-
             return html;
         }
-
     }
 }

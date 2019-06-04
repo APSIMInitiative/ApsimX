@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
     [Version(1, 0, 2, "Added calculation for proportion ofspring male parameter")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantbreed.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]

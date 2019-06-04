@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/graze food store/grazefoodstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/Graze Food Store/GrazeFoodStoreType.htm")]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]
@@ -448,7 +448,8 @@ namespace Models.CLEM.Resources
 
                 // take from pools as specified for the breed
                 double amountRequired = request.Required;
-                bool secondTakeFromPools = thisBreed.RuminantTypeModel.StrictFeedingLimits;
+                // secondtake is the inverse of setting stricy feeding limits.
+                bool secondTakeFromPools = !thisBreed.RuminantTypeModel.StrictFeedingLimits;
                 thisBreed.DMD = 0;
                 thisBreed.N = 0;
                 int index = 0;

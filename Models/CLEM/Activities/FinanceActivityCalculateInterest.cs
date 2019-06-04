@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity peforms monthly interest transactions.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/finances/calculateinterest.htm")]
+    [HelpUri(@"Content/Features/Activities/Finances/CalculateInterest.htm")]
     public class FinanceActivityCalculateInterest : CLEMActivityBase
     {
         /// <summary>

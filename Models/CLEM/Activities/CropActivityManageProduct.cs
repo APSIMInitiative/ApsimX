@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
-    [HelpUri(@"content/features/activities/crop/managecropproduct.htm")]
+    [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
