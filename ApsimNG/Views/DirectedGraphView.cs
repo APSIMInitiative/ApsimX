@@ -27,6 +27,11 @@ namespace UserInterface.Views
         public DGObject selectedObject { get; private set; }
 
         /// <summary>
+        /// The currently second selected node/object. (button 3)
+        /// </summary>
+        public DGObject selected2Object { get; private set; }
+
+        /// <summary>
         /// Keeps track of whether the mouse button is currently down.
         /// </summary>
         private bool isDragging = false;
@@ -51,10 +56,11 @@ namespace UserInterface.Views
         /// </summary>
         private List<DGArc> arcs = new List<DGArc>();
 
+
         /// <summary>
-        /// List of arcs which connect the nodes.
+        /// When a single object is selected
         /// </summary>
-        public event EventHandler<EventArgs> OnButtonDown;
+        public event EventHandler<GraphObjectSelectedArgs> OnGraphObjectSelected;
 
         /// <summary>Initializes a new instance of the <see cref="DirectedGraphView" /> class.</summary>
         public DirectedGraphView(ViewBase owner = null) : base(owner)
@@ -69,28 +75,27 @@ namespace UserInterface.Views
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
-
+            
             ScrolledWindow scroller = new ScrolledWindow(new Adjustment(0, 0, 100, 1, 1, 1), new Adjustment(0, 0, 100, 1, 1, 1))
             {
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
             };
-            
+
             scroller.AddWithViewport(drawable);
-            
+
             mainWidget = scroller;
             drawable.Realized += OnRealized;
             mainWidget.Destroyed += OnDestroyed;
-            ContextMenu = null;
-
+            
             DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
             DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
         }
 
+
         private void OnDestroyed(object sender, EventArgs e)
         {
             mainWidget.Destroyed -= OnDestroyed;
-            ContextMenu = null;
         }
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
         public DirectedGraph DirectedGraph
@@ -106,6 +111,8 @@ namespace UserInterface.Views
             {
                 value.Nodes.ForEach(node => nodes.Add(new DGNode(node)));
                 value.Arcs.ForEach(arc => arcs.Add(new DGArc(arc, nodes)));
+                // Redraw area.
+                drawable.QueueDraw();
             }
         }
 
@@ -149,35 +156,67 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnMouseButtonPress(object o, ButtonPressEventArgs args)
         {
-            // Get the point clicked by the mouse.
-            PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
-
-            // Delselect existing object
-            if (selectedObject != null)
-                selectedObject.Selected = false;
-
-            // Look through nodes for the click point
-            selectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
-
-            // If not found, look through arcs for the click point
-            if (selectedObject == null)
-                selectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-            // If found object, select it.
-            if (selectedObject != null)
+            if (args.Event.Button == 1)
             {
-                selectedObject.Selected = true;
-                if (args.Event.Button == 1)
-                    isDragging = true;
-                lastPos = clickPoint;
+                // Delselect existing object
+                if (selectedObject != null) selectedObject.Selected = false;
+                selectedObject = null;
+                if (selected2Object != null) selected2Object.Selected = false;
+                selected2Object = null;
+
+                // Get the point clicked by the mouse.
+                PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+
+                // Look through nodes for the click point
+                DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+                // If not found, look through arcs for the click point
+                if (clickedObject == null)
+                    clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+                // If found object, select it.
+                if (clickedObject != null)
+                {
+                    clickedObject.Selected = true;
+                    selectedObject = clickedObject;
+                    if (args.Event.Button == 1)
+                        isDragging = true;
+                    lastPos = clickPoint;
+                }
             }
-            if (OnButtonDown != null) { OnButtonDown(this, new EventArgs()); };
+
+            if (args.Event.Button == 3)
+            {
+                if (selected2Object != null) selected2Object.Selected = false;
+                selected2Object = null;
+
+                // Get the point clicked by the mouse.
+                PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+
+                if (selected2Object != null) selected2Object.Selected = false;
+                selected2Object = null;
+
+                // Look through nodes for the click point
+                DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+                // If not found, look through arcs for the click point
+                if (clickedObject == null)
+                    clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+                // If found object, select it.
+                if (clickedObject != null)
+                {
+                    selected2Object = clickedObject;
+                    selected2Object.Selected = true;
+                }
+            }
+
             // Redraw area.
             (o as DrawingArea).QueueDraw();
+            if (OnGraphObjectSelected != null) { OnGraphObjectSelected(this, new GraphObjectSelectedArgs(selectedObject)); };
         }
 
         /// <summary>Mouse has been moved</summary>
-        [GLib.ConnectBefore]
         private void OnMouseMove(object o, MotionNotifyEventArgs args)
         {
             // Get the point clicked by the mouse.
@@ -195,16 +234,17 @@ namespace UserInterface.Views
         }
 
         /// <summary>Mouse button has been released</summary>
-        /// Displays the popup menu when the right mouse button is released
-        [GLib.ConnectBefore]
         private void OnMouseButtonRelease(object o, ButtonReleaseEventArgs args)
         {
+            args.RetVal = true;
             isDragging = false;
-            CheckSizing();
-            if (args.Event.Button == 3 && ContextMenu != null)
-                ContextMenu.Show();
-        }
+            if (OnGraphObjectSelected != null) { OnGraphObjectSelected(this, new GraphObjectSelectedArgs(selectedObject, selected2Object)); };
 
+            if (selected2Object != null) selected2Object.Selected = false;
+            selected2Object = null;
+
+            CheckSizing();
+        }
         /// <summary>
         /// Drawing area has been rendered - make sure it has enough space.
         /// </summary>
@@ -232,9 +272,26 @@ namespace UserInterface.Views
                     drawable.HeightRequest = 2 * drawable.Allocation.Height;
             }
         }
+    }
 
-        /// <summary>Gets or sets the popup menu of the view.</summary>
-        public MenuView ContextMenu { get; set /*{ value.AttachToWidget(drawable); } */ ; }
-
+    public class GraphObjectSelectedArgs : EventArgs
+    {
+        public GraphObjectSelectedArgs()
+        {
+            Object1 = null;
+            Object2 = null;
+        }
+        public GraphObjectSelectedArgs(DGObject a)
+        {
+            Object1 = a;
+            Object2 = null;
+        }
+        public GraphObjectSelectedArgs(DGObject a, DGObject b)
+        {
+            Object1 = a;
+            Object2 = b;
+        }
+        public DGObject Object1 { get; set; }
+        public DGObject Object2 { get; set; }
     }
 }

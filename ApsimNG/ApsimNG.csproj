@@ -205,6 +205,7 @@
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
+    <Compile Include="EventArguments\RotBubbleChartArgs.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Utility\Colour.cs" />
     <Compile Include="Presenters\CompositeFactorPresenter.cs" />
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
+    <Compile Include="Views\ContextMenuHelper.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
     <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
     <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />

@@ -322,7 +322,7 @@
             eventbox.TooltipText = text;
             eventbox.ButtonPressEvent += OnEventbox1ButtonPress;
             eventbox.Add(headerBox);
-            Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
+            Notebook notebook = onLeftTabControl ? notebook1 : notebook2; /*notebook.PopupDisable();*/
             // Attach an icon to the context menu
             Widget iconLabel = LabelWithIcon(tabLabel.Text, null);
             notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, iconLabel);

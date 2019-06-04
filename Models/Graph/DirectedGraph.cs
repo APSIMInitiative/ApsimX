@@ -34,6 +34,14 @@
             Colour = Color.Beige;
             OutlineColour = Color.Black;
         }
+        /// <summary>Constructor</summary>
+        public Node(Node x)
+        {
+            Colour = x.Colour;
+            OutlineColour = x.OutlineColour;
+            Location = x.Location;
+            Name = x.Name;
+        }
     }
 
     /// <summary>Encapsulates an arc on a directed graph</summary>
@@ -113,7 +121,6 @@
             newNode.Transparent = true;
             nodesToKeep.Add(newNode);
         }
-
         /// <summary>Add a new node to the graph</summary>
         public void AddNode(string name, Color colour, Color outlineColour)
         {
@@ -134,6 +141,37 @@
             newNode.Colour = colour;
             newNode.OutlineColour = outlineColour;
             nodesToKeep.Add(newNode);
+        }
+
+        /// <summary>Duplicate a node in the graph</summary>
+        public void DupNode(string name)
+        {
+            Node nodeToDuplicate = Nodes.Find(node => node.Name == name);
+            if (nodeToDuplicate != null)
+            {
+                Node newNode = new Node(nodeToDuplicate);
+                newNode.Name = "Copy of " + nodeToDuplicate.Name;
+                newNode.Location = nextNodePosition;
+                nextNodePosition.X += 150;
+                if (nextNodePosition.X > 500)
+                {
+                    nextNodePosition.X = 50;
+                    nextNodePosition.Y = nextNodePosition.Y + 150;
+                }
+                Nodes.Add(newNode);
+                nodesToKeep.Add(newNode);
+            }
+        }
+
+        /// <summary>Remove a node from the graph</summary>
+        public void DelNode(string name)
+        {
+            Node nodeToDelete = Nodes.Find(node => node.Name == name);
+            if (nodeToDelete != null)
+            {
+                nodesToKeep.Remove(nodeToDelete);
+                Nodes.Remove(nodeToDelete);
+            }
         }
 
         /// <summary>Add a new arc to the graph</summary>

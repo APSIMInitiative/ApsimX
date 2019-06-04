@@ -8,6 +8,8 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using Interfaces;
+    using EventArguments;
+    using ApsimNG.Classes.DirectedGraph;
     using Gtk;
 
     /// <summary>
@@ -17,6 +19,18 @@ namespace UserInterface.Views
     /// 
     public class RotBubbleChartView : ViewBase, IRotBubbleChartView
     {
+        /// <summary>Invoked when the user changes the selection</summary>
+        //public event EventHandler<SelectNodeEventArgs> SelectNode;
+
+        /// <summary>Invoked when the user adds a node</summary>
+        public event EventHandler<AddNodeEventArgs> AddNode;
+
+        /// <summary>Invoked when the user duplicates a node</summary>
+        public event EventHandler<DupNodeEventArgs> DupNode;
+
+        /// <summary>Invoked when the user deletes a node</summary>
+        public event EventHandler<DelNodeEventArgs> DelNode;
+
         public Views.DirectedGraphView graph;
 
         private Paned vpaned1 = null;
@@ -24,8 +38,13 @@ namespace UserInterface.Views
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
         private ctxView middlebox = null;
+        private Menu ContextMenu = new Menu();
 
-        public RotBubbleChartView(ViewBase owner) : base(owner)
+        public System.Drawing.Color defaultBackground;
+        public System.Drawing.Color defaultOutline;
+
+
+        public RotBubbleChartView(ViewBase owner = null) : base(owner)
         {
             vpaned1 = new VPaned();
             mainWidget = vpaned1;
@@ -49,13 +68,86 @@ namespace UserInterface.Views
             vpaned1.Pack2(halign, false, false);
             vpaned1.Show();
 
-            graph.ContextMenu = new MenuView();
-            graph.OnButtonDown += OnGraphButtonClick;
+            graph.OnGraphObjectSelected += OnGraphObjectSelected;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
+
+            defaultOutline = Utility.Colour.FromGtk(owner.MainWidget.Style.Foreground(StateType.Normal));
+            defaultBackground = Utility.Colour.FromGtk(owner.MainWidget.Style.Background(StateType.Normal));
+
+            ContextMenuHelper contextMenuHelper = new ContextMenuHelper(graph.MainWidget);
+            contextMenuHelper.ContextMenu += OnPopup;
+        }
+        private void OnPopup(object o, /*PopupMenuArgs */ ContextMenuEventArgs args)
+        {
+            Console.WriteLine("Posting menu");
+            ContextMenu.Popup();
+        }
+
+        /// <summary>
+        /// Selected graph object will be an arc, node, or null. Make sure the menu is appropriate
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void OnGraphObjectSelected(object o, GraphObjectSelectedArgs args)
+        {
+            ContextMenu.Foreach(mi => ContextMenu.Remove(mi));
+            Console.WriteLine("Creating menu");
+            MenuItem item;
+            EventHandler handler;
+            if (args.Object1 == null)
+            {
+                middlebox.OnSelect(selectMode.info);
+                item = new MenuItem("Add Node");
+                handler = delegate (object s, EventArgs x)
+                {
+                    Console.WriteLine("Add node selected");
+                    int n = Graph.DirectedGraph.Nodes.Count;
+                    if (AddNode != null) { AddNode(this, new AddNodeEventArgs { Name = "State " + n, Background = defaultBackground, Outline = defaultOutline }); }
+                };
+                item.Activated += handler;
+                ContextMenu.Append(item);
+            }
+            if (args.Object1?.GetType() == typeof(DGNode) && args.Object2 == null)
+            {
+                middlebox.OnSelect(selectMode.node);
+                item = new MenuItem("Duplicate");
+                handler = delegate (object s, EventArgs x) {
+                    Console.WriteLine("duplicate node selected");
+                    if (DupNode != null) { DupNode(this, new DupNodeEventArgs { nodeNameToDuplicate = args.Object1.Name }); }
+                };
+                item.Activated += handler;
+                ContextMenu.Append(item);
+
+                item = new MenuItem("Delete");
+                handler = delegate (object s, EventArgs x) {
+                    Console.WriteLine("delete node selected");
+                    if (DelNode != null) { DelNode(this, new DelNodeEventArgs { nodeNameToDelete = args.Object1.Name }); }
+                };
+                item.Activated += handler;
+                ContextMenu.Append(item);
+
+            }
+            if (args.Object1?.GetType() == typeof(DGNode) && args.Object2?.GetType() == typeof(DGNode))
+            {
+                middlebox.OnSelect(selectMode.info);
+                item = new MenuItem("Add Arc");
+                handler = delegate (object s, EventArgs x)
+                {
+                    Console.WriteLine("add arc selected");
+                    //if (DupNode != null) { DupNode(this, new DupNodeEventArgs { nodeNameToDuplicate = args.Object1.Name }); }
+                };
+                item.Activated += handler;
+                ContextMenu.Append(item);
+            }
+            if (args.Object1?.GetType() == typeof(DGArc) )
+                middlebox.OnSelect(selectMode.arc);
+
+            ContextMenu.ShowAll(); 
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
+            graph.OnGraphObjectSelected -= OnGraphObjectSelected;
             combobox1.Changed -= OnComboBox1SelectedValueChanged;
             graph.MainWidget.Destroy();
             graph = null;
@@ -63,25 +155,6 @@ namespace UserInterface.Views
             owner = null;
         }
 
-        // The graph is telling us it's made a selection on the down click, and is
-        // about to post a menu when the user lets go.
-        public void OnGraphButtonClick(object sender, EventArgs e)
-        {
-
-            var mnu = new List<MenuDescriptionArgs>();
-
-            MenuDescriptionArgs desc = new MenuDescriptionArgs();
-            desc.Name = "Add Node";
-            //desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
-
-            //EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mun, method);
-            EventHandler handler = delegate (object s, EventArgs x) { Console.WriteLine("Test"); };
-            desc.OnClick = handler;
-
-            mnu.Add(desc);
-            graph.ContextMenu.Populate(mnu);
-
-        }
         private void OnComboBox1SelectedValueChanged(object sender, EventArgs e)
         {
             if (OnInitialStateChanged != null)
@@ -129,6 +202,7 @@ namespace UserInterface.Views
                 Label l1 = new Label("Rules");
                 arcSelBox.PackStart(l1, false, false, 0);
                 textbox1 = new TextView();
+                textbox1.HeightRequest = 75;
                 //textbox1.
                 ScrolledWindow rules = new ScrolledWindow();
                 rules.ShadowType = ShadowType.EtchedIn;
@@ -139,6 +213,7 @@ namespace UserInterface.Views
                 Label l2 = new Label("Actions");
                 arcSelBox.PackStart(l2, false, false, 0);
                 textbox2 = new TextView();
+                textbox2.HeightRequest = 75;
                 ScrolledWindow actions = new ScrolledWindow();
                 actions.ShadowType = ShadowType.EtchedIn;
                 actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
@@ -180,33 +255,36 @@ namespace UserInterface.Views
 
                 OnSelect(selectMode.info);
             }
-            void OnSelect(selectMode mode)
+            public void OnSelect(selectMode mode)
             {
-                MainWidget.HideAll();
+                MainWidget.Foreach(c => c.Hide()); // .HideAll();
+                ctxLabel.Show();
                 MainWidget.PackStart(ctxLabel, false, false, 0);
 
                 switch (mode)
                 {
                     case selectMode.arc: {
                             ctxLabel.Text = "Transition from x to y";
+                            arcSelWdgt.Show();
                             MainWidget.PackStart(arcSelWdgt, false, false, 0);
                             break;
                         }
                     case selectMode.node: {
                             ctxLabel.Text = "State xxx";
+                            nodeSelWdgt.Show();
                             MainWidget.PackStart(nodeSelWdgt, false, false, 0);
                             break;
                         }
                     case selectMode.info: {
                             ctxLabel.Text = "Information";
+                            infoWdgt.Show();
                             MainWidget.PackStart(infoWdgt,false, false, 0);
                             break;
                         }
                 }
                 MainWidget.Show();
             }
-
-            private enum selectMode { arc, node, info  };
         }
+        public enum selectMode { arc, node, info };
     }
 }
