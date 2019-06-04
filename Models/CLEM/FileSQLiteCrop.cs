@@ -40,7 +40,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file from a APSIM SQLite database for the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/DataReaders/CropSQLiteDataReader.htm")]
+    [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
     public class FileSQLiteCrop : CLEMModel, IFileCrop
     {
         private bool nitrogenColumnExists = false;
