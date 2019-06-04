@@ -232,7 +232,7 @@ namespace Models.CLEM.Activities
             }
 
             // if Jan-March then use first three months otherwise use 2
-            int greenage = (Clock.Today.Month <= 3) ? 3 : 2;
+            int greenage = (Clock.Today.Month <= 3) ? 2 : 1;
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;
