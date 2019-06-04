@@ -16628,8 +16628,8 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "\\\\Lin-file\\home$\\HRARXC\\My Documents\\RCichota\\Projects\\FRNL\\ForageSpecies\\General\\Datasets\\Foulum-DK\\Foulum.met",
-                      "ExcelWorkSheetName": null,
+                      "FileName": "Foulum.met",
+                      "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -29618,8 +29618,8 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "\\\\Lin-file\\home$\\HRARXC\\My Documents\\RCichota\\Projects\\FRNL\\ForageSpecies\\General\\Datasets\\Foulum-DK\\Foulum.met",
-                      "ExcelWorkSheetName": null,
+                      "FileName": "Foulum.met",
+                      "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
                       "IncludeInDocumentation": true,
