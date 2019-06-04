@@ -282,7 +282,8 @@ namespace Models.CLEM.Activities
                     {
                         Age = 0
                     };
-                    newPasture.Set(growth * Area);  
+                    newPasture.Set(growth * Area);
+                    newPasture.Growth = growth * Area;
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100,Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
@@ -341,6 +342,27 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Function to detach pasture before reporting
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMDetachPasture")]
+        private void OnCLEMDetachPasture(object sender, EventArgs e)
+        {
+            foreach (var pool in LinkedNativeFoodType.Pools)
+            {
+                double detach = LinkedNativeFoodType.CarryoverDetachRate;
+                if (pool.Age < 12)
+                {
+                    detach = LinkedNativeFoodType.DetachRate;
+                }
+                double detachedAmount = pool.Amount * (1 - detach);
+                pool.Detached = pool.Amount * detach;
+                pool.Set(detachedAmount);
+            }
+        }
+
+        /// <summary>
         /// Function to age resource pools
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -356,18 +378,11 @@ namespace Models.CLEM.Activities
                 // DMD is a proportional loss (x = x*(1-proploss))
                 pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
-                double detach = LinkedNativeFoodType.CarryoverDetachRate;
                 if (pool.Age < 12)
                 {
-                    detach = LinkedNativeFoodType.DetachRate;
                     pool.Age++;
                 }
-                pool.Growth = 0;
-                double detachedAmount = pool.Amount * (1 - detach);
-                pool.Set(detachedAmount);
-                pool.Detached = detachedAmount;
             }
-
             // remove all pools with less than 10g of food
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }
