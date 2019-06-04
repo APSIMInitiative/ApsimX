@@ -448,7 +448,8 @@ namespace Models.CLEM.Resources
 
                 // take from pools as specified for the breed
                 double amountRequired = request.Required;
-                bool secondTakeFromPools = thisBreed.RuminantTypeModel.StrictFeedingLimits;
+                // secondtake is the inverse of setting stricy feeding limits.
+                bool secondTakeFromPools = !thisBreed.RuminantTypeModel.StrictFeedingLimits;
                 thisBreed.DMD = 0;
                 thisBreed.N = 0;
                 int index = 0;
