@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 197,
+  "ExplorerWidth": 198,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -1903,6 +1903,24 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n    \t[Link] Weather weather = null;\r\n        private RectangularZone[] Zones {get; set; }\r\n\r\n        public double FRadIntCanopy {get; set;}\r\n        public double FRadIntUnderstory {get; set;}\r\n        private double[] Zwidth {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        private double CanopyWidth {get; set;}\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               //Set up our list on zones in the simulation\r\n               List<RectangularZone> zones = new List<RectangularZone>();\r\n               foreach (RectangularZone zone in Apsim.FindAll(this.Parent, typeof(RectangularZone)))\r\n               {\r\n                   zones.Add(zone as RectangularZone);\r\n               }\r\n               Zones = zones.ToArray();\r\n               \r\n               //Set up local solution variables\r\n               Zwidth = new double[Zones.Length];\r\n               int pos = 0;\r\n               foreach (RectangularZone zone in Zones)\r\n               {\r\n               \t\tZwidth[pos] = zone.Width;\r\n               \t\tAreaWidth += zone.Width;\r\n               \t\tpos += 1;\r\n               }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tdouble CanopyWidth = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Width\")/1000;\r\n        \tdouble CanopyRs = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.RadIntTot\");\r\n        \tFRadIntCanopy = (CanopyRs * Zwidth[0])/(weather.Radn * AreaWidth);\r\n        \tdouble UnderstoryRs = (double)Zones[1].Get(\"Slurp.Leaf.RadIntTot\"); \r\n        \tFRadIntUnderstory = (UnderstoryRs * Zwidth[1])/ (weather.Radn * AreaWidth);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "FRadIntCanopy",
+              "Value": "0"
+            },
+            {
+              "Key": "FRadIntUnderstory",
+              "Value": "0"
+            }
+          ],
+          "Name": "CalcFRadInt",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
@@ -2032,7 +2050,7 @@
                 "[Clock].Today",
                 "[SimpleFruitTree].Leaf.Height as height",
                 "[SimpleFruitTree].Leaf.LAI as lai",
-                "([SimpleFruitTree].Leaf.RadIntTot * 1.5) / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntCanopy as f.rad.int",
                 "[SimpleFruitTree].Leaf.Transpiration * 1.5/5 as transpiration",
                 "sum([Soil].SoilWater.SWmm[1:7]) as psw",
                 "sum([Soil].OutputLayers.SWmm[1:3]) as psw",
@@ -2808,7 +2826,7 @@
                 "[Clock].Today",
                 "[Slurp].Leaf.Height as height",
                 "[Slurp].Leaf.LAI as lai",
-                "([Slurp].Leaf.RadIntTot * 3.5)  / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntUnderstory as f.rad.int",
                 "[Slurp].Leaf.Transpiration as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:3]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -3484,6 +3502,24 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Manager, Models",
+          "Code": "\r\n",
+          "Parameters": [
+            {
+              "Key": "FRadIntCanopy",
+              "Value": "0"
+            },
+            {
+              "Key": "FRadIntUnderstory",
+              "Value": "0"
+            }
+          ],
+          "Name": "CalcFRadInt",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Graph.Graph, Models",
           "Caption": null,
           "Axis": [
@@ -3519,7 +3555,7 @@
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
-              "ColourArgb": -16736653,
+              "ColourArgb": -16777216,
               "FactorToVaryColours": "Zone",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
@@ -4529,7 +4565,7 @@
                 "[Clock].Today",
                 "[SimpleFruitTree].Leaf.Height as height",
                 "[SimpleFruitTree].Leaf.LAI as lai",
-                "([SimpleFruitTree].Leaf.RadIntTot * 1.5) / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntCanopy as f.rad.int",
                 "[SimpleFruitTree].Leaf.Transpiration * 1.5/5 as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -5902,7 +5938,7 @@
                 "[Clock].Today",
                 "[Slurp].Leaf.Height as height",
                 "[Slurp].Leaf.LAI as lai",
-                "([Slurp].Leaf.RadIntTot * 3.5)  / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntUnderstory as f.rad.int",
                 "[Slurp].Leaf.Transpiration as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -6600,6 +6636,24 @@
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "namespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "FRadIntCanopy",
+              "Value": "0"
+            },
+            {
+              "Key": "FRadIntUnderstory",
+              "Value": "0"
+            }
+          ],
+          "Name": "CalcFRadInt",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -7938,7 +7992,7 @@
                 "[Clock].Today",
                 "[SimpleFruitTree].Leaf.Height as height",
                 "[SimpleFruitTree].Leaf.LAI as lai",
-                "([SimpleFruitTree].Leaf.RadIntTot * 1.5) / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntCanopy as f.rad.int",
                 "[SimpleFruitTree].Leaf.Transpiration * 1.5/5 as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -8867,7 +8921,7 @@
                 "[Clock].Today",
                 "[Slurp].Leaf.Height as height",
                 "[Slurp].Leaf.LAI as lai",
-                "([Slurp].Leaf.RadIntTot * 3.5)  / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntUnderstory as f.rad.int",
                 "[Slurp].Leaf.Transpiration as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -9542,6 +9596,24 @@
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "namespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "FRadIntCanopy",
+              "Value": "0"
+            },
+            {
+              "Key": "FRadIntUnderstory",
+              "Value": "0"
+            }
+          ],
+          "Name": "CalcFRadInt",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -10784,7 +10856,7 @@
                 "[Clock].Today",
                 "[SimpleFruitTree].Leaf.Height as height",
                 "[SimpleFruitTree].Leaf.LAI as lai",
-                "([SimpleFruitTree].Leaf.RadIntTot * 1.5) / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntCanopy as f.rad.int",
                 "[SimpleFruitTree].Leaf.Transpiration * 1.5/5 as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:4]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -11711,7 +11783,7 @@
                 "[Clock].Today",
                 "[Slurp].Leaf.Height as height",
                 "[Slurp].Leaf.LAI as lai",
-                "([Slurp].Leaf.RadIntTot * 3.5)  / ([Weather].Radn * (1.5+3.5)) as f.rad.int",
+                "[CalcFRadInt].Script.FRadIntUnderstory as f.rad.int",
                 "[Slurp].Leaf.Transpiration as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:4]) as psw",
                 "[Soil].OutputLayers.SW",
@@ -12383,6 +12455,24 @@
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "namespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "FRadIntCanopy",
+              "Value": "0"
+            },
+            {
+              "Key": "FRadIntUnderstory",
+              "Value": "0"
+            }
+          ],
+          "Name": "CalcFRadInt",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
