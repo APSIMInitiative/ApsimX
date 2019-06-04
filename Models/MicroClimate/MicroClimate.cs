@@ -355,8 +355,8 @@ namespace Models
                 throw (new Exception("Strip crop light interception model must only have one canopy in zone called " + shortest.zone.Name));
             //if (tallest.DeltaZ.Length > 1)
             //    throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + tallest.zone.Name));
-            //if (shortest.DeltaZ.Length > 1)
-            //    throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
+            if (shortest.DeltaZ.Length > 1)
+                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
 
             if (MathUtilities.Sum(tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
@@ -364,54 +364,47 @@ namespace Models
                 double Dt = tallest.Canopies[0].Canopy.Depth/1000;                 // Depth of tallest strips canopy
                 double BHt = Ht - Dt;                                         // Hight of the base of the tallest strips canopy
                 double Hs = MathUtilities.Sum(shortest.DeltaZ);               // Height of shortest strip
+                if ((Hs > BHt) & (tallest.DeltaZ.Length > 1))
+                    throw (new Exception("Shortest canopy must not overlap with talleset canopy if the base height of the tallest canopy is >0"));
                 double Wt = (tallest.zone as Zones.RectangularZone).Width;    // Width of tallest strip zone
                 double PWt = tallest.Canopies[0].Canopy.Width/1000;           // Width of the canopy in the tallest strip
                 double Wo = Math.Max(0, PWt - Wt);                            // Width of the tallest strips canopy that overlaps the shortest strip
-                double Ws = (shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip zone
-                double Ft = Wt / (Wt + Ws);                                   // Fraction of space in tallest strip zone
-                double Fo = Wo / (Wt + Ws);                                   // Fraction of space where the tallest strip overlaps the shortest
-                double Fs = (Ws-Wo) / (Wt + Ws);                                   // Fraction of space in the shortest strip not overlapped
-                double LAIt = MathUtilities.Sum(tallest.LAItotsum) * Wt/(Wt+Wo);   // LAI of tallest strip in the tall zone
-                double LAIo= MathUtilities.Sum(tallest.LAItotsum) * Wo/(Wt + Wo);  // LAI of tallest strip in the zone overlap
+                double Ws = (shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip
+                double Ft = (Wt + Wo) / (Wt + Ws);                                   // Fraction of space in tallest strips canopy
+                double Fs = (Ws - Wo) / (Wt + Ws);                                   // Fraction of space in the shortest strips canopy
+                double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of tallest strip
                 double LAIs = MathUtilities.Sum(shortest.LAItotsum);          // LAI of shortest strip
                 double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
                 double Ks = shortest.Canopies[0].Ktot;                        // Extinction Coefficient of the shortest strip
                 double Httop = Dt;                                            // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
                 double LAIttop = LAIt;                                        // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
-                double LAIotop = LAIo;                                        // LAI of the top layer of the tallest strip in the zone overlap
                 if (Hs > BHt)
                 {
                     Httop = Dt - (Hs - BHt);                                 
                     LAIttop = Httop / Dt * LAIt;
-                    LAIotop = Httop / Dt * LAIo;
                 }
                 double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
-                double LAIobot = LAIo - LAIotop;                              // LAI of the bottom layer of the tallest strip in the overlap
                 double LAIttophomo = Ft * LAIttop;                            // LAI of top layer of tallest strip if spread homogeneously across all of the space
-                double LAIotophomo = Fo * LAIotop;                            // LAI of top layer of overlap if spread homogeneously across all of the space
                 double Ftblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Wt, 2)) - Httop) / Wt;  // View factor for top layer of tallest strip
-                double Foblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Wo, 2)) - Httop) / Wo;  // View factor for top layer of overlap
                 double Fsblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Ws, 2)) - Httop) / Ws;  // View factor for top layer of shortest strip
                 double Tt = Ft * (Ftblack * Math.Exp(-Kt * LAIttop) 
                                   + Ft * (1 - Ftblack) * Math.Exp(-Kt * LAIttophomo)) 
                           + Fs * Ft * (1 - Fsblack) * Math.Exp(-Kt * LAIttophomo);  //  Transmission of light to bottom of top layer in tallest strip
-                double To = Fo * (Foblack * Math.Exp(-Kt * LAIotop)
-                                  + Fo * (1 - Foblack) * Math.Exp(-Kt * LAIotophomo))
-                          + Fs * Fo * (1 - Fsblack) * Math.Exp(-Kt * LAIotophomo);  //  Transmission of light to bottom of top layer in overlap
                 double Ts = Fs * (Fsblack +Fs*(1-Fsblack)*Math.Exp(-Kt*LAIttophomo))
                           +Ft*Fs*((1-Ftblack)*Math.Exp(-Kt*LAIttophomo));           //  Transmission of light to bottom of top layer in shortest strip
-                double Intttop = 1 - Tt - To - Ts * Wt / (Wt + Wo);                                 // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
-                double Inttbot = (Tt * (1 - Math.Exp(-Kt * LAItbot))) * Wt / (Wt + Wo);        // Interception by the bottom layer of the tallest strip
-                double Soilt = (Tt * (Math.Exp(-Kt * LAItbot))) * Wt / (Wt + Wo);              // Transmission to the soil below tallest strip
-                double Intotop = 1 - Tt - To - Ts * Wo / (Wt + Wo);                                 // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
-                double Intobot = (Tt * (1 - Math.Exp(-Kt * LAItbot))) * Wo / (Wt + Wo);        // Interception by the bottom layer of the tallest strip
-                double Ints = Ts * (1 - Math.Exp(-Ks * LAIs));                // Interception by the shortest strip
-                double Soils = Ts * (Math.Exp(-Ks * LAIs));                   // Transmission to the soil below shortest strip
-                double EnergyBalanceCheck = Intttop + Inttbot + Intotop + Intobot + Soilt + Ints + Soils;  // Sum of all light fractions (should equal 1)
+                double Intttop = 1 - Tt - Ts;                                 // Fractional interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
+                double Inttbot = (Tt * (1 - Math.Exp(-Kt * LAItbot)));        // Fractional interception by the bottom layer of the tallest strip
+                double Soilt = (Tt * (Math.Exp(-Kt * LAItbot)));              // Fractional transmission to the soil below tallest strip
+                double Ints = Ts * (1 - Math.Exp(-Ks * LAIs));                // Fractional interception by the shortest strip
+                double Soils = Ts * (Math.Exp(-Ks * LAIs));                   // Fractional transmission to the soil below shortest strip
+                double EnergyBalanceCheck = Intttop + Inttbot + Soilt + Ints + Soils;  // Sum of all light fractions (should equal 1)
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot+ Intotop + Intobot) /Ft;
+                Ft = (Wt) / (Wt + Ws);  // Remove overlap so scaling back to zone ground area works
+                Fs = (Ws) / (Wt + Ws);  // Remove overlap so scaling back to zone ground area works
+
+                tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) /Ft;  //Fix me.  Currently putting radiation interception into the bottom layer which is not correct when we have a canopy with a base height > 0
                 tallest.SurfaceRs = weather.Radn*Soilt/Ft;
 
                 if (shortest.Canopies[0].Rs != null)
