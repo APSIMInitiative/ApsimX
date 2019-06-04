@@ -1963,7 +1963,7 @@
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "StartGrainFill",
-                  "ReSetEvent": null,
+                  "ReSetEvent": "Germination",
                   "Name": "FinalGrainNum",
                   "Children": [
                     {
@@ -2093,7 +2093,7 @@
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "FloralInitiation",
-                  "ReSetEvent": null,
+                  "ReSetEvent": "Germination",
                   "Name": "GreenWtAtFI",
                   "Children": [
                     {
