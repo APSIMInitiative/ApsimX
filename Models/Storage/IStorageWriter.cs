@@ -63,7 +63,8 @@
         /// create an ID if the simulationName is unknown.
         /// </summary>
         /// <param name="simulationName">The name of the simulation to look for.</param>
+        /// <param name="folderName">The name of the folder the simulation belongs in.</param>
         /// <returns>Always returns a number.</returns>
-        int GetSimulationID(string simulationName);
+        int GetSimulationID(string simulationName, string folderName);
     }
 }

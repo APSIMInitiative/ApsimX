@@ -47,6 +47,11 @@
                     // Add a simulation descriptor.
                     simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
 
+                    // Add a folderName descriptor.
+                    var folderNode = Apsim.Parent(this, typeof(Folder));
+                    if (folderNode != null)
+                        simDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
+
                     // Add in simulation descriptors.
                     foreach (var simulationDescriptor in baseSimulation.GenerateSimulationDescriptions())
                     {
