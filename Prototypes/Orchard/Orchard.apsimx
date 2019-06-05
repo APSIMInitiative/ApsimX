@@ -1872,14 +1872,14 @@
                 "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 2800,2800,3500,3500,2800",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,125,200,295,330",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,6.6,7.6,7.6,  0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,125,305,330",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,7.6,7.6,  0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
                 "[Leaf].BaseHeightFunction.FixedValue = 800",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 0   , 125, 250, 360, 361",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 1800,1800,2200,2200,1800",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 70  , 125, 360, 361",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 1500,1700,1700,1500",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1"
               ],
@@ -1906,7 +1906,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone[] Zones {get; set; }\r\n\r\n        private double[] Zwidth {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        private double CanopyWidth {get; set;}\r\n        public double TranspCanopy {get; set;}\r\n        public double TranspUnderstory {get; set;}\r\n        public double FRadIntCanopy {get; set;}\r\n        public double FRadIntUnderstory {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               //Set up our list on zones in the simulation\r\n               List<RectangularZone> zones = new List<RectangularZone>();\r\n               foreach (RectangularZone zone in Apsim.FindAll(this.Parent, typeof(RectangularZone)))\r\n               {\r\n                   zones.Add(zone as RectangularZone);\r\n               }\r\n               Zones = zones.ToArray();\r\n               \r\n               //Set up local solution variables\r\n               Zwidth = new double[Zones.Length];\r\n               AreaWidth = 0;\r\n               int pos = 0;\r\n               foreach (RectangularZone zone in Zones)\r\n               {\r\n               \t\tZwidth[pos] = zone.Width;\r\n               \t\tAreaWidth += zone.Width;\r\n               \t\tpos += 1;\r\n               }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tdouble CanopyWidth = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Width\")/1000;\r\n        \tdouble CanopyRs = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.RadIntTot\");\r\n        \tFRadIntCanopy = (CanopyRs * Zwidth[0])/(weather.Radn * AreaWidth);\r\n        \tdouble UnderstoryRs = (double)Zones[1].Get(\"Slurp.Leaf.RadIntTot\"); \r\n        \tFRadIntUnderstory = (UnderstoryRs * Zwidth[1])/ (weather.Radn * AreaWidth);\r\n        \tdouble CanopyTrans = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Transpiration\");\r\n        \tTranspCanopy = CanopyTrans * Zwidth[0]/AreaWidth;\r\n        \tdouble UnderstoryTrans = (double)Zones[1].Get(\"Slurp.Leaf.Transpiration\");\r\n        \tTranspUnderstory = CanopyTrans * Zwidth[1]/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone[] Zones {get; set; }\r\n\r\n        private double[] Zwidth {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        private double CanopyWidth {get; set;}\r\n        public double TranspCanopy {get; set;}\r\n        public double TranspUnderstory {get; set;}\r\n        public double FRadIntCanopy {get; set;}\r\n        public double FRadIntUnderstory {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               //Set up our list on zones in the simulation\r\n               List<RectangularZone> zones = new List<RectangularZone>();\r\n               foreach (RectangularZone zone in Apsim.FindAll(this.Parent, typeof(RectangularZone)))\r\n               {\r\n                   zones.Add(zone as RectangularZone);\r\n               }\r\n               Zones = zones.ToArray();\r\n               \r\n               //Set up local solution variables\r\n               Zwidth = new double[Zones.Length];\r\n               AreaWidth = 0;\r\n               int pos = 0;\r\n               foreach (RectangularZone zone in Zones)\r\n               {\r\n               \t\tZwidth[pos] = zone.Width;\r\n               \t\tAreaWidth += zone.Width;\r\n               \t\tpos += 1;\r\n               }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tdouble CanopyWidth = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Width\")/1000;\r\n        \tdouble CanopyRs = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.RadIntTot\");\r\n        \tFRadIntCanopy = (CanopyRs * Zwidth[0])/(weather.Radn * AreaWidth);\r\n        \tdouble UnderstoryRs = (double)Zones[1].Get(\"Slurp.Leaf.RadIntTot\"); \r\n        \tFRadIntUnderstory = (UnderstoryRs * Zwidth[1])/ (weather.Radn * AreaWidth);\r\n        \tdouble CanopyTrans = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Transpiration\");\r\n        \tTranspCanopy = CanopyTrans * Zwidth[0]/AreaWidth;\r\n        \tdouble UnderstoryTrans = (double)Zones[1].Get(\"Slurp.Leaf.Transpiration\");\r\n        \tTranspUnderstory = UnderstoryTrans * Zwidth[1]/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "TranspCanopy",
@@ -2064,7 +2064,9 @@
                 "sum([Soil].OutputLayers.SWmm[1:3]) as psw",
                 "[Soil].OutputLayers.SW",
                 "sum of [Soil].SoilWater.Flux[6] from 2009-01-21 to 2011-04-14 as drainage",
-                "[SimpleFruitTree].Leaf.WaterDemand as EtDem"
+                "[SimpleFruitTree].Leaf.WaterDemand as EtDem",
+                "[SimpleFruitTree].Leaf.LAI",
+                "[Weather].DaysSinceWinterSolstice"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -3021,9 +3023,9 @@
                         0.2
                       ],
                       "KL": [
-                        0.15,
                         0.1,
                         0.05,
+                        0.03,
                         0.01
                       ],
                       "XF": [
@@ -3421,7 +3423,7 @@
                 },
                 {
                   "Key": "SowingDate",
-                  "Value": "2007-07-01"
+                  "Value": "2006-07-01"
                 },
                 {
                   "Key": "RootDepth",
@@ -4174,36 +4176,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "EtDem",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -4516,6 +4488,72 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "LAI",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Weather.DaysSinceWinterSolstice",
+              "YFieldName": "f.rad.int",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8012,7 +8050,7 @@
         {
           "$type": "Models.Zones.RectangularZone, Models",
           "Length": 100.0,
-          "Width": 1.0,
+          "Width": 1.3,
           "Slope": 0.0,
           "Name": "Row",
           "Children": [
@@ -8027,7 +8065,9 @@
                 "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
                 "[Soil].OutputLayers.SW",
                 "sum of [Soil].SoilWater.Flux[6] from 2008-10-01 to 2011-03-08 as drainage",
-                "[SimpleFruitTree].Root.Depth as rootDepth"
+                "[SimpleFruitTree].Root.Depth as rootDepth",
+                "[SimpleFruitTree].Leaf.LAI",
+                "[Weather].DaysSinceWinterSolstice"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -8941,7 +8981,7 @@
         {
           "$type": "Models.Zones.RectangularZone, Models",
           "Length": 100.0,
-          "Width": 2.5,
+          "Width": 2.2,
           "Slope": 0.0,
           "Name": "Alley",
           "Children": [
@@ -10798,6 +10838,72 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "LAI",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Weather.DaysSinceWinterSolstice",
+              "YFieldName": "f.rad.int",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
@@ -10867,7 +10973,7 @@
         {
           "$type": "Models.Zones.RectangularZone, Models",
           "Length": 100.0,
-          "Width": 1.0,
+          "Width": 1.3,
           "Slope": 0.0,
           "Name": "Row",
           "Children": [
@@ -11795,7 +11901,7 @@
         {
           "$type": "Models.Zones.RectangularZone, Models",
           "Length": 100.0,
-          "Width": 2.5,
+          "Width": 2.2,
           "Slope": 0.0,
           "Name": "Alley",
           "Children": [
