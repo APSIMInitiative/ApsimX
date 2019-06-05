@@ -26,7 +26,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/resourcebalances.htm")]
+    [HelpUri(@"Content/features/Reporting/ResourceBalances.htm")]
     public class ReportResourceBalances: Models.Report.Report
     {
         [Link]
@@ -66,8 +66,10 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
+            List<string> variableNames = new List<string>
+            {
+                "Parent.Name as Zone"
+            };
 
             if (VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
             {
@@ -262,8 +264,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
     }

@@ -206,12 +206,13 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                // Had birth after last conception
-                // Time since birth < milking days
-                // Last pregnancy was successful
-                // Mother has suckling offspring OR
-                // Cow has been milked since weaning.
-                return (this.AgeAtLastBirth > this.AgeAtLastConception & (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & SuccessfulPregnancy & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
+                //(a)Has at least one suckling offspring(i.e.unweaned offspring)
+                //Or
+                //(b) Is being milked
+                //and
+                //(c) Less than Milking days since last birth
+                // removed the previous SuccessfulPregnancy and BirthAge > ConceptionAge to allow new ability to conceive while lactating.
+                return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
             }            
         }
 

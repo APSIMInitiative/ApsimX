@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the collection of manure from a specified paddock in the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/manure/collectmanurepaddock.htm")]
+    [HelpUri(@"Content/Features/Activities/Manure/CollectManurePaddock.htm")]
     public class ManureActivityCollectPaddock: CLEMActivityBase
     {
         private ProductStoreTypeManure manureStore;
@@ -45,15 +45,6 @@ namespace Models.CLEM.Activities
         [Description("Name of paddock (GrazeFoodStoreType) to collect from (blank is yards)")]
         [Required]
         public string GrazeFoodStoreTypeName { get; set; }
-
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        private List<ResourceRequest> GetResourcesNeededForActivityLocal()
-        {
-            return null;
-        }
 
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided

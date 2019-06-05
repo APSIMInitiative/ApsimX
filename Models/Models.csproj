@@ -144,13 +144,18 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
+    <Compile Include="CLEM\FileSQLiteCrop.cs" />
     <Compile Include="CLEM\Groupings\LabourPriceGroup.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
+    <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
     <Compile Include="CLEM\Resources\LabourPricing.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="CLEM\Reporting\PivotTable.cs" />
+    <Compile Include="CLEM\WarningLog.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -232,6 +237,7 @@
     <Compile Include="G_Range\GRWeather.cs" />
     <Compile Include="G_Range\G_Range.cs" />
     <Compile Include="G_Range\GRParms.cs" />
+    <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />

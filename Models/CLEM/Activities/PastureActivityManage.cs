@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/pasture/managepasture.htm")]
+    [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
         private double unitsOfArea2Ha;
         private IFileGRASP FileGRASP = null;
         private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-        private int soilIndex = 0; // obtained from LandType used
+        private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
         private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
@@ -184,18 +184,19 @@ namespace Models.CLEM.Activities
             }
             if (Area == 0 && AreaRequested > 0)
             {
-                ResourceRequestList = new List<ResourceRequest>();
-                ResourceRequestList.Add(new ResourceRequest()
+                ResourceRequestList = new List<ResourceRequest>
                 {
-                    AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                    ResourceType = typeof(Land),
-                    ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
-                    ActivityModel = this,
-                    Reason = "Assign",
-                    FilterDetails = null
-                }
-                );
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                        ResourceType = typeof(Land),
+                        ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
+                        ActivityModel = this,
+                        Reason = "Assign",
+                        FilterDetails = null
+                    }
+                };
             }
 
             // if we get here we assume some land has been supplied
@@ -270,16 +271,19 @@ namespace Models.CLEM.Activities
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
                 // convert from kg/ha to kg/area unit
-                growth = growth * unitsOfArea2Ha;
+                growth *= unitsOfArea2Ha;
 
                 Cover = pasturedata.Cover;
 
                 if (growth > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-                    newPasture.Age = 0;
-                    newPasture.Set(growth * Area);  
+                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                    {
+                        Age = 0
+                    };
+                    newPasture.Set(growth * Area);
+                    newPasture.Growth = growth * Area;
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100,Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
@@ -338,6 +342,27 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Function to detach pasture before reporting
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMDetachPasture")]
+        private void OnCLEMDetachPasture(object sender, EventArgs e)
+        {
+            foreach (var pool in LinkedNativeFoodType.Pools)
+            {
+                double detach = LinkedNativeFoodType.CarryoverDetachRate;
+                if (pool.Age < 12)
+                {
+                    detach = LinkedNativeFoodType.DetachRate;
+                }
+                double detachedAmount = pool.Amount * (1 - detach);
+                pool.Detached = pool.Amount * detach;
+                pool.Set(detachedAmount);
+            }
+        }
+
+        /// <summary>
         /// Function to age resource pools
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -353,17 +378,11 @@ namespace Models.CLEM.Activities
                 // DMD is a proportional loss (x = x*(1-proploss))
                 pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
-                double detach = LinkedNativeFoodType.CarryoverDetachRate;
                 if (pool.Age < 12)
                 {
-                    detach = LinkedNativeFoodType.DetachRate;
                     pool.Age++;
                 }
-                double detachedAmount = pool.Amount * (1 - detach);
-                pool.Set(detachedAmount);
-                pool.Detached = detachedAmount;
             }
-
             // remove all pools with less than 10g of food
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }

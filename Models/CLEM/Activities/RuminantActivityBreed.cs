@@ -23,8 +23,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Version(1, 0, 2, "Added calculation for proportion ofspring male parameter")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantbreed.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
@@ -41,7 +42,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Use artificial insemination (no bulls required)
         /// </summary>
-        [Description("Use artificial insemination (no bulls required)")]
+        [Description("Use controlled maiting/artificial insemination (no bulls required)")]
         [Required]
         public bool UseAI { get; set; }
 
@@ -129,7 +130,7 @@ namespace Models.CLEM.Activities
 
                                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                                 {
-                                    if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                    if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                     {
                                         // calculate conception
                                         double conceptionRate = ConceptionRate(female) * maleLimiter;
@@ -150,7 +151,7 @@ namespace Models.CLEM.Activities
                                 numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
                                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                                 {
-                                    if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                    if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                     {
                                         // calculate conception
                                         double conceptionRate = ConceptionRate(female);
@@ -268,7 +269,7 @@ namespace Models.CLEM.Activities
                         {
                             // Foetal mortality is now performed each timestep at base of this method
                             object newCalf = null;
-                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() >= 0.5);
+                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
                             double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                             if (isMale)
                             {
@@ -313,7 +314,7 @@ namespace Models.CLEM.Activities
 
                         foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                         {
-                            if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                            if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                             {
                                 // calculate conception
                                 double conceptionRate = ConceptionRate(female) * maleLimiter;
@@ -334,7 +335,7 @@ namespace Models.CLEM.Activities
                         numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
                         foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                         {
-                            if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                            if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                             {
                                 // calculate conception
                                 double conceptionRate = ConceptionRate(female);
@@ -361,8 +362,7 @@ namespace Models.CLEM.Activities
         private double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-
-            bool isConceptionReady = false;
+            bool isConceptionReady;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;

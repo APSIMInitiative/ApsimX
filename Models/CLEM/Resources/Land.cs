@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all land types for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/land/land.htm")]
+    [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
     public class Land: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -167,8 +167,19 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "\n<div class=\"activityentry\">";
-            html += "Reported in <span class=\"setvalue\">" + UnitsOfArea +"</span>";
-            if(UnitsOfAreaToHaConversion != 1)
+            html += "Reported in ";
+            if(UnitsOfArea == null || UnitsOfArea == "")
+            {
+                html += "<span class=\"errorlink\">Unspecified units of area</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + UnitsOfArea + "</span>";
+            }
+            html += "</span>";
+
+
+            if (UnitsOfAreaToHaConversion != 1)
             {
                 html += " (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)";
             }

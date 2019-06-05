@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminantadvancedconception.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminant/RuminantAdvancedConception.htm")]
     public class RuminantConceptionAdvanced: CLEMModel, IConceptionModel
     {
         /// <summary>
@@ -49,6 +49,14 @@ namespace Models.CLEM.Resources
         public double[] ConceptionRateAsymptote { get; set; }
 
         /// <summary>
+        /// Maximum conception rate from uncontrolled breeding 
+        /// </summary>
+        [Category("Advanced", "Breeding")]
+        [Description("Maximum conception rate from uncontrolled breeding")]
+        [Required, Proportion]
+        public double MaximumConceptionUncontrolledBreeding { get; set; }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
@@ -70,8 +78,7 @@ namespace Models.CLEM.Resources
         public double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-
-            bool isConceptionReady = false;
+            bool isConceptionReady;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;
