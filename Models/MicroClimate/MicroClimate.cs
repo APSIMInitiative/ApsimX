@@ -409,7 +409,13 @@ namespace Models
                 Ft = (Wt) / (Wt + Ws);  // Remove overlap so scaling back to zone ground area works
                 Fs = (Ws) / (Wt + Ws);  // Remove overlap so scaling back to zone ground area works
 
-                tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) /Ft;  //Fix me.  Currently putting radiation interception into the bottom layer which is not correct when we have a canopy with a base height > 0
+                if (tallest.DeltaZ.Length>1)
+                {
+                    tallest.Canopies[0].Rs[0] = weather.Radn * Inttbot / Ft;
+                    tallest.Canopies[0].Rs[1] = weather.Radn * Intttop / Ft;
+                }
+                else
+                    tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) /Ft;
                 tallest.SurfaceRs = weather.Radn*Soilt/Ft;
 
                 if (shortest.Canopies[0].Rs != null)
