@@ -37,7 +37,7 @@
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
 
-            //jobRunner.AllJobsCompleted += OnAllJobsCompleted;
+            jobRunner.AllSimulationsCompleted += OnAllJobsCompleted;
         }
 
         /// <summary>Is this instance currently running APSIM.</summary>
