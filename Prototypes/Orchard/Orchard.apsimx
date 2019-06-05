@@ -1737,7 +1737,7 @@
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.1,1",
                 "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 90,140,200,295,330",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0,1.9,3.3,4.5,0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0,2.9,5.0,6.7,0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
@@ -1777,7 +1777,7 @@
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 1",
                 "[Leaf].BaseHeightFunction.FixedValue = 900",
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 900,2200,2200,900",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 300,700,700,300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1"
               ],
@@ -1811,7 +1811,7 @@
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 1",
                 "[Leaf].BaseHeightFunction.FixedValue = 900",
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 900,2200,2200,900",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 300,700,700,300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1"
               ],
@@ -1873,7 +1873,7 @@
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.1,1",
                 "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,125,200,295,330",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0, 6.6,7.6,7.6,  0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,6.6,7.6,7.6,  0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
@@ -8557,7 +8557,7 @@
               "Parameters": [
                 {
                   "Key": "CultivarName",
-                  "Value": "Peach"
+                  "Value": "Apple"
                 },
                 {
                   "Key": "SowingDate",
@@ -10834,7 +10834,8 @@
                 "sum([Soil].OutputLayers.SWmm[1:4]) as psw",
                 "[Soil].OutputLayers.SW",
                 "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage",
-                "[SimpleFruitTree].Root.Depth as rootDepth"
+                "[SimpleFruitTree].Root.Depth as rootDepth",
+                "[Weather].DaysSinceWinterSolstice"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -11410,7 +11411,7 @@
               "Parameters": [
                 {
                   "Key": "CultivarName",
-                  "Value": "Peach"
+                  "Value": "Apple"
                 },
                 {
                   "Key": "SowingDate",
@@ -11760,7 +11761,8 @@
                 "[Slurp].Leaf.Transpiration as transpiration",
                 "sum([Soil].OutputLayers.SWmm[1:4]) as psw",
                 "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage"
+                "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage",
+                "[Weather].DaysSinceWinterSolstice"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -19479,7 +19481,7 @@
                     },
                     {
                       "Key": "SowingDate",
-                      "Value": "2001-07-01"
+                      "Value": "2003-07-01"
                     },
                     {
                       "Key": "RootDepth",
