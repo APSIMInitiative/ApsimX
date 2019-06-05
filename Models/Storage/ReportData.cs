@@ -18,6 +18,9 @@
         /// <summary>The name of the simulation the data belongs to.</summary>
         public string SimulationName { get; set; }
 
+        /// <summary>The name of the folder the simulation belongs in.</summary>
+        public string FolderName { get; set; }
+
         /// <summary>The name of the table to write the data to.</summary>
         public string TableName { get; set; }
 
