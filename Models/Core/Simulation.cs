@@ -156,6 +156,11 @@ namespace Models.Core
         {
             var simulationDescription = new SimulationDescription(this);
 
+            // Add a folderName descriptor.
+            var folderNode = Apsim.Parent(this, typeof(Folder));
+            if (folderNode != null)
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
+
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
             foreach (var zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
