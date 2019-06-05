@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminants/ruminantherd.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
         /// <summary>

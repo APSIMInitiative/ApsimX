@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminants/ruminantcohorts.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantCohorts.htm")]
     public class RuminantInitialCohorts : CLEMModel
     {
         /// <summary>

@@ -28,7 +28,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [Description("This report automatically generates an activity performed ledger and provides a table of activity success.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/activitiesperformed.htm")]
+    [HelpUri(@"Content/features/Reporting/ActivitiesPerformed.htm")]
     public class ReportActivitiesPerformed: Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
