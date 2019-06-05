@@ -117,7 +117,7 @@ namespace Models.Core
                 return null;
             }
             else if (namePath[0] != '.' &&
-                     namePath.Replace("()", "").IndexOfAny("(+*/".ToCharArray()) != -1)
+                     namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1)
             {
                 // expression - need a better way of detecting an expression
                 returnVariable = new VariableExpression(namePath, relativeTo as Model);
@@ -190,7 +190,7 @@ namespace Models.Core
                 }
 
                 // At this point there are only 2 possibilities. We have encountered a 
-                // PropertyInfo or the path is invalid.
+                // PropertyInfo/MethodInfo or the path is invalid.
                 // We now need to loop through the remaining path bits and keep track of each
                 // section of the path as each section will have to be evaulated everytime a
                 // a get is done for this path. 
@@ -221,15 +221,68 @@ namespace Models.Core
                     }
                     else if (propertyInfo == null && relativeToObject is Model)
                     {
-                        // Not a property, may be a child model.
+                        // Not a property, may be an unchecked method or a child model.
                         localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
                         if (localModel == null)
                         {
-                            return null;
-                        }
+                            // not a child model so check that it still isn't an unchecked method with arguments
+                            MethodInfo methodInfo = null;
+                            if(namePathBits[j].IndexOf('(')>0)
+                            { 
+                                relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')));
+                                if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
+                                {
+                                    methodInfo = relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')), BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                                }
+                            }
+                            if (methodInfo != null)
+                            {
+                                // get arguments and store in VariableMethod
+                                List<object> argumentsList = new List<object>();
+                                string args = namePathBits[j].Substring(namePathBits[j].IndexOf('('));
+                                if (args.Length > 0)
+                                {
+                                    args = args.Trim('(').Trim(')');
+                                    var argList = args.Split(',');
+                                    // get arguments
+                                    ParameterInfo[] pars = methodInfo.GetParameters();
 
-                        properties.Add(new VariableObject(localModel));
-                        relativeToObject = localModel;
+                                    for (int argid = 0; argid < argList.Length; argid++)
+                                    {
+                                        var cleanArg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ').Trim('"');
+                                        switch (Type.GetTypeCode(pars[argid].ParameterType))
+                                        {
+                                            case TypeCode.Double:
+                                                argumentsList.Add(Convert.ToDouble(cleanArg));
+                                                break;
+                                            case TypeCode.Int32:
+                                                argumentsList.Add(Convert.ToInt32(cleanArg));
+                                                break;
+                                            case TypeCode.String:
+                                                argumentsList.Add(cleanArg);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    properties.Add(new VariableMethod(relativeTo, methodInfo, argumentsList.ToArray<object>()));
+                                }
+                                else
+                                {
+                                    properties.Add(new VariableMethod(relativeTo, methodInfo, null));
+                                }
+                            }
+                            else
+                            {
+                                // Not a model or method
+                                return null;
+                            }
+                        }
+                        else
+                        {
+                            properties.Add(new VariableObject(localModel));
+                            relativeToObject = localModel;
+                        }
                     }
                     else if (propertyInfo != null)
                     {
