@@ -82,10 +82,7 @@ namespace Models
                 soilSurfaceTemperature = temp_max_melt * maximum_soil_surface_temperature +
                                                   temp_min_melt * minimum_soil_surface_temperature;
             }
-
             // End calculating soil surface temperatures
-
-            // if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'POT_PRD')
 
             // Calculate potential production, using POTCRP as a guide, but not including cropping types.An edit included POTTREE as well, but mostly already present in the model.
             Potential();
@@ -288,7 +285,7 @@ namespace Models
                 // No production this month... there is either zero cover or zero biomass
                 for (int iLyr = 0; iLyr < vLayers; iLyr++)
                 {
-                    prop_live_per_layer[iLyr] = 0.0;         // Nothing alive, so no production.  Or no facet cover, so no production
+                    prop_live_per_layer[iLyr] = 0.0;      // Nothing alive, so no production.  Or no facet cover, so no production
                     totalPotProduction[iLyr] = 0.0;       // Note this is biomass
                     abovegroundPotProduction[iLyr] = 0.0; // Note this is biomass
                     belowgroundPotProduction[iLyr] = 0.0; // Note this is biomass.Divide by 2.5 or 2 for carbon.
@@ -634,13 +631,13 @@ namespace Models
 
             for (int iFacet = (int)Facet.shrub; iFacet <= (int)Facet.tree; iFacet++)
             {
-                switch (iFacet)
+                switch ((Facet)iFacet)
                 {
 
-                    case (int)Facet.shrub:
+                    case Facet.shrub:
                         avg_pot_production = (totalPotProduction[(int)Layer.shrub] + totalPotProduction[(int)Layer.shrubUnderTree]) / 2.0;
                         break;
-                    case (int)Facet.tree:
+                    case Facet.tree:
                         avg_pot_production = totalPotProduction[(int)Layer.tree];
                         break;
                 }
@@ -672,10 +669,10 @@ namespace Models
                             shrub_c_sum = shrub_c_sum + shrubCarbon[iPart];
                             tree_c_sum = tree_c_sum + treeCarbon[iPart];
                         }
-                        switch (iFacet)
+                        switch ((Facet)iFacet)
                         {
 
-                            case (int)Facet.shrub:
+                            case Facet.shrub:
                                 //  Shrubs
                                 if (shrub_c_sum > 0.0) // If a division by zero error would occur, just don't change carbon_allocation
                                 {
@@ -684,7 +681,7 @@ namespace Models
                                     carbonAllocation[(int)Facet.shrub, (int)WoodyPart.coarseRoot] = shrubCarbon[(int)WoodyPart.coarseRoot] / shrub_c_sum;
                                 }
                                 break;
-                            case (int)Facet.tree:
+                            case Facet.tree:
                                 // Trees
                                 if (tree_c_sum > 0.0) // If a division by zero error would occur, just don't change carbon_allocation
                                 {
@@ -736,12 +733,12 @@ namespace Models
                     // Growth of forest parts, with carbon added to the part and removed from the source-sink
                     for (int iPart = 0; iPart < nWoodyParts; iPart++)
                     {
-                        switch (iFacet)
+                        switch ((Facet)iFacet)
                         {
-                            case (int)Facet.shrub:
+                            case Facet.shrub:
                                 shrubCarbon[iPart] = shrubCarbon[iPart] + mfprd[iPart];   // Translated from CSCHED... double-check as needed
                                 break;
-                            case (int)Facet.tree:
+                            case Facet.tree:
                                 treeCarbon[iPart] = treeCarbon[iPart] + mfprd[iPart];    // Translated from CSCHED... double-check as needed
                                 break;
                         }
@@ -765,12 +762,12 @@ namespace Models
                     double[] fmrspflux = new double[nWoodyParts];
                     for (int iPart = 0; iPart < nWoodyParts; iPart++) // Merged two looping structures, the first didn't exist in Century, but works with this logic.
                     {
-                        switch (iFacet)
+                        switch ((Facet)iFacet)
                         {
-                            case (int)Facet.shrub:
+                            case Facet.shrub:
                                 fmrspflux[iPart] = parms.woodyMaxFractionNppToRespiration[iPart] * resp_temp_effect * shrubCarbon[iPart];
                                 break;
-                            case (int)Facet.tree:
+                            case Facet.tree:
                                 fmrspflux[iPart] = parms.woodyMaxFractionNppToRespiration[iPart] * resp_temp_effect * treeCarbon[iPart];
                                 break;
                         }
@@ -780,9 +777,9 @@ namespace Models
 
                     double[] euf = new double[nWoodyParts];
                     // Actual uptake... using the average of the vegetation layer parts
-                    switch (iFacet)
+                    switch ((Facet)iFacet)
                     {
-                        case (int)Facet.shrub:
+                        case Facet.shrub:
                             if ((totalPotProdLimitedByN[(int)Layer.shrub] + totalPotProdLimitedByN[(int)Layer.shrubUnderTree] / 2.0) > 0.0)
                             {
                                 for (int iPart = 0; iPart < nWoodyParts; iPart++)
@@ -795,7 +792,7 @@ namespace Models
                                     euf[iPart] = 1.0;      // Will cause no change later in the logic.
                             }
                             break;
-                        case (int)Facet.tree:
+                        case Facet.tree:
                             if (totalPotProdLimitedByN[(int)Layer.tree] > 0.0)
                             {
                                 for (int iPart = 0; iPart < nWoodyParts; iPart++)
@@ -816,12 +813,12 @@ namespace Models
                         for (int iPart = 0; iPart < nWoodyParts; iPart++)
                         {
                             amt = uptake[N_STORE] * euf[iPart];
-                            switch (iFacet)
+                            switch ((Facet)iFacet)
                             {
-                                case (int)Facet.shrub:
+                                case Facet.shrub:
                                     shrubNitrogen[iPart] = shrubNitrogen[iPart] + amt;
                                     break;
-                                case (int)Facet.tree:
+                                case Facet.tree:
                                     treeNitrogen[iPart] = treeNitrogen[iPart] + amt;
                                     break;
                             }
@@ -850,12 +847,12 @@ namespace Models
                             for (int iPart = 0; iPart < nWoodyParts; iPart++)
                             {
                                 amt = calcup * euf[iPart];
-                                switch (iFacet)
+                                switch ((Facet)iFacet)
                                 {
-                                    case (int)Facet.shrub:
+                                    case Facet.shrub:
                                         shrubNitrogen[iPart] = shrubNitrogen[iPart] + amt;
                                         break;
-                                    case (int)Facet.tree:
+                                    case Facet.tree:
                                         treeNitrogen[iPart] = treeNitrogen[iPart] + amt;
                                         break;
                                 }
@@ -875,12 +872,12 @@ namespace Models
                         for (int iPart = 0; iPart < nWoodyParts; iPart++)
                         {
                             amt = uptake[N_FIX] * euf[iPart];
-                            switch (iFacet)
+                            switch ((Facet)iFacet)
                             {
-                                case (int)Facet.shrub:
+                                case Facet.shrub:
                                     shrubNitrogen[iPart] = shrubNitrogen[iPart] + amt;
                                     break;
-                                case (int)Facet.tree:
+                                case Facet.tree:
                                     treeNitrogen[iPart] = treeNitrogen[iPart] + amt;
                                     break;
                             }
@@ -903,15 +900,15 @@ namespace Models
                 else
                 {
                     // There is no production this month
-                    switch (iFacet)
+                    switch ((Facet)iFacet)
                     {
-                        case (int)Facet.shrub:
+                        case Facet.shrub:
                             totalPotProdLimitedByN[(int)Layer.shrub] = 0.0;
                             totalPotProduction[(int)Layer.shrub] = 0.0;
                             totalPotProdLimitedByN[(int)Layer.shrubUnderTree] = 0.0;
                             totalPotProduction[(int)Layer.shrubUnderTree] = 0.0;
                             break;
-                        case (int)Facet.tree:
+                        case Facet.tree:
                             totalPotProdLimitedByN[(int)Layer.tree] = 0.0;
                             totalPotProduction[(int)Layer.tree] = 0.0;
                             break;
@@ -1606,7 +1603,546 @@ namespace Models
             // else ... no fire
         }
 
+        /// <summary>
+        /// Woody plant material dies for various reasons.
+        /// </summary>
         private void WoodyPlantPartDeath()
-        { }
+        {
+            double temp_average = (globe.maxTemp + globe.minTemp) / 2.0;
+            double death_carbon = 0.0;
+            double death_nitrogen = 0.0;
+            for (int iFacet = (int)Facet.shrub; iFacet <= (int)Facet.tree; iFacet++)
+            {
+                // Death of leaves
+                if (leafCarbon[iFacet] > 0.0001)
+                {
+                    // Must account for deciduous leaves.  Century uses a death rate for non - deciduous months and another for deciduous months.  I am going to do the same, but the deciduous will be additive.
+                    // Extremely complex if-then being replaced with a series of tests...
+                    bool l1 = temp_average < parms.temperatureLeafOutAndFall[1];
+                    bool l2 = !dayLengthIncreasing;
+                    // The following cannot use .eq.months as CENTURY does.In CENTURY, a SAVE stores the state of "drop leaves" between months.  
+                    // I will edit it to more closely match CENTURY, so that IN_WINTER *is *saved
+                    bool l3 = !inWinter && Latitude > 0.0 && month == 12;
+                    bool l4 = !inWinter && Latitude <= 0.0 && month == 6;
+                    if ((l1 && l2) || l3 || l4)
+                        inWinter = true;
+
+                    // Do the base line leaf death rate
+                    death_carbon = leafCarbon[iFacet] * parms.leafDeathRate[iFacet];
+                    // Century has an option to adjust death rate associated with element concentration, but I will skip that.
+                    // And incorporate deciduous death.That's the proportion that are deciduous times the carbon times the death rate)
+                    if (inWinter && propAnnualDecid[iFacet] > 0.001)
+                        death_carbon = death_carbon + (propAnnualDecid[iFacet] * (leafCarbon[iFacet] * parms.deathRateOfDeciduousLeaves));
+                    if (parms.droughtDeciduous[iFacet] > 0.0001)
+                        death_carbon = death_carbon + ((leafCarbon[iFacet] * (1.0 - waterFunction) * parms.deathRateOfDeciduousLeaves) * parms.droughtDeciduous[iFacet]);
+                    deadStandingCarbon[iFacet] = deadStandingCarbon[iFacet] + death_carbon;
+                    // Make sure the following is only a placeholder.Death_Carbon should not accumulate twice.If it is happening, only use standing dead carbon.
+                    deadLeafCarbon[iFacet] = deadLeafCarbon[iFacet] + death_carbon;
+                    // Calculate the proportion of carbon that has been killed
+                    // A different pathway than in Century.I may misinterpret, but perhaps it is just simplier given the structure I have used.
+                    double c_prop;
+                    if (leafCarbon[iFacet] > 0.0001)
+                        c_prop = death_carbon / leafCarbon[iFacet];
+                    else
+                        c_prop = 0.0;
+                    leafCarbon[iFacet] = leafCarbon[iFacet] - death_carbon;
+                    double to_storage = leafNitrogen[iFacet] * c_prop * parms.fractionWoodyLeafNTranslocated;
+                    storedNitrogen[iFacet] = storedNitrogen[iFacet] + to_storage;
+                    death_nitrogen = (leafNitrogen[iFacet] * c_prop) - to_storage;
+                    leafNitrogen[iFacet] = leafNitrogen[iFacet] - death_nitrogen;
+                    deadStandingNitrogen[iFacet] = deadStandingNitrogen[iFacet] + death_nitrogen;
+                    deadLeafNitrogen[iFacet] = deadLeafNitrogen[iFacet] + death_nitrogen;
+
+                    // A portion of stored carbon for maintence respiration is loss associated with death of plant part.    ! FLOWS may be misnamed, or the wrong indicator.
+                    respirationFlows[(int)Facet.herb] = respirationFlows[(int)Facet.herb] - (respirationFlows[(int)Facet.herb] * c_prop);
+
+                    // Do flows to litter, keeping track of structural and metabolic components
+                    // DON'T PASS TO LITTER UNTIL STANDING DEAD LEAVES FALL.  CENTURY doesn't use standing dead for woody plants, but leaves can take some time to fall, so I will use them here.
+                }
+
+                // Death of seeds
+                if (seedCarbon[iFacet] > 0.0)
+                    death_carbon = seedCarbon[iFacet] * (parms.fractionSeedsNotGerminated[iFacet] / 12.0);
+                else
+                    death_carbon = 0.0;
+                if (seedNitrogen[iFacet] > 0.0)
+                    death_nitrogen = seedNitrogen[iFacet] * (parms.fractionSeedsNotGerminated[iFacet] / 12.0);
+                else
+                    death_nitrogen = 0.0;
+                deadSeedCarbon[iFacet] = deadSeedCarbon[iFacet] + death_carbon;
+                seedCarbon[iFacet] = seedCarbon[iFacet] - death_carbon;
+                deadSeedNitrogen[iFacet] = deadSeedNitrogen[iFacet] + death_nitrogen;
+                seedNitrogen[iFacet] = seedNitrogen[iFacet] - death_nitrogen;
+                // Seeds won't play a role in respiration.  These seeds are destined for decomposition only.
+                // Seeds don't move to standing dead.  They are viable until they drop from the plant and a portion becomes litter.
+                // Do flows to litter for seeds, keeping track of structural and metabolic components
+                // Seed litter is already partitioned in the main decomposition routine.Commented out here.
+
+                // Death of fine branches
+                if (fineBranchCarbon[iFacet] > 0.0)
+                    death_carbon = fineBranchCarbon[iFacet] * parms.fineBranchDeathRate[iFacet];
+                else
+                    death_carbon = 0.0;
+                fineBranchCarbon[iFacet] = fineBranchCarbon[iFacet] - death_carbon;
+                deadFineBranchCarbon[iFacet] = deadFineBranchCarbon[iFacet] + death_carbon;
+                // Fine branches should remain in standing dead until fall
+                deadStandingCarbon[iFacet] = deadStandingCarbon[iFacet] + death_carbon;
+                if (fineBranchNitrogen[iFacet] > 0.0001)
+                    death_nitrogen = fineBranchNitrogen[iFacet] * parms.fineBranchDeathRate[iFacet];
+                else
+                    death_nitrogen = 0.0;
+                fineBranchNitrogen[iFacet] = fineBranchNitrogen[iFacet] - death_nitrogen;
+                deadFineBranchNitrogen[iFacet] = deadFineBranchNitrogen[iFacet] + death_nitrogen;
+                deadStandingNitrogen[iFacet] = deadStandingNitrogen[iFacet] + death_nitrogen;
+                // WAIT until standing dead falls to litter before partitioning... FINE BRANCHES JOIN STANDING DEAD
+
+                // Death of fine roots
+                if (fineRootCarbon[iFacet] > 0.0)
+                    death_carbon = fineRootCarbon[iFacet] * parms.fineRootDeathRate[iFacet];
+                else
+                    death_carbon = 0.0;
+                fineRootCarbon[iFacet] = fineRootCarbon[iFacet] - death_carbon;
+                deadFineRootCarbon[iFacet] = deadFineRootCarbon[iFacet] + death_carbon;
+                if (fineRootNitrogen[iFacet] > 0.00001)
+                    death_nitrogen = fineRootNitrogen[iFacet] * parms.fineRootDeathRate[iFacet];
+                else
+                    death_nitrogen = 0.0;
+                fineRootNitrogen[iFacet] = fineRootNitrogen[iFacet] - death_nitrogen;
+                deadFineRootNitrogen[iFacet] = deadFineRootNitrogen[iFacet] + death_nitrogen;
+                // Do flows to litter, keeping track of structural and metabolic components
+                // Fine roots are already partitioned in the main decomposition module.  
+
+                // Death of coarse branches
+                if (coarseBranchCarbon[iFacet] > 0.00001)
+                    death_carbon = coarseBranchCarbon[iFacet] * parms.coarseBranchDeathRate[iFacet];
+                else
+                    death_carbon = 0.0;
+                coarseBranchCarbon[iFacet] = coarseBranchCarbon[iFacet] - death_carbon;
+                deadCoarseBranchCarbon[iFacet] = deadCoarseBranchCarbon[iFacet] + death_carbon;
+                if (coarseBranchNitrogen[iFacet] > 0.00001)
+                    death_nitrogen = coarseBranchNitrogen[iFacet] * parms.coarseBranchDeathRate[iFacet];
+                else
+                    death_nitrogen = 0.0;
+                coarseBranchNitrogen[iFacet] = coarseBranchNitrogen[iFacet] - death_nitrogen;
+                deadCoarseBranchNitrogen[iFacet] = deadCoarseBranchNitrogen[iFacet] + death_nitrogen;
+
+                // Death of coarse root
+                if (coarseRootCarbon[iFacet] > 0.00001)
+                    death_carbon = coarseRootCarbon[iFacet] * parms.coarseRootDeathRate[iFacet];
+                else
+                    death_carbon = 0.0;
+                coarseRootCarbon[iFacet] = coarseRootCarbon[iFacet] - death_carbon;
+                deadCoarseRootCarbon[iFacet] = deadCoarseRootCarbon[iFacet] + death_carbon;
+                if (coarseRootNitrogen[iFacet] > 0.00001)
+                    death_nitrogen = coarseRootNitrogen[iFacet] * parms.coarseRootDeathRate[iFacet];
+                else
+                    death_nitrogen = 0.0;
+                coarseRootNitrogen[iFacet] = coarseRootNitrogen[iFacet] - death_nitrogen;
+                deadCoarseRootNitrogen[iFacet] = deadCoarseRootNitrogen[iFacet] + death_nitrogen;
+            }
+        }
+
+        /// <summary>
+        /// Simulate whole plant deaths
+        /// To represent populations, I will use an area 1 km x 1 km, and explicit tallying of space-filling plants.  There is the
+        /// option to do this for entire cells modeled, but their areas will vary across the globe.  Moreover, none of the results
+        /// will be reported on a per-cell basis, so the results from the 1 km^2 area will be suitable for reporting covers and
+        /// concentrations, etc.The 1 km^2 area was selected because it is convenient and sufficiently large enough to minimize
+        /// rounding effects.  For example, if the effective root area of a tree is 8 x 8 m, 15,625 trees could fit within the
+        ///1 km^2 area.Many thousands of herbs could fit, etc.I speak of root area rather than volume because the soil depths
+        /// and layers define volume (i.e., herbs have access to the first two layers, shrubs up to layer three, trees all four
+        /// layers).  Incidentally, an herb that occupies 0.2 x 0.2 m would fill the entire 1 km^2 area with 25,000,000 individuals,
+        /// so there is no need for specially defined storage spaces(double and the like)
+        /// </summary>
+        private void WholePlantDeath()
+        {
+            double temperature = (globe.minTemp + globe.maxTemp) / 2.0;
+            double[] data_val = new double[4];
+            int iLayer;
+
+            // Note that this is whole plant death and removal.This is not related to standing dead on scenecent perennials, etc.  But to count flows here
+            // or not?  There is a risk of double-counting flows of nutrients and stocks.NO... nutrient flows are on a cell-basis, not captured here.
+
+            // Death occurs mostly when plants are not dormant.  Here I will use temperature as a surrogate for that.I could use phenology, or a dormancy flag.
+            if (temperature > 0.0)
+            {
+                for (int iFacet = 0; iFacet < nFacets; iFacet++)
+                {
+                    int[] died = new int[6]; // temporary for debugging
+                    double death_rate = parms.nominalPlantDeathRate[iFacet];
+                    // Probably pass correctly, but to decrease risk of error ...
+                    // Those at the facet level are handled outside of the layers level
+                    for (int i = 0; i < 4; i++)
+                        data_val[i] = parms.waterEffectOnDeathRate[iFacet, i];
+                    death_rate = death_rate + Linear(ratioWaterPet, data_val, 2);
+                    for (int i = 0; i < 4; i++)
+                        data_val[i] = parms.grazingEffectOnDeathRate[iFacet, i];
+                    death_rate = death_rate + Linear(fractionLiveRemovedGrazing, data_val, 2);
+                    double temp_rate = death_rate;   // Save the death rate up to this point, so that recalculating based on LAI below won't keep adding to death rate for the different layers
+                    // Incorproate annuals.  Do so after the season has ended and standing dead has fallen to litter, etc. The best time to account for
+                    // annual death may be the beginning of the following year, when phenology is reset to 0.
+                    if (month == (int)Math.Round(parms.monthToRemoveAnnuals) && iFacet == (int)Facet.herb)
+                        death_rate = death_rate + propAnnualDecid[(int)Facet.herb];
+
+                    // Plants die regardless of their placement, whether in the understory of another plant, or defining a facet.   The rate is the same, except for LAI effects.  
+                    // Kill the plants...
+                    // Shading effect on death rate is at the facet level, but the leaf area index is at the layer level, so store
+                    // death rate in temp_rate and use that in the following functions.
+                    for (int i = 0; i < 4; i++)
+                        data_val[i] = parms.shadingEffectOnDeathRate[iFacet, i];
+                    switch ((Facet)iFacet)
+                    {
+                        case Facet.herb:
+                            // Do the three herbaceous layers, open, under shrubs, and under trees
+                            for (iLayer = (int)Layer.herb; iLayer <= (int)Layer.herbUnderTree; iLayer++)
+                            {
+                                death_rate = temp_rate + Linear(leafAreaIndex[(int)Facet.herb], data_val, 2);
+                                death_rate = Math.Min(1.0, death_rate);
+                                death_rate = Math.Max(0.0, death_rate);
+                                died[iLayer] = (int)(totalPopulation[iLayer] * death_rate);
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * death_rate);
+                            }
+                            break;
+                        case Facet.shrub:
+                            // Do the two shrub layers, open, and under trees
+                            for (iLayer = (int)Layer.shrub; iLayer <= (int)Layer.shrubUnderTree; iLayer++)
+                            {
+                                death_rate = temp_rate + Linear(leafAreaIndex[(int)Facet.shrub], data_val, 2);
+                                death_rate = Math.Min(1.0, death_rate);
+                                death_rate = Math.Max(0.0, death_rate);
+                                died[iLayer] = (int)(totalPopulation[iLayer] * death_rate);
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * death_rate);
+                            }
+                            break;
+                        case Facet.tree:
+                            // Do the tree layer, open
+                            iLayer = (int)Layer.tree;
+                            death_rate = temp_rate + Linear(leafAreaIndex[(int)Facet.tree], data_val, 2);
+                            death_rate = Math.Min(1.0, death_rate);
+                            death_rate = Math.Max(0.0, death_rate);
+                            died[iLayer] = (int)(totalPopulation[iLayer] * death_rate);
+                            totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * death_rate);
+                            break;
+                    }
+                }
+
+                // Now calculate facet covers.  This is much streamlined with the 6 - layer approach than the 3 - facet only approach.
+                // ilayers 1, 4, and 6 [0, 3 and 5 in C#] are the overstory layers defining facets directly.
+
+                // TREES
+                facetCover[(int)Facet.tree] = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) / refArea;
+                // SHRUBS
+                facetCover[(int)Facet.shrub] = (totalPopulation[(int)Layer.shrub] * parms.indivPlantArea[(int)Facet.shrub]) / refArea;
+                // HERBS
+                facetCover[(int)Facet.herb] = (totalPopulation[(int)Layer.herb] * parms.indivPlantArea[(int)Facet.herb]) / refArea;
+
+                // And update bare ground proportion.
+                bareCover = (1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]));
+            }
+
+            // Fire will be handled separately, because fire may occur when temperatures are below freezing. A little duplicative, but no matter.
+            // Decide whether fire is being modeled.   If maps are being used, then move ahead(too many possibilities to judge if fire is not occurring in the maps).
+            // If maps are not being used, then check to see that the frequency of fire and the fraction burned are both greater than 0.
+            // Otherwise, there is no fire.
+            if (globe.fireMapsUsed != 0 || (globe.fireMapsUsed == 0 && parms.frequencyOfFire > 0.0 && parms.fractionBurned > 0.0))
+            {
+                double proportion_cell_burned = 0.0;
+                if (globe.fireMapsUsed != 0)
+                {
+                    // Model fire, with their occurrence determined in maps.The maps will store the proportion of each cell burned.
+                    // No month is included here.  If someone wants to give detailed month - level fire maps, they may
+                    proportion_cell_burned = globe.propBurned;
+                }
+                else
+                {
+                    // Fire based on probabilies and percentages
+                    // Fire is confined to one month, otherwise the method would be overly complex, requiring checks to judge which months are appropriate.
+                    if (parms.burnMonth == month)
+                    {
+                        // The cell may burn
+                        double harvest = new Random().NextDouble();
+                        if (parms.frequencyOfFire > harvest)
+                        {
+                            // Some portion of the cell will burn...
+                            proportion_cell_burned = parms.fractionBurned;
+                        }
+                    }
+                }
+
+                // If some of the cell is to burn, do that, removing whole dead plants
+                if (proportion_cell_burned > 0.0)
+                {
+                    for (int iFacet = 0; iFacet < nFacets; iFacet++)
+                    {
+                        // Use fire severity, already calculated in modeling plant part death.
+                        // Calculate the proportion of plants to be killed.
+                        data_val[1] = 0.0;
+                        data_val[3] = 1.0;
+                        data_val[0] = parms.fractionPlantsBurnedDead[iFacet, 0];
+                        data_val[2] = parms.fractionPlantsBurnedDead[iFacet, 1];
+                        double proportion_plants_killed = Linear(fireSeverity, data_val, 2) * proportion_cell_burned;
+
+                        switch ((Facet)iFacet)
+                        {
+                            case Facet.herb:
+                                iLayer = (int)Layer.herb;
+                                // Porportion of plants to be killed by fire ... 
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * proportion_plants_killed);
+                                iLayer = (int)Layer.herbUnderShrub;
+                                // Porportion of plants to be killed by fire ... 
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * proportion_plants_killed);
+                                iLayer = (int)Layer.herbUnderTree;
+                                // Porportion of plants to be killed by fire ... 
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * proportion_plants_killed);
+                                break;
+                            case Facet.shrub:
+                                iLayer = (int)Layer.shrub;
+                                // Porportion of plants to be killed by fire ... 
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * proportion_plants_killed);
+                                iLayer = (int)Layer.shrubUnderTree;
+                                // Porportion of plants to be killed by fire ... 
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * proportion_plants_killed);
+                                break;
+                            case Facet.tree:
+                                iLayer = (int)Layer.tree;
+                                // Porportion of plants to be killed by fire ... 
+                                totalPopulation[iLayer] = totalPopulation[iLayer] - (totalPopulation[iLayer] * proportion_plants_killed);
+                                break;
+                        }
+                    }
+                    // Now recalculate facet covers.  This is much streamlined with the 6 - layer approach than the 3 - facet only approach.
+                    // ilayers 1, 4, and 6 [0, 3 and 5 in C#] are the overstory layers defining facets directly.
+
+                    // TREES
+                    facetCover[(int)Facet.tree] = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) / refArea;
+                    // SHRUBS
+                    facetCover[(int)Facet.shrub] = (totalPopulation[(int)Layer.shrub] * parms.indivPlantArea[(int)Facet.shrub]) / refArea;
+                    // HERBS
+                    facetCover[(int)Facet.herb] = (totalPopulation[(int)Layer.herb] * parms.indivPlantArea[(int)Facet.herb]) / refArea;
+
+                    // And update bare ground proportion.
+                    bareCover = (1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read in the maps that are associated with fire or fertilization, or other management.
+        /// </summary>
+        private void Management()
+        {
+            // Simulate fertilization.This will almost certainly be set through maps, but perhaps deposition or the like may be simulated
+            // using the probability option, so I will leave it.It is there because of the parallels with fire.
+            if (globe.fertilizeMapsUsed != 0 || (globe.fertilizeMapsUsed == 0 && parms.frequencyOfFertilization > 0.0 && parms.fractionFertilized > 0.0))
+            {
+                double proportion_cell_fertilized = 0.0;
+                if (globe.fertilizeMapsUsed != 0)
+                {
+                    // Model fire, with their occurrence determined in maps.The maps will store the proportion of each cell burned.
+                    // No month is included here.  If someone wants to give detailed month - level fire maps, they may
+                    proportion_cell_fertilized = globe.propFertilized;
+                }
+                else
+                {
+                    // Fertilized based on probabilies and percentages
+                    // Fertilized is confined to one month, otherwise the method would be overly complex, requiring checks to judge which months are appropriate.
+                    if (parms.fertilizeMonth == month)
+                    {
+                        // The cell may burn
+                        double harvest = new Random().NextDouble();
+                        if (parms.frequencyOfFertilization > harvest)
+                        {
+                            // Some portion of the cell will burn...
+                            proportion_cell_fertilized = parms.fractionFertilized;
+                        }
+                    }
+                }
+
+                // If some of the cell is to be fertilized, do that
+                if (proportion_cell_fertilized > 0.0)
+                {
+                    mineralNitrogen[surfaceIndex] = mineralNitrogen[surfaceIndex] + (parms.fertilizeNitrogenAdded * parms.fractionFertilized);
+                    fertilizedNitrogenAdded = fertilizedNitrogenAdded + (parms.fertilizeNitrogenAdded * parms.fractionFertilized);
+                    // Add organic matter if requested.It gets partitioned in litter, following CENTURY
+                    // NOTE that the lignin ratio is hardwired here.
+                    double c_added = parms.fertilizeCarbonAdded * parms.fractionFertilized;
+                    double n_added = parms.fertilizeNitrogenAdded * parms.fractionFertilized;
+                    double organic_fert_lignin = 0.20;
+                    PartitionLitter(soilIndex, c_added, n_added, organic_fert_lignin);
+                    fertilizedNitrogenAdded = fertilizedNitrogenAdded + n_added;
+                    fertilizedCarbonAdded = fertilizedCarbonAdded + c_added;
+                }
+            }
+            // else ... no fertilization
+        }
+
+        /// <summary>
+        /// Simulate whole plant reproduction
+        /// </summary>
+        private void PlantReproduction()
+        {
+            double temperature = (globe.minTemp + globe.maxTemp) / 2.0;
+
+            // Establishment occurs only when plants are not dormant.  Here I will use temperature as a surrogate for that.I could use phenology, or a dormancy flag.
+            if (temperature > 0.0)
+            {
+                // Get the empty space, to determine establishment
+                // Note: As long as a plant is alive, it maintains control of that area.  This is based on herbaceous size classes
+                // only, since even though the plants reserve their full size, they can become established on a smaller area.  Really it is more
+                // about the logic, so that any given herb-size patch has a chance to be occupeid by an herb, shrub, or tree... or nothing.
+                // Note that deaths have already been accounted for, and bare cover updated.
+                // The only means of shifts in facet cover is through differential allotment of bare cover to the three facets.
+                // So I am going to calculate those values first, then do the three special cases after the main facets are attended to.
+
+                double[] data_val = new double[4];
+                double[] relative_establishment = new double[vLayers];
+                relative_establishment[(int)Layer.herb] = parms.relativeSeedProduction[(int)Facet.herb];
+                relative_establishment[(int)Layer.herbUnderShrub] = parms.relativeSeedProduction[(int)Facet.herb];
+                relative_establishment[(int)Layer.herbUnderTree] = parms.relativeSeedProduction[(int)Facet.herb];
+                relative_establishment[(int)Layer.shrub] = parms.relativeSeedProduction[(int)Facet.shrub];
+                relative_establishment[(int)Layer.shrubUnderTree] = parms.relativeSeedProduction[(int)Facet.shrub];
+                relative_establishment[(int)Layer.tree] = parms.relativeSeedProduction[(int)Facet.tree];
+
+                //    write(ECHO_FILE, '(A40, I5, F9.3, 6(F10.3))') ' REL_EST pre water FACETS: ',icell, &
+                // Rng(icell) % ratio_water_pet, relative_establishment
+                // Do water limitations
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.waterEffectOnEstablish[(int)Facet.herb, i];
+                if (ratioWaterPet < 0.0 || ratioWaterPet >= vLarge)
+                    ratioWaterPet = 0.0;
+                relative_establishment[(int)Layer.herb] = relative_establishment[(int)Layer.herb] * Linear(ratioWaterPet, data_val, 2);
+                relative_establishment[(int)Layer.herbUnderShrub] = relative_establishment[(int)Layer.herbUnderShrub] * Linear(ratioWaterPet, data_val, 2);
+                relative_establishment[(int)Layer.herbUnderTree] = relative_establishment[(int)Layer.herbUnderTree] * Linear(ratioWaterPet, data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.waterEffectOnEstablish[(int)Facet.shrub, i];
+                relative_establishment[(int)Layer.shrub] = relative_establishment[(int)Layer.shrub] * Linear(ratioWaterPet, data_val, 2);
+                relative_establishment[(int)Layer.shrubUnderTree] = relative_establishment[(int)Layer.shrubUnderTree] * Linear(ratioWaterPet, data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.waterEffectOnEstablish[(int)Facet.tree, i];
+                relative_establishment[(int)Layer.tree] = relative_establishment[(int)Layer.tree] * Linear(ratioWaterPet, data_val, 2);
+
+                // Do litter limitation
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.litterEffectOnEstablish[(int)Facet.herb, i];
+                if (totalLitterCarbon[surfaceIndex] < 0.0 || totalLitterCarbon[surfaceIndex] >= vLarge)
+                    totalLitterCarbon[surfaceIndex] = 0.0;
+                relative_establishment[(int)Layer.herb] = relative_establishment[(int)Layer.herb] * Linear((totalLitterCarbon[surfaceIndex] * 2.5), data_val, 2);
+                relative_establishment[(int)Layer.herbUnderShrub] = relative_establishment[(int)Layer.herbUnderShrub] * Linear((totalLitterCarbon[surfaceIndex] * 2.5), data_val, 2);
+                relative_establishment[(int)Layer.herbUnderTree] = relative_establishment[(int)Layer.herbUnderTree] * Linear((totalLitterCarbon[surfaceIndex] * 2.5), data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.litterEffectOnEstablish[(int)Facet.shrub, i];
+                relative_establishment[(int)Layer.shrub] = relative_establishment[(int)Layer.shrub] * Linear((totalLitterCarbon[surfaceIndex] * 2.5), data_val, 2);
+                relative_establishment[(int)Layer.shrubUnderTree] = relative_establishment[(int)Layer.shrubUnderTree] * Linear((totalLitterCarbon[surfaceIndex] * 2.5), data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.litterEffectOnEstablish[(int)Facet.tree, i];
+                relative_establishment[(int)Layer.tree] = relative_establishment[(int)Layer.tree] * Linear((totalLitterCarbon[surfaceIndex] * 2.5), data_val, 2);
+
+                // Do limitation due to herbaceous root biomass limiations.Only empty patches are candidates for establishment, but that
+                // is taking the logic too rigorously.Root biomass will play a role, as represented in the non - spatial portion of the model.
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.herbRootEffectOnEstablish[(int)Facet.herb, i];
+                if (fineRootCarbon[(int)Facet.herb] < 0.0 || fineRootCarbon[(int)Facet.herb] >= vLarge)
+                    fineRootCarbon[(int)Facet.herb] = 0.0;
+                relative_establishment[(int)Layer.herb] = relative_establishment[(int)Layer.herb] * Linear((fineRootCarbon[(int)Facet.herb] * 2.5), data_val, 2);
+                relative_establishment[(int)Layer.herbUnderShrub] = relative_establishment[(int)Layer.herbUnderShrub] * Linear((fineRootCarbon[(int)Facet.herb] * 2.5), data_val, 2);
+                relative_establishment[(int)Layer.herbUnderTree] = relative_establishment[(int)Layer.herbUnderTree] * Linear((fineRootCarbon[(int)Facet.herb] * 2.5), data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.herbRootEffectOnEstablish[(int)Facet.shrub, i];
+                relative_establishment[(int)Layer.shrub] = relative_establishment[(int)Layer.shrub] * Linear((fineRootCarbon[(int)Facet.herb] * 2.5), data_val, 2);
+                relative_establishment[(int)Layer.shrubUnderTree] = relative_establishment[(int)Layer.shrubUnderTree] * Linear((fineRootCarbon[(int)Facet.herb] * 2.5), data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.herbRootEffectOnEstablish[(int)Facet.tree, i];
+                relative_establishment[(int)Layer.tree] = relative_establishment[(int)Layer.tree] * Linear((fineRootCarbon[(int)Facet.herb] * 2.5), data_val, 2);
+
+                //    write(ECHO_FILE, 998) ' REL_EST pre wood FACETS: ',icell,Rng(icell) % facet_cover(S_FACET), &
+                // Rng(icell) % facet_cover(T_FACET), relative_establishment
+                // Do woody cover limitation ... this is applicable to most of the entries, but not all.
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.woodyCoverEffectOnEstablish[(int)Facet.herb, i];
+                relative_establishment[(int)Layer.herbUnderShrub] = relative_establishment[(int)Layer.herbUnderShrub] * Linear(facetCover[(int)Facet.shrub], data_val, 2);
+                relative_establishment[(int)Layer.herbUnderTree] = relative_establishment[(int)Layer.herbUnderTree] * Linear(facetCover[(int)Facet.tree], data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.woodyCoverEffectOnEstablish[(int)Facet.shrub, i];
+                relative_establishment[(int)Layer.shrub] = relative_establishment[(int)Layer.shrub] * Linear(facetCover[(int)Facet.shrub], data_val, 2);
+                relative_establishment[(int)Layer.shrubUnderTree] = relative_establishment[(int)Layer.shrubUnderTree] * Linear(facetCover[(int)Facet.tree], data_val, 2);
+                for (int i = 0; i < 4; i++)
+                    data_val[i] = parms.woodyCoverEffectOnEstablish[(int)Facet.tree, i];
+                relative_establishment[(int)Layer.tree] = relative_establishment[(int)Layer.tree] * Linear(facetCover[(int)Facet.tree], data_val, 2);
+
+                // Calculate total seed production, to allow competition between facets for the empty patches.           
+                // This needs to be based on populations, rather than facet area, because understory plants may produce seed as well.
+                // Baseline relative seed production, incorporating total population size for the facet.
+
+                double[] tot_pop = new double[nFacets];
+                tot_pop[(int)Facet.herb] = totalPopulation[(int)Layer.herb] + totalPopulation[(int)Layer.herbUnderShrub] + totalPopulation[(int)Layer.herbUnderTree];
+                tot_pop[(int)Facet.shrub] = totalPopulation[(int)Layer.shrub] + totalPopulation[(int)Layer.shrubUnderTree];
+                tot_pop[(int)Facet.tree] = totalPopulation[(int)Layer.tree];
+
+                // Potential plants established
+                double[] pot_established = new double[vLayers];
+                pot_established[(int)Layer.herb] = tot_pop[(int)Facet.herb] * relative_establishment[(int)Layer.herb];
+                pot_established[(int)Layer.herbUnderShrub] = tot_pop[(int)Facet.herb] * relative_establishment[(int)Layer.herbUnderShrub];
+                pot_established[(int)Layer.herbUnderTree] = tot_pop[(int)Facet.herb] * relative_establishment[(int)Layer.herbUnderTree];
+                pot_established[(int)Layer.shrub] = tot_pop[(int)Facet.shrub] * relative_establishment[(int)Layer.shrub];
+                pot_established[(int)Layer.shrubUnderTree] = tot_pop[(int)Facet.shrub] * relative_establishment[(int)Layer.shrubUnderTree];
+                pot_established[(int)Layer.tree] = tot_pop[(int)Facet.tree] * relative_establishment[(int)Layer.tree];
+                // 995 format(A40, I5, 6(I15))
+                // Now plant the plants that will fit.The ordering will be critical here.          
+                // First, trees will take precedence, shading out the other facets, and recognizing that woody plant limitations were considered above.     
+                // Second, shrubs will take precedence.Third, herbs will be planted.
+                // Plants are being put in place full - size.
+                // Recall that death is already simulated at this point - facets will not shrink, but they may grow.The order in which they grow is relavant.
+
+                // TREE
+                totalPopulation[(int)Layer.tree] = totalPopulation[(int)Layer.tree] + pot_established[(int)Layer.tree];
+                if (totalPopulation[(int)Layer.tree] > parms.potPopulation[(int)Facet.tree])
+                    totalPopulation[(int)Layer.tree] = parms.potPopulation[(int)Facet.tree];
+                facetCover[(int)Facet.tree] = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) / refArea;
+
+                // SHRUB
+                // First, adjust pot_population(S_FACET) to incorporate the tree facet.
+                double max_population = parms.potPopulation[(int)Facet.shrub] * (1.0 - facetCover[(int)Facet.tree]);  // The pot_pop is at 100 %.So if trees are 30 %, then pot_pop *0.70 would be the maximum shrubs could occupy.Again, an ordered approach, with trees, then shrubs, then herbs.
+                totalPopulation[(int)Layer.shrub] = totalPopulation[(int)Layer.shrub] + pot_established[(int)Layer.shrub];
+                if (totalPopulation[(int)Layer.shrub] > max_population)
+                    totalPopulation[(int)Layer.shrub] = max_population;
+                facetCover[(int)Facet.shrub] = (totalPopulation[(int)Layer.shrub] * parms.indivPlantArea[(int)Facet.shrub]) / refArea;
+
+                // HERB
+                // First, adjust pot_population(H_FACET) to incorporate the tree and shrub facets.
+                max_population = parms.potPopulation[(int)Facet.herb] * (1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub]));  // The pot_pop is at 100 %.So if trees are 30 %, then pot_pop *0.70 would be the maximum shrubs could occupy.Again, an ordered approach, with trees, then shrubs, then herbs.
+                totalPopulation[(int)Layer.herb] = totalPopulation[(int)Layer.herb] + pot_established[(int)Layer.herb];
+                if (totalPopulation[(int)Layer.herb] > max_population)
+                    totalPopulation[(int)Layer.herb] = max_population;
+                facetCover[(int)Facet.herb] = (totalPopulation[(int)Layer.herb] * parms.indivPlantArea[(int)Facet.herb]) / refArea;
+
+                // HERBS UNDER SHRUBS
+                max_population = (parms.potPopulation[(int)Facet.herb] * facetCover[(int)Facet.shrub] * parms.indivPlantArea[(int)Facet.shrub]) /
+                                parms.indivPlantArea[(int)Facet.herb];  // Parameter, so no division by 0 likely.The same is true below.
+                totalPopulation[(int)Layer.herbUnderShrub] = totalPopulation[(int)Layer.herbUnderShrub] + pot_established[(int)Layer.herbUnderShrub];
+                if (totalPopulation[(int)Layer.herbUnderShrub] > max_population)
+                    totalPopulation[(int)Layer.herbUnderShrub] = max_population;
+
+                // SHRUBS UNDER TREES
+                max_population = (parms.potPopulation[(int)Facet.shrub] * facetCover[(int)Facet.tree] * parms.indivPlantArea[(int)Facet.tree]) /
+                                parms.indivPlantArea[(int)Facet.shrub];
+                totalPopulation[(int)Layer.shrubUnderTree] = totalPopulation[(int)Layer.shrubUnderTree] + pot_established[(int)Layer.shrubUnderTree];
+                if (totalPopulation[(int)Layer.shrubUnderTree] > max_population)
+                    totalPopulation[(int)Layer.shrubUnderTree] = max_population;
+
+                // HERBS UNDER TREES
+                max_population = (parms.potPopulation[(int)Facet.herb] * facetCover[(int)Facet.tree] * parms.indivPlantArea[(int)Facet.tree]) /
+                                parms.indivPlantArea[(int)Facet.herb];
+                totalPopulation[(int)Layer.herbUnderTree] = totalPopulation[(int)Layer.herbUnderTree] + pot_established[(int)Layer.herbUnderTree];
+                if (totalPopulation[(int)Layer.herbUnderTree] > max_population)
+                    totalPopulation[(int)Layer.herbUnderTree] = max_population;
+
+                // And update bare ground proportion.
+                bareCover = (1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]));
+
+                // 999 format(A40, I5, F9.3, 6(I15))
+                // 998 format(A40, I5, 2(F9.3), 6(F10.7))
+                // 997 format(A40, I5, 6(I14))
+            }
+        }
     }
 }

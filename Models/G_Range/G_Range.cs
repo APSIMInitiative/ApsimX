@@ -325,6 +325,7 @@ namespace Models
 
         private double lastMonthDayLength;     // The day length of the previous month, to know when spring and fall come.
         private bool dayLengthIncreasing;      // Increasing or decreasing day length, comparing the current to previous day lengths.
+        private bool inWinter = false;         // NOT ORIGINALLY PART OF THE CELL STRUCTURE - It used a Fortran "SAVE" in Plant_Death.95
         private double dayLength;              // Day length, calculated based on latitude and month
 
         private double heatAccumulation;       // Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
@@ -587,13 +588,23 @@ namespace Models
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             month = Clock.Today.Month; // 1 to 12
-            UpdateVegetation();
-            UpdateWeather();
-            PotentialProduction();
-            HerbGrowth();
-            WoodyGrowth();
-            Grazing();
-            PlantPartDeath();
+            UpdateVegetation();       // Update metrics for vegetation.
+            UpdateWeather();          // Calculate snowfall, evapotranspiration, etc.  Also updates heat accumulation.
+            PotentialProduction();    // Calculate potential production, and plant allometrics adjusted by grazing fraction
+            HerbGrowth();             // Calculate herbaceous growth
+            WoodyGrowth();            // Calculate woody plant growth
+            Grazing();                // Remove material grazed by livestock
+            PlantPartDeath();         // Plant part death
+            WholePlantDeath();        // Whole plant death
+            Management();             // Fertilization and other management
+            PlantReproduction();      // Seed-based reproduction by plants
+            UpdateVegetation();       // Update metrics for vegetation
+            WaterLoss();              // Calculate water loss
+            Decomposition();          // Decomposition
+            NitrogenLosses();         // Leaching and volatilization of nitrogen
+            EachMonth();              // Miscellaneous steps that need to be done each month
+            //OutputSurfaces();         // Produce output surfaces
+            ZeroAccumulators();       // Zero-out the accumulators storing dead materials
         }
 
         /// <summary>EventHandler - Tasks done at the start of each year.</summary>
@@ -628,7 +639,7 @@ namespace Models
         /// <param name="dataVal">Pairs of values that define the relationship, x1, y1, x2, y2, etc.</param>
         /// <param name="imx">The number of pairs given, often 2</param>
         /// <returns></returns>
-        private double Linear(double x, double[]dataVal, int imx)
+        private double Linear(double x, double[] dataVal, int imx)
         {
             double[,] dataV = new double[2, imx];
             for (int m = 0; m < imx; m++)
@@ -901,11 +912,11 @@ namespace Models
                 // Recalculate the proportion of residue that is lignin, which follows from annual precipitation (CMPLIG.F in Century.No equilvalent in Savanna)
                 plantLigninFraction[iFacet, surfaceIndex] = ligninLeaf[iFacet] +
                                        parms.ligninContentFractionAndPrecip[0, surfaceIndex] +
-                                       (parms.ligninContentFractionAndPrecip[1, surfaceIndex] * 
+                                       (parms.ligninContentFractionAndPrecip[1, surfaceIndex] *
                                        globe.precipAverage) / 2.0;
                 plantLigninFraction[iFacet, soilIndex] = ligninFineRoot[iFacet] +
                                         parms.ligninContentFractionAndPrecip[0, soilIndex] +
-                                        (parms.ligninContentFractionAndPrecip[1, soilIndex] * 
+                                        (parms.ligninContentFractionAndPrecip[1, soilIndex] *
                                         globe.precipAverage) / 2.0;
                 plantLigninFraction[iFacet, surfaceIndex] = Math.Max(0.02, plantLigninFraction[iFacet, surfaceIndex]);
                 plantLigninFraction[iFacet, surfaceIndex] = Math.Min(0.50, plantLigninFraction[iFacet, surfaceIndex]);
@@ -947,5 +958,59 @@ namespace Models
 
         }
 
+        /// <summary>
+        /// Zero-out some accumulators each month.
+        /// </summary>
+        private void ZeroAccumulators()
+        {
+            // Zeroing out the dead plant stores each month, as in Savanna(ZFLOW.F)
+            // These have all been partitioned by now, either into forms of litter or passed to standing dead, which is not zeroed -out.
+            for (int iFacet = 0; iFacet < nFacets; iFacet++)
+            {
+                deadFineRootCarbon[iFacet] = 0.0;
+                deadFineRootNitrogen[iFacet] = 0.0;
+                deadFineBranchCarbon[iFacet] = 0.0;
+                deadFineBranchNitrogen[iFacet] = 0.0;
+                deadSeedCarbon[iFacet] = 0.0;
+                deadSeedNitrogen[iFacet] = 0.0;
+                deadLeafCarbon[iFacet] = 0.0;
+                deadLeafNitrogen[iFacet] = 0.0;
+                deadCoarseBranchCarbon[iFacet] = 0.0;
+                deadCoarseBranchNitrogen[iFacet] = 0.0;
+                deadCoarseRootCarbon[iFacet] = 0.0;
+                deadCoarseRootNitrogen[iFacet] = 0.0;
+            }
+        }
+
+        /// <summary>
+        /// Do processing steps that must be done each month.  The main steps are a long series of tests to ensure that
+        /// values aren't exceeding a very large value, or moving negative.  Errors will cause tallying of counts of errors,
+        /// both spatially and per entry.That said, they won't be stored spatially for each individual entry, as that
+        /// would almost double memory.
+        /// 
+        /// This routine includes a simple assignment of grazing fraction.That logic is placed here to allow for it to
+        /// be made more dynamic in the future.
+        /// </summary>
+        private void EachMonth()
+        {
+            // I'm not transcoding the bulk of this yet. There are around 1700 lines of code that test variables against bounds of 0
+            // and vLarge. This can probably be restructured, if it's even necessary.
+
+            // What it retained here is the logic of checking the bounds on grazing.
+
+            double live_carbon = leafCarbon[(int)Facet.herb] + leafCarbon[(int)Facet.shrub] + leafCarbon[(int)Facet.tree] +
+                                 fineBranchCarbon[(int)Facet.shrub] + fineBranchCarbon[(int)Facet.tree];
+            double dead_carbon = deadStandingCarbon[(int)Facet.herb] + deadStandingCarbon[(int)Facet.shrub] + deadStandingCarbon[(int)Facet.tree];
+            if ((live_carbon + dead_carbon) > 0.0)
+            {
+                fractionLiveRemovedGrazing = (parms.fractionGrazed / 12.0) * (live_carbon / (live_carbon + dead_carbon));
+                fractionDeadRemovedGrazing = (parms.fractionGrazed / 12.0) * (1.0 - (live_carbon / (live_carbon + dead_carbon)));
+            }
+            else
+            {
+                fractionLiveRemovedGrazing = 0.0;
+                fractionDeadRemovedGrazing = 0.0;
+            }
+        }
     }
 }
