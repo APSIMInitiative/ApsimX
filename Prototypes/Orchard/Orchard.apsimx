@@ -1905,27 +1905,63 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[PlantVariables].Script.Height as height",
+            "[PlantVariables].Script.LAI as lai",
+            "[PlantVariables].Script.FRadInt as f.rad.int",
+            "[PlantVariables].Script.ET as transpiration",
+            "[PlantVariables].Script.ES as Es",
+            "[PlantVariables].Script.PET as PET",
+            "[PlantVariables].Script.RootDepth as rootDepth",
+            "[Soil].OutputLayers.SW",
+            "sum([Soil].OutputLayers.SWmm) as psw",
+            "[Weather].DaysSinceWinterSolstice"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone[] Zones {get; set; }\r\n\r\n        private double[] Zwidth {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        private double CanopyWidth {get; set;}\r\n        public double TranspCanopy {get; set;}\r\n        public double TranspUnderstory {get; set;}\r\n        public double FRadIntCanopy {get; set;}\r\n        public double FRadIntUnderstory {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               //Set up our list on zones in the simulation\r\n               List<RectangularZone> zones = new List<RectangularZone>();\r\n               foreach (RectangularZone zone in Apsim.FindAll(this.Parent, typeof(RectangularZone)))\r\n               {\r\n                   zones.Add(zone as RectangularZone);\r\n               }\r\n               Zones = zones.ToArray();\r\n               \r\n               //Set up local solution variables\r\n               Zwidth = new double[Zones.Length];\r\n               AreaWidth = 0;\r\n               int pos = 0;\r\n               foreach (RectangularZone zone in Zones)\r\n               {\r\n               \t\tZwidth[pos] = zone.Width;\r\n               \t\tAreaWidth += zone.Width;\r\n               \t\tpos += 1;\r\n               }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tdouble CanopyWidth = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Width\")/1000;\r\n        \tdouble CanopyRs = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.RadIntTot\");\r\n        \tFRadIntCanopy = (CanopyRs * Zwidth[0])/(weather.Radn * AreaWidth);\r\n        \tdouble UnderstoryRs = (double)Zones[1].Get(\"Slurp.Leaf.RadIntTot\"); \r\n        \tFRadIntUnderstory = (UnderstoryRs * Zwidth[1])/ (weather.Radn * AreaWidth);\r\n        \tdouble CanopyTrans = (double)Zones[0].Get(\"SimpleFruitTree.Leaf.Transpiration\");\r\n        \tTranspCanopy = CanopyTrans * Zwidth[0]/AreaWidth;\r\n        \tdouble UnderstoryTrans = (double)Zones[1].Get(\"Slurp.Leaf.Transpiration\");\r\n        \tTranspUnderstory = UnderstoryTrans * Zwidth[1]/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \t   \r\n        \t   ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (ThisZone.Name == \"Row\")\r\n\t        \t{\r\n\t        \tFRadInt = ((double)RowZone.Get(\"SimpleFruitTree.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n\t        \tET = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n\t        \tLAI = (double)RowZone.Get(\"SimpleFruitTree.Leaf.LAI\");\r\n\t        \tHeight = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Height\");\r\n\t        \tRootDepth = (double)RowZone.Get(\"SimpleFruitTree.Root.Depth\");\r\n\t        \t}\r\n        \telse\r\n        \t\t{\r\n        \t\tFRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n\t        \tHeight = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n\t        \tRootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n        \tES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n        \tPET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * ThisZone.Width/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
-              "Key": "TranspCanopy",
+              "Key": "FRadInt",
               "Value": "0"
             },
             {
-              "Key": "TranspUnderstory",
+              "Key": "ET",
               "Value": "0"
             },
             {
-              "Key": "FRadIntCanopy",
+              "Key": "ES",
               "Value": "0"
             },
             {
-              "Key": "FRadIntUnderstory",
+              "Key": "PET",
+              "Value": "0"
+            },
+            {
+              "Key": "LAI",
+              "Value": "0"
+            },
+            {
+              "Key": "Height",
+              "Value": "0"
+            },
+            {
+              "Key": "RootDepth",
               "Value": "0"
             }
           ],
-          "Name": "AreaVariables",
+          "Name": "PlantVariables",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -1943,7 +1979,7 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "OrchardObs.xlsx",
+          "FileName": "AllObs.xlsx",
           "FileNameMetadata": null,
           "SheetNames": [
             "Observed"
@@ -1968,13 +2004,13 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "GrapeObserved.xlsx",
-          "FileNameMetadata": null,
-          "SheetNames": [
-            "GrapeObserved"
-          ],
-          "Name": "GrapeObserved",
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "Drainage",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "Zone",
+          "FieldName2UsedForMatch": "Clock.Today",
+          "FieldName3UsedForMatch": "",
+          "Name": "DrainagePO",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -2055,23 +2091,27 @@
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[SimpleFruitTree].Leaf.Height as height",
-                "[SimpleFruitTree].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntCanopy as f.rad.int",
-                "[AreaVariables].Script.TranspCanopy as transpiration",
-                "sum([Soil].SoilWater.SWmm[1:7]) as psw",
-                "sum([Soil].OutputLayers.SWmm[1:3]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[6] from 2009-01-21 to 2011-04-14 as drainage",
-                "[SimpleFruitTree].Leaf.WaterDemand as EtDem",
-                "[SimpleFruitTree].Leaf.LAI",
-                "[Weather].DaysSinceWinterSolstice"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[6] from 2009-01-21 to 2011-04-14 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -2578,8 +2618,7 @@
                   "Thickness": [
                     400.0,
                     400.0,
-                    400.0,
-                    1800.0
+                    400.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -2669,36 +2708,6 @@
               "Name": "SetupTreeRootZones",
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
-              "Parameters": [
-                {
-                  "Key": "FASW",
-                  "Value": "0"
-                },
-                {
-                  "Key": "WaterDeficit",
-                  "Value": "0"
-                },
-                {
-                  "Key": "AutoIrrigationOn",
-                  "Value": "True"
-                },
-                {
-                  "Key": "FASWThreshold",
-                  "Value": "0.9"
-                },
-                {
-                  "Key": "FASWDepth",
-                  "Value": "600"
-                }
-              ],
-              "Name": "Automatic irrigation based on water deficit",
-              "IncludeInDocumentation": true,
-              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -2818,6 +2827,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -2834,19 +2852,27 @@
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[Slurp].Leaf.Height as height",
-                "[Slurp].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
-                "[AreaVariables].Script.TranspUnderstory as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:3]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[6] from 2009-01-21 to 2011-04-14 as drainage"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[6] from 2009-01-21 to 2011-04-14 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -3353,8 +3379,7 @@
                   "Thickness": [
                     400.0,
                     400.0,
-                    400.0,
-                    1800.0
+                    400.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -3423,7 +3448,7 @@
                 },
                 {
                   "Key": "SowingDate",
-                  "Value": "2006-07-01"
+                  "Value": "2007-07-01"
                 },
                 {
                   "Key": "RootDepth",
@@ -3465,7 +3490,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.5;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.75;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -3473,11 +3498,11 @@
                 },
                 {
                   "Key": "MaximumHeight",
-                  "Value": "300"
+                  "Value": "200"
                 },
                 {
                   "Key": "MinimumHeight",
-                  "Value": "100"
+                  "Value": "50"
                 },
                 {
                   "Key": "Cover",
@@ -3506,26 +3531,17 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-          "Parameters": [
-            {
-              "Key": "FRadIntCanopy",
-              "Value": "0"
             },
             {
-              "Key": "FRadIntUnderstory",
-              "Value": "0"
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "Name": "AreaVariables",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -4035,7 +4051,7 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report",
+              "TableName": "Drainage",
               "XFieldName": "Clock.Today",
               "YFieldName": "drainage",
               "X2FieldName": null,
@@ -4133,15 +4149,15 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
+              "YFieldName": "ET",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
+              "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Predicted",
+              "Name": "ET",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -4167,166 +4183,72 @@
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
+              "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Observed",
+              "Name": "ETObserved",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
-          "Name": "ObsPred",
-          "Children": [
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": 12.0,
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Transpiration",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.transpiration",
-                  "YFieldName": "Predicted.transpiration",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": true,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Drainage",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": "Zone",
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.drainage",
-                  "YFieldName": "Predicted.drainage",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 1,
+              "LineThickness": 1,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Es",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "ES",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16747854,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 2,
+              "LineThickness": 1,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PET",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "PET",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -4634,25 +4556,32 @@
           "Length": 100.0,
           "Width": 1.0,
           "Slope": 0.0,
-          "Name": "Row_irrigated",
+          "Name": "Row",
           "Children": [
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[SimpleFruitTree].Leaf.Height as height",
-                "[SimpleFruitTree].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntCanopy as f.rad.int",
-                "[AreaVariables].Script.TranspCanopy as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[6] from 2008-11-15 to 2011-04-14 as drainage",
-                "[SimpleFruitTree].Root.Depth as rootDepth"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[6] from 2008-11-15 to 2011-04-14 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -5186,8 +5115,7 @@
                     300.0,
                     300.0,
                     300.0,
-                    300.0,
-                    1200.0
+                    300.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -5996,6 +5924,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -6007,24 +5944,32 @@
           "Length": 100.0,
           "Width": 3.0,
           "Slope": 0.0,
-          "Name": "Alley_dry",
+          "Name": "Alley",
           "Children": [
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[Slurp].Leaf.Height as height",
-                "[Slurp].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
-                "[AreaVariables].Script.TranspUnderstory as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[6] from 2008-11-15 to 2011-04-14 as drainage"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[6] from 2008-11-15 to 2011-04-14 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "SoilReport",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -6558,8 +6503,7 @@
                     300.0,
                     300.0,
                     300.0,
-                    300.0,
-                    1200.0
+                    300.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -6670,7 +6614,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.5;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 0.9)\r\n            {\r\n            \tCover = 0.65;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -6678,11 +6622,11 @@
                 },
                 {
                   "Key": "MaximumHeight",
-                  "Value": "300"
+                  "Value": "200"
                 },
                 {
                   "Key": "MinimumHeight",
-                  "Value": "100"
+                  "Value": "50"
                 },
                 {
                   "Key": "Cover",
@@ -6711,17 +6655,17 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n        \r\n    }\r\n}\r\n",
-          "Parameters": [],
-          "Name": "AreaVariables",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -7519,7 +7463,7 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report",
+              "TableName": "Drainage",
               "XFieldName": "Clock.Today",
               "YFieldName": "drainage",
               "X2FieldName": null,
@@ -7617,7 +7561,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
+              "YFieldName": "ET",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -7657,160 +7601,6 @@
               "Filter": null,
               "Name": "Observed",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
-          "Name": "ObsPred",
-          "Children": [
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": 12.0,
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Transpiration",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.transpiration",
-                  "YFieldName": "Predicted.transpiration",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": true,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Drainage",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": "Zone",
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.drainage",
-                  "YFieldName": "Predicted.drainage",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -8057,22 +7847,27 @@
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[SimpleFruitTree].Leaf.Height as height",
-                "[SimpleFruitTree].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntCanopy as f.rad.int",
-                "[AreaVariables].Script.TranspCanopy as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[6] from 2008-10-01 to 2011-03-08 as drainage",
-                "[SimpleFruitTree].Root.Depth as rootDepth",
-                "[SimpleFruitTree].Leaf.LAI",
-                "[Weather].DaysSinceWinterSolstice"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[6] from 2008-10-01 to 2011-03-08 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -8582,8 +8377,7 @@
                     300.0,
                     300.0,
                     300.0,
-                    300.0,
-                    1200.0
+                    300.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -8972,6 +8766,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -8988,20 +8791,27 @@
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[Slurp].Leaf.Height as height",
-                "[Slurp].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
-                "[AreaVariables].Script.TranspUnderstory as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:6]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[6] from 2008-10-01 to 2011-03-08 as drainage",
-                "[SimpleFruitTree].Root.Depth as rootDepth"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[6] from 2008-10-01 to 2011-03-08 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -9511,8 +9321,7 @@
                     300.0,
                     300.0,
                     300.0,
-                    300.0,
-                    1200.0
+                    300.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -9623,7 +9432,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.5;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.75;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -9631,11 +9440,11 @@
                 },
                 {
                   "Key": "MaximumHeight",
-                  "Value": "300"
+                  "Value": "200"
                 },
                 {
                   "Key": "MinimumHeight",
-                  "Value": "100"
+                  "Value": "50"
                 },
                 {
                   "Key": "Cover",
@@ -9664,17 +9473,17 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n        \r\n    }\r\n}\r\n",
-          "Parameters": [],
-          "Name": "AreaVariables",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -10376,7 +10185,7 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report",
+              "TableName": "Drainage",
               "XFieldName": "Clock.Today",
               "YFieldName": "drainage",
               "X2FieldName": null,
@@ -10474,7 +10283,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
+              "YFieldName": "ET",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -10514,160 +10323,6 @@
               "Filter": null,
               "Name": "Observed",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
-          "Name": "ObsPred",
-          "Children": [
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": 12.0,
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Transpiration",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.transpiration",
-                  "YFieldName": "Predicted.transpiration",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": true,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Drainage",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": "Zone",
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.drainage",
-                  "YFieldName": "Predicted.drainage",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -10980,21 +10635,27 @@
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[SimpleFruitTree].Leaf.Height as height",
-                "[SimpleFruitTree].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntCanopy as f.rad.int",
-                "[AreaVariables].Script.TranspCanopy as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:4]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage",
-                "[SimpleFruitTree].Root.Depth as rootDepth",
-                "[Weather].DaysSinceWinterSolstice"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -11502,8 +11163,7 @@
                     400.0,
                     400.0,
                     400.0,
-                    400.0,
-                    1400.0
+                    400.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -11892,6 +11552,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -11908,20 +11577,27 @@
             {
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
-                "[Clock].Today",
-                "[Slurp].Leaf.Height as height",
-                "[Slurp].Leaf.LAI as lai",
-                "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
-                "[AreaVariables].Script.TranspUnderstory as transpiration",
-                "sum([Soil].OutputLayers.SWmm[1:4]) as psw",
-                "[Soil].OutputLayers.SW",
-                "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage",
-                "[Weather].DaysSinceWinterSolstice"
+                ""
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
               "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum of [Soil].SoilWater.Flux[7] from 2008-10-01 to 2010-07-23 as drainage"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -12429,8 +12105,7 @@
                     400.0,
                     400.0,
                     400.0,
-                    400.0,
-                    1400.0
+                    400.0
                   ],
                   "Name": "OutputLayers",
                   "Children": [],
@@ -12541,7 +12216,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.5;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tCover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n            \tCover = 0.75;        \r\n            }\r\n\r\n          \tLAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -12549,11 +12224,11 @@
                 },
                 {
                   "Key": "MaximumHeight",
-                  "Value": "300"
+                  "Value": "200"
                 },
                 {
                   "Key": "MinimumHeight",
-                  "Value": "100"
+                  "Value": "50"
                 },
                 {
                   "Key": "Cover",
@@ -12582,17 +12257,17 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n        \r\n    }\r\n}\r\n",
-          "Parameters": [],
-          "Name": "AreaVariables",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -13198,7 +12873,7 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report",
+              "TableName": "Drainage",
               "XFieldName": "Clock.Today",
               "YFieldName": "drainage",
               "X2FieldName": null,
@@ -13296,7 +12971,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
+              "YFieldName": "ET",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -13336,160 +13011,6 @@
               "Filter": null,
               "Name": "Observed",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
-          "Name": "ObsPred",
-          "Children": [
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": 12.0,
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Transpiration",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.transpiration",
-                  "YFieldName": "Predicted.transpiration",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": true,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Drainage",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Zone",
-                  "FactorToVaryMarkers": "Zone",
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.drainage",
-                  "YFieldName": "Predicted.drainage",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -13658,6 +13179,20 @@
             }
           ],
           "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            ""
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
@@ -14699,16 +14234,7 @@
                 {
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
-                    "[Clock].Today",
-                    "[SimpleFruitTree].Leaf.Height as height",
-                    "[SimpleFruitTree].Leaf.LAI as lai",
-                    "[AreaVariables].Script.FRadIntCanopy as f.rad.int",
-                    "[AreaVariables].Script.TranspCanopy as transpiration",
-                    "sum([Soil].SoilWater.SWmm[1:5]) as psw",
-                    "[Soil].OutputLayers.SW",
-                    "[SimpleFruitTree].Root.Depth as rootDepth",
-                    "[DripIrrigator].Script.totalIrrigation as Irrig",
-                    "sum of [Soil].SoilWater.Flux[7] from 2001-07-01 to 2005-07-01 as drainage"
+                    ""
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -15380,6 +14906,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "PlantVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -15396,13 +14931,7 @@
                 {
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
-                    "[Clock].Today",
-                    "[Slurp].Leaf.Height as height",
-                    "[Slurp].Leaf.LAI as lai",
-                    "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
-                    "[AreaVariables].Script.TranspUnderstory as transpiration",
-                    "sum([Soil].SoilWater.SWmm[1:5]) as psw",
-                    "[Soil].OutputLayers.SW"
+                    ""
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -16098,17 +15627,17 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "PlantVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n        \r\n    }\r\n}\r\n",
-              "Parameters": [],
-              "Name": "AreaVariables",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -16193,7 +15722,7 @@
               "Line": 4,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
+              "TableName": "Observed",
               "XFieldName": "Clock.Today",
               "YFieldName": "f.rad.int",
               "X2FieldName": null,
@@ -16289,9 +15818,201 @@
               "Line": 4,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
+              "TableName": "Observed",
               "XFieldName": "Clock.Today",
               "YFieldName": "canopy.height",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "psw",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Zone",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "psw",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": "Zone",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "psw",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": 12.0,
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "Transpiration",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "transpiration",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "transpiration",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -16390,7 +16111,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.1",
                   "X2FieldName": null,
@@ -16486,7 +16207,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.2",
                   "X2FieldName": null,
@@ -16582,7 +16303,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.3",
                   "X2FieldName": null,
@@ -16678,7 +16399,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.4",
                   "X2FieldName": null,
@@ -16774,7 +16495,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.5",
                   "X2FieldName": null,
@@ -16870,7 +16591,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.6",
                   "X2FieldName": null,
@@ -16966,7 +16687,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.7",
                   "X2FieldName": null,
@@ -16983,264 +16704,6 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "psw",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Irri",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "Zone",
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "psw",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Irri",
-                  "FactorToVaryMarkers": "Zone",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "psw",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Observed",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 2500.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Drainage",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "drainage",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 12.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Transpiration",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Observed",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -17306,72 +16769,6 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 2500.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Irrigation",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Irrig",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -19420,7 +18817,8 @@
                     "[Soil].OutputLayers.SW",
                     "[SimpleFruitTree].Root.Depth as rootDepth",
                     "[DripIrrigator].Script.totalIrrigation as Irrig",
-                    "sum of [Soil].SoilWater.Flux[7] from 2001-07-01 to 2005-07-01 as drainage"
+                    "sum of [Soil].SoilWater.Flux[7] from 2001-07-01 to 2005-07-01 as drainage",
+                    "[Soil].SoilWater.Es as Evaporation"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -19548,6 +18946,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "PlantVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -19570,7 +18977,8 @@
                     "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
                     "[AreaVariables].Script.TranspUnderstory as transpiration",
                     "sum([Soil].SoilWater.SWmm[1:5]) as psw",
-                    "[Soil].OutputLayers.SW"
+                    "[Soil].OutputLayers.SW",
+                    "[Soil].SoilWater.Es as Evaporation"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -20261,17 +19669,17 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "PlantVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n        \r\n    }\r\n}\r\n",
-              "Parameters": [],
-              "Name": "AreaVariables",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -20356,7 +19764,7 @@
               "Line": 4,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
+              "TableName": "Observed",
               "XFieldName": "Clock.Today",
               "YFieldName": "f.rad.int",
               "X2FieldName": null,
@@ -20452,9 +19860,201 @@
               "Line": 4,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
+              "TableName": "Observed",
               "XFieldName": "Clock.Today",
               "YFieldName": "canopy.height",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": 12.0,
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "Transpiration",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "transpiration",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "transpiration",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "psw",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Zone",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "psw",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": "Zone",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "psw",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -20553,7 +20153,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.1",
                   "X2FieldName": null,
@@ -20649,7 +20249,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.2",
                   "X2FieldName": null,
@@ -20745,7 +20345,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.3",
                   "X2FieldName": null,
@@ -20841,7 +20441,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.4",
                   "X2FieldName": null,
@@ -20937,7 +20537,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.5",
                   "X2FieldName": null,
@@ -21033,7 +20633,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.6",
                   "X2FieldName": null,
@@ -21129,7 +20729,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.7",
                   "X2FieldName": null,
@@ -21146,264 +20746,6 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "psw",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Irri",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "Zone",
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "psw",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Irri",
-                  "FactorToVaryMarkers": "Zone",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "psw",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Observed",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 2500.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Drainage",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "drainage",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 12.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Transpiration",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Observed",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -21469,72 +20811,6 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 2500.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Irrigation",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Irrig",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -22150,8 +21426,7 @@
                         300.0,
                         300.0,
                         300.0,
-                        300.0,
-                        1500.0
+                        300.0
                       ],
                       "Name": "OutputLayers",
                       "Children": [],
@@ -22176,7 +21451,8 @@
                     "[Soil].OutputLayers.SW",
                     "[SimpleFruitTree].Root.Depth as rootDepth",
                     "[DripIrrigator].Script.totalIrrigation as Irrig",
-                    "sum of [Soil].SoilWater.Flux[7] from 2001-07-01 to 2005-07-01 as drainage"
+                    "sum of [Soil].SoilWater.Flux[7] from 2001-07-01 to 2005-07-01 as drainage",
+                    "[Soil].SoilWater.Es as Evaporation"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -22304,6 +21580,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "PlantVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -22326,7 +21611,8 @@
                     "[AreaVariables].Script.FRadIntUnderstory as f.rad.int",
                     "[AreaVariables].Script.TranspUnderstory as transpiration",
                     "sum([Soil].SoilWater.SWmm[1:5]) as psw",
-                    "[Soil].OutputLayers.SW"
+                    "[Soil].OutputLayers.SW",
+                    "[Soil].SoilWater.Es as Evaporation"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -22999,13 +22285,11 @@
                     {
                       "$type": "Models.Soils.OutputLayers, Models",
                       "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
                       ],
                       "Name": "OutputLayers",
                       "Children": [],
@@ -23017,17 +22301,17 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "PlantVariables",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n\r\n        \r\n    }\r\n}\r\n",
-              "Parameters": [],
-              "Name": "AreaVariables",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -23178,9 +22462,201 @@
               "Line": 4,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
+              "TableName": "Observed",
               "XFieldName": "Clock.Today",
               "YFieldName": "canopy.height",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "psw",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Zone",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "psw",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Irri",
+              "FactorToVaryMarkers": "Zone",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "psw",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": 12.0,
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "Transpiration",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "TSys",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "transpiration",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "transpiration",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -23279,7 +22755,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.1",
                   "X2FieldName": null,
@@ -23375,7 +22851,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.2",
                   "X2FieldName": null,
@@ -23471,7 +22947,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "GrapeObserved",
+                  "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw.3",
                   "X2FieldName": null,
@@ -23488,198 +22964,6 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 2500.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Drainage",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "drainage",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Observed",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "drainage",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Observed",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 12.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Transpiration",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "TSys",
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "GrapeObserved",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Observed",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -23745,72 +23029,6 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": 2500.0,
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "DisabledSeries": [],
-          "Name": "Irrigation",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Irri",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Irrig",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -23890,7 +23108,7 @@
               "Children": [
                 {
                   "$type": "Models.Graph.Regression, Models",
-                  "ForEachSeries": true,
+                  "ForEachSeries": false,
                   "showOneToOne": true,
                   "showEquation": true,
                   "Name": "Regression",
@@ -23954,7 +23172,7 @@
               "Line": 4,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "PredictedObserved",
+              "TableName": "DrainagePO",
               "XFieldName": "Observed.drainage",
               "YFieldName": "Predicted.drainage",
               "X2FieldName": null,
@@ -23968,7 +23186,7 @@
               "Children": [
                 {
                   "$type": "Models.Graph.Regression, Models",
-                  "ForEachSeries": true,
+                  "ForEachSeries": false,
                   "showOneToOne": true,
                   "showEquation": true,
                   "Name": "Regression",
@@ -24046,7 +23264,85 @@
               "Children": [
                 {
                   "$type": "Models.Graph.Regression, Models",
-                  "ForEachSeries": true,
+                  "ForEachSeries": false,
+                  "showOneToOne": true,
+                  "showEquation": true,
+                  "Name": "Regression",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "RadInt",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "SimulationName",
+              "FactorToVaryMarkers": "SimulationName",
+              "FactorToVaryLines": null,
+              "Marker": 4,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "PredictedObserved",
+              "XFieldName": "Observed.f.rad.int",
+              "YFieldName": "Predicted.f.rad.int",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Regression, Models",
+                  "ForEachSeries": false,
                   "showOneToOne": true,
                   "showEquation": true,
                   "Name": "Regression",
