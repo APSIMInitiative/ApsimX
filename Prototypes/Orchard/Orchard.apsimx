@@ -1930,7 +1930,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \t   \r\n        \t   ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (ThisZone.Name == \"Row\")\r\n\t        \t{\r\n\t        \tFRadInt = ((double)RowZone.Get(\"SimpleFruitTree.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n\t        \tET = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n\t        \tLAI = (double)RowZone.Get(\"SimpleFruitTree.Leaf.LAI\");\r\n\t        \tHeight = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Height\");\r\n\t        \tRootDepth = (double)RowZone.Get(\"SimpleFruitTree.Root.Depth\");\r\n\t        \t}\r\n        \telse\r\n        \t\t{\r\n        \t\tFRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n\t        \tHeight = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n\t        \tRootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n        \tES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n        \tPET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * ThisZone.Width/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \t   \r\n        \t   ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (ThisZone.Name == \"Row\")\r\n\t        \t{\r\n\t        \tFRadInt = ((double)RowZone.Get(\"SimpleFruitTree.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n\t        \tET = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n\t        \tLAI = (double)RowZone.Get(\"SimpleFruitTree.Leaf.LAI\");\r\n\t        \tHeight = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Height\");\r\n\t        \tRootDepth = (double)RowZone.Get(\"SimpleFruitTree.Root.Depth\");\r\n\t        \tPlantWidth = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Width\");\r\n\t        \t}\r\n        \telse\r\n        \t\t{\r\n        \t\tFRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n\t        \tHeight = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n\t        \tRootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n        \tES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n        \tdouble PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n        \tPET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "FRadInt",
@@ -1958,6 +1958,10 @@
             },
             {
               "Key": "RootDepth",
+              "Value": "0"
+            },
+            {
+              "Key": "PlantWidth",
               "Value": "0"
             }
           ],
@@ -2825,7 +2829,7 @@
               "Name": "Operations",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4149,7 +4153,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "ET",
+              "YFieldName": "transpiration",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -4248,6 +4252,72 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "PET",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "DisabledSeries": [],
+          "Name": "Trans vs PET",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 4,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "PET",
+              "YFieldName": "transpiration",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
