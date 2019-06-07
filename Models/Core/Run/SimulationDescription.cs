@@ -4,6 +4,7 @@
     using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -24,7 +25,6 @@
 
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
-
 
         /// <summary>
         /// Constructor
@@ -55,6 +55,15 @@
         /// <summary>Gets / sets the list of descriptors for this simulaton.</summary>
         public List<Descriptor> Descriptors { get; set; } = new List<Descriptor>();
 
+        /// <summary>Gets or sets the DataStore for this simulaton.</summary>
+        public DataStore Storage
+        {
+            get
+            {
+                var scope = new ScopingRules();
+                return scope.FindAll(baseSimulation).First(model => model is DataStore) as DataStore;
+            }
+        }
         /// <summary>
         /// Add an override to replace an existing model, as specified by the
         /// path, with a replacement model.

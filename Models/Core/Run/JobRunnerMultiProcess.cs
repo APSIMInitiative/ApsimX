@@ -4,11 +4,12 @@
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
     using System.IO;
-    using System.Reflection;
+    using System.IO.Pipes;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -16,9 +17,12 @@
     [Serializable]
     public class JobRunnerMultiProcess : JobRunner
     {
-        private SocketServer server;
         private bool allStopped;
         private int numberOfProcessors;
+        private ConcurrentQueue<MultiProcessJob> jobsToRun = new ConcurrentQueue<MultiProcessJob>();
+        private Task jobQueueFillerTask;
+
+        private List<Task> pipeServers = new List<Task>();
 
         /// <summary>A mapping of job IDs (Guid) to job  instances.</summary>
         private Dictionary<Guid, MultiProcessJob> runningJobs = new Dictionary<Guid, MultiProcessJob>();
@@ -46,14 +50,8 @@
         /// <summary>Main worker thread.</summary>
         protected override void WorkerThread()
         {
-            // Spin up a job manager server.
-            server = new SocketServer();
-            server.AddCommand("GetJob", OnGetJob);
-            server.AddCommand("TransferData", OnTransferData);
-            server.AddCommand("EndJob", OnEndJob);
-
-            // Tell server to start listening.
-            Task t = Task.Run(() => server.StartListening(2222));
+            // Start a task to fill our queue of jobs to run.
+            jobQueueFillerTask = Task.Run(() => FillJobQueue());
 
             DeleteRunners();
             CreateRunners();
@@ -62,8 +60,6 @@
 
             SpinWait.SpinUntil(() => allStopped);
 
-            server.StopListening();
-            server = null;
             DeleteRunners();
             runningJobs.Clear();
 
@@ -76,22 +72,80 @@
         /// <summary>Create one job runner process for each CPU</summary>
         private void CreateRunners()
         {
+            numberOfProcessors = 4;
             int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
             for (int i = numRunners; i < numberOfProcessors; i++)
-            {
-                string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
-                ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
-                runnerProcess.Exited += OnExited;
-                runnerProcess.Start(runnerFileName, null, Directory.GetCurrentDirectory(), true, false);
-            }
+                pipeServers.Add(Task.Run(() => PipeServerTaskThread()));
         }
 
-        /// <summary>Delete any runners that may exist.</summary>
+         /// <summary>Delete any runners that may exist.</summary>
         private void DeleteRunners()
         {
             foreach (Process runner in Process.GetProcessesByName("APSIMRunner"))
                 runner.Kill();
+        }
+
+        /// <summary>
+        /// Main task thread for working with a single APSIMRunner.exe process using
+        /// an anonymous pipe.
+        /// </summary>
+        private void PipeServerTaskThread()
+        {
+            // Create 2 anonymous pipes (read and write) for duplex communications
+            // (each pipe is one-way)
+            using (var pipeRead = new AnonymousPipeServerStream(PipeDirection.In, HandleInheritability.Inheritable))
+            using (var pipeWrite = new AnonymousPipeServerStream(PipeDirection.Out, HandleInheritability.Inheritable))
+            {
+                var pipeHandles = pipeRead.GetClientHandleAsString() + " " + pipeWrite.GetClientHandleAsString();
+
+                // Run a APSIMRunner process passing the pipe read and write handles as arguments.
+                var runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
+                runnerProcess.Exited += OnExited;
+                runnerProcess.Start(executable: Path.Combine(Directory.GetCurrentDirectory(), "APSIMRunner.exe"),
+                                    arguments: pipeHandles,
+                                    workingDirectory: Directory.GetCurrentDirectory(),
+                                    redirectOutput: true,
+                                    writeToConsole: false);
+
+                // Release the local handles that were created with the above GetClientHandleAsString calls
+                pipeRead.DisposeLocalCopyOfClientHandle();
+                pipeWrite.DisposeLocalCopyOfClientHandle();
+
+                try
+                {
+                    // Get the next job to run.
+                    var job = GetJobToRun();
+
+                    while (job != null)
+                    {
+                        var startTime = DateTime.Now;
+
+                        // Send the job to APSIMRunner.exe - this will run the simulation.
+                        PipeUtilities.SendObjectToPipe(pipeWrite, job.JobSentToClient);
+
+                        pipeWrite.WaitForPipeDrain();
+
+                        // Get the output data back from APSIMRunner.exe
+                        var endJob = PipeUtilities.GetObjectFromPipe(pipeRead) as JobOutput;
+
+                        // Send the output data to storage.
+                        endJob.WriteOutput(job.DataStore);
+
+                        // Signal end of job.
+                        InvokeJobCompleted(job.RunnableJob,
+                                           job.JobManager,
+                                           startTime,
+                                           endJob.ErrorMessage);
+
+                        // Get the next job to run.
+                        job = GetJobToRun();
+                    }
+                }
+                catch (Exception err)
+                {
+                    AddException(err);
+                }
+            }
         }
 
         /// <summary>A runner process has exited. Check for errors</summary>
@@ -110,162 +164,41 @@
                 allStopped = true;
         }
 
-        private int jobManagerIndex;
-        private IEnumerator<IRunnable> currentEnumerator;
-
-        /// <summary>
-        /// Return the next job to run.
-        /// </summary>
-        /// <returns>The job to run or null if no more.</returns>
-        private MultiProcessJob GetNextJobToRun()
+        /// <summary>Fill our job queue with jobs to run.</summary>
+        private void FillJobQueue()
         {
-            lock (runningJobs)
+            Parallel.ForEach(jobManagers, (jobManager) =>
             {
-                if (currentEnumerator == null)
-                    currentEnumerator = jobManagers[jobManagerIndex].GetJobs().GetEnumerator();
-                bool ok = currentEnumerator.MoveNext();
-
-                while (!ok && jobManagerIndex < jobManagers.Count)
+                foreach (var job in jobManager.GetJobs())
                 {
-                    jobManagerIndex++;
-                    if (jobManagerIndex < jobManagers.Count)
-                    {
-                        currentEnumerator = jobManagers[jobManagerIndex].GetJobs().GetEnumerator();
-                        ok = currentEnumerator.MoveNext();
-                    }
+                    jobsToRun.Enqueue(
+                        new MultiProcessJob()
+                        {
+                            JobManager = jobManager,
+                            RunnableJob = job
+                        });
                 }
-                if (ok)
-                    return new MultiProcessJob()
-                    {
-                        JobManagerIndex = jobManagerIndex,
-                        RunnableJob = currentEnumerator.Current,
-                        StartTime = DateTime.Now
-                    };
-                else
-                    return null;
-            }
+            });
         }
 
-        /// <summary>Called by a runner process to get the next job to run.</summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The command arguments</param>
-        private void OnGetJob(object sender, SocketServer.CommandArgs args)
+        /// <summary>Get the next job to run. Needs to be thread safe.</summary>
+        /// <returns>The job to run or NULL if no more jobs to be run.</returns>
+        private MultiProcessJob GetJobToRun()
         {
-            try
+            var jobKey = Guid.NewGuid();
+            MultiProcessJob job = null;
+            SpinWait.SpinUntil(() => jobsToRun.TryDequeue(out job) || jobQueueFillerTask.IsCompleted);
+            if (job == null)
+                return null;
+            else if (job.RunnableJob is SimulationDescription)
             {
-                var jobKey = Guid.NewGuid();
-                var job = GetNextJobToRun();
-                string fileName = null;
-
-                // At this point DataStore should be a child of the simulation. Store the
-                // DataStore in our jobToRun and then remove it from the simulation. We
-                // don't want to pass the DataStore to the runner process via a socket.
-                if (job == null)
-                    server.Send(args.socket, "NULL");
-                else
-                {
-                    if (job.RunnableJob is SimulationDescription)
-                    {
-                        var simulation = (job.RunnableJob as SimulationDescription).ToSimulation();
-                        var dataStore = Apsim.Child(simulation, typeof(DataStore)) as DataStore;
-                        fileName = dataStore.FileName;
-                        simulation.Children.Remove(dataStore);
-                        job.DataStore = dataStore;
-                        job.JobSentToClient = simulation;
-                    }
-                    else
-                        job.JobSentToClient = job.RunnableJob;
-
-                    lock (runningJobs)
-                        runningJobs.Add(jobKey, job);
-
-                    GetJobReturnData returnData = new GetJobReturnData
-                    {
-                        id = jobKey,
-                        job = job.JobSentToClient,
-                        fileName = fileName
-                    };
-                    server.Send(args.socket, returnData);
-                }
+                job.DataStore = (job.RunnableJob as SimulationDescription).Storage;
+                job.JobSentToClient = (job.RunnableJob as SimulationDescription).ToSimulation();
             }
-            catch (Exception err)
-            {
-                AddException(err);
-            }
-        }
+            else
+                job.JobSentToClient = job.RunnableJob;
 
-        /// <summary>Called by a runner process to send its output data.</summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The command arguments</param>
-        private void OnTransferData(object sender, SocketServer.CommandArgs args)
-        {
-            try
-            {
-                IDataStore dataStore;
-                if (args.obj is TransferReportData)
-                {
-                    var transferData = args.obj as TransferReportData;
-                    lock (runningJobs)
-                        dataStore = runningJobs[transferData.id].DataStore;
-                    dataStore.Writer.WriteTable(transferData.data);
-                }
-                else if (args.obj is TransferDataTable)
-                {
-                    var transferData = args.obj as TransferDataTable;
-                    lock (runningJobs)
-                        dataStore = runningJobs[transferData.id].DataStore;
-                    dataStore.Writer.WriteTable(transferData.data);
-                }
-                else
-                    throw new Exception("Invalid socket transfer method.");
-
-                server.Send(args.socket, "OK");
-            }
-            catch (Exception err)
-            {
-                AddException(err);
-            }
-        }
-
-        /// <summary>Called by a runner process to signal end of job</summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The command arguments</param>
-        private void OnEndJob(object sender, SocketServer.CommandArgs args)
-        {
-            try
-            {
-                EndJobArguments arguments = args.obj as EndJobArguments;
-
-                MultiProcessJob processJob;
-                lock (runningJobs)
-                    processJob = runningJobs[arguments.id];
-
-                JobCompleteArguments jobCompleteArguments = new JobCompleteArguments
-                {
-                    Job = processJob.JobSentToClient,
-                    ExceptionThrowByJob = arguments.errorMessage
-                };
-
-
-                var finishTime = DateTime.Now;
-                var completeArguments = new JobCompleteArguments()
-                {
-                    Job = processJob.JobSentToClient,
-                    ExceptionThrowByJob = arguments.errorMessage,
-                    ElapsedTime = finishTime - processJob.StartTime
-                };
-
-                InvokeJobCompleted(processJob.RunnableJob, 
-                                   jobManagers[processJob.JobManagerIndex], 
-                                   processJob.StartTime, 
-                                   arguments.errorMessage);
-
-                server.Send(args.socket, "OK");
-            }
-            catch (Exception err)
-            {
-                AddException(err);
-            }
+            return job;
         }
 
         /// <summary>
@@ -282,61 +215,32 @@
             }
         }
 
-        /// <summary>An class for encapsulating a response to a GetJob command</summary>
-        [Serializable]
-        public class GetJobReturnData
-        {
-            /// <summary>Job ID</summary>
-            public Guid id;
-
-            /// <summary>Table name</summary>
-            public IRunnable job;
-
-            /// <summary>File name</summary>
-            public string fileName;
-
-            /// <summary>Name of job completed</summary>
-            public string jobName;
-        }
-
         /// <summary>An class for encapsulating arguments to an EndJob command</summary>
         [Serializable]
-        public class EndJobArguments
+        public class JobOutput
         {
-            /// <summary>Job ID</summary>
-            public Guid id;
-            
             /// <summary>Error message</summary>
-            public Exception errorMessage;
+            public Exception ErrorMessage { get; set; }
+
+            /// <summary>Report data that needs to be written to storage.</summary>
+            public List<ReportData> ReportData { get; set; }
+
+            /// <summary>Data tables that need to be written to storage.</summary>
+            public List<DataTable> DataTables { get; set; }
+
+            /// <summary>Data tables that need to be written to storage.</summary>
+            /// <param name="storage">Write all output to storage.</param>
+            public void WriteOutput(IDataStore storage)
+            {
+                DataTables.ForEach(table => storage.Writer.WriteTable(table));
+                ReportData.ForEach(table => storage.Writer.WriteTable(table));
+            }
         }
-
-        /// <summary>An class for encapsulating a ReportData</summary>
-        [Serializable]
-        public class TransferReportData
-        {
-            /// <summary>Job ID</summary>
-            public Guid id;
-            
-            /// <summary>Simulation name</summary>
-            public ReportData data;
-        }
-
-
-        /// <summary>An class for encapsulating a DataTable</summary>
-        [Serializable]
-        public class TransferDataTable
-        {
-            /// <summary>Job ID</summary>
-            public Guid id;
-            
-            /// <summary>Simulation name</summary>
-            public DataTable data;
-        }
-
+        
         private class MultiProcessJob
         {
-            /// <summary>The index of the owining job manager.</summary>
-            public int JobManagerIndex { get; set; }
+            /// <summary>The owining job manager.</summary>
+            public IJobManager JobManager { get; set; }
 
             /// <summary>The job to run.</summary>
             public IRunnable RunnableJob { get; set; }
@@ -346,9 +250,6 @@
 
             /// <summary>The data store relating to the job</summary>
             public DataStore DataStore { get; set; }
-
-            /// <summary>The time the job was started.</summary>
-            public DateTime StartTime { get; set; }
         }
     }
 }

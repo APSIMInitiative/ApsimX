@@ -1,12 +1,15 @@
 ﻿namespace APSIMRunner
 {
-    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Core.Run;
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Pipes;
+    using System.Net.Sockets;
     using System.Threading;
+    using static Models.Core.Run.JobRunnerMultiProcess;
 
     class Program
     {
@@ -14,50 +17,62 @@
         static int Main(string[] args)
         {
             try
-            { 
+            {
+                if (args == null || args.Length < 2)
+                    throw new Exception("Usage: APSIMRunner.exe pipeWriteHandle pipeReadHandle");
+
+                // Get read and write pipe handles
+                // Note: Roles are now reversed from how the other process is passing the handles in
+                string pipeWriteHandle = args[0];
+                string pipeReadHandle = args[1];
+
+                // Add hook for manager assembly resolve method.
                 AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
-                // Send a command to socket server to get the job to run.
-                object response = GetNextJob();
-                while (response != null)
+                // Create 2 anonymous pipes (read and write) for duplex communications
+                // (each pipe is one-way)
+                using (var pipeRead = new AnonymousPipeClientStream(PipeDirection.In, pipeReadHandle))
+                using (var pipeWrite = new AnonymousPipeClientStream(PipeDirection.Out, pipeWriteHandle))
                 {
-                    JobRunnerMultiProcess.GetJobReturnData job = response as JobRunnerMultiProcess.GetJobReturnData;
+                    //while (args.Length > 0)
+                    //    Thread.Sleep(200);
 
-                    // Run the simulation.
-                    Exception error = null;
-                    var storage = new StorageViaSockets(job.fileName, job.id);
-                    IModel modelToRun = null;
-                    try
+                    while (PipeUtilities.GetObjectFromPipe(pipeRead) is Simulation sim)
                     {
-                        IRunnable jobToRun = job.job;
-                        if (jobToRun is IModel)
+                        Exception error = null;
+                        var storage = new StorageViaSockets(sim.FileName);
+                        try
                         {
-                            modelToRun = job.job as IModel;
+                            if (sim != null)
+                            {
+                                // Remove existing DataStore
+                                sim.Children.RemoveAll(model => model is Models.Storage.DataStore);
 
-                            // Add in a socket datastore to satisfy links.
-                            modelToRun.Children.Add(storage);
+                                // Add in a socket datastore to satisfy links.
+                                sim.Children.Add(storage);
+
+                                // Run the simulation.
+                                sim.Run(new CancellationTokenSource());
+                            }
+                            else
+                                throw new Exception("Unknown job type");
                         }
-                        else
-                            throw new Exception("Unknown job type: " + jobToRun.GetType().Name);
+                        catch (Exception err)
+                        {
+                            error = err;
+                        }
 
-                        jobToRun.Run(new CancellationTokenSource());
+                        // Signal end of job.
+                        PipeUtilities.SendObjectToPipe(pipeWrite, new JobOutput
+                        {
+                            ErrorMessage = error,
+                            ReportData = storage.reportDataThatNeedsToBeWritten,
+                            DataTables = storage.dataTablesThatNeedToBeWritten
+                        });
+
+                        pipeWrite.WaitForPipeDrain();
+
                     }
-                    catch (Exception err)
-                    {
-                        error = err;
-                    }
-
-                    // Signal end of job.
-                    JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments
-                    {
-                        errorMessage = error,
-                        id = job.id
-                    };
-                    SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
-                    SocketServer.Send("127.0.0.1", 2222, endJobCommand);
-
-                    // Get next job.
-                    response = GetNextJob();
                 }
             }
             catch (Exception err)
@@ -70,31 +85,6 @@
                 AppDomain.CurrentDomain.AssemblyResolve -= Manager.ResolveManagerAssembliesEventHandler;
             }
             return 0;
-        }
-
-        /// <summary>Get the next job to run. Returns the job to run or null if no more jobs.</summary>
-        private static object GetNextJob()
-        {
-            SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
-            object response = null;
-
-            while (response == null)
-            {
-                try
-                {
-                    response = SocketServer.Send("127.0.0.1", 2222, command);
-
-                    if (response is string && response.ToString() == "NULL")
-                        return null;
-                }
-                catch (Exception)
-                {
-                    // connection forcibly closed?
-                    response = null;
-                    Thread.Sleep(200);
-                }
-            }
-            return response;
         }
     }
 }
