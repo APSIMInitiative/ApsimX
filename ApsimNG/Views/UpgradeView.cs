@@ -55,20 +55,11 @@ namespace UserInterface.Views
         private Entry lastNameBox = null;
         private Entry organisationBox = null;
         private Entry emailBox = null;
-        private Entry address1Box = null;
-        private Entry address2Box = null;
-        private Entry cityBox = null;
-        private Entry stateBox = null;
         private Entry countryBox = null;
-        private Entry postcodeBox = null;
         private Label label1 = null;
         private Alignment htmlAlign = null;
         private CheckButton checkbutton1 = null;
         private Gtk.TreeView listview1 = null;
-        private Alignment alignment3 = null;
-        private Alignment alignment4 = null;
-        private Alignment alignment5 = null;
-        private Alignment alignment6 = null;
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
@@ -89,20 +80,11 @@ namespace UserInterface.Views
             lastNameBox = (Entry)builder.GetObject("lastNameBox");
             organisationBox = (Entry)builder.GetObject("organisationBox");
             emailBox = (Entry)builder.GetObject("emailBox");
-            address1Box = (Entry)builder.GetObject("address1Box");
-            address2Box = (Entry)builder.GetObject("address2Box");
-            cityBox = (Entry)builder.GetObject("cityBox");
-            stateBox = (Entry)builder.GetObject("stateBox");
             countryBox = (Entry)builder.GetObject("countryBox");
-            postcodeBox = (Entry)builder.GetObject("postcodeBox");
             label1 = (Label)builder.GetObject("label1");
             htmlAlign = (Alignment)builder.GetObject("HTMLalign");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             listview1 = (Gtk.TreeView)builder.GetObject("listview1");
-            alignment3 = (Alignment)builder.GetObject("alignment3");
-            alignment4 = (Alignment)builder.GetObject("alignment4");
-            alignment5 = (Alignment)builder.GetObject("alignment5");
-            alignment6 = (Alignment)builder.GetObject("alignment6");
             alignment7 = (Alignment)builder.GetObject("alignment7");
             oldVersions = (CheckButton)builder.GetObject("checkbutton2");
             listview1.Model = listmodel;
@@ -122,8 +104,7 @@ namespace UserInterface.Views
 
             // Make the tab order a little more sensible than the defaults
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
-            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
-                          alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
+            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
             htmlView = new HTMLView(new ViewBase(null));
             htmlAlign.Add(htmlView.MainWidget);
@@ -184,14 +165,9 @@ namespace UserInterface.Views
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
-            organisationBox.Text = Utility.Configuration.Settings.Organisation;
-            address1Box.Text = Utility.Configuration.Settings.Address1;
-            address2Box.Text = Utility.Configuration.Settings.Address2;
-            cityBox.Text = Utility.Configuration.Settings.City;
-            stateBox.Text = Utility.Configuration.Settings.State;
-            postcodeBox.Text = Utility.Configuration.Settings.Postcode;
-            countryBox.Text = Utility.Configuration.Settings.Country;
             emailBox.Text = Utility.Configuration.Settings.Email;
+            organisationBox.Text = Utility.Configuration.Settings.Organisation;
+            countryBox.Text = Utility.Configuration.Settings.Country;
 
             WebClient web = new WebClient();
 
@@ -459,19 +435,23 @@ namespace UserInterface.Views
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
+            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/AddNew";
             url += "?firstName=" + firstNameBox.Text;
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "address1", address1Box.Text);
-            url = AddToURL(url, "address2", address2Box.Text);
-            url = AddToURL(url, "city", cityBox.Text);
-            url = AddToURL(url, "state", stateBox.Text);
-            url = AddToURL(url, "postcode", postcodeBox.Text);
             url = AddToURL(url, "country", countryBox.Text);
             url = AddToURL(url, "email", emailBox.Text);
-            url = AddToURL(url, "product", "APSIM Next Generation " + version);
+
+            string product = "APSIM Next Generation";
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                product += " (Windows)";
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                product += " (Mac)";
+            else if (ProcessUtilities.CurrentOS.IsLinux)
+                product += " (Debian"; // fixme - linux != debian
+
+            url = AddToURL(url, "product",  product);
 
             WebUtilities.CallRESTService<object>(url);
         }
@@ -493,14 +473,9 @@ namespace UserInterface.Views
         {
             Utility.Configuration.Settings.FirstName = firstNameBox.Text;
             Utility.Configuration.Settings.LastName = lastNameBox.Text;
-            Utility.Configuration.Settings.Organisation = organisationBox.Text;
-            Utility.Configuration.Settings.Address1 = address1Box.Text;
-            Utility.Configuration.Settings.Address2 = address2Box.Text;
-            Utility.Configuration.Settings.City = cityBox.Text;
-            Utility.Configuration.Settings.State = stateBox.Text;
-            Utility.Configuration.Settings.Postcode = postcodeBox.Text;
-            Utility.Configuration.Settings.Country = countryBox.Text;
             Utility.Configuration.Settings.Email = emailBox.Text;
+            Utility.Configuration.Settings.Organisation = organisationBox.Text;
+            Utility.Configuration.Settings.Country = countryBox.Text;
         }
     }
 }
