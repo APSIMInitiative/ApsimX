@@ -449,8 +449,8 @@ namespace UserInterface.Views
             else if (ProcessUtilities.CurrentOS.IsMac)
                 product += " (Mac)";
             else if (ProcessUtilities.CurrentOS.IsLinux)
-                product += " (Debian"; // fixme - linux != debian
-
+                product += " (Debian)"; // fixme - linux != debian
+            product += " Upgrade";
             url = AddToURL(url, "product",  product);
 
             WebUtilities.CallRESTService<object>(url);
