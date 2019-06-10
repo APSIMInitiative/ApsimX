@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/land/landtype.htm")]
+    [HelpUri(@"Content/Features/Resources/Land/LandType.htm")]
     public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>

@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/crop/croptask.htm")]
+    [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
         [Link]

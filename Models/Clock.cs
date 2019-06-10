@@ -116,6 +116,8 @@ namespace Models
         public event EventHandler CLEMUpdateLabourAvailability;
         /// <summary>CLEM update pasture</summary>
         public event EventHandler CLEMUpdatePasture;
+        /// <summary>CLEM detach pasture</summary>
+        public event EventHandler CLEMDetachPasture;
         /// <summary>CLEM pasture has been added and is ready for use</summary>
         public event EventHandler CLEMPastureReady;
         /// <summary>CLEM cut and carry</summary>
@@ -338,6 +340,8 @@ namespace Models
                             CLEMAnimalStock.Invoke(this, args);
                         if (CLEMAnimalSell != null)
                             CLEMAnimalSell.Invoke(this, args);
+                        if (CLEMDetachPasture != null)
+                            CLEMDetachPasture.Invoke(this, args);
                         if (CLEMHerdSummary != null)
                             CLEMHerdSummary.Invoke(this, args);
                         if (CLEMAgeResources != null)

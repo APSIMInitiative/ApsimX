@@ -22,7 +22,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/ruminantherdsummary.htm")]
+    [HelpUri(@"Content/features/Reporting/RuminantHerdSummary.htm")]
     public class SummariseRuminantHerd: CLEMModel
     {
         [Link]

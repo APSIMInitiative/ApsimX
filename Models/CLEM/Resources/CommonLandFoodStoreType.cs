@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a common land food store.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
-    [HelpUri(@"content/features/resources/animalfoodstore/commonlandstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
         /// <summary>

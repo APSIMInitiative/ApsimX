@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This component holds all Labour Price Entries that define the value of individuals.")]
     [Version(1, 0, 1, "Initial release")]
-    [HelpUri(@"content/features/resources/labour/labourpricing.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/LabourPricing.htm")]
     public class LabourPricing : CLEMModel, IValidatableObject
     {
         /// <summary>

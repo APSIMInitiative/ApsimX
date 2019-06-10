@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Equipment))]
     [Description("This resource represents an equipment store type (e.g. Tractor, bore).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/equipment/equipmenttype.htm")]
+    [HelpUri(@"Content/Features/Resources/Equipment/Equipmenttype.htm")]
     public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
