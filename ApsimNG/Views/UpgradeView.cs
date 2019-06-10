@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
@@ -55,7 +56,7 @@ namespace UserInterface.Views
         private Entry lastNameBox = null;
         private Entry organisationBox = null;
         private Entry emailBox = null;
-        private Entry countryBox = null;
+        private ComboBox countryBox = null;
         private Label label1 = null;
         private Alignment htmlAlign = null;
         private CheckButton checkbutton1 = null;
@@ -80,7 +81,7 @@ namespace UserInterface.Views
             lastNameBox = (Entry)builder.GetObject("lastNameBox");
             organisationBox = (Entry)builder.GetObject("organisationBox");
             emailBox = (Entry)builder.GetObject("emailBox");
-            countryBox = (Entry)builder.GetObject("countryBox");
+            countryBox = (ComboBox)builder.GetObject("countryBox");
             label1 = (Label)builder.GetObject("label1");
             htmlAlign = (Alignment)builder.GetObject("HTMLalign");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
@@ -101,6 +102,17 @@ namespace UserInterface.Views
             listview1.AppendColumn(column1);
             column1.Sizing = TreeViewColumnSizing.Autosize;
             column1.Resizable = true;
+
+            // Populate the combo box with a list of valid country names.
+            ListStore countries = new ListStore(typeof(string));
+            foreach (string country in Constants.Countries)
+                countries.AppendValues(country);
+            countryBox.Model = countries;
+
+            // Add a cell renderer to the combo box.
+            CellRendererText cell = new CellRendererText();
+            countryBox.PackStart(cell, false);
+            countryBox.AddAttribute(cell, "text", 0);
 
             // Make the tab order a little more sensible than the defaults
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
@@ -129,13 +141,20 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnShown(object sender, EventArgs e)
         {
-            window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-            while (Gtk.Application.EventsPending())
-                Gtk.Application.RunIteration();
-            PopulateForm();
-            window1.GdkWindow.Cursor = null;
-            if (loadFailure)
-                window1.Destroy();
+            try
+            {
+                window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
+                PopulateForm();
+                window1.GdkWindow.Cursor = null;
+                if (loadFailure)
+                    window1.Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -167,7 +186,7 @@ namespace UserInterface.Views
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
             emailBox.Text = Utility.Configuration.Settings.Email;
             organisationBox.Text = Utility.Configuration.Settings.Organisation;
-            countryBox.Text = Utility.Configuration.Settings.Country;
+            countryBox.Active = Constants.Countries.ToList().IndexOf(Utility.Configuration.Settings.Country);
 
             WebClient web = new WebClient();
 
@@ -224,11 +243,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnViewMoreDetail(object sender, EventArgs e)
         {
-            int selIndex = GetSelIndex();
-            if (selIndex >= 0)
+            try
             {
-                Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
-                Process.Start(upgradeList[selIndex].IssueURL);
+                int selIndex = GetSelIndex();
+                if (selIndex >= 0)
+                {
+                    Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                    Process.Start(upgradeList[selIndex].IssueURL);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -238,8 +264,15 @@ namespace UserInterface.Views
 
         private void OnShowOldVersionsToggled(object sender, EventArgs args)
         {
-            listmodel.Clear();
-            PopulateUpgradeList();
+            try
+            {
+                listmodel.Clear();
+                PopulateUpgradeList();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -249,16 +282,16 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnUpgrade(object sender, EventArgs e)
         {
-            int selIndex = GetSelIndex();
-            if (selIndex >= 0)
+            try
             {
-                try
+                int selIndex = GetSelIndex();
+                if (selIndex >= 0)
                 {
                     if (!checkbutton1.Active)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
                     if (String.IsNullOrWhiteSpace(firstNameBox.Text) || String.IsNullOrWhiteSpace(lastNameBox.Text) ||
-                        String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.Text))
+                        String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.ActiveText))
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
@@ -320,11 +353,10 @@ namespace UserInterface.Views
 
                     }
                 }
-                catch (Exception err)
-                {
-                    window1.GdkWindow.Cursor = null;
-                    ViewBase.MasterView.ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
-                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -440,7 +472,7 @@ namespace UserInterface.Views
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.Text);
+            url = AddToURL(url, "country", countryBox.ActiveText);
             url = AddToURL(url, "email", emailBox.Text);
 
             string product = "APSIM Next Generation";
@@ -471,11 +503,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnFormClosing(object sender, EventArgs e)
         {
-            Utility.Configuration.Settings.FirstName = firstNameBox.Text;
-            Utility.Configuration.Settings.LastName = lastNameBox.Text;
-            Utility.Configuration.Settings.Email = emailBox.Text;
-            Utility.Configuration.Settings.Organisation = organisationBox.Text;
-            Utility.Configuration.Settings.Country = countryBox.Text;
+            try
+            {
+                Utility.Configuration.Settings.FirstName = firstNameBox.Text;
+                Utility.Configuration.Settings.LastName = lastNameBox.Text;
+                Utility.Configuration.Settings.Email = emailBox.Text;
+                Utility.Configuration.Settings.Organisation = organisationBox.Text;
+                Utility.Configuration.Settings.Country = countryBox.ActiveText;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }
