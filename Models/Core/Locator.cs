@@ -279,7 +279,7 @@ namespace Models.Core
                     {
                         // Not a property, may be an unchecked method or a child model.
                         localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
-                        if (localModel != null)
+                        if (localModel == null)
                         {
                             // Not a model
                             return null;
