@@ -76,23 +76,34 @@ namespace UserInterface.Presenters
             IModel simulation = Apsim.Parent(model, typeof(Simulation));
             IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
             IDataStore ds = Apsim.Children(simulations, typeof(IDataStore)).FirstOrDefault() as IDataStore;
-            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[8].ToString()).ToArray();
+            if (ds == null)
+            {
+                return htmlString;
+            }
+            if(ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
+            {
+                return htmlString;
+            }
+            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+            int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
+            int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
+            dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+
             foreach (DataRow dr in dataRows)
             {
                 // convert invalid parameter warnings to errors
-                if(dr[7].ToString().StartsWith("Invalid parameter value in model"))
+                if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
                 {
-                    dr[8] = "0";
+                    dr[errorCol] = "0";
                 }
             }
-            dataRows = dataRows.OrderBy(a => a[8].ToString()).ToArray();
 
             if (dataRows.Count() > 0)
             {
                 foreach (DataRow dr in dataRows)
                 {
                     bool ignore = false;
-                    string msgStr = dr[7].ToString();
+                    string msgStr = dr[msgCol].ToString();
                     if (msgStr.Contains("@i:"))
                     {
                         ignore = true;
@@ -106,6 +117,10 @@ namespace UserInterface.Presenters
                         {
                             parts.RemoveAt(0);
                         }
+                        if (parts[0].Contains("ERRORS in file:"))
+                        {
+                            parts.RemoveAt(0);
+                        }
                         if (parts[0].Contains("Simulation name:"))
                         {
                             parts.RemoveAt(0);
@@ -114,9 +129,9 @@ namespace UserInterface.Presenters
 
                         string type = "Message";
                         string title = "Message";
-                        switch (dr[8].ToString())
+                        switch (dr[errorCol].ToString())
                         {
-                            case "0":
+                            case "2":
                                 type = "Error";
                                 title = "Error";
                                 break;
@@ -126,14 +141,6 @@ namespace UserInterface.Presenters
                                 break;
                             default:
                                 break;
-                        }
-                        if (type == "Error")
-                        {
-                            if (!msgStr.StartsWith("Invalid parameter value in model"))
-                            {
-                                msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                                msgStr = msgStr.Substring(msgStr.IndexOf("\n") + 1);
-                            }
                         }
                         if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
                         {
@@ -158,8 +165,9 @@ namespace UserInterface.Presenters
                         {
                             type = "Ok";
                             title = "Success";
-                            DataTable dataRows2 = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_InitialConditions");
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[2][11].ToString());
+                            DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
+                            int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }
 

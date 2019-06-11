@@ -1,4 +1,6 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.Commands;
+
+namespace UserInterface.Presenters
 {
     using System;
     using System.Data;
@@ -57,12 +59,14 @@
                     this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
             }
+            this.view.FileName.Value = dataStore.FileName;
 
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Changed += OnColumnFilterChanged;
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             this.view.RowFilter.Changed += OnColumnFilterChanged;
             this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
+            this.view.FileNameChanged += OnFileNameChanged;
             PopulateGrid();
         }
 
@@ -70,10 +74,12 @@
         public void Detach()
         {
             (view.MaximumNumberRecords as EditView).EndEdit();
+            (view.FileName as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.RowFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            view.FileNameChanged -= OnFileNameChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
@@ -148,7 +154,7 @@
                         // Add the units, if they're available
                         if (units != null)
                         {
-                            column.ColumnName = column.ColumnName + " " + units;
+                            column.ColumnName = column.ColumnName + " (" + units + ")";
                         }
                     }
 
@@ -171,7 +177,8 @@
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
                     if (ExperimentFilter != null)
                     {
-                        string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                        var names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                        string filter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
                         if (!string.IsNullOrEmpty(view.RowFilter.Value))
                             filter += " AND " + view.RowFilter.Value;
                         data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
@@ -266,13 +273,25 @@
                 {
                     Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
                 }
-                catch (Exception)
-                {  // If there are any errors, return 0
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
+                catch (FormatException)
+                {
                 }
             }
 
             PopulateGrid();
+        }
+
+        /// <summary>
+        /// Invoked when the user modifies the contents of the filename textbox.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnFileNameChanged(object sender, EventArgs e)
+        {
+            ChangeProperty command = new ChangeProperty(dataStore, "CustomFileName", view.FileName.Value);
+            explorerPresenter.CommandHistory.Add(command);
+            dataStore.Close();
+            dataStore.Open();
         }
     }
 }

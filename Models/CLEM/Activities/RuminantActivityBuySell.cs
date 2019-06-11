@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantbuysell.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -252,7 +252,6 @@ namespace Models.CLEM.Activities
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
                     {
                         value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase,  RuminantFilterParameters.BreedingSire, "true");
-//                        value = newind.BreedParams.SirePrice;
                     }
                     else
                     {
@@ -353,7 +352,6 @@ namespace Models.CLEM.Activities
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
                                 {
                                     value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.BreedingSire, "true");
-//                                    value = ind.BreedParams.SirePrice;
                                 }
                                 else
                                 {

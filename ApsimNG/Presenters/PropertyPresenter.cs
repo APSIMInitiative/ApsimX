@@ -356,11 +356,16 @@ namespace UserInterface.Presenters
             foreach (IVariable property in properties)
             {
                 if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value , null });
+                    table.Rows.Add(new object[] { property.Value, null });
                 else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel)});
+                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
                 else
-                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling });
+                {
+                    string description = property.Description;
+                    if (!string.IsNullOrEmpty(property.Units))
+                        description += " (" + property.Units + ")";
+                    table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
+                }
             }
         }
 
@@ -461,6 +466,7 @@ namespace UserInterface.Presenters
                     Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
                     // get crop file names
                     fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteCrop)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -525,6 +531,13 @@ namespace UserInterface.Presenters
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }
+                    else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
+                    {
+                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
+                        string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = values;
+                    }
                     else
                     {
                         cell.EditorType = EditorTypeEnum.TextBox;
@@ -586,12 +599,9 @@ namespace UserInterface.Presenters
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
                         string tableName = cell.Value.ToString();
-                        DataTable data = null;
                         if (storage.Reader.TableNames.Contains(tableName))
-                            data = storage.Reader.GetDataUsingSql("SELECT * FROM " + tableName + " LIMIT 1");
-                        if (data != null)
                         {
-                            fieldNames = DataTableUtilities.GetColumnNames(data).ToList();
+                            fieldNames = storage.Reader.ColumnNames(tableName).ToList();
                             if (fieldNames.Contains("SimulationID"))
                                 fieldNames.Add("SimulationName");
                         }
@@ -710,8 +720,6 @@ namespace UserInterface.Presenters
         /// <param name="e">Event parameters</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-
             foreach (IGridCell cell in e.ChangedCells)
             {
                 try
@@ -726,8 +734,6 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowError(ex);
                 }
             }
-            
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

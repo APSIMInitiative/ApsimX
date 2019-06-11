@@ -228,21 +228,27 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ResourcesForAllActivityInitialisation()
         {
-            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-            GetResourcesRequiredForInitialisation();
+            if (this.Enabled)
+            {
+                // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+                GetResourcesRequiredForInitialisation();
 
-            // get resources required for all dynamically created CLEMActivityBase activities
-            if (ActivityList != null)
-            {
-                foreach (CLEMActivityBase activity in ActivityList)
+                // get resources required for all dynamically created CLEMActivityBase activities
+                if (ActivityList != null)
                 {
-                    activity.GetResourcesForAllActivityInitialisation();
+                    foreach (CLEMActivityBase activity in ActivityList)
+                    {
+                        activity.GetResourcesForAllActivityInitialisation();
+                    }
                 }
-            }
-            // get resources required for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-            {
-                activity.GetResourcesForAllActivityInitialisation();
+                // get resources required for all children of type CLEMActivityBase
+                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                {
+                    if (activity.Enabled)
+                    {
+                        activity.GetResourcesForAllActivityInitialisation();
+                    }
+                }
             }
         }
 
@@ -252,24 +258,27 @@ namespace Models.CLEM.Activities
         /// </summary>
         public virtual void GetResourcesForAllActivities(CLEMModel model)
         {
-            if (this.TimingOK)
+            if (this.Enabled)
             {
-                ResourcesForAllActivities(model);
-            }
-            else
-            {
-                this.Status = ActivityStatus.Ignored;
-                if (ActivityList != null)
+                if (this.TimingOK)
                 {
-                    foreach (CLEMActivityBase activity in ActivityList)
+                    ResourcesForAllActivities(model);
+                }
+                else
+                {
+                    this.Status = ActivityStatus.Ignored;
+                    if (ActivityList != null)
+                    {
+                        foreach (CLEMActivityBase activity in ActivityList)
+                        {
+                            activity.Status = ActivityStatus.Ignored;
+                        }
+                    }
+                    // get resources required for all children of type CLEMActivityBase
+                    foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
                     {
                         activity.Status = ActivityStatus.Ignored;
                     }
-                }
-                // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-                {
-                    activity.Status = ActivityStatus.Ignored;
                 }
             }
         }
@@ -579,12 +588,13 @@ namespace Models.CLEM.Activities
 
                     amountProvided += amount;
                     removeRequest.Required = amount;
-//                    removeRequest.ResourceType = lt;
                     if (removeFromResource)
                     {
                         lt.LastActivityRequestID = request.ActivityID;
                         lt.LastActivityRequestAmount = amount;
                         lt.Remove(removeRequest);
+                        request.Provided += removeRequest.Provided;
+                        request.Value += request.Provided * lt.PayRate();
                     }
                 }
 
@@ -620,6 +630,8 @@ namespace Models.CLEM.Activities
                                     item.LastActivityRequestID = request.ActivityID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
+                                    request.Provided += removeRequest.Provided;
+                                    request.Value += request.Provided * item.PayRate();
                                 }
                             }
                             else
@@ -939,7 +951,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         NotNeeded,
         /// <summary>
-        /// Indicates activity cuased a warning and was not perfromed
+        /// Indicates activity caused a warning and was not performed
         /// </summary>
         Warning,
         /// <summary>

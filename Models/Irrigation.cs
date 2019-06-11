@@ -24,19 +24,19 @@
 
         /// <summary>Gets or sets the depth at which irrigation is applied (mm).</summary>
         [XmlIgnore]
-        public double Depth { get; set; }
+        public double Depth { get; private set; }
 
         /// <summary>Gets or sets the duration of the irrigation event (minutes).</summary>
         [XmlIgnore]
-        public double Duration { get; set; }
+        public double Duration { get; private set; }
 
         /// <summary>Gets or sets the efficiency of the irrigation system (mm/mm).</summary>
         [XmlIgnore]
-        public double Efficiency { get; set; }
+        public double Efficiency { get; private set; }
 
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
         [XmlIgnore]
-        public bool WillRunoff { get; set; }
+        public bool WillRunoff { get; private set; }
 
         /// <summary>Occurs when [irrigated].</summary>
         /// <remarks>
@@ -74,7 +74,7 @@
                 if (Depth > 0.0)
                     willRunoff = false;
 
-                IrrigationApplied = amount;
+                IrrigationApplied = amount * efficiency;
                 WillRunoff = willRunoff;
 
                 // Prepare the irrigation data

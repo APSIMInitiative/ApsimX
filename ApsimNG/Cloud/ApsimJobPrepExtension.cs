@@ -42,7 +42,7 @@ namespace ApsimNG.Cloud
         /// <returns></returns>
         private static IEnumerable<ResourceFile> GetResourceFiles(APSIMJob job, CloudBlobClient blobClient)
         {
-            yield return new ResourceFile(job.ModelZipFileSas, BatchConstants.MODEL_ZIPFILE_NAME);
+            yield return new ResourceFile(job.ModelZipFileSas, BatchConstants.ModelZipFileName);
 
             var toolsRef = blobClient.GetContainerReference("tools");
             foreach(CloudBlockBlob listBlobItem in toolsRef.ListBlobs())

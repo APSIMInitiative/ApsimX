@@ -2,9 +2,11 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +23,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
-    [HelpUri(@"content/features/CLEMComponent.htm")]
+    [HelpUri(@"Content/Features/CLEMComponent.htm")]
     [Version(1,0,1,"")]
     [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI
@@ -32,6 +34,10 @@ namespace Models.CLEM
         Clock Clock = null;
         [Link]
         Simulation Simulation = null;
+        [Link]
+        IDataStore DataStore = null;
+
+        private static Random randomGenerator;
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -46,8 +52,6 @@ namespace Models.CLEM
         [Required, GreaterThanEqualValue(0) ]
         [Description("Random number generator seed (0 to use clock)")]
         public int RandomSeed { get; set; }
-
-        private static Random randomGenerator;
 
         /// <summary>
         /// Access the CLEM random number generator
@@ -90,6 +94,7 @@ namespace Models.CLEM
         /// <value>The area.</value>
         [XmlIgnore]
         public new double Area { get; set; }
+
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
         [XmlIgnore]
@@ -137,15 +142,26 @@ namespace Models.CLEM
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("CLEMValidate")]
+        private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
+            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
             // commencing is too early as Summary has not been created for reporting.
             // some values assigned in commencing will not be checked before processing, but will be caught here
             if (!Validate(Simulation, ""))
             {
                 string error = "@i:Invalid parameters in model";
+
+                // find IStorageReader of simulation
+                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IStorageReader ds = DataStore.Reader;
+                DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
+                // all all current errors and validation problems to error string.
+                foreach (DataRow dr in dataRows)
+                {
+                    error += "\n" + dr[6].ToString();
+                }
                 throw new ApsimXException(this, error);
             }
 
@@ -299,33 +315,35 @@ namespace Models.CLEM
             // get clock
             IModel parentSim = Apsim.Parent(this, typeof(Simulation));
             Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
-
-            html += "\n<div class=\"clearfix defaultbanner\">";
-            html += "<div class=\"namediv\">" + clk.Name + "</div>";
-            html += "<div class=\"typediv\">Clock</div>";
-            html += "</div>";
-            html += "\n<div class=\"defaultcontent\">";
-            html += "\n<div class=\"activityentry\">This simulation runs from ";
-            if (clk.StartDate == null)
+            if (clk != null)
             {
-                html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+                html += "\n<div class=\"clearfix defaultbanner\">";
+                html += "<div class=\"namediv\">" + clk.Name + "</div>";
+                html += "<div class=\"typediv\">Clock</div>";
+                html += "</div>";
+                html += "\n<div class=\"defaultcontent\">";
+                html += "\n<div class=\"activityentry\">This simulation runs from ";
+                if (clk.StartDate == null)
+                {
+                    html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
+                }
+                html += " to ";
+                if (clk.EndDate == null)
+                {
+                    html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
+                }
+                html += "\n</div>";
+                html += "\n</div>";
+                html += "\n</div>";
             }
-            else
-            {
-                html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
-            }
-            html += " to ";
-            if (clk.EndDate == null)
-            {
-                html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
-            }
-            html += "\n</div>";
-            html += "\n</div>";
-            html += "\n</div>";
 
             foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
             {

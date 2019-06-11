@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/crop/croptask.htm")]
+    [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
         [Link]
@@ -95,8 +95,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
-            double numberUnits = 0;
+            double daysNeeded;
+            double numberUnits;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -125,7 +125,6 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
                     productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested;
                     if (requirement.WholeUnitBlocks)
@@ -136,7 +135,6 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
                     productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)

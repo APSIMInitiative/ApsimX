@@ -29,7 +29,14 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
+        [XmlIgnore]
         public string SelectedTab { get; set; }
+
+        /// <summary>
+        /// Warning log for this CLEM model
+        /// </summary>
+        [XmlIgnore]
+        public WarningLog Warnings = new WarningLog();
 
         /// <summary>
         /// Allows unique id of activity to be set 
@@ -208,15 +215,24 @@ namespace Models.CLEM
             html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
             html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
 
-            if(this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-            {
-                //html += "\n<div class=\"activityentry\">This resource is measured in ";
-                //if((this as ResourceBaseWithTransactions).Units != "")
-                //{
-                //    html += "<span class=\"setvalue\">" + (this as ResourceBaseWithTransactions).Units + "</span> ";
-                //}
-                //html += "</div>";
-            }
+            //if(this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
+            //{
+            //    // add units when completed
+            //    string units = (this as IResourceType).Units;
+            //    if (units != "NA")
+            //    {
+            //        html += "\n<div class=\"activityentry\">This resource is measured in  ";
+            //        if (units == null || units == "")
+            //        {
+            //            html += "<span class=\"errorlink\">Not specified</span>";
+            //        }
+            //        else
+            //        {
+            //            html += "<span class=\"setvalue\">" + units + "</span>";
+            //        }
+            //        html += "</div>";
+            //    }
+            //}
             return html;
         }
 
@@ -235,7 +251,26 @@ namespace Models.CLEM
         /// <returns></returns>
         public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            if (this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
+            {
+                // add units when completed
+                string units = (this as IResourceType).Units;
+                if (units != "NA")
+                {
+                    html += "\n<div class=\"activityentry\">This resource is measured in  ";
+                    if (units == null || units == "")
+                    {
+                        html += "<span class=\"errorlink\">Not specified</span>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + units + "</span>";
+                    }
+                    html += "</div>";
+                }
+            }
+            return html;
         }
 
         /// <summary>

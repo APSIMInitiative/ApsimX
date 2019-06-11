@@ -102,8 +102,8 @@ namespace UserInterface.Views
             vbox1.Add(bottomView);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
-            _mainWidget = vbox1;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = vbox1;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void Hbox_SizeAllocated(object o, SizeAllocatedArgs args)
@@ -143,7 +143,7 @@ namespace UserInterface.Views
                     {
                         // set to web address
                         // not currently available during development until web help is launched
-                        // helpURL = "http://www.apsim.info/CLEM/Help/" + ModelHelpURL.TrimStart('/');
+                        helpURL = "http://www.apsim.info/CLEM/" + ModelHelpURL.TrimStart('/');
                     }
                     if (helpURL == "")
                     {
@@ -170,8 +170,8 @@ namespace UserInterface.Views
                     child.Destroy();
                 }
             }
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         public string ModelTypeText

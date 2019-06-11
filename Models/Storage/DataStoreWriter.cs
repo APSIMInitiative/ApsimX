@@ -32,7 +32,7 @@
         private bool somethingHasBeenWriten = false;
 
         /// <summary>The IDS for all simulations</summary>
-        private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, SimulationDetails> simulationIDs = new Dictionary<string, SimulationDetails>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
         private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -66,6 +66,12 @@
         {
             Connection = dbConnection;
             ReadExistingDatabase(dbConnection);
+            if (dbConnection is SQLite && !(dbConnection as SQLite).IsInMemory)
+            {
+                // For disk-based databases, these pragmas greatly improve performance
+                dbConnection.ExecuteQuery("PRAGMA journal_mode=WAL");
+                dbConnection.ExecuteQuery("PRAGMA synchronous=NORMAL");
+            }
         }
 
         /// <summary>The database connection to write to.</summary>
@@ -94,7 +100,7 @@
 
             Start();
             var table = data.ToTable();
-            AddIndexColumns(table, "Current", data.SimulationName);
+            AddIndexColumns(table, "Current", data.SimulationName, data.FolderName);
 
             // Add units
             AddUnits(data.TableName, data.ColumnNames, data.ColumnUnits);
@@ -124,12 +130,13 @@
             if (table.Columns.Contains("SimulationName"))
             {
                 var simulationNames = DataTableUtilities.GetColumnAsStrings(table, "SimulationName").ToList().Distinct();
-                DeleteOldRowsInTable(table.TableName, simulationNamesThatMayNeedCleaning: simulationNames);
+                DeleteOldRowsInTable(table.TableName, "Current",
+                                     simulationNamesThatMayNeedCleaning: simulationNames);
             }
             else
-                DeleteOldRowsInTable(table.TableName);
+                DeleteOldRowsInTable(table.TableName, "Current");
 
-            AddIndexColumns(table, "Current", null);
+            AddIndexColumns(table, "Current", null, null);
 
             lock (lockObject)
             {
@@ -142,10 +149,6 @@
         {
             if (commandRunner != null)
             {
-                // Make sure all existing writing has completed.
-                while (commands.Count > 0 || !idle)
-                    Thread.Sleep(100);
-
                 // Make sure all existing writing has completed.
                 while (commands.Count > 0 || !idle)
                     Thread.Sleep(100);
@@ -213,7 +216,15 @@
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
         public void Empty()
         {
-            Start();
+            try
+            {
+                Start();
+            }
+            catch
+            {
+                // The call to Start may fail if the database is corrupt, which may well be why we want to empty it.
+                // For that reason, catch any exceptions and proceed.
+            }
             commands.Add(new EmptyCommand(Connection));
             Stop();
         }
@@ -284,24 +295,29 @@
         /// create an ID if the simulationName is unknown.
         /// </summary>
         /// <param name="simulationName">The name of the simulation to look for.</param>
+        /// <param name="folderName">The name of the folder the simulation belongs in.</param>
         /// <returns>Always returns a number.</returns>
-        public int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName, string folderName)
         {
             if (simulationName == null)
                 return 0;
 
             lock (lockObject)
             {
-                if (!simulationIDs.TryGetValue(simulationName, out int id))
+                if (!simulationIDs.TryGetValue(simulationName, out SimulationDetails details))
                 {
                     // Not found so create a new ID, add it to our collection of ids
+                    int id;
                     if (simulationIDs.Count > 0)
-                        id = simulationIDs.Values.Max() + 1;
+                        id = simulationIDs.Values.Select(v => v.ID).Max() + 1;
                     else
                         id = 1;
-                    simulationIDs.Add(simulationName, id);
+                    simulationIDs.Add(simulationName, new SimulationDetails() { ID = id, FolderName = folderName });
+                    return id;
                 }
-                return id;
+                else if (folderName != null)
+                    details.FolderName = folderName;
+                return details.ID;
             }
         }
 
@@ -337,18 +353,26 @@
         /// <param name="dbConnection">The database connection to read from.</param>
         private void ReadExistingDatabase(IDatabaseConnection dbConnection)
         {
+            if (dbConnection == null)
+                return;
+
             simulationIDs.Clear();
             if (dbConnection.TableExists("_Simulations"))
             {
-                var data = dbConnection.ExecuteQuery("SELECT * FROM _Simulations");
+                var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
-                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                {
+                    int id = Convert.ToInt32(row["ID"]);
+                    string folderName = row["FolderName"].ToString();
+                    simulationIDs.Add(row["Name"].ToString(),
+                                      new SimulationDetails() { ID = id, FolderName = folderName });
+                }
             }
 
             checkpointIDs.Clear();
             if (dbConnection.TableExists("_Checkpoints"))
             {
-                var data = dbConnection.ExecuteQuery("SELECT * FROM _Checkpoints");
+                var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
                     checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
@@ -365,52 +389,65 @@
             // Can be called by many threads simultaneously.
 
             List<int> simulationIds = null;
-            if (simulationNamesThatMayNeedCleaning != null)
+            if (tablesNotNeedingIndexColumns.Contains(tableName))
             {
-                IEnumerable<string> simsNeedingCleaning;
-
-                lock (lockObject)
-                {
-                    // Have we written anything to this table yet?
-                    if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
-                    {
-                        // No - create a empty list of simulation names that we've cleaned up.
-                        simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
-                        simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
-                    }
-                    else
-                    {
-                        // Get a list of simulations that haven't been cleaned up for this table.
-                        simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
-                    }
-
-                    simulationIds = new List<int>();
-                    if (simsNeedingCleaning.Any())
-                    {
-                        // Add the simulations we're about to clean to our list so
-                        // that they aren't cleaned again. Also get id's for each one.
-                        foreach (var simulationName in simsNeedingCleaning)
-                        {
-                            simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
-                            simulationIds.Add(GetSimulationID(simulationName));
-                        }
-                    }
-                }
-            }
-
-            if (simulationNamesThatMayNeedCleaning == null || simulationIds.Any())
-            {
-                // Get a checkpoint id.
-                var checkpointID = 0;
-                if (checkpointName != null)
-                    checkpointID = GetCheckpointID(checkpointName);
-
                 // Create a delete row command to remove the rows.
                 lock (lockObject)
                 {
+                    // This will drop the table.
                     commands.Add(new DeleteRowsCommand(Connection, tableName,
-                                        checkpointID,
-                                        simulationIds));
+                                        0, simulationIds));
+                }
+            }
+            else 
+            {
+                if (simulationNamesThatMayNeedCleaning != null)
+                {
+                    IEnumerable<string> simsNeedingCleaning;
+
+                    lock (lockObject)
+                    {
+                        // Have we written anything to this table yet?
+                        if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
+                        {
+                            // No - create a empty list of simulation names that we've cleaned up.
+                            simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
+                            simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
+                        }
+                        else
+                        {
+                            // Get a list of simulations that haven't been cleaned up for this table.
+                            simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
+                        }
+
+                        simulationIds = new List<int>();
+                        if (simsNeedingCleaning.Any())
+                        {
+                            // Add the simulations we're about to clean to our list so
+                            // that they aren't cleaned again. Also get id's for each one.
+                            foreach (var simulationName in simsNeedingCleaning)
+                            {
+                                simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
+                                simulationIds.Add(GetSimulationID(simulationName, null));
+                            }
+                        }
+                    }
+                }
+
+                if (simulationNamesThatMayNeedCleaning == null || simulationIds.Any())
+                {
+                    // Get a checkpoint id.
+                    var checkpointID = 0;
+                    if (checkpointName != null)
+                        checkpointID = GetCheckpointID(checkpointName);
+
+                    // Create a delete row command to remove the rows.
+                    lock (lockObject)
+                    {
+                        commands.Add(new DeleteRowsCommand(Connection, tableName,
+                                            checkpointID,
+                                            simulationIds));
+                    }
                 }
             }
         }
@@ -438,7 +475,8 @@
         /// <param name="table">The table to add the columns to.</param>
         /// <param name="checkpointName">The name of the checkpoint.</param>
         /// <param name="simulationName">The simulation name.</param>
-        private void AddIndexColumns(DataTable table, string checkpointName, string simulationName)
+        /// <param name="folderName">The name of the folder the simulation sits in.</param>
+        private void AddIndexColumns(DataTable table, string checkpointName, string simulationName, string folderName)
         {
             if (!tablesNotNeedingIndexColumns.Contains(table.TableName))
             {
@@ -475,14 +513,14 @@
                         foreach (DataRow row in table.Rows)
                         {
                             simulationName = row[simulationNameColumnIndex].ToString();
-                            row[simulationColumn] = GetSimulationID(simulationName); ;
+                            row[simulationColumn] = GetSimulationID(simulationName, folderName); ;
                         }
                         table.Columns.RemoveAt(simulationNameColumnIndex);
                     }
                     else if (simulationName != null)
                     {
                         simulationColumn = table.Columns.Add("SimulationID", typeof(int));
-                        var id = GetSimulationID(simulationName);
+                        var id = GetSimulationID(simulationName, folderName);
                         foreach (DataRow row in table.Rows)
                             row[simulationColumn] = id;
                     }
@@ -534,8 +572,9 @@
                 foreach (var simulation in simulationIDs)
                 {
                     var row = simulationsTable.NewRow();
-                    row[0] = simulation.Value;
+                    row[0] = simulation.Value.ID;
                     row[1] = simulation.Key;
+                    row[2] = simulation.Value.FolderName;
                     simulationsTable.Rows.Add(row);
                 }
                 WriteTable(simulationsTable);
@@ -576,6 +615,12 @@
 
             /// <summary>Units of column.</summary>
             public string Units { get; set; }
+        }
+
+        private class SimulationDetails
+        {
+            public int ID { get; set; }
+            public string FolderName { get; set; }
         }
     }
 }

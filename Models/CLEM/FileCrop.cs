@@ -34,8 +34,8 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/datareaders/cropdatareader.htm")]
-    public class FileCrop : CLEMModel
+    [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
+    public class FileCrop : CLEMModel, IFileCrop
     {
         /// <summary>
         /// A reference to the text file reader object
@@ -220,12 +220,14 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> cropProps = new List<string>();
-                cropProps.Add("SoilNum");
-                cropProps.Add("CropName");
-                cropProps.Add("Year");
-                cropProps.Add("Month");
-                cropProps.Add("AmtKg");
+                List<string> cropProps = new List<string>
+                {
+                    "SoilNum",
+                    "CropName",
+                    "Year",
+                    "Month",
+                    "AmtKg"
+                };
                 //Npct column is optional 
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
@@ -264,7 +266,7 @@ namespace Models.CLEM
         /// <returns>A struct called CropDataType containing the crop data for this month.
         /// This struct can be null. 
         /// </returns>
-        public List<CropDataType> GetCropDataForEntireRun(int soilNumber, string cropName,
+        public List<CropDataType> GetCropDataForEntireRun(string soilNumber, string cropName,
                                         DateTime startDate, DateTime endDate)
         {
             int startYear = startDate.Year;
@@ -297,14 +299,14 @@ namespace Models.CLEM
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
-            CropDataType cropdata = new CropDataType();
-
-            cropdata.SoilNum = int.Parse(dr["SoilNum"].ToString());
-            cropdata.CropName = dr["CropName"].ToString();
-            cropdata.Year = int.Parse(dr["Year"].ToString());
-            cropdata.Month = int.Parse(dr["Month"].ToString());
-
-            cropdata.AmtKg = double.Parse(dr["AmtKg"].ToString());
+            CropDataType cropdata = new CropDataType
+            {
+                SoilNum = int.Parse(dr["SoilNum"].ToString()),
+                CropName = dr["CropName"].ToString(),
+                Year = int.Parse(dr["Year"].ToString()),
+                Month = int.Parse(dr["Month"].ToString()),
+                AmtKg = double.Parse(dr["AmtKg"].ToString())
+            };
 
             //Npct column is optional 
             //Only try to read it in if it exists in the file.

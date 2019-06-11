@@ -16,6 +16,7 @@ namespace Models.Report
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
+    using Models.CLEM;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -27,6 +28,7 @@ namespace Models.Report
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
@@ -63,12 +65,6 @@ namespace Models.Report
         /// </summary>
         [XmlIgnore] public int ActiveTabIndex = 0;
 
-        /// <summary>Experiment factor names</summary>
-        public List<string> ExperimentFactorNames { get; set; }
-
-        /// <summary>Experiment factor values</summary>
-        public List<string> ExperimentFactorValues { get; set; }
-
         /// <summary>
         /// Gets or sets variable names for outputting
         /// </summary>
@@ -86,7 +82,7 @@ namespace Models.Report
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
             dataToWriteToDb = null;
@@ -140,13 +136,20 @@ namespace Models.Report
         public void DoOutput()
         {
             if (dataToWriteToDb == null)
+            {
+                string folderName = null;
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                if (folderDescriptor != null)
+                    folderName = folderDescriptor.Value;
                 dataToWriteToDb = new ReportData()
                 {
+                    FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
+            }
 
             // Create a row ready for writing.
             List<object> valuesToWrite = new List<object>();
@@ -229,10 +232,51 @@ namespace Models.Report
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                foreach (var descriptor in simulation.Descriptors)
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                StoreFactorsInDataStore();
+            }
+        }
+
+        /// <summary>Store descriptors in DataStore.</summary>
+        private void StoreFactorsInDataStore()
+        {
+            if (storage != null && simulation != null && simulation.Descriptors != null)
+            {
+                var table = new DataTable("_Factors");
+                table.Columns.Add("ExperimentName", typeof(string));
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("FolderName", typeof(string));
+                table.Columns.Add("FactorName", typeof(string));
+                table.Columns.Add("FactorValue", typeof(string));
+
+                var experimentDescriptor = simulation.Descriptors.Find(d => d.Name == "Experiment");
+                var simulationDescriptor = simulation.Descriptors.Find(d => d.Name == "SimulationName");
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+
+                foreach (var descriptor in simulation.Descriptors)
+                {
+                    if (descriptor.Name != "Experiment" &&
+                        descriptor.Name != "SimulationName" &&
+                        descriptor.Name != "FolderName" &&
+                        descriptor.Name != "Zone")
+                    {
+                        var row = table.NewRow();
+                        if (experimentDescriptor != null)
+                            row[0] = experimentDescriptor.Value;
+                        if (simulationDescriptor != null)
+                            row[1] = simulationDescriptor.Value;
+                        if (folderDescriptor != null)
+                            row[2] = folderDescriptor.Value;
+                        row[3] = descriptor.Name;
+                        row[4] = descriptor.Value;
+                        table.Rows.Add(row);
+                    }
+                }
+                storage.Writer.WriteTable(table);
             }
         }
     }

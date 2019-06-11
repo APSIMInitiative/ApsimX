@@ -1,6 +1,6 @@
 ﻿using System;
-using APSIM.Shared.Utilities;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 
@@ -53,11 +53,11 @@ namespace Models
             /// <summary>The number layers</summary>
             public int numLayers;
 
-            /// <summary>The soil_heat</summary>
-            public double soil_heat = 0;
+            /// <summary>The soil heat flux</summary>
+            public double SoilHeatFlux = 0;
 
-            /// <summary>The dryleaffraction</summary>
-            public double dryleaffraction = 0;
+            /// <summary>The dry leaf time fraction</summary>
+            public double DryLeafFraction = 0;
 
             /// <summary>Gets or sets the component data.</summary>
             public List<CanopyType> Canopies = new List<CanopyType>();
@@ -87,7 +87,7 @@ namespace Models
                     }
                     if (Array.IndexOf(nodes, canopyBase) == -1)
                     {
-                        nodes[numNodes] = canopyBase;
+                        nodes[0] = canopyBase;
                         numNodes = numNodes + 1;
                     }
                 }
@@ -186,8 +186,8 @@ namespace Models
             /// </summary>
             public void Reset()
             {
-                soil_heat = 0.0;
-                dryleaffraction = 0.0;
+                SoilHeatFlux = 0.0;
+                DryLeafFraction = 0.0;
                 Albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
@@ -199,10 +199,40 @@ namespace Models
                 LAItotsum = new double[-1 + 1];
                 Canopies.Clear();
             }
+            
+            /// <summary>Gets the intercepted precipitation.</summary>
+            [Description("Intercepted precipitation")]
+            [Units("mm")]
+            public double PrecipitationInterception
+            {
+                get
+                {
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                        for (int j = 0; j <= Canopies.Count - 1; j++)
+                            totalInterception += Canopies[j].interception[i];
+                    return totalInterception;
+                }
+            }
 
-            /// <summary>Gets the petr.</summary>
+            /// <summary>Gets the intercepted radiation.</summary>
+            [Description("Intercepted radiation")]
+            [Units("MJ/m2")]
+            public double RadiationInterception
+            {
+                get
+                {
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                        for (int j = 0; j <= Canopies.Count - 1; j++)
+                            totalInterception += Canopies[j].Rs[i];
+                    return totalInterception;
+                }
+            }
+
+            /// <summary>Gets the radiation term of PET.</summary>
             [Description("Radiation component of PET")]
-            [Units("mm/day")]
+            [Units("mm")]
             public double petr
             {
                 get
@@ -215,9 +245,9 @@ namespace Models
                 }
             }
 
-            /// <summary>Gets the peta.</summary>
+            /// <summary>Gets the aerodynamic term of PET.</summary>
             [Description("Aerodynamic component of PET")]
-            [Units("mm/day")]
+            [Units("mm")]
             public double peta
             {
                 get
@@ -229,20 +259,21 @@ namespace Models
                     return totalPeta;
                 }
             }
-            /// <summary>Gets the net_radn.</summary>
+
+            /// <summary>Gets the total net radiation.</summary>
             [Description("Net all-wave radiation of the whole system")]
-            [Units("MJ/m2/day")]
+            [Units("MJ/m2")]
             public double NetRadiation
             {
-                get { return weather.Radn * (1.0 - Albedo) + NetLongWaveRadiation; }
+                get { return NetShortWaveRadiation + NetLongWaveRadiation; }
             }
 
-            /// <summary>Gets the net_rs.</summary>
+            /// <summary>Gets the net short wave radiation.</summary>
             [Description("Net short-wave radiation of the whole system")]
-            [Units("MJ/m2/day")]
+            [Units("MJ/m2")]
             public double NetShortWaveRadiation
             {
-                get { return weather.Radn * (1.0 - Albedo); }
+                get { return weather == null ? 0.0 : weather.Radn * (1.0 - Albedo); }
             }
 
             /// <summary>

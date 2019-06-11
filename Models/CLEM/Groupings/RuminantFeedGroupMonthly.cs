@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/filters/ruminantfeedgroupmonthly.htm")]
+    [HelpUri(@"Content/Features/Filters/RuminantFeedGroupMonthly.htm")]
     public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject
     {
         /// <summary>

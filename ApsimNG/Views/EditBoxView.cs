@@ -60,10 +60,23 @@ namespace UserInterface.Views
         public EditView(ViewBase owner) : base(owner)
         {
             textentry1 = new Entry();
-            _mainWidget = textentry1;
+            Initialise();
+        }
+
+        /// <summary>Constructor</summary>
+        public EditView(ViewBase owner, Entry e) : base(owner)
+        {
+            textentry1 = e;
+            Initialise();
+        }
+
+        private void Initialise()
+        {
+            mainWidget = textentry1;
             textentry1.FocusOutEvent += OnSelectionChanged;
             textentry1.KeyPressEvent += OnKeyPress;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            textentry1.FocusOutEvent += OnLeave;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -80,8 +93,10 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textentry1.FocusOutEvent -= OnSelectionChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            textentry1.FocusOutEvent -= OnLeave;
+            textentry1.KeyPressEvent -= OnKeyPress;
+            owner = null;
         }
 
         private string lastText = String.Empty;
@@ -152,6 +167,7 @@ namespace UserInterface.Views
                     {
                         Coordinates = coordinates,
                         Code = textentry1.Text,
+                        ControlShiftSpace = true,
                         Offset = Offset
                     };
                     lastText = textentry1.Text;
@@ -162,6 +178,16 @@ namespace UserInterface.Views
             {
                 OnSelectionChanged(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// User has left the edit box.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void OnLeave(object o, FocusOutEventArgs args)
+        {
+            OnSelectionChanged(o, new EventArgs());
         }
 
         /// <summary>

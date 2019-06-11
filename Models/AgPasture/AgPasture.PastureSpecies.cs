@@ -283,6 +283,11 @@ namespace Models.AgPasture
             foreach (PastureBelowGroundOrgan root in roots)
                 root.DoResetOrgan();
 
+            // clean up secondary variables
+            greenLAI = 0.0;
+            deadLAI = 0.0;
+            roots[0].Depth = 0.0;
+
             isAlive = false;
             phenologicStage = -1;
         }
@@ -592,7 +597,7 @@ namespace Models.AgPasture
 
         /// <summary>Gets or sets the scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [XmlIgnore]
-        [Description("Reference CO2 concentration for photosynthesis [ppm]:")]
+        [Description("Scaling parameter for the CO2 effect on photosynthesis [ppm]:")]
         [Units("ppm")]
         public double CO2EffectScaleFactor = 700.0;
 
@@ -1939,13 +1944,13 @@ namespace Models.AgPasture
         /// <summary>Tissue turnover factor due to variations in temperature (0-1).</summary>
         private double ttfTemperature;
 
-        /// <summary>Tissue turnover factor due to variations in moisture (0-1).</summary>
+        /// <summary>Tissue turnover factor for shoot due to variations in moisture (0-1).</summary>
         private double ttfMoistureShoot;
 
-        /// <summary>Tissue turnover factor due to variations in moisture (0-1).</summary>
+        /// <summary>Tissue turnover factor for roots due to variations in moisture (0-1).</summary>
         private double ttfMoistureRoot;
 
-        /// <summary>Tissue turnover factor due to variations in moisture (0-1).</summary>
+        /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
         private double ttfLeafNumber;
 
         /// <summary>Effect of defoliation on stolon turnover (0-1).</summary>
@@ -3213,8 +3218,8 @@ namespace Models.AgPasture
             get
             {
                 Biomass mass = new Biomass();
-                mass.StructuralWt = leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead / 10; // to g/m2
-                mass.StructuralN = leaves.NLive + leaves.NDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead / 10;    // to g/m2
+                mass.StructuralWt = (leaves.DMLive + leaves.DMDead + stems.DMLive + stems.DMDead + stolons.DMLive + stolons.DMDead) / 10.0; // to g/m2
+                mass.StructuralN = (leaves.NLive + leaves.NDead + stems.NLive + stems.NDead + stolons.NLive + stolons.NDead) / 10.0;    // to g/m2
                 mass.DMDOfStructural = leaves.DigestibilityLive;
                 return mass;
             }
@@ -5080,6 +5085,7 @@ namespace Models.AgPasture
         /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
         /// The depth increase rate is of zero-order type, given by the RootElongationRate, but it is adjusted for temperature
         ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
+        ///  - The effect of temperature was reduced (average between that of growth DM and one) as soil temp varies less than air
         /// </remarks>
         private void EvaluateRootElongation()
         {
@@ -5089,7 +5095,7 @@ namespace Models.AgPasture
             {
                 if (((dGrowthRootDM - detachedRootDM) > Epsilon) && (roots[0].Depth < myRootDepthMaximum))
                 {
-                    double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
+                    double tempFactor = 0.5 + 0.5 * TemperatureLimitingFactor(Tmean(0.5));
                     dRootDepth = myRootElongationRate * tempFactor;
                     roots[0].Depth = Math.Min(myRootDepthMaximum, Math.Max(myRootDepthMinimum, roots[0].Depth + dRootDepth));
                 }
@@ -5107,15 +5113,19 @@ namespace Models.AgPasture
         {
             double TodaysHeight = myPlantHeightMaximum;
 
-            if (StandingHerbageWt <= myPlantHeightMassForMax)
+            if (isAlive)
             {
-                double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
-                double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
-                heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
-                TodaysHeight *= heightF;
+                if (StandingHerbageWt <= myPlantHeightMassForMax)
+                {
+                    double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
+                    double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
+                    heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
+                    TodaysHeight = Math.Max(TodaysHeight* heightF, myPlantHeightMinimum);
+                }
             }
-
-            return Math.Max(TodaysHeight, myPlantHeightMinimum);
+            else
+                TodaysHeight = 0.0;
+            return TodaysHeight;
         }
 
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
@@ -5230,97 +5240,6 @@ namespace Models.AgPasture
             }
             else
                 mySummary.WriteWarning(this, " Could not graze due to lack of DM available");
-        }
-
-        /// <summary>Removes a given amount of DM (and N) from this plant.</summary>
-        /// <remarks>
-        /// This method uses preferences for green/dead material to partition the amount to remove between plant parts.
-        /// NOTE: This method should only be called after testing the HarvestableWt is greater than zero.
-        /// </remarks>
-        /// <param name="amountToRemove">The amount to remove (kg/ha)</param>
-        /// <exception cref="System.Exception">Removal of DM resulted in loss of mass balance</exception>
-        public void RemoveDMold(double amountToRemove)
-        {
-            // get existing DM and N amounts
-            double preRemovalDMShoot = AboveGroundWt;
-            double preRemovalNShoot = AboveGroundN;
-
-            // get the DM weights for each pool, consider preference and available DM
-            double tempPrefGreen = myPreferenceForGreenOverDead + (amountToRemove / HarvestableWt);
-            double tempPrefDead = 1.0 + (myPreferenceForGreenOverDead * amountToRemove / HarvestableWt);
-            double tempRemovableGreen = Math.Max(0.0, leaves.DMLiveHarvestable + stems.DMLiveHarvestable + stolons.DMLiveHarvestable);
-            double tempRemovableDead = StandingDeadHerbageWt;
-
-            // get partition between dead and live materials
-            double tempTotal = tempRemovableGreen * tempPrefGreen + tempRemovableDead * tempPrefDead;
-            double fractionToHarvestGreen = tempRemovableGreen * tempPrefGreen / tempTotal;
-            double fractionToHarvestDead = tempRemovableDead * tempPrefDead / tempTotal;
-
-            // get amounts removed
-            double removingGreenDM = amountToRemove * fractionToHarvestGreen;
-            double removingDeadDM = amountToRemove * fractionToHarvestDead;
-
-            // Fraction of DM remaining in the field
-            double fractionRemainingGreen = 1.0;
-            if (StandingLiveHerbageWt > Epsilon)
-                fractionRemainingGreen = Math.Max(0.0, Math.Min(1.0, 1.0 - removingGreenDM / StandingLiveHerbageWt));
-            double fractionRemainingDead = 1.0;
-            if (StandingDeadHerbageWt > Epsilon)
-                fractionRemainingDead = Math.Max(0.0, Math.Min(1.0, 1.0 - removingDeadDM / StandingDeadHerbageWt));
-            double fractionRemainingStolon = 1.0;
-            if (StandingLiveHerbageWt > Epsilon)
-                fractionRemainingStolon = Math.Max(0.0, Math.Min(1.0, 1.0 - removingGreenDM * stolons.FractionStanding / StandingLiveHerbageWt));
-
-            // get digestibility of DM being harvested
-            defoliatedDigestibility = calcHarvestDigestibility(leaves.DMLive * fractionToHarvestGreen, leaves.DMDead * fractionToHarvestDead,
-                stems.DMLive * fractionToHarvestGreen, stems.DMDead * fractionToHarvestDead,
-                stolons.DMLive * fractionToHarvestGreen, stolons.DMDead * fractionToHarvestDead);
-
-            // update the various pools
-            leaves.Tissue[0].DM *= fractionRemainingGreen;
-            leaves.Tissue[1].DM *= fractionRemainingGreen;
-            leaves.Tissue[2].DM *= fractionRemainingGreen;
-            leaves.Tissue[3].DM *= fractionRemainingDead;
-            stems.Tissue[0].DM *= fractionRemainingGreen;
-            stems.Tissue[1].DM *= fractionRemainingGreen;
-            stems.Tissue[2].DM *= fractionRemainingGreen;
-            stems.Tissue[3].DM *= fractionRemainingDead;
-            stolons.Tissue[0].DM *= fractionRemainingStolon;
-            stolons.Tissue[1].DM *= fractionRemainingStolon;
-            stolons.Tissue[2].DM *= fractionRemainingStolon;
-
-            // N remove
-            leaves.Tissue[0].Namount *= fractionRemainingGreen;
-            leaves.Tissue[1].Namount *= fractionRemainingGreen;
-            leaves.Tissue[2].Namount *= fractionRemainingGreen;
-            leaves.Tissue[3].Namount *= fractionRemainingDead;
-            stems.Tissue[0].Namount *= fractionRemainingGreen;
-            stems.Tissue[1].Namount *= fractionRemainingGreen;
-            stems.Tissue[2].Namount *= fractionRemainingGreen;
-            stems.Tissue[3].Namount *= fractionRemainingDead;
-            stolons.Tissue[0].Namount *= fractionRemainingStolon;
-            stolons.Tissue[1].Namount *= fractionRemainingStolon;
-            stolons.Tissue[2].Namount *= fractionRemainingStolon;
-
-            //C and N remobilised are also removed proportionally
-            for (int t = 0; t < 3; t++)
-            {
-                leaves.Tissue[t].NRemobilisable *= fractionRemainingGreen;
-                stems.Tissue[t].NRemobilisable *= fractionRemainingGreen;
-                stolons.Tissue[t].NRemobilisable *= fractionRemainingStolon;
-            }
-
-            leaves.Tissue[3].NRemobilisable *= fractionRemainingDead;
-            stems.Tissue[3].NRemobilisable *= fractionRemainingDead;
-            remobilisableC *= fractionRemainingDead;
-
-            // set outputs and check mass balance
-            defoliatedDM = preRemovalDMShoot - AboveGroundWt;
-            defoliatedN = preRemovalNShoot - AboveGroundN;
-            defoliatedFraction = defoliatedDM / preRemovalDMShoot;
-            myDefoliatedFraction = defoliatedFraction;
-            if (Math.Abs(defoliatedDM - amountToRemove) > Epsilon)
-                throw new ApsimXException(this, " Removal of DM resulted in loss of mass balance");
         }
 
         /// <summary>Removes a given amount of DM (and N) from this plant.</summary>

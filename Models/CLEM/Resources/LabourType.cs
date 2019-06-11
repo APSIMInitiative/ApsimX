@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Resources
 {
@@ -20,9 +21,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/labour/labourtype.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get { return "NA"; } }
+
         /// <summary>
         /// Age in years.
         /// </summary>
@@ -57,6 +64,12 @@ namespace Models.CLEM.Resources
         public int Individuals { get; set; }
 
         /// <summary>
+        /// Hired labour switch
+        /// </summary>
+        [Description("Hired labour")]
+        public bool Hired { get; set; }
+
+        /// <summary>
         /// The unique id of the last activity request for this labour type
         /// </summary>
         [XmlIgnore]
@@ -78,14 +91,19 @@ namespace Models.CLEM.Resources
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [XmlIgnore]
-        public double AvailableDays { get { return availableDays; } }
-        private double availableDays;
+        public double AvailableDays { get; private set; }
 
         /// <summary>
         /// Link to the current labour availability for this person
         /// </summary>
         [XmlIgnore]
         public LabourSpecificationItem LabourAvailability { get; set; }
+
+        /// <summary>
+        /// A proportion (0-1) to limit available labour. This may be from financial shortfall for hired labour.
+        /// </summary>
+        [XmlIgnore]
+        public double AvailabilityLimiter { get; set; }
 
         /// <summary>
         /// Constructor
@@ -119,11 +137,20 @@ namespace Models.CLEM.Resources
         /// <param name="month"></param>
         public void SetAvailableDays(int month)
         {
-            availableDays = 0;
+            AvailableDays = 0;
             if(LabourAvailability != null)
             {
-                availableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1));
+                AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1)*AvailabilityLimiter);
             }
+        }
+
+        /// <summary>
+        /// Get value of this individual
+        /// </summary>
+        /// <returns>value</returns>
+        public double PayRate()
+        {
+            return (Parent as Labour).PayRate(this);
         }
 
         #region Transactions
@@ -141,13 +168,15 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
             double addAmount = (double)resourceAmount;
-            this.availableDays = this.availableDays + addAmount;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Gain = addAmount;
-            details.Activity = activity.Name;
-            details.ActivityType = activity.GetType().Name;
-            details.Reason = reason;
-            details.ResourceType = this.Name;
+            this.AvailableDays += addAmount;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Gain = addAmount,
+                Activity = activity.Name,
+                ActivityType = activity.GetType().Name,
+                Reason = reason,
+                ResourceType = this.Name
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -166,16 +195,18 @@ namespace Models.CLEM.Resources
 
             double amountRemoved = request.Required;
             // avoid taking too much
-            amountRemoved = Math.Min(this.availableDays, amountRemoved);
-            this.availableDays -= amountRemoved;
+            amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
+            this.AvailableDays -= amountRemoved;
             request.Provided = amountRemoved;
             LastActivityRequestID = request.ActivityID;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this.Name,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel.Name,
+                ActivityType = request.ActivityModel.GetType().Name,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -188,7 +219,7 @@ namespace Models.CLEM.Resources
         /// <param name="newValue">New value to set food store to</param>
         public new void Set(double newValue)
         {
-            this.availableDays = newValue;
+            this.AvailableDays = newValue;
         }
 
         /// <summary>
@@ -230,7 +261,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return this.availableDays;
+                return this.AvailableDays;
             }
         }
 
@@ -249,7 +280,7 @@ namespace Models.CLEM.Resources
                 html = "<div class=\"activityentry\">";
                 if (this.Individuals == 0)
                 {
-                    html += "No individuals are proivded for this labour type";
+                    html += "No individuals are provided for this labour type";
                 }
                 else
                 {
@@ -259,6 +290,10 @@ namespace Models.CLEM.Resources
                     }
                     html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge)+"</span> year old ";
                     html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower())+"</span>";
+                    if (Hired)
+                    {
+                        html += " as hired labour";
+                    }
                 }
                 html += "</div>";
             }

@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantpredictivestocking.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
@@ -289,11 +289,25 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
-            html += "<span class=\"setvalue\">";
-            html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+            if (AssessmentMonth > 0 & AssessmentMonth <= 12)
+            {
+                html += "<span class=\"setvalue\">";
+                html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">No month set";
+            }
             html += "</span> for a dry season of ";
-            html += "<span class=\"setvalue\">";
-            html += DrySeasonLength.ToString("#0");
+            if (DrySeasonLength > 0)
+            {
+                html += "<span class=\"setvalue\">";
+                html += DrySeasonLength.ToString("#0");
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">No length";
+            }
             html += "</span> months ";
             html += "</div>";
             html += "\n<div class=\"activityentry\">The herd will be sold to maintain ";

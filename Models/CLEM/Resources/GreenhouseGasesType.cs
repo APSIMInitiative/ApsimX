@@ -19,9 +19,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GreenhouseGases))]
     [Description("This resource represents a greenhouse gas (e.g. CO2).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/greenhouse gases/greenhousegastype.htm")]
+    [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -102,13 +108,15 @@ namespace Models.CLEM.Resources
             {
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = addAmount;
-                details.GainStandardised = addAmount * GlobalWarmingPotential;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = addAmount,
+                    GainStandardised = addAmount * GlobalWarmingPotential,
+                    Activity = activity.Name,
+                    ActivityType = activity.GetType().Name,
+                    Reason = reason,
+                    ResourceType = this.Name
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -131,13 +139,15 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.LossStandardised = amountRemoved * GlobalWarmingPotential;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this.Name,
+                Loss = amountRemoved,
+                LossStandardised = amountRemoved * GlobalWarmingPotential,
+                Activity = request.ActivityModel.Name,
+                ActivityType = request.ActivityModel.GetType().Name,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

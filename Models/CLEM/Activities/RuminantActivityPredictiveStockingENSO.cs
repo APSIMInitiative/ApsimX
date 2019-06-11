@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantpredictivestockingenso.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
     public class RuminantActivityPredictiveStockingENSO: CLEMActivityBase
     {
         [Link]
@@ -390,20 +390,16 @@ namespace Models.CLEM.Activities
 
                 for (int i = 0; i < Convert.ToInt32(numberToBuy); i++)
                 {
-                    Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale()
+                    Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale(192, Sex.Male, weight, exampleRuminant.BreedParams)
                     {
-                        Age = 192, // 16 months
-                        Gender = Sex.Male,
+                        // Age = 192, or 16 months
                         HerdName = exampleRuminant.HerdName,
-                        HighWeight = weight,
                         Number = 1,
                         SaleFlag = HerdChangeReason.RestockPurchase,
                         Breed = exampleRuminant.Breed,
-                        BreedParams = exampleRuminant.BreedParams,
                         BreedingSire = false,
                         Draught = false,
                         Location = paddockName,
-                        Weight = weight
                     }
                     );
                 }

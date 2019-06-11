@@ -15,9 +15,19 @@ namespace Models.CLEM.Resources
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(CLEMResourceTypeBase))]
+    [ValidParent(ParentType = typeof(AnimalFoodStoreType))]
+    [ValidParent(ParentType = typeof(EquipmentType))]
+    [ValidParent(ParentType = typeof(GrazeFoodStoreType))]
+    [ValidParent(ParentType = typeof(GreenhouseGasesType))]
+    [ValidParent(ParentType = typeof(HumanFoodStoreType))]
+    [ValidParent(ParentType = typeof(LandType))]
+    [ValidParent(ParentType = typeof(OtherAnimalsType))]
+    [ValidParent(ParentType = typeof(ProductStoreType))]
+    [ValidParent(ParentType = typeof(ProductStoreTypeManure))]
+    [ValidParent(ParentType = typeof(WaterType))]
     [Description("This component defines the pricing of a resource type")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
     public class ResourcePricing : CLEMModel
     {
         /// <summary>

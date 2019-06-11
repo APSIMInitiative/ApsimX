@@ -761,7 +761,7 @@
                 code.Append("\n\t\t[Description(\"" + param.Description + "\")]\n");
                 if (String.Compare(param.TypeName, "cultivars") == 0)
                 {
-                    code.Append("\t\t[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]\n");
+                    code.Append("\t\t[Display(Type = DisplayType.CultivarName)]\n");
                 }
                 code.Append("\t\tpublic " + atype + param.Name + " { get; set; }\n");
             }
@@ -961,24 +961,27 @@
                 // then this is the place to do it.
 
                 int classPos = csharpCode.IndexOf("class Script");
-                int startBody = csharpCode.IndexOf("{", classPos) + 1;
-                int pos = csharpCode.LastIndexOf("public", classPos-1);
-                string prefix = csharpCode.Substring(0, pos);
-                code.Append(prefix);
-                // replace the includes and setup the namespace
-                code.Append("\nusing Models.Core;\nnamespace Models\n{\n");
-                code.Append("\t[Serializable]\n");
-                code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
-                code.Append("\tpublic class Script : Model\n");
-                code.Append("\t{\n");
-                code.Append(this.WriteManagerParams(scriptParams));       // this could be used in the Scipt class
-                code.Append("\t/*\n");
+                if (classPos >= 0)
+                {
+                    int startBody = csharpCode.IndexOf("{", classPos) + 1;
+                    int pos = csharpCode.LastIndexOf("public", classPos - 1);
+                    string prefix = csharpCode.Substring(0, pos);
+                    code.Append(prefix);
+                    // replace the includes and setup the namespace
+                    code.Append("\nusing Models.Core;\nnamespace Models\n{\n");
+                    code.Append("\t[Serializable]\n");
+                    code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
+                    code.Append("\tpublic class Script : Model\n");
+                    code.Append("\t{\n");
+                    code.Append(this.WriteManagerParams(scriptParams));       // this could be used in the Scipt class
+                    code.Append("\t/*\n");
 
-                int endPos = csharpCode.LastIndexOf("}");
-                code.Append(csharpCode.Substring(startBody, endPos - startBody));
-                code.Append("\n*/\n\t}\n}");
-                string suffix = csharpCode.Substring(endPos + 1, csharpCode.Length - endPos - 1);
-                code.Append(suffix);
+                    int endPos = csharpCode.LastIndexOf("}");
+                    code.Append(csharpCode.Substring(startBody, endPos - startBody));
+                    code.Append("\n*/\n\t}\n}");
+                    string suffix = csharpCode.Substring(endPos + 1, csharpCode.Length - endPos - 1);
+                    code.Append(suffix);
+                }
             }
 
             XmlNode codeNode = newNode.AppendChild(newNode.OwnerDocument.CreateElement("Code"));
@@ -1096,7 +1099,7 @@
                             type = "Fertiliser.Types." + newtype;
                             this.FindTokenValue("depth", childText, ref depth);
 
-                            childText = string.Format("Fertiliser.Apply({0}, {1}, {2});", amount, type, depth);
+                            childText = string.Format("[Fertiliser].Apply({0}, {1}, {2});", amount, type, depth);
                         }
                         else
                         {
@@ -1106,7 +1109,7 @@
 
                                 this.FindTokenValue("amount", childText, ref amount);
 
-                                childText = string.Format("Irrigation.Apply({0});", amount);
+                                childText = string.Format("[Irrigation].Apply({0});", amount);
                             }
                             else
                             {

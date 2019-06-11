@@ -108,10 +108,16 @@ namespace Models
         public event EventHandler CLEMInitialiseResource;
         /// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseActivity;
+        /// <summary>CLEM validate all data entry</summary>
+        public event EventHandler CLEMValidate;
         /// <summary>CLEM start of timestep event</summary>
         public event EventHandler CLEMStartOfTimeStep;
+        /// <summary>CLEM set labour availability after start of timestep and financial considerations.</summary>
+        public event EventHandler CLEMUpdateLabourAvailability;
         /// <summary>CLEM update pasture</summary>
         public event EventHandler CLEMUpdatePasture;
+        /// <summary>CLEM detach pasture</summary>
+        public event EventHandler CLEMDetachPasture;
         /// <summary>CLEM pasture has been added and is ready for use</summary>
         public event EventHandler CLEMPastureReady;
         /// <summary>CLEM cut and carry</summary>
@@ -150,14 +156,6 @@ namespace Models
         public event EventHandler CLEMHerdSummary;
         /// <summary>CLEM end of timestep event</summary>
         public event EventHandler CLEMEndOfTimeStep;
-
-        // CLEM versions of the following events to ensure APSIM tasks perfomed before CLEM not yet implemented
-        ///// <summary>CLEM start of simulation performed after APSIM StartOfSimulation</summary>
-        //public event EventHandler CLEMStartOfSimulation;
-        ///// <summary>CLEM start of month performed after APSIM StartOfMonth</summary>
-        //public event EventHandler CLEMStartOfMonth;
-        ///// <summary>CLEM end of month performed after APSIM EndOfMonth</summary>
-        //public event EventHandler CLEMEndOfMonth;
 
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
@@ -214,7 +212,10 @@ namespace Models
                 if (CLEMInitialiseActivity != null)
                     CLEMInitialiseActivity.Invoke(this, args);
 
-                while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
+                if (CLEMValidate != null)
+                    CLEMValidate.Invoke(this, args);
+
+            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
                 {
                     if (DoWeather != null)
                         DoWeather.Invoke(this, args);
@@ -305,6 +306,8 @@ namespace Models
                         // CLEM events performed before APSIM EndOfMonth
                         if (CLEMStartOfTimeStep != null)
                             CLEMStartOfTimeStep.Invoke(this, args);
+                        if (CLEMUpdateLabourAvailability != null)
+                            CLEMUpdateLabourAvailability.Invoke(this, args);
                         if (CLEMUpdatePasture != null)
                             CLEMUpdatePasture.Invoke(this, args);
                         if (CLEMPastureReady != null)
@@ -337,6 +340,8 @@ namespace Models
                             CLEMAnimalStock.Invoke(this, args);
                         if (CLEMAnimalSell != null)
                             CLEMAnimalSell.Invoke(this, args);
+                        if (CLEMDetachPasture != null)
+                            CLEMDetachPasture.Invoke(this, args);
                         if (CLEMHerdSummary != null)
                             CLEMHerdSummary.Invoke(this, args);
                         if (CLEMAgeResources != null)

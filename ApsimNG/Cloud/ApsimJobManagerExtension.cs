@@ -28,7 +28,7 @@ namespace ApsimNG.Cloud
                 CommandLine = cmd,
                 DisplayName = "Job manager task",
                 KillJobOnCompletion = true,
-                Id = BatchConstants.JOB_MANAGER_NAME,
+                Id = BatchConstants.JobManagerName,
                 RunExclusive = false,
                 ResourceFiles = GetResourceFiles(job, blobClient).ToList()
             };

@@ -2,7 +2,7 @@
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="37">
   <Name>Simulations</Name>
   <Simulation>
-    <Name>Sugarcane</Name>
+    <Name>Simulation</Name>
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

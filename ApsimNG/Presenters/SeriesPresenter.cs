@@ -62,9 +62,16 @@ namespace UserInterface.Presenters
             Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
             if (parentGraph != null)
             {
-                graphPresenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                try
+                {
+                    graphPresenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
+                    graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
             }
 
             try
@@ -158,6 +165,25 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>Set the value of the graph models property</summary>
+        /// <param name="name">The name of the property to set</param>
+        /// <param name="value">The value of the property to set it to</param>
+        private void SetModelPropertyInAllSeries(string name, object value)
+        {
+            try
+            {
+                foreach (var s in Apsim.Children(series.Parent, typeof(Series)))
+                {
+                    ChangeProperty command = new ChangeProperty(s, name, value);
+                    explorerPresenter.CommandHistory.Add(command);
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
         /// <summary>
         /// Invoked when the user selects an item in the intellisense window.
         /// </summary>
@@ -198,11 +224,27 @@ namespace UserInterface.Presenters
             LineType lineType;
             if (Enum.TryParse<LineType>(this.seriesView.LineType.SelectedValue, out lineType))
             {
-                this.SetModelProperty("Line", lineType);
-                this.SetModelProperty("FactorToVaryLines", null);
+                // Have not specified a vary by.
+                bool setInAllSeries = series.FactorToVaryLines == "Graph series";
+                if (setInAllSeries)
+                {
+                    SetModelPropertyInAllSeries("Line", lineType);
+                    SetModelPropertyInAllSeries("FactorToVaryLines", null);
+                }
+                else
+                {
+                    SetModelProperty("Line", lineType);
+                    SetModelProperty("FactorToVaryLines", null);
+                }
             }
             else
-                this.SetModelProperty("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
+            {
+                bool setInAllSeries = seriesView.LineType.SelectedValue == "Vary by Graph series";
+                if (setInAllSeries)
+                    SetModelPropertyInAllSeries("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
+                else
+                    SetModelProperty("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
+            }
         }
         
         /// <summary>Series marker type has been changed by the user.</summary>
@@ -213,11 +255,27 @@ namespace UserInterface.Presenters
             MarkerType markerType;
             if (Enum.TryParse<MarkerType>(this.seriesView.MarkerType.SelectedValue, out markerType))
             {
-                this.SetModelProperty("Marker", markerType);
-                this.SetModelProperty("FactorToVaryMarkers", null);
+                // Have not specified a vary by.
+                bool setInAllSeries = series.FactorToVaryMarkers == "Graph series";
+                if (setInAllSeries)
+                {
+                    SetModelPropertyInAllSeries("Marker", markerType);
+                    SetModelPropertyInAllSeries("FactorToVaryMarkers", null);
+                }
+                else
+                {
+                    SetModelProperty("Marker", markerType);
+                    SetModelProperty("FactorToVaryMarkers", null);
+                }
             }
             else
-                this.SetModelProperty("FactorToVaryMarkers", this.seriesView.MarkerType.SelectedValue.Replace("Vary by ", ""));
+            {
+                bool setInAllSeries = seriesView.MarkerType.SelectedValue == "Vary by Graph series";
+                if (setInAllSeries)
+                    SetModelPropertyInAllSeries("FactorToVaryMarkers", this.seriesView.MarkerType.SelectedValue.Replace("Vary by ", ""));
+                else
+                    SetModelProperty("FactorToVaryMarkers", this.seriesView.MarkerType.SelectedValue.Replace("Vary by ", ""));
+            }
         }
 
         /// <summary>Series line thickness has been changed by the user.</summary>
@@ -252,11 +310,27 @@ namespace UserInterface.Presenters
             object obj = seriesView.Colour.SelectedValue;
             if (obj is Color)
             {
-                this.SetModelProperty("Colour", obj);
-                this.SetModelProperty("FactorToVaryColours", null);
+                // Have not specified a vary by.
+                bool setInAllSeries = series.FactorToVaryColours == "Graph series";
+                if (setInAllSeries)
+                {
+                    SetModelPropertyInAllSeries("Colour", obj);
+                    SetModelPropertyInAllSeries("FactorToVaryColours", null);
+                }
+                else
+                {
+                    SetModelProperty("Colour", obj);
+                    SetModelProperty("FactorToVaryColours", null);
+                }
             }
             else
-                this.SetModelProperty("FactorToVaryColours", obj.ToString().Replace("Vary by ", ""));
+            {
+                bool setInAllSeries = obj.ToString() == "Vary by Graph series";
+                if (setInAllSeries)
+                    SetModelPropertyInAllSeries("FactorToVaryColours", obj.ToString().Replace("Vary by ", ""));
+                else
+                    SetModelProperty("FactorToVaryColours", obj.ToString().Replace("Vary by ", ""));
+            }
         }
 
         /// <summary>X on top has been changed by the user.</summary>
@@ -482,7 +556,7 @@ namespace UserInterface.Presenters
             // Populate filter textbox.
             this.seriesView.Filter.Value = series.Filter;
 
-            this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+            this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
@@ -495,8 +569,11 @@ namespace UserInterface.Presenters
             List<string> warnings = new List<string>();
 
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
-            if (series.FactorNamesForVarying != null)
-                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+
+            var descriptors = series.GetDescriptorNames();
+            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            if (descriptors != null)
+                values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
             string selectedValue;
             if (series.FactorToVaryLines == null)
@@ -521,8 +598,10 @@ namespace UserInterface.Presenters
             List<string> warnings = new List<string>();
 
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
-            if (series.FactorNamesForVarying != null)
-                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            var descriptors = series.GetDescriptorNames();
+            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            if (descriptors != null)
+                values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
             string selectedValue;
             if (series.FactorToVaryMarkers == null)
@@ -551,8 +630,10 @@ namespace UserInterface.Presenters
                 colourOptions.Add(colour);
 
             // Send colour options to view.
-            if (series.FactorNamesForVarying != null)
-                colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            var descriptors = series.GetDescriptorNames();
+            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            if (descriptors != null)
+                colourOptions.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
             object selectedValue;
             if (series.FactorToVaryColours == null)

@@ -28,7 +28,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [Description("This report automatically generates an activity performed ledger and provides a table of activity success.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/activitiesperformed.htm")]
+    [HelpUri(@"Content/features/Reporting/ActivitiesPerformed.htm")]
     public class ReportActivitiesPerformed: Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
@@ -65,12 +65,14 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-            variableNames.Add("[Clock].Today as Date");
-            variableNames.Add("[Activities].LastActivityPerformed.Name as Name");
-            variableNames.Add("[Activities].LastActivityPerformed.Status as Status");
-            variableNames.Add("[Activities].LastActivityPerformed.UniqueID as UniqueID");
+            List<string> variableNames = new List<string>
+            {
+                "Parent.Name as Zone",
+                "[Clock].Today as Date",
+                "[Activities].LastActivityPerformed.Name as Name",
+                "[Activities].LastActivityPerformed.Status as Status",
+                "[Activities].LastActivityPerformed.UniqueID as UniqueID"
+            };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
 
@@ -91,13 +93,16 @@ namespace Models.CLEM.Reporting
         private void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
+            {
                 storage.Writer.WriteTable(dataToWriteToDb);
+            }
             dataToWriteToDb = null;
         }
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public new void DoOutput()
         {
             if (dataToWriteToDb == null)
+            {
                 dataToWriteToDb = new ReportData()
                 {
                     SimulationName = simulation.Name,
@@ -105,9 +110,12 @@ namespace Models.CLEM.Reporting
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
+            }
             List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
+            {
                 valuesToWrite.Add(columns[i].GetValue());
+            }
 
             dataToWriteToDb.Rows.Add(valuesToWrite);
 
@@ -191,11 +199,14 @@ namespace Models.CLEM.Reporting
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
+                foreach (var descriptor in simulation.Descriptors)
                 {
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
                 }
             }
         }

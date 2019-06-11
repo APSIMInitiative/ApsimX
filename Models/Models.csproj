@@ -143,8 +143,19 @@
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
+    <Compile Include="CLEM\FileSQLiteCrop.cs" />
+    <Compile Include="CLEM\Groupings\LabourPriceGroup.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
+    <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Resources\LabourPricing.cs" />
+    <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
+    <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
+    <Compile Include="CLEM\Reporting\PivotTable.cs" />
+    <Compile Include="CLEM\WarningLog.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -214,8 +225,23 @@
     <Compile Include="Core\Interfaces\IOptionallySerialiseChildren.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
     <Compile Include="Core\ITest.cs" />
-    <Compile Include="Core\SimulationGeneratorFactors.cs" />
+    <Compile Include="Core\Reference.cs" />
+    <Compile Include="Core\Run\IReplacement.cs" />
+    <Compile Include="Core\Run\ModelReplacement.cs" />
+    <Compile Include="Core\Run\PropertyReplacement.cs" />
+    <Compile Include="Core\Run\Runner.cs" />
+    <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
+    <Compile Include="Functions\DecumulateFunction.cs" />
+    <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
+    <Compile Include="Graph\MultiDescriptorPainter.cs" />
+    <Compile Include="Graph\SequentialPainter.cs" />
+    <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
+    <Compile Include="Factorial\CompositeFactor.cs" />
+    <Compile Include="Plant\Phenology\Scales\Age.cs" />
+    <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
@@ -224,10 +250,8 @@
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobRunnerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
-    <Compile Include="Core\ModelNode.cs" />
     <Compile Include="Core\ModelTypes.cs" />
-    <Compile Include="Core\Property.cs" />
-    <Compile Include="Core\Runner.cs" />
+    <Compile Include="Core\Runners\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
     <Compile Include="Core\Runners\RunSimulation.cs" />
     <Compile Include="Core\Runners\RunExternal.cs" />
@@ -250,6 +274,7 @@
     <Compile Include="Functions\SoilFunctions\CERESNitrificationModel.cs" />
     <Compile Include="Functions\StringComparisonFunction.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
+    <Compile Include="IConceptionModel.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
@@ -390,7 +415,6 @@
     <Compile Include="Factorial\Factor.cs" />
     <Compile Include="Factorial\Experiment.cs" />
     <Compile Include="Factorial\Factors.cs" />
-    <Compile Include="Factorial\FactorValue.cs" />
     <Compile Include="Memo.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -512,7 +536,7 @@
     <Compile Include="Functions\SubtractFunction.cs" />
     <Compile Include="Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Functions\SupplyFunctions\RUEModel.cs" />
-    <Compile Include="Functions\Variable.cs" />
+    <Compile Include="Functions\VariableReference.cs" />
     <Compile Include="Functions\WeightedTemperatureFunction.cs" />
     <Compile Include="Functions\XYPairs.cs" />
     <Compile Include="Plant\OilPalm\OilPalm.cs" />
@@ -696,6 +720,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="Resources\Oats1.json" />
+    <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
