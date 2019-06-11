@@ -12,6 +12,8 @@
     using System.Data;
     using System.IO;
     using System.Linq;
+    using UnitTests.Core;
+    using UnitTests.Storage;
 
     [TestFixture]
     public class ReportTests
@@ -122,6 +124,39 @@
             int finalValFirstYear = int.Parse(data.AsEnumerable().Where(x => int.Parse(x["Year"].ToString()) == 2017).Select(x => x["SigmaDay"]).Last().ToString());
             int firstValSecondYear = int.Parse(data.AsEnumerable().Where(x => int.Parse(x["Year"].ToString()) == 2018).Select(x => x["SigmaDay"]).First().ToString());
             Assert.That(finalValFirstYear > firstValSecondYear, $"Error: Report aggregation from 01-Jan to 31-Dec did not reset after the end date. Final value in first year: {finalValFirstYear}, first value in second year: {firstValSecondYear}");
+        }
+
+        [Test]
+        public void FactorsTableIsWritten()
+        {
+            // When report gets an oncommencing it should write a _Factors table to storage.
+
+            var sim = new Simulation();
+            sim.Descriptors = new List<SimulationDescription.Descriptor>();
+            sim.Descriptors.Add(new SimulationDescription.Descriptor("Experiment", "exp1"));
+            sim.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", "sim1"));
+            sim.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", "F"));
+            sim.Descriptors.Add(new SimulationDescription.Descriptor("Zone", "z"));
+            sim.Descriptors.Add(new SimulationDescription.Descriptor("Cultivar", "cult1"));
+            sim.Descriptors.Add(new SimulationDescription.Descriptor("N", "0"));
+
+            var report = new Report()
+            {
+                VariableNames = new string[0],
+                EventNames = new string[0]
+            };
+            Utilities.InjectLink(report, "simulation", sim);
+            Utilities.InjectLink(report, "locator", new MockLocator());
+            Utilities.InjectLink(report, "storage", new MockStorage());
+
+            var events = new Events(report);
+            events.Publish("StartOfSimulation", new object[] { report, new EventArgs() });
+
+            Assert.AreEqual(MockStorage.tables[0].TableName, "_Factors");
+            Assert.AreEqual(Utilities.TableToString(MockStorage.tables[0]),
+               "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
+               "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
+               "          exp1,          sim1,         F,         N,          0\r\n");
         }
     }
 }

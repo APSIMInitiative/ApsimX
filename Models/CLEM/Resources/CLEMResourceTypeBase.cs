@@ -24,12 +24,6 @@ namespace Models.CLEM.Resources
         Clock Clock = null;
 
         /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units")]
-        public string Units { get; set; }
-
-        /// <summary>
         /// Resource price
         /// </summary>
         public ResourcePricing Price
@@ -44,16 +38,18 @@ namespace Models.CLEM.Resources
 
                 if (price == null)
                 {
-                    if (!priceWarningRaised)
+                    //if (!priceWarningRaised)
+                    if (!Warnings.Exists("price"))
                     {
                         string warn = "No pricing is available for [r=" + this.Name + "]";
                         if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                         {
                             warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                         }
-                        warn += "\nNo financial transactions will occur and no packet size set.\nAdd [r=ResourcePricing] component to [r=" + this.Name + "] to improve purchase and sales.";
+                        warn += "\nNo financial transactions will occur as no packet size set.\nAdd [r=ResourcePricing] component to [r=" + this.Name + "] to improve purchase and sales.";
                         Summary.WriteWarning(this, warn);
-                        priceWarningRaised = true;
+//                        priceWarningRaised = true;
+                        Warnings.Add("price");
                     }
                     return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
                 }
@@ -61,7 +57,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        private bool priceWarningRaised = false;
+//        private bool priceWarningRaised = false;
 
         /// <summary>
         /// Add resources from various objects

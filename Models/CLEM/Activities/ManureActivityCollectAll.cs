@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the collection of manure from all paddocks and yards in the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/manure/collectmanureall.htm")]
+    [HelpUri(@"Content/Features/Activities/Manure/CollectManureAll.htm")]
     public class ManureActivityCollectAll : CLEMActivityBase
     {
         private ProductStoreTypeManure manureStore;
@@ -35,15 +35,6 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
-        }
-
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        private List<ResourceRequest> GetResourcesNeededForActivityLocal()
-        {
-            return null;
         }
 
         /// <summary>

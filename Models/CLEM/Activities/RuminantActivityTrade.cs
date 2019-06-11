@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminanttrade.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>

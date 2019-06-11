@@ -415,7 +415,7 @@ namespace UserInterface.Views
                         iconName = "Partial";
                         break;
                     case "2":
-                        iconName = "Ignored";
+                        iconName = "NotNeeded";
                         break;
                     case "3":
                         iconName = "Critical";

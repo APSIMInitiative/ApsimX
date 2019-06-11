@@ -20,9 +20,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     [Description("This resource represents a human food store (e.g. Eggs).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/human food store/humanfoodstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStoreType.htm")]
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// Dry Matter (%)
         /// </summary>
@@ -104,8 +110,8 @@ namespace Models.CLEM.Resources
         /// <param name="reason">Name of individual adding resource</param>
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            double addAmount = 0;
-            double nAdded = 0;
+            double addAmount;
+            double nAdded;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
@@ -123,13 +129,15 @@ namespace Models.CLEM.Resources
             // update N based on new input added
             CurrentStoreNitrogen = ((Nitrogen / 100 * Amount) + (nAdded / 100 * addAmount)) / (Amount + addAmount) * 100;
 
-            this.amount = this.amount + addAmount;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Gain = addAmount;
-            details.Activity = activity.Name;
-            details.ActivityType = activity.GetType().Name;
-            details.Reason = reason;
-            details.ResourceType = this.Name;
+            this.amount += addAmount;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Gain = addAmount,
+                Activity = activity.Name,
+                ActivityType = activity.GetType().Name,
+                Reason = reason,
+                ResourceType = this.Name
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -152,12 +160,14 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this.Name,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel.Name,
+                ActivityType = request.ActivityModel.GetType().Name,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

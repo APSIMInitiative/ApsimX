@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all labour types (people) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/labour/labour.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
     public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
         private List<string> WarningsMultipleEntry = new List<string>();
@@ -149,7 +149,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            int currentmonth = Clock.Today.Month;
             foreach (LabourType item in Items)
             {
                 item.AvailabilityLimiter = 1.0;

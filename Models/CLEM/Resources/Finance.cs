@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all finance types (bank accounts) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/finance/finance.htm")]
+    [HelpUri(@"Content/Features/Resources/Finance/Finance.htm")]
     public class Finance : ResourceBaseWithTransactions
     {
         /// <summary>
@@ -89,6 +89,10 @@ namespace Models.CLEM.Resources
             if(CurrencyName!=null && CurrencyName!="")
             {
                 html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName+"</span></div>";
+            }
+            else
+            {
+                html += "<div class=\"activityentry\">Currency is <span class=\"errorlink\">Not specified</span></div>";
             }
             return html;
         }

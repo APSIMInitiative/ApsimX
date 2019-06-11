@@ -299,8 +299,10 @@ namespace Models
         [EventSubscribe("DoEnergyArbitration")]
         private void DoEnergyArbitration(object sender, EventArgs e)
         {
-            dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
             dayLengthLight = MathUtilities.DayLength(Clock.Today.DayOfYear, SunSetAngle, weather.Latitude);
+            dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
+            // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
+            dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0)); 
 
             if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone && zoneMicroClimates[1].zone is Zones.RectangularZone)
             {
@@ -353,14 +355,16 @@ namespace Models
                 throw (new Exception("Strip crop light interception model must only have one canopy in zone called "+tallest.zone.Name));
             if (shortest.Canopies.Count > 1)
                 throw (new Exception("Strip crop light interception model must only have one canopy in zone called " + shortest.zone.Name));
-            if (tallest.DeltaZ.Length > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + tallest.zone.Name));
-            if (shortest.DeltaZ.Length > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
+            //if (tallest.DeltaZ.Length > 1)
+            //    throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + tallest.zone.Name));
+            //if (shortest.DeltaZ.Length > 1)
+            //    throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
 
             if (MathUtilities.Sum(tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
                 double Ht = MathUtilities.Sum(tallest.DeltaZ);                // Height of tallest strip
+                double Dt = tallest.Canopies[0].Canopy.Depth/1000;                 // Depth of tallest strips canopy
+                double BHt = Ht - Dt;                                         // Hight of the base of the tallest strips canopy
                 double Hs = MathUtilities.Sum(shortest.DeltaZ);               // Height of shortest strip
                 double Wt = (tallest.zone as Zones.RectangularZone).Width;    // Width of tallest strip
                 double Ws = (shortest.zone as Zones.RectangularZone).Width;   // Width of shortest strip
@@ -369,9 +373,14 @@ namespace Models
                 double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of tallest strip
                 double LAIs = MathUtilities.Sum(shortest.LAItotsum);          // LAI of shortest strip
                 double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
-                double Ks = shortest.Canopies[0].Ktot;                         // Extinction Coefficient of the shortest strip
-                double Httop = Ht - Hs;                                       // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
-                double LAIttop = Httop / Ht * LAIt;                           // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
+                double Ks = shortest.Canopies[0].Ktot;                        // Extinction Coefficient of the shortest strip
+                double Httop = Dt;                                            // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
+                double LAIttop = LAIt;                                        // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
+                if (Hs > BHt)
+                {
+                    Httop = Dt - (Hs - BHt);                                 
+                    LAIttop = Httop / Dt * LAIt;
+                }
                 double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
                 double LAIttophomo = Ft * LAIttop;                            // LAI of top layer of tallest strip if spread homogeneously across all of the space
                 double Ftblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(Wt, 2)) - Httop) / Wt;  // View factor for top layer of tallest strip
