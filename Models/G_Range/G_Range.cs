@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Models
 {
     using System.Xml.Serialization;
+    using System.Reflection;
     using Models.Core;
     using Models.Soils.Arbitrator;
     using Models.Interfaces;
@@ -20,6 +21,10 @@ namespace Models
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
         #region Links
+
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
+        [Link]
+        private ISummary summary = null;
 
         [Link]
         private Clock Clock = null;
@@ -180,11 +185,11 @@ namespace Models
 
         // Once the entire model has been transcoded, these pragmas should be remove (and the associated warnings dealt with appropriately)
 
-#pragma warning disable 0414
+        //#pragma warning disable 0414
 
-#pragma warning disable 0169
+        //#pragma warning disable 0169
 
-#pragma warning disable 0649
+        //#pragma warning disable 0649
 
         /// <summary>
         ///  Stores parameters unique to each landscape unit
@@ -328,18 +333,78 @@ namespace Models
         private bool inWinter = false;         // NOT ORIGINALLY PART OF THE CELL STRUCTURE - It used a Fortran "SAVE" in Plant_Death.95
         private double dayLength;              // Day length, calculated based on latitude and month
 
-        private double heatAccumulation;       // Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
+        /// <summary>
+        /// Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
+        /// </summary>
+        public double heatAccumulation { get; private set; }
 
-        private double[] facetCover = new double[nFacets];      // The proportion occupied by each facet
-        private double[] totalPopulation = new double[vLayers]; // The total population of each vegetation layer
+        /// <summary>
+        /// The proportion occupied by each facet
+        /// </summary>
+        [Units("0-1")]
+        public double[] facetCover { get; private set; } = new double[nFacets];
 
-        private double bareCover;              // Bare cover stored, rather than continually summing the three facets.
-        private double[] propAnnualDecid = new double[nFacets];  // Proportion of facet that is annual plants (H_FACET) or deciduous (S_FACET and T_FACET)
+        /// <summary>
+        /// The total population of each vegetation layer
+        /// </summary>
+        public double[] totalPopulation { get; private set; } = new double[vLayers]; 
 
-        private double potEvap;                // Potential evapotranspiration for the cell(cm/month)
-        private double evaporation;            // Water evaporated from the soil and vegetation(cm/month)
-        private double snow;                   // Snowpack, in cm
-        private double snowLiquid;             // Snowpack liquid water.
+        /// <summary>
+        /// Bare cover stored, rather than continually summing the three facets. 
+        /// </summary>
+        [Units("0-1")]
+        public double bareCover { get; private set; }
+
+        /// <summary>
+        /// Proportion of facet that is annual plants (H_FACET) or deciduous (S_FACET and T_FACET)
+        /// </summary>
+        [Units("0-1")]
+        public double[] propAnnualDecid { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Precipitation total for the current month
+        /// Exposed here for reporting purposes
+        /// </summary>
+        [Units("cm")]
+        public double precip { get { return globe.precip; } }
+
+        /// <summary>
+        /// Average maximum temperature for the current month 
+        /// Exposed here for reporting purposes
+        /// </summary>
+        [Units("C")]
+        public double maxTemp { get { return globe.maxTemp; } }
+
+        /// <summary>
+        /// Average minimum temperature for the current month 
+        /// Exposed here for reporting purposes
+        /// </summary>
+        [Units("C")]
+        public double minTemp { get { return globe.minTemp; } }
+
+        /// <summary>
+        /// Potential evapotranspiration for the cell(cm/month)
+        /// </summary>
+        [Units("cm/month")]
+        public double potEvap { get; private set; }
+
+        /// <summary>
+        /// Water evaporated from the soil and vegetation(cm/month)
+        /// </summary>
+        [Units("cm/month")]
+        public double evaporation { get; private set; }
+
+        /// <summary>
+        /// Snowpack, in cm
+        /// </summary>
+        [Units("cm")]
+        public double snow { get; private set; }
+
+        /// <summary>
+        /// Snowpack liquid water.
+        /// </summary>
+        [Units("cm")]
+        public double snowLiquid { get; private set; }
 
         // Editing the model 01/02/2014 to prevent snow and snow liquid from skyrocketing.   Adding an field for OLD SNOW and ICE, prior to clearing out snow each year.
         private double oldSnow;                // Snow from past years, including glacial build up.   This will be an accumulator, but essentially outside of active process modeling
@@ -350,82 +415,253 @@ namespace Models
         private double melt;                   // Snow that melts from snowpack (cm water)
         private double petRemaining;           // Potential evaporation decremented as steps are calculated.Appears to be a bookkeeping tool.
 
-        private double pptSoil;                // Precipitation adjusted for snow accumulation and melt, and available to infiltrate the soil (cm)
+        /// <summary>
+        /// Precipitation adjusted for snow accumulation and melt, and available to infiltrate the soil (cm)
+        /// </summary>
+        [Units("cm")]
+        public double pptSoil { get; private set; }
+
         private double runoff;                 // Runoff from the rangeland cell
-        private double ratioWaterPet;          // Ratio of available water to potential evapotranspiration
-        private double petTopSoil;             // Potential evaporation from top soil (cm/day)
+
+        /// <summary>
+        /// Ratio of available water to potential evapotranspiration
+        /// </summary>
+        public double ratioWaterPet { get; private set; }
+
+        /// <summary>
+        /// Potential evaporation from top soil (cm/day)
+        /// </summary>
+        [Units("cm/d")]
+        public double petTopSoil { get; private set; }
         private double[] nLeached = new double[nSoilLayers];  // Nitrogen leached from soil(AMTLEA in Century)
         private double[] asmos = new double[nSoilLayers];     // Used in summing water
         private double[] amov = new double[nSoilLayers];      // Used in summing water movement
         private double stormFlow;              // Storm flow
-        private double holdingTank;            // Stores water temporarily.Was asmos(layers+1) in H2OLos
-        private double transpiration;          // Transpiration water loss
+        private double holdingTank;            // Stores water temporarily. Was asmos(layers+1) in H2OLos
+
+        /// <summary>
+        /// Transpiration water loss
+        /// </summary>
+        public double transpiration { get; private set; }
         private double[] relativeWaterContent = new double[nSoilLayers]; // Used to initialize and during simulation in CENTURY.Here, only during simulation
         private double[] waterAvailable = new double[3];                 // Water available to plants, available for growth =(1) [0 in C#], survival(2) [1 in C#], and in the two top layers(3) [2 in C#]
-        private double annualEvapotranspiration;                         // Annual actual evapotranspiration
 
-        private double totalAgroundLiveBiomass;          // Total aboveground live biomass (g/m^2)
-        private double totalBgroundLiveBiomass;          // Total belowground live biomass(g/m^2)
+        /// <summary>
+        /// Annual actual evapotranspiration
+        /// </summary>
+        [Units("cm")]
+        public double annualEvapotranspiration { get; private set; }
 
-        private double[] totalLitterCarbon = new double[2];   // Average monthly litter carbon(g/m^2)
-        private double[] totalLitterNitrogen = new double[2]; // Average monthly litter carbon(g/m^2)
+        /// <summary>
+        /// Total aboveground live biomass (g/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double totalAgroundLiveBiomass { get; private set; }
 
-        private double[] rootShootRatio = new double[nFacets]; // Root shoot ratio
-        private double treeBasalArea;                  // Basal area for trees
+        /// <summary>
+        /// Total belowground live biomass (g/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double totalBgroundLiveBiomass { get; private set; }
 
-        private double soilSurfaceTemperature;         // Average soil surface temperature (C)
+        /// <summary>
+        /// Average monthly litter carbon(g/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] totalLitterCarbon { get; private set; } = new double[2];
+
+        /// <summary>
+        /// Average monthly litter carbon(g/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] totalLitterNitrogen { get; private set; } = new double[2];
+
+        /// <summary>
+        /// Root shoot ratio
+        /// </summary>
+        public double[] rootShootRatio { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Basal area for trees
+        /// </summary>
+        public double treeBasalArea { get; private set; }
+
+        /// <summary>
+        /// Average soil surface temperature (C)
+        /// </summary>
+        [Units("C")]
+        public double soilSurfaceTemperature { get; private set; }
 
         // Soils as in Century 4.5 NLayer= 4, 0-15, 15-30, 30-45, 45-60 cm.
         // These will be initialized using approximations and weighted averages from HWSD soils database, which is 0-30 for TOP, 30-100 for SUB.
-        private double[] sand = new double[4];                 // The percent sand in the soil
-        private double[] silt = new double[4];                 // The percent silt in the soil
-        private double[] clay = new double[4];                 // The percent clay in the soil
-        private double[] mineralNitrogen = new double[4];      // Mineral nitrogen content for layer(g/m2)
-        private double[] soilDepth = new double[] { 15.0, 15.0, 15.0, 15.0 }; // The depth of soils, in cm.Appears hardwired in some parts of CENTURY, flexible, and up to 9 layers, in other parts of CENTURY.Likely I noted some values from an early version, but this is a simplification, so...
+        private double[] sand = new double[nSoilLayers];                 // The percent sand in the soil
+        private double[] silt = new double[nSoilLayers];                 // The percent silt in the soil
+        private double[] clay = new double[nSoilLayers];                 // The percent clay in the soil
 
-        private double[] fieldCapacity = new double[4];        // Field capacity for four soils layers shown above.
-        private double[] wiltingPoint = new double[4];         // Wilting point for four soil layers shown above.
-        private double soilTotalCarbon;                        // grams per square meter
+        /// <summary>
+        /// Mineral nitrogen content for layer(g/m2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] mineralNitrogen { get; private set; } = new double[nSoilLayers];
 
-        private double[] treeCarbon = new double[nWoodyParts];    // Tree carbon in its components.These must all be merged or otherwise crosswalked at some point.
-        private double[] treeNitrogen = new double[nWoodyParts];  // Tree nitrogen in its components.   These must all be merged or otherwise crosswalked at some point.
-        private double[] shrubCarbon = new double[nWoodyParts];   // Shrub carbon in its components.   These must all be merged or otherwise crosswalked at some point.
-        private double[] shrubNitrogen = new double[nWoodyParts]; // Shrub nitrogen in its components.   These must all be merged or otherwise crosswalked at some point.
+        private double[] soilDepth = new double[nSoilLayers] { 15.0, 15.0, 15.0, 15.0 }; // The depth of soils, in cm.Appears hardwired in some parts of CENTURY, flexible, and up to 9 layers, in other parts of CENTURY.Likely I noted some values from an early version, but this is a simplification, so...
 
-        private double[] carbonNitrogenRatio = new double[2];  // Carbon to nitrogen ratio, SURFACE, SOIL
-        private double[] fastSoilCarbon = new double[2];       // Soil organic matter carbon, surface and soil  g/m2(SOM1C in Century)
-        private double intermediateSoilCarbon;                 // Intermediate soil carbon g/m2(SOMC2 in Century)
-        private double passiveSoilCarbon;                      // Passive soil carbon g/m2(SOMC3 in Century)
-        private double[] fastSoilNitrogen = new double[2];     // Soil organic matter nitrogen, surface and soil  g/m2(SOM1E in Century and SSOM1E in Savanna)
-        private double intermediateSoilNitrogen;               // Intermediate soil nitrogen g/m2(SOM2E in Century)
-        private double passiveSoilNitrogen;                    // Passive soil nitrogen g/m2(SOM3E in Century)
+        private double[] fieldCapacity = new double[nSoilLayers];        // Field capacity for four soils layers shown above.
+        private double[] wiltingPoint = new double[nSoilLayers];         // Wilting point for four soil layers shown above.
 
-        private double potentialProduction;                    // Calculated potential production for the cell, an index.Based on soil temperature, so not specific to facets.
-        private double[] belowgroundPotProduction = new double[vLayers]; // BIOMASS, Belowground potential production in g/m2
-        private double[] abovegroundPotProduction = new double[vLayers]; // BIOMASS, Abovegroudn potential production in g/m2
-        private double[] totalPotProduction = new double[vLayers];       // BIOMASS, Calculate total potential production, in g/m2 with all the corrections in place.
-        private double[] co2EffectOnProduction = new double[nFacets];    // Calculated effect of CO2 increasing from 350 to 700 ppm on grassland production, per facet
+        /// <summary>
+        /// grams per square meter
+        /// </summary>
+        [Units("g/m^2")]
+        public double soilTotalCarbon { get; private set; }
 
-        private double[] totalPotProdLimitedByN = new double[vLayers];   // Coefficient on total potential production reflecting limits due to nitrogen in place(EPRODL)
-        private double monthlyNetPrimaryProduction;            // Monthly net primary production in g/m2, summed from total_pot_prod_limited_by_n
+        /// <summary>
+        /// Tree carbon in its components.These must all be merged or otherwise crosswalked at some point.
+        /// </summary>
+        public double[] treeCarbon { get; private set; } = new double[nWoodyParts];
 
-        private double fractionLiveRemovedGrazing;             // Fraction of live forage removed by grazing  (FLGREM in CENTURY)
-        private double fractionDeadRemovedGrazing;             // Fraction of dead forage removed by grazing(FDGREM in CENTURY)
+        /// <summary>
+        /// Tree nitrogen in its components.   These must all be merged or otherwise crosswalked at some point.
+        /// </summary>
+        public double[] treeNitrogen { get; private set; }  = new double[nWoodyParts];
+
+        /// <summary>
+        /// Shrub carbon in its components.   These must all be merged or otherwise crosswalked at some point.
+        /// </summary>
+        public double[] shrubCarbon { get; private set; } = new double[nWoodyParts];
+
+        /// <summary>
+        /// Shrub nitrogen in its components.   These must all be merged or otherwise crosswalked at some point.
+        /// </summary>
+        public double[] shrubNitrogen { get; private set; } = new double[nWoodyParts];
+
+        /// <summary>
+        /// Carbon to nitrogen ratio, SURFACE, SOIL
+        /// </summary>
+        public double[] carbonNitrogenRatio { get; private set; } = new double[2]; 
+
+        /// <summary>
+        /// Soil organic matter carbon, surface and soil  g/m2(SOM1C in Century)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] fastSoilCarbon { get; private set; } = new double[2];
+
+        /// <summary>
+        /// Intermediate soil carbon g/m2(SOMC2 in Century)
+        /// </summary>
+        [Units("g/m^2")]
+        public double intermediateSoilCarbon { get; private set; }
+
+        /// <summary>
+        /// Passive soil carbon g/m2(SOMC3 in Century)
+        /// </summary>
+        [Units("g/m^2")]
+        public double passiveSoilCarbon { get; private set; }
+
+        /// <summary>
+        /// Soil organic matter nitrogen, surface and soil  g/m2(SOM1E in Century and SSOM1E in Savanna)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] fastSoilNitrogen { get; private set; } = new double[2];
+
+        /// <summary>
+        /// Intermediate soil nitrogen g/m2(SOM2E in Century)
+        /// </summary>
+        [Units("g/m^2")]
+        public double intermediateSoilNitrogen { get; private set; }
+
+        /// <summary>
+        /// Passive soil nitrogen g/m2(SOM3E in Century)
+        /// </summary>
+        [Units("g/m^2")]
+        public double passiveSoilNitrogen { get; private set; }
+
+        /// <summary>
+        /// Calculated potential production for the cell, an index.Based on soil temperature, so not specific to facets.
+        /// </summary>
+        [Units("0-1")]
+        public double potentialProduction { get; private set; }
+
+        /// <summary>
+        /// BIOMASS, Belowground potential production in g/m2
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] belowgroundPotProduction { get; private set; }  = new double[vLayers];
+
+        /// <summary>
+        /// BIOMASS, Aboveground potential production in g/m2
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] abovegroundPotProduction { get; private set; } = new double[vLayers];
+
+        /// <summary>
+        /// BIOMASS, Calculate total potential production, in g/m2 with all the corrections in place. 
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] totalPotProduction { get; private set; }  = new double[vLayers];
+
+        /// <summary>
+        /// Calculated effect of CO2 increasing from 350 to 700 ppm on grassland production, per facet
+        /// </summary>
+        public double[] co2EffectOnProduction { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coefficient on total potential production reflecting limits due to nitrogen in place(EPRODL)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] totalPotProdLimitedByN { get; private set; } = new double[vLayers];
+
+        /// <summary>
+        /// Monthly net primary production in g/m2, summed from total_pot_prod_limited_by_n
+        /// </summary>
+        [Units("g/m^2")]
+        public double monthlyNetPrimaryProduction { get; private set; }
+
+        /// <summary>
+        /// Fraction of live forage removed by grazing  (FLGREM in CENTURY)
+        /// </summary>
+        [Units("0-1")]
+        public double fractionLiveRemovedGrazing { get; private set; }
+
+        /// <summary>
+        /// Fraction of dead forage removed by grazing(FDGREM in CENTURY)
+        /// </summary>
+        [Units("0-1")]
+        public double fractionDeadRemovedGrazing { get; private set; }
 
         // Facets are used here.Facets are: 1 - Herb, 2 - Shrub, 3 - Tree
         // NOT USED RIGHT NOW:  The array index here is:  1 - Phenological death, 2 - Incremental death, 3 - Herbivory, 4 - Fire
         private double tempEffectOnDecomp;           // Temperature effect on decomposition (TFUNC in CENTURY Cycle.f)  (index)
         private double waterEffectOnDecomp;          // Water effect on decomposition (index)  (Aboveground and belowground entries in CENTURY set to equal, so distinction not made here)
         private double anerobicEffectOnDecomp;       // Anerobic effects on decomposition(index)  (EFFANT in Savanna)
-        private double allEffectsOnDecomp;           // Combined effects on decomposition, which in Savanna includes anerobic(CYCLE.F)  (index)
 
-        private double[] deadFineRootCarbon = new double[nFacets];     // Dead fine root carbon of the four types cited above.
+        /// <summary>
+        /// Combined effects on decomposition, which in Savanna includes anerobic(CYCLE.F)  (index)
+        /// </summary>
+        public double allEffectsOnDecomp { get; private set; }
+
+        /// <summary>
+        /// Dead fine root carbon of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadFineRootCarbon { get; private set; } = new double[nFacets]; 
+
         private double[] deadFineRootNitrogen = new double[nFacets];   // Dead fine root nitrogen of the four types cited above.
-        private double[] deadStandingCarbon = new double[nFacets];     // Standing dead carbon of leaf and stem, of the four types cited above.
+
+        /// <summary>
+        /// Standing dead carbon of leaf and stem, of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadStandingCarbon { get; private set; } = new double[nFacets]; 
         private double[] deadStandingNitrogen = new double[nFacets];   // Standing dead nitrogen of leaf and stem, of the four types cited above.
         private double[] deadSeedCarbon = new double[nFacets];         // Dead seed carbon of the four types cited above.   (gC/m^2)
         private double[] deadSeedNitrogen = new double[nFacets];       // Dead seed nitrogen of the four types cited above.           (units?)
-        private double[] deadLeafCarbon = new double[nFacets];         // Dead leaf carbon of the four types cited above.   (gC/m^2)
+
+        /// <summary>
+        /// Dead leaf carbon of the four types cited above.   (gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadLeafCarbon { get; private set; } = new double[nFacets];
         private double[] deadLeafNitrogen = new double[nFacets];       // Dead leaf nitrogen of the four types cited above.
         private double[] deadFineBranchCarbon = new double[nFacets];   // Dead fine branch carbon of the four types cited above.   (gC/m^2)
         private double deadTotalFineBranchCarbon;                      // Dead fine branch carbon, summed across facets
@@ -447,8 +683,19 @@ namespace Models
         private double[] ligninLeaf = new double[nFacets];             // Leaf lignin concentration
 
         private double[,] plantLigninFraction = new double[nFacets, 2];   // Lignin in structural residue, at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRLIG)
-        private double[] litterStructuralCarbon = new double[2];           // Litter structural carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRCIS, or in Savanna, SSTRCIS, with unlabeled and labeled merged)
-        private double[] litterMetabolicCarbon = new double[2];           // Litter metabolic carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (METCIS, or in Savanna, SMETCIS)
+
+        /// <summary>
+        /// Litter structural carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRCIS, or in Savanna, SSTRCIS, with unlabeled and labeled merged)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] litterStructuralCarbon { get; private set; } = new double[2];   
+
+        /// <summary>
+        /// Litter metabolic carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (METCIS, or in Savanna, SMETCIS)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] litterMetabolicCarbon { get; private set; } = new double[2];  
+
         private double[] litterStructuralNitrogen = new double[2];        // Litter structural nitrogen at the surface(1) and in the soil(2)  (STRUCE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
         private double[] litterMetabolicNitrogen = new double[2];         // Litter structural nitrogen at the surface(1) and in the soil(2)  (METABE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
 
@@ -468,7 +715,11 @@ namespace Models
 
         private double[] maintainRespiration = new double[nFacets];   // Maintainence respiration
 
-        private double[] phenology = new double[nFacets];             // Phenological stage, a continuous variable from 0 to 4.
+        /// <summary>
+        /// Phenological stage, a continuous variable from 0 to 4.
+        /// </summary>
+        [Units("0-4")]
+        public double[] phenology { get; private set; } = new double[nFacets];
 
         private double[] fineRootCarbon = new double[nFacets];        // Fine root carbon    (gC/m^2)
         private double[] fineRootNitrogen = new double[nFacets];      // Fine root nitrogen(gN/m^2)
@@ -504,8 +755,8 @@ namespace Models
         private double fertilizedNitrogenAdded;  // Total fertilized nitrogen added(g / m2)
         private double fertilizedCarbonAdded;    // Total fertilized carbon added(g / m2)
 
-        private int largeErrorCount;  // The count of cells being reset because their values were very very large
-        private int negErrorCount;    // The count of cell being reset because values were below zero
+        // private int largeErrorCount;  // The count of cells being reset because their values were very very large
+        // private int negErrorCount;    // The count of cell being reset because values were below zero
 
         #endregion
 
@@ -658,14 +909,14 @@ namespace Models
             int k = 0;
             for (int i = 0; i < imx - 1; i++)
             {
-                if (x <= dataV[0, i])
+                if (x <= dataV[0, i + 1])
                 {
                     k = i;
                     break;
                 }
             }
 
-            return dataV[1, k] + (dataV[1, k + 1] - dataV[1, k]) / (dataV[0, k + 1] - dataV[0, k]) * (x - dataV[1, k]);
+            return dataV[1, k] + (dataV[1, k + 1] - dataV[1, k]) / (dataV[0, k + 1] - dataV[0, k]) * (x - dataV[0, k]);
 
         }
 
@@ -837,8 +1088,8 @@ namespace Models
         private void EachYear()
         {
             annualEvapotranspiration = 0.0;
-            negErrorCount = 0;
-            largeErrorCount = 0;
+            // negErrorCount = 0;
+            // largeErrorCount = 0;
 
             // Fill the tree carbon allocation array.  This is dynamic in Century 4.5, static in 4.0, and static here.  (Calculated each year, but no matter)
             // This will be approximate, as all five pieces are not specified(but could be).
@@ -928,7 +1179,7 @@ namespace Models
                 burnedNitrogen = 0.0;
                 fireSeverity = 0.0;
             } // Facet loop
-              // Leaving out CO2 effects for now...
+              // Mostly eaving out CO2 effects for now...
               /*
                 ! Opening the CO2 effects file each month, just for simplicity
                 open(SHORT_USE_FILE, FILE = parm_path(1:len_trim(parm_path))//Sim_Parm%co2effect_file_name, ACTION='READ', IOSTAT=ioerr)
@@ -955,7 +1206,11 @@ namespace Models
 
                 if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'EACH_YR')
                 */
-
+            // TEMPORARY!!! FIX THIS UP LATER
+            // Until we decide how (or if) to read in the co2 effects, we need to have some none-zero values - EJZ
+            co2EffectOnProduction[(int)Facet.herb] = 0.8;
+            co2EffectOnProduction[(int)Facet.shrub] = 0.8;
+            co2EffectOnProduction[(int)Facet.tree] = 0.8;
         }
 
         /// <summary>
@@ -993,10 +1248,49 @@ namespace Models
         /// </summary>
         private void EachMonth()
         {
-            // I'm not transcoding the bulk of this yet. There are around 1700 lines of code that test variables against bounds of 0
-            // and vLarge. This can probably be restructured, if it's even necessary.
+            // I'm not transcoding the bulk of this directly. There are around 1700 lines of code that test variables against bounds of 0
+            // and vLarge. Here I use relflection to check all Double members against that range.
 
-            // What it retained here is the logic of checking the bounds on grazing.
+            Type myType = GetType();
+            double var;
+            // We should see Properties through their backing fields. This is adequate, provided the properties aren't making use of accessors.
+            FieldInfo[] fields = myType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (FieldInfo fieldInfo in fields)
+            {
+                if (fieldInfo.Name.Contains("Latitude") || fieldInfo.Name.Contains("Longitude")) // These can be negative
+                    continue;
+                if (fieldInfo.FieldType == typeof(Double))
+                {
+                    var = TestDouble((double)fieldInfo.GetValue(this), fieldInfo.Name);
+                    if (!Double.IsNaN(var))
+                        fieldInfo.SetValue(this, var);
+                }
+                else if (fieldInfo.FieldType == typeof(Double[]))
+                {
+                    Double[] array = (Double[])fieldInfo.GetValue(this);
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        var = TestDouble(array[i], fieldInfo.Name + '[' + i.ToString() + ']');
+                        if (!Double.IsNaN(var))
+                            array[i] = var;
+                    }
+                }
+                else if (fieldInfo.FieldType == typeof(Double[,]))
+                {
+                    Double[,] array = (Double[,])fieldInfo.GetValue(this);
+                    for (int i = 0; i < array.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < array.GetLength(1); j++)
+                        {
+                            var = TestDouble(array[i, j], fieldInfo.Name + '[' + i.ToString() + ',' + j.ToString() + ']');
+                            if (!Double.IsNaN(var))
+                                array[i, j] = var;
+                        }
+                    }
+                }
+            }
+
+            // What it retained here from the Fortran original is the logic for checking the bounds on grazing.
 
             double live_carbon = leafCarbon[(int)Facet.herb] + leafCarbon[(int)Facet.shrub] + leafCarbon[(int)Facet.tree] +
                                  fineBranchCarbon[(int)Facet.shrub] + fineBranchCarbon[(int)Facet.tree];
@@ -1011,6 +1305,28 @@ namespace Models
                 fractionLiveRemovedGrazing = 0.0;
                 fractionDeadRemovedGrazing = 0.0;
             }
+        }
+
+        private double TestDouble(double var, string varName)
+        {
+            double min = 0.0;
+            double max = vLarge;
+            if (Double.IsNaN(var))
+            {
+                summary.WriteWarning(this, "Variable " + varName + " was NaN");
+                return min;
+            }
+            else if (var < min)
+            {
+                summary.WriteWarning(this, "Variable " + varName + " was below the minimum allowed value");
+                return min;
+            }
+            else if (var > max)
+            {
+                summary.WriteWarning(this, "Variable " + varName + " was above the maximum allowed value");
+                return max;
+            }
+            return Double.NaN;
         }
     }
 }

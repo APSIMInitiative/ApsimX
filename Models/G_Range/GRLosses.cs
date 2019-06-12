@@ -307,12 +307,12 @@ namespace Models
             if (relativeWaterContent[0] > vLarge)
             {
                 relativeWaterContent[0] = vLarge;
-                Console.WriteLine("Relative water content reset to very large in Water_Loss, layer 1");
+                summary.WriteWarning(this, "Relative water content reset to very large in Water_Loss, layer 1");
             }
             if (relativeWaterContent[0] < 0.0)
             {
                 relativeWaterContent[0] = 0.0;
-                Console.WriteLine("Relative water content reset to 0.0 in Water_Loss, layer 1");
+                summary.WriteWarning(this, "Relative water content reset to 0.0 in Water_Loss, layer 1");
             }
 
             // Update water available pools minus evaporation from top layer
@@ -688,9 +688,9 @@ namespace Models
                                plantLigninFraction[(int)Facet.tree, iLayer]) / 3.0;
                 frac_lignin = Math.Max(0.02, frac_lignin);         // From Century CmpLig.f
                 frac_lignin = Math.Min(0.50, frac_lignin);
-                double grmin;
-                double immobil;
-                TrackLignin(iLayer, 0, litterStructuralCarbon[iLayer], litterStructuralNitrogen[iLayer], allEffectsOnDecomp, decodt, frac_lignin, out grmin, out immobil);
+                double grmin = 0.0;
+                double immobil = 0.0;
+                TrackLignin(iLayer, 0, ref litterStructuralCarbon[iLayer], ref litterStructuralNitrogen[iLayer], allEffectsOnDecomp, decodt, frac_lignin, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 tminup[iLayer] = tminup[iLayer] + immobil;
@@ -811,7 +811,7 @@ namespace Models
                 // An entry in Savanna storing a temporary accumulator appears never to be used, and was skipped.
 
                 // Fine branch(these are ordered, first do fine then do coarse)
-                TrackLignin(surfaceIndex, 1, deadTotalFineBranchCarbon, deadTotalFineBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, out grmin, out immobil);
+                TrackLignin(surfaceIndex, 1, ref deadTotalFineBranchCarbon, ref deadTotalFineBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
@@ -819,7 +819,7 @@ namespace Models
                 tminup[iLayer] = tminup[iLayer] + immobil;
 
                 // Coarse branch
-                TrackLignin(surfaceIndex, 2, deadTotalCoarseBranchCarbon, deadTotalCoarseBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, out grmin, out immobil);
+                TrackLignin(surfaceIndex, 2, ref deadTotalCoarseBranchCarbon, ref deadTotalCoarseBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
@@ -827,7 +827,7 @@ namespace Models
                 tminup[iLayer] = tminup[iLayer] + immobil;
 
                 // Coarse root
-                TrackLignin(soilIndex, 3, deadTotalCoarseRootCarbon, deadTotalCoarseRootNitrogen, allEffectsOnDecomp, decodt, 0.25, out grmin, out immobil);
+                TrackLignin(soilIndex, 3, ref deadTotalCoarseRootCarbon, ref deadTotalCoarseRootNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
@@ -962,7 +962,7 @@ namespace Models
         /// <param name="frlig"></param>
         /// <param name="tndec"></param>
         /// <param name="smintosom"></param>
-        private void TrackLignin(int iLayer, int ic, double woodc, double woodn, double defac, double decodt, double frlig, out double tndec, out double smintosom)
+        private void TrackLignin(int iLayer, int ic, ref double woodc, ref double woodn, double defac, double decodt, double frlig, ref double tndec, ref double smintosom)
         {
             double[] ps1co2 = new double[2];
             ps1co2[0] = 0.45;
@@ -974,8 +974,10 @@ namespace Models
             double eflig = Math.Exp(-3.0 * frlig);
             double decrt = 0.0;
 
-            tndec = 0.0;
-            smintosom = 0.0;
+            // EJZ - The original looks wrong to me. These are effectively output variables, and should probably
+            // be assigned a value of 0, rather than being left unaltered.
+            // tndec = 0.0;
+            // smintosom = 0.0;
 
             switch (ic)
             {

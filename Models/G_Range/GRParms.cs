@@ -656,8 +656,12 @@ namespace Models
             double[] organicCarbon = new double[4];
             organicCarbon[0] = globe.topOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
             organicCarbon[3] = globe.subOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
-            organicCarbon[1] = (globe.topOrganicCarbon * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
-            organicCarbon[2] = (globe.topOrganicCarbon * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+            // EJZ - THIS BIT IS DELIBRATELY BROKEN, TO CORRESPOND TO AN ERROR IN GRANGE ITSELF
+            // organicCarbon[1] = (globe.topOrganicCarbon * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
+            // organicCarbon[2] = (globe.topOrganicCarbon * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+            organicCarbon[1] = (globe.topSand * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
+            organicCarbon[2] = (globe.topSand * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+            // EJZ - END OF BROKEN CODE
 
             // Century uses these soil parameters from 0 - 1, so...
             for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
@@ -678,7 +682,7 @@ namespace Models
             rangeType = globe.landscapeType;
             if (rangeType < 1)
             {
-                Console.WriteLine("A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString());
+                summary.WriteError(this, "A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString());
                 rangeType = 1;
                 parms = parmArray[0];
             }
@@ -710,7 +714,7 @@ namespace Models
                 {
                     fieldCapacity[iLayer] = 0.03;
                     wiltingPoint[iLayer] = 0.01;
-                    Console.WriteLine("Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
+                    summary.WriteWarning(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
                     // The following is commented out, to avoid distracting warnings with minor effects on outcomes.But the error to ECHO.GOF is retained.
                     // write(*, *) 'Warning, check GIS: soil information is not defined for cell: ',icell,' and layer: ',ilayer
                 }
@@ -950,6 +954,7 @@ namespace Models
                 parm.initSoilCNRatio = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.initLigninNRatio = ReadDoubleVal(parmsStrings[iLine++]);
 
+                /* EJZ - TEMPORARILY DOING THIS WRONG DELIBRATELY, TO CORRESPOND WITH A BUG IN GRANGE
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.shrubCarbon = new double[nWoodyParts, 2];
                 for (int i = 0; i < tempArray.Length; i++)
@@ -959,6 +964,20 @@ namespace Models
                 parm.treeCarbon = new double[nWoodyParts, 2];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.treeCarbon[i % nWoodyParts, i / nWoodyParts] = tempArray[i];
+                */
+                // EJZ - STARTING BAD CODE HERE
+                // Two things are wrong with this - first, the order in which shrub and tree are read
+                // Secondly, the order of array indices
+                ReadDoubleArray(parmsStrings[iLine++], out tempArray);
+                parm.treeCarbon = new double[nWoodyParts, 2];
+                for (int i = 0; i < tempArray.Length; i++)
+                    parm.treeCarbon[i / 2, i % 2] = tempArray[i];
+
+                ReadDoubleArray(parmsStrings[iLine++], out tempArray);
+                parm.shrubCarbon = new double[nWoodyParts, 2];
+                for (int i = 0; i < tempArray.Length; i++)
+                    parm.shrubCarbon[i / 2, i % 2] = tempArray[i];
+                // END BAD CODE SECTION
 
                 ReadDoubleArray(parmsStrings[iLine++], out parm.temperatureProduction);
                 parm.standingDeadProductionHalved = ReadDoubleVal(parmsStrings[iLine++]);

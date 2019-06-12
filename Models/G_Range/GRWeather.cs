@@ -31,14 +31,14 @@ namespace Models
             private double minTempTotal;
 
             /// <summary>
-            /// Returns total precipitation in mm
+            /// Returns total precipitation in cm
             /// </summary>
             public double precip
             {
                 get
                 {
                     if (nDays > 0)
-                        return precipTotal / 10.0;
+                        return precipTotal / 10.0;  // G-Range uses centimeters, not millimeters!!
                     else
                         return Double.NaN;
                 }
@@ -111,7 +111,7 @@ namespace Models
         private void UpdateWeather()
         {
             // Get the monthly values
-            globe.precip = metAccumulator.precip / 10.0;  // G-Range uses centimeters, not millimeters!!
+            globe.precip = metAccumulator.precip; 
             globe.maxTemp = metAccumulator.maxTemp;
             globe.minTemp = metAccumulator.minTemp;
             uint monthDays = metAccumulator.nDays;

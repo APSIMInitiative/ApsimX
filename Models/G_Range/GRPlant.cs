@@ -1363,7 +1363,7 @@ namespace Models
                     death_rate = parms.shootDeathRate[1] * (1.0 - propAnnualDecid[(int)Facet.herb]) * waterFunction;
                 else
                     death_rate = parms.shootDeathRate[0] * waterFunction;
-                if (month == parms.monthToRemoveAnnuals)
+                if (month == (int)Math.Round(parms.monthToRemoveAnnuals))
                     death_rate = death_rate + propAnnualDecid[(int)Facet.herb];    // A one-time loss, so not corrected by month
                 if (leafCarbon[(int)Facet.herb] > parms.shootDeathRate[3])          // Shoot death rate 4 [3 in C#] stores g / m ^ 2, a threshold for shading affecting shoot death, stored in 3
                     death_rate = death_rate + parms.shootDeathRate[2];
@@ -1766,9 +1766,9 @@ namespace Models
             // Death occurs mostly when plants are not dormant.  Here I will use temperature as a surrogate for that.I could use phenology, or a dormancy flag.
             if (temperature > 0.0)
             {
+                int[] died = new int[6]; // temporary for debugging
                 for (int iFacet = 0; iFacet < nFacets; iFacet++)
                 {
-                    int[] died = new int[6]; // temporary for debugging
                     double death_rate = parms.nominalPlantDeathRate[iFacet];
                     // Probably pass correctly, but to decrease risk of error ...
                     // Those at the facet level are handled outside of the layers level
@@ -1782,7 +1782,8 @@ namespace Models
                     // Incorproate annuals.  Do so after the season has ended and standing dead has fallen to litter, etc. The best time to account for
                     // annual death may be the beginning of the following year, when phenology is reset to 0.
                     if (month == (int)Math.Round(parms.monthToRemoveAnnuals) && iFacet == (int)Facet.herb)
-                        death_rate = death_rate + propAnnualDecid[(int)Facet.herb];
+                        death_rate = death_rate + propAnnualDecid[(int)Facet.herb];  
+                    // EJZ - The C# compiler points out that the assignment above is futile; the value is never used.
 
                     // Plants die regardless of their placement, whether in the understory of another plant, or defining a facet.   The rate is the same, except for LAI effects.  
                     // Kill the plants...
