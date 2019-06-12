@@ -118,7 +118,7 @@ namespace Models.Core
             }
             else if (namePath[0] != '.' &&
                      (namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1
-                     | namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1))
+                     | (namePath.IndexOfAny("(".ToCharArray()) >= 0 && namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1)))
             {
                 // expression - need a better way of detecting an expression
                 returnVariable = new VariableExpression(namePath, relativeTo as Model);
