@@ -379,10 +379,10 @@ namespace Models
                 if ((Ha > CBHt) & (tallest.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
                 double Wt = (tallest.zone as Zones.RectangularZone).Width;    // Width of tree zone
-                double CWt = tallest.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
                 double Wa = (shortest.zone as Zones.RectangularZone).Width;   // Width of alley zone
+                double CWt = Math.Min(tallest.Canopies[0].Canopy.Width / 1000,(Wt + Wa));// Width of the tree canopy
                 double WaOl = Math.Min(CWt - Wt, Wa);                         // Width of tree canopy that overlap the alley zone
-                double WaOp = Wa - WaOl;
+                double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
                 double Fs = WaOp / (Wt + Wa);                                 // Fraction of open space in the alley row
                 double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of trees
@@ -392,19 +392,20 @@ namespace Models
                 double LAIthomo = Ft * LAIt;                                  // LAI of trees if spread homogeneously across row and alley zones
                 double Ftbla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;    // View factor for the tree canopy if a black body
                 double Fabla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;  // View factor for the gap between trees in alley if trees a black body
+                if (WaOp == 0) Fabla = 0;
                 //All transmission and interception values below are a fraction of the total short wave radiation incident to both the tree and alley rows
                 double Tt = Ft * (Ftbla * Math.Exp(-Kt * LAIt)
                           + Ft * (1 - Ftbla) * Math.Exp(-Kt * LAIthomo))
                           + Fs * Ft * (1 - Fabla) * Math.Exp(-Kt * LAIthomo);     //  Transmission of light to the bottom of the tree canopy
-                double Ts = Fs * (Fabla + Fs * (1 - Fabla) * Math.Exp(-Kt * LAIthomo))
+                double Ta = Fs * (Fabla + Fs * (1 - Fabla) * Math.Exp(-Kt * LAIthomo))
                           + Ft * Fs * ((1 - Ftbla) * Math.Exp(-Kt * LAIthomo));   //  Transmission of light to the bottom of the gap in the tree canopy
-                double It = 1 - Tt - Ts;                                    // Interception by the trees
+                double It = 1 - Tt - Ta;                                    // Interception by the trees
                 double St = Tt * Wt / CWt;                                  // Transmission to the soil in the tree zone
                 double IaOl = Tt * WaOl / CWt * (1 - Math.Exp(-Ka * LAIa)); // Interception by the alley canopy below the overlap of the trees
-                double IaOp = Ts * (1 - Math.Exp(-Ka * LAIa));              // Interception by the alley canopy in the gaps between tree canopy 
+                double IaOp = Ta * (1 - Math.Exp(-Ka * LAIa));              // Interception by the alley canopy in the gaps between tree canopy 
                 double Ia = IaOl + IaOp;                                    // Interception by the alley canopy
                 double SaOl = Tt * WaOl / CWt * (Math.Exp(-Ka * LAIa));     // Transmission to the soil beneigth the alley canopy under the tree canopy
-                double SaOp = Ts * (Math.Exp(-Ka * LAIa));                  // Transmission to the soil beneigth the alley canopy in the open
+                double SaOp = Ta * (Math.Exp(-Ka * LAIa));                  // Transmission to the soil beneigth the alley canopy in the open
                 double Sa = SaOl + SaOp;                                    // Transmission to the soil beneight the alley
                 double EnergyBalanceCheck = It + St + Ia + Sa;              // Sum of all light fractions (should equal 1)
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
