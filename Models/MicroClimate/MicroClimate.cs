@@ -366,29 +366,29 @@ namespace Models
         /// <summary>
         /// This model is for tree crops where there is no vertical overlap of the shortest and tallest canopy but the tallest canopy can overlap the shortest horzontally
         /// </summary>
-        /// <param name="tallest"></param>
-        /// <param name="shortest"></param>
-        private void doTreeRowCropShortWaveRadiation(ref ZoneMicroClimate tallest, ref ZoneMicroClimate shortest)
+        /// <param name="tree"></param>
+        /// <param name="alley"></param>
+        private void doTreeRowCropShortWaveRadiation(ref ZoneMicroClimate tree, ref ZoneMicroClimate alley)
         {
-            if (MathUtilities.Sum(tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            if (MathUtilities.Sum(tree.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
-                double Ht = MathUtilities.Sum(tallest.DeltaZ);                // Height of tree canopy
-                double CDt = tallest.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
-                double CBHt = Ht - CDt;                                       // Base hight of the tree canopy
-                double Ha = MathUtilities.Sum(shortest.DeltaZ);               // Height of alley canopy
-                if ((Ha > CBHt) & (tallest.DeltaZ.Length > 1))
+                double Ht = MathUtilities.Sum(tree.DeltaZ);                // Height of tree canopy
+                double CDt = tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
+                double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
+                double Ha = MathUtilities.Sum(alley.DeltaZ);               // Height of alley canopy
+                if ((Ha > CBHt) & (tree.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
-                double Wt = (tallest.zone as Zones.RectangularZone).Width;    // Width of tree zone
-                double Wa = (shortest.zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = Math.Min(tallest.Canopies[0].Canopy.Width / 1000,(Wt + Wa));// Width of the tree canopy
+                double Wt = (tree.zone as Zones.RectangularZone).Width;    // Width of tree zone
+                double Wa = (alley.zone as Zones.RectangularZone).Width;   // Width of alley zone
+                double CWt = Math.Min(tree.Canopies[0].Canopy.Width / 1000,(Wt + Wa));// Width of the tree canopy
                 double WaOl = Math.Min(CWt - Wt, Wa);                         // Width of tree canopy that overlap the alley zone
                 double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
                 double Fs = WaOp / (Wt + Wa);                                 // Fraction of open space in the alley row
-                double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of trees
-                double LAIa = MathUtilities.Sum(shortest.LAItotsum);          // LAI of alley crop
-                double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of trees
-                double Ka = shortest.Canopies[0].Ktot;                        // Extinction Coefficient of alley crop
+                double LAIt = MathUtilities.Sum(tree.LAItotsum);           // LAI of trees
+                double LAIa = MathUtilities.Sum(alley.LAItotsum);          // LAI of alley crop
+                double Kt = tree.Canopies[0].Ktot;                         // Extinction Coefficient of trees
+                double Ka = alley.Canopies[0].Ktot;                        // Extinction Coefficient of alley crop
                 double LAIthomo = Ft * LAIt;                                  // LAI of trees if spread homogeneously across row and alley zones
                 double Ftbla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;    // View factor for the tree canopy if a black body
                 double Fabla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;  // View factor for the gap between trees in alley if trees a black body
@@ -414,18 +414,18 @@ namespace Models
                 Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
                 Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
 
-                tallest.Canopies[0].Rs[1] = weather.Radn * It / Ft;
-                tallest.SurfaceRs = weather.Radn * St / Ft;
+                tree.Canopies[0].Rs[1] = weather.Radn * It / Ft;
+                tree.SurfaceRs = weather.Radn * St / Ft;
 
-                if (shortest.Canopies[0].Rs != null)
-                    if (shortest.Canopies[0].Rs.Length > 0)
-                        shortest.Canopies[0].Rs[0] = weather.Radn * Ia / Fs;
-                shortest.SurfaceRs = weather.Radn * Sa / Fs;
+                if (alley.Canopies[0].Rs != null)
+                    if (alley.Canopies[0].Rs.Length > 0)
+                        alley.Canopies[0].Rs[0] = weather.Radn * Ia / Fs;
+                alley.SurfaceRs = weather.Radn * Sa / Fs;
             }
             else
             {
-                tallest.SurfaceRs = weather.Radn;
-                shortest.SurfaceRs = weather.Radn;
+                tree.SurfaceRs = weather.Radn;
+                alley.SurfaceRs = weather.Radn;
             }
         }
 
