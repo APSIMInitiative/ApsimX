@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
                 htmlString += "\n<div class=\"version\">V"+ item.ToString() + "</div>";
                 htmlString += "</div>";
                 htmlString += "\n<div class=\"messagecontent\">";
-                htmlString += "\n<div class=\"messageentry\">" + (item.Comments().Length == 0?((item.ToString() == "1.0.1")?"Initial release of this component":"No details provided"):item.Comments());
+                htmlString += "\n<div class=\"messageentry\">" + (item.Comments().Length == 0?((item.ToString() == "1.0.1")?"Initial release of this component":"No details provided"):item.Comments().Replace("\n", "<br />"));
                 htmlString += "\n</div>";
                 htmlString += "\n</div>";
                 htmlString += "\n</div>";
