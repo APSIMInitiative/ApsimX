@@ -117,7 +117,8 @@ namespace Models.Core
                 return null;
             }
             else if (namePath[0] != '.' &&
-                     namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1)
+                     (namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1
+                     | namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1))
             {
                 // expression - need a better way of detecting an expression
                 returnVariable = new VariableExpression(namePath, relativeTo as Model);
@@ -211,12 +212,16 @@ namespace Models.Core
                     // Look for either a property or a child model.
                     IModel localModel = null;
                     if (relativeToObject == null)
+                    {
                         return null;
+                    }
 
                     // Check property info
                     PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
                     if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
+                    {
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                    }
 
                     // If not property info
                     // Check method info
