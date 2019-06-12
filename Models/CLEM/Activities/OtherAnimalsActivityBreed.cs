@@ -115,7 +115,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this.Name, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.Name);
                         OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
                         {
                             Age = 0,
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.Name);
                     }
                 }
             }

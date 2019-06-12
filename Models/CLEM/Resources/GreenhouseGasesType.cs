@@ -112,10 +112,9 @@ namespace Models.CLEM.Resources
                 {
                     Gain = addAmount,
                     GainStandardised = addAmount * GlobalWarmingPotential,
-                    Activity = activity.Name,
-                    ActivityType = activity.GetType().Name,
+                    Activity = activity,
                     Reason = reason,
-                    ResourceType = this.Name
+                    ResourceType = this
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -141,11 +140,10 @@ namespace Models.CLEM.Resources
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
             {
-                ResourceType = this.Name,
+                ResourceType = this,
                 Loss = amountRemoved,
                 LossStandardised = amountRemoved * GlobalWarmingPotential,
-                Activity = request.ActivityModel.Name,
-                ActivityType = request.ActivityModel.GetType().Name,
+                Activity = request.ActivityModel,
                 Reason = request.Reason
             };
             LastTransaction = details;
