@@ -740,6 +740,7 @@
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
