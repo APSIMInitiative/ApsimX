@@ -5455,7 +5455,7 @@
                 {
                   "$type": "Models.Soils.InitialWater, Models",
                   "PercentMethod": 1,
-                  "FractionFull": 1.0,
+                  "FractionFull": 0.7,
                   "DepthWetSoil": "NaN",
                   "RelativeTo": null,
                   "Name": "Initial water",
@@ -5957,7 +5957,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            SimpleFruitTree.Root.ZoneNamesToGrowRootsIn.Add(\"Alley_dry\");\r\n            SimpleFruitTree.Root.ZoneRootDepths.Add(2600);\r\n            SimpleFruitTree.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            SimpleFruitTree.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            SimpleFruitTree.Root.ZoneRootDepths.Add(2600);\r\n            SimpleFruitTree.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "UseExtraZone",
@@ -6679,6 +6679,162 @@
                   "Date": "2010-04-17",
                   "Action": "[Irrigation].apply(6)",
                   "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-10-28",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-10-29",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-06",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-13",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-14",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-15",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-18",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-21",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-22",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-27",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-28",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-06",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-07",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-08",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-04",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-15",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-24",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-02",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-03",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-06",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-07",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-13",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-14",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-23",
+                  "Action": "[Irrigation].apply(50)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-24",
+                  "Action": "[Irrigation].apply(50)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-30",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
                 }
               ],
               "Name": "Operations",
@@ -6731,7 +6887,7 @@
               "EventNames": [
                 "[Clock].DoReport"
               ],
-              "Name": "SoilReport",
+              "Name": "Drainage",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -6843,7 +6999,7 @@
                 {
                   "$type": "Models.Soils.InitialWater, Models",
                   "PercentMethod": 1,
-                  "FractionFull": 1.0,
+                  "FractionFull": 0.7,
                   "DepthWetSoil": "NaN",
                   "RelativeTo": null,
                   "Name": "Initial water",
@@ -7423,6 +7579,880 @@
               "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "PlantVariables",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "Operation": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-10-14",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-10-15",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-10-16",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-10-19",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-10-31",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-01",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-03",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-04",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-05",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-06",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-07",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-08",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-12",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-13",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-15",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-16",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-17",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-19",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-20",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-21",
+                  "Action": "[Irrigation].apply(3)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-23",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-24",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-25",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-26",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-27",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-28",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-11-30",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-01",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-02",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-03",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-04",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-05",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-06",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-07",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-08",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-11",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-12",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-13",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-14",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-17",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-18",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-19",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-20",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-21",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-29",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-30",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2008-12-31",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-01",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-02",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-03",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-04",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-08",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-09",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-10",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-11",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-16",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-17",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-18",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-19",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-22",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-23",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-24",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-25",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-26",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-27",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-28",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-29",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-01-31",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-01",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-02",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-05",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-07",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-09",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-18",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-19",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-02-20",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-11-21",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-11-22",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-11-23",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-11-24",
+                  "Action": "[Irrigation].apply(7.5)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-11-28",
+                  "Action": "[Irrigation].apply(7.5)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-11-29",
+                  "Action": "[Irrigation].apply(7.5)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-11",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-12",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-13",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-14",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-15",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-22",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-23",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-24",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-26",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-27",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2009-12-28",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-01",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-02",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-05",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-06",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-07",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-10",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-11",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-12",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-01-13",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-02-18",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-02-19",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-02-20",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-02-25",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-02-26",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-02-27",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-04",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-05",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-24",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-25",
+                  "Action": "[Irrigation].apply(9)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-26",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-27",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-03-28",
+                  "Action": "[Irrigation].apply(12)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-04-15",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-04-16",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-04-17",
+                  "Action": "[Irrigation].apply(6)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-10-28",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-10-29",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-06",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-13",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-14",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-15",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-18",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-21",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-22",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-27",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-11-28",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-06",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-07",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-08",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-04",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-15",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2010-12-24",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-02",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-03",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-06",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-07",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-13",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-14",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-23",
+                  "Action": "[Irrigation].apply(25)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-24",
+                  "Action": "[Irrigation].apply(25)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "2011-01-30",
+                  "Action": "[Irrigation].apply(15)",
+                  "Enabled": true
+                }
+              ],
+              "Name": "Operations",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -8323,36 +9353,6 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "ET",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Observed",
-              "XFieldName": "Clock.Today",
               "YFieldName": "transpiration",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8361,7 +9361,7 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Observed",
+              "Name": "Predicted",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8463,6 +9463,17 @@
               "Interval": "NaN",
               "DateTimeAxis": false,
               "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
@@ -8524,6 +9535,66 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Observed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 1,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Drainage",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "drainage",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted Drainage",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -16736653,
+              "FactorToVaryColours": "Zone",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 7,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "drainage",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed Drainage",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -23810,7 +24881,7 @@
               "CrossesAtZero": false
             }
           ],
-          "LegendPosition": 0,
+          "LegendPosition": 3,
           "DisabledSeries": [],
           "Name": "Transpiration",
           "Children": [
@@ -23888,7 +24959,7 @@
               "CrossesAtZero": false
             }
           ],
-          "LegendPosition": 0,
+          "LegendPosition": 3,
           "DisabledSeries": [],
           "Name": "Drainage",
           "Children": [
@@ -23966,7 +25037,7 @@
               "CrossesAtZero": false
             }
           ],
-          "LegendPosition": 0,
+          "LegendPosition": 3,
           "DisabledSeries": [],
           "Name": "psw",
           "Children": [
@@ -24044,7 +25115,7 @@
               "CrossesAtZero": false
             }
           ],
-          "LegendPosition": 0,
+          "LegendPosition": 3,
           "DisabledSeries": [],
           "Name": "RadInt",
           "Children": [
