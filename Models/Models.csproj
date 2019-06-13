@@ -152,6 +152,7 @@
     <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
     <Compile Include="CLEM\Resources\LabourPricing.cs" />
+    <Compile Include="CLEM\Resources\ResourceUnitsConverter.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="CLEM\Reporting\PivotTable.cs" />
