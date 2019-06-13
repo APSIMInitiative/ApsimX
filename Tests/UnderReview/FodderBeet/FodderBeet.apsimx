@@ -3881,6 +3881,42 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.AddFunction, Models",
+              "Name": "SCS",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[StorageRoot].Live.MetabolicWt",
+                  "Name": "Storage",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[StorageRoot].Live.StorageWt",
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Non structural carbohydrates and sugars",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.PMF.CultivarFolder, Models",
               "Name": "Cultivars",
               "Children": [
@@ -3912,42 +3948,6 @@
                     ""
                   ],
                   "Name": "Jamon",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.AddFunction, Models",
-              "Name": "SCS",
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[StorageRoot].Live.MetabolicWt",
-                  "Name": "Storage",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[StorageRoot].Live.StorageWt",
-                  "Name": "Metabolic",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Non structural carbohydrates and sugars",
-                  "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
