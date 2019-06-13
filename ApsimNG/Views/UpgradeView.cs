@@ -467,23 +467,17 @@ namespace UserInterface.Views
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/AddNew";
+            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/AddRegistration";
             url += "?firstName=" + firstNameBox.Text;
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
             url = AddToURL(url, "country", countryBox.ActiveText);
             url = AddToURL(url, "email", emailBox.Text);
-
-            string product = "APSIM Next Generation";
-            if (ProcessUtilities.CurrentOS.IsWindows)
-                product += " (Windows)";
-            else if (ProcessUtilities.CurrentOS.IsMac)
-                product += " (Mac)";
-            else if (ProcessUtilities.CurrentOS.IsLinux)
-                product += " (Debian)"; // fixme - linux != debian
-            product += " Upgrade";
-            url = AddToURL(url, "product",  product);
+            url = AddToURL(url, "product", "APSIM Next Generation");
+            url = AddToURL(url, "version", version);
+            url = AddToURL(url, "platform", GetPlatform());
+            url = AddToURL(url, "type", "Upgrade");
 
             WebUtilities.CallRESTService<object>(url);
         }
@@ -494,6 +488,20 @@ namespace UserInterface.Views
             if (value == null || value == string.Empty)
                 value = "-";
             return url + "&" + key + "=" + value;
+        }
+
+        /// <summary>
+        /// Gets the platform name used when writing to registration database.
+        /// </summary>
+        private string GetPlatform()
+        {
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return "Windows";
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return "Mac";
+            else if (ProcessUtilities.CurrentOS.IsLinux)
+                return "Linux";
+            return "?";
         }
 
         /// <summary>
