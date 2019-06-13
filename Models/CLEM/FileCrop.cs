@@ -301,7 +301,7 @@ namespace Models.CLEM
         {
             CropDataType cropdata = new CropDataType
             {
-                SoilNum = int.Parse(dr["SoilNum"].ToString()),
+                SoilNum = dr["SoilNum"].ToString(),
                 CropName = dr["CropName"].ToString(),
                 Year = int.Parse(dr["Year"].ToString()),
                 Month = int.Parse(dr["Month"].ToString()),
@@ -444,7 +444,7 @@ namespace Models.CLEM
         /// <summary>
         /// Soil Number
         /// </summary>
-        public int SoilNum;
+        public string SoilNum;
 
         /// <summary>
         /// Name of Crop
