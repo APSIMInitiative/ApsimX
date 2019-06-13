@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Use artificial insemination (no bulls required)
         /// </summary>
-        [Description("Use controlled maiting/artificial insemination (no bulls required)")]
+        [Description("Use controlled mating/artificial insemination (no bulls required)")]
         [Required]
         public bool UseAI { get; set; }
 
@@ -312,7 +312,7 @@ namespace Models.CLEM.Activities
                         double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
                         double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
 
-                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
                         {
                             if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                             {
@@ -333,7 +333,7 @@ namespace Models.CLEM.Activities
                     if (this.TimingOK)
                     {
                         numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
-                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
                         {
                             if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                             {
@@ -362,21 +362,33 @@ namespace Models.CLEM.Activities
         private double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-            bool isConceptionReady;
+            bool isConceptionReady = false;
             if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
             {
                 isConceptionReady = true;
             }
             else
             {
-                double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
-                // calculate inter-parturition interval
-                currentIPI = Math.Max(currentIPI, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
-                double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
-                isConceptionReady = (female.Age >= ageNextConception);
+                // add one to age to ensure that conception is due this timestep
+                if ((female.Age+1 - female.AgeAtLastBirth)*30.4 > female.BreedParams.MinimumDaysBirthToConception)
+                {
+                    if (UseAI)
+                    {
+                        // only based upon period since birth
+                        isConceptionReady = true;
+                    }
+                    else
+                    {
+                        // check with IPI as well
+                        // calculate inter-parturition interval
+                        double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow(female.ProportionOfNormalisedWeight, female.BreedParams.InterParturitionIntervalCoefficient) * 30.4;
+                        double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
+                        isConceptionReady = (female.Age+1 >= ageNextConception);
+                    }
+                }
             }
 
-            // if first mating and of age or suffcient time since last birth/conception
+            // if first mating and of age or sufficient time since last birth/conception
             if(isConceptionReady)
             {
                 // Get conception rate from conception model associated with the Ruminant Type parameters
