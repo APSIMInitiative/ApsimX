@@ -21,7 +21,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "#CLEM Grazing simulation example\n##Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button at the top of the right hand information pane after selecting any CLEM component from your simulation tree or at http://www.apsim.info/CLEM/Content/Home.htm.",
+          "Text": "#CLEM Grazing simulation example\n##Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
           "Name": "Grazing example description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -202,6 +202,7 @@
                           "InterParturitionIntervalCoefficient": -0.7994,
                           "GestationLength": 9.0,
                           "MinimumAge1stMating": 24.0,
+                          "MaximumAgeMating": 120.0,
                           "MinimumSize1stMating": 0.5,
                           "MinimumDaysBirthToConception": 61.0,
                           "MultipleBirthRate": null,
