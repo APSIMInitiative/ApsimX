@@ -1861,6 +1861,8 @@ namespace Models
                     if (parms.burnMonth == month)
                     {
                         // The cell may burn
+                        // EJZ - Is this right? We also have a similar random value in PlantPartDeath, so the two are not going to
+                        // coincide. Shouldn't there just be one fire "event"?
                         double harvest = new Random().NextDouble();
                         if (parms.frequencyOfFire > harvest)
                         {

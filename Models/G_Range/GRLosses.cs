@@ -273,15 +273,20 @@ namespace Models
                     // Calculate water available to plants for growth
 
                     waterAvailable[0] = waterAvailable[0] + avinj;
+#if !G_RANGE_BUG
+                    waterAvailable[1] = waterAvailable[1] + avinj;
+#endif
                     if (soilLayer <= 1)
                         waterAvailable[2] = waterAvailable[2] + avinj;
                 }
             }
 
-            // Sum water available for plants to survive.
-            for (int soilLayer = 0; soilLayer < nSoilLayers; soilLayer++)
-                waterAvailable[1] = waterAvailable[1] + avinj;   //// THIS DOES NOT LOOK RIGHT - EJZ
 
+            // Sum water available for plants to survive.
+#if G_RANGE_BUG
+            for (int soilLayer = 0; soilLayer < nSoilLayers; soilLayer++)
+                waterAvailable[1] = waterAvailable[1] + avinj;   //// THIS DOES NOT LOOK RIGHT. avinj will have the value for the bottom soil layer (only) - EJZ
+#endif
             // Ignoring entry regarding harvesting of crops ... REVISIT ?
             // Minimum relative water content for top layer to evaporate(MANY OF THESE COMMENTS COME DIRECTLY FROM CENTURY)
             double fwlos = 0.25;
@@ -974,11 +979,12 @@ namespace Models
             double eflig = Math.Exp(-3.0 * frlig);
             double decrt = 0.0;
 
+#if !G_RANGE_BUG
             // EJZ - The original looks wrong to me. These are effectively output variables, and should probably
             // be assigned a value of 0, rather than being left unaltered.
-            // tndec = 0.0;
-            // smintosom = 0.0;
-
+            tndec = 0.0;
+            smintosom = 0.0;
+#endif
             switch (ic)
             {
                 case 0:

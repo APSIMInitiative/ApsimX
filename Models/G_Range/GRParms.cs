@@ -656,12 +656,15 @@ namespace Models
             double[] organicCarbon = new double[4];
             organicCarbon[0] = globe.topOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
             organicCarbon[3] = globe.subOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
-            // EJZ - THIS BIT IS DELIBRATELY BROKEN, TO CORRESPOND TO AN ERROR IN GRANGE ITSELF
-            // organicCarbon[1] = (globe.topOrganicCarbon * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
-            // organicCarbon[2] = (globe.topOrganicCarbon * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+#if G_RANGE_BUG
+            // EJZ - THIS BIT IS DELIBERATELY BROKEN, TO CORRESPOND TO AN ERROR IN GRANGE ITSELF
             organicCarbon[1] = (globe.topSand * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
             organicCarbon[2] = (globe.topSand * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
             // EJZ - END OF BROKEN CODE
+#else
+            organicCarbon[1] = (globe.topOrganicCarbon * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
+            organicCarbon[2] = (globe.topOrganicCarbon * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+#endif
 
             // Century uses these soil parameters from 0 - 1, so...
             for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
@@ -954,17 +957,8 @@ namespace Models
                 parm.initSoilCNRatio = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.initLigninNRatio = ReadDoubleVal(parmsStrings[iLine++]);
 
-                /* EJZ - TEMPORARILY DOING THIS WRONG DELIBRATELY, TO CORRESPOND WITH A BUG IN GRANGE
-                ReadDoubleArray(parmsStrings[iLine++], out tempArray);
-                parm.shrubCarbon = new double[nWoodyParts, 2];
-                for (int i = 0; i < tempArray.Length; i++)
-                    parm.shrubCarbon[i % nWoodyParts, i / nWoodyParts] = tempArray[i];
-
-                ReadDoubleArray(parmsStrings[iLine++], out tempArray);
-                parm.treeCarbon = new double[nWoodyParts, 2];
-                for (int i = 0; i < tempArray.Length; i++)
-                    parm.treeCarbon[i % nWoodyParts, i / nWoodyParts] = tempArray[i];
-                */
+#if G_RANGE_BUG
+                // DOING THIS WRONG DELIBRATELY, TO CORRESPOND WITH A BUG IN GRANGE
                 // EJZ - STARTING BAD CODE HERE
                 // Two things are wrong with this - first, the order in which shrub and tree are read
                 // Secondly, the order of array indices
@@ -978,7 +972,17 @@ namespace Models
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.shrubCarbon[i / 2, i % 2] = tempArray[i];
                 // END BAD CODE SECTION
+#else
+                ReadDoubleArray(parmsStrings[iLine++], out tempArray);
+                parm.shrubCarbon = new double[nWoodyParts, 2];
+                for (int i = 0; i < tempArray.Length; i++)
+                    parm.shrubCarbon[i % nWoodyParts, i / nWoodyParts] = tempArray[i];
 
+                ReadDoubleArray(parmsStrings[iLine++], out tempArray);
+                parm.treeCarbon = new double[nWoodyParts, 2];
+                for (int i = 0; i < tempArray.Length; i++)
+                    parm.treeCarbon[i % nWoodyParts, i / nWoodyParts] = tempArray[i];
+#endif                
                 ReadDoubleArray(parmsStrings[iLine++], out parm.temperatureProduction);
                 parm.standingDeadProductionHalved = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.radiationProductionCoefficient = ReadDoubleVal(parmsStrings[iLine++]);

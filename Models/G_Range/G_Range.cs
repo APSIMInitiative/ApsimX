@@ -52,13 +52,13 @@ namespace Models
         #region IPlant interface
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        public double Legumosity { get { return 0; } }
+        public double Legumosity { get { return parms.maxSymbioticNFixationRatio * 100.0; } }  // Very ad hod.
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        public bool IsC4 { get { return false; } }
+        public bool IsC4 { get { return Math.Abs(Latitude) < 30.0 ; } } // Treat low latitudes as C4
 
         /// <summary> Is the plant alive?</summary>
-        public bool IsAlive { get { return true; } }
+        public bool IsAlive { get { return totalAgroundLiveBiomass > 0.0; } }
 
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames { get { return null; } }
@@ -93,6 +93,7 @@ namespace Models
         public double Albedo { get { return 0.15; } }
 
         /// <summary>Gets or sets the gsmax.</summary>
+        [Description("Daily maximum stomatal conductance(m/s)")]
         public double Gsmax { get { return 0.01; } }
 
         /// <summary>Gets or sets the R50.</summary>
@@ -1318,7 +1319,8 @@ namespace Models
             }
             else if (var < min)
             {
-                summary.WriteWarning(this, "Variable " + varName + " was below the minimum allowed value");
+                if (!varName.Contains("carbonSourceSink"))
+                    summary.WriteWarning(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value");
                 return min;
             }
             else if (var > max)
