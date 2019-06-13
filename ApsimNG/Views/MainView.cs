@@ -32,16 +32,9 @@
         private static string indexTabText = "Home";
 
         /// <summary>
-        /// Stores the size, in points, of the "default" base font
-        /// </summary>
-        private double defaultBaseSize;
-
-        /// <summary>
         /// Keeps track of whether or not the waiting cursor is being used.
         /// </summary>
         private bool waiting = false;
-
-        private double scrollSizeStep = 0.5;
 
         /// <summary>
         /// Number of buttons in the status panel.

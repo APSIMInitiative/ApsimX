@@ -981,6 +981,8 @@ namespace UserInterface.Views
             else
                browser.LoadHTML(contents);
 
+            browser.Font = (MasterView as ViewBase).MainWidget.Style.FontDescription;
+
             if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).Browser != null)
             {
                 TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
@@ -992,7 +994,6 @@ namespace UserInterface.Views
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
             browser.ForegroundColour = Utility.Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
 
-            browser.Font = MainWidget.Style.FontDescription;
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 
