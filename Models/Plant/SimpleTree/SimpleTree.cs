@@ -50,6 +50,9 @@ namespace Models.PMF
         [Units("mm")]
         public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
         public double FRGR { get { return 1; } }

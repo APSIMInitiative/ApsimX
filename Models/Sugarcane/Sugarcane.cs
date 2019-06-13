@@ -401,6 +401,10 @@ namespace Models
         /// </summary>
         public double Depth { get { return height; } }
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
+
         /// <summary>
         /// Gets  FRGR.
         /// </summary>
