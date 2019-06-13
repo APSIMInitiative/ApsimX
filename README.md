@@ -10,7 +10,7 @@ ApsimX is the next generation of [APSIM](http://www.apsim.info)
 
 **Hardware required**: 
 
-Any recent PC with a minimum of 2 Gb of RAM.
+Any recent PC with a minimum of 2Gb of RAM.
 
 **Software required**:
 
