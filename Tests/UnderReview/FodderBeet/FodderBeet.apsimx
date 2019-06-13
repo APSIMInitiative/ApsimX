@@ -4106,226 +4106,241 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.AboveGround.N",
                   "n": 318,
-                  "Slope": 0.928426046770673,
-                  "Intercept": 1.943975853124531,
-                  "SEslope": 0.034247717048442532,
-                  "SEintercept": 0.85323492615868579,
-                  "R2": 0.69930687333497876,
-                  "RMSE": 6.7289779631445663,
-                  "NSE": 0.62326148884706212,
-                  "ME": 0.34273081609220762,
-                  "MAE": 5.0053097485433344,
-                  "RSR": 0.61282444374691425
+                  "Slope": 0.93800590393710015,
+                  "Intercept": 2.032462119802819,
+                  "SEslope": 0.035464610334754343,
+                  "SEintercept": 0.88355215436460177,
+                  "R2": 0.68883954647664469,
+                  "RMSE": 6.9747025480840286,
+                  "NSE": 0.59524410112847881,
+                  "ME": 0.64553665086908463,
+                  "MAE": 5.1636289885721984,
+                  "RSR": 0.63520318133607645
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.AboveGround.Wt",
-                  "n": 415,
-                  "Slope": 0.89538284935599033,
-                  "Intercept": 130.80611713799317,
-                  "SEslope": 0.022693868722813069,
-                  "SEintercept": 39.140301475130777,
-                  "R2": 0.79032169804452068,
-                  "RMSE": 387.12903868660618,
-                  "NSE": 0.77516828547648,
-                  "ME": -28.130572159969649,
-                  "MAE": 296.03098152173055,
-                  "RSR": 0.47359260061364294
+                  "n": 419,
+                  "Slope": 0.92382363198718043,
+                  "Intercept": 174.98222349972025,
+                  "SEslope": 0.021992080999995313,
+                  "SEintercept": 37.873526132091762,
+                  "R2": 0.80885560344190288,
+                  "RMSE": 377.88618114269985,
+                  "NSE": 0.7872234482517394,
+                  "ME": 59.58917414151675,
+                  "MAE": 292.11410393837656,
+                  "RSR": 0.46072630901185485
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Leaf.CoverGreen",
                   "n": 236,
-                  "Slope": 0.79877312365766562,
-                  "Intercept": 0.12873358159224846,
-                  "SEslope": 0.026442965085648897,
-                  "SEintercept": 0.020828473038861071,
-                  "R2": 0.79589821466910449,
-                  "RMSE": 0.10026142274077679,
-                  "NSE": 0.78379338387822006,
-                  "ME": -0.023713320233666742,
-                  "MAE": 0.079353470754621236,
-                  "RSR": 0.46399405857451487
+                  "Slope": 0.80735019372931927,
+                  "Intercept": 0.12994499648023516,
+                  "SEslope": 0.026854067363372314,
+                  "SEintercept": 0.021152288188941337,
+                  "R2": 0.79435177396810908,
+                  "RMSE": 0.099133582807167775,
+                  "NSE": 0.7886302380847704,
+                  "ME": -0.016004027015834251,
+                  "MAE": 0.077249326244149014,
+                  "RSR": 0.45877459316187397
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Leaf.CoverTotal",
                   "n": 120,
-                  "Slope": 0.65855830878558719,
-                  "Intercept": 0.28932064117106593,
-                  "SEslope": 0.039261257060238842,
-                  "SEintercept": 0.0275623491913512,
-                  "R2": 0.70452614607364961,
-                  "RMSE": 0.12715704043805742,
-                  "NSE": 0.61573951927267456,
-                  "ME": 0.060081293365103726,
-                  "MAE": 0.09434067042595129,
-                  "RSR": 0.617299206264351
+                  "Slope": 0.61711868594756281,
+                  "Intercept": 0.34346271941500961,
+                  "SEslope": 0.0416276272821972,
+                  "SEintercept": 0.02922359814916119,
+                  "R2": 0.65065281838182676,
+                  "RMSE": 0.14912327711230178,
+                  "NSE": 0.47151121269306939,
+                  "ME": 0.086401367568104778,
+                  "MAE": 0.10664330353086049,
+                  "RSR": 0.72393695449215245
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Leaf.LAI",
                   "n": 387,
-                  "Slope": 0.57248916849383424,
-                  "Intercept": 1.026613852549308,
-                  "SEslope": 0.032275243316823882,
-                  "SEintercept": 0.087785273095202523,
-                  "R2": 0.4497064926393709,
-                  "RMSE": 0.91771519960808023,
-                  "NSE": 0.41598995786129667,
-                  "ME": -0.01669901016488165,
-                  "MAE": 0.67819936836782591,
-                  "RSR": 0.76321751307368191
+                  "Slope": 0.56652110994866023,
+                  "Intercept": 1.0460689211963548,
+                  "SEslope": 0.032073597784748414,
+                  "SEintercept": 0.087236818419651072,
+                  "R2": 0.4476226022159131,
+                  "RMSE": 0.91775144747603887,
+                  "NSE": 0.41594382255271445,
+                  "ME": -0.011808606987653097,
+                  "MAE": 0.67260616386050609,
+                  "RSR": 0.76324765859992949
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Leaf.Live.N",
                   "n": 304,
-                  "Slope": 0.67798393349431019,
-                  "Intercept": 2.1241858061801318,
-                  "SEslope": 0.036309104833706932,
-                  "SEintercept": 0.23257654895684754,
-                  "R2": 0.53585910430148886,
-                  "RMSE": 1.996457500451194,
-                  "NSE": 0.4889618928989492,
-                  "ME": 0.267897192323637,
-                  "MAE": 1.5007308252091935,
-                  "RSR": 0.71369255334220294
+                  "Slope": 0.65638358050776369,
+                  "Intercept": 2.1811507537960342,
+                  "SEslope": 0.036478447714788621,
+                  "SEintercept": 0.23366126814925858,
+                  "R2": 0.51739808474762472,
+                  "RMSE": 2.0237059143968668,
+                  "NSE": 0.47491701131488351,
+                  "ME": 0.2003450941308989,
+                  "MAE": 1.5277096430182229,
+                  "RSR": 0.72343330170224407
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Leaf.Live.Wt",
-                  "n": 387,
-                  "Slope": 0.78280160701377777,
-                  "Intercept": 69.037383971508845,
-                  "SEslope": 0.041711312165980986,
-                  "SEintercept": 6.9112652173297269,
-                  "R2": 0.47775731696601786,
-                  "RMSE": 68.463785353964681,
-                  "NSE": 0.0031241641573742651,
-                  "ME": 36.275590517340042,
-                  "MAE": 52.101124375950334,
-                  "RSR": 0.99714589167787315
+                  "n": 389,
+                  "Slope": 0.76405870757152994,
+                  "Intercept": 71.703108545983255,
+                  "SEslope": 0.041732231770657879,
+                  "SEintercept": 6.904439655819302,
+                  "R2": 0.46414092458339384,
+                  "RMSE": 68.78920185857163,
+                  "NSE": -0.0084872341563762,
+                  "ME": 36.17038287142708,
+                  "MAE": 52.824946447298416,
+                  "RSR": 1.002943030279541
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Leaf.PlantAppearedGreenLeafNo",
                   "n": 207,
-                  "Slope": 1.0799309541512638,
-                  "Intercept": 1.659244751897301,
-                  "SEslope": 0.036839241182161357,
-                  "SEintercept": 0.81411360890300577,
-                  "R2": 0.80739437970535655,
-                  "RMSE": 4.6681778091639758,
-                  "NSE": 0.41041084045435594,
-                  "ME": 3.3574879227053134,
-                  "MAE": 3.6106280193236717,
-                  "RSR": 0.76599014532580312
+                  "Slope": 1.0943425304804528,
+                  "Intercept": 1.5028094248645765,
+                  "SEslope": 0.037381947167923077,
+                  "SEintercept": 0.82610691588935248,
+                  "R2": 0.80696866471531536,
+                  "RMSE": 4.8185029847964964,
+                  "NSE": 0.37182742068679664,
+                  "ME": 3.5072463768115929,
+                  "MAE": 3.7043478260869573,
+                  "RSR": 0.79065664429738
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Petiole.Live.N",
                   "n": 304,
-                  "Slope": 0.42924905002896069,
-                  "Intercept": 1.5628857044971676,
-                  "SEslope": 0.036908075245068485,
-                  "SEintercept": 0.1055008148300375,
-                  "R2": 0.3093386082215549,
-                  "RMSE": 1.2592216308775523,
-                  "NSE": 0.250979734792112,
-                  "ME": 0.15856820031373503,
-                  "MAE": 0.98442683937745368,
-                  "RSR": 0.86403494301824757
+                  "Slope": 0.42007924717177353,
+                  "Intercept": 1.5440077403592216,
+                  "SEslope": 0.03617825360325249,
+                  "SEintercept": 0.10341463782457383,
+                  "R2": 0.30864606899003388,
+                  "RMSE": 1.2499799368115059,
+                  "NSE": 0.26193382606012172,
+                  "ME": 0.117128180584091,
+                  "MAE": 0.9719299195097626,
+                  "RSR": 0.8576936076965348
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Petiole.Live.Wt",
-                  "n": 387,
-                  "Slope": 0.56641735770898316,
-                  "Intercept": 83.245608088817036,
-                  "SEslope": 0.031632007071632384,
-                  "SEintercept": 4.79145966957041,
-                  "R2": 0.45439709933609007,
-                  "RMSE": 63.04842097861264,
-                  "NSE": 0.30550150126952635,
-                  "ME": 26.347098539252357,
-                  "MAE": 52.068822793415308,
-                  "RSR": 0.83228836887602375
+                  "n": 389,
+                  "Slope": 0.57514615947723291,
+                  "Intercept": 69.370256370161428,
+                  "SEslope": 0.030009452024340369,
+                  "SEintercept": 4.5398865858878112,
+                  "R2": 0.48695268907251343,
+                  "RMSE": 56.596035305561408,
+                  "NSE": 0.43817614052118559,
+                  "ME": 13.675601238370625,
+                  "MAE": 44.357504904422633,
+                  "RSR": 0.74858505342084536
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Phenology.Stage",
                   "n": 16,
-                  "Slope": 1.1979082090919109,
-                  "Intercept": -0.36013417901219835,
-                  "SEslope": 0.02156093735091847,
-                  "SEintercept": 0.095515195815696174,
-                  "R2": 0.99548507042976953,
-                  "RMSE": 0.550187440758705,
-                  "NSE": 0.80626801922008728,
-                  "ME": 0.48097570962842195,
-                  "MAE": 0.48097570962842195,
-                  "RSR": 0.42617335907018883
+                  "Slope": 1.197895596591793,
+                  "Intercept": -0.36006481026155068,
+                  "SEslope": 0.021560549384785469,
+                  "SEintercept": 0.095513477121348139,
+                  "R2": 0.99548513753528067,
+                  "RMSE": 0.55019380213061175,
+                  "NSE": 0.80626353926211913,
+                  "ME": 0.48099147525356889,
+                  "MAE": 0.48099147525356889,
+                  "RSR": 0.42617828656767964
+                },
+                {
+                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "Name": "FodderBeet.SCS",
+                  "n": 2,
+                  "Slope": 1.0625688095365715,
+                  "Intercept": -325.1219822568321,
+                  "SEslope": 0.0,
+                  "SEintercept": 0.0,
+                  "R2": 1.0000000000000278,
+                  "RMSE": 258.90074371440647,
+                  "NSE": -6.1980021043112883,
+                  "ME": -258.83032855283449,
+                  "MAE": 258.83032855283449,
+                  "RSR": 1.8971033319657746
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.StorageRoot.Live.N",
                   "n": 304,
-                  "Slope": 0.9478221921468315,
-                  "Intercept": -1.226643244742867,
-                  "SEslope": 0.032246785267476694,
-                  "SEintercept": 0.49886449089955154,
-                  "R2": 0.74098033799122587,
-                  "RMSE": 5.0047264519025854,
-                  "NSE": 0.62920728079406862,
-                  "ME": -1.9105044467048735,
-                  "MAE": 3.8634679430892294,
-                  "RSR": 0.60792516506047556
+                  "Slope": 0.96895925816472317,
+                  "Intercept": -1.0074251133041958,
+                  "SEslope": 0.035160587474979327,
+                  "SEintercept": 0.54394161851927258,
+                  "R2": 0.7154833497697064,
+                  "RMSE": 5.2235444591611842,
+                  "NSE": 0.59607466004967979,
+                  "ME": -1.4142562910531824,
+                  "MAE": 3.9769029782910095,
+                  "RSR": 0.63450503400222746
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.StorageRoot.Live.Wt",
-                  "n": 387,
-                  "Slope": 0.83907094941692673,
-                  "Intercept": 47.190782424775534,
-                  "SEslope": 0.019315139248882004,
-                  "SEintercept": 26.182617337638249,
-                  "R2": 0.83055542606579036,
-                  "RMSE": 325.06587600808882,
-                  "NSE": 0.79307710688450306,
-                  "ME": -138.18175863254751,
-                  "MAE": 246.611300006121,
-                  "RSR": 0.45429969033355322
+                  "n": 389,
+                  "Slope": 0.87434177208017094,
+                  "Intercept": 106.10770835392407,
+                  "SEslope": 0.021149131251671015,
+                  "SEintercept": 28.726129660004531,
+                  "R2": 0.81537484120071624,
+                  "RMSE": 312.91131331739734,
+                  "NSE": 0.80812077254697967,
+                  "ME": -39.058676685420465,
+                  "MAE": 235.21286208171756,
+                  "RSR": 0.4374768161371656
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.Structure.LeafTipsAppeared",
-                  "n": 295,
-                  "Slope": 0.916918639438606,
-                  "Intercept": 6.1462583308381227,
-                  "SEslope": 0.02409048705533498,
-                  "SEintercept": 0.87937095263505094,
-                  "R2": 0.83177097102992426,
-                  "RMSE": 7.60798794027579,
-                  "NSE": 0.77803078634290657,
-                  "ME": 3.4264468300859461,
-                  "MAE": 4.8528490043234083,
-                  "RSR": 0.47033687463848339
+                  "n": 207,
+                  "Slope": 0.97882068303750991,
+                  "Intercept": 0.70262352451711507,
+                  "SEslope": 0.010094641468258355,
+                  "SEintercept": 0.404815230910346,
+                  "R2": 0.9786615961870494,
+                  "RMSE": 2.493681629120351,
+                  "NSE": 0.97864662559055471,
+                  "ME": -0.06597081858543169,
+                  "MAE": 1.9668245504969444,
+                  "RSR": 0.14577454514191443
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "FodderBeet.TotalDead.N",
                   "n": 98,
-                  "Slope": 2.5013759057937133,
-                  "Intercept": 0.23230775391453129,
-                  "SEslope": 0.17242627806432204,
-                  "SEintercept": 0.26995595876484163,
-                  "R2": 0.686736227080645,
-                  "RMSE": 3.0141267926693884,
-                  "NSE": -8.8058886647257282,
-                  "ME": 2.0862005943236861,
-                  "MAE": 2.1834151847559156,
-                  "RSR": 3.1154178814904046
+                  "Slope": 2.4888174780264478,
+                  "Intercept": 0.19877953301142037,
+                  "SEslope": 0.1721478538682627,
+                  "SEintercept": 0.26952004915967992,
+                  "R2": 0.68526407021842184,
+                  "RMSE": 2.9731205104022269,
+                  "NSE": -8.54089132327263,
+                  "ME": 2.0371652780724472,
+                  "MAE": 2.1392205066590471,
+                  "RSR": 3.0730335646331111
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -6567,7 +6582,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalWt",
                           "Children": [
                             {
@@ -6663,7 +6678,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRootWt",
                           "Children": [
                             {
@@ -6759,7 +6774,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LeafWt",
                           "Children": [
                             {
@@ -6855,7 +6870,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PetioleWt",
                           "Children": [
                             {
@@ -6961,7 +6976,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGround_N",
                           "Children": [
                             {
@@ -7057,7 +7072,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_N",
                           "Children": [
                             {
@@ -7153,7 +7168,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_N",
                           "Children": [
                             {
@@ -7249,7 +7264,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_N",
                           "Children": [
                             {
@@ -7355,7 +7370,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -7451,7 +7466,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LightInterception",
                           "Children": [
                             {
@@ -9666,7 +9681,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGroundWt",
                           "Children": [
                             {
@@ -9762,7 +9777,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRootWt",
                           "Children": [
                             {
@@ -9858,7 +9873,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LeafWt",
                           "Children": [
                             {
@@ -9954,7 +9969,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PetioleWt",
                           "Children": [
                             {
@@ -10060,7 +10075,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -10156,7 +10171,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LightInterception",
                           "Children": [
                             {
@@ -10262,7 +10277,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGround_N",
                           "Children": [
                             {
@@ -10358,7 +10373,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_N",
                           "Children": [
                             {
@@ -10454,7 +10469,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_N",
                           "Children": [
                             {
@@ -10550,7 +10565,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_N",
                           "Children": [
                             {
@@ -12844,12 +12859,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LeafNumber",
                           "Children": [
                             {
@@ -12940,12 +12955,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "GreenLeafNumber",
                           "Children": [
                             {
@@ -13036,12 +13051,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "SenescedLeafNo",
                           "Children": [
                             {
@@ -13132,12 +13147,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -13228,12 +13243,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LightInterception",
                           "Children": [
                             {
@@ -13733,7 +13748,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
@@ -13836,7 +13851,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
@@ -13939,7 +13954,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
@@ -14042,7 +14057,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
@@ -14155,12 +14170,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_NConc",
                           "Children": [
                             {
@@ -14251,12 +14266,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_NConc",
                           "Children": [
                             {
@@ -14347,12 +14362,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_NConc",
                           "Children": [
                             {
@@ -14443,12 +14458,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Dead_NConc",
                           "Children": [
                             {
@@ -16873,12 +16888,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -17362,7 +17377,7 @@
                               "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             },
                             {
@@ -19665,7 +19680,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -19699,7 +19714,7 @@
                               "Filter": null,
                               "Name": "Pred",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19729,7 +19744,7 @@
                               "Filter": null,
                               "Name": "Obs",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -19761,7 +19776,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -19795,7 +19810,7 @@
                               "Filter": null,
                               "Name": "Pred",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19825,7 +19840,7 @@
                               "Filter": null,
                               "Name": "Obs",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -19857,7 +19872,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -19891,7 +19906,7 @@
                               "Filter": null,
                               "Name": "Pred",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19921,103 +19936,7 @@
                               "Filter": null,
                               "Name": "Obs",
                               "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 2,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "DisabledSeries": [],
-                          "Name": "NLeaching",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 2,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": "Irr",
-                              "FactorToVaryLines": "Nit",
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "Report",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "Soil.SoilNitrogen.NLeach60cm",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
-                              "Cumulative": true,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "At60cm",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 2,
-                              "ColourArgb": -2793984,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": "Irr",
-                              "FactorToVaryLines": "Nit",
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "FRNLReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "Soil.SoilNitrogen.NLeaching",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
-                              "Cumulative": true,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Bottom",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -20043,7 +19962,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -20059,7 +19978,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Inputs",
                               "Children": [
                                 {
@@ -20088,7 +20007,7 @@
                                   "Filter": null,
                                   "Name": "Rain",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20118,7 +20037,7 @@
                                   "Filter": null,
                                   "Name": "Irrigation",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -20139,7 +20058,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -20155,7 +20074,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Outputs",
                               "Children": [
                                 {
@@ -20184,7 +20103,7 @@
                                   "Filter": null,
                                   "Name": "Evaporation",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20214,7 +20133,7 @@
                                   "Filter": null,
                                   "Name": "Transpiration",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20244,7 +20163,7 @@
                                   "Filter": null,
                                   "Name": "Drainage",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20274,7 +20193,7 @@
                                   "Filter": null,
                                   "Name": "Runoff",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -20305,7 +20224,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20321,7 +20240,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer1",
                                       "Children": [
                                         {
@@ -20350,7 +20269,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20380,12 +20299,12 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -20401,7 +20320,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20417,7 +20336,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer2",
                                       "Children": [
                                         {
@@ -20446,7 +20365,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20476,12 +20395,12 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -20497,7 +20416,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20513,7 +20432,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer3",
                                       "Children": [
                                         {
@@ -20542,7 +20461,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20572,12 +20491,12 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -20593,7 +20512,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20609,7 +20528,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer4",
                                       "Children": [
                                         {
@@ -20638,7 +20557,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20668,12 +20587,12 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -20689,7 +20608,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20705,7 +20624,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer5",
                                       "Children": [
                                         {
@@ -20734,7 +20653,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20764,12 +20683,12 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -20785,7 +20704,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20801,7 +20720,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer6",
                                       "Children": [
                                         {
@@ -20830,7 +20749,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20860,12 +20779,12 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -20881,7 +20800,7 @@
                                           "Minimum": "NaN",
                                           "Maximum": "NaN",
                                           "Interval": "NaN",
-                                          "DateTimeAxis": false,
+                                          "DateTimeAxis": true,
                                           "CrossesAtZero": false
                                         },
                                         {
@@ -20897,7 +20816,7 @@
                                         }
                                       ],
                                       "LegendPosition": 0,
-                                      "DisabledSeries": null,
+                                      "DisabledSeries": [],
                                       "Name": "Layer7",
                                       "Children": [
                                         {
@@ -20926,7 +20845,7 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Pred",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -20956,22 +20875,22 @@
                                           "Filter": "[Irr]='Nil'",
                                           "Name": "Obs",
                                           "Children": [],
-                                          "IncludeInDocumentation": true,
+                                          "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -20987,7 +20906,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -21041,7 +20960,7 @@
                                   "Filter": null,
                                   "Name": "Pred",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -21071,7 +20990,7 @@
                                   "Filter": null,
                                   "Name": "Obs",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -21081,178 +21000,12 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Folder, Models",
-                          "ShowPageOfGraphs": true,
-                          "Name": "PredObs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 1,
-                              "DisabledSeries": null,
-                              "Name": "ProfileWater",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Nit",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 0,
-                                  "MarkerSize": 1,
-                                  "Line": 4,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "PredictedObserved",
-                                  "XFieldName": "Observed.Soil.SoilWater.ProfileWater",
-                                  "YFieldName": "Predicted.Soil.SoilWater.ProfileWater",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": true,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "PO",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Graph.Regression, Models",
-                                      "ForEachSeries": false,
-                                      "showOneToOne": true,
-                                      "showEquation": true,
-                                      "Name": "Regression",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 1,
-                              "DisabledSeries": null,
-                              "Name": "ProfileSoilN",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Nit",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 0,
-                                  "MarkerSize": 1,
-                                  "Line": 4,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "PredictedObserved",
-                                  "XFieldName": "Observed.Soil.SoilNitrogen.ProfileMineralN",
-                                  "YFieldName": "Predicted.Soil.SoilNitrogen.ProfileMineralN",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": true,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "PO",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Graph.Regression, Models",
-                                      "ForEachSeries": false,
-                                      "showOneToOne": true,
-                                      "showEquation": true,
-                                      "Name": "Regression",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21273,7 +21026,7 @@
                               "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             },
                             {
@@ -28587,12 +28340,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -28698,7 +28451,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -28794,7 +28547,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -28890,7 +28643,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -28970,7 +28723,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -28986,7 +28739,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -29092,7 +28845,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "AboveGround_N",
                               "Children": [
                                 {
@@ -29188,7 +28941,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRoot_N",
                               "Children": [
                                 {
@@ -29284,7 +29037,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Leaf_N",
                               "Children": [
                                 {
@@ -29380,7 +29133,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Petiole_N",
                               "Children": [
                                 {
@@ -30387,12 +30140,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -30498,7 +30251,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -30594,7 +30347,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -30690,7 +30443,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -30770,7 +30523,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -30786,7 +30539,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -30892,7 +30645,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "AboveGround_N",
                               "Children": [
                                 {
@@ -30988,7 +30741,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRoot_N",
                               "Children": [
                                 {
@@ -31084,7 +30837,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Leaf_N",
                               "Children": [
                                 {
@@ -31180,7 +30933,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Petiole_N",
                               "Children": [
                                 {
@@ -42228,12 +41981,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -42339,7 +42092,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "AboveGround_N",
                               "Children": [
                                 {
@@ -42445,7 +42198,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -42541,7 +42294,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -42637,7 +42390,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -42733,7 +42486,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -43552,12 +43305,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -43663,7 +43416,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "AboveGround_N",
                               "Children": [
                                 {
@@ -43769,7 +43522,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -43865,7 +43618,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -43961,7 +43714,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -44057,7 +43810,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -44920,12 +44673,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -45031,7 +44784,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -45127,7 +44880,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -45223,7 +44976,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -45319,7 +45072,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -46135,12 +45888,12 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -46246,7 +45999,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "TotalWt",
                               "Children": [
                                 {
@@ -46342,7 +46095,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRootWt",
                               "Children": [
                                 {
@@ -46438,7 +46191,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -46534,7 +46287,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "PetioleWt",
                               "Children": [
                                 {
@@ -47986,7 +47739,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalWt",
                           "Children": [
                             {
@@ -48082,7 +47835,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalN",
                           "Children": [
                             {
@@ -50228,7 +49981,7 @@
                     }
                   ],
                   "LegendPosition": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "TotalWt",
                   "Children": [
                     {
@@ -51596,12 +51349,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -51688,7 +51441,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalWt",
                           "Children": [
                             {
@@ -51754,7 +51507,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Soluble Carbohydrates",
                           "Children": [
                             {
@@ -53857,12 +53610,12 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -53949,7 +53702,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalWt",
                           "Children": [
                             {
@@ -55421,214 +55174,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowPageOfGraphs": true,
-              "Name": "Enviroment",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": "",
-                      "Inverted": false,
-                      "Minimum": 0.0,
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": "Date",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "DisabledSeries": [],
-                  "Name": "AW",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "ProfileWater",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Simulated",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": "",
-                      "Inverted": false,
-                      "Minimum": 0.0,
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": "Date",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "DisabledSeries": [],
-                  "Name": "FW",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Fw",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Simulated",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": "",
-                      "Inverted": false,
-                      "Minimum": 0.0,
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": "Date",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "DisabledSeries": [],
-                  "Name": "FN",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Fn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Simulated",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
