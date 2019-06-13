@@ -150,6 +150,14 @@ namespace Models.AgPasture
             get { return Height; }
         }
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        [Description("The depth of the canopy")]
+        [Units("mm")]
+        public double Width
+        {
+            get { return 0; }
+        }
+
         // TODO: have to verify how this works (what exactly is needed by MicroClimate
         /// <summary>Plant growth limiting factor, supplied to MicroClimate for calculating potential transpiration.</summary>
         [Description("General growth limiting factor (for MicroClimate)")]
