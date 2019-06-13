@@ -8837,18 +8837,15 @@
           "VariableNames": [
             "[Clock].Today as Date",
             "[Clock].Today.DayOfYear as DayOfYear",
-            "[MicroClimate].net_radn",
             "[Weather].Radn as SolarRadiation",
+            "[MicroClimate].NetRadiation",
             "[RedClover].Leaf.RadIntTot as InterceptedRadiation",
             "[Weather].MeanT",
+            "",
             "[Weather].Rain as Rainfall",
             "[Irrigation].IrrigationApplied as IrrigationApplied",
-            "",
-            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.TargetAboveGroundPropValue",
-            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.TargetAboveGroundPropValue.Value()",
-            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.TargetAboveGroundPropNoVal",
-            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand.TargetAboveGroundPropNoVal.Value()",
-            "",
+            "[MicroClimate].PrecipitationInterception as PrecipitationInterception",
+            "[MicroClimate].PetTotal",
             "[Soil].SoilWater.Eo as Eo",
             "[Soil].SoilWater.Es as Evaporation",
             "[RedClover].Leaf.Transpiration as Transpiration",
@@ -10213,7 +10210,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "StartDate": "2014-02-01T00:00:00",
-                      "EndDate": "2016-12-31T00:00:00",
+                      "EndDate": "2016-11-30T00:00:00",
                       "Name": "clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -11431,6 +11428,12 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "2016-10-03",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Cut\", amountDM: 40, amountType: \"ResidualDM\", duration: 1)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2016-11-11",
                                   "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Cut\", amountDM: 40, amountType: \"ResidualDM\", duration: 1)",
                                   "Enabled": true
                                 }
@@ -27190,7 +27193,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This simulation setup was based on a dataset supplied by Hamish Brown, which was collected for his PhD thesis.  The trial was conducted at the Iversen field of Lincoln University, in Lincoln, New Zealand between 1996 and 2002.  The work was focused on understanding water use and its interaction with yield of dryland and irrigated forage crops (lucerne, chicory and red clover were used).  \r\nThe trial was implemented in spring of 1996, after conventional cultivation, including subsoiling and liming.  Red clover (cultivar '*Pawera*') was sown at a rate of 10.0 kg/ha and was grazed regularly by sheep.  There were annual applications of superphosphate but no N fertilisation (except excreta from grazing sheep).  The treatments consisted of  irrigation versus dryland conditions.  The major parameters analysed were herbage growth and yield, population, nutritive characteristics, and water utilisation.  \r\nSoil data was obtained from measurements presented by Brown (2004) and complemented by S-MAP database from Landcare Research Limited. Weather data was obtained from the nearby Broadfields met station in Lincoln. \r\n\r\nReferences:  \r\nBrown, H.E. 2004. Understanding yield and water use of dryland forage crops in New Zealand. PhD thesis, Lincoln University, Lincoln, NZ. 288 p.  \r\nBrown, H.E.; Moot, D.J.; & Pollock, K.M. 2003. Long term growth rates and water extraction patterns of dryland chicory, lucerne and red clover. Legumes for dryland pastures. New Zealand Grassland Association, Research Practice Series, 11:91-99.  \r\nBrown, H.E.; Moot, D.J.; & Pollock, K.M. 2005. Herbage production, persistence, nutritive characteristics and water use of perennial forages grown over 6 years on a Wakanui silt loam. New Zealand Journal of Agricultural Research, 48(4):423-439.\r\n",
+                  "Text": "This simulation setup was based on a dataset supplied by Hamish Brown, which was collected for his PhD thesis.  The trial was conducted at the Iversen field of Lincoln University, in Lincoln, New Zealand between 1996 and 2002.  The work was focused on understanding water use and its interaction with yield of dryland and irrigated forage crops (lucerne, chicory and red clover were used).  \r\nThe trial was implemented in spring of 1996, after conventional cultivation, including subsoiling and liming.  Red clover (cultivar '*Pawera*') was sown at a rate of 10.0 kg/ha and was grazed regularly by sheep.  There were annual applications of superphosphate but no N fertilisation (except excreta from grazing sheep).  The treatments consisted of irrigation versus dryland conditions.  The major parameters analysed were herbage growth and yield, population, nutritive characteristics, and water utilisation.  N concentration was infered from the few measurements of crude protein and interploated over time using a sinusoidal function; these values are for reference only and cannot be used to actually validate the model.  \r\nSoil data was obtained from measurements presented by Brown (2004) and complemented by S-MAP database from Landcare Research Limited. Weather data was obtained from the nearby Broadfields met station in Lincoln. \r\n\r\nReferences:  \r\nBrown, H.E. 2004. Understanding yield and water use of dryland forage crops in New Zealand. PhD thesis, Lincoln University, Lincoln, NZ. 288 p.  \r\nBrown, H.E.; Moot, D.J.; & Pollock, K.M. 2003. Long term growth rates and water extraction patterns of dryland chicory, lucerne and red clover. Legumes for dryland pastures. New Zealand Grassland Association, Research Practice Series, 11:91-99.  \r\nBrown, H.E.; Moot, D.J.; & Pollock, K.M. 2005. Herbage production, persistence, nutritive characteristics and water use of perennial forages grown over 6 years on a Wakanui silt loam. New Zealand Journal of Agricultural Research, 48(4):423-439.\r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -27386,7 +27389,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "StartDate": "1996-09-20T00:00:00",
-                      "EndDate": "2002-07-05T00:00:00",
+                      "EndDate": "2000-06-30T00:00:00",
                       "Name": "clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -27441,237 +27444,9 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1997-02-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 10)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1997-06-05",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1997-10-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1997-11-19",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1997-12-23",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 45, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-02-03",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-03-12",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-05-29",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-09-29",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 11)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-11-11",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-12-15",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 35, amountType: \"ResidualDM\", duration: 8)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-01-11",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 35, amountType: \"ResidualDM\", duration: 9)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-02-17",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 8)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-04-09",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 25, amountType: \"ResidualDM\", duration: 14)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-06-24",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 8, amountType: \"ResidualDM\", duration: 4)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-09-29",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 8)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-11-09",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 40, amountType: \"ResidualDM\", duration: 9)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-12-20",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 45, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2000-01-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 40, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2000-03-13",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2000-05-25",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 5)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2000-09-22",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 10)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2000-11-10",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 40, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2000-12-19",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 9)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-01-24",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-03-11",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 7)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-05-02",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 15, amountType: \"ResidualDM\", duration: 5)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-06-24",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 11)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-10-03",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 8)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-11-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 40, amountType: \"ResidualDM\", duration: 6)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2001-12-22",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 45, amountType: \"ResidualDM\", duration: 9)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2002-02-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 10)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2002-04-03",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 15)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2002-06-24",
-                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 12)",
-                                  "Enabled": true
-                                }
-                              ],
-                              "Name": "DefoliationSchedule",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Operations, Models",
                               "Operation": null,
                               "Name": "IrrigationSchedule",
                               "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"This script is set in 'Replacements':\")]\r\n        public string Message { get; set; }\r\n    }\r\n}\r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "Message",
-                                  "Value": ""
-                                }
-                              ],
-                              "Name": "DefoliationManager",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -28089,6 +27864,156 @@
                                 }
                               ],
                               "Name": "ExcretaSchedule",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"This script is set in 'Replacements':\")]\r\n        public string Message { get; set; }\r\n    }\r\n}\r\n",
+                              "Parameters": [
+                                {
+                                  "Key": "Message",
+                                  "Value": ""
+                                }
+                              ],
+                              "Name": "DefoliationManager",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1997-02-21",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 10)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1997-06-05",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1997-10-06",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 7)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1997-11-19",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 7)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1997-12-23",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 45, amountType: \"ResidualDM\", duration: 7)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-02-03",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 50, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-03-12",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-05-29",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-09-29",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 11)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-11-11",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-12-15",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 35, amountType: \"ResidualDM\", duration: 8)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-01-11",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 35, amountType: \"ResidualDM\", duration: 9)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-02-17",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 8)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-04-09",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 25, amountType: \"ResidualDM\", duration: 14)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-06-24",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 8, amountType: \"ResidualDM\", duration: 4)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-09-29",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 20, amountType: \"ResidualDM\", duration: 8)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-11-09",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 40, amountType: \"ResidualDM\", duration: 9)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-12-20",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 45, amountType: \"ResidualDM\", duration: 7)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2000-01-21",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 40, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2000-03-13",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 30, amountType: \"ResidualDM\", duration: 6)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2000-05-25",
+                                  "Action": "[DefoliationManager].Script.Defoliate(defoliationType: \"Graze\", amountDM: 10, amountType: \"ResidualDM\", duration: 5)",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "DefoliationSchedule",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -41549,7 +41474,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "HarvestedWt",
+                          "YFieldName": "RotationHarvestedWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -41579,7 +41504,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Observed",
                           "XFieldName": "Date",
-                          "YFieldName": "HarvestedWt",
+                          "YFieldName": "RotationHarvestedWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -41644,8 +41569,8 @@
                           "LineThickness": 0,
                           "Checkpoint": "Current",
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.HarvestedWt",
-                          "YFieldName": "Predicted.HarvestedWt",
+                          "XFieldName": "Observed.RotationHarvestedWt",
+                          "YFieldName": "Predicted.RotationHarvestedWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -41927,7 +41852,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Observed",
                           "XFieldName": "Date",
-                          "YFieldName": "HerbageNConc",
+                          "YFieldName": "AvgHerbageNConc",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -41937,258 +41862,6 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "DisabledSeries": [],
-                      "Name": "HerbageNc_PO",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 1,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.HerbageNConc",
-                          "YFieldName": "Predicted.HerbageNConc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "PO",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": "Dry Matter (g/m2)",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "DisabledSeries": [],
-                      "Name": "NTakenOff",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16747854,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 1,
-                          "Line": 2,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "Report",
-                          "XFieldName": "Date",
-                          "YFieldName": "NTakenOff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 1,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "Observed",
-                          "XFieldName": "Date",
-                          "YFieldName": "NTakenOff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "DisabledSeries": [],
-                      "Name": "NTakenOff_PO",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 1,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.NTakenOff",
-                          "YFieldName": "Predicted.NTakenOff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "PO",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -42631,7 +42304,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Date",
-                          "YFieldName": "HarvestedWt",
+                          "YFieldName": "RotationHarvestedWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -42661,7 +42334,7 @@
                           "Checkpoint": "Current",
                           "TableName": "ObservedMeans",
                           "XFieldName": "Date",
-                          "YFieldName": "HarvestedWt",
+                          "YFieldName": "RotationHarvestedWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -42726,8 +42399,8 @@
                           "LineThickness": 0,
                           "Checkpoint": "Current",
                           "TableName": "PredictedObservedMeans",
-                          "XFieldName": "Observed.HarvestedWt",
-                          "YFieldName": "Predicted.HarvestedWt",
+                          "XFieldName": "Observed.RotationHarvestedWt",
+                          "YFieldName": "Predicted.RotationHarvestedWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -43009,7 +42682,7 @@
                           "Checkpoint": "Current",
                           "TableName": "ObservedMeans",
                           "XFieldName": "Date",
-                          "YFieldName": "HerbageNConc",
+                          "YFieldName": "AverageHerbageNConc",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -43019,258 +42692,6 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "DisabledSeries": [],
-                      "Name": "HerbageNc_PO",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 1,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "PredictedObservedMeans",
-                          "XFieldName": "Observed.HerbageNConc",
-                          "YFieldName": "Predicted.HerbageNConc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "PO",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": "Dry Matter (g/m2)",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "DisabledSeries": [],
-                      "Name": "NTakenOff",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16747854,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 1,
-                          "Line": 2,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "Report",
-                          "XFieldName": "Date",
-                          "YFieldName": "NTakenOff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 1,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "ObservedMeans",
-                          "XFieldName": "Date",
-                          "YFieldName": "NTakenOff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "DisabledSeries": [],
-                      "Name": "NTakenOff_PO",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 1,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "PredictedObservedMeans",
-                          "XFieldName": "Observed.NTakenOff",
-                          "YFieldName": "Predicted.NTakenOff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "PO",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
