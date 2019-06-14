@@ -78,22 +78,8 @@ namespace Models.CLEM.Resources
         public double ConceptionRate(RuminantFemale female)
         {
             double rate = 0;
-            bool isConceptionReady;
-            if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
-            {
-                isConceptionReady = true;
-            }
-            else
-            {
-                double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
-                // calculate inter-parturition interval
-                currentIPI = Math.Max(currentIPI, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
-                double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
-                isConceptionReady = (female.Age >= ageNextConception);
-            }
 
-            // if first mating and of age or suffcient time since last birth/conception
-            if (isConceptionReady)
+            if (female.StandardReferenceWeight > 0)
             {
                 // generalised curve
                 switch (female.NumberOfBirths)
@@ -135,9 +121,8 @@ namespace Models.CLEM.Resources
                         break;
                 }
             }
+            rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;
         }
-
-
     }
 }
