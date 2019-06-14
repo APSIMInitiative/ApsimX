@@ -468,6 +468,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteCrop.png" />
