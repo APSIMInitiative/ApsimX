@@ -35,14 +35,6 @@ namespace Models.CLEM
         /// Amount added
         /// </summary>
         public double Loss { get; set; }
-        /// <summary>
-        /// Standardised amount removed
-        /// </summary>
-        public double GainStandardised { get; set; }
-        /// <summary>
-        /// Standardised amount added
-        /// </summary>
-        public double LossStandardised { get; set; }
 
         /// <summary>
         /// Object to sotre specific extra information such as cohort details

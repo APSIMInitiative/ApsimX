@@ -42,20 +42,6 @@ namespace Models.CLEM.Resources
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
-        /// <summary>
-        /// Global warming potential
-        /// </summary>
-        [Description("Global warming potential")]
-        [Required, GreaterThanEqualValue(0)]
-        public double GlobalWarmingPotential { get; set; }
-
-        /// <summary>
-        /// CO2 equivalents
-        /// </summary>
-        [XmlIgnore]
-        public double CO2Equivalents { get { return Amount * GlobalWarmingPotential; } }
-
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -111,7 +97,6 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     Gain = addAmount,
-                    GainStandardised = addAmount * GlobalWarmingPotential,
                     Activity = activity,
                     Reason = reason,
                     ResourceType = this
@@ -142,7 +127,6 @@ namespace Models.CLEM.Resources
             {
                 ResourceType = this,
                 Loss = amountRemoved,
-                LossStandardised = amountRemoved * GlobalWarmingPotential,
                 Activity = request.ActivityModel,
                 Reason = request.Reason
             };
@@ -173,8 +157,8 @@ namespace Models.CLEM.Resources
             html += "<div class=\"activityentry\">";
             html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
             html += "</div>";
-            html += "One unit of this is equivalent to <span class=\"setvalue\">" + this.GlobalWarmingPotential.ToString("0.#####") + "</span> CO<sub>2</sub>";
-            html += "</div>";
+            // the following line seems unneeded but may be part of wrapping divs
+            //            html += "</div>";
             return html;
         }
 
