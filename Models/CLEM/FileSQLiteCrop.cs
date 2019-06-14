@@ -143,18 +143,6 @@ namespace Models.CLEM
                     }
                 }
             }
-            set
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
-                }
-                else
-                {
-                    this.FileName = value;
-                }
-            }
         }
 
         /// <summary>
