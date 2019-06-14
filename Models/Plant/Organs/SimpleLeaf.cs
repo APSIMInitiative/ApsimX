@@ -163,6 +163,10 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get { return Math.Max(0,Height-BaseHeight); } }
 
+        /// <summary>The width of an individual plant</summary>
+        [Units("mm")]
+        public double Width { get; set; }
+
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         public double FRGR { get; set; }
@@ -222,6 +226,10 @@ namespace Models.PMF.Organs
         /// <summary>The height of the base of the canopy</summary>
         [Link(IsOptional = true)]
         IFunction BaseHeightFunction = null;
+        /// <summary>The with of a single plant</summary>
+        [Link(IsOptional = true)]
+        IFunction WidthFunction = null;
+
         /// <summary>The lai dead function</summary>
         [Link]
         IFunction LaiDeadFunction = null;
@@ -397,6 +405,10 @@ namespace Models.PMF.Organs
                     BaseHeight = 0;
                 else
                     BaseHeight = BaseHeightFunction.Value();
+                if (WidthFunction == null)
+                    Width = 0;
+                else
+                    Width = WidthFunction.Value();
                 LAIDead = LaiDeadFunction.Value();
             }
         }
