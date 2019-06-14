@@ -31,7 +31,7 @@
         private const int DefaultMaxSims = 50;
 
         /// <summary>The list of columns that we will hide from user.</summary>
-        private string[] hiddenColumns = new string[] { "Experiment", "Zone" };
+        private string[] hiddenColumns = new string[] { "Experiment", "Zone", "FolderName" };
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -129,7 +129,7 @@
         /// <summary>Get a list of all simulation descriptions (even disabled ones).</summary>
         private void GetAllSimulationDescriptionsFromExperiment()
         {
-            var savedDisabledSimulationNames = experiment.DisabledSimNames;
+            List<string> savedDisabledSimulationNames = experiment.DisabledSimNames;
             experiment.DisabledSimNames = null;
             simulationDescriptions = experiment.GenerateSimulationDescriptions();
             experiment.DisabledSimNames = savedDisabledSimulationNames;
