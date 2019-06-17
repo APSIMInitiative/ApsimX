@@ -75,6 +75,9 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets the canopy depth (mm)</summary>
         public double Depth { get { return 10000; } }
+        
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width{ get { return 0; } }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         [Units("0-1")]

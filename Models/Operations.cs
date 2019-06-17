@@ -56,6 +56,8 @@ namespace Models
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
+    [ValidParent(ParentType = typeof(Factorial.Factor))]
     public class Operations : Model
     {
         /// <summary>The clock</summary>
