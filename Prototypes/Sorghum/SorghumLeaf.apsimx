@@ -3378,103 +3378,10 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.PhaseLookup, Models",
-                          "Name": "ratioRootShoot",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "This is a straight lookup table not an lineaer relationship",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Emergence",
-                              "End": "FloralInitiation",
-                              "Name": "BetweenEmergenceAndFloralInit",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": "0-1",
-                                  "Name": "rootFraction",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "FloralInitiation",
-                              "End": "Flowering",
-                              "Name": "BetweenFloralInitAndFlowering",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.33,
-                                  "Units": "0-1",
-                                  "Name": "rootFraction",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Flowering",
-                              "End": "StartGrainFill",
-                              "Name": "BetweenFloweringAndGrainFill",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.087,
-                                  "Units": "0-1",
-                                  "Name": "rootFraction",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "StartGrainFill",
-                              "End": "HarvestRipe",
-                              "Name": "BetweenFloweringAndGrainFill1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": "0-1",
-                                  "Name": "rootFraction",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].RatioRootShoot",
+                          "Name": "RatioRootShoot",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -3933,6 +3840,108 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "RatioRootShoot",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This is a straight lookup table not an lineaer relationship",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "FloralInitiation",
+                      "Name": "BetweenEmergenceAndFloralInit",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": "0-1",
+                          "Name": "rootFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FloralInitiation",
+                      "End": "Flowering",
+                      "Name": "BetweenFloralInitAndFlowering",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.33,
+                          "Units": "0-1",
+                          "Name": "rootFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "StartGrainFill",
+                      "Name": "BetweenFloweringAndGrainFill",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.087,
+                          "Units": "0-1",
+                          "Name": "rootFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "StartGrainFill",
+                      "End": "HarvestRipe",
+                      "Name": "BetweenGrainFillAndHarvestRipe",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": "0-1",
+                          "Name": "rootFraction",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -4586,103 +4595,10 @@
                   "Name": "DMSupplyFixation",
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "ratioRootShoot",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "FloralInitiation",
-                          "Name": "BetweenEmergenceAndFloralInit",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 2.0,
-                              "Units": "0-1",
-                              "Name": "rootFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "FloralInitiation",
-                          "End": "Flowering",
-                          "Name": "BetweenFloralInitAndFlowering",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.33,
-                              "Units": "0-1",
-                              "Name": "rootFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "This is a straight lookup table not an lineaer relationship",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
-                          "End": "StartGrainFill",
-                          "Name": "BetweenFloweringAndGrainFill",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.087,
-                              "Units": "0-1",
-                              "Name": "rootFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "StartGrainFill",
-                          "End": "HarvestRipe",
-                          "Name": "BetweenGrainFillAndHarvestRipe",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": "0-1",
-                              "Name": "rootFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].RatioRootShoot",
+                      "Name": "RatioRootShoot",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
