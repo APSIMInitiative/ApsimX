@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
         {
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + //{font-family: sans-serif, Arial, Helvetica;  }" +
+                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
                 ".errorbanner {background-color:red !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
                 ".errorcontent {background-color:[ContError] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:red; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".warningbanner {background-color:orange !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +

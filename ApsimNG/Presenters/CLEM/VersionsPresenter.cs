@@ -45,7 +45,7 @@ namespace UserInterface.Presenters
         {
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + //{font-family: sans-serif, Arial, Helvetica;  }" +
+                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
                 ".messagebanner {background-color:CornflowerBlue !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; }" +
                 ".messagecontent {background-color:[Background] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
