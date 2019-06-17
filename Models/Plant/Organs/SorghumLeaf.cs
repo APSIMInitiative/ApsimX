@@ -956,13 +956,15 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Adjustment function for calculating leaf demand
+        /// Adjustment function for calculating leaf demand.
+        /// This should always be equal to -1 * structural N Demand.
         /// </summary>
         public double calculateClassicDemandDelta()
         {
             if (MathUtilities.IsNegative(Live.N))
                 throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
+            // Same as metabolic demand in new apsim.
             var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();

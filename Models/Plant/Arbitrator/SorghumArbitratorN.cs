@@ -68,10 +68,11 @@ namespace Models.PMF
             AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
             var nDemand = totalPlantNDemand - rootDemand;
+            double totalMetabolicDemand = BAT.MetabolicDemand[leafIndex] + BAT.MetabolicDemand[rachisIndex] + BAT.MetabolicDemand[stemIndex];
 
-            double leafProportion = MathUtilities.Divide(BAT.StructuralDemand[leafIndex] + BAT.MetabolicDemand[leafIndex] + leafAdjustment, nDemand, 0);
-            double rachisProportion = MathUtilities.Divide(BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex], nDemand, 0);
-            double stemProportion = MathUtilities.Divide(BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex], nDemand, 0);
+            double leafProportion = MathUtilities.Divide(BAT.MetabolicDemand[leafIndex], totalMetabolicDemand, 0);
+            double rachisProportion = MathUtilities.Divide(BAT.MetabolicDemand[rachisIndex], totalMetabolicDemand, 0);
+            double stemProportion = MathUtilities.Divide(BAT.MetabolicDemand[stemIndex], totalMetabolicDemand, 0);
 
             var leafAlloc = NotAllocated * leafProportion;
             var rachisAlloc = NotAllocated * rachisProportion;
