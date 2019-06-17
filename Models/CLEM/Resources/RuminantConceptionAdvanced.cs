@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public RuminantConceptionAdvanced()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
         /// <summary>

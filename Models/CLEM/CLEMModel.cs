@@ -157,7 +157,7 @@ namespace Models.CLEM
         {
             string overall = "activity";
             string extra = "";
-            double opacity = 1.0;
+            double opacity = 1;
 
             if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
