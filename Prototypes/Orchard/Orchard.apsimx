@@ -21183,8 +21183,8 @@
                         150.0,
                         750.0,
                         150.0,
-                        1850.0,
-                        250.0
+                        150.0,
+                        1950.0
                       ],
                       "BD": [
                         1.35,
@@ -21545,14 +21545,7 @@
                         0.0,
                         0.0
                       ],
-                      "SW": [
-                        0.313,
-                        0.302,
-                        0.236,
-                        0.215,
-                        0.1,
-                        0.1
-                      ],
+                      "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
@@ -21593,6 +21586,18 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.InitialWater, Models",
+                      "PercentMethod": 0,
+                      "FractionFull": 0.8,
+                      "DepthWetSoil": "NaN",
+                      "RelativeTo": null,
+                      "Name": "InitialWater",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -21628,7 +21633,7 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[Soil].SoilWater.SWmm",
-                    "[Soil].SoilWater.SWmm[5] + [Soil].SoilWater.SWmm[6] + [Soil].SoilWater.SWmm[7] + [Soil].SoilWater.SWmm[8] + [Soil].SoilWater.SWmm[9] as SW_belowRoots"
+                    "[Soil].SoilWater.SWmm[6] + [Soil].SoilWater.SWmm[7] + [Soil].SoilWater.SWmm[8] + [Soil].SoilWater.SWmm[9] + [Soil].SoilWater.SWmm[10] as SW_belowRoots"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -21804,7 +21809,7 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "",
-                    "[Soil].SoilWater.SWmm[5] + [Soil].SoilWater.SWmm[6] + [Soil].SoilWater.SWmm[7] + [Soil].SoilWater.SWmm[8] + [Soil].SoilWater.SWmm[9] as SW_belowRoots"
+                    "[Soil].SoilWater.SWmm[6] + [Soil].SoilWater.SWmm[7] + [Soil].SoilWater.SWmm[8] + [Soil].SoilWater.SWmm[9] + [Soil].SoilWater.SWmm[10] as SW_belowRoots"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -22080,8 +22085,8 @@
                         150.0,
                         750.0,
                         150.0,
-                        1850.0,
-                        250.0
+                        150.0,
+                        1950.0
                       ],
                       "BD": [
                         1.35,
@@ -22133,7 +22138,7 @@
                             0.12,
                             0.1,
                             0.05,
-                            0.08,
+                            0.05,
                             0.06
                           ],
                           "KL": [
@@ -22442,14 +22447,7 @@
                         0.0,
                         0.0
                       ],
-                      "SW": [
-                        0.313,
-                        0.302,
-                        0.236,
-                        0.215,
-                        0.1,
-                        0.1
-                      ],
+                      "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
@@ -22486,6 +22484,18 @@
                         150.0
                       ],
                       "Name": "OutputLayers",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.InitialWater, Models",
+                      "PercentMethod": 0,
+                      "FractionFull": 0.8,
+                      "DepthWetSoil": "NaN",
+                      "RelativeTo": null,
+                      "Name": "InitialWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -24156,7 +24166,56 @@
               "$type": "Models.Factorial.Factor, Models",
               "Specification": "[TreeInitialisation].Script.CultivarName = Grape_2Cane, Grape_4Cane",
               "Name": "TSys",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[TreeInitialisation].Script.CultivarName = Grape_2Cane",
+                    "[VineIrrigation]"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Grape_4Cane",
+                  "Children": [
+                    {
+                      "$type": "Models.Operations, Models",
+                      "Operation": null,
+                      "Name": "VineIrrigation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[TreeInitialisation].Script.CultivarName = Grape_4Cane",
+                    "[VineIrrigation]"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Grape_2Cane",
+                  "Children": [
+                    {
+                      "$type": "Models.Operations, Models",
+                      "Operation": null,
+                      "Name": "VineIrrigation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
