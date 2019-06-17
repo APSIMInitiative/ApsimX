@@ -999,7 +999,7 @@ namespace Models.PMF.Organs
                     return nProvided;
 
                 // take from decreasing dltLai 
-                if (MathUtilities.IsPositive(DltLAI))
+                if (!forLeaf && MathUtilities.IsPositive(DltLAI))
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
