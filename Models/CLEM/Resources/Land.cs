@@ -40,6 +40,18 @@ namespace Models.CLEM.Resources
         public double UnitsOfAreaToHaConversion { get; set; }
 
         /// <summary>
+        /// A method with argument to test
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <param name="intarg"></param>
+        /// <param name="doublearg"></param>
+        /// <returns></returns>
+        public string TestMethod(string txt, int intarg, double doublearg)
+        {
+            return "string:" + txt + "_int:"+intarg.ToString()+"_double:"+doublearg.ToString();
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Land()
