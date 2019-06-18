@@ -91,7 +91,7 @@ namespace Models
         private void Potential()
         {
             double h2ogef;
-            double[] prop_live_per_layer = new double[vLayers]; // Filling the arrays in case something gets skipped below. (In C#, initialised to 0)
+            double[] prop_live_per_layer = new double[nLayers]; // Filling the arrays in case something gets skipped below. (In C#, initialised to 0)
 
             // From Century, the value for potential plant production is now calculated from the equation of a line whose intercept changes depending on water
             // content based on soil type.
@@ -140,7 +140,7 @@ namespace Models
                 Facet ifacet = Facet.herb;
                 double aisc = 0.0;
                 double woody_cover = 0.0;
-                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                for (int iLyr = 0; iLyr < nLayers; iLyr++)
                 {
                     // Compute shading modifier.First, set woody cover
                     switch ((Layer)iLyr)
@@ -283,7 +283,7 @@ namespace Models
             else
             {
                 // No production this month... there is either zero cover or zero biomass
-                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                for (int iLyr = 0; iLyr < nLayers; iLyr++)
                 {
                     prop_live_per_layer[iLyr] = 0.0;      // Nothing alive, so no production.  Or no facet cover, so no production
                     totalPotProduction[iLyr] = 0.0;       // Note this is biomass
@@ -1122,7 +1122,7 @@ namespace Models
             }
             // Then put in limited production estimates
 
-            double[] lfrac = new double[vLayers];
+            double[] lfrac = new double[nLayers];
             switch (iFacet)
             {
                 case Facet.herb:
@@ -1998,7 +1998,7 @@ namespace Models
                 // So I am going to calculate those values first, then do the three special cases after the main facets are attended to.
 
                 double[] data_val = new double[4];
-                double[] relative_establishment = new double[vLayers];
+                double[] relative_establishment = new double[nLayers];
                 relative_establishment[(int)Layer.herb] = parms.relativeSeedProduction[(int)Facet.herb];
                 relative_establishment[(int)Layer.herbUnderShrub] = parms.relativeSeedProduction[(int)Facet.herb];
                 relative_establishment[(int)Layer.herbUnderTree] = parms.relativeSeedProduction[(int)Facet.herb];
@@ -2082,7 +2082,7 @@ namespace Models
                 tot_pop[(int)Facet.tree] = totalPopulation[(int)Layer.tree];
 
                 // Potential plants established
-                double[] pot_established = new double[vLayers];
+                double[] pot_established = new double[nLayers];
                 pot_established[(int)Layer.herb] = tot_pop[(int)Facet.herb] * relative_establishment[(int)Layer.herb];
                 pot_established[(int)Layer.herbUnderShrub] = tot_pop[(int)Facet.herb] * relative_establishment[(int)Layer.herbUnderShrub];
                 pot_established[(int)Layer.herbUnderTree] = tot_pop[(int)Facet.herb] * relative_establishment[(int)Layer.herbUnderTree];

@@ -958,7 +958,7 @@ namespace Models
                 parm.initLigninNRatio = ReadDoubleVal(parmsStrings[iLine++]);
 
 #if G_RANGE_BUG
-                // DOING THIS WRONG DELIBRATELY, TO CORRESPOND WITH A BUG IN GRANGE
+                // DOING THIS WRONG DELIBERATELY, TO CORRESPOND WITH A BUG IN GRANGE
                 // EJZ - STARTING BAD CODE HERE
                 // Two things are wrong with this - first, the order in which shrub and tree are read
                 // Secondly, the order of array indices

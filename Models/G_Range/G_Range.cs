@@ -123,6 +123,10 @@ namespace Models
         [Units("mm")]
         public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
 
+        /// <summary>Gets the canopy depth (mm)</summary>
+        [Units("mm")]
+        public double Width { get { return 0.0; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [XmlIgnore]
         public double PotentialEP { get; set; }
@@ -233,7 +237,7 @@ namespace Models
         /// <summary>
         /// Total number of layers (V_LYRS)
         /// </summary>
-        private const int vLayers = 6;
+        private const int nLayers = 6;
 
         /// <summary>
         /// Vegetation facet constants.  Facets are used for unit input, so that users provide 3 values, rather than 6
@@ -327,12 +331,20 @@ namespace Models
 
         private int month;
 
-        private int rangeType;                 // Identifier storing the type of rangeland cell, used as a key to the Parms strcuture
+        /// <summary>
+        /// Identifier storing the type of rangeland cell, used as a key to the Parms strcuture
+        /// </summary>
+        public int rangeType { get; private set; }
 
         private double lastMonthDayLength;     // The day length of the previous month, to know when spring and fall come.
         private bool dayLengthIncreasing;      // Increasing or decreasing day length, comparing the current to previous day lengths.
         private bool inWinter = false;         // NOT ORIGINALLY PART OF THE CELL STRUCTURE - It used a Fortran "SAVE" in Plant_Death.95
-        private double dayLength;              // Day length, calculated based on latitude and month
+
+        /// <summary>
+        /// Day length, calculated based on latitude and month
+        /// </summary>
+        [Units("hr")]
+        public double dayLength { get; private set; }
 
         /// <summary>
         /// Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
@@ -348,7 +360,7 @@ namespace Models
         /// <summary>
         /// The total population of each vegetation layer
         /// </summary>
-        public double[] totalPopulation { get; private set; } = new double[vLayers]; 
+        public double[] totalPopulation { get; private set; } = new double[nLayers]; 
 
         /// <summary>
         /// Bare cover stored, rather than continually summing the three facets. 
@@ -410,11 +422,20 @@ namespace Models
         // Editing the model 01/02/2014 to prevent snow and snow liquid from skyrocketing.   Adding an field for OLD SNOW and ICE, prior to clearing out snow each year.
         private double oldSnow;                // Snow from past years, including glacial build up.   This will be an accumulator, but essentially outside of active process modeling
         private double oldSnowLiquid;          // Ditto
-        // This won't be output until there is some need for it.
-        // End of addition
+                                               // This won't be output until there is some need for it.
+                                               // End of addition
 
-        private double melt;                   // Snow that melts from snowpack (cm water)
-        private double petRemaining;           // Potential evaporation decremented as steps are calculated.Appears to be a bookkeeping tool.
+        /// <summary>
+        /// Snow that melts from snowpack (cm water)
+        /// </summary>
+        [Units("cm")]
+        public double melt { get; private set; }
+
+        /// <summary>
+        /// Potential evaporation decremented as steps are calculated.Appears to be a bookkeeping tool.
+        /// </summary>
+        [Units("cm")]
+        public double petRemaining { get; private set; }
 
         /// <summary>
         /// Precipitation adjusted for snow accumulation and melt, and available to infiltrate the soil (cm)
@@ -422,7 +443,10 @@ namespace Models
         [Units("cm")]
         public double pptSoil { get; private set; }
 
-        private double runoff;                 // Runoff from the rangeland cell
+        /// <summary>
+        /// Runoff from the rangeland cell
+        /// </summary>
+        public double runoff { get; private set; }
 
         /// <summary>
         /// Ratio of available water to potential evapotranspiration
@@ -434,7 +458,13 @@ namespace Models
         /// </summary>
         [Units("cm/d")]
         public double petTopSoil { get; private set; }
-        private double[] nLeached = new double[nSoilLayers];  // Nitrogen leached from soil(AMTLEA in Century)
+
+        /// <summary>
+        /// Nitrogen leached from soil(AMTLEA in Century)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] nLeached { get; private set; } = new double[nSoilLayers]; 
+
         private double[] asmos = new double[nSoilLayers];     // Used in summing water
         private double[] amov = new double[nSoilLayers];      // Used in summing water movement
         private double stormFlow;              // Storm flow
@@ -444,8 +474,13 @@ namespace Models
         /// Transpiration water loss
         /// </summary>
         public double transpiration { get; private set; }
+
         private double[] relativeWaterContent = new double[nSoilLayers]; // Used to initialize and during simulation in CENTURY.Here, only during simulation
-        private double[] waterAvailable = new double[3];                 // Water available to plants, available for growth =(1) [0 in C#], survival(2) [1 in C#], and in the two top layers(3) [2 in C#]
+
+        /// <summary>
+        /// Water available to plants, available for growth =(1) [0 in C#], survival(2) [1 in C#], and in the two top layers(3) [2 in C#]
+        /// </summary>
+        public double[] waterAvailable { get; private set; }  = new double[3]; 
 
         /// <summary>
         /// Annual actual evapotranspiration
@@ -485,6 +520,7 @@ namespace Models
         /// <summary>
         /// Basal area for trees
         /// </summary>
+        [Units("m^2")]
         public double treeBasalArea { get; private set; }
 
         /// <summary>
@@ -495,9 +531,23 @@ namespace Models
 
         // Soils as in Century 4.5 NLayer= 4, 0-15, 15-30, 30-45, 45-60 cm.
         // These will be initialized using approximations and weighted averages from HWSD soils database, which is 0-30 for TOP, 30-100 for SUB.
-        private double[] sand = new double[nSoilLayers];                 // The percent sand in the soil
-        private double[] silt = new double[nSoilLayers];                 // The percent silt in the soil
-        private double[] clay = new double[nSoilLayers];                 // The percent clay in the soil
+        /// <summary>
+        /// The percent sand in the soil
+        /// </summary>
+        [Units("0-1")]
+        public double[] sand { get; private set; } = new double[nSoilLayers];
+
+        /// <summary>
+        /// The percent silt in the soil
+        /// </summary>
+        [Units("0-1")]
+        public double[] silt { get; private set; } = new double[nSoilLayers];
+
+        /// <summary>
+        /// The percent clay in the soil
+        /// </summary>
+        [Units("0-1")]
+        public double[] clay { get; private set; } = new double[nSoilLayers];
 
         /// <summary>
         /// Mineral nitrogen content for layer(g/m2)
@@ -507,8 +557,15 @@ namespace Models
 
         private double[] soilDepth = new double[nSoilLayers] { 15.0, 15.0, 15.0, 15.0 }; // The depth of soils, in cm.Appears hardwired in some parts of CENTURY, flexible, and up to 9 layers, in other parts of CENTURY.Likely I noted some values from an early version, but this is a simplification, so...
 
-        private double[] fieldCapacity = new double[nSoilLayers];        // Field capacity for four soils layers shown above.
-        private double[] wiltingPoint = new double[nSoilLayers];         // Wilting point for four soil layers shown above.
+        /// <summary>
+        /// Field capacity for four soils layers shown above.
+        /// </summary>
+        public double[] fieldCapacity { get; private set; } = new double[nSoilLayers];
+
+        /// <summary>
+        /// Wilting point for four soil layers shown above.
+        /// </summary>
+        public double[] wiltingPoint { get; private set; } = new double[nSoilLayers];
 
         /// <summary>
         /// grams per square meter
@@ -587,19 +644,19 @@ namespace Models
         /// BIOMASS, Belowground potential production in g/m2
         /// </summary>
         [Units("g/m^2")]
-        public double[] belowgroundPotProduction { get; private set; }  = new double[vLayers];
+        public double[] belowgroundPotProduction { get; private set; }  = new double[nLayers];
 
         /// <summary>
         /// BIOMASS, Aboveground potential production in g/m2
         /// </summary>
         [Units("g/m^2")]
-        public double[] abovegroundPotProduction { get; private set; } = new double[vLayers];
+        public double[] abovegroundPotProduction { get; private set; } = new double[nLayers];
 
         /// <summary>
         /// BIOMASS, Calculate total potential production, in g/m2 with all the corrections in place. 
         /// </summary>
         [Units("g/m^2")]
-        public double[] totalPotProduction { get; private set; }  = new double[vLayers];
+        public double[] totalPotProduction { get; private set; }  = new double[nLayers];
 
         /// <summary>
         /// Calculated effect of CO2 increasing from 350 to 700 ppm on grassland production, per facet
@@ -610,7 +667,7 @@ namespace Models
         /// Coefficient on total potential production reflecting limits due to nitrogen in place(EPRODL)
         /// </summary>
         [Units("g/m^2")]
-        public double[] totalPotProdLimitedByN { get; private set; } = new double[vLayers];
+        public double[] totalPotProdLimitedByN { get; private set; } = new double[nLayers];
 
         /// <summary>
         /// Monthly net primary production in g/m2, summed from total_pot_prod_limited_by_n
@@ -632,9 +689,21 @@ namespace Models
 
         // Facets are used here.Facets are: 1 - Herb, 2 - Shrub, 3 - Tree
         // NOT USED RIGHT NOW:  The array index here is:  1 - Phenological death, 2 - Incremental death, 3 - Herbivory, 4 - Fire
-        private double tempEffectOnDecomp;           // Temperature effect on decomposition (TFUNC in CENTURY Cycle.f)  (index)
-        private double waterEffectOnDecomp;          // Water effect on decomposition (index)  (Aboveground and belowground entries in CENTURY set to equal, so distinction not made here)
-        private double anerobicEffectOnDecomp;       // Anerobic effects on decomposition(index)  (EFFANT in Savanna)
+
+        /// <summary>
+        /// Temperature effect on decomposition (TFUNC in CENTURY Cycle.f)  (index)
+        /// </summary>
+        public double tempEffectOnDecomp { get; private set; }
+
+        /// <summary>
+        /// Water effect on decomposition (index)  (Aboveground and belowground entries in CENTURY set to equal, so distinction not made here)
+        /// </summary>
+        public double waterEffectOnDecomp { get; private set; }
+
+        /// <summary>
+        /// Anerobic effects on decomposition(index)  (EFFANT in Savanna)
+        /// </summary>
+        public double anerobicEffectOnDecomp { get; private set; }
 
         /// <summary>
         /// Combined effects on decomposition, which in Savanna includes anerobic(CYCLE.F)  (index)
@@ -645,45 +714,162 @@ namespace Models
         /// Dead fine root carbon of the four types cited above.
         /// </summary>
         [Units("g/m^2")]
-        public double[] deadFineRootCarbon { get; private set; } = new double[nFacets]; 
+        public double[] deadFineRootCarbon { get; private set; } = new double[nFacets];
 
-        private double[] deadFineRootNitrogen = new double[nFacets];   // Dead fine root nitrogen of the four types cited above.
+        /// <summary>
+        /// Dead fine root nitrogen of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadFineRootNitrogen { get; private set; } = new double[nFacets];
 
         /// <summary>
         /// Standing dead carbon of leaf and stem, of the four types cited above.
         /// </summary>
         [Units("g/m^2")]
-        public double[] deadStandingCarbon { get; private set; } = new double[nFacets]; 
-        private double[] deadStandingNitrogen = new double[nFacets];   // Standing dead nitrogen of leaf and stem, of the four types cited above.
-        private double[] deadSeedCarbon = new double[nFacets];         // Dead seed carbon of the four types cited above.   (gC/m^2)
-        private double[] deadSeedNitrogen = new double[nFacets];       // Dead seed nitrogen of the four types cited above.           (units?)
+        public double[] deadStandingCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Standing dead nitrogen of leaf and stem, of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadStandingNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead seed carbon of the four types cited above.   (gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadSeedCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead seed nitrogen of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadSeedNitrogen { get; private set; } = new double[nFacets];
 
         /// <summary>
         /// Dead leaf carbon of the four types cited above.   (gC/m^2)
         /// </summary>
         [Units("g/m^2")]
         public double[] deadLeafCarbon { get; private set; } = new double[nFacets];
-        private double[] deadLeafNitrogen = new double[nFacets];       // Dead leaf nitrogen of the four types cited above.
-        private double[] deadFineBranchCarbon = new double[nFacets];   // Dead fine branch carbon of the four types cited above.   (gC/m^2)
-        private double deadTotalFineBranchCarbon;                      // Dead fine branch carbon, summed across facets
-        private double[] deadFineBranchNitrogen = new double[nFacets]; // Dead fine branch nitrogen of the four types cited above.
-        private double deadTotalFineBranchNitrogen;                    // Dead fine branch nitrogen, summed across facets
-        private double[] deadCoarseRootCarbon = new double[nFacets];   // Dead coarse root carbon of the four types cited above.   (gC/m^2)
-        private double deadTotalCoarseRootCarbon;                      // Dead total coarse root carbon, summed across facets
-        private double[] deadCoarseRootNitrogen = new double[nFacets]; // Dead coarse root nitrogen of the four types cited above.
-        private double deadTotalCoarseRootNitrogen;                    // Dead total coarse root nitrogen, summed across facets
-        private double[] deadCoarseBranchCarbon = new double[nFacets]; // Dead coarse wood carbon of the four types cited above.   (gC/m^2)
-        private double deadTotalCoarseBranchCarbon;                    // Dead total coarse wood carbon, summed across facets
-        private double[] deadCoarseBranchNitrogen = new double[nFacets]; // Dead coarse wood nitrogen of the four types cited above.
-        private double deadTotalCoarseBranchNitrogen;                  // Dead total coarse wood nitrogen, summed across facets
 
-        private double[] ligninFineRoot = new double[nFacets];         // Fine root lignin concentration
-        private double[] ligninCoarseRoot = new double[nFacets];       // Coarse root lignin concentration
-        private double[] ligninFineBranch = new double[nFacets];       // Fine branch lignin concentration
-        private double[] ligninCoarseBranch = new double[nFacets];     // Coarse branch lignin concentration
-        private double[] ligninLeaf = new double[nFacets];             // Leaf lignin concentration
+        /// <summary>
+        /// Dead leaf nitrogen of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadLeafNitrogen { get; private set; } = new double[nFacets];
 
-        private double[,] plantLigninFraction = new double[nFacets, 2];   // Lignin in structural residue, at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRLIG)
+        /// <summary>
+        /// Dead fine branch carbon of the four types cited above.   (gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadFineBranchCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead fine branch carbon, summed across facets
+        /// </summary>
+        [Units("g/m^2")]
+        public double deadTotalFineBranchCarbon { get { return _deadTotalFineBranchCarbon; } }
+        private double _deadTotalFineBranchCarbon;
+
+        /// <summary>
+        /// Dead fine branch nitrogen of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadFineBranchNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead fine branch nitrogen, summed across facets
+        /// </summary>
+        [Units("g/m^2")]
+        public double deadTotalFineBranchNitrogen { get { return _deadTotalFineBranchNitrogen; } }
+        private double _deadTotalFineBranchNitrogen;
+
+        /// <summary>
+        /// Dead coarse root carbon of the four types cited above.   (gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadCoarseRootCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead total coarse root carbon, summed across facets
+        /// </summary>
+        [Units("g/m^2")]
+        public double deadTotalCoarseRootCarbon { get { return _deadTotalCoarseRootCarbon; } }
+        private double _deadTotalCoarseRootCarbon;
+
+        /// <summary>
+        /// Dead coarse root nitrogen of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadCoarseRootNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead total coarse root nitrogen, summed across facets
+        /// </summary>
+        [Units("g/m^2")]
+        public double deadTotalCoarseRootNitrogen { get { return _deadTotalCoarseRootNitrogen; } }
+        private double _deadTotalCoarseRootNitrogen;
+
+        /// <summary>
+        /// Dead coarse wood carbon of the four types cited above.   (gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadCoarseBranchCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead total coarse wood carbon, summed across facets
+        /// </summary>
+        [Units("g/m^2")]
+        public double deadTotalCoarseBranchCarbon { get { return _deadTotalCoarseBranchCarbon; } }
+        private double _deadTotalCoarseBranchCarbon;
+
+        /// <summary>
+        /// Dead coarse wood nitrogen of the four types cited above.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] deadCoarseBranchNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Dead total coarse wood nitrogen, summed across facets
+        /// </summary>
+        [Units("g/m^2")]
+        public double deadTotalCoarseBranchNitrogen { get { return _deadTotalCoarseBranchNitrogen; } }
+        private double _deadTotalCoarseBranchNitrogen;
+
+        /// <summary>
+        /// Fine root lignin concentration
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] ligninFineRoot { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coarse root lignin concentration
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] ligninCoarseRoot { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Fine branch lignin concentration
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] ligninFineBranch { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coarse branch lignin concentration
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] ligninCoarseBranch { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Leaf lignin concentration
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] ligninLeaf { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Lignin in structural residue, at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRLIG)
+        /// </summary>
+        public double[,] plantLigninFraction { get; private set; } = new double[nFacets, 2];
 
         /// <summary>
         /// Litter structural carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (STRCIS, or in Savanna, SSTRCIS, with unlabeled and labeled merged)
@@ -695,10 +881,19 @@ namespace Models
         /// Litter metabolic carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (METCIS, or in Savanna, SMETCIS)
         /// </summary>
         [Units("g/m^2")]
-        public double[] litterMetabolicCarbon { get; private set; } = new double[2];  
+        public double[] litterMetabolicCarbon { get; private set; } = new double[2];
 
-        private double[] litterStructuralNitrogen = new double[2];        // Litter structural nitrogen at the surface(1) and in the soil(2)  (STRUCE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
-        private double[] litterMetabolicNitrogen = new double[2];         // Litter structural nitrogen at the surface(1) and in the soil(2)  (METABE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
+        /// <summary>
+        /// Litter structural nitrogen at the surface(1) and in the soil(2)  (STRUCE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] litterStructuralNitrogen { get; private set; } = new double[2];
+
+        /// <summary>
+        /// Litter structural nitrogen at the surface(1) and in the soil(2)  (METABE, or in Savanna, SSTRUCE, with STRUCE named for "elements"  I am only including nitrogen, as in Savanna, so dropping the name)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] litterMetabolicNitrogen { get; private set; } = new double[2];
 
         // Temporary storage places, but used across swaths of DECOMP.If memory is limited, devise an alternative.
         private double[] tnetmin = new double[2];              // Temporary storage
@@ -722,39 +917,155 @@ namespace Models
         [Units("0-4")]
         public double[] phenology { get; private set; } = new double[nFacets];
 
-        private double[] fineRootCarbon = new double[nFacets];        // Fine root carbon    (gC/m^2)
-        private double[] fineRootNitrogen = new double[nFacets];      // Fine root nitrogen(gN/m^2)
-        private double[] seedCarbon = new double[nFacets];            //  Seed carbon(gC/m^2)
-        private double[] seedNitrogen = new double[nFacets];          // Seed nitrogen(gN/m^2)
-        private double[] leafCarbon = new double[nFacets];            // Leaf carbon(gC/m^2)
-        private double[] leafNitrogen = new double[nFacets];          // Leaf nitrogen(gN/m^2)
-        private double[] fineBranchCarbon = new double[nFacets];      // Fine branch carbon(gC/m^2)
-        private double[] fineBranchNitrogen = new double[nFacets];    // Fine branch nitrogen(gN/m^2)
-        private double[] coarseRootCarbon = new double[nFacets];      // Coarse root carbon(gC/m^2)
-        private double[] coarseRootNitrogen = new double[nFacets];    // Coarse root nitrogen(gN/m^2)
-        private double[] coarseBranchCarbon = new double[nFacets];    // Coarse branch carbon(gC/m^2)
-        private double[] coarseBranchNitrogen = new double[nFacets];  // Coarse branch nitrogen(gN/m^2)
-        private double[] storedNitrogen = new double[nFacets];        // Stored nitrogen(CRPSTG in Century GROWTH, STORAGE in RESTRP).  I can't find where this is initialized, except for a gridded system input.  Assumed 0 for now, but here as a placeholder.
-        private double[] plantNitrogenFixed = new double[nFacets];    // Plant nitrogen fixed
-        private double[] nitrogenFixed = new double[nFacets];         // Nitrogen fixed.  Not sure what components distinguish it, just yet.  (NFIX)
-        private double[] respirationFlows = new double[nFacets];      // Maintenance respiration flows to storage pool(MRSPSTG)
-        private double[] respirationAnnual = new double[nFacets];     // Maintenance respiration flows for year(MRSPANN)
+        /// <summary>
+        /// Fine root carbon    (gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] fineRootCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Fine root nitrogen(gN/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] fineRootNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Seed carbon(gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] seedCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Seed nitrogen(gN/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] seedNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Leaf carbon(gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] leafCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Leaf nitrogen(gN/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] leafNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Fine branch carbon(gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] fineBranchCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Fine branch nitrogen(gN/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] fineBranchNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coarse root carbon(gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] coarseRootCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coarse root nitrogen(gN/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] coarseRootNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coarse branch carbon(gC/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] coarseBranchCarbon { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Coarse branch nitrogen(gN/m^2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] coarseBranchNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Stored nitrogen(CRPSTG in Century GROWTH, STORAGE in RESTRP).  I can't find where this is initialized, except for a gridded system input.  Assumed 0 for now, but here as a placeholder.
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] storedNitrogen { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Plant nitrogen fixed
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] plantNitrogenFixed { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Nitrogen fixed.  Not sure what components distinguish it, just yet.  (NFIX)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] nitrogenFixed { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Maintenance respiration flows to storage pool(MRSPSTG)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] respirationFlows { get; private set; } = new double[nFacets];
+
+        /// <summary>
+        /// Maintenance respiration flows for year(MRSPANN)
+        /// </summary>
+        [Units("g/m^2")]
+        public double[] respirationAnnual { get; private set; } = new double[nFacets];
 
         private double carbonSourceSink;                              // Carbon pool.  (g / m2)(CSRSNK)    I don't know the utility of this, but incorporating it.
         private double nitrogenSourceSink;                            // Nitrogen pool.  (g / m2)(ESRSNK)
         private double[,] carbonAllocation = new double[nFacets, nWoodyParts]; // Shrub carbon allocation, by proportion(TREE_CFAC in Century, except statis here)  Brought into this array, even though it requires more memory, in case I do incorporate dynamic allocation at some point.
 
-        private double[] optimumLeafAreaIndex = new double[nFacets];  // Optimum leaf area index
-        private double[] leafAreaIndex = new double[nFacets];         // Leaf area index
+        /// <summary>
+        /// Optimum leaf area index
+        /// </summary>
+        public double[] optimumLeafAreaIndex { get; private set; } = new double[nFacets];
 
-        private double waterFunction;            // Water function influencing mortality(AGWFUNC and BGWFUNC in Century, merged here since CYCLE assigns them equal and they start with the same value)
+        /// <summary>
+        /// Leaf area index
+        /// </summary>
+        public double[] leafAreaIndex { get; private set; } = new double[nFacets];
 
-        private double fireSeverity;             // A score from 0 to 1 reflecting fire intensity
-        private double burnedCarbon;             // The sum of carbon burned, only on the 1 m plots, not whole plant death
-        private double burnedNitrogen;           // The sum of nitrogen burned, only on the 1 m plots, not whole plant death
+        /// <summary>
+        /// Water function influencing mortality(AGWFUNC and BGWFUNC in Century, merged here since CYCLE assigns them equal and they start with the same value)
+        /// </summary>
+        public double waterFunction { get; private set; }
 
-        private double fertilizedNitrogenAdded;  // Total fertilized nitrogen added(g / m2)
-        private double fertilizedCarbonAdded;    // Total fertilized carbon added(g / m2)
+        /// <summary>
+        /// A score from 0 to 1 reflecting fire intensity
+        /// </summary>
+        public double fireSeverity { get; private set; }
+
+        /// <summary>
+        /// The sum of carbon burned, only on the 1 m plots, not whole plant death
+        /// </summary>
+        [Units("g/m^2")]
+        public double burnedCarbon { get; private set; }
+
+        /// <summary>
+        /// The sum of nitrogen burned, only on the 1 m plots, not whole plant death
+        /// </summary>
+        [Units("g/m^2")]
+        public double burnedNitrogen { get; private set; }
+
+        /// <summary>
+        /// Total fertilized nitrogen added(g / m2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double fertilizedNitrogenAdded { get; private set; }
+
+        /// <summary>
+        /// Total fertilized carbon added(g / m2)
+        /// </summary>
+        [Units("g/m^2")]
+        public double fertilizedCarbonAdded { get; private set; }
 
         // private int largeErrorCount;  // The count of cells being reset because their values were very very large
         // private int negErrorCount;    // The count of cell being reset because values were below zero
@@ -987,7 +1298,7 @@ namespace Models
             // Moving the following from WATER_LOSS, since it was only being done with no snow present.
             double avgALiveBiomass = 0.0;
             double avgBLiveBiomass = 0.0;
-            double[] biomassLivePerLayer = new double[vLayers];
+            double[] biomassLivePerLayer = new double[nLayers];
 
             // ABOVEGROUND
             // Using method used in productivity.Does not use plant populations in layers, but uses the facets instead.Not at precise but less prone to vast swings.
@@ -1023,7 +1334,7 @@ namespace Models
                 biomassLivePerLayer[(int)Layer.tree] = (leafCarbon[(int)Facet.tree] + seedCarbon[(int)Facet.tree] +
                           fineBranchCarbon[(int)Facet.tree] + coarseBranchCarbon[(int)Facet.tree]) * 2.5 * fracCover;
 
-                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                for (int iLyr = 0; iLyr < nLayers; iLyr++)
                     avgALiveBiomass = avgALiveBiomass + biomassLivePerLayer[iLyr];
             }
             else
@@ -1061,7 +1372,7 @@ namespace Models
                          (fineRootCarbon[(int)Facet.tree] + coarseRootCarbon[(int)Facet.tree]) * 2.5 * fracCover;
 
 
-                for (int iLyr = 0; iLyr < vLayers; iLyr++)
+                for (int iLyr = 0; iLyr < nLayers; iLyr++)
                     avgBLiveBiomass = avgBLiveBiomass + biomassLivePerLayer[iLyr];
             }
             else
@@ -1142,12 +1453,12 @@ namespace Models
                 // model tracking.  They need to be cleared -out prior to each year's simulation.
                 // (Note: Arrays can be zeroed out with a single call, but not as clear)
                 // Totals summed across facets are to be reset each year
-                deadTotalFineBranchCarbon = 0.0;
-                deadTotalFineBranchNitrogen = 0.0;
-                deadTotalCoarseBranchCarbon = 0.0;
-                deadTotalCoarseBranchNitrogen = 0.0;
-                deadTotalCoarseRootCarbon = 0.0;
-                deadTotalCoarseRootNitrogen = 0.0;
+                _deadTotalFineBranchCarbon = 0.0;
+                _deadTotalFineBranchNitrogen = 0.0;
+                _deadTotalCoarseBranchCarbon = 0.0;
+                _deadTotalCoarseBranchNitrogen = 0.0;
+                _deadTotalCoarseRootCarbon = 0.0;
+                _deadTotalCoarseRootNitrogen = 0.0;
                 // Other dead placeholders may be zeroed-out as well.The only reason they would store anything after the
                 // call to DECOMPOSITION would be from rounding errors.And DEAD_LEAF_CARBON and NITROGEN plus FINE_BRANCH_CARBON and NITROGEN
                 // aren't used in modeling at all, they are only accumulators.   The death of those elements go to STANDING_DEAD_CARBON and NITROGEN
@@ -1319,7 +1630,7 @@ namespace Models
             }
             else if (var < min)
             {
-                if (!varName.Contains("carbonSourceSink"))
+                if (!varName.Contains("carbonSourceSink") &&!varName.Contains("holdingTank"))
                     summary.WriteWarning(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value");
                 return min;
             }

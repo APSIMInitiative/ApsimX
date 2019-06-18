@@ -514,8 +514,8 @@ namespace Models
                     // Fine branch and stem wood
                     dthc = deadFineBranchCarbon[iFacet];         // * prf(ifacet)
                     dthn = deadFineBranchNitrogen[iFacet];       // * prf(ifacet)
-                    deadTotalFineBranchCarbon = deadTotalFineBranchCarbon + dthc;     // Accumulating values for shrubs and trees.
-                    deadTotalFineBranchNitrogen = deadTotalFineBranchNitrogen + dthn;
+                    _deadTotalFineBranchCarbon = _deadTotalFineBranchCarbon + dthc;     // Accumulating values for shrubs and trees.
+                    _deadTotalFineBranchNitrogen = _deadTotalFineBranchNitrogen + dthn;
                     frac_lignin = ligninFineBranch[iFacet] / fineBranchCarbon[iFacet];
                     frac_lignin = Math.Max(0.02, frac_lignin);   // From Century CmpLig.f
                     frac_lignin = Math.Min(0.50, frac_lignin);
@@ -524,8 +524,8 @@ namespace Models
                     // Coarse roots
                     dthc = deadCoarseRootCarbon[iFacet];          // * prf(ifacet)
                     dthn = deadCoarseRootNitrogen[iFacet];        // * prf(ifacet)
-                    deadTotalCoarseRootCarbon = deadTotalCoarseRootCarbon + dthc;    // Accumulating values for shrubs and trees.Be sure they are partitioned when done.
-                    deadTotalCoarseRootNitrogen = deadTotalCoarseRootNitrogen + dthn;
+                    _deadTotalCoarseRootCarbon = _deadTotalCoarseRootCarbon + dthc;    // Accumulating values for shrubs and trees.Be sure they are partitioned when done.
+                    _deadTotalCoarseRootNitrogen = _deadTotalCoarseRootNitrogen + dthn;
                     // Do flows to litter, keeping track of structural and metabolic components
                     frac_lignin = ligninCoarseRoot[iFacet] / coarseRootCarbon[iFacet];
                     frac_lignin = Math.Max(0.02, frac_lignin);     // From Century CmpLig.f
@@ -535,8 +535,8 @@ namespace Models
                     // Coarse branches
                     dthc = deadCoarseBranchCarbon[iFacet];       // * prf(ifacet)
                     dthn = deadCoarseBranchNitrogen[iFacet];     // * prf(ifacet)
-                    deadTotalCoarseBranchCarbon = deadTotalCoarseBranchCarbon + dthc;
-                    deadTotalCoarseBranchNitrogen = deadTotalCoarseBranchNitrogen + dthn;
+                    _deadTotalCoarseBranchCarbon = _deadTotalCoarseBranchCarbon + dthc;
+                    _deadTotalCoarseBranchNitrogen = _deadTotalCoarseBranchNitrogen + dthn;
                     // Do flows to litter, keeping track of structural and metabolic components
                     // Coarse branches cannot be part of dead standing carbon.It could be, but functionally coarse branches are not useful for herbivores, for example
                     frac_lignin = ligninCoarseBranch[iFacet] / coarseBranchCarbon[iFacet];
@@ -816,7 +816,7 @@ namespace Models
                 // An entry in Savanna storing a temporary accumulator appears never to be used, and was skipped.
 
                 // Fine branch(these are ordered, first do fine then do coarse)
-                TrackLignin(surfaceIndex, 1, ref deadTotalFineBranchCarbon, ref deadTotalFineBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+                TrackLignin(surfaceIndex, 1, ref _deadTotalFineBranchCarbon, ref _deadTotalFineBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
@@ -824,7 +824,7 @@ namespace Models
                 tminup[iLayer] = tminup[iLayer] + immobil;
 
                 // Coarse branch
-                TrackLignin(surfaceIndex, 2, ref deadTotalCoarseBranchCarbon, ref deadTotalCoarseBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+                TrackLignin(surfaceIndex, 2, ref _deadTotalCoarseBranchCarbon, ref _deadTotalCoarseBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
@@ -832,7 +832,7 @@ namespace Models
                 tminup[iLayer] = tminup[iLayer] + immobil;
 
                 // Coarse root
-                TrackLignin(soilIndex, 3, ref deadTotalCoarseRootCarbon, ref deadTotalCoarseRootNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+                TrackLignin(soilIndex, 3, ref _deadTotalCoarseRootCarbon, ref _deadTotalCoarseRootNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
