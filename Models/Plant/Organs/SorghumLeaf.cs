@@ -285,25 +285,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Stress.</summary>
         [Description("Nitrogen Photosynthesis Stress")]
-        public double NitrogenPhotoStress
-        {
-            get
-            {
-                var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
-                return Math.Max(photoStress, 0.0);
-            }
-        }
+        public double NitrogenPhotoStress { get; set; }
 
         /// <summary>Stress.</summary>
         [Description("Nitrogen Phenology Stress")]
-        public double NitrogenPhenoStress
-        {
-            get
-            {
-                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
-                return MathUtilities.Bound(phenoStress, 0.0, 1.0);
-            }
-        }
+        public double NitrogenPhenoStress { get; set; }
 
         /// <summary>Stress.</summary>
         [Description("Phosphorus Stress")]
@@ -467,6 +453,11 @@ namespace Models.PMF.Organs
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
 
+            var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
+            NitrogenPhotoStress = Math.Max(photoStress, 0.0);
+
+            var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+            NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
         }
 
         /// <summary>sen_radn_crit.</summary>
