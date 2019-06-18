@@ -41,10 +41,10 @@ namespace Models.PMF
 
             var grainDemand = BAT.StructuralDemand[grainIndex] + BAT.MetabolicDemand[grainIndex];
             var rootDemand = BAT.StructuralDemand[rootIndex] + BAT.MetabolicDemand[rootIndex];
-            var stemDemand = BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex];
-            var rachisDemand = BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex];
-            var leafMetabolicDemand = BAT.MetabolicDemand[leafIndex];
-            var leafStructuralDemand = BAT.StructuralDemand[leafIndex];
+            //var stemDemand = BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex];
+            //var rachisDemand = BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex];
+            //var leafMetabolicDemand = BAT.MetabolicDemand[leafIndex];
+            //var leafStructuralDemand = BAT.StructuralDemand[leafIndex];
 
             //calc leaf demand separately - old sorghum doesn't quite fit
             var leaf = Organs[leafIndex] as SorghumLeaf;
@@ -68,15 +68,20 @@ namespace Models.PMF
             AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
             var nDemand = totalPlantNDemand - rootDemand;
-            double totalMetabolicDemand = BAT.MetabolicDemand[leafIndex] + BAT.MetabolicDemand[rachisIndex] + BAT.MetabolicDemand[stemIndex];
 
-            double leafProportion = MathUtilities.Divide(BAT.MetabolicDemand[leafIndex], totalMetabolicDemand, 0);
-            double rachisProportion = MathUtilities.Divide(BAT.MetabolicDemand[rachisIndex], totalMetabolicDemand, 0);
-            double stemProportion = MathUtilities.Divide(BAT.MetabolicDemand[stemIndex], totalMetabolicDemand, 0);
+            double leafDemand = BAT.MetabolicDemand[leafIndex] - BAT.StructuralAllocation[leafIndex];
+            double rachisDemand = BAT.MetabolicDemand[rachisIndex] - BAT.StructuralAllocation[rachisIndex];
+            double stemDemand = BAT.MetabolicDemand[stemIndex] - BAT.StructuralAllocation[stemIndex];
 
-            var leafAlloc = NotAllocated * leafProportion;
-            var rachisAlloc = NotAllocated * rachisProportion;
-            var stemAlloc = NotAllocated * stemProportion;
+            double totalMetabolicDemand = leafDemand + rachisDemand + stemDemand;
+
+            double leafProportion = MathUtilities.Divide(leafDemand, totalMetabolicDemand, 0);
+            double rachisProportion = MathUtilities.Divide(rachisDemand, totalMetabolicDemand, 0);
+            double stemProportion = MathUtilities.Divide(stemDemand, totalMetabolicDemand, 0);
+
+            var leafAlloc = Math.Min(1, NotAllocated * leafProportion);
+            var rachisAlloc = Math.Min(1, NotAllocated * rachisProportion);
+            var stemAlloc = Math.Min(1, NotAllocated * stemProportion);
 
             AllocateMetabolic(leafIndex, leafAlloc, BAT);
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
