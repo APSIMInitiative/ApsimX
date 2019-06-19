@@ -25,8 +25,9 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/features/Reporting/Ledgers.htm")]
+    [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
     public class ReportResourceLedger : Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
@@ -110,9 +111,18 @@ namespace Models.CLEM.Reporting
                             {
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType as Resource");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity as Activity");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ActivityType as ActivityType");
+                                // get all converters for this type of resource
+                                var converterList = Apsim.ChildrenRecursively(model, typeof(ResourceUnitsConverter)).Select(a => a.Name).Distinct();
+                                if (converterList!=null)
+                                {
+                                    foreach (var item in converterList)
+                                    {
+                                        variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + ",\"gain\") as " + item + "_Gain");
+                                        variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + ",\"loss\") as " + item + "_Loss");
+                                    }
+
+                                }                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
                             }
                         }

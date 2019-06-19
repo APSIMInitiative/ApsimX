@@ -172,10 +172,9 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 Gain = addAmount,
-                Activity = activity.Name,
-                ActivityType = activity.GetType().Name,
+                Activity = activity,
                 Reason = reason,
-                ResourceType = this.Name
+                ResourceType = this
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -201,10 +200,9 @@ namespace Models.CLEM.Resources
             LastActivityRequestID = request.ActivityID;
             ResourceTransaction details = new ResourceTransaction
             {
-                ResourceType = this.Name,
+                ResourceType = this,
                 Loss = amountRemoved,
-                Activity = request.ActivityModel.Name,
-                ActivityType = request.ActivityModel.GetType().Name,
+                Activity = request.ActivityModel,
                 Reason = request.Reason
             };
             LastTransaction = details;
