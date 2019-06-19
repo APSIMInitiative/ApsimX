@@ -53,7 +53,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The thermal time is used to control many of the phenological changes in red clover.  It is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Plant development accelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is little information about these thresholds for red clover. The minimum, or base, temperature is quite variable among cultivars, varying from -1.0 to 5oC ([BlackEtAl2006]; [MonksEtAl2009]; [MootEtAll2000]). Even less data is found for the other parameters, and they are quite variable too; optimum temperature is around 28oC and 38oC for maximum temperature ([BlackEtAl2006]; [MonksEtAl2009]).\r\n",
+                      "Text": "The thermal time is used to control many of the phenological changes in red clover.  It is calculated using the daily average temperature and three parameters, or cardinal temperatures: minimum, maximum, and optimum.  Plant development accelerates as temperature increases from minimum to optimum and slows down after that, ceasing completely at maximum temperature.  There is little information about these thresholds for red clover, especially about their variation between cultivars. The minimum, or base, temperature seems to vary from -1.0 to 5oC ([HamptonEtAl1987]; [MonksEtAl2009]; [MootEtAll2000]). Even less data is found for the other parameters, and they are quite variable too; optimum temperature is around 25oC and 35oC for maximum temperature ([BlackEtAl2009Clovers]; [MonksEtAl2009]).\r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -110,7 +110,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Germination in most clover species is very variable (e.g. [HamptonEtAl1987]; [MurrayThesis2012]), with about 70-90% of seeds germinating for red clover. Temperatures between 5 and 20oC do not affect germination rate, but so slow it down ([HamptonEtAl1987]).  The model does not consider variable germination rate, thus the population should be adjusted by the user to account for less than 100% germination when sowing. Also, following default PMF behaviour, red clover germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.\r\n\r\n",
+                      "Text": "Germination in most clover species is very variable (e.g. [HamptonEtAl1987]; [MurrayThesis2012]), with about 60-85% of seeds germinating for red clover. Temperatures between 5 and 20oC do not affect germination rate, but do slow it down ([HamptonEtAl1987]).  The model does not consider variable germination rate, thus the population should be adjusted by the user to account for less than 100% germination when sowing. Also, following default PMF behaviour, red clover germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.\r\n\r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -484,7 +484,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "__Note:__ this organ represents all the leaves in the plant, without distinction between ages or placement in the canopy.  \r\n",
+                  "Text": "__Note:__ this organ represents all the leaves in the plant, it has only a basic representation of canopy structure and does not distinguish leaves for ages or placement in the canopy.  \r\n",
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -497,7 +497,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of red clover seeds varies between 0.5 and 0.8 g/1000 seeds ([Thomas1987Chapter]; [BissuelBelaygueEtAl2002_seed]; [MurrayThesis2012]). ",
+                      "Text": "It is assumed that approximately 1/3 of the seed biomass is allocated to shoot upon emergence.  The weight of red clover seeds varies between 2.0 and 4.5 g/1000 seeds ([ClaydonEtAlcvColenso]; [MurrayThesis2012]).  \n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -576,7 +576,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is the N concentration that the organ muast have to fully function, growth penalty incurr if N level fall below this threshold.  Values for this parameter have not been clearly identified for red clover, typical concentration values for non stressed plants can be used instead, these vary between 3.5 and 4.5% ([WilmanAndMehdi1984]; [CaradusEtAl1993_PEffect]; [HoghJensenEtAl2002]).  \r\n",
+                      "Text": "This is the N concentration that the organ must have to perform its functions without limitations; a growth penalty will occurr if N level fall below this threshold.  No values have been clearly identifyied for this parameter in red clover, thus typical values for non-stressed plants are used instead, these vary between 2.5 and 3.5% ([HeichelEtAl1985]; [WiersmaEtAl1998_RedCloverYeild]; [HakalaAndJauhiainen2007]).  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -596,7 +596,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This represents the maximum limit for N concentration in leaves.  The N content above CriticalNConc is not essential for growth and can be remobilised for new growth when uptake is insuficient.  Literature data suggest that value for maximum N concentration for whit clover leaves is about 6.0-7.0% ([RysAndPhung1985]; [CaradusEtAl1993_PEffect]; [HoghJensenEtAl2002]).  \r\n",
+                      "Text": "This represents the maximum limit for N concentration in leaves.  The N content above CriticalNConc is not essential for growth and can be remobilised for new growth when uptake is insuficient.  Published data suggest that maximum N concentration levels for red clover leaves are about 4.0-5.0% ([HeichelEtAl1985]; [WiersmaEtAl1998_RedCloverYeild]; [HakalaAndJauhiainen2007]).  \n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -624,7 +624,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "There has been a number of studies on the photosynthetesis rate of red clover (e.g. [McCreeTroughton1966]; [WoledgeEtAl1991_Photo]; [MalinowskiEtAl1998]; [HerautBronEtAl2000]; [HofmannEtAl2007]), including its variation due to water and N deficiency, shading and CO2 changes. The values and trends for CO2 assimilation rates are generally consistent across the various studies and these have been used to help defining the limiting factor for photoynthesis in the model. Reported values RUE for red clover are in general around 2.5-3.0 g DM/MJ ([FaurieEtAl1996]; [ManderscheidEtAl1997]; [NassiriThesis1998]).  \r\n",
+                      "Text": "There has been a number of studies on the photosynthetesis rate of red clover (e.g. [JoggiEtAl1983_RedClover]; [denHollanderEtAl2007]; [RiesingerEtAl2009rue]), including its variation due to water defficiency, nutrition, and shading. The values and trends for CO2 assimilation rates are generally consistent across the various studies and these have been used to help defining the limiting factor for photoynthesis in the model. Reported values RUE for red clover are in general around 2.5-3.0 g DM/MJ ([RiesingerEtAl2009rue]; [TorssellEtAl2007swardModel]).  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1036,7 +1036,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The leaf area index (LAI) for green leaves is defined based on biomass and the specific leaf area (SLA). The value for SLA for red clover is assumed to be constant in the current model, although the data indicates that age and some environmental factors (shading and nutrient status) have some effect on this value.  Variation due to age are ignored because the model simulates a population, as is intented to describe swards over long term, thus it should represent leaves of varing ages at the same time.  The nutritional effects are generally not linked to N, which currently is the only nutrient simulated in APSIM, thus can be ignored.  The effects of shading, as well as water deficiency, only occur when these conditions are mantained for some time, the model may have to be revised in the future to account for these factors, prefereably with some experimental data.  Available data suggest that SLA of red clover varies between 0.020 and 0.045 m2/g, with mean values for the cultivar Huia being around 0.030 m2/g ([Woledge1986_LeafAge]; [ChapmanAndRobson1992]; [KangAndBringk1995]; [HerautBronEtAl2000]; [CastleEtAl2002]; [NicholsEtAl2014_Drought]).  \r\n",
+                      "Text": "The leaf area index (LAI) for green leaves of red clover is defined based on their biomass and specific leaf area (SLA). The value for SLA is currently assumed to be constant, although factors such as age and environmental conditions (shading and nutrient status) have some effect on this value.  Variations due to age can ignored because the model simulates a generic population, and thus it represents leaves of varing ages at the same time.  The effects of shading and nutrition, as well as water deficiency, are only manifested when these conditions are mantained for some time, the model may have to be revised in the future to account for some of these factors, prefereably with some experimental data.  Available data suggest that SLA of red clover varies approximately between 0.020 and 0.035 m2/g, with some variation due to cultivar; mean values for adult plants are around 0.030 m2/g ([denHollanderEtAl2007]; [MurrayThesis2012]; [MasonEtAl2016_LeafEcon]).  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1073,7 +1073,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "No specific data for LAI or SLA of dead leaves were found for chicory. The value of SLA is thus assumed to be the same as that of live leaves (this is consistent for the model as very little biomass reallocation of biomass occurs during senescence). ",
+                      "Text": "No specific data for area of dead leaves were found for red clover. The value of SLA is thus assumed to be the same as that of live leaves (this is consistent for the model as very little biomass reallocation of biomass occurs during senescence). ",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1111,7 +1111,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Due to the near horizontal placement of its leaves, red clover has a high capacity for light interception. Values for the light extinction coefficient reported in the literature are quite variable, depending on what light fraction they are related to and whether plants are considered in mixed swards or as separated plants; these vary from 0.70 up to 1.0 ([LantingaEtAl1999]; [SonohatEtAl2002]; [denHollanderEtAl2007]). ",
+                      "Text": "Red clover has a high capacity for light interception due to the near horizontal placement of its leaves. Values for the light extinction coefficient reported in the literature are sparse and quite variable, depending on what light fraction they are related to and whether plants are considered in mixed swards or as separated plants; these vary from 0.80 up to 1.10 ([JoggiEtAl1983_RedClover]; [denHollanderEtAl2007]).  \n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1140,7 +1140,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The average height of red clover is assumed here as a simple function of leaf biomass; generically the petiole determines the height, but this are linked to leaf growth. Inflorescence are ignored as the height is mostly used for co puting light interception and transpiration.  The petiole length varies with cultivar, tipically between 5 and 15 cm ([Brougham1958_LeafDev]; [BissuelBelaygueEtAl2002_flower]; [denHollanderEtAl2007]).  The inflorescence is typically one third higher than the leaves. Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  \r\n",
+                      "Text": "The average height of red clover plants is assumed to be a simple function of leaf biomass.  Generically the stem length and morphology (degree of prostration) determines the height of the plant, but leaves are used because the growth of stems and leaves are closely linked. Inflorescence are ignored for the computation of height.  The height of adult plants varies with cultivar, typically between 50 and 80 cm ([JoggiEtAl1983_RedClover]; [denHollanderEtAl2007]; [ChmelikovaEtAl2015]).  The inflorescence is typically one third higher than the leaves. Sward population and competition with other plant may have an influence on the relationship between biomass and height, but this is not currently accounted for by the model.  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1180,7 +1180,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "red clover has a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 m2/m2 ([Brougham1958_LeafDev]; [HartChapter1987]; [NicholsEtAl2014_Drought]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.",
+                      "Text": "Red clover has, similar to otehr clovers, a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 m2/m2 ([Brougham1958_LeafDev]; [JoggiEtAl1983_RedClover]; [MurrayThesis2012]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
