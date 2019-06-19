@@ -861,7 +861,7 @@ namespace Models.PMF.Organs
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
                     LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-                    for (int layer = 0; layer < currentLayer; layer++)
+                    for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
