@@ -412,10 +412,9 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     Gain = pool.Amount,
-                    Activity = activity.Name,
-                    ActivityType = activity.GetType().Name,
+                    Activity = activity,
                     Reason = reason,
-                    ResourceType = this.Name
+                    ResourceType = this
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -453,6 +452,7 @@ namespace Models.CLEM.Resources
                 thisBreed.DMD = 0;
                 thisBreed.N = 0;
                 int index = 0;
+
                 while (amountRequired > 0)
                 {
                     // limiter obtained from breed feed limits or unlimited if second take of pools
@@ -462,14 +462,24 @@ namespace Models.CLEM.Resources
                         limiter = thisBreed.PoolFeedLimits[index].Limit;
                     }
 
-                    double amountToRemove = Math.Min(this.Pools[index].Amount, amountRequired * limiter);
+                    double amountToRemove = Math.Min(thisBreed.PoolFeedLimits[index].Pool.Amount * limiter, amountRequired);
                     // update DMD and N based on pool utilised
-                    thisBreed.DMD += this.Pools[index].DMD * amountToRemove;
-                    thisBreed.N += this.Pools[index].Nitrogen * amountToRemove;
+                    thisBreed.DMD += thisBreed.PoolFeedLimits[index].Pool.DMD * amountToRemove;
+                    thisBreed.N += thisBreed.PoolFeedLimits[index].Pool.Nitrogen * amountToRemove;
                     amountRequired -= amountToRemove;
 
                     // remove resource from pool
-                    this.Pools[index].Remove(amountToRemove, thisBreed, "Graze");
+                    thisBreed.PoolFeedLimits[index].Pool.Remove(amountToRemove, thisBreed, "Graze");
+
+                    // keep for a bit to check change of pool pointer
+                    //double amountToRemove = Math.Min(this.Pools[index].Amount * limiter, amountRequired);
+                    //// update DMD and N based on pool utilised
+                    //thisBreed.DMD += this.Pools[index].DMD * amountToRemove;
+                    //thisBreed.N += this.Pools[index].Nitrogen * amountToRemove;
+                    //amountRequired -= amountToRemove;
+
+                    //// remove resource from pool
+                    //this.Pools[index].Remove(amountToRemove, thisBreed, "Graze");
 
                     index++;
                     if (index >= this.Pools.Count)
@@ -498,10 +508,9 @@ namespace Models.CLEM.Resources
                 // report 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    ResourceType = this.Name,
+                    ResourceType = this,
                     Loss = request.Provided,
-                    Activity = request.ActivityModel.Name,
-                    ActivityType = request.ActivityModel.GetType().Name,
+                    Activity = request.ActivityModel,
                     Reason = request.Reason
                 };
                 LastTransaction = details;
@@ -537,10 +546,9 @@ namespace Models.CLEM.Resources
                 // report 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    ResourceType = this.Name,
+                    ResourceType = this,
                     Gain = request.Provided * -1,
-                    Activity = request.ActivityModel.Name,
-                    ActivityType = request.ActivityModel.GetType().Name,
+                    Activity = request.ActivityModel,
                     Reason = request.Reason
                 };
                 LastTransaction = details;

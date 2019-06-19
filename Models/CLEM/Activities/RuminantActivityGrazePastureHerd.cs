@@ -251,6 +251,9 @@ namespace Models.CLEM.Activities
             {
                 pool.Limit = greenlimit / 100.0;
             }
+
+            // order feedpools by age so that diet is taken from youngest greenest first
+            this.PoolFeedLimits = this.PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
         }
 
         public override void DoActivity()

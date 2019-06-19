@@ -113,18 +113,6 @@ namespace Models.CLEM
                     }
                 }
             }
-            set
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
-                }
-                else
-                {
-                    this.FileName = value;
-                }
-            }
         }
 
         /// <summary>
@@ -301,7 +289,7 @@ namespace Models.CLEM
         {
             CropDataType cropdata = new CropDataType
             {
-                SoilNum = int.Parse(dr["SoilNum"].ToString()),
+                SoilNum = dr["SoilNum"].ToString(),
                 CropName = dr["CropName"].ToString(),
                 Year = int.Parse(dr["Year"].ToString()),
                 Month = int.Parse(dr["Month"].ToString()),
@@ -444,7 +432,7 @@ namespace Models.CLEM
         /// <summary>
         /// Soil Number
         /// </summary>
-        public int SoilNum;
+        public string SoilNum;
 
         /// <summary>
         /// Name of Crop
