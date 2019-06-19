@@ -121,12 +121,13 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            var links = sim.Children[4] as ModelWithLinks;
-            Assert.AreEqual(links.zones.Length, 2);
-            Assert.NotNull(links.zones[0]);
-            Assert.NotNull(links.zones[1]);
+            var modelWithLinks = sim.Children[4] as ModelWithLinks;
+            Assert.AreEqual(modelWithLinks.zones.Length, 2);
+            Assert.NotNull(modelWithLinks.zones[0]);
+            Assert.NotNull(modelWithLinks.zones[1]);
         }
 
         /// <summary>Ensure the old style IFunction are linked correctly i.e. treated specially.</summary>
@@ -166,12 +167,12 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            Links.Resolve(sim, sim);
+            var model = sim.Children[4] as ModelWithIFunctions;
 
-            var links = sim.Children[4] as ModelWithIFunctions;
-
-            Assert.AreEqual(links.model2.Value(), 2);
+            Assert.AreEqual(model.model2.Value(), 2);
         }
 
         /// <summary>Ensure a [ScopedLinkByName] works.</summary>
@@ -191,10 +192,11 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            var links = sim.Children[4] as ModelWithScopedLinkByName;
-            Assert.AreEqual(links.zone2.Name, "zone2");
+            var model = sim.Children[4] as ModelWithScopedLinkByName;
+            Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
         /// <summary>Ensure a [ScopedLink] finds the closest match</summary>
@@ -214,11 +216,12 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find the closest match.
-            var links = sim.Children[4] as ModelWithScopedLink;
-            Assert.AreEqual(links.zone2.Name, "zone1");
+            var model = sim.Children[4] as ModelWithScopedLink;
+            Assert.AreEqual(model.zone2.Name, "zone1");
         }
 
         /// <summary>Ensure a [ChildLink] finds works</summary>
@@ -242,16 +245,20 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find zone1 as a match i.e. not use the zones name when doing a match.
-            var links = sim.Children[2] as ModelWithChildLink;
-            Assert.AreEqual(links.zone2.Name, "zone1");
+            var model = sim.Children[2] as ModelWithChildLink;
+            Assert.AreEqual(model.zone2.Name, "zone1");
 
             // If we now add another child, resolve should fail as there are two matches.
-            links.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
+            model.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
             Apsim.ParentAllChildren(sim);
-            Assert.Throws<Exception>(() => Links.Resolve(sim, sim) );
+            Assert.Throws<Exception>(() =>
+            {
+                links.Resolve(sim, true);
+            });
         }
 
         /// <summary>Ensure a [ChildLinkByName] finds works</summary>
@@ -276,11 +283,12 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find zone2 as a match as it uses the fields name.
-            var links = sim.Children[2] as ModelWithChildLinkByName;
-            Assert.AreEqual(links.zone2.Name, "zone2");
+            var model = sim.Children[2] as ModelWithChildLinkByName;
+            Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
         /// <summary>Ensure a [ParentLink] works</summary>
@@ -306,12 +314,13 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find the closest match.
-            var links = sim.Children[2].Children[0] as ModelWithParentLink;
-            Assert.AreEqual(links.zone.Name, "zone1");
-            Assert.AreEqual(links.sim.Name, "Simulation");
+            var model = sim.Children[2].Children[0] as ModelWithParentLink;
+            Assert.AreEqual(model.zone.Name, "zone1");
+            Assert.AreEqual(model.sim.Name, "Simulation");
         }
 
         /// <summary>Ensure a [LinkByPath] works</summary>
@@ -345,12 +354,13 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(sim);
 
-            Links.Resolve(sim, sim);
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            var links = sim.Children[2].Children[0] as ModelWithLinkByPath;
+            var model = sim.Children[2].Children[0] as ModelWithLinkByPath;
             var zone2 = sim.Children[3];
-            Assert.AreEqual(links.irrigation1, zone2.Children[0]);
-            Assert.AreEqual(links.irrigation2, zone2.Children[1]);
+            Assert.AreEqual(model.irrigation1, zone2.Children[0]);
+            Assert.AreEqual(model.irrigation2, zone2.Children[1]);
         }
 
         /// <summary>Ensure link can resolve services</summary>
@@ -376,7 +386,8 @@ namespace UnitTests.Core
             };
             Apsim.ParentAllChildren(simulations);
 
-            Links.Resolve(simulations.Children[1], simulations);
+            var links = new Links();
+            links.Resolve(simulations.Children[1], true);
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.IsNotNull(modelWithServices.storage);

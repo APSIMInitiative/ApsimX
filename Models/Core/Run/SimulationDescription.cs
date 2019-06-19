@@ -112,9 +112,9 @@
                 // and not have a separate DataStore instance for each simulation.
                 Model goodStorage;
                 if (topLevelModel == null)
-                    goodStorage = Apsim.Find(newSimulation, typeof(IDataStore)) as Model;
+                    goodStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
                 else
-                    goodStorage = Apsim.Find(topLevelModel, typeof(IDataStore)) as Model;
+                    goodStorage = Apsim.Child(topLevelModel, typeof(IDataStore)) as Model;
                 var unwantedStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
                 if (unwantedStorage != null)
                     Apsim.Delete(unwantedStorage);

@@ -106,6 +106,9 @@
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
         protected override void PostAllRuns()
         {
+            storage?.Writer.Stop();
+            storage?.Reader.Refresh();
+
             if (runPostSimulationTools)
                 RunPostSimulationTools();
 
@@ -137,6 +140,19 @@
 
                 if (relativeTo != null)
                 {
+                    // If this simulation was not created from deserialisation then we need
+                    // to parent all child models correctly and call OnCreated for each model.
+                    bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
+                                               relativeTo.Children[0].Parent == relativeTo;
+                    if (!hasBeenDeserialised)
+                    {
+                        // Parent all models.
+                        Apsim.ParentAllChildren(relativeTo);
+
+                        // Call OnCreated in all models.
+                        Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
+                    }
+
                     // Find the root model.
                     rootModel = relativeTo;
                     while (rootModel.Parent != null)
@@ -152,19 +168,6 @@
 
                     // Find a storage model.
                     storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
-
-                    // If this simulation was not created from deserialisation then we need
-                    // to parent all child models correctly and call OnCreated for each model.
-                    bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
-                                                relativeTo.Children[0].Parent == relativeTo;
-                    if (!hasBeenDeserialised)
-                    {
-                        // Parent all models.
-                        Apsim.ParentAllChildren(relativeTo);
-
-                        // Call OnCreated in all models.
-                        Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
-                    }
                 }
             }
             catch (Exception readException)
@@ -240,13 +243,13 @@
             storage?.Writer.WaitForIdle();
             storage?.Reader.Refresh();
 
+            var links = new Links();
             foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
             {
                 DateTime startTime = DateTime.Now;
 
-                if (rootModel is Simulations)
-                    (rootModel as Simulations).Links.Resolve(test as IModel);
-
+                links.Resolve(test as IModel, true);
+                
                 // If we run into problems, we will want to include the name of the test in the 
                 // exception's message. However, tests may be manager scripts, which always have
                 // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the

@@ -72,7 +72,6 @@
         /// <summary>Create one job runner process for each CPU</summary>
         private void CreateRunners()
         {
-            numberOfProcessors = 4;
             int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
             for (int i = numRunners; i < numberOfProcessors; i++)
                 pipeServers.Add(Task.Run(() => PipeServerTaskThread()));
