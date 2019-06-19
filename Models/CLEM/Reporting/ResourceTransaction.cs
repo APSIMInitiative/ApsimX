@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +16,13 @@ namespace Models.CLEM
     public class ResourceTransaction
     {
         /// <summary>
-        /// Type of resource in transaction
+        /// Resource type in transaction
         /// </summary>
-        public string ResourceType { get; set; }
+        public CLEMResourceTypeBase ResourceType { get; set; }
         /// <summary>
-        /// Name of sender or activity
+        /// Sender activity
         /// </summary>
-        public string Activity { get; set; }
-        /// <summary>
-        /// Name of sender or activity
-        /// </summary>
-        public string ActivityType { get; set; }
+        public CLEMModel Activity { get; set; }
         /// <summary>
         /// Reason or cateogry
         /// </summary>
@@ -37,19 +35,39 @@ namespace Models.CLEM
         /// Amount added
         /// </summary>
         public double Loss { get; set; }
-        /// <summary>
-        /// Standardised amount removed
-        /// </summary>
-        public double GainStandardised { get; set; }
-        /// <summary>
-        /// Standardised amount added
-        /// </summary>
-        public double LossStandardised { get; set; }
 
         /// <summary>
         /// Object to sotre specific extra information such as cohort details
         /// </summary>
         public object ExtraInformation { get; set; }
+
+        /// <summary>
+        /// Convert transaction to another value using ResourceType supplied converter
+        /// </summary>
+        /// <param name="converterName">Name of converter to use</param>
+        /// <param name="transactionType">Indicates if it is a Gain or Loss to convert</param>
+        /// <returns>Value to report</returns>
+        public object ConvertTo(string converterName, string transactionType)
+        {
+            if(ResourceType!=null)
+            {
+                double amount = 0;
+                switch (transactionType.ToLower())
+                {
+                    case "gain":
+                        amount = this.Gain;
+                        break;
+                    case "loss":
+                        amount = this.Loss;
+                        break;
+                    default:
+
+                        break;
+                }
+                return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
+            }
+            return null;
+        }
     }
 
     /// <summary>

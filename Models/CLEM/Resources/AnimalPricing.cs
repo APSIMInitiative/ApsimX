@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public AnimalPricing()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
             this.SetDefaults();
         }
 

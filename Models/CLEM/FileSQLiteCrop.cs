@@ -143,18 +143,6 @@ namespace Models.CLEM
                     }
                 }
             }
-            set
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
-                }
-                else
-                {
-                    this.FileName = value;
-                }
-            }
         }
 
         /// <summary>
@@ -263,7 +251,7 @@ namespace Models.CLEM
             nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(PercentNitrogenColumnName);
 
             // define SQL filter to load data
-            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + " FROM " + TableName
+            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + SoilTypeColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + " FROM " + TableName
                 + " WHERE " + SoilTypeColumnName + " = '" + soilId + "'"
                 + " AND " + CropNameColumnName + " = '" + cropName + "'";
 
@@ -302,9 +290,9 @@ namespace Models.CLEM
                 results.DefaultView.Sort = "Year, Month";
 
                 // convert to list<CropDataType>
-                foreach (DataRow row in results.DefaultView)
+                foreach (DataRowView row in results.DefaultView)
                 {
-                    cropDetails.Add(DataRow2CropData(row));
+                    cropDetails.Add(DataRow2CropData(row.Row));
                 }
             }
 
@@ -315,11 +303,10 @@ namespace Models.CLEM
         {
             CropDataType cropdata = new CropDataType
             {
-                SoilNum = int.Parse(dr[SoilTypeColumnName].ToString()),
+                SoilNum = dr[SoilTypeColumnName].ToString(),
                 CropName = dr[CropNameColumnName].ToString(),
                 Year = int.Parse(dr[YearColumnName].ToString()),
                 Month = int.Parse(dr[MonthColumnName].ToString()),
-
                 AmtKg = double.Parse(dr[AmountColumnName].ToString())
             };
             if(nitrogenColumnExists)
@@ -330,6 +317,8 @@ namespace Models.CLEM
             {
                 cropdata.Npct = double.NaN;
             }
+            cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
+
             return cropdata;
         }
 
