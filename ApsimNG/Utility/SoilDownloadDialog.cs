@@ -517,7 +517,7 @@
         }
 
         /// <summary>
-        /// Gets a soil description from the ISRIC REST API.
+        /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>
         /// <returns>True if successful</returns>
         private bool GetISRICSoil()
@@ -541,6 +541,10 @@
                     if (soilNodes.Count > 0)
                     {
                         newSoil = SoilFromApsoil(soilNodes[0]);
+                        // Something looks very wrong with organic carbon in these soils. 
+                        // It looks to me like it's off by a factor of 10. 
+                        SoilOrganicMatter soilOrganic = Apsim.Child(newSoil, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+                        soilOrganic.OC = MathUtilities.Divide_Value(soilOrganic.OC, 10.0);
                         ReplaceModelCommand command = new ReplaceModelCommand(soil, newSoil, explorerPresenter);
                         explorerPresenter.CommandHistory.Add(command, true);
                     }
