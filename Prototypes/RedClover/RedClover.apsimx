@@ -633,7 +633,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.25,
+                      "FixedValue": 1.5,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "Children": [],
@@ -727,13 +727,13 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
+                            0.5,
                             0.8,
-                            1.0,
                             1.5
                           ],
                           "Y": [
                             0.0,
-                            0.8,
+                            0.6,
                             1.0,
                             1.0
                           ],
