@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected RuminantInitialCohorts()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
         /// <summary>

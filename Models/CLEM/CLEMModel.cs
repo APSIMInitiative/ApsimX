@@ -157,6 +157,7 @@ namespace Models.CLEM
         {
             string overall = "activity";
             string extra = "";
+            double opacity = 1;
 
             if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
@@ -210,10 +211,18 @@ namespace Models.CLEM
                     break;
             }
 
+            if(!this.Enabled)
+            {
+                if(this.Parent.Enabled)
+                {
+                    opacity = 0.4;
+                }
+            }
+
             string html = "";
             html += "\n<div class=\"holder"+ ((extra == "") ? "main" : "sub") + " " + overall  +"\">";
             html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
-            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
+            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\" style=\"opacity: "+opacity.ToString()+";\">";
 
             //if(this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
             //{
@@ -289,7 +298,7 @@ namespace Models.CLEM
         public string ModelSummaryNameTypeHeader()
         {
             string html = "";
-            html += "<div class=\"namediv\">" + this.Name + "</div>";
+            html += "<div class=\"namediv\">" + this.Name +  ((!this.Enabled)?" - DISABLED!":"")+ "</div>";
             if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
                 html += "<div class=\"partialdiv\"";
