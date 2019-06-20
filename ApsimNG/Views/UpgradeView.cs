@@ -122,6 +122,7 @@ namespace UserInterface.Views
             htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
+            window1.Modal = true;
             oldVersions.Toggled += OnShowOldVersionsToggled;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
