@@ -162,7 +162,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "During this phase, red clover plants partitions biomass to leaf+petiole, stem, and root+taproot organs. Initially, this phase starts when plants emerge, but it is also triggered as phenology resets after the end of the reproductive phase.  The vegetative phase ends when the inductive phase starts.  \r\nred clover is typically described as either short day or short-long day species ([Thomas1961]; [ChapterThomas1980]), which means induction is caused by exposure to short daylight lengths but reproductive growth may also be triggered by a period with long daylight.  Exposure to cold temperature can also lead to induction with subsequent initiation of inflorescence development when days become warmer and longer ([Thomas1981_SLD]; [BeattyThesis1959]). The variability in response of induction to environmental condition is considerably large in red clover. In most stands at least some plants will show reproductive growth regardless of environmental conditions. The variations show some trend when contrasting large- to short-leaved cultivars or for cultivar from different origins (especially latitude), but the effect of genotypes within each group was not found to be significant (e.g. [ChapterThomas1980]; [Thomas1982_Comparison]; [Norris1984_daylength]; [BeattyThesis1959]).  \r\nInducing daylight length seem to be 12 hours or less, while temperatures need to be below about 10oC ([Thomas1979_Natural]; [Thomas1981_SLD]; [Thomas1982_Comparison]; [Norris1984_daylength]; [Norris1985_Temperature]). The base red clover model uses the accumulation of days under either low temperature or small daylight length to trigger the end of the vegetative phase.\r\n",
+                      "Text": "During this phase, red clover plants allocates new biomass to only leaf+petiole, stems, and root+taproot organs. Initially, this phase starts when plants emerge, but it is also triggered as phenology resets after the end of the reproductive phase.  The vegetative phase ends when the inductive phase starts.  \r\nRed clover is a long day species, with flowering starting in spring when day light is increasing ([Aitken1964flowering]; [BowleyEtAl1987red]; [Fagerberg1988Phenol]), and although temperature has a small effect on flowering date and intensity, red clover does not need vernalisation to start flower initiation.  Red clover plants can flower on the same year of planting, if that is done early enough in spring, but swards sown in later summer and autumn will not be developed enough to start flowering before the winter.  The model uses accumulation of days under favaourable conditions to trigger the change of phase from vegetative to inductive to ensure that flower is not triggered in autumn.  \n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -171,8 +171,8 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 15.0,
-                      "Units": "days",
+                      "FixedValue": 500.0,
+                      "Units": "oCd",
                       "Name": "Target",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -180,78 +180,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AddFunction, Models",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime.Value()",
                       "Name": "Progression",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Photoperiod.Value()",
-                          "Name": "ShortDays",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                6.0,
-                                8.0,
-                                10.0,
-                                12.0,
-                                14.0,
-                                16.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                0.7,
-                                0.1,
-                                0.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].ThermalTime.Value()",
-                          "Name": "LowTemperatures",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                2.0,
-                                5.0,
-                                8.0,
-                                11.0,
-                                15.0
-                              ],
-                              "Y": [
-                                0.0,
-                                0.0,
-                                1.0,
-                                1.0,
-                                0.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -269,7 +201,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "During this phase the red clover plants await for the environmental cue to start the reproductive growth. Physiologic and metabolic processes remain the same as for the vegetative phase; plants partition biomass to leaf+petiole, stem, and root+taproot organs. The inductive phase starts when plants accumulated a given number of days under inductive conditions, i.e. low temperatures and/or short daylight lengths ([Thomas1979_Natural]; [Norris1984_daylength]; [Norris1985_Temperature]).  The phase ends when the plants start the reproduction growth, with the emergence of flower buds.  \r\nThere is a large level of variation in red clover plants and their flowering response to environmental conditions, with some plants reaching reproductive growth in almost any stand ([Thomas1979_Natural]; [BeattyThesis1959]). Nonetheless, in natural condition reproductive growth is typically triggered by long daylight lengths, with reported values around 14 hours ([ChapterThomas1980]; [Thomas1981_SLD];[Norris1984_daylength]).  The accumulation of days under long daylight length is used by the model to trigger the end of the inductive phase.  \r\n",
+                      "Text": "During this phase the red clover plants await for the environmental cue to start the reproductive growth.  Physiologic and metabolic processes remain the same as for the vegetative phase with plants allocating biomass to leaf+petiole, stems, and root+taproot organs.  As red clover requires long days for flowering, the trigger to end this phase is defined by the length of day, or photoperiod.  Cultivars are often grouped by flowering date, as in early, intermediate, or late flowering; thus different cultivars require different photoperiods to trigger flower initiation ([Aitken1964flowering]; [Fagerberg1988Phenol]; [ClaydonEtAl1993colenso]).  The variability in response of induction to environmental condition is considerably in red clover and not well understood (e.g. [JonesAndThomas1993gibberelins]; [FanEtAl2004cutting]).  In most stands at least some plants will show reproductive growth, but often not all the plants in the stand.  This, and genetic variability, results in considerable variation in flower initiation is any given sward.  As the model attempts to simulated an average plant, such variations are not accounted for.\r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -287,26 +219,64 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
+                      "$type": "Models.Functions.LessThanFunction, Models",
                       "Name": "Progression",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            10.0,
-                            11.5,
-                            14.0,
-                            15.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].PhotoperiodVariation",
+                          "Name": "PhotoperiodVariation",
                           "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "NoProgression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "XProperty": "[Phenology].Photoperiod.Value()",
+                          "Name": "SomeProgression",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                10.0,
+                                11.0,
+                                12.0,
+                                13.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -329,7 +299,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "During this phase the plant is partitioning biomass to all organs, including reproductive organs (peduncles, inflorescence, and seeds). The current model does not describe the flower and seeds development explicitly, only a generic organ referred to as *inflorescence* is defined. The main reason for this is the variability and complex phenology of reproduction of red clover; with seeds maturing while new flowers are still being initiated over summer and early autumn (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]). Also due to their similarities and the fact that a population is describe in the model (instead of single plants), peduncles and petioles are simulated as a single organ.  \r\nFlower emergence typically starts in spring, peaks at the beginning of summer and continues until autumn ([ChapterThomas1980]; [MacfarlaneAndSheath1984]; [MarshalEtAl1993_Production]). The actual periods vary for different cultivars, and some have flower nearly all year (albeit with low frequency over winter).  A drop in flower numbers in mid-summer and subsequent increase in early autumn has been show in some cultivars and has been linked to water deficit or inhibition due to long days ([ChapterThomas1980]; [MacfarlaneAndSheath1984]).  Management practices, such as applying N fertiliser, irrigation and defoliations, have, in general, a positive impact on flower and seed production ([ChapterThomas1980]; [MedeirosAndSteiner2000]; [BissuelBelaygueEtAl2002_flower]), but there is large variation in the responses, depending on the cultivars as well as the extent and timing of the intervention. Currently, the model does not account for the effect of this practices explicitly, although it is expected that some effects are captured by changes in biomass allocation caused by actions such as irrigation of application of fertilisers.\r\n",
+                      "Text": "During this phase the plant is partitioning biomass to all organs, including reproductive organs (peduncles, inflorescence, and seeds).  The current model does not describe the development of flower and seeds explicitly, only a generic organ referred to as *inflorescence* is defined.  The reason for this is because there isn't enough data to devise and parameterise these processes while there is considerable variability in the phenology of reproduction of red clover.  Often there are seeds maturing while new flowers are still being initiated over summer (e.g. [Aitken1964flowering]; [CliffordAndAnderson1980seed]).  Also due to their similarities and the fact that a population is describe in the model (instead of single plants), peduncles and petioles are simulated as a single organ.  \r\nFlower emergence starts in spring when day light is increasing, heading peaks in summer, and ceases in early autumn ([Aitken1964flowering]; [CliffordAndAnderson1980seed]; [ClaydonEtAl1993colenso]).  The actual periods vary for different cultivars, with early flowering ones having typically longer reproductive phases.  The models uses the accumulation of degrees-day and photoperiod to simulate the progression and to trigger the end of this phase.  \nManagement practices, such as applying N fertiliser, irrigation, and defoliations, may have an impact on flower and seed production ([Brougham1959graze]; [CliffordAndAnderson1980seed]; [FanEtAl2004cutting]), but there is large variation in the responses, depending on the cultivars as well as the extent and timing of the intervention.  Currently, the model does not account for the effect of this practices explicitly, although it is expected that some effects are captured by changes in biomass allocation caused by actions such as irrigation or defoliation.  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -338,8 +308,8 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 30.0,
-                      "Units": "days",
+                      "FixedValue": 2500.0,
+                      "Units": "oCd",
                       "Name": "Target",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -347,31 +317,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime.Value()",
                       "Name": "Progression",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            10.0,
-                            11.5,
-                            14.0,
-                            15.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            0.0,
-                            0.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4157,10 +4106,10 @@
                                     20.0
                                   ],
                                   "Y": [
-                                    0.0,
-                                    0.0,
-                                    0.025,
-                                    0.2,
+                                    0.05,
+                                    0.075,
+                                    0.15,
+                                    0.3,
                                     0.6,
                                     0.8,
                                     0.95,
@@ -8484,7 +8433,10 @@
                     "[Leaf].Photosynthesis.FT.XYPairs.X = 0,4,9,15,18.5,27,35,37.5",
                     "[Leaf].Photosynthesis.FT.XYPairs.Y = 0,0,0.15,0.6,1,1,0.1,0",
                     "[Leaf].NRetranslocationFactor.TemperatureFactor.XYPairs.X = 0,4,9,15,18.5,27,35,37.5",
-                    "[Leaf].NRetranslocationFactor.TemperatureFactor.XYPairs.Y = 0,0,0.15,0.6,1,1,0.1,0"
+                    "[Leaf].NRetranslocationFactor.TemperatureFactor.XYPairs.Y = 0,0,0.15,0.6,1,1,0.1,0",
+                    "[Phenology].Inductive.Target.FixedValue = 20",
+                    "[Phenology].Inductive.Progression.SomeProgression.XYPairs.X = 12,13,14,15",
+                    "[Phenology].Reproductive.Target.FixedValue = 2000"
                   ],
                   "Name": "Pawera",
                   "Children": [
@@ -8508,7 +8460,10 @@
                     "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,8,15,18,26,34,37.5",
                     "[Leaf].Photosynthesis.FT.XYPairs.Y = 0,0,0.15,0.68,1,1,0.1,0",
                     "[Leaf].NRetranslocationFactor.TemperatureFactor.XYPairs.X = 0,2.5,8,15,18,26,34,37.5",
-                    "[Leaf].NRetranslocationFactor.TemperatureFactor.XYPairs.Y = 0,0,0.15,0.68,1,1,0.1,0"
+                    "[Leaf].NRetranslocationFactor.TemperatureFactor.XYPairs.Y = 0,0,0.15,0.68,1,1,0.1,0",
+                    "[Phenology].Inductive.Target.FixedValue = 15",
+                    "[Phenology].Inductive.Progression.SomeProgression.XYPairs.X = 12,12.5,13.5,14",
+                    "[Phenology].Reproductive.Target.FixedValue = 2200"
                   ],
                   "Name": "Rajah",
                   "Children": [
