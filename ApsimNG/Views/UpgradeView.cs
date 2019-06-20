@@ -291,9 +291,7 @@ namespace UserInterface.Views
                     if (!checkbutton1.Active)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
-                    if (String.IsNullOrWhiteSpace(firstNameBox.Text) || String.IsNullOrWhiteSpace(lastNameBox.Text) ||
-                        String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.ActiveText))
-                        throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+                    AssertInputsAreValid();
 
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
                     Upgrade upgrade = upgradeList[selIndex];
@@ -302,6 +300,17 @@ namespace UserInterface.Views
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
                     {
+                        // Write to the registration database.
+                        AssertInputsAreValid();
+                        try
+                        {
+                            WriteUpgradeRegistration(versionNumber);
+                        }
+                        catch (Exception err)
+                        {
+                            throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
+                        }
+
                         window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
@@ -362,6 +371,18 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Throws if user has not provided info in a mandatory field.
+        /// </summary>
+        private void AssertInputsAreValid()
+        {
+            if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
+                string.IsNullOrWhiteSpace(lastNameBox.Text) ||
+                string.IsNullOrWhiteSpace(emailBox.Text) || 
+                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+        }
+
+        /// <summary>
         /// Invoked when the download progress changes.
         /// Updates the progress bar.
         /// </summary>
@@ -404,9 +425,6 @@ namespace UserInterface.Views
                 {
                     if (e.Error != null) // On Linux, we get to this point even when errors have occurred
                         throw e.Error;
-
-                    // Write to the registration database.
-                    WriteUpgradeRegistration(versionNumber);
 
                     if (File.Exists(tempSetupFileName))
                     {
@@ -486,7 +504,15 @@ namespace UserInterface.Views
             product += " Upgrade";
             url = AddToURL(url, "product",  product);
 
-            WebUtilities.CallRESTService<object>(url);
+            try
+            {
+                WebUtilities.CallRESTService<object>(url);
+            }
+            catch
+            {
+                // Retry once.
+                WebUtilities.CallRESTService<object>(url);
+            }
         }
 
         /// <summary>Add a key / value pair to url if not empty</summary>
