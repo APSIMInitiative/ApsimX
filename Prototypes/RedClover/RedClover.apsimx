@@ -5961,7 +5961,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.1,
+                              "FixedValue": 0.25,
                               "Units": "g/g",
                               "Name": "BaseProportion",
                               "Children": [],
@@ -6982,7 +6982,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.8,
+                              "FixedValue": 0.7,
                               "Units": "g/g",
                               "Name": "BaseProportion",
                               "Children": [],
@@ -8268,7 +8268,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The target shoot-to-root is used to alter the allocation of biomass when the balance between the various organs is disturbed, such as after a defoliation.  \r\nPublished data for the shoot-to-root ratio in red clover show considerable variability, with values between 1.5 to 8.0 for a wide range of conditions ([Evans1973RootShoot]; [Evans1977Roots]; [HeichelEtAl1985]; [ChmelikovaEtAl2015]). For typical enviromental conditions (low stress levels) the data suggest a strong seasonality in biomass allocation.  Similar to other forages with a taproots, basically all growth in spring is allocated above ground, whereas in summer-autumn the allocatin is more even, replenishing the below ground reserves (e.g. [Evans1973RootShoot]; [HeichelEtAl1985]; [Teixeira2008DMPartition]).  The partition can be further affected by environmental conditions, with water or nutrient deficiency inducing greater root growth, while low light conditions lead to a higher allocation above ground ([GistAndMott1957]; [KendallEtAl1994GLFs]). The current model does not explicitly consider these variations, this should be upgraded when data becomes available.  \r\n\r\n",
+                  "Text": "The target shoot-to-root is used to alter the allocation of biomass when the balance between the various organs is disturbed, such as after a defoliation.  \r\nPublished data for the shoot-to-root ratio in red clover show considerable variability, with values between 1.5 to 8.0 for a wide range of conditions ([Evans1973RootShoot]; [Evans1977Roots]; [HeichelEtAl1985]; [ChmelikovaEtAl2015]). For typical enviromental conditions (low stress levels) the data suggest a strong seasonality in biomass allocation.  Similar to other forages that are strongly taprooted, basically all growth in spring is allocated above ground, whereas in summer-autumn the allocation is more even, replenishing the below ground reserves (e.g. [Evans1973RootShoot]; [HeichelEtAl1985]; [Teixeira2008DMPartition]).  The partition can be further affected by environmental conditions, with water or nutrient deficiency inducing greater root growth, while low light conditions lead to a higher allocation above ground ([GistAndMott1957]; [KendallEtAl1994GLFs]). The current model does not explicitly consider these variations, this should be upgraded when data becomes available.  \r\n\r\n",
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8282,41 +8282,97 @@
                   "Name": "AllPhases",
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.DivideFunction, Models",
                       "Name": "TargetSR",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 3.0,
-                          "Units": "g/g",
-                          "Name": "MeanSR",
-                          "Children": [],
+                          "$type": "Models.Functions.LessThanFunction, Models",
+                          "Name": "BaseTargetAboveGroundAllocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].PhotoperiodVariation",
+                              "Name": "PhotoperiodVariation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.5,
+                              "Units": "g/g",
+                              "Name": "MinimumAllocation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "XProperty": "[Phenology].Photoperiod.Value()",
+                              "Name": "VariableAllocation",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    9.5,
+                                    13.0,
+                                    17.0,
+                                    20.0
+                                  ],
+                                  "Y": [
+                                    0.975,
+                                    0.95,
+                                    0.75,
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Photoperiod.Value()",
-                          "Name": "PhotoPeriodFactor",
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "BaseTargetBelowGroundAllocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                6.0,
-                                13.0,
-                                20.0,
-                                24.0
-                              ],
-                              "Y": [
-                                0.33,
-                                0.75,
-                                1.0,
-                                1.25,
-                                1.65
-                              ],
-                              "Name": "XYPairs",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "One",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[TargetShootRootRatio].AllPhases.TargetSR.BaseTargetAboveGroundAllocation",
+                              "Name": "BaseTargetAboveGroundAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8357,7 +8413,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[TargetShootRootRatio].Value()",
+                  "VariableName": "[TargetShootRootRatio]",
                   "Name": "TargetSR",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8380,7 +8436,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[TargetShootRootRatio].Value()",
+                      "VariableName": "[TargetShootRootRatio]",
                       "Name": "TargetSR",
                       "Children": [],
                       "IncludeInDocumentation": true,
