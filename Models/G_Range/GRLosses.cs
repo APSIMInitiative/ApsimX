@@ -824,7 +824,11 @@ namespace Models
                 tminup[iLayer] = tminup[iLayer] + immobil;
 
                 // Coarse branch
+#if G_RANGE_BUG
+                TrackLignin(surfaceIndex, 2, ref deadCoarseBranchCarbon[0], ref deadCoarseBranchNitrogen[0], allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+#else
                 TrackLignin(surfaceIndex, 2, ref _deadTotalCoarseBranchCarbon, ref _deadTotalCoarseBranchNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+#endif
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)
@@ -832,7 +836,11 @@ namespace Models
                 tminup[iLayer] = tminup[iLayer] + immobil;
 
                 // Coarse root
+#if G_RANGE_BUG
+                TrackLignin(soilIndex, 3, ref deadCoarseRootCarbon[0], ref deadCoarseRootNitrogen[0], allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+#else
                 TrackLignin(soilIndex, 3, ref _deadTotalCoarseRootCarbon, ref _deadTotalCoarseRootNitrogen, allEffectsOnDecomp, decodt, 0.25, ref grmin, ref immobil);
+#endif
                 grossmin[iLayer] = grossmin[iLayer] + grmin;
                 tnetmin[iLayer] = tnetmin[iLayer] - immobil;
                 if (tnetmin[iLayer] < 0.0)

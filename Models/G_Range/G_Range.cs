@@ -1518,11 +1518,21 @@ namespace Models
 
                 if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'EACH_YR')
                 */
-            // TEMPORARY!!! FIX THIS UP LATER
-            // Until we decide how (or if) to read in the co2 effects, we need to have some none-zero values - EJZ
-            co2EffectOnProduction[(int)Facet.herb] = 0.8;
-            co2EffectOnProduction[(int)Facet.shrub] = 0.8;
-            co2EffectOnProduction[(int)Facet.tree] = 0.8;
+              // I prefer not to use the external files of G-Range, especially as the Weather component is already intended as
+              // a provider of information on CO2 levels.
+
+            // In G-Range, a value of 0.8 is the baseline value for co2EffectOnProduction, 
+            // and is what G-Range uses for dates prior to 2007. They have the value going up to around 1.0 in 2066 under the rcp85 scenario,
+            // which is around 800 ppm. Boone et al. 2017 reference equation 10 of Pan et al. (1998):
+            // 1 + (1.25 - 1)/(log10(2)) * (log10(CO2 / 350))
+            // But actually use something a bit different, indicating 2006 CO2 levels as a baseline, without giving details. 
+            // I can get close to their values with the following:
+            double co2 = Math.Max(Weather.CO2, 380.0);
+            double co2Effect = 0.8 + (0.19 / Math.Log10(2.0)) * Math.Log10(co2 / 380.0);
+            co2EffectOnProduction[(int)Facet.herb] = co2Effect;
+            co2EffectOnProduction[(int)Facet.shrub] = co2Effect;
+            co2EffectOnProduction[(int)Facet.tree] = co2Effect;
+            // This won't matter for initial testing, as Weather.CO2 will default to 350, and so co2effect will always be 0.8, the G-Range "default"
         }
 
         /// <summary>
@@ -1561,7 +1571,7 @@ namespace Models
         private void EachMonth()
         {
             // I'm not transcoding the bulk of this directly. There are around 1700 lines of code that test variables against bounds of 0
-            // and vLarge. Here I use relflection to check all Double members against that range.
+            // and vLarge. Here I use reflection to check (almost) all Double members against that range.
 
             Type myType = GetType();
             double var;
