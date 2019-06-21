@@ -1177,7 +1177,11 @@ namespace Models
         /// <returns></returns>
         private double Line(double x, double x1, double y1, double x2, double y2)
         {
+#if G_RANGE_BUG
+            return (double)((int)((y2 - y1) / (x2 - x1) * (x - x2) + y2));
+#else
             return (y2 - y1) / (x2 - x1) * (x - x2) + y2;
+#endif
         }
     }
 }
