@@ -218,11 +218,14 @@ namespace UserInterface.Views
         {
             get
             {
+                if (Browser == null && Browser.Document == null)
+                    return Color.Empty;
                 return Browser.Document.BackColor;
             }
             set
             {
-                Browser.Document.BackColor = value;
+                if (Browser != null && Browser.Document != null)
+                    Browser.Document.BackColor = value;
             }
         }
 
@@ -230,11 +233,14 @@ namespace UserInterface.Views
         {
             get
             {
+                if (Browser == null && Browser.Document == null)
+                    return Color.Empty;
                 return Browser.Document.ForeColor;
             }
             set
             {
-                Browser.Document.ForeColor = value;
+                if (Browser != null && Browser.Document != null)
+                    Browser.Document.ForeColor = value;
             }
         }
 
