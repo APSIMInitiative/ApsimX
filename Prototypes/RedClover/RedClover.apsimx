@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 283,
+  "ExplorerWidth": 587,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -8217,7 +8217,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The target shoot-to-root is used to alter the allocation of biomass when the balance between the various organs is disturbed, such as after a defoliation.  \r\nPublished data for the shoot-to-root ratio in red clover show considerable variability, with values between 1.5 to 8.0 for a wide range of conditions ([Evans1973RootShoot]; [Evans1977Roots]; [HeichelEtAl1985]; [ChmelikovaEtAl2015]). For typical enviromental conditions (low stress levels) the data suggest a strong seasonality in biomass allocation.  Similar to other forages that are strongly taprooted, basically all growth in spring is allocated above ground, whereas in summer-autumn the allocation is more even, replenishing the below ground reserves (e.g. [Evans1973RootShoot]; [HeichelEtAl1985]; [Teixeira2008DMPartition]).  The partition can be further affected by environmental conditions, with water or nutrient deficiency inducing greater root growth, while low light conditions lead to a higher allocation above ground ([GistAndMott1957]; [KendallEtAl1994GLFs]). The current model does not explicitly consider these variations, this should be upgraded when data becomes available.  \r\n\r\n",
+                  "Text": "The target shoot-to-root is used to alter the allocation of biomass when the balance between the various organs is disturbed, such as after a defoliation.  \r\nPublished data for the shoot-to-root ratio in red clover show considerable variability, with values between 1.5 to 8.0 for a wide range of conditions ([Evans1973RootShoot]; [Evans1977Roots]; [HeichelEtAl1985]; [ChmelikovaEtAl2015]). For typical enviromental conditions (low stress levels) the data suggest a strong seasonality in biomass allocation.  Similar to other forages that are strongly taprooted, basically all growth in spring is allocated to above ground organs, whereas in summer-autumn the allocation is more even, replenishing the below ground reserves (e.g. [Evans1973RootShoot]; [HeichelEtAl1985]; [Teixeira2008DMPartition]).  The partition can be further affected by environmental conditions, with water or nutrient deficiency inducing greater root growth, while low light conditions lead to a higher allocation above ground ([GistAndMott1957]; [KendallEtAl1994GLFs]). The current model does not explicitly consider these variations, this should be upgraded when data becomes available.  \r\n\r\n",
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8235,71 +8235,10 @@
                       "Name": "TargetSR",
                       "Children": [
                         {
-                          "$type": "Models.Functions.LessThanFunction, Models",
-                          "Name": "BaseTargetAboveGroundAllocation",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].PhotoperiodVariation",
-                              "Name": "PhotoperiodVariation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Zero",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
-                              "Units": "g/g",
-                              "Name": "MinimumAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].Photoperiod.Value()",
-                              "Name": "VariableAllocation",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    9.5,
-                                    13.0,
-                                    17.0,
-                                    20.0
-                                  ],
-                                  "Y": [
-                                    0.975,
-                                    0.95,
-                                    0.75,
-                                    0.5,
-                                    0.5
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[TargetAboveGroundFraction]",
+                          "Name": "TargetAboveGroundAllocation",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -8320,8 +8259,8 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TargetShootRootRatio].AllPhases.TargetSR.BaseTargetAboveGroundAllocation",
-                              "Name": "BaseTargetAboveGroundAllocation",
+                              "VariableName": "[TargetAboveGroundFraction]",
+                              "Name": "TargetAboveGroundAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8348,12 +8287,12 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.DivideFunction, Models",
+              "$type": "Models.Functions.PhaseLookup, Models",
               "Name": "TargetAboveGroundFraction",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The model attempts to keep the proportion of the plant biomass above and below ground at a given value.  The 'target' value is the 'ideal' relative proportion of biomass above and below ground for the plant at a given growth phase. This is in accord with the biomass allocation plasticity approach (e.g. [Wilson_1988]; [LevangBrilz_2002]). The approach ensures that biomass allocation is shifted to the appropriate organs when the balance is disturbed, especially important for recovery after cut or grazing.  The model uses the target shoot-to-root ratio to compute the proportion of biomass above ground (e.g. [JohnsonAndThornley1987]).  \r\n",
+                  "Text": "The model attempts to keep the proportion of the plant biomass above and below ground at a given value.  The 'target' value is the 'ideal' relative proportion of biomass above and below ground for the plant at a given growth phase.  The approach used here mimics the allocation pattern in strongly taprooted forages (e.g. [Teixeira2008DMPartition]).  In spring, nearly all biomass is allocated to above ground organs, with the proportion reducing as the length of day increases.  In summer-autumn the allocation evenly distributed amoung all organs, favouring the replenishment of below ground reserves ([Evans1973RootShoot]; [HeichelEtAl1985]).  \nThe approach used in the RedClover model is based on that used for describing biomass partitioning in lucerne ([Teixeira2008DMPartition]), which was parameterised for Lincoln, NZ, only.  This was generalised by assuming that miminum and maximum allocations are a function of the annual variation in day length (which is a function of latitude).  Thus, the variation in allocation to above ground organs is small in the tropics and reaches a maximum near the polar circle.  This function allows for smooth transition between seasons and describe the general pattern sensibly, but it should be revised when more data becomes available.  \n",
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8361,9 +8300,429 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[TargetShootRootRatio]",
-                  "Name": "TargetSR",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "Emergence",
+                  "End": "Ripening",
+                  "Name": "AllPhases",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LessThanFunction, Models",
+                      "Name": "TargetAboveGroundAllocation",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].PhotoperiodVariation",
+                          "Name": "PhotoperiodVariation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LowerAllocationFractionAboveG]",
+                          "Name": "BaseAllocationFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "VariableAllocationFraction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[LowerAllocationFractionAboveG]",
+                              "Name": "BaseAllocationFraction",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "AdditionalAllocation",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "DeltaAllocation",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[UpperAllocationFractionAboveG]",
+                                      "Name": "MaximumAllocationFraction",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[LowerAllocationFractionAboveG]",
+                                      "Name": "MinimumAllocationFraction",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "DayLengthFactor",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 1.0,
+                                      "Units": null,
+                                      "Name": "One",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.PowerFunction, Models",
+                                      "Exponent": 2.5,
+                                      "Name": "PowerFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "BaseFactor",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.MaximumFunction, Models",
+                                              "Name": "Nominator",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 0.0,
+                                                  "Units": null,
+                                                  "Name": "Zero",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                                  "Name": "PhotoDev",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.PhotoperiodFunction, Models",
+                                                      "Twilight": 0.0,
+                                                      "DayLength": 0.0,
+                                                      "Name": "PhotoPeriod",
+                                                      "Children": [],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                                      "Name": "Deviation",
+                                                      "Children": [
+                                                        {
+                                                          "$type": "Models.Functions.Constant, Models",
+                                                          "FixedValue": 12.0,
+                                                          "Units": "hours",
+                                                          "Name": "Noon",
+                                                          "Children": [],
+                                                          "IncludeInDocumentation": true,
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        },
+                                                        {
+                                                          "$type": "Models.Functions.VariableReference, Models",
+                                                          "VariableName": "[DeltaAnnualDayLength]",
+                                                          "Name": "DeltaDayLength",
+                                                          "Children": [],
+                                                          "IncludeInDocumentation": true,
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        }
+                                                      ],
+                                                      "IncludeInDocumentation": true,
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.MultiplyFunction, Models",
+                                              "Name": "Denominator",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 2.0,
+                                                  "Units": null,
+                                                  "Name": "Two",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[DeltaAnnualDayLength]",
+                                                  "Name": "DeltaDayLength",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MaximumFunction, Models",
+              "Name": "LowerAllocationFractionAboveG",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is the lower limit for biomass allocation in above ground organs, assumed to be a function of latitude.  \n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": "g/g",
+                  "Name": "MinimumAllocation",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "EstimatedAllocation",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.75,
+                      "Units": "g/g",
+                      "Name": "MedianAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "LatitudeFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LessThanFunction, Models",
+                          "Name": "AbsLatitude",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Weather].Latitude",
+                              "Name": "Latitude",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": "",
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "SouthLatitude",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": -1.0,
+                                  "Units": "",
+                                  "Name": "MinusOne",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Weather].Latitude",
+                                  "Name": "Latitude",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Weather].Latitude",
+                              "Name": "NorthLatitude",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "Variation",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "DeltaAllocation",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[LowerAllocationFractionAboveG].EstimatedAllocation.MedianAllocation",
+                                  "Name": "MedianAllocation",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[LowerAllocationFractionAboveG].MinimumAllocation",
+                                  "Name": "MinimumAllocation",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 65.0,
+                              "Units": "degrees",
+                              "Name": "ReferenceLatitude",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MinimumFunction, Models",
+              "Name": "UpperAllocationFractionAboveG",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is the upper limit for biomass allocation in above ground organs, assumed to be a function of latitude.  It is the values used for partitioning growth in early spring.  \n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.99,
+                  "Units": "g/g",
+                  "Name": "MaximumAllocation",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8371,28 +8730,219 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "TotalRatio",
+                  "Name": "EstimatedAllocation",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LowerAllocationFractionAboveG].EstimatedAllocation.MedianAllocation",
+                      "Name": "MedianAllocation",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[TargetShootRootRatio]",
-                      "Name": "TargetSR",
-                      "Children": [],
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "LatitudeFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LessThanFunction, Models",
+                          "Name": "AbsLatitude",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Weather].Latitude",
+                              "Name": "Latitude",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": "",
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "SouthLatitude",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": -1.0,
+                                  "Units": "",
+                                  "Name": "MinusOne",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Weather].Latitude",
+                                  "Name": "Latitude",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Weather].Latitude",
+                              "Name": "NorthLatitude",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "Variation",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "DeltaAllocation",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[UpperAllocationFractionAboveG].MaximumAllocation",
+                                  "Name": "MaximumAllocation",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[LowerAllocationFractionAboveG].EstimatedAllocation.MedianAllocation",
+                                  "Name": "MedianAllocation",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 50.0,
+                              "Units": "degrees",
+                              "Name": "ReferenceLatitude",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "XProperty": "[Weather].Latitude",
+              "Name": "DeltaAnnualDayLength",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    -60.561,
+                    -60.0,
+                    -58.0,
+                    -56.0,
+                    -53.0,
+                    -50.0,
+                    -45.0,
+                    -40.0,
+                    -35.0,
+                    -30.0,
+                    -20.0,
+                    -10.0,
+                    0.0,
+                    10.0,
+                    20.0,
+                    30.0,
+                    35.0,
+                    40.0,
+                    45.0,
+                    50.0,
+                    53.0,
+                    56.0,
+                    58.0,
+                    60.0,
+                    60.561
+                  ],
+                  "Y": [
+                    8.162632937,
+                    7.228435336,
+                    6.235336765,
+                    5.578044109,
+                    4.826865745,
+                    4.238303826,
+                    3.472388398,
+                    2.875623173,
+                    2.378880814,
+                    1.941276518,
+                    1.210593451,
+                    0.58553637,
+                    0.0,
+                    0.58553637,
+                    1.210593451,
+                    1.941276518,
+                    2.378880814,
+                    2.875623173,
+                    3.472388398,
+                    4.238303826,
+                    4.826865745,
+                    5.578044109,
+                    6.235336765,
+                    7.228435336,
+                    8.162632937
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is the variation in day length within a year (i.e. the length of longest day minus that of the shortest).  It could, or should, be computed functions in 'Weather' as it is a function of latitude, but due to the lack of an accessor, a fitted function is used instead.  The value is used to generalise the computations of the target partitioning of new growth to above ground organs.  \n",
+                  "Name": "Memo",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -17200,7 +17750,7 @@
                             {
                               "$type": "Models.Graph.Axis, Models",
                               "Type": 0,
-                              "Title": "Ratio",
+                              "Title": "Fraction",
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
@@ -33787,7 +34337,7 @@
                             {
                               "$type": "Models.Graph.Axis, Models",
                               "Type": 0,
-                              "Title": "Ratio",
+                              "Title": "Fraction",
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
@@ -49448,7 +49998,7 @@
                             {
                               "$type": "Models.Graph.Axis, Models",
                               "Type": 0,
-                              "Title": "Ratio",
+                              "Title": "Fraction",
                               "Inverted": false,
                               "Minimum": "NaN",
                               "Maximum": "NaN",
