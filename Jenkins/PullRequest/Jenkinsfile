@@ -48,7 +48,14 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/hol353/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin JobRunner
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xdfq
+							git checkout master
+							get fetch hol353
+							git checkout JobRunner
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -73,7 +80,14 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/hol353/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin JobRunner
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xdfq
+							git checkout master
+							get fetch hol353
+							git checkout JobRunner
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -96,7 +110,14 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/hol353/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin JobRunner
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xdfq
+							git checkout master
+							get fetch hol353
+							git checkout JobRunner
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -119,7 +140,14 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/hol353/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin JobRunner
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xdfq
+							git checkout master
+							get fetch hol353
+							git checkout JobRunner
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
