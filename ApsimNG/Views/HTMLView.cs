@@ -207,11 +207,6 @@ namespace UserInterface.Views
             while (Browser != null && Browser.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
-                BackgroundColour = System.Drawing.Color.FromArgb(34, 34, 34);
-                ForegroundColour = System.Drawing.Color.FromArgb(255, 255, 255);
-            }
         }
 
         public System.Drawing.Color BackgroundColour
