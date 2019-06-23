@@ -133,7 +133,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Red clover has small seeds and these need to be placed near the soil surface to emergence sucessfully. Best emergence rate occur when seeds are sown at depth of 5mm ([Hyde1950]; [MurrayAndClements1993]), and few plants will emerge from seeds deeper than 40mm.  Variations in germination rate due to depth are not currently simulated by the model, however the sowing depth does affect timing of emergence, in combination with temperature.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).  \r\nEmergence of red clover occur a few days after germination ([Hyde1950]; [MootEtAll2000]), but this is quite variable (taking 5-20 days).  Both temperature and depth of seed are important factors.  Thermal time for the emergence of red clover (cv. Huia and Nomad) has been reported as being approximately 150oCd ([MootEtAll2000]; [MurrayThesis2012]), and there seem to be no significant variations between NZ cultivars ([HamptonEtAl1987]).  \r\n",
+                      "Text": "Red clover has small seeds and these need to be placed near the soil surface to emergence successfully. Best emergence rate occur when seeds are sown at depth of 5mm ([Hyde1950]; [MurrayAndClements1993]), and few plants will emerge from seeds deeper than 40mm.  Variations in germination rate due to depth are not currently simulated by the model, however the sowing depth does affect timing of emergence, in combination with temperature.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).  \r\nEmergence of red clover occur a few days after germination ([Hyde1950]; [MootEtAll2000]), but this is quite variable (taking 5-20 days).  Both temperature and depth of seed are important factors.  Thermal time for the emergence of red clover (cv. Huia and Nomad) has been reported as being approximately 150oCd ([MootEtAll2000]; [MurrayThesis2012]), and there seem to be no significant variations between NZ cultivars ([HamptonEtAl1987]).  \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -951,114 +951,6 @@
                 },
                 {
                   "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "NDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].minimumNconc",
-                          "Name": "MinNconc",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].potentialDMAllocation.Structural",
-                          "Name": "PotentialDMAllocation",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Metabolic",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "MetabolicNconc",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].criticalNConc",
-                              "Name": "CritNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].minimumNconc",
-                              "Name": "MinNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].potentialDMAllocation.Structural",
-                          "Name": "PotentialDMAllocation",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].nitrogenDemandSwitch",
-                          "Name": "NitrogenDemandSwitch",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].maximumNconc",
-                          "Name": "MaxNconc",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "DMDemands",
                   "Children": [
                     {
@@ -1105,24 +997,6 @@
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TargetAboveGroundFraction]",
-                                  "Name": "TargetAboveGroundPropValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TargetAboveGroundFraction]",
-                                  "Name": "TargetAboveGroundPropNoVal",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -1273,6 +1147,114 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "NDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].MinimumNConc",
+                          "Name": "MinNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].potentialDMAllocation.Structural",
+                          "Name": "PotentialDMAllocation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Metabolic",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "MetabolicNconc",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].CriticalNConc",
+                              "Name": "CritNconc",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].MinimumNConc",
+                              "Name": "MinNconc",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].potentialDMAllocation.Structural",
+                          "Name": "PotentialDMAllocation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].NitrogenDemandSwitch",
+                          "Name": "NitrogenDemandSwitch",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].MaximumNConc",
+                          "Name": "MaxNconc",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2415,7 +2397,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].minimumNconc",
+                          "VariableName": "[Petiole].MinimumNConc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2446,7 +2428,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].criticalNConc",
+                              "VariableName": "[Petiole].CriticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2455,7 +2437,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].minimumNconc",
+                              "VariableName": "[Petiole].MinimumNConc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2487,7 +2469,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].nitrogenDemandSwitch",
+                          "VariableName": "[Petiole].NitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2496,7 +2478,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].maximumNconc",
+                          "VariableName": "[Petiole].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3250,7 +3232,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].minimumNconc",
+                          "VariableName": "[Stem].MinimumNConc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3281,7 +3263,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].criticalNConc",
+                              "VariableName": "[Stem].CriticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3290,7 +3272,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].minimumNconc",
+                              "VariableName": "[Stem].MinimumNConc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3322,7 +3304,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].nitrogenDemandSwitch",
+                          "VariableName": "[Stem].NitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3331,7 +3313,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].maximumNconc",
+                          "VariableName": "[Stem].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4231,7 +4213,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetBiomassProportion]",
+                                          "VariableName": "[Inflorescence].TargetBiomassProportion",
                                           "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -4353,7 +4335,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].minimumNconc",
+                          "VariableName": "[Inflorescence].MinimumNConc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4384,7 +4366,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Inflorescence].criticalNConc",
+                              "VariableName": "[Inflorescence].CriticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4393,7 +4375,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Inflorescence].minimumNconc",
+                              "VariableName": "[Inflorescence].MinimumNConc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4425,7 +4407,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].nitrogenDemandSwitch",
+                          "VariableName": "[Inflorescence].NitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4434,7 +4416,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].maximumNconc",
+                          "VariableName": "[Inflorescence].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5156,17 +5138,7 @@
                           "FixedValue": 1.0,
                           "Units": "g/g",
                           "Name": "StructuralFraction",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5238,7 +5210,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].minimumNconc",
+                          "VariableName": "[Nodule].MinimumNConc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5269,7 +5241,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nodule].criticalNConc",
+                              "VariableName": "[Nodule].CriticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5278,7 +5250,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nodule].minimumNconc",
+                              "VariableName": "[Nodule].MinimumNConc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5310,7 +5282,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].nitrogenDemandSwitch",
+                          "VariableName": "[Nodule].NitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5319,7 +5291,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].maximumNconc",
+                          "VariableName": "[Nodule].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6265,7 +6237,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].minimumNconc",
+                          "VariableName": "[Taproot].MinimumNConc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6296,7 +6268,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Taproot].criticalNConc",
+                              "VariableName": "[Taproot].CriticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6305,7 +6277,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Taproot].minimumNconc",
+                              "VariableName": "[Taproot].MinimumNConc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6337,7 +6309,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].nitrogenDemandSwitch",
+                          "VariableName": "[Taproot].NitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6346,7 +6318,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].maximumNconc",
+                          "VariableName": "[Taproot].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7286,7 +7258,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc",
+                          "VariableName": "[Root].MinimumNConc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7317,7 +7289,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc",
+                              "VariableName": "[Root].CriticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -7326,7 +7298,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc",
+                              "VariableName": "[Root].MinimumNConc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -7358,7 +7330,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].nitrogenDemandSwitch",
+                          "VariableName": "[Root].NitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7367,7 +7339,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc",
+                          "VariableName": "[Root].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -17845,7 +17817,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -17861,7 +17833,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "BaseBiomassDemandAG",
                               "Children": [
                                 {
@@ -18001,7 +17973,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -18017,7 +17989,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "DeficitBiomassDemandAG",
                               "Children": [
                                 {
