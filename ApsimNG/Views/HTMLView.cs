@@ -218,7 +218,7 @@ namespace UserInterface.Views
         {
             get
             {
-                if (Browser == null && Browser.Document == null)
+                if (Browser == null || Browser.Document == null)
                     return Color.Empty;
                 return Browser.Document.BackColor;
             }
@@ -233,7 +233,7 @@ namespace UserInterface.Views
         {
             get
             {
-                if (Browser == null && Browser.Document == null)
+                if (Browser == null || Browser.Document == null)
                     return Color.Empty;
                 return Browser.Document.ForeColor;
             }
