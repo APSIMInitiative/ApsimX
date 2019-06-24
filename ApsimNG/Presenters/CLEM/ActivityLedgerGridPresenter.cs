@@ -61,7 +61,10 @@ namespace UserInterface.Presenters
                 if (data != null)
                 {
                     // get unique rows
+                    //List<string> activities = data.AsEnumerable().Where(a => a.Field<string>("Name") != "TimeStep").Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
                     List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                    string TimeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
+
                     // get unique columns
                     List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
                     // create table
@@ -74,7 +77,7 @@ namespace UserInterface.Presenters
                     }
                     foreach (var item in activities)
                     {
-                        if (item != "TimeStep")
+                        if (item != TimeStepUID)
                         {
                             DataRow dr = tbl.NewRow();
                             string name = data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item).FirstOrDefault()["Name"].ToString();
