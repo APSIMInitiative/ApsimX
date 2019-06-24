@@ -546,19 +546,16 @@
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"));
 
             startPage.AddButtonToMenu(
-                                        "Settings",
-                                        "Change Font",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
-                                        this.OnChooseFont);
+                                      "Settings",
+                                      "Change Font",
+                                      new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                      this.OnChooseFont);
 
-            if (!ProcessUtilities.CurrentOS.IsLinux)
-            {
-                startPage.AddButtonToMenu(
-                                        "Settings",
-                                        "Toggle Theme",
-                                        new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
-                                        OnToggleTheme);
-            }
+            startPage.AddButtonToMenu(
+                                      "Settings",
+                                      "Toggle Theme",
+                                      new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                      OnToggleTheme);
 
             startPage.AddButton(
                             "Help",
