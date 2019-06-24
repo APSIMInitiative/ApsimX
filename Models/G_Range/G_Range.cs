@@ -1130,6 +1130,8 @@ namespace Models
             LoadParms();    // Initialize_Landscape_Parms
             LoadGlobals();  // Initialize_Globe
             InitParms();    // Initialize_Rangelands
+            // I need to find a way to spin up the simulation. It takes a couple of decades for things to come to a near-equilibrium
+            // The orignal G-Range uses a file to store state from a previous run to avoid this problem.
         }
 
         /// <summary>EventHandler - preparation before the main daily processes.

@@ -239,6 +239,12 @@ namespace Models
                 //  if tot2.le. 0
                 relativeWaterContent[soilLayer] = (asmos[soilLayer] / soilDepth[soilLayer] - wiltingPoint[soilLayer]) /
                       (fieldCapacity[soilLayer] - wiltingPoint[soilLayer]);
+#if !G_RANGE_BUG
+                if (relativeWaterContent[soilLayer] > vLarge)
+                    relativeWaterContent[soilLayer] = vLarge;
+                if (relativeWaterContent[soilLayer] < 0.0)
+                    relativeWaterContent[soilLayer] = 0.0;
+#endif
             }
 
             // Calculate transpiration water loss(cm/ month)
