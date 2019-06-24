@@ -845,7 +845,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.45,
+                          "FixedValue": 0.5,
                           "Units": "g/g",
                           "Name": "TargetProportion",
                           "Children": [],
@@ -958,7 +958,27 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.95,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "This is the default value for PMF. ",
+                              "Name": "Description",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -971,27 +991,55 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "The DM demand as defined here is a weighting factor, actual values are computed by the OrganArbitrator. The value is computed as the sum of a base demand, simply based on the potential partition according to the target proportions, and a deficit demand, which diverts more biomass to organs that deviate from their targeted proportions. This ensures faster regrowth of above ground organs after defoliation. The target proportion may vary with growth stage and environmental conditions.  \r\n",
+                                  "Name": "Description",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction]",
-                                      "Name": "TargetAboveGroundProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[TargetAboveGroundFraction]",
+                                          "Name": "TargetAboveGroundProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -1000,29 +1048,10 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -1075,26 +1104,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.95,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "This is the default value for PMF. ",
-                              "Name": "Description",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -2078,7 +2087,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.667,
+                              "FixedValue": 0.5,
                               "Units": "g/g",
                               "Name": "ProportionToLeaves",
                               "Children": [],
@@ -2148,7 +2157,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.4,
+                                  "FixedValue": 0.33,
                                   "Units": "g/g",
                                   "Name": "ProportionToInflorescence",
                                   "Children": [],
@@ -2194,7 +2203,17 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -2207,27 +2226,46 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction]",
-                                      "Name": "TargetAboveGroundProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Petiole].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[TargetAboveGroundFraction]",
+                                          "Name": "TargetAboveGroundProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Petiole].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -2236,29 +2274,10 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -2316,16 +2335,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2927,7 +2936,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
+                  "FixedValue": 0.045,
                   "Units": "gN/gDM",
                   "Name": "MaximumNConc",
                   "Children": [],
@@ -3029,7 +3038,17 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.85,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -3042,27 +3061,46 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction]",
-                                      "Name": "TargetAboveGroundProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Stem].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[TargetAboveGroundFraction]",
+                                          "Name": "TargetAboveGroundProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Stem].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -3071,29 +3109,10 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -3154,16 +3173,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.65,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -3171,11 +3180,29 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Metabolic",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": "g/g",
+                          "Name": "MetabolicFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stem].DMDemands.Structural.DMDemandFunction",
+                          "Name": "DMDemandFunction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3202,6 +3229,15 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Stem].DMDemands.Metabolic.MetabolicFraction",
+                              "Name": "MetabolicFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3522,38 +3558,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation",
-                      "Name": "PhotoPeriodFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.015,
-                            0.03,
-                            0.04,
-                            0.05
-                          ],
-                          "Y": [
-                            0.0,
-                            0.1,
-                            0.5,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -3621,32 +3625,66 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation",
+                      "$type": "Models.Functions.LessThanFunction, Models",
                       "Name": "PhotoPeriodFactor",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            -0.02,
-                            -0.01,
-                            0.0,
-                            0.01,
-                            0.02,
-                            0.04,
-                            0.05
-                          ],
-                          "Y": [
-                            0.0,
-                            0.05,
-                            0.1,
-                            0.25,
-                            0.5,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].PhotoperiodVariation",
+                          "Name": "PhotoperiodVariation",
                           "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": "",
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": "",
+                          "Name": "BaseFactor",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "XProperty": "[Phenology].PhotoperiodVariation",
+                          "Name": "VariableFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                -0.075,
+                                -0.05,
+                                -0.03,
+                                -0.01,
+                                0.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                0.75,
+                                0.1,
+                                0.01
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -3732,37 +3770,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].DMRetranslocationFactor.PhotoPeriodFactor",
                       "Name": "PhotoPeriodFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            -0.02,
-                            -0.01,
-                            0.0,
-                            0.01,
-                            0.02,
-                            0.04,
-                            0.05
-                          ],
-                          "Y": [
-                            0.0,
-                            0.05,
-                            0.1,
-                            0.25,
-                            0.5,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4062,7 +4073,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
+                              "FixedValue": 0.35,
                               "Units": "g/g",
                               "Name": "BaseProportion",
                               "Children": [],
@@ -4132,7 +4143,17 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -4145,27 +4166,46 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction]",
-                                      "Name": "TargetAboveGroundProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Inflorescence].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[TargetAboveGroundFraction]",
+                                          "Name": "TargetAboveGroundProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Inflorescence].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -4174,29 +4214,10 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -4254,16 +4275,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -4915,7 +4926,7 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Leaf].FNmetabolic",
+                              "XProperty": "[Leaf].FN",
                               "Name": "NDeficiencyFactor",
                               "Children": [
                                 {
@@ -4969,7 +4980,17 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -4982,31 +5003,59 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "TargetBelowGroundProp",
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 1.0,
-                                          "Units": null,
-                                          "Name": "One",
-                                          "Children": [],
+                                          "$type": "Models.Functions.SubtractFunction, Models",
+                                          "Name": "TargetBelowGroundProp",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 1.0,
+                                              "Units": null,
+                                              "Name": "One",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetAboveGroundFraction]",
+                                              "Name": "TargetAboveGroundProp",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction]",
-                                          "Name": "TargetAboveGroundProp",
+                                          "VariableName": "[Nodule].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -5016,43 +5065,15 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Nodule].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -5129,16 +5150,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5805,7 +5816,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.03,
+                  "FixedValue": 0.0325,
                   "Units": "gN/gDM",
                   "Name": "MaximumNConc",
                   "Children": [],
@@ -5857,7 +5868,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.25,
+                              "FixedValue": 0.45,
                               "Units": "g/g",
                               "Name": "BaseProportion",
                               "Children": [],
@@ -5971,7 +5982,17 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.85,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -5984,31 +6005,59 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "TargetBelowGroundProp",
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 1.0,
-                                          "Units": null,
-                                          "Name": "One",
-                                          "Children": [],
+                                          "$type": "Models.Functions.SubtractFunction, Models",
+                                          "Name": "TargetBelowGroundProp",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 1.0,
+                                              "Units": null,
+                                              "Name": "One",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetAboveGroundFraction]",
+                                              "Name": "TargetAboveGroundProp",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction]",
-                                          "Name": "TargetAboveGroundProp",
+                                          "VariableName": "[Taproot].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -6018,43 +6067,15 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Taproot].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -6134,16 +6155,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.75,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -6151,11 +6162,29 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Metabolic",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": "g/g",
+                          "Name": "MetabolicFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Taproot].DMDemands.Structural.DMDemandFunction",
+                          "Name": "DMDemandFunction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6182,6 +6211,15 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Taproot].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Taproot].DMDemands.Metabolic.MetabolicFraction",
+                              "Name": "MetabolicFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6519,33 +6557,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].DMRetranslocationFactor.PhotoPeriodFactor",
                       "Name": "PhotoPeriodFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.015,
-                            0.03,
-                            0.04,
-                            0.05
-                          ],
-                          "Y": [
-                            0.0,
-                            0.1,
-                            0.5,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6557,8 +6572,8 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "FixedValue": 1.0,
+                  "Units": "/day",
                   "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6626,33 +6641,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].PhotoperiodVariation",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].DMRetranslocationFactor.PhotoPeriodFactor",
                       "Name": "PhotoPeriodFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.015,
-                            0.03,
-                            0.04,
-                            0.05
-                          ],
-                          "Y": [
-                            0.0,
-                            0.1,
-                            0.5,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6878,7 +6870,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.5,
                               "Units": "g/g",
                               "Name": "BaseProportion",
                               "Children": [],
@@ -6992,7 +6984,17 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": "g/g",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "DMDemandFunction",
                           "Children": [
                             {
@@ -7005,31 +7007,59 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                              "Name": "BaseBiomassDemand",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "OrganDMDemand",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "PartitionFraction",
+                                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                                  "Name": "BaseBiomassDemand",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "TargetBelowGroundProp",
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "PartitionFraction",
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 1.0,
-                                          "Units": null,
-                                          "Name": "One",
-                                          "Children": [],
+                                          "$type": "Models.Functions.SubtractFunction, Models",
+                                          "Name": "TargetBelowGroundProp",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 1.0,
+                                              "Units": null,
+                                              "Name": "One",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetAboveGroundFraction]",
+                                              "Name": "TargetAboveGroundProp",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetAboveGroundFraction]",
-                                          "Name": "TargetAboveGroundProp",
+                                          "VariableName": "[Root].TargetBiomassProportion",
+                                          "Name": "TargetOrganProp",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -7039,43 +7069,15 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Root].TargetBiomassProportion",
-                                      "Name": "TargetOrganProp",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "DeficitBiomassDemand",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "Deficit",
+                                  "Name": "DeficitBiomassDemand",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -7152,16 +7154,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": "g/g",
-                          "Name": "StructuralFraction",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -9245,20 +9237,20 @@
             "[RedClover].Root.DMDemands.Structural.DMDemandFunction",
             "[RedClover].Taproot.DMDemands.Structural.DMDemandFunction",
             "[RedClover].Nodule.DMDemands.Structural.DMDemandFunction",
-            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[RedClover].Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[RedClover].Stem.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Stem.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[RedClover].Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[RedClover].Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[RedClover].Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
-            "[RedClover].Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
-            "[RedClover].Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+            "[RedClover].Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+            "[RedClover].Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+            "[RedClover].Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+            "[RedClover].Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+            "[RedClover].Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+            "[RedClover].Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
+            "[RedClover].Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
             "([RedClover].Leaf.Allocated.Wt/([RedClover].Arbitrator.DM.Allocated+0.000001)) as LeafFractionDMAllocated",
             "([RedClover].Stem.Allocated.Wt/([RedClover].Arbitrator.DM.Allocated+0.000001)) as StemFractionDMAllocated",
             "([RedClover].Petiole.Allocated.Wt/([RedClover].Arbitrator.DM.Allocated+0.000001)) as PetioleFractionDMAllocated",
@@ -9373,27 +9365,42 @@
             "[RedClover].Stem.Live.MetabolicWt",
             "[RedClover].Stem.Live.StructuralN",
             "[RedClover].Stem.Live.StorageN",
+            "[RedClover].Stem.Live.MetabolicN",
+            "",
             "[RedClover].Petiole.Live.StructuralWt",
             "[RedClover].Petiole.Live.StorageWt",
             "[RedClover].Petiole.Live.MetabolicWt",
             "[RedClover].Petiole.Live.StructuralN",
             "[RedClover].Petiole.Live.StorageN",
+            "[RedClover].Petiole.Live.MetabolicN",
+            "",
             "[RedClover].Inflorescence.Live.StructuralWt",
             "[RedClover].Inflorescence.Live.StorageWt",
+            "[RedClover].Inflorescence.Live.MetabolicWt",
             "[RedClover].Inflorescence.Live.StructuralN",
             "[RedClover].Inflorescence.Live.StorageN",
+            "[RedClover].Inflorescence.Live.MetabolicN",
+            "",
             "[RedClover].Root.Live.StructuralWt",
             "[RedClover].Root.Live.StorageWt",
+            "[RedClover].Root.Live.MetabolicWt",
             "[RedClover].Root.Live.StructuralN",
             "[RedClover].Root.Live.StorageN",
+            "[RedClover].Root.Live.MetabolicN",
+            "",
             "[RedClover].Taproot.Live.StructuralWt",
             "[RedClover].Taproot.Live.StorageWt",
+            "[RedClover].Taproot.Live.MetabolicWt",
             "[RedClover].Taproot.Live.StructuralN",
             "[RedClover].Taproot.Live.StorageN",
+            "[RedClover].Taproot.Live.MetabolicN",
+            "",
             "[RedClover].Nodule.Live.StructuralWt",
             "[RedClover].Nodule.Live.StorageWt",
+            "[RedClover].Nodule.Live.MetabolicWt",
             "[RedClover].Nodule.Live.StructuralN",
             "[RedClover].Nodule.Live.StorageN",
+            "[RedClover].Nodule.Live.MetabolicN",
             "",
             "[RedClover].Leaf.Live.StructuralNConc",
             "[RedClover].Leaf.Live.StorageNConc",
@@ -16678,7 +16685,7 @@
                               "Checkpoint": "Current",
                               "TableName": "Report",
                               "XFieldName": "Date",
-                              "YFieldName": "RedClover.Leaf.Live.StorageWt",
+                              "YFieldName": "RedClover.Taproot.Live.StorageWt",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -17893,7 +17900,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17923,7 +17930,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17953,7 +17960,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -17983,7 +17990,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18049,7 +18056,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18079,7 +18086,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18109,7 +18116,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18139,7 +18146,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18205,7 +18212,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18235,7 +18242,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18265,7 +18272,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18331,7 +18338,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18361,7 +18368,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -18391,7 +18398,289 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Nodule",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Biomass (g/m2)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "TotalBiomassDemandAG",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16736653,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Leaf.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Leaf",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16747854,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Petiole.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Petiole",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -1663232,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Stem.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Stem",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 2,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Inflorescence",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Biomass (g/m2)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 1,
+                              "DisabledSeries": [],
+                              "Name": "TotalBiomassDemandBG",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -2793984,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Root.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Root",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -990142,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Taproot.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Taproot",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NRate",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Nodule.DMDemand.Total",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -25281,7 +25570,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": null,
+                          "Filter": "",
                           "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -25311,7 +25600,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": null,
+                          "Filter": "",
                           "Name": "Observed",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -25377,7 +25666,7 @@
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": null,
+                          "Filter": "",
                           "Name": "PO",
                           "Children": [
                             {
@@ -33468,7 +33757,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -33484,7 +33773,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ActualBiomassProportionAG",
                           "Children": [
                             {
@@ -33624,7 +33913,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -33640,7 +33929,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ActualBiomassProportionBG",
                           "Children": [
                             {
@@ -33750,7 +34039,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -33766,7 +34055,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TargetBiomassProportionAG",
                           "Children": [
                             {
@@ -33906,7 +34195,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -33922,7 +34211,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TargetBiomassProportionBG",
                           "Children": [
                             {
@@ -34032,7 +34321,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -34048,7 +34337,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AllocatedBiomassProportionAG",
                           "Children": [
                             {
@@ -34188,7 +34477,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -34204,7 +34493,7 @@
                             }
                           ],
                           "LegendPosition": 1,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AllocatedBiomassProportionBG",
                           "Children": [
                             {
@@ -34314,7 +34603,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -34330,7 +34619,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "ShootRootRatio",
                           "Children": [
                             {
@@ -34410,7 +34699,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -34426,7 +34715,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGroundFraction",
                           "Children": [
                             {
@@ -34511,7 +34800,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -34527,7 +34816,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "BaseBiomassDemandAG",
                               "Children": [
                                 {
@@ -34546,7 +34835,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34576,7 +34865,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34606,7 +34895,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34636,7 +34925,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34667,7 +34956,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -34683,7 +34972,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "DeficitBiomassDemandAG",
                               "Children": [
                                 {
@@ -34702,7 +34991,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34732,7 +35021,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34762,7 +35051,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34792,7 +35081,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34823,7 +35112,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -34839,7 +35128,7 @@
                                 }
                               ],
                               "LegendPosition": 1,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "BaseBiomassDemandBG",
                               "Children": [
                                 {
@@ -34858,7 +35147,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34888,7 +35177,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34918,7 +35207,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -34949,7 +35238,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -34965,7 +35254,7 @@
                                 }
                               ],
                               "LegendPosition": 1,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "DeficitBiomassDemandBG",
                               "Children": [
                                 {
@@ -34984,7 +35273,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -35014,7 +35303,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -35044,7 +35333,289 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Nodule",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Biomass (g/m2)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "TotalBiomassDemandAG",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16736653,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Leaf.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Leaf",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16747854,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Petiole.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Petiole",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -1663232,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Stem.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Stem",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 2,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Inflorescence",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Biomass (g/m2)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 1,
+                              "DisabledSeries": [],
+                              "Name": "TotalBiomassDemandBG",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -2793984,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Root.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Root",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -990142,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Taproot.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Taproot",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "Irrigation",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Nodule.DMDemand.Total",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -43337,483 +43908,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "\r\n### All data from New Zealand\r\n",
-              "Name": "SubTitle",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 1,
-              "DisabledSeries": [],
-              "Name": "AboveGroundWt",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.RedClover.AboveGround.Wt",
-                  "YFieldName": "Predicted.RedClover.AboveGround.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "PO",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 1,
-              "DisabledSeries": [],
-              "Name": "HarvestedBiomass",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.HarvestedWt",
-                  "YFieldName": "Predicted.HarvestedWt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "PO",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 1,
-              "DisabledSeries": [],
-              "Name": "HerbageNconc",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.HerbageNConc",
-                  "YFieldName": "Predicted.HerbageNConc",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "PO",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 1,
-              "DisabledSeries": [],
-              "Name": "CumHarvestedWt",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.CumulativeHarvestedWt",
-                  "YFieldName": "Predicted.CumulativeHarvestedWt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "PO",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 1,
-              "DisabledSeries": [],
-              "Name": "NTakenOff",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.NTakenOff",
-                  "YFieldName": "Predicted.NTakenOff",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "PO",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 1,
-              "DisabledSeries": [],
-              "Name": "CumNTakenOff",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.CumulativeNTakenOff",
-                  "YFieldName": "Predicted.CumulativeNTakenOff",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "PO",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -50238,7 +50332,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -50254,7 +50348,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "BaseBiomassDemandAG",
                               "Children": [
                                 {
@@ -50273,7 +50367,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50303,7 +50397,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50333,7 +50427,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50363,7 +50457,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50394,7 +50488,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -50410,7 +50504,7 @@
                                 }
                               ],
                               "LegendPosition": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "DeficitBiomassDemandAG",
                               "Children": [
                                 {
@@ -50429,7 +50523,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Leaf.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50459,7 +50553,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Petiole.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50489,7 +50583,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Stem.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50519,7 +50613,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50550,7 +50644,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -50566,7 +50660,7 @@
                                 }
                               ],
                               "LegendPosition": 1,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "BaseBiomassDemandBG",
                               "Children": [
                                 {
@@ -50585,7 +50679,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50615,7 +50709,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50645,7 +50739,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.BaseBiomassDemand",
+                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.BaseBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50676,7 +50770,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": false,
+                                  "DateTimeAxis": true,
                                   "CrossesAtZero": false
                                 },
                                 {
@@ -50692,7 +50786,7 @@
                                 }
                               ],
                               "LegendPosition": 1,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "DeficitBiomassDemandBG",
                               "Children": [
                                 {
@@ -50711,7 +50805,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Root.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50741,7 +50835,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Taproot.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -50771,7 +50865,289 @@
                                   "Checkpoint": "Current",
                                   "TableName": "Report",
                                   "XFieldName": "Date",
-                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.DeficitBiomassDemand",
+                                  "YFieldName": "RedClover.Nodule.DMDemands.Structural.DMDemandFunction.OrganDMDemand.DeficitBiomassDemand",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Nodule",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Biomass (g/m2)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "TotalBiomassDemandAG",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16736653,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Leaf.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Leaf",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16747854,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Petiole.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Petiole",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -1663232,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Stem.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Stem",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 2,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Inflorescence.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Inflorescence",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Biomass (g/m2)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 1,
+                              "DisabledSeries": [],
+                              "Name": "TotalBiomassDemandBG",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -2793984,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Root.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Root",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -990142,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Taproot.DMDemand.Total",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Taproot",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": "NInputs",
+                                  "Marker": 11,
+                                  "MarkerSize": 1,
+                                  "Line": 1,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Date",
+                                  "YFieldName": "RedClover.Nodule.DMDemand.Total",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
