@@ -746,9 +746,6 @@
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
-    <None Include="Resources\XYPairsGraph1.xml" />
-    <None Include="Resources\WaterGraph1.xml" />
-    <None Include="Resources\InitialWaterGraph1.xml" />
     <EmbeddedResource Include="Resources\success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />

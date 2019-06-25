@@ -189,10 +189,10 @@ namespace Models.PMF
                 var totalSupply = myZone.Supply.Sum();
                 WatSupply = totalSupply; 
                 //used for SWDef PhenologyStress table lookup
-                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,1.0);
+                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
 
                 //used for SWDef ExpansionStress table lookup
-                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
+                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
 
                 //used for SwDefPhoto Stress
                 PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
