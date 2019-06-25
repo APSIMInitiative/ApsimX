@@ -243,10 +243,9 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 Gain = 1,
-                Activity = model.Name,
-                ActivityType = model.GetType().Name,
+                Activity = model as CLEMModel,
                 Reason = ind.SaleFlag.ToString(),
-                ResourceType = this.Name,
+                ResourceType = ind.BreedParams,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -288,10 +287,9 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 Loss = 1,
-                Activity = model.Name,
-                ActivityType = model.GetType().Name,
+                Activity = model as CLEMModel,
                 Reason = ind.SaleFlag.ToString(),
-                ResourceType = this.Name,
+                ResourceType = ind.BreedParams,
                 ExtraInformation = ind
             };
             LastTransaction = details;

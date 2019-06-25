@@ -35,5 +35,27 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Conversion factor")]
         public double Factor { get; set; }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Converts <span class=\"resourcelink\">" + this.Parent.Name+"</span> by a factor of ";
+            if (Factor <= 0)
+            {
+                html += "<span class=\"errorlink\">[VALUE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + Factor.ToString("0.#####") + "</span>";
+            }
+            html += "</div>";
+            return html;
+        }
+
     }
 }
