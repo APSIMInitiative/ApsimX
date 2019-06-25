@@ -88,9 +88,21 @@ namespace UnitTests
                 {
                     if (!fieldNames.Contains(column.ColumnName) &&
                         column.ColumnName != "CheckpointName" &&
-                        column.ColumnName != "SimulationName")
+                        column.ColumnName != "SimulationName" &&
+                        column.ColumnName != "SimulationID")
                         dataCopy.Columns.Remove(column.ColumnName);
                 }
+
+                // Add in a simulation name column if it doesn't exist.
+                if (dataCopy.Columns.Contains("SimulationID") && !dataCopy.Columns.Contains("SimulationName"))
+                {
+                    dataCopy.Columns.Add("SimulationName", typeof(string));
+                    foreach (DataRow row in dataCopy.Rows)
+                    {
+                        row["SimulationName"] = "Sim" + row["SimulationID"].ToString();
+                    }
+                }
+
 
                 var view = new DataView(dataCopy);
                 view.RowFilter = rowFilter;

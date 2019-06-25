@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
+    <Compile Include="Classes\CustomMenuToolButton.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -386,6 +387,7 @@
     <Compile Include="Views\TreeProxyView.cs" />
     <Compile Include="Views\ViewBase.cs" />
     <Compile Include="Views\XYPairsView.cs" />
+    <Compile Include="Utility\MacUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Apsim.png" />
@@ -466,6 +468,11 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteCrop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CompositeFactor.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PivotTable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPriceGroup.png" />
@@ -733,13 +740,12 @@
     <EmbeddedResource Include="Resources\AgPastureRemoveBiomass.png" />
     <EmbeddedResource Include="Resources\AgPastureRootDistribution.png" />
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
+    <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
-    <None Include="Resources\XYPairsGraph1.xml" />
-    <None Include="Resources\WaterGraph1.xml" />
-    <None Include="Resources\InitialWaterGraph1.xml" />
     <EmbeddedResource Include="Resources\success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />

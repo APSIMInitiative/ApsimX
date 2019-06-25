@@ -21,11 +21,17 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/graze food store/grazefoodstoretype.htm")]
+    [HelpUri(@"Content/Features/Resources/Graze Food Store/GrazeFoodStoreType.htm")]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]
         ZoneCLEM ZoneCLEM = null;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; private set; }
 
         /// <summary>
         /// List of pools available
@@ -304,8 +310,10 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            CurrentEcologicalIndicators = new EcologicalIndicators();
-            CurrentEcologicalIndicators.ResourceType = this.Name;
+            CurrentEcologicalIndicators = new EcologicalIndicators
+            {
+                ResourceType = this.Name
+            };
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -401,12 +409,13 @@ namespace Models.CLEM.Resources
                 // update biomass available
                 biomassAddedThisYear += pool.Amount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = pool.Amount;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = pool.Amount,
+                    Activity = activity,
+                    Reason = reason,
+                    ResourceType = this
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -438,10 +447,12 @@ namespace Models.CLEM.Resources
 
                 // take from pools as specified for the breed
                 double amountRequired = request.Required;
-                bool secondTakeFromPools = thisBreed.RuminantTypeModel.StrictFeedingLimits;
+                // secondtake is the inverse of setting stricy feeding limits.
+                bool secondTakeFromPools = !thisBreed.RuminantTypeModel.StrictFeedingLimits;
                 thisBreed.DMD = 0;
                 thisBreed.N = 0;
                 int index = 0;
+
                 while (amountRequired > 0)
                 {
                     // limiter obtained from breed feed limits or unlimited if second take of pools
@@ -451,14 +462,24 @@ namespace Models.CLEM.Resources
                         limiter = thisBreed.PoolFeedLimits[index].Limit;
                     }
 
-                    double amountToRemove = Math.Min(this.Pools[index].Amount, amountRequired * limiter);
+                    double amountToRemove = Math.Min(thisBreed.PoolFeedLimits[index].Pool.Amount * limiter, amountRequired);
                     // update DMD and N based on pool utilised
-                    thisBreed.DMD += this.Pools[index].DMD * amountToRemove;
-                    thisBreed.N += this.Pools[index].Nitrogen * amountToRemove;
+                    thisBreed.DMD += thisBreed.PoolFeedLimits[index].Pool.DMD * amountToRemove;
+                    thisBreed.N += thisBreed.PoolFeedLimits[index].Pool.Nitrogen * amountToRemove;
                     amountRequired -= amountToRemove;
 
                     // remove resource from pool
-                    this.Pools[index].Remove(amountToRemove, thisBreed, "Graze");
+                    thisBreed.PoolFeedLimits[index].Pool.Remove(amountToRemove, thisBreed, "Graze");
+
+                    // keep for a bit to check change of pool pointer
+                    //double amountToRemove = Math.Min(this.Pools[index].Amount * limiter, amountRequired);
+                    //// update DMD and N based on pool utilised
+                    //thisBreed.DMD += this.Pools[index].DMD * amountToRemove;
+                    //thisBreed.N += this.Pools[index].Nitrogen * amountToRemove;
+                    //amountRequired -= amountToRemove;
+
+                    //// remove resource from pool
+                    //this.Pools[index].Remove(amountToRemove, thisBreed, "Graze");
 
                     index++;
                     if (index >= this.Pools.Count)
@@ -485,12 +506,13 @@ namespace Models.CLEM.Resources
                 biomassConsumed += request.Provided;
 
                 // report 
-                ResourceTransaction details = new ResourceTransaction();
-                details.ResourceType = this.Name;
-                details.Loss = request.Provided;
-                details.Activity = request.ActivityModel.Name;
-                details.ActivityType = request.ActivityModel.GetType().Name;
-                details.Reason = request.Reason;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    ResourceType = this,
+                    Loss = request.Provided,
+                    Activity = request.ActivityModel,
+                    Reason = request.Reason
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -522,12 +544,13 @@ namespace Models.CLEM.Resources
                 nitrogen /= request.Provided;
 
                 // report 
-                ResourceTransaction details = new ResourceTransaction();
-                details.ResourceType = this.Name;
-                details.Gain = request.Provided * -1;
-                details.Activity = request.ActivityModel.Name;
-                details.ActivityType = request.ActivityModel.GetType().Name;
-                details.Reason = request.Reason;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    ResourceType = this,
+                    Gain = request.Provided * -1,
+                    Activity = request.ActivityModel,
+                    Reason = request.Reason
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -628,6 +651,15 @@ namespace Models.CLEM.Resources
                 }
             }
             return html;
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            return "";
         }
 
     }

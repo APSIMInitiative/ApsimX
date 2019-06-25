@@ -29,7 +29,7 @@ namespace Models.PMF
     /// 3. **doNutrientArbitration.** When this event occurs, the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how much of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.  
     /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisfy any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N concentration and final allocations are sent to organs. 
     /// 
-    /// ![Alt Text](ArbitrationDiagram.PNG)
+    /// ![Alt Text](ArbitratorSequenceDiagram.PNG)
     /// 
     /// **Figure [FigureNumber]:**  Schematic showing the procedure for arbitration of biomass partitioning.  Pink boxes represent events that occur every day and their numbering shows the order of calculations. Blue boxes represent the methods that are called when these events occur.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties.
     /// </summary>
@@ -156,23 +156,58 @@ namespace Models.PMF
             ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
             if (myZone != null)
             {
-
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
                 myZone.StartWater = new double[myZone.soil.Thickness.Length];
                 myZone.AvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
+                myZone.Supply = new double[myZone.soil.Thickness.Length];
 
-                for(int layer = 0; layer < myZone.soil.Thickness.Length; ++layer)
+                double[] kl = myZone.soil.KL(Plant.Name);
+
+                if (root.Depth != myZone.Depth)
+                {
+                    myZone.Depth += 0;
+                }
+                var currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+                for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
                     myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
+
+                    var proportion = root.rootProportionInLayer(layer, myZone);
+                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
+                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                myZone.AvailableSW[currentLayer] *= currentLayerProportion;
+                myZone.PotentialAvailableSW[currentLayer] *= currentLayerProportion;
+
+                var totalAvail = myZone.AvailableSW.Sum();
+                var totalAvailPot = myZone.PotentialAvailableSW.Sum();
+                var totalSupply = myZone.Supply.Sum();
+                WatSupply = totalSupply; 
+                //used for SWDef PhenologyStress table lookup
+                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
+
+                //used for SWDef ExpansionStress table lookup
+                SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
+
+                //used for SwDefPhoto Stress
+                PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
             }
         }
-        
+
+        ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table
+        public double SWAvailRatio { get; set; }
+
+        ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
+        public double SDRatio { get; set; }
+
+        ///Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
+        public double PhotoStress { get; set; }
+
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
         /// </summary>

@@ -186,6 +186,11 @@ namespace UserInterface.Presenters
             {
                 try
                 {
+                    Color colour = definition.Colour;
+                    // If dark theme is active, and colour is black, use white instead.
+                    // This won't help at all if the colour is a dark grey.
+                    if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
+                        colour = Color.White;
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
                     {
@@ -195,7 +200,7 @@ namespace UserInterface.Presenters
                                           definition.Y,
                                           definition.XAxis,
                                           definition.YAxis,
-                                          definition.Colour,
+                                          colour,
                                           definition.ShowInLegend);
                     }
                     else if (definition.Type == SeriesType.Scatter)
@@ -207,16 +212,16 @@ namespace UserInterface.Presenters
                                                     definition.Error,
                                                     definition.XAxis,
                                                     definition.YAxis,
-                                                    definition.Colour,
+                                                    colour,
                                                     definition.Line,
                                                     definition.Marker,
                                                     definition.LineThickness,
                                                     definition.MarkerSize,
                                                     definition.ShowInLegend);
                     }
-                    else if (definition.Type == SeriesType.Area)
+                    else if (definition.Type == SeriesType.Region)
                     {
-                        graphView.DrawArea(
+                        graphView.DrawRegion(
                                             definition.Title,
                                             definition.X,
                                             definition.Y,
@@ -224,8 +229,19 @@ namespace UserInterface.Presenters
                                             definition.Y2,
                                             definition.XAxis,
                                             definition.YAxis,
-                                            definition.Colour,
+                                            colour,
                                             definition.ShowInLegend);
+                    }
+                    else if (definition.Type == SeriesType.Area)
+                    {
+                        graphView.DrawArea(
+                            definition.Title,
+                            definition.X.Cast<double>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
+                            definition.XAxis,
+                            definition.YAxis,
+                            colour,
+                            definition.ShowInLegend);
                     }
                 }
                 catch (Exception err)

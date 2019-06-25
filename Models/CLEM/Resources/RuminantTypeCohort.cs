@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This specifies a ruminant cohort used for identifying purchase individuals and initalising the herd at the start of the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminantcohort.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
         [Link]
@@ -104,13 +104,12 @@ namespace Models.CLEM.Resources
             {
                 for (int i = 1; i <= Number; i++)
                 {
-                    object ruminantBase = null;
                     double u1 = ZoneCLEM.RandomGenerator.NextDouble();
                     double u2 = ZoneCLEM.RandomGenerator.NextDouble();
                     double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                  Math.Sin(2.0 * Math.PI * u2);
                     double weight = Weight + WeightSD * randStdNormal;
-
+                    object ruminantBase;
                     if (this.Gender == Sex.Male)
                     {
                         ruminantBase = new RuminantMale(Age, Gender, weight, parent);
@@ -239,6 +238,7 @@ namespace Models.CLEM.Resources
                 if(Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                 {
                     normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
+                    (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                 }
 
                 html += "\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>"+normWtString+"</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>";

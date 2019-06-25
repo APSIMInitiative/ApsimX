@@ -18,7 +18,6 @@
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
-    /// (ISRIC has not yet been implemented)
     /// This needs a bit more polishing to do a better job of guiding the user, and of informing them when
     /// things to wrong.
     /// </summary>
@@ -518,24 +517,54 @@
         }
 
         /// <summary>
-        /// Gets a soil description from the ISRIC REST API.
-        /// Not yet implemented
+        /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>
         /// <returns>True if successful</returns>
         private bool GetISRICSoil()
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return false;
-            string url = "https://rest.soilgrids.ord/query?lon=" +
+            string url = "https://worldmodel.csiro.au/apsimsoil?lon=" +
                 entryLongitude.Text + "&lat=" + entryLatitude.Text;
-
-            MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
-                               "This feature has not yet been implemented.");
-            md.Title = "Not implemented";
-            md.Run();
-            md.Destroy();
-
-            return false;
+            Soil newSoil = null;
+            WaitCursor = true;
+            try
+            {
+                try
+                {
+                    MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                    stream.Position = 0;
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(stream);
+                    List<XmlNode> soilNodes = XmlUtilities.ChildNodesRecursively(doc, "Soil");
+                    // We will have either 0 or 1 soil nodes
+                    if (soilNodes.Count > 0)
+                    {
+                        newSoil = SoilFromApsoil(soilNodes[0]);
+                        // Something looks very wrong with organic carbon in these soils. 
+                        // It looks to me like it's off by a factor of 10. 
+                        SoilOrganicMatter soilOrganic = Apsim.Child(newSoil, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+                        soilOrganic.OC = MathUtilities.Divide_Value(soilOrganic.OC, 10.0);
+                        ReplaceModelCommand command = new ReplaceModelCommand(soil, newSoil, explorerPresenter);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                    }
+                    MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
+                                       "Initial values for water and soil nitrogen have not been provided with this soil description. " +
+                                       "Please add sensible values before using this soil in a simulation.");
+                    md.Title = "Soil use warning";
+                    md.Run();
+                    md.Destroy();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            finally
+            {
+                WaitCursor = false;
+            }
         }
 
         private bool waiting = false;

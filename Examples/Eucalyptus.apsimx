@@ -14,7 +14,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Name": "Eucalyptus",
+      "Name": "Simulation",
       "Children": [
         {
           "$type": "Models.Weather, Models",
@@ -741,7 +741,7 @@
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": ".Simulations.Eucalyptus.Plantation.SCRUM"
+                  "Value": ".Simulations.Simulation.Plantation.SCRUM"
                 }
               ],
               "Name": "Harvesting",

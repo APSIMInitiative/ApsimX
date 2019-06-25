@@ -169,6 +169,9 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get { return Structure.Height; } }
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
         /// <summary>Gets  FRGR.</summary>
         [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
         [Units("0-1")]
@@ -1818,7 +1821,7 @@ namespace Models.PMF.Organs
                 double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
                 double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
 
-                if (resLeafCohort - totalBMLeafCohort > 0.00001)
+                if (resLeafCohort > Double.Epsilon && resLeafCohort - totalBMLeafCohort > 0.00001)
                     throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
 
                 if (resLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)

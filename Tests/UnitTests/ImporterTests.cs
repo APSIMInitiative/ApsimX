@@ -365,5 +365,17 @@
             MainPresenter presenter = new MainPresenter();
             Assert.DoesNotThrow(() => presenter.Import(fileName));
         }
+
+        /// <summary>Ensure entire old APSIM file loads OK.</summary>
+        [Test]
+        public void EnsureOldAPSIMFileLoads()
+        {
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
+
+            APSIMImporter importer = new APSIMImporter();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+
+            Assert.IsNotNull(sims);
+        }
     }
 }

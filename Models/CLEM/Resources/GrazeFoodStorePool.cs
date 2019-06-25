@@ -15,6 +15,12 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStorePool : IFeedType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]
@@ -119,6 +125,7 @@ namespace Models.CLEM.Resources
                     Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
+                Growth += pool.Amount;
             }
         }
 
@@ -132,7 +139,7 @@ namespace Models.CLEM.Resources
         {
             removeAmount = Math.Min(this.amount, removeAmount);
             this.Consumed += removeAmount;
-            this.amount = this.amount - removeAmount;
+            this.amount -= removeAmount;
 
             return removeAmount;
         }

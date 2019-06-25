@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantfeed.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
     public class RuminantActivityFeed : CLEMRuminantActivityBase
     {
         [Link]
@@ -44,8 +44,6 @@ namespace Models.CLEM.Activities
         [Description("Proportion wastage through trampling (feed trough = 0)")]
         [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
-
-        private IResourceType foodSource { get; set; }
 
         /// <summary>
         /// Feed type
@@ -82,7 +80,6 @@ namespace Models.CLEM.Activities
 
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            foodSource = FeedType;
         }
 
         /// <summary>

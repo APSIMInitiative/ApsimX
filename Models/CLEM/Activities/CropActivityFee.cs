@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("This is a fee required to perfrom a crop management task.")]
-    [HelpUri(@"content/features/activities/crop/cropfee.htm")]
+    [HelpUri(@"Content/Features/Activities/Crop/CropFee.htm")]
     [Version(1, 0, 1, "")]
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
     {
@@ -107,8 +107,7 @@ namespace Models.CLEM.Activities
             if (this.TimingOK)
             {
                 List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-
-                double sumneeded = 0;
+                double sumneeded;
                 switch (PaymentStyle)
                 {
                     case CropPaymentStyleType.Fixed:

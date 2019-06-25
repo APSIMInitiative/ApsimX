@@ -12,6 +12,8 @@ namespace UnitTests.Storage
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();
 
+        internal static List<DataTable> tables = new List<DataTable>();
+
         public string[] SimulationNames
         {
             get
@@ -41,7 +43,7 @@ namespace UnitTests.Storage
         public IStorageReader Reader => throw new NotImplementedException();
 
         public IStorageWriter Writer { get { return this; } }
-
+         
         [Serializable]
         internal class Row
         {
@@ -60,6 +62,7 @@ namespace UnitTests.Storage
 
         public void WriteTable(DataTable table)
         {
+            tables.Add(table);
         }
 
         public void DeleteDataInTable(string tableName)
@@ -87,7 +90,7 @@ namespace UnitTests.Storage
         {
         }
 
-        public int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName, string folderName)
         {
             return 0;
         }

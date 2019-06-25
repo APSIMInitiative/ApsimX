@@ -273,9 +273,8 @@ namespace UserInterface.Presenters
                 {
                     Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
                 }
-                catch (Exception)
-                {  // If there are any errors, return 0
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
+                catch (FormatException)
+                {
                 }
             }
 

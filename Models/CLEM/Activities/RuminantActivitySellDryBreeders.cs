@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity flags dry breeders for sale. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantdrybreeders.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantDryBreeders.htm")]
     public class RuminantActivitySellDryBreeders : CLEMRuminantActivityBase
     {
         /// <summary>

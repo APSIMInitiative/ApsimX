@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
-    [HelpUri(@"content/features/activities/activitiesholder.htm")]
+    [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
@@ -242,7 +242,10 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.ReportAllAllActivitiesPerformed();
+                if (child.Enabled)
+                {
+                    child.ReportAllAllActivitiesPerformed();
+                }
             }
 
             // add timestep activity for reporting
@@ -263,7 +266,10 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.ClearAllAllActivitiesPerformedStatus();
+                if (child.Enabled)
+                {
+                    child.ClearAllAllActivitiesPerformedStatus();
+                }
             }
         }
 

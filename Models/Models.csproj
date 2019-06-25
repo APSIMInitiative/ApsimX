@@ -144,13 +144,19 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
+    <Compile Include="CLEM\FileSQLiteCrop.cs" />
     <Compile Include="CLEM\Groupings\LabourPriceGroup.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
+    <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
     <Compile Include="CLEM\Resources\LabourPricing.cs" />
+    <Compile Include="CLEM\Resources\ResourceUnitsConverter.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="CLEM\Reporting\PivotTable.cs" />
+    <Compile Include="CLEM\WarningLog.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -227,6 +233,7 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ISimulationGenerator.cs" />
+    <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
@@ -235,6 +242,7 @@
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
+    <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
@@ -714,6 +722,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="Resources\Oats1.json" />
+    <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

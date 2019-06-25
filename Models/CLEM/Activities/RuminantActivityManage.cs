@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantmanage.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -316,6 +316,17 @@ namespace Models.CLEM.Activities
                 foreach (var ind in herd.Where(a => a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumBullAge)))
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
+
+                    // ensure females are not pregnant and add warning if pregnant old females found.
+                    if (ind.Gender == Sex.Female && (ind as RuminantFemale).IsPregnant)
+                    {
+                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregant.\nConsider changing the MaximumBreederAge in [RuminantActivityManage] or ensure [RuminantType.MaxAgeMating] is less than or equal to the MaximumBreederAge to avoid selling pregnant individuals.";
+                        if(!Warnings.Exists(warning))
+                        {
+                            Warnings.Add(warning);
+                            Summary.WriteWarning(this, warning);
+                        }
+                    }
                 }
 
                 // MALES

@@ -18,13 +18,20 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link]
         private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get {return "NA"; }  }
 
         /// <summary>
         /// Breed
@@ -680,6 +687,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; }
         /// <summary>
+        /// Proportion offspring born male
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0.5)]
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion of offspring male")]
+        [Required, Proportion]
+        public double ProportionOffspringMale { get; set; }
+        /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
         [Category("Advanced", "Breeding")]
@@ -707,6 +722,14 @@ namespace Models.CLEM.Resources
         [Description("Minimum age for 1st mating (months)")]
         [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
+        /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Category("Basic", "Breeding")]
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
@@ -750,13 +773,6 @@ namespace Models.CLEM.Resources
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
-        /// <summary>
-        /// Maximum conception rate from uncontrolled breeding 
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Proportion]
-        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion
 

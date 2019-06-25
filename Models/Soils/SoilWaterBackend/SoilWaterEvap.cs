@@ -70,7 +70,7 @@ namespace Models.Soils.SoilWaterBackend
 
         //Initialise the Accumulating Variables
 
-        public void InitialiseAccumulatingVars(SoilWaterSoil SoilObject, Clock Clock)
+        public void InitialiseAccumulatingVars(SoilWaterSoil SoilObject, IClock Clock)
             {
             //reset the accumulated Evap variables (sumes1, sumes2, t) 
             //nb. sumes1 -> is sum of es during stage1
@@ -139,7 +139,7 @@ namespace Models.Soils.SoilWaterBackend
 
         //Constructor
 
-        public NormalEvaporation(SoilWaterSoil SoilObject, Clock Clock)
+        public NormalEvaporation(SoilWaterSoil SoilObject, IClock Clock)
             {
 
             cons = SoilObject.Constants;
@@ -356,7 +356,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-        public void CalcEs_RitchieEq_LimitedBySW(SoilWaterSoil SoilObject, Clock Clock, double Infiltration)
+        public void CalcEs_RitchieEq_LimitedBySW(SoilWaterSoil SoilObject, IClock Clock, double Infiltration)
             {
 
             //private void soilwat2_ritchie_evaporation()

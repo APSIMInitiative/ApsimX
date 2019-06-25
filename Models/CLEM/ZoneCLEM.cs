@@ -23,7 +23,8 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [Description("This manages all CLEM resources and activities in the simulation.")]
-    [HelpUri(@"content/features/CLEMComponent.htm")]
+    [HelpUri(@"Content/Features/CLEMComponent.htm")]
+    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes.")]
     [Version(1,0,1,"")]
     [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI
