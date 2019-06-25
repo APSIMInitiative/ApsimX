@@ -167,6 +167,28 @@ namespace UserInterface.Interfaces
             bool showOnLegend);
 
         /// <summary>
+        /// Draw a stacked area series with the specified arguments.Similar to
+        /// an area series except that the area between this curve and the
+        /// previous curve (or y = 0 if this is first) will be filled with
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawStackedArea(
+            string title,
+            double[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend);
+
+        /// <summary>
         /// Draw text on the graph at the specified coordinates.
         /// </summary>
         /// <param name="text">The text to put on the graph</param>

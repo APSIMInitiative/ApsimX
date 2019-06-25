@@ -478,7 +478,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Draw an  area series with the specified arguments. Similar to a
+        /// Draw an area series with the specified arguments. Similar to a
         /// line series, but the area under the curve will be filled with colour.
         /// </summary>
         /// <param name="title">The series title</param>
@@ -502,6 +502,62 @@ namespace UserInterface.Views
             y2.AddRange(Enumerable.Repeat(0d, y.Length));
 
             DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
+        }
+
+        /// <summary>
+        /// Draw a stacked area series with the specified arguments.Similar to
+        /// an area series except that the area between this curve and the
+        /// previous curve (or y = 0 if this is first) will be filled with
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawStackedArea(
+            string title,
+            double[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend)
+        {
+            if (this.plot1.Model.Series.Count < 1 || plot1.Model.Series.OfType<LineSeries>().Count() < 1)
+            {
+                // This is the first series to be added to the chart. Just use
+                // a region series (colours area between two curves), and use
+                // y = 0 for the second curve.
+                List<double> y0 = new List<double>();
+                y0.AddRange(Enumerable.Repeat(0d, y.Length));
+                DrawRegion(title, x, y, x, y0, xAxisType, yAxisType, colour, showOnLegend);
+                return;
+            }
+            LineSeries previous = plot1.Model.Series.OfType<LineSeries>().Last();
+            double[] x1 = previous.Points.Select(p => p.X).ToArray();
+            double[] y1 = previous.Points.Select(p => p.Y).ToArray();
+
+            List<double> y2 = new List<double>();
+            for (int i = 0; i < x1.Length; i++)
+            {
+                double xVal = x1[i];
+
+                // The previous series might not have exactly the same set of x
+                // values as the new series. First we check if the new series
+                // contains this x value. If it does not, we do a linear interp
+                // to find an appropriate y-value.
+                int index = MathUtilities.SafeIndexOf(x.ToList(), xVal);
+                double yVal = y1[i];
+                if (index >= 0)
+                    yVal += y[index];
+                else
+                    yVal += MathUtilities.LinearInterpReal(xVal, x, y, out bool didInterp);
+                y2.Add(yVal);
+            }
+            DrawRegion(title, x, y2, x1, y1, xAxisType, yAxisType, colour, showOnLegend);
         }
 
         /// <summary>

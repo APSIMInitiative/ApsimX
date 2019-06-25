@@ -243,6 +243,17 @@ namespace UserInterface.Presenters
                             colour,
                             definition.ShowInLegend);
                     }
+                    else if (definition.Type == SeriesType.StackedArea)
+                    {
+                        graphView.DrawStackedArea(
+                            definition.Title,
+                            definition.X.Cast<double>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
+                            definition.XAxis,
+                            definition.YAxis,
+                            colour,
+                            definition.ShowInLegend);
+                    }
                 }
                 catch (Exception err)
                 {
