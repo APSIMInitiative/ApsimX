@@ -232,12 +232,12 @@ namespace ApsimNG.Views.CLEM
         private VBox vbox1 = null;
 
         /// <summary>
-        /// Button to decrease pivot (cycle left)
+        /// Button to cycle the pivot backwards
         /// </summary>
         private Button leftbutton = null;
 
         /// <summary>
-        /// Button to increase pivot (cycle right)
+        /// Button to cycle the pivot forwards
         /// </summary>
         private Button rightbutton = null;
 
@@ -287,12 +287,13 @@ namespace ApsimNG.Views.CLEM
 
             AddOptions(Row);
             AddOptions(Column);
+
+            Pivot.AddText("None");
             AddOptions(Pivot);
 
             Time.AddText("Daily");
             Time.AddText("Monthly");
             Time.AddText("Yearly");
-            Time.AddText("MonthlyAverage");
 
             // Subscribe the left/right buttons to the change pivot event
             leftbutton.Clicked += OnChangePivot;
@@ -311,7 +312,7 @@ namespace ApsimNG.Views.CLEM
         }
 
         /// <summary>
-        /// Add a standard collection of text options to a view box
+        /// Add the ledger text options to a view box
         /// </summary>
         /// <param name="combo"></param>
         private static void AddOptions(ViewBox box)

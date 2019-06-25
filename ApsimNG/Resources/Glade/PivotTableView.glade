@@ -298,7 +298,7 @@
             <property name="width_request">170</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="button_sensitivity">off</property>
+            <property name="button_sensitivity">on</property>
           </object>
           <packing>
             <property name="left_attach">3</property>
