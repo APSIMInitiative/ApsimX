@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
             html += "</table>";
             if(WeightWarningOccurred)
             {
-                html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more then 20%</span>";
+                html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
             }
             return html;
         }
