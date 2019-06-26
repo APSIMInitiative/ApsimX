@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 56,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
@@ -2456,6 +2456,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2685,10 +2693,10 @@
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": 44.715513732021336,
-            "Longitude": 94.833984375
+            "Latitude": 26.431228064506438,
+            "Longitude": 17.578125000000004
           },
-          "Zoom": 3.0,
+          "Zoom": 1.0,
           "Name": "Map",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -2790,7 +2798,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Insert text here to document the Australian datasets",
+              "Text": "Test data are provided for three locations across Australia, ranging from warmer subtropical Queensland, through to cooler temperature locations in southern Australia.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -2803,19 +2811,19 @@
               "Name": "Tarlee",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This Rotation Trial ([Schultz1995]) was located near the township of Tarlee (34.28 S, 138.77E) in South Australia from 1979 to 1996.  It was established on a Red Brown Earth to monitor the long term effects of rotations on soil properties and crop production.  In this test, we use data for continuous wheat, and wheat-fallow rotations with 3 stubble treatments (burning, incorporation, retention) and 3 Nitrogen rates (0,40,80 kg/ha).\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
                   "Name": "Tarlee",
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Insert text here to document the Tarlee dataset",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Factorial.Factors, Models",
                       "Name": "Factors",
@@ -8512,6 +8520,14 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                                      "Name": "RetranslocateNitrogen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
                                     }
                                   ],
                                   "IncludeInDocumentation": true,
@@ -9260,6 +9276,14 @@
                                           "ReadOnly": false
                                         }
                                       ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                                      "Name": "RetranslocateNitrogen",
+                                      "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -11743,8 +11767,8 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        1.0,
-                                        1.0
+                                        0.5,
+                                        0.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -11808,7 +11832,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
-                                        "Location": "65, 426",
+                                        "Location": "656, 254",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11816,7 +11840,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
-                                        "Location": "345, 45",
+                                        "Location": "566, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11824,7 +11848,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
-                                        "Location": "265, 151",
+                                        "Location": "261, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11832,7 +11856,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
-                                        "Location": "444, 154",
+                                        "Location": "397, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11840,7 +11864,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
-                                        "Location": "50, 200",
+                                        "Location": "123, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11888,7 +11912,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
-                                        "Location": "63, 290",
+                                        "Location": "48, 338",
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
@@ -11896,7 +11920,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNO3",
-                                        "Location": "702, 339",
+                                        "Location": "688, 415",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11904,7 +11928,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNH4",
-                                        "Location": "675, 205",
+                                        "Location": "691, 421",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -11915,7 +11939,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "415, 173",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -11923,7 +11947,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Humic",
-                                        "Location": "349, 151",
+                                        "Location": "499, 172",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -11939,7 +11963,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMLignin",
                                         "DestinationName": "Humic",
-                                        "Location": "0, 0",
+                                        "Location": "255, 105",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -11963,7 +11987,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMCarbohydrate",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "141, 131",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -11979,7 +12003,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "335, 301",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -11987,7 +12011,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Humic",
-                                        "Location": "321, 241",
+                                        "Location": "319, 278",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -11995,7 +12019,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Humic",
                                         "DestinationName": "Microbial",
-                                        "Location": "319, 267",
+                                        "Location": "334, 340",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -12011,7 +12035,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NO3",
                                         "DestinationName": "Atmosphere",
-                                        "Location": "0, 0",
+                                        "Location": "1, 319",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -12019,7 +12043,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NH4",
                                         "DestinationName": "NO3",
-                                        "Location": "0, 0",
+                                        "Location": "243, 409",
                                         "Colour": "Black",
                                         "Text": null
                                       }
@@ -12313,8 +12337,8 @@
                           "YAxis": 0,
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Rotation",
-                          "FactorToVaryMarkers": "Zone",
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "N",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -12332,7 +12356,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12362,12 +12386,12 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12408,8 +12432,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "Zone",
+                          "FactorToVaryColours": "Rotation",
+                          "FactorToVaryMarkers": "N",
                           "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
@@ -12482,7 +12506,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -12498,7 +12522,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Rotation",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryLines": "N",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -12516,7 +12540,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12546,12 +12570,12 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12656,7 +12680,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -12690,7 +12714,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12720,12 +12744,12 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12830,7 +12854,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -12864,7 +12888,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12894,12 +12918,12 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13004,7 +13028,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -13038,7 +13062,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -13068,12 +13092,12 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13141,17 +13165,17 @@
                               "showEquation": true,
                               "Name": "Regression",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -13924,7 +13948,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
-                                        "Location": "65, 426",
+                                        "Location": "656, 254",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -13932,7 +13956,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
-                                        "Location": "345, 45",
+                                        "Location": "566, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -13940,7 +13964,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
-                                        "Location": "265, 151",
+                                        "Location": "261, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -13948,7 +13972,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
-                                        "Location": "444, 154",
+                                        "Location": "397, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -13956,7 +13980,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
-                                        "Location": "50, 200",
+                                        "Location": "123, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -14004,7 +14028,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
-                                        "Location": "63, 290",
+                                        "Location": "48, 338",
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
@@ -14012,7 +14036,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNO3",
-                                        "Location": "702, 339",
+                                        "Location": "688, 415",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -14020,7 +14044,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNH4",
-                                        "Location": "675, 205",
+                                        "Location": "691, 421",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -14031,7 +14055,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "415, 173",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14039,7 +14063,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Humic",
-                                        "Location": "349, 151",
+                                        "Location": "499, 172",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14055,7 +14079,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMLignin",
                                         "DestinationName": "Humic",
-                                        "Location": "0, 0",
+                                        "Location": "255, 105",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14079,7 +14103,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMCarbohydrate",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "141, 131",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14095,7 +14119,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "335, 301",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14103,7 +14127,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Humic",
-                                        "Location": "321, 241",
+                                        "Location": "319, 278",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14111,7 +14135,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Humic",
                                         "DestinationName": "Microbial",
-                                        "Location": "319, 267",
+                                        "Location": "334, 340",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14127,7 +14151,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NO3",
                                         "DestinationName": "Atmosphere",
-                                        "Location": "0, 0",
+                                        "Location": "1, 319",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -14135,7 +14159,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NH4",
                                         "DestinationName": "NO3",
-                                        "Location": "0, 0",
+                                        "Location": "243, 409",
                                         "Colour": "Black",
                                         "Text": null
                                       }
@@ -14226,7 +14250,7 @@
                                     14.5
                                   ],
                                   "FBiom": [
-                                    0.2,
+                                    0.03,
                                     0.03,
                                     0.02,
                                     0.015,
@@ -17012,7 +17036,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
-                                        "Location": "65, 426",
+                                        "Location": "656, 254",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17020,7 +17044,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
-                                        "Location": "345, 45",
+                                        "Location": "566, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17028,7 +17052,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
-                                        "Location": "265, 151",
+                                        "Location": "261, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17036,7 +17060,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
-                                        "Location": "444, 154",
+                                        "Location": "397, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17044,7 +17068,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
-                                        "Location": "50, 200",
+                                        "Location": "123, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17092,7 +17116,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
-                                        "Location": "63, 290",
+                                        "Location": "48, 338",
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
@@ -17100,7 +17124,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNO3",
-                                        "Location": "702, 339",
+                                        "Location": "688, 415",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17108,7 +17132,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNH4",
-                                        "Location": "675, 205",
+                                        "Location": "691, 421",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -17119,7 +17143,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "415, 173",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17127,7 +17151,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Humic",
-                                        "Location": "349, 151",
+                                        "Location": "499, 172",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17143,7 +17167,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMLignin",
                                         "DestinationName": "Humic",
-                                        "Location": "0, 0",
+                                        "Location": "255, 105",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17167,7 +17191,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMCarbohydrate",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "141, 131",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17183,7 +17207,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "335, 301",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17191,7 +17215,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Humic",
-                                        "Location": "321, 241",
+                                        "Location": "319, 278",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17199,7 +17223,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Humic",
                                         "DestinationName": "Microbial",
-                                        "Location": "319, 267",
+                                        "Location": "334, 340",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17215,7 +17239,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NO3",
                                         "DestinationName": "Atmosphere",
-                                        "Location": "0, 0",
+                                        "Location": "1, 319",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -17223,7 +17247,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NH4",
                                         "DestinationName": "NO3",
-                                        "Location": "0, 0",
+                                        "Location": "243, 409",
                                         "Colour": "Black",
                                         "Text": null
                                       }
@@ -18014,72 +18038,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "DisabledSeries": [],
-                      "Name": "FOMC",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": null,
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "BrigalowReport",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "TotalFOMC",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -18106,6 +18064,15 @@
               "ShowPageOfGraphs": true,
               "Name": "Pendleton",
               "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The Pendleton Long Term Experiment ([Rasmussen1998]) was established in 1931 at Oregon State University’s Columbia Basin Agricultural Research Center near Pendleton, OR (45.72 N, 118.63 W).\nIt consisted of nine treatments consisting of crop residue (fall burn, spring burn, and no burn) and fertility\n(0, 45, and 90 kg N/ha, manure, and pea vine) management practices under a Winter Wheat-Summer Fallow system.\nAll plots were tilled using a moldboard plow, cultivated, and rod-weeded to control weeds. ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
@@ -27458,6 +27425,14 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                                      "Name": "RetranslocateNitrogen",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
                                     }
                                   ],
                                   "IncludeInDocumentation": true,
@@ -28206,6 +28181,14 @@
                                           "ReadOnly": false
                                         }
                                       ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                                      "Name": "RetranslocateNitrogen",
+                                      "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -30788,7 +30771,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
-                                        "Location": "65, 426",
+                                        "Location": "656, 254",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30796,7 +30779,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
-                                        "Location": "345, 45",
+                                        "Location": "566, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30804,7 +30787,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
-                                        "Location": "265, 151",
+                                        "Location": "261, 69",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30812,7 +30795,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
-                                        "Location": "444, 154",
+                                        "Location": "397, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30820,7 +30803,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
-                                        "Location": "50, 200",
+                                        "Location": "123, 70",
                                         "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30868,7 +30851,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
-                                        "Location": "63, 290",
+                                        "Location": "48, 338",
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
@@ -30876,7 +30859,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNO3",
-                                        "Location": "702, 339",
+                                        "Location": "688, 415",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30884,7 +30867,7 @@
                                       {
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "PlantAvailableNH4",
-                                        "Location": "675, 205",
+                                        "Location": "691, 421",
                                         "Colour": "86, 180, 233",
                                         "OutlineColour": "Black",
                                         "Transparent": false
@@ -30895,7 +30878,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "415, 173",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30903,7 +30886,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "SurfaceResidue",
                                         "DestinationName": "Humic",
-                                        "Location": "349, 151",
+                                        "Location": "499, 172",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30919,7 +30902,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMLignin",
                                         "DestinationName": "Humic",
-                                        "Location": "0, 0",
+                                        "Location": "255, 105",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30943,7 +30926,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "FOMCarbohydrate",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "141, 131",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30959,7 +30942,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Microbial",
-                                        "Location": "0, 0",
+                                        "Location": "335, 301",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30967,7 +30950,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Microbial",
                                         "DestinationName": "Humic",
-                                        "Location": "321, 241",
+                                        "Location": "319, 278",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30975,7 +30958,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "Humic",
                                         "DestinationName": "Microbial",
-                                        "Location": "319, 267",
+                                        "Location": "334, 340",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30991,7 +30974,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NO3",
                                         "DestinationName": "Atmosphere",
-                                        "Location": "0, 0",
+                                        "Location": "1, 319",
                                         "Colour": "Black",
                                         "Text": null
                                       },
@@ -30999,7 +30982,7 @@
                                         "$type": "Models.Graph.Arc, Models",
                                         "SourceName": "NH4",
                                         "DestinationName": "NO3",
-                                        "Location": "0, 0",
+                                        "Location": "243, 409",
                                         "Colour": "Black",
                                         "Text": null
                                       }
@@ -31289,7 +31272,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SOC30",
+                          "Name": "SOC 0 to 30cm",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31415,7 +31398,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SOC60",
+                          "Name": "SOC 30 to 60 cm",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31511,7 +31494,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SON30",
+                          "Name": "SON 0 to 30 cm",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31607,7 +31590,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SON60",
+                          "Name": "SON 30 to 60 cm",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31694,16 +31677,16 @@
                               "Type": 0,
                               "Title": null,
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": 8.0,
+                              "Maximum": 14.0,
+                              "Interval": 2.0,
                               "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "CNR30",
+                          "Name": "CNR 0 to 30 cm",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31790,16 +31773,16 @@
                               "Type": 0,
                               "Title": null,
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": 8.0,
+                              "Maximum": 14.0,
+                              "Interval": 2.0,
                               "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "CNR60",
+                          "Name": "CNR 30 to 60 cm",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31895,7 +31878,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SOC30 Pre vs Obs",
+                          "Name": "SOC 0 to 30 cm Pre vs Obs",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -31973,7 +31956,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SOC60 Pre vs Obs",
+                          "Name": "SOC 30 to 60 cm Pre vs Obs",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -32051,7 +32034,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SON30 Pre vs Obs",
+                          "Name": "SON 0 to 30 cm Pre vs Obs",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -32129,7 +32112,7 @@
                           ],
                           "LegendPosition": 2,
                           "DisabledSeries": [],
-                          "Name": "SON60 Pre vs Obs",
+                          "Name": "SON 30 to 60 cm Pre vs Obs",
                           "Children": [
                             {
                               "$type": "Models.Graph.Series, Models",
@@ -32245,7 +32228,7 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -32275,12 +32258,12 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },

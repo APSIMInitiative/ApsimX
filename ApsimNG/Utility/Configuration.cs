@@ -239,6 +239,9 @@ namespace Utility
                     instance.FilesInHistory = 20;
                 }
 
+                if (instance.FilesInHistory == 0)
+                    instance.FilesInHistory = 20;
+
                 instance.configurationFile = configurationFile;
                 return instance;
             }

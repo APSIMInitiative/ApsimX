@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
+    [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze Food Store/GrazeFoodStoreType.htm")]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -412,10 +413,9 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     Gain = pool.Amount,
-                    Activity = activity.Name,
-                    ActivityType = activity.GetType().Name,
+                    Activity = activity,
                     Reason = reason,
-                    ResourceType = this.Name
+                    ResourceType = this
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -448,42 +448,53 @@ namespace Models.CLEM.Resources
 
                 // take from pools as specified for the breed
                 double amountRequired = request.Required;
-                // secondtake is the inverse of setting stricy feeding limits.
-                bool secondTakeFromPools = !thisBreed.RuminantTypeModel.StrictFeedingLimits;
                 thisBreed.DMD = 0;
                 thisBreed.N = 0;
-                int index = 0;
-                while (amountRequired > 0)
-                {
-                    // limiter obtained from breed feed limits or unlimited if second take of pools
-                    double limiter = 1.0;
-                    if (!secondTakeFromPools)
-                    {
-                        limiter = thisBreed.PoolFeedLimits[index].Limit;
-                    }
 
-                    double amountToRemove = Math.Min(this.Pools[index].Amount, amountRequired * limiter);
+                // first take from pools
+                foreach (GrazeBreedPoolLimit pool in thisBreed.PoolFeedLimits)
+                {
+                    // take min of amount in pool, intake*limiter, remaining intake needed
+                    double amountToRemove = Math.Min(request.Required * pool.Limit, Math.Min(pool.Pool.Amount, amountRequired));
                     // update DMD and N based on pool utilised
-                    thisBreed.DMD += this.Pools[index].DMD * amountToRemove;
-                    thisBreed.N += this.Pools[index].Nitrogen * amountToRemove;
+                    thisBreed.DMD += pool.Pool.DMD * amountToRemove;
+                    thisBreed.N += pool.Pool.Nitrogen * amountToRemove;
+
                     amountRequired -= amountToRemove;
 
                     // remove resource from pool
-                    this.Pools[index].Remove(amountToRemove, thisBreed, "Graze");
+                    pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
+                }
 
-                    index++;
-                    if (index >= this.Pools.Count)
+                // if forage still limiting and second take allowed (enforce strict limits is false)
+                if(amountRequired > 0 & !thisBreed.RuminantTypeModel.StrictFeedingLimits)
+                {
+                    // allow second take for the limited pools
+                    double forage = thisBreed.PoolFeedLimits.Sum(a => a.Pool.Amount);
+
+                    // this will only be the previously limited pools
+                    double amountTakenDuringSecondTake = 0;
+                    foreach (GrazeBreedPoolLimit pool in thisBreed.PoolFeedLimits.Where(a => a.Limit < 1))
                     {
-                        // if we've already given second chance to get food so finish without full satisfying individual
-                        // or strict feeding limits are enforced
-                        if (secondTakeFromPools)
+                        //if still not enough take all
+                        double amountToRemove = 0;
+                        if (amountRequired >= forage)
                         {
-                            break;
+                            // take as a proportion of the pool to total forage remaining
+                            amountToRemove = pool.Pool.Amount/forage * amountRequired;
                         }
-                        // if not strict limits allow a second request for food from previously limited pools.
-                        secondTakeFromPools = true;
-                        index = 0;
+                        else
+                        {
+                            amountToRemove = pool.Pool.Amount;
+                        }
+                        // update DMD and N based on pool utilised
+                        thisBreed.DMD += pool.Pool.DMD * amountToRemove;
+                        thisBreed.N += pool.Pool.Nitrogen * amountToRemove;
+                        amountTakenDuringSecondTake += amountToRemove;
+                        // remove resource from pool
+                        pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
                     }
+                    amountRequired -= amountTakenDuringSecondTake;
                 }
 
                 request.Provided = request.Required - amountRequired;
@@ -498,16 +509,48 @@ namespace Models.CLEM.Resources
                 // report 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    ResourceType = this.Name,
+                    ResourceType = this,
                     Loss = request.Provided,
-                    Activity = request.ActivityModel.Name,
-                    ActivityType = request.ActivityModel.GetType().Name,
+                    Activity = request.ActivityModel,
                     Reason = request.Reason
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
 
+                //while (amountRequired > 0)
+                //{
+                //    // limiter obtained from breed feed limits or unlimited if second take of pools
+                //    double limiter = 1.0;
+                //    if (!secondTakeFromPools)
+                //    {
+                //        limiter = thisBreed.PoolFeedLimits[index].Limit;
+                //    }
+
+                //    double amountToRemove = Math.Min(thisBreed.PoolFeedLimits[index].Pool.Amount * limiter, amountRequired);
+                //    // update DMD and N based on pool utilised
+                //    thisBreed.DMD += thisBreed.PoolFeedLimits[index].Pool.DMD * amountToRemove;
+                //    thisBreed.N += thisBreed.PoolFeedLimits[index].Pool.Nitrogen * amountToRemove;
+
+                //    amountRequired -= amountToRemove;
+
+                //    // remove resource from pool
+                //    thisBreed.PoolFeedLimits[index].Pool.Remove(amountToRemove, thisBreed, "Graze");
+
+                //    index++;
+                //    if (index >= this.Pools.Count)
+                //    {
+                //        // if we've already given second chance to get food so finish without full satisfying individual
+                //        // or strict feeding limits are enforced
+                //        if (secondTakeFromPools)
+                //        {
+                //            break;
+                //        }
+                //        // if not strict limits allow a second request for food from previously limited pools.
+                //        secondTakeFromPools = true;
+                //        index = 0;
+                //    }
+                //}
             }
             else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityCutAndCarry))
             {
@@ -537,10 +580,9 @@ namespace Models.CLEM.Resources
                 // report 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    ResourceType = this.Name,
+                    ResourceType = this,
                     Gain = request.Provided * -1,
-                    Activity = request.ActivityModel.Name,
-                    ActivityType = request.ActivityModel.GetType().Name,
+                    Activity = request.ActivityModel,
                     Reason = request.Reason
                 };
                 LastTransaction = details;

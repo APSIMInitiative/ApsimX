@@ -410,14 +410,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
-        /// Intake coefficient in relation to Live Weight
+        /// Intake coefficient in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake coefficient in relation to Live Weight")]
         [Required, GreaterThanValue(0)]
         public double IntakeCoefficient { get; set; }
         /// <summary>
-        /// Intake intercept In relation to SRW
+        /// Intake intercept in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake intercept in relation to SRW")]
@@ -490,7 +490,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Enforce strict feeding limits
         /// </summary>
-        [Category("Advanced", "Diet")]
+        [Category("Basic", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
         public bool StrictFeedingLimits { get; set; }
@@ -722,6 +722,14 @@ namespace Models.CLEM.Resources
         [Description("Minimum age for 1st mating (months)")]
         [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
+        /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Category("Basic", "Breeding")]
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>

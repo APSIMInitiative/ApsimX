@@ -142,22 +142,32 @@ namespace Models.CLEM.Activities
             // if there is no ResourceRequestList (i.e. not created from parent pasture)
             if (ResourceRequestList == null)
             {
-                // determine pasture quality from all pools (DMD) at start of grazing
-                double pastureDMD = GrazeFoodStoreModel.DMD;
-
-                // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
-                // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
-                // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
-                PotentialIntakePastureQualityLimiter = 1.0;
-                if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
-                {
-                    PotentialIntakePastureQualityLimiter = 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
-                }
-
+                PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
                 GetResourcesNeededForActivity();
             }
-            // this has all the code to feed animals.
+            // The DoActivity has all the code to feed animals.
             DoActivity();
+        }
+
+        /// <summary>
+        /// Calculate the potential intake limiter based on pasture quality.
+        /// </summary>
+        /// <returns>Limiter as proportion</returns>
+        public double CalculatePotentialIntakePastureQualityLimiter()
+        {
+            // determine pasture quality from all pools (DMD) at start of grazing
+            double pastureDMD = GrazeFoodStoreModel.DMD;
+            // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
+            // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
+            // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
+            if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
+            {
+                return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         public override List<ResourceRequest> GetResourcesNeededForActivity()
@@ -242,7 +252,7 @@ namespace Models.CLEM.Activities
             
             double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
             greenlimit = Math.Max(0.0, greenlimit);
-            if (propgreen > 90)
+            if (greenlimit > 0.9)
             {
                 greenlimit = 100;
             }
@@ -251,6 +261,9 @@ namespace Models.CLEM.Activities
             {
                 pool.Limit = greenlimit / 100.0;
             }
+
+            // order feedpools by age so that diet is taken from youngest greenest first
+            this.PoolFeedLimits = this.PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
         }
 
         public override void DoActivity()
