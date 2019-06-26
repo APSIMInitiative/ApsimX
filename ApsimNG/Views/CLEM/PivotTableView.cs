@@ -32,46 +32,7 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Triggers when changes are made to the view that need to be tracked
         /// </summary>
-        public event EventHandler<TrackChangesArgs> TrackChanges;
-
-        /// <summary>
-        /// Triggers when the current pivot focus is changed
-        /// </summary>
-        public event EventHandler<ChangePivotArgs> ChangePivot;
-
-        /// <summary>
-        /// Carries the data which needs to be tracked when changes are made
-        /// </summary>
-        public class TrackChangesArgs : EventArgs
-        {
-            public string Name { get; }
-            public object Value { get; }
-
-            public TrackChangesArgs(string name, object value)
-            {
-                Name = name;
-                Value = value;
-            }
-
-            public TrackChangesArgs(ViewBox box)
-            {
-                Name = box.Name;
-                Value = box.ID;
-            }
-        }
-
-        /// <summary>
-        /// Carries the information about whether the pivot is increasing or decreasing
-        /// </summary>
-        public class ChangePivotArgs : EventArgs
-        {
-            public bool Increase { get; }
-
-            public ChangePivotArgs(bool increase)
-            {
-                Increase = increase;
-            }
-        }
+        public event EventHandler TrackChanges;       
 
         /// <summary>
         /// Used to simplify interaction with the GtkComboBox objects in a PivotTableView
@@ -90,10 +51,7 @@ namespace ApsimNG.Views.CLEM
             /// Triggers when the active selection in the box is changed
             /// </summary>
             public event EventHandler Changed;
-
-            /// <summary>
-            /// The name of the ViewBox
-            /// </summary>
+            
             public string Name { get; set; }
 
             /// <summary>
@@ -132,11 +90,10 @@ namespace ApsimNG.Views.CLEM
             /// <param name="name">The name of the viewbox</param>
             /// <param name="parent">The parent view</param>
             /// <param name="builder">The Gtk.Builder used to construct the ComboBox</param>
-            public ViewBox(string name, PivotTableView parent, Builder builder)
-            {
-                Name = name;
+            public ViewBox(string gladeObject, PivotTableView parent, Builder builder)
+            {                
                 this.parent = parent;
-                box = (ComboBox)builder.GetObject($"{name.ToLower()}box");
+                box = (ComboBox)builder.GetObject(gladeObject);
                 AddRenderer(box);
 
                 Changed += parent.OnInvokeUpdate;
@@ -194,37 +151,37 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// The Ledger box
         /// </summary>
-        public ViewBox Ledger { get; set; }
+        public ViewBox LedgerViewBox { get; set; }
 
         /// <summary>
         /// The Expression box
         /// </summary>
-        public ViewBox Expression { get; set; }
+        public ViewBox ExpressionViewBox { get; set; }
 
         /// <summary>
         /// The Value box
         /// </summary>
-        public ViewBox Value { get; set; }
+        public ViewBox ValueViewBox { get; set; }
 
         /// <summary>
         /// The Row box
         /// </summary>
-        public ViewBox Row { get; set; }
+        public ViewBox RowViewBox { get; set; }
 
         /// <summary>
         /// The Column box
         /// </summary>
-        public ViewBox Column { get; set; }
+        public ViewBox ColumnViewBox { get; set; }
 
         /// <summary>
         /// The Pivot box
         /// </summary>
-        public ViewBox Pivot { get; set; }
+        public ViewBox FilterViewBox { get; set; }
 
         /// <summary>
         /// The Time box
         /// </summary>
-        public ViewBox Time { get; set; }
+        public ViewBox TimeViewBox { get; set; }
 
         /// <summary>
         /// The main widget
@@ -234,22 +191,27 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Button to cycle the pivot backwards
         /// </summary>
-        private Button leftbutton = null;
+        private Button leftButton = null;
 
         /// <summary>
         /// Button to cycle the pivot forwards
         /// </summary>
-        private Button rightbutton = null;
+        private Button rightButton = null;
 
         /// <summary>
         /// Button to store the current gridview in the DataStore
         /// </summary>
-        private Button storebutton = null;
+        private Button storeButton = null;
 
         /// <summary>
         /// Custom gridview added post-reading the glade file
         /// </summary>
         public GridView Grid { get; set; } = null;
+        
+        /// <summary>
+        /// Displays the currently selected filter
+        /// </summary>
+        public Label FilterLabel { get; set; } = null;
 
         /// <summary>
         /// Instantiate the View
@@ -263,44 +225,49 @@ namespace ApsimNG.Views.CLEM
             // Assign the interactable objects from glade
             vbox1 = (VBox)builder.GetObject("vbox1");
 
-            leftbutton = (Button)builder.GetObject("leftbutton");
-            rightbutton = (Button)builder.GetObject("rightbutton");
-            storebutton = (Button)builder.GetObject("storebutton");
+            leftButton = (Button)builder.GetObject("leftbutton");
+            rightButton = (Button)builder.GetObject("rightbutton");
+            storeButton = (Button)builder.GetObject("storebutton");
+
+            leftButton.Name = "left";
+            rightButton.Name = "right";
+
+            FilterLabel = (Label)builder.GetObject("filter");
 
             // Setup the ViewBoxes
-            Ledger = new ViewBox("Ledger", this, builder);
-            Expression = new ViewBox("Expression", this, builder);
-            Value = new ViewBox("Value", this, builder);
-            Row = new ViewBox("Row", this, builder);
-            Column = new ViewBox("Column", this, builder);
-            Pivot = new ViewBox("Pivot", this, builder);
-            Time = new ViewBox("Time", this, builder);
+            LedgerViewBox = new ViewBox("ledgerbox", this, builder) { Name = "LedgerViewBox" };
+            ExpressionViewBox = new ViewBox("expressionbox", this, builder) { Name = "ExpressionViewBox" };
+            ValueViewBox = new ViewBox("valuebox", this, builder) { Name = "ValueViewBox" };
+            RowViewBox = new ViewBox("rowbox", this, builder) { Name = "RowViewBox" };
+            ColumnViewBox = new ViewBox("columnbox", this, builder) { Name = "ColumnViewBox" };
+            FilterViewBox = new ViewBox("filterbox", this, builder) { Name = "FilterViewBox" };
+            TimeViewBox = new ViewBox("timebox", this, builder) { Name = "TimeViewBox" };
 
             // Add text options to the ViewBoxes           
-            Expression.AddText("Sum");
-            Expression.AddText("Average");
-            Expression.AddText("Max");
-            Expression.AddText("Min");
+            ExpressionViewBox.AddText("Sum");
+            ExpressionViewBox.AddText("Average");
+            ExpressionViewBox.AddText("Max");
+            ExpressionViewBox.AddText("Min");
 
-            Value.AddText("Gain");
-            Value.AddText("Loss");
+            ValueViewBox.AddText("Gain");
+            ValueViewBox.AddText("Loss");
 
-            AddOptions(Row);
-            AddOptions(Column);
+            AddOptions(RowViewBox);
+            AddOptions(ColumnViewBox);
 
-            Pivot.AddText("None");
-            AddOptions(Pivot);
+            FilterViewBox.AddText("None");
+            AddOptions(FilterViewBox);
 
-            Time.AddText("Daily");
-            Time.AddText("Monthly");
-            Time.AddText("Yearly");
+            TimeViewBox.AddText("Daily");
+            TimeViewBox.AddText("Monthly");
+            TimeViewBox.AddText("Yearly");            
 
             // Subscribe the left/right buttons to the change pivot event
-            leftbutton.Clicked += OnChangePivot;
-            rightbutton.Clicked += OnChangePivot;
+            leftButton.Clicked += OnInvokeUpdate;
+            rightButton.Clicked += OnInvokeUpdate;
 
             // Subscribe the store button to the store data event 
-            storebutton.Clicked += OnStoreData;
+            storeButton.Clicked += OnStoreData;
 
             // Add the custom gridview (external to glade)
             Grid = new GridView(owner);
@@ -342,26 +309,8 @@ namespace ApsimNG.Views.CLEM
             // Invoke the UpdateData event
             UpdateData?.Invoke(sender, EventArgs.Empty);
 
-            // Invoke the TrackChanges event
-            if (sender.GetType() == typeof(ViewBox))
-            {
-                TrackChangesArgs args = new TrackChangesArgs((ViewBox)sender);
-
-                TrackChanges?.Invoke(sender, args);
-            }
-        }
-
-        /// <summary>
-        /// Invokes the ChangePivot event
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        private void OnChangePivot(object sender, EventArgs e)
-        {
-            ChangePivotArgs args = new ChangePivotArgs(sender == rightbutton);
-
-            ChangePivot.Invoke(((Button)sender).Name, args);
-            OnInvokeUpdate(sender, EventArgs.Empty);
+            // Invoke the TrackChanges event             
+            TrackChanges?.Invoke(sender, EventArgs.Empty);            
         }
 
         /// <summary>
@@ -391,11 +340,11 @@ namespace ApsimNG.Views.CLEM
                 if (child.GetType() != typeof(ReportResourceLedger)) continue;
 
                 ReportResourceLedger ledger = child as ReportResourceLedger;
-                Ledger.AddText(ledger.Name);
+                LedgerViewBox.AddText(ledger.Name);
             }
 
             // Set the active ledger option
-            if (Ledger.ID < 0) Ledger.ID = 0;
+            if (LedgerViewBox.ID < 0) LedgerViewBox.ID = 0;
         }
 
         /// <summary>
@@ -403,16 +352,16 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         public void Detach()
         {
-            Ledger.Detach();
-            Row.Detach();
-            Column.Detach();
-            Expression.Detach();
-            Value.Detach();
-            Pivot.Detach();
-            Time.Detach();
+            LedgerViewBox.Detach();
+            RowViewBox.Detach();
+            ColumnViewBox.Detach();
+            ExpressionViewBox.Detach();
+            ValueViewBox.Detach();
+            FilterViewBox.Detach();
+            TimeViewBox.Detach();
 
-            leftbutton.Clicked -= OnChangePivot;
-            rightbutton.Clicked -= OnChangePivot;
+            leftButton.Clicked -= OnInvokeUpdate;
+            rightButton.Clicked -= OnInvokeUpdate;
         }
     }
 
