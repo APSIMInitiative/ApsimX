@@ -884,6 +884,9 @@ namespace Models
 
             // We need to work out the "cell" that corresponds to our latitude and longitude
             // The code below is roughly correct, but it might need a bit of additional thought about boundary cases.
+            // What should happen when the target location lies on a cell boundary? Should there be an attempt to "average" parameters
+            // for the 2 (or 4) cells touching the position? That could get messy in the case where it lies on the boundary of two
+            // different cover types.
             X = Math.Max(1, Math.Min(720, (int)Math.Round(360 + longitude * 2.0)));
             Y = Math.Max(1, Math.Min(360, (int)Math.Round(180.0 - latitude * 2.0)));
             globe.zone = (Y - 1) * 720 + X;

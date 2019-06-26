@@ -2,8 +2,12 @@
 
 namespace Models
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Newtonsoft.Json;
+    using System.Data;
+    using System.IO;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
@@ -98,7 +102,170 @@ namespace Models
             }
         }
 
+        [Serializable]
+        private class WeatherFaker
+        {
+            /// <summary>
+            /// Stores total number of observations
+            /// </summary>
+            public uint nDays { get; private set; }
+
+            /// <summary>
+            /// Returns total precipitation in cm
+            /// </summary>
+            public double precip { get; private set; }
+
+            /// <summary>
+            /// Returns average maximum temperature for the period
+            /// </summary>
+            public double maxTemp { get; private set; }
+
+            /// <summary>
+            /// Returns average minimum temperature for the period
+            /// </summary>
+            public double minTemp { get; private set; }
+
+            private double[] rainfall = new double[12];
+            private double[][] maxT = new double[2][];
+            private double[][] minT = new double[2][];
+            private bool haveValues = false;
+
+            public WeatherFaker(double latitude, double longitude)
+            {
+                maxT[0] = new double[12];
+                maxT[1] = new double[12];
+                minT[0] = new double[12];
+                minT[1] = new double[12];
+                string url = "https://rest.soilgrids.org/query?attributes=PREMRG,TMDMOD,TMNMOD&lon=" +
+                     longitude.ToString() + "&lat=" + latitude.ToString();
+                try
+                {
+                    MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                    stream.Position = 0;
+                    JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
+                    while (reader.Read())
+                    {
+                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("properties") && reader.Depth == 1)
+                        {
+                            reader.Read(); // Read the "start object" token
+                            while (reader.Read())
+                            {
+                                if (reader.TokenType == JsonToken.PropertyName)
+                                {
+                                    double[] dest = null;
+                                    string propName = reader.Value.ToString();
+                                    if (propName == "TMDMOD_2001")
+                                        dest = maxT[0];
+                                    else if (propName == "TMDMOD_2011")
+                                        dest = maxT[1];
+                                    else if (propName == "TMNMOD_2001")
+                                        dest = minT[0];
+                                    else if (propName == "TMNMOD_2011")
+                                        dest = minT[1];
+                                    else if (propName == "PREMRG")
+                                        dest = rainfall;
+                                    if (dest != null)
+                                    {
+                                        reader.Read();
+                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                        {
+                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                            {
+                                                reader.Read(); // Read start of object token
+                                                for (int i = 0; i < 12; i++)
+                                                {
+                                                    reader.Read(); // Read a month name
+                                                    dest[i] = (double)reader.ReadAsDouble();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                        reader.Skip();
+                                }
+                            }
+                        }
+                    }
+                    haveValues = true;
+                }
+                catch (Exception) { }
+            }
+
+            public void FakeMonth(int month)
+            {
+                uint[] daysInMonth = new uint[] { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; // Don't worry about leap years
+                nDays = daysInMonth[month - 1];
+                if (haveValues)
+                {
+                    precip = rainfall[month - 1] / 10.0;
+                    Random rand = new Random();
+                    int idx = rand.NextDouble() < 0.5 ? 0 : 1;
+                    maxTemp = maxT[idx][month - 1];
+                    idx = rand.NextDouble() < 0.5 ? 0 : 1;
+                    minTemp = minT[idx][month - 1];
+                }
+                else // No data. Use non-seasonal blandness, for now.
+                {
+                    precip = 50;
+                    maxTemp = 25;
+                    minTemp = 5;
+                }
+            }
+        }
+
+        [Serializable]
+        private class FakeWeatherReader : Accumulator
+        {
+            private DataTable metTable;
+            DateTime StartDate;
+            DateTime EndDate;
+            private int iRow;
+            private int nRows;
+
+            public FakeWeatherReader(DataTable metData)
+            {
+                metTable = metData;
+                nRows = metTable.Rows.Count;
+                iRow = 0;
+                StartDate = RowDate(0);
+                EndDate = RowDate(nRows - 1);
+            }
+
+            private DateTime RowDate(int row)
+            {
+                int year = (int)(Single)metTable.Rows[row]["year"];
+                int day = (int)(Single)metTable.Rows[row]["day"];
+                return new DateTime(year, 1, 1).AddDays(day - 1);
+            }
+
+            public void FakeMonth(int month)
+            {
+                DateTime curDate = RowDate(iRow);
+                while (curDate.Month != month && curDate.Day != 1)
+                {
+                    iRow++;
+                    if (iRow == nRows)
+                        iRow = 0;
+                    curDate = RowDate(iRow);
+                }
+                do
+                {
+                    Single precip = (Single)metTable.Rows[iRow]["rain"];
+                    Single maxt = (Single)metTable.Rows[iRow]["maxt"];
+                    Single mint = (Single)metTable.Rows[iRow]["mint"];
+                    Accumulate(precip, mint, maxt);
+                    iRow++;
+                    if (iRow == nRows)
+                        iRow = 0;
+                    curDate = RowDate(iRow);
+                } while (curDate.Month == month);
+            }
+        }
+
         private Accumulator metAccumulator = new Accumulator();
+
+        // private WeatherFaker weatherFaker = null;
+        private FakeWeatherReader fakeReader = null;
 
         /// <summary>
         /// Gets weather (precipitation, and maximum and minimum temperatures) data for each day, and accumulates it 
@@ -110,12 +277,41 @@ namespace Models
 
         private void UpdateWeather()
         {
-            // Get the monthly values
-            globe.precip = metAccumulator.precip; 
-            globe.maxTemp = metAccumulator.maxTemp;
-            globe.minTemp = metAccumulator.minTemp;
-            uint monthDays = metAccumulator.nDays;
-            metAccumulator.Reset();
+            uint monthDays;
+            if (doingSpinUp)
+            {
+/*
+                if (weatherFaker == null)
+                    weatherFaker = new WeatherFaker(Latitude, Longitude);
+                weatherFaker.FakeMonth(month);
+                globe.precip = weatherFaker.precip;
+                globe.maxTemp = weatherFaker.maxTemp;
+                globe.minTemp = weatherFaker.minTemp;
+                monthDays = weatherFaker.nDays;
+*/
+
+                if (fakeReader == null)
+                {
+                    System.Data.DataTable metData = (Weather as Weather).GetAllData();
+                    fakeReader = new FakeWeatherReader(metData);
+                }
+                fakeReader.FakeMonth(month);
+                globe.precip = fakeReader.precip;
+                globe.maxTemp = fakeReader.maxTemp;
+                globe.minTemp = fakeReader.minTemp;
+                monthDays = fakeReader.nDays;
+                fakeReader.Reset(); 
+
+            }
+            else
+            {
+                // Get the monthly values
+                globe.precip = metAccumulator.precip;
+                globe.maxTemp = metAccumulator.maxTemp;
+                globe.minTemp = metAccumulator.minTemp;
+                monthDays = metAccumulator.nDays;
+                metAccumulator.Reset();
+            }
 
             stormFlow = parms.prcpThresholdFraction * globe.precip;
             double tempMean = (globe.maxTemp + globe.minTemp) / 2.0;
@@ -125,6 +321,9 @@ namespace Models
             PEvap();
             DayLength();
             SnowDynamics();
+#if !G_RANGE_BUG
+            CalcPropBurned();
+#endif
         }
 
         /// <summary>
@@ -145,7 +344,7 @@ namespace Models
             double day_pet = (const1 * (temp_mean + const2) * Math.Sqrt(temp_range) * (Shortwave() / langley2watts));
             // Calculate monthly PET and convert to cm
 
-            double month_pet = (day_pet * 30.0 ) / 10.0;
+            double month_pet = (day_pet * 30.0) / 10.0;
             if (month_pet > vLarge || month_pet < 0.5)
                 month_pet = 0.5;
 
@@ -304,5 +503,41 @@ namespace Models
                 }
             }
         }
+
+#if !G_RANGE_BUG
+        /// <summary>
+        /// Decide whether fire is being modeled.   If maps are being used, then move ahead(too many possibilities to judge if fire is not occurring in the maps).
+        /// If maps are not being used, then check to see that the frequency of fire and the fraction burned are both greater than 0.
+        /// Otherwise, there is no fire.
+        /// In the original, this logic appears twice: in PlantPartDeath and WholePlantDeath. However, when burns are "random", this leads to different fire events for
+        /// assessing death of plant parts vs. whole plants, which is not logical.
+        /// </summary>
+        private void CalcPropBurned()
+        {
+            proportionCellBurned = 0.0;
+            if (globe.fireMapsUsed != 0 || (globe.fireMapsUsed == 0 && parms.frequencyOfFire > 0.0 && parms.fractionBurned > 0.0))
+            {
+                if (globe.fireMapsUsed != 0)
+                {
+                    // Model fire, with their occurrence determined in maps.The maps will store the proportion of each cell burned.
+                    // No month is included here.  If someone wants to give detailed month - level fire maps, they may
+                    proportionCellBurned = globe.propBurned;
+                }
+                else
+                {
+                    // Fire based on probabilies and percentages
+                    // Fire is confined to one month, otherwise the method would be overly complex, requiring checks to judge which months are appropriate.
+                    if (parms.burnMonth == month)
+                    {
+                        // The cell may burn
+                        double harvest = new Random().NextDouble();
+                        if (parms.frequencyOfFire > harvest)
+                            // Some portion of the cell will burn...
+                            proportionCellBurned = parms.fractionBurned;
+                    }
+                }
+            }
+        }
+#endif
     }
 }

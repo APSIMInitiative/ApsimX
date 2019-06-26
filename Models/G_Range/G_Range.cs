@@ -1070,7 +1070,12 @@ namespace Models
         // private int largeErrorCount;  // The count of cells being reset because their values were very very large
         // private int negErrorCount;    // The count of cell being reset because values were below zero
 
-        #endregion
+#if !G_RANGE_BUG
+        private double proportionCellBurned; // Here to correct inconsistent burining in original
+        private bool doingSpinUp;    // Flags that we are doing a spinup
+#endif
+
+#endregion
 
         /// <summary>
         /// Gets or sets the latitude for the site being modelled. Should be in the range -90 to 90
@@ -1132,6 +1137,9 @@ namespace Models
             InitParms();    // Initialize_Rangelands
             // I need to find a way to spin up the simulation. It takes a couple of decades for things to come to a near-equilibrium
             // The orignal G-Range uses a file to store state from a previous run to avoid this problem.
+#if !G_RANGE_BUG
+            SpinUp();
+#endif
         }
 
         /// <summary>EventHandler - preparation before the main daily processes.
@@ -1194,6 +1202,38 @@ namespace Models
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         { }
+
+        private void SpinUp()
+        {
+            doingSpinUp = true;
+            // Run for 150 years
+            for (int iYear = 0; iYear < 150; iYear++)
+            {
+                EachYear();
+                for (month = 1; month <= 12; month++)
+                {
+                    UpdateVegetation();       // Update metrics for vegetation.
+                    UpdateWeather();          // Calculate snowfall, evapotranspiration, etc.  Also updates heat accumulation.
+                    PotentialProduction();    // Calculate potential production, and plant allometrics adjusted by grazing fraction
+                    HerbGrowth();             // Calculate herbaceous growth
+                    WoodyGrowth();            // Calculate woody plant growth
+                    Grazing();                // Remove material grazed by livestock
+                    PlantPartDeath();         // Plant part death
+                    WholePlantDeath();        // Whole plant death
+                    Management();             // Fertilization and other management
+                    PlantReproduction();      // Seed-based reproduction by plants
+                    UpdateVegetation();       // Update metrics for vegetation
+                    WaterLoss();              // Calculate water loss
+                    Decomposition();          // Decomposition
+                    NitrogenLosses();         // Leaching and volatilization of nitrogen
+                    EachMonth();              // Miscellaneous steps that need to be done each month
+                  //OutputSurfaces();         // Produce output surfaces
+                    ZeroAccumulators();       // Zero-out the accumulators storing dead materials
+                }
+            }
+            // Actually we should check Clock.StartDate and be sure we spin up to the day before.
+            doingSpinUp = false;
+        }
 
         /// <summary>
         /// A linear interpolation routine, from Savanna ALINT.

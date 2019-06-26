@@ -1434,6 +1434,7 @@ namespace Models
             double proportion_cell_burned = 0.0;
             if (globe.fireMapsUsed != 0 || (globe.fireMapsUsed == 0 && parms.frequencyOfFire > 0.0 && parms.fractionBurned > 0.0))
             {
+#if G_RANGE_BUG
                 if (globe.fireMapsUsed != 0)
                 {
                     // Model fire, with their occurrence determined in maps.The maps will store the proportion of each cell burned.
@@ -1453,6 +1454,9 @@ namespace Models
                             proportion_cell_burned = parms.fractionBurned;
                     }
                 }
+#else
+                proportion_cell_burned = proportionCellBurned;
+#endif
 
                 // If some of the cell is to burn, do that
                 if (proportion_cell_burned > 0.0009)
@@ -1626,6 +1630,17 @@ namespace Models
                     bool l4 = !inWinter && Latitude <= 0.0 && month == 6;
                     if ((l1 && l2) || l3 || l4)
                         inWinter = true;
+
+#if !G_RANGE_BUG
+                    l1 = temp_average > parms.temperatureLeafOutAndFall[0];
+                    l2 = dayLengthIncreasing;
+                    // The following cannot use .eq.months as CENTURY does.In CENTURY, a SAVE stores the state of "drop leaves" between months.  
+                    // I will edit it to more closely match CENTURY, so that IN_WINTER *is *saved
+                    l3 = inWinter && Latitude > 0.0 && month == 6;
+                    l4 = inWinter && Latitude <= 0.0 && month == 12;
+                    if ((l1 && l2) || l3 || l4)
+                        inWinter = false;
+#endif
 
                     // Do the base line leaf death rate
                     death_carbon = leafCarbon[iFacet] * parms.leafDeathRate[iFacet];
@@ -1847,6 +1862,7 @@ namespace Models
             // Otherwise, there is no fire.
             if (globe.fireMapsUsed != 0 || (globe.fireMapsUsed == 0 && parms.frequencyOfFire > 0.0 && parms.fractionBurned > 0.0))
             {
+#if G_RANGE_BUG
                 double proportion_cell_burned = 0.0;
                 if (globe.fireMapsUsed != 0)
                 {
@@ -1871,6 +1887,9 @@ namespace Models
                         }
                     }
                 }
+#else
+                double proportion_cell_burned = proportionCellBurned;
+#endif
 
                 // If some of the cell is to burn, do that, removing whole dead plants
                 if (proportion_cell_burned > 0.0)
