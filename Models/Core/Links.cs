@@ -45,7 +45,10 @@ namespace Models.Core
                 List<IModel> allModels = new List<IModel>() { rootNode };
                 allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
                 foreach (IModel modelNode in allModels)
-                    ResolveInternal(modelNode, scope);
+                {
+                    if (modelNode.Enabled)
+                        ResolveInternal(modelNode, scope);
+                }
             }
             else
                 ResolveInternal(rootNode, scope);

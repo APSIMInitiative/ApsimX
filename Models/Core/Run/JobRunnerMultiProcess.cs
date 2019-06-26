@@ -27,9 +27,6 @@
         /// <summary>A mapping of job IDs (Guid) to job  instances.</summary>
         private Dictionary<Guid, MultiProcessJob> runningJobs = new Dictionary<Guid, MultiProcessJob>();
 
-        /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
-        private List<Exception> exceptionsThrown;
-
         /// <summary>Constructor.</summary>
         /// <param name="numOfProcessors">The maximum number of cores to use.</param>
         public JobRunnerMultiProcess(int numOfProcessors = -1)
@@ -166,7 +163,7 @@
         /// <summary>Fill our job queue with jobs to run.</summary>
         private void FillJobQueue()
         {
-            Parallel.ForEach(jobManagers, (jobManager) =>
+            foreach (var jobManager in jobManagers)
             {
                 foreach (var job in jobManager.GetJobs())
                 {
@@ -177,7 +174,7 @@
                             RunnableJob = job
                         });
                 }
-            });
+            }
         }
 
         /// <summary>Get the next job to run. Needs to be thread safe.</summary>
@@ -208,9 +205,8 @@
         {
             if (err != null)
             {
-                if (exceptionsThrown == null)
-                    exceptionsThrown = new List<Exception>();
-                exceptionsThrown.Add(err);
+                if (ExceptionThrownByRunner == null)
+                    ExceptionThrownByRunner = err;
             }
         }
 

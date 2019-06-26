@@ -99,8 +99,7 @@
                                          ref files, recurse);
             foreach (string fileName in files)
             {
-                if (ignorePaths == null ||
-                    !ignorePaths.Contains(Path.GetDirectoryName(fileName), StringComparer.InvariantCultureIgnoreCase))
+                if (!DoIgnoreFile(fileName, ignorePaths))
                 {
                     var simulationGroup = new SimulationGroup(fileName, runTests);
                     jobs.Add(simulationGroup);
@@ -201,6 +200,21 @@
                 return 0;
             else
                 return 100.0 * NumberOfSimulationsCompleted / TotalNumberOfSimulations;
+        }
+
+        /// <summary>
+        /// Ignore the specified path when looking for files to run?
+        /// </summary>
+        /// <param name="fileNameToCheck">The filename to check.</param>
+        /// <param name="ignorePaths">The list of ignore paths.</param>
+        private bool DoIgnoreFile(string fileNameToCheck, List<string> ignorePaths)
+        {
+            if (ignorePaths != null)
+                foreach (var path in ignorePaths)
+                    if (fileNameToCheck.Contains(Path.DirectorySeparatorChar + path + Path.DirectorySeparatorChar))
+                        return true;
+
+            return false;
         }
 
         /// <summary>

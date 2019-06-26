@@ -369,7 +369,9 @@
                 foreach (DataRow row in data.Rows)
                 {
                     int id = Convert.ToInt32(row["ID"]);
-                    string folderName = row["FolderName"].ToString();
+                    string folderName = null;
+                    if (data.Columns.Contains("FolderName"))
+                        folderName = row["FolderName"].ToString();
                     simulationIDs.Add(row["Name"].ToString(),
                                       new SimulationDetails() { ID = id, FolderName = folderName });
                 }

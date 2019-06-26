@@ -125,7 +125,7 @@
             if (Children.Count == 1)
                 GetParametersFromScriptModel(Children[0]);
 
-            if (isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
+            if (Enabled && isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
             {
                 try
                 {
