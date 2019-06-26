@@ -203,6 +203,9 @@ namespace Models.Core
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
             }
 
+            // Remove disabled models.
+            RemoveDisabledModels(this);
+
             var links = new Links();
             var events = new Events(this);
 
@@ -243,6 +246,16 @@ namespace Models.Core
                 // Unresolve all links.
                 links.Unresolve(this, true);
             }
+        }
+
+        /// <summary>
+        /// Remove all disabled child models from the specified model.
+        /// </summary>
+        /// <param name="model"></param>
+        private void RemoveDisabledModels(IModel model)
+        {
+            model.Children.RemoveAll(child => !child.Enabled);
+            model.Children.ForEach(child => RemoveDisabledModels(child));
         }
 
         /// <summary>Gets the simulation fraction complete.</summary>

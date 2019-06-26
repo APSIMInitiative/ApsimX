@@ -180,7 +180,7 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
+                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType) && m.Enabled);
                     if (localModel == null)
                     {
                         break;

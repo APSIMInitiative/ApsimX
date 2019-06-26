@@ -70,7 +70,6 @@
 
                 Assert.AreEqual(allCompleteArgsRunner.Count, 1);
                 Assert.IsNull(allCompleteArgsRunner[0].ExceptionThrowByRunner);
-                Assert.Greater(allCompleteArgsRunner[0].ElapsedTime.TotalMilliseconds, 100);
             }
         }
 
