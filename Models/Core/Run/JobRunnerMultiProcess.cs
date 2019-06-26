@@ -10,6 +10,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.IO.Pipes;
+    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -97,7 +98,8 @@
                 // Run a APSIMRunner process passing the pipe read and write handles as arguments.
                 var runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
-                runnerProcess.Start(executable: Path.Combine(Directory.GetCurrentDirectory(), "APSIMRunner.exe"),
+                var runnerExecutable = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "APSIMRunner.exe");
+                runnerProcess.Start(executable: runnerExecutable,
                                     arguments: pipeHandles,
                                     workingDirectory: Directory.GetCurrentDirectory(),
                                     redirectOutput: true,
