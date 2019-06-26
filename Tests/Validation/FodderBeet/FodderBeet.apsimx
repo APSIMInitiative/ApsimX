@@ -14,6 +14,118 @@
       "ReadOnly": false
     },
     {
+      "$type": "Models.Core.Replacements, Models",
+      "Name": "Replacements",
+      "Children": [
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[FodderBeet].AboveGround.N",
+            "[FodderBeet].AboveGround.Wt",
+            "[FodderBeet].AboveGroundDead.N",
+            "[FodderBeet].AboveGroundDead.Wt",
+            "[FodderBeet].AboveGroundLive.N",
+            "[FodderBeet].AboveGroundLive.Wt",
+            "[FodderBeet].Arbitrator.DM.TotalFixationSupply",
+            "[FodderBeet].Arbitrator.DMDemand",
+            "[FodderBeet].Leaf.AppearedCohortNo",
+            "[FodderBeet].Leaf.CohortParameters.MaxArea.Value()",
+            "[FodderBeet].Leaf.CoverDead",
+            "[FodderBeet].Leaf.CoverGreen",
+            "[FodderBeet].Leaf.CoverTotal",
+            "[FodderBeet].Leaf.Dead.N",
+            "[FodderBeet].Leaf.Dead.NConc",
+            "[FodderBeet].Leaf.Dead.Wt",
+            "[FodderBeet].Leaf.DeadCohortNo",
+            "[FodderBeet].Leaf.ExpandedCohortNo",
+            "[FodderBeet].Leaf.Fw",
+            "[FodderBeet].Leaf.Fn",
+            "[FodderBeet].Leaf.Height",
+            "[FodderBeet].Leaf.InitialisedCohortNo",
+            "[FodderBeet].Leaf.LAI",
+            "[FodderBeet].Leaf.Live.N",
+            "[FodderBeet].Leaf.Live.NConc",
+            "[FodderBeet].Leaf.Live.Wt",
+            "[FodderBeet].Leaf.Photosynthesis.RadnInt.Value()",
+            "[FodderBeet].Leaf.Photosynthesis.RUEact.Value()",
+            "[FodderBeet].Leaf.PlantAppearedGreenLeafNo",
+            "[FodderBeet].Leaf.PlantsenescedLeafNo",
+            "[FodderBeet].Leaf.SenescingCohortNo",
+            "[FodderBeet].Leaf.SpecificArea",
+            "[FodderBeet].Leaf.Transpiration",
+            "[FodderBeet].Petiole.Live.NConc",
+            "[FodderBeet].Petiole.Live.Wt",
+            "[FodderBeet].Petiole.Live.N",
+            "[FodderBeet].Petiole.NConc",
+            "[FodderBeet].Petiole.PercentWSC",
+            "[FodderBeet].Phenology.AccumulatedThermalTime.Value()",
+            "[FodderBeet].Phenology.CurrentPhaseName",
+            "[FodderBeet].Phenology.CurrentStageName",
+            "[FodderBeet].Phenology.DailyVernalisation.Value()",
+            "[FodderBeet].Phenology.FlagLeafDAS",
+            "[FodderBeet].Phenology.FloweringDAS",
+            "[FodderBeet].Phenology.MaturityDAS",
+            "[FodderBeet].Phenology.Photoperiod.Value()",
+            "[FodderBeet].Phenology.PhotoPeriodDeltaFunction",
+            "[FodderBeet].Phenology.SoilTemperatureFunction.Value()",
+            "[FodderBeet].Phenology.Stage",
+            "[FodderBeet].Phenology.ThermalTime.Value()",
+            "[FodderBeet].Phenology.Vrn1.Value()",
+            "[FodderBeet].Phenology.Vrn2.Value()",
+            "[FodderBeet].Phenology.Vrn4.Value()",
+            "[FodderBeet].Phenology.Zadok.Stage",
+            "[FodderBeet].Root.Depth",
+            "[FodderBeet].Root.Live.N",
+            "[FodderBeet].Root.Live.NConc",
+            "[FodderBeet].Root.N",
+            "[FodderBeet].Root.Nconc",
+            "[FodderBeet].Root.WaterUptake",
+            "[FodderBeet].Root.Live.Wt",
+            "[FodderBeet].SowingData.Cultivar",
+            "[FodderBeet].StorageRoot.Live.NConc",
+            "[FodderBeet].StorageRoot.Live.Wt",
+            "[FodderBeet].StorageRoot.Live.N",
+            "[FodderBeet].StorageRoot.NConc",
+            "[FodderBeet].StorageRoot.Wt",
+            "[FodderBeet].Structure.Height",
+            "[FodderBeet].Structure.LeafTipsAppeared",
+            "[FodderBeet].Structure.MainStemPopn",
+            "[FodderBeet].Structure.TotalStemPopn",
+            "[FodderBeet].Total.N",
+            "[FodderBeet].Total.NConc",
+            "[FodderBeet].Total.Wt",
+            "[FodderBeet].TotalDead.N",
+            "[FodderBeet].TotalDead.NConc",
+            "[FodderBeet].SCS",
+            "[Phenology].Photoperiod.Value()",
+            "[Soil].SoilWater.SW",
+            "[Soil].SoilWater.SWmm",
+            "[SurfaceOrganicMatter].Wt",
+            "[Weather].MeanT",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
+            "sum([Soil].SoilWater.SWmm) as ProfileWater",
+            "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
+            "[Soil].SoilWater.LeachNO3",
+            "[Weather].Rain",
+            "[Irrigation].IrrigationApplied",
+            "[Fertiliser].NitrogenApplied"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
@@ -22534,7 +22646,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LAI",
                           "Children": [
                             {
@@ -22622,7 +22734,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "TotalWt",
                           "Children": [
                             {
@@ -22700,7 +22812,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRootWt",
                           "Children": [
                             {
@@ -22778,7 +22890,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "LeafWt",
                           "Children": [
                             {
@@ -22856,7 +22968,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "PetioleWt",
                           "Children": [
                             {
@@ -22944,7 +23056,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Total_N",
                           "Children": [
                             {
@@ -23022,7 +23134,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "StorageRoot_N",
                           "Children": [
                             {
@@ -23100,7 +23212,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Leaf_N",
                           "Children": [
                             {
@@ -23178,7 +23290,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "Petiole_N",
                           "Children": [
                             {
