@@ -96,7 +96,7 @@ namespace Models.CLEM.Reporting
                         }
                         else
                         {
-                            if (model.GetType() == typeof(Ruminant))
+                            if (model.GetType() == typeof(RuminantHerd))
                             {
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");

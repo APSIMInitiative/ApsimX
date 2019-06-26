@@ -587,9 +587,40 @@ namespace UserInterface.Views
         {
             if (string.IsNullOrEmpty(completionOption))
                 return;
-            textEditor.InsertAtCaret(completionOption);
+
+            // If no trigger word provided, insert at caret.
+            if (string.IsNullOrEmpty(triggerWord))
+            {
+                int offset = Offset + completionOption.Length;
+                textEditor.InsertAtCaret(completionOption);
+                textEditor.Caret.Offset = offset;
+                return;
+            }
+
+            // If trigger word is entire text, replace the entire text.
+            if (textEditor.Text == triggerWord)
+            {
+                textEditor.Text = completionOption;
+                textEditor.Caret.Offset = completionOption.Length;
+                return;
+            }
+
+            // Overwrite the last occurrence of this word before the caret.
+            int index = textEditor.GetTextBetween(0, Offset).LastIndexOf(triggerWord);
+            if (index < 0)
+                // If text does not contain trigger word, isnert at caret.
+                textEditor.InsertAtCaret(completionOption);
+
+            string textBeforeTriggerWord = textEditor.Text.Substring(0, index);
+
+            string textAfterTriggerWord = "";
+            if (textEditor.Text.Length > index + triggerWord.Length)
+                textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
+
+            textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
+            textEditor.Caret.Offset = index + completionOption.Length;
         }
-        
+
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
