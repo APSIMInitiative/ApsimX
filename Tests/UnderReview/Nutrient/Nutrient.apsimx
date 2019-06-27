@@ -2798,7 +2798,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Insert text here to document the Australian datasets",
+              "Text": "Test data are provided for three locations across Australia, ranging from warmer subtropical Queensland, through to cooler temperature locations in southern Australia.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -2811,19 +2811,19 @@
               "Name": "Tarlee",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This Rotation Trial ([Schultz1995]) was located near the township of Tarlee (34.28 S, 138.77E) in South Australia from 1979 to 1996.  It was established on a Red Brown Earth to monitor the long term effects of rotations on soil properties and crop production.  In this test, we use data for continuous wheat, and wheat-fallow rotations with 3 stubble treatments (burning, incorporation, retention) and 3 Nitrogen rates (0,40,80 kg/ha).\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
                   "Name": "Tarlee",
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Insert text here to document the Tarlee dataset",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Factorial.Factors, Models",
                       "Name": "Factors",
@@ -11767,8 +11767,8 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        1.0,
-                                        1.0
+                                        0.5,
+                                        0.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -12337,8 +12337,8 @@
                           "YAxis": 0,
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Rotation",
-                          "FactorToVaryMarkers": "Zone",
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "N",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -12432,8 +12432,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "Zone",
+                          "FactorToVaryColours": "Rotation",
+                          "FactorToVaryMarkers": "N",
                           "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
@@ -14250,7 +14250,7 @@
                                     14.5
                                   ],
                                   "FBiom": [
-                                    0.2,
+                                    0.03,
                                     0.03,
                                     0.02,
                                     0.015,
@@ -18064,6 +18064,15 @@
               "ShowPageOfGraphs": true,
               "Name": "Pendleton",
               "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The Pendleton Long Term Experiment ([Rasmussen1998]) was established in 1931 at Oregon State University’s Columbia Basin Agricultural Research Center near Pendleton, OR (45.72 N, 118.63 W).\nIt consisted of nine treatments consisting of crop residue (fall burn, spring burn, and no burn) and fertility\n(0, 45, and 90 kg N/ha, manure, and pea vine) management practices under a Winter Wheat-Summer Fallow system.\nAll plots were tilled using a moldboard plow, cultivated, and rod-weeded to control weeds. ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
@@ -32219,7 +32228,7 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -32249,12 +32258,12 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
