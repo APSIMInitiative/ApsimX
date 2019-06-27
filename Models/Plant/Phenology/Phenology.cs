@@ -401,7 +401,15 @@ namespace Models.PMF.Phen
 
                     if(SorghumFlag != null && CurrentPhase is EmergingPhase)
                     {
-                        propOfDayToUse = 0.0;
+                        // void accumulate(...)
+                        double dltPhase = 1.0 + Stage % 1.0;
+                        double newStage = Math.Floor(Stage) + dltPhase;
+                        double dltStage = newStage - Stage;
+                        double pIndex = Stage;
+                        double dltIndex = dltStage;
+                        double indexDevel = pIndex - Math.Floor(pIndex) + dltIndex;
+                        double portionInOld = 1 - APSIM.Shared.Utilities.MathUtilities.Divide(indexDevel - 1, dltIndex, 0);
+                        propOfDayToUse = 1 - portionInOld;
                     }
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
@@ -412,11 +420,8 @@ namespace Models.PMF.Phen
 
                 Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
 
-               if (plant != null)
-                    if (plant.IsAlive && PostPhenology != null)
+                if (plant != null && plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
-
-                
             }
         }
 
