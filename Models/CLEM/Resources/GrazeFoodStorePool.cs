@@ -159,7 +159,7 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public void Set(double newAmount)
         {
-            this.amount = newAmount;
+            this.amount = Math.Max(0,newAmount);
         }
 
         /// <summary>
