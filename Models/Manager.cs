@@ -105,6 +105,7 @@
             }
 
             isCreated = true;
+            Children.Clear();
             RebuildScriptModel();
         }
 
@@ -222,7 +223,7 @@
                         if (property != null)
                         {
                             object value;
-                            if (parameter.Value.StartsWith("."))
+                            if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
                                 value = Apsim.Get(this, parameter.Value);
                             else if (property.PropertyType == typeof(IPlant))
                                 value = Apsim.Find(this, parameter.Value);
