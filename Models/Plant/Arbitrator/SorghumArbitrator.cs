@@ -243,7 +243,8 @@ namespace Models.PMF
                 
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
-                var nDemand = N.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
+                // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
+                var nDemand = N.TotalMetabolicDemand - grainDemand; // to replicate calcNDemand in old sorghum 
                                 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
@@ -365,7 +366,7 @@ namespace Models.PMF
                     no3Diffusion *= proportion;
                 }
 
-                myZone.Diffusion[layer] = no3Diffusion;
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 
