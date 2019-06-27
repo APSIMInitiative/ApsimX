@@ -105,7 +105,6 @@
             }
 
             isCreated = true;
-            Children.Clear();
             RebuildScriptModel();
         }
 
@@ -264,7 +263,7 @@
                     if (value == null)
                         value = "";
                     else if (value is IModel)
-                        value = Apsim.FullPath(value as IModel);
+                        value = "[" + (value as IModel).Name + "]";
                     Parameters.Add(new KeyValuePair<string, string>
                                         (property.Name, 
                                          ReflectionUtilities.ObjectToString(value)));
