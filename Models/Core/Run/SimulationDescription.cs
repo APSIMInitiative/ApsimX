@@ -89,8 +89,16 @@
         /// <param name="cancelToken"></param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            var simulationToRun = ToSimulation();
-            simulationToRun.Run(cancelToken);
+            try
+            {
+                var simulationToRun = ToSimulation();
+                simulationToRun.Run(cancelToken);
+            }
+            catch (Exception err)
+            {
+                var message = "Error in file: " + baseSimulation.FileName + " Simulation: " + Name;
+                throw new Exception(message, err);
+            }
         }
 
         /// <summary>
