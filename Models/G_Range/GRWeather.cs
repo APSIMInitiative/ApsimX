@@ -102,6 +102,12 @@ namespace Models
             }
         }
 
+/*
+        /// <summary>
+        /// Fetches "average" weather data from the soilgrids website
+        /// I was seeing how it would go to use this mechanism for performing spinups, 
+        /// but there's really no good reason to continue to use it.
+        /// </summary>
         [Serializable]
         private class WeatherFaker
         {
@@ -212,6 +218,7 @@ namespace Models
                 }
             }
         }
+*/
 
         [Serializable]
         private class FakeWeatherReader : Accumulator
@@ -264,8 +271,10 @@ namespace Models
 
         private Accumulator metAccumulator = new Accumulator();
 
+#if !G_RANGE_BUG
         // private WeatherFaker weatherFaker = null;
         private FakeWeatherReader fakeReader = null;
+#endif
 
         /// <summary>
         /// Gets weather (precipitation, and maximum and minimum temperatures) data for each day, and accumulates it 
@@ -278,6 +287,7 @@ namespace Models
         private void UpdateWeather()
         {
             uint monthDays;
+#if !G_RANGE_BUG
             if (doingSpinUp)
             {
 /*
@@ -304,6 +314,7 @@ namespace Models
 
             }
             else
+#endif
             {
                 // Get the monthly values
                 globe.precip = metAccumulator.precip;

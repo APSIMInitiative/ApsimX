@@ -1203,6 +1203,7 @@ namespace Models
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         { }
 
+#if !G_RANGE_BUG
         private void SpinUp()
         {
             doingSpinUp = true;
@@ -1234,6 +1235,7 @@ namespace Models
             // Actually we should check Clock.StartDate and be sure we spin up to the day before.
             doingSpinUp = false;
         }
+#endif
 
         /// <summary>
         /// A linear interpolation routine, from Savanna ALINT.
