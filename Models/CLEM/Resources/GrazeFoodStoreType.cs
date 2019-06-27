@@ -464,6 +464,11 @@ namespace Models.CLEM.Resources
 
                     // remove resource from pool
                     pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
+
+                    if (amountRequired <= 0)
+                    {
+                        break;
+                    }
                 }
 
                 // if forage still limiting and second take allowed (enforce strict limits is false)
