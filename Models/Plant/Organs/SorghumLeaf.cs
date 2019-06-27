@@ -338,6 +338,14 @@ namespace Models.PMF.Organs
                     //first culm is the main culm
                     AddCulm(new CulmParameters() { Density = SowingDensity });
                 }
+
+                Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
+                Live.StorageWt = 0.0;
+                LAI = initialLAIFunction.Value() * smm2sm * SowingDensity;
+                SLN = initialSLNFunction.Value();
+
+                Live.StructuralN = LAI * SLN;
+                Live.StorageN = 0;
             }
         }
 
@@ -401,6 +409,8 @@ namespace Models.PMF.Organs
             // save current state
             if (parentPlant.IsEmerged)
                 StartLive = Live;
+            dltPotentialLAI = 0;
+            dltStressedLAI = 0;
             if (LeafInitialised)
             {
                 dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
@@ -1268,13 +1278,11 @@ namespace Models.PMF.Organs
             {
                 Clear();
                 SowingDensity = data.Population;
-
-                Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
-                Live.StorageWt = 0.0;
-                LAI = initialLAIFunction.Value() * smm2sm * SowingDensity;
-                SLN = initialSLNFunction.Value();
-
-                Live.StructuralN = LAI * SLN;
+                Live.StructuralWt = 0;
+                Live.StorageWt = 0;
+                LAI = 0;
+                SLN = 0;
+                Live.StructuralN = 0;
                 Live.StorageN = 0;
             }
         }
