@@ -374,6 +374,10 @@ namespace Models.CLEM
             }
 
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
+            if(results.Rows.Count == 0)
+            {
+                return null;
+            }
             results.DefaultView.Sort = "Year, Month";
 
             List<PastureDataType> pastureDetails = new List<PastureDataType>();
