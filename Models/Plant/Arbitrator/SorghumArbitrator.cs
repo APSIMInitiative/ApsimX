@@ -117,6 +117,7 @@ namespace Models.PMF
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
+                // Z.Water calculated as Supply * fraction used
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             }
 
@@ -128,7 +129,7 @@ namespace Models.PMF
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
-            if (WDemand > 0)
+            if (MathUtilities.IsPositive(WDemand))
                 fraction = Math.Min(1.0, waterSupply / WDemand);
 
             // Proportionally allocate supply across organs.
@@ -170,6 +171,7 @@ namespace Models.PMF
                     myZone.Depth += 0;
                 }
                 var currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
@@ -177,13 +179,15 @@ namespace Models.PMF
                     myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
 
+                    if (layer == currentLayer)
+                    {
+                        myZone.AvailableSW[layer] *= currentLayerProportion;
+                        myZone.PotentialAvailableSW[layer] *= currentLayerProportion;
+                    }
+
                     var proportion = root.rootProportionInLayer(layer, myZone);
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
-                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
-                myZone.AvailableSW[currentLayer] *= currentLayerProportion;
-                myZone.PotentialAvailableSW[currentLayer] *= currentLayerProportion;
-
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();

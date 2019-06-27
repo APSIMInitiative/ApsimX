@@ -876,8 +876,6 @@ namespace Models.PMF.Organs
                         supply[layer] = Math.Max(0.0, kl[layer] * klMod * available[layer] * proportionThroughLayer);
                     }
 
-                    if (MathUtilities.Sum(supply) < 0.0)
-                        return supply;
                     return supply;
                 }
                 else
