@@ -291,7 +291,7 @@
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
-                Assert.IsTrue(exceptions[0].Message.Contains("Intentional exception"));
+                Assert.IsTrue(exceptions[0].ToString().Contains("Intentional exception"));
 
                 database.CloseDatabase();
             }
