@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 278,
+  "ExplorerWidth": 452,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -27,7 +27,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\n# SLURP: the Sound of a crop using water\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  \n\nSLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  \n\n   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  \n   2. Root which extracts water and nitrogen from the soil for plant growth  \n \n#Inclusion in APSIM simulations\nA Slurp crop is included in a simulation the same as any other APSIM crop  \n\n * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSlurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * `depth` in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation\n\n#Altering Slurp properties during runs\nIn some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.\n\n~~~\nobject LAIResetValue = leaflai;  \nzone.Set(\"Slurp.Leaf.LAIFunction.Value()\", LAIResetValue);  \nobject HeightResetValue = CoverToday * MaximumHeight;  \nzone.Set(\"Slurp.Leaf.HeightFunction.Value()\", HeightResetValue);  \n~~~\n",
+              "Text": "\n# SimpleFruitTree\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of perennial tree and vine crops.  Its scope is intended for use in water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply grows a canopy and takes up water and nitrogen.  \n\nSimpleFruitTree consists of 2 organs:  \n\n   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  \n   2. Root which extracts water and nitrogen from the soil for plant growth  \n   3. Trunk which represents the perennial biomass of the trees\n   4. Fruit which represents the biomass that may be removed from the orchard each year\n \n#Inclusion in APSIM simulations\nA SimpleFruitTree crop is included in a simulation the same as any other APSIM crop  \n\n * The SimpleFruitTree object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSimpleFruitTree.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n\n  * Note that the SimpleTreeModel has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * `depth` in the Sow arguement is the depth that the crop is sown at.  In most cases the Sow argument is used to initialise an established tree crop so sow depth arguement is used to set the root depth of the trees.  This depth should be set to the rooting depth that is expected as roots will not grow during the simulation.  \n * While the SimpleFruitTree model will run as a stand alone model, in most cases fruit trees and vines are grown in rows with a grass or herb ley growing in the alleys.  As such it is important to set up a simulation with two rectangular zones, one with the fruit tree established within and another with the pasture or herb ley established.  In most cases a SLURP is adequate to represent the energy, water and nitrogen balance of the alleys.  \n * As part of the development of this crop model the Microclimate radiation arbitration was improved to be suitable for fruit crop set ups.  This involved modifying the strip crop radiation interception code to allow:\n   1. The entire depth of the tallest (tree) canopy to be taller than the grass growing in the alleys\n   2. The width of the canopy of the trees to exceed the width of the zone that the trees are planted in so they may intercept more radiation that would be possible if they were kept within the spatial confines of the row zone ",
               "Name": "TitlePage",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -50,10 +50,19 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "Initialisation",
-                  "End": "Sowing",
-                  "Name": "Initial",
+                  "Start": "ModelInitialisation",
+                  "End": "Dormant",
+                  "Name": "ZeroPhase",
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "It is necessary to have a phase before Dormancy otherwise the rewind doesn't work",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime.Value()",
@@ -66,7 +75,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": "d",
+                      "Units": "oCd",
                       "Name": "Target",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -79,31 +88,56 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "Sowing",
-                  "End": "Never",
-                  "Name": "Ongoing",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
-                      "Name": "Progression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1E+15,
-                      "Units": "d",
-                      "Name": "Target",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.PMF.Phen.DAWSPhase, Models",
+                  "Start": "Dormant",
+                  "End": "BudBreak",
+                  "DAWStoProgress": 30,
+                  "Name": "Dormancy",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.DAWSPhase, Models",
+                  "Start": "BudBreak",
+                  "End": "StartFruitGrowth",
+                  "DAWStoProgress": 100,
+                  "Name": "CanopyExpansion",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.DAWSPhase, Models",
+                  "Start": "StartFruitGrowth",
+                  "End": "FruitRipe",
+                  "DAWStoProgress": 300,
+                  "Name": "FruitGrowth",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.DAWSPhase, Models",
+                  "Start": "FruitRipe",
+                  "End": "BareTree",
+                  "DAWStoProgress": 340,
+                  "Name": "LeafFall",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.GotoPhase, Models",
+                  "Start": "BareTree",
+                  "End": "Unused",
+                  "PhaseNameToGoto": "Dormancy",
+                  "Name": "GotoPhase",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1834,7 +1868,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.01,
                   "Units": null,
                   "Name": "MaximumNConc",
                   "Children": [
@@ -1854,7 +1888,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.005,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [
@@ -1898,9 +1932,9 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
@@ -1910,7 +1944,7 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
@@ -1924,8 +1958,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
+                      "FractionLiveToResidue": 0.1,
+                      "FractionDeadToResidue": 0.9,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1934,9 +1968,9 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
@@ -2117,19 +2151,312 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.EnergyBalance, Models",
-                  "Albedo": 0.0,
-                  "Gsmax350": 0.0,
-                  "R50": 0.0,
-                  "KDead": 0.0,
-                  "LAIDead": 0.0,
-                  "Name": "EnergyBalance",
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
+              "DMSupply": null,
+              "NSupply": null,
+              "DMDemand": null,
+              "NDemand": null,
+              "potentialDMAllocation": null,
+              "Name": "Product",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "NReallocationFactor",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "NRetranslocationFactor",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "DMRetranslocationFactor",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.01,
+                  "Units": null,
+                  "Name": "MaximumNConc",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.005,
+                  "Units": null,
+                  "Name": "MinimumNConc",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "Start": "Initialisation",
+                  "End": "Never",
+                  "Name": "NitrogenDemandSwitch",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "Name": "BiomassRemovalDefaults",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Harvest",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Cut",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.1,
+                      "FractionDeadToResidue": 0.9,
+                      "Name": "Prune",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Graze",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
+                  "Name": "InitialWtFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "SenescenceRate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DetachmentRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "0-1",
+                  "Name": "MaintenanceRespirationFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "DMConversionEfficiency",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "DMReallocationFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stem].MinimumNConc.Value()",
+                  "Name": "CriticalNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "RemobilisationCost",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CarbonConcentration",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "FRGRFunction",
+                      "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": false,
@@ -2137,270 +2464,9 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "StomatalConductanceCO2Modifier",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Height",
-                      "Name": "HeightFunction",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "DepthFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Height",
-                          "Name": "Height",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].BaseHeight",
-                          "Name": "BaseHeight",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "GAIDeadFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Weather].DaysSinceWinterSolstice",
-                          "Name": "SeasonalLAIPattern",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                90.0,
-                                140.0,
-                                200.0,
-                                295.0,
-                                330.0,
-                                365.0
-                              ],
-                              "Y": [
-                                0.5,
-                                0.5,
-                                0.7,
-                                0.8,
-                                0.8,
-                                0.5,
-                                0.5
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Graph, Models",
-                                  "Caption": null,
-                                  "Axis": [
-                                    {
-                                      "$type": "Models.Graph.Axis, Models",
-                                      "Type": 0,
-                                      "Title": "Y",
-                                      "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
-                                      "DateTimeAxis": false,
-                                      "CrossesAtZero": false
-                                    },
-                                    {
-                                      "$type": "Models.Graph.Axis, Models",
-                                      "Type": 3,
-                                      "Title": "X",
-                                      "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
-                                      "DateTimeAxis": false,
-                                      "CrossesAtZero": false
-                                    }
-                                  ],
-                                  "LegendPosition": 3,
-                                  "DisabledSeries": [],
-                                  "Name": "Graph",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Graph.Series, Models",
-                                      "Type": 1,
-                                      "XAxis": 3,
-                                      "YAxis": 0,
-                                      "ColourArgb": -65536,
-                                      "FactorToVaryColours": null,
-                                      "FactorToVaryMarkers": null,
-                                      "FactorToVaryLines": null,
-                                      "Marker": 11,
-                                      "MarkerSize": 0,
-                                      "Line": 0,
-                                      "LineThickness": 0,
-                                      "Checkpoint": "Current",
-                                      "TableName": null,
-                                      "XFieldName": ".Simulations.Replacements.SimpleFruitTree.Root.KLModifier.XYPairs.X",
-                                      "YFieldName": ".Simulations.Replacements.SimpleFruitTree.Root.KLModifier.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
-                                      "ShowInLegend": false,
-                                      "IncludeSeriesNameInLegend": false,
-                                      "Cumulative": false,
-                                      "CumulativeX": false,
-                                      "Filter": null,
-                                      "Name": "Series",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": false,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": false,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Age.Years",
-                          "Name": "AgeFactor",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                6.0
-                              ],
-                              "Y": [
-                                0.1,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Graph, Models",
-                                  "Caption": null,
-                                  "Axis": [
-                                    {
-                                      "$type": "Models.Graph.Axis, Models",
-                                      "Type": 0,
-                                      "Title": "Y",
-                                      "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
-                                      "DateTimeAxis": false,
-                                      "CrossesAtZero": false
-                                    },
-                                    {
-                                      "$type": "Models.Graph.Axis, Models",
-                                      "Type": 3,
-                                      "Title": "X",
-                                      "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
-                                      "DateTimeAxis": false,
-                                      "CrossesAtZero": false
-                                    }
-                                  ],
-                                  "LegendPosition": 3,
-                                  "DisabledSeries": [],
-                                  "Name": "Graph",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Graph.Series, Models",
-                                      "Type": 1,
-                                      "XAxis": 3,
-                                      "YAxis": 0,
-                                      "ColourArgb": -65536,
-                                      "FactorToVaryColours": null,
-                                      "FactorToVaryMarkers": null,
-                                      "FactorToVaryLines": null,
-                                      "Marker": 11,
-                                      "MarkerSize": 0,
-                                      "Line": 0,
-                                      "LineThickness": 0,
-                                      "Checkpoint": "Current",
-                                      "TableName": null,
-                                      "XFieldName": ".Simulations.Replacements.SimpleFruitTree.Leaf.LAIFunction.SeasonalLAIPattern.XYPairs.X",
-                                      "YFieldName": ".Simulations.Replacements.SimpleFruitTree.Leaf.LAIFunction.SeasonalLAIPattern.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
-                                      "ShowInLegend": false,
-                                      "IncludeSeriesNameInLegend": false,
-                                      "Cumulative": false,
-                                      "CumulativeX": false,
-                                      "Filter": null,
-                                      "Name": "Series",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": false,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": false,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "FrostFactor",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": null,
-                      "Name": "GAIFunction",
+                      "Name": "Structural",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": false,
@@ -2408,9 +2474,48 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
+                      "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "ExtinctionCoefficientFunction",
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "NDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Structural",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": false,
@@ -2437,23 +2542,23 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0   , 140, 250, 360, 361",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0   , 125, 250, 360, 361",
                 "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 2800,2800,3500,3500,2800",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 90,140,200,295,330",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0,2.9,5.0,6.7,0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,125,305,330",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,7.6,7.6,  0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
                 "[Leaf].BaseHeightFunction.FixedValue = 800",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 0   , 140, 250, 360, 361",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 2400,2400,3000,3000,2400",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 70  , 125, 360, 361",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 1300,1600,1600,1300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].Gsmax350 = 0.003"
+                "[Leaf].Gsmax350 = 0.008"
               ],
-              "Name": "Peach",
+              "Name": "Apple",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -2472,23 +2577,23 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 70,230,  320,321",
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 900,2200,2200,900",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 65,  230,350,365",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 1800,2400,2400,1800",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,200,250,310,330",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0  ,6.8,6.8,  5,  0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 65, 130, 200, 330,360",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,2.74,3.74,3.74,  0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,3",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.7",
-                "[Leaf].BaseHeightFunction.FixedValue = 900",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 70,230,  320,321",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 300,700,700,300",
+                "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8",
+                "[Leaf].BaseHeightFunction.FixedValue = 1800",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 5000,5000,5000,5000",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Gsmax350 = 0.006"
+                "[Leaf].Gsmax350 = 0.003"
               ],
-              "Name": "Grape_2Cane",
+              "Name": "Kiwifruit",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -2542,23 +2647,23 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 65,  230,350,365",
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 1800,2400,2400,1800",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 70,230,  320,321",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 900,2200,2200,900",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 65, 130, 200, 330,360",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,2.74,3.74,3.74,  0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,200,250,310,330",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0  ,6.8,6.8,  5,  0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,3",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8",
-                "[Leaf].BaseHeightFunction.FixedValue = 1800",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 110,230,  320,321",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 5000,5000,5000,5000",
+                "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.7",
+                "[Leaf].BaseHeightFunction.FixedValue = 900",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 70,230,  320,321",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 300,700,700,300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Gsmax350 = 0.003"
+                "[Leaf].Gsmax350 = 0.006"
               ],
-              "Name": "Kiwifruit",
+              "Name": "Grape_2Cane",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -2577,23 +2682,23 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0   , 125, 250, 360, 361",
+                "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.X= 0   , 140, 250, 360, 361",
                 "[Leaf].HeightFunction.SeasonalHeightPattern.XYPairs.Y= 2800,2800,3500,3500,2800",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].HeightFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 70,125,305,330",
-                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0 ,7.6,7.6,  0",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.X = 90,140,200,295,330",
+                "[Leaf].LAIFunction.SeasonalLAIPattern.XYPairs.Y = 0,2.9,5.0,6.7,0",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.X = 0,6",
                 "[Leaf].LAIFunction.AgeFactor.XYPairs.Y = 0.2,1",
                 "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.6",
                 "[Leaf].BaseHeightFunction.FixedValue = 800",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 70  , 125, 360, 361",
-                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 1300,1600,1600,1300",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.X= 0   , 140, 250, 360, 361",
+                "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 2400,2400,3000,3000,2400",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].Gsmax350 = 0.007"
+                "[Leaf].Gsmax350 = 0.002"
               ],
-              "Name": "Apple",
+              "Name": "Peach",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -3005,10 +3110,10 @@
                         0.2
                       ],
                       "KL": [
-                        0.2,
-                        0.15,
-                        0.07,
-                        0.01
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -3034,10 +3139,10 @@
                         0.2
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -3393,7 +3498,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -3406,6 +3511,26 @@
                 {
                   "Key": "StartAge",
                   "Value": "6"
+                },
+                {
+                  "Key": "SurfaceKL",
+                  "Value": "0.2"
+                },
+                {
+                  "Key": "KLReductionFactor",
+                  "Value": "0.003"
+                },
+                {
+                  "Key": "KLReductionDepth",
+                  "Value": "150"
+                },
+                {
+                  "Key": "YKLModifiers",
+                  "Value": ""
+                },
+                {
+                  "Key": "XDepth",
+                  "Value": ""
                 }
               ],
               "Name": "TreeInitialisation",
@@ -3428,124 +3553,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Operations, Models",
-              "Operation": [
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2008-11-19",
-                  "Action": "[Irrigation].apply(11)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2008-11-26",
-                  "Action": "[Irrigation].apply(12)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2008-12-03",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2008-12-10",
-                  "Action": "[Irrigation].apply(13)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2008-12-17",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2008-12-29",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-01-21",
-                  "Action": "[Irrigation].apply(15)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-02-04",
-                  "Action": "[Irrigation].apply(18)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-02-11",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-02-18",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-02-25",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-12-02",
-                  "Action": "[Irrigation].apply(14)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-12-09",
-                  "Action": "[Irrigation].apply(26)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2009-12-16",
-                  "Action": "[Irrigation].apply(13)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2010-12-06",
-                  "Action": "[Irrigation].apply(8)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2010-12-13",
-                  "Action": "[Irrigation].apply(11)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2010-12-20",
-                  "Action": "[Irrigation].apply(12)",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "2011-01-05",
-                  "Action": "[Irrigation].apply(38)",
-                  "Enabled": true
-                }
-              ],
-              "Name": "Operations",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Manager, Models",
               "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
@@ -3556,7 +3563,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        [Link] Clock clock;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 3;\r\n                    irrigation.Apply(amount, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        [Link] Clock clock;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"Amount of water (mm) applied each irrigation\")]\r\n        public double Amount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    irrigation.Apply(Amount, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "FASW",
@@ -3567,20 +3574,24 @@
                   "Value": "0"
                 },
                 {
-                  "Key": "FASWThreshold",
-                  "Value": "0.4"
-                },
-                {
-                  "Key": "FASWDepth",
-                  "Value": "600"
-                },
-                {
                   "Key": "StartDate",
                   "Value": "1-nov"
                 },
                 {
                   "Key": "EndDate",
                   "Value": "1-mar"
+                },
+                {
+                  "Key": "FASWThreshold",
+                  "Value": "0.6"
+                },
+                {
+                  "Key": "FASWDepth",
+                  "Value": "600"
+                },
+                {
+                  "Key": "Amount",
+                  "Value": "20"
                 }
               ],
               "Name": "Automatic irrigation based on water deficit",
@@ -3829,10 +3840,10 @@
                         0.2
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -4195,7 +4206,7 @@
                 },
                 {
                   "Key": "InitialRootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "SowingDate",
@@ -4203,7 +4214,7 @@
                 },
                 {
                   "Key": "RootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "RFV",
@@ -4211,7 +4222,7 @@
                 },
                 {
                   "Key": "KLReductionFactor",
-                  "Value": "-0.003"
+                  "Value": "-0.001"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -4943,66 +4954,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": "Zone",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 1,
-              "LineThickness": 1,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Es",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "ES",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16747854,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 2,
-              "LineThickness": 1,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "PET",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "PET",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -5589,12 +5540,12 @@
                         0.3
                       ],
                       "KL": [
-                        0.2,
-                        0.15,
-                        0.1,
-                        0.05,
-                        0.03,
-                        0.03
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -5624,12 +5575,12 @@
                         0.3
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -5985,28 +5936,6 @@
               "Name": "Irrigation",
               "Children": [],
               "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
-              "Parameters": [
-                {
-                  "Key": "CultivarName",
-                  "Value": "Kiwifruit"
-                },
-                {
-                  "Key": "SowingDate",
-                  "Value": "2008-07-01"
-                },
-                {
-                  "Key": "StartAge",
-                  "Value": "6"
-                }
-              ],
-              "Name": "TreeInitialisation",
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6972,6 +6901,48 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n               }\r\n        }\r\n    }\r\n}            \r\n",
+              "Parameters": [
+                {
+                  "Key": "CultivarName",
+                  "Value": "Kiwifruit"
+                },
+                {
+                  "Key": "SowingDate",
+                  "Value": "2008-07-01"
+                },
+                {
+                  "Key": "StartAge",
+                  "Value": "6"
+                },
+                {
+                  "Key": "SurfaceKL",
+                  "Value": "0.2"
+                },
+                {
+                  "Key": "KLReductionFactor",
+                  "Value": "0.003"
+                },
+                {
+                  "Key": "KLReductionDepth",
+                  "Value": "150"
+                },
+                {
+                  "Key": "YKLModifiers",
+                  "Value": ""
+                },
+                {
+                  "Key": "XDepth",
+                  "Value": ""
+                }
+              ],
+              "Name": "TreeInitialisation",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -7199,12 +7170,12 @@
                         0.24
                       ],
                       "KL": [
-                        0.2,
-                        0.15,
-                        0.1,
-                        0.05,
-                        0.01,
-                        0.01
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -7234,12 +7205,12 @@
                         0.24
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -7589,7 +7560,7 @@
                 },
                 {
                   "Key": "InitialRootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "SowingDate",
@@ -7597,7 +7568,7 @@
                 },
                 {
                   "Key": "RootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "RFV",
@@ -7605,7 +7576,7 @@
                 },
                 {
                   "Key": "KLReductionFactor",
-                  "Value": "-0.003"
+                  "Value": "-0.001"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -10166,13 +10137,13 @@
                         0.2
                       ],
                       "KL": [
-                        0.2,
-                        0.15,
-                        0.1,
-                        0.05,
-                        0.05,
-                        0.05,
-                        0.3
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -10204,13 +10175,13 @@
                         0.2
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -10557,7 +10528,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -10570,6 +10541,26 @@
                 {
                   "Key": "StartAge",
                   "Value": "6"
+                },
+                {
+                  "Key": "SurfaceKL",
+                  "Value": "0.16"
+                },
+                {
+                  "Key": "KLReductionFactor",
+                  "Value": "0.003"
+                },
+                {
+                  "Key": "KLReductionDepth",
+                  "Value": "150"
+                },
+                {
+                  "Key": "YKLModifiers",
+                  "Value": ""
+                },
+                {
+                  "Key": "XDepth",
+                  "Value": ""
                 }
               ],
               "Name": "TreeInitialisation",
@@ -11170,13 +11161,13 @@
                         0.2
                       ],
                       "KL": [
-                        0.2,
-                        0.15,
-                        0.1,
-                        0.05,
-                        0.05,
-                        0.05,
-                        0.3
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -11208,13 +11199,13 @@
                         0.2
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -11568,7 +11559,7 @@
                 },
                 {
                   "Key": "InitialRootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "SowingDate",
@@ -11576,7 +11567,7 @@
                 },
                 {
                   "Key": "RootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "RFV",
@@ -11584,7 +11575,7 @@
                 },
                 {
                   "Key": "KLReductionFactor",
-                  "Value": "-0.003"
+                  "Value": "-0.001"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -13479,10 +13470,10 @@
                         0.3
                       ],
                       "KL": [
-                        0.06,
-                        0.04,
-                        0.02,
-                        0.01
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -13508,10 +13499,10 @@
                         0.3
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -13868,7 +13859,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -13881,6 +13872,26 @@
                 {
                   "Key": "StartAge",
                   "Value": "6"
+                },
+                {
+                  "Key": "SurfaceKL",
+                  "Value": "0.16"
+                },
+                {
+                  "Key": "KLReductionFactor",
+                  "Value": "0.003"
+                },
+                {
+                  "Key": "KLReductionDepth",
+                  "Value": "150"
+                },
+                {
+                  "Key": "YKLModifiers",
+                  "Value": ""
+                },
+                {
+                  "Key": "XDepth",
+                  "Value": ""
                 }
               ],
               "Name": "TreeInitialisation",
@@ -14409,10 +14420,10 @@
                         0.3
                       ],
                       "KL": [
-                        0.06,
-                        0.04,
-                        0.02,
-                        0.01
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -14438,10 +14449,10 @@
                         0.3
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -14805,7 +14816,7 @@
                 },
                 {
                   "Key": "InitialRootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "SowingDate",
@@ -14813,7 +14824,7 @@
                 },
                 {
                   "Key": "RootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "RFV",
@@ -14821,7 +14832,7 @@
                 },
                 {
                   "Key": "KLReductionFactor",
-                  "Value": "-0.003"
+                  "Value": "-0.001"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -18203,7 +18214,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -18216,6 +18227,30 @@
                     {
                       "Key": "StartAge",
                       "Value": "9"
+                    },
+                    {
+                      "Key": "KLReductionFactor",
+                      "Value": "-0.0005"
+                    },
+                    {
+                      "Key": "KLReductionDepth",
+                      "Value": "150"
+                    },
+                    {
+                      "Key": "YKLModifiers",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "XDepth",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "MaxG",
+                      "Value": "0.006"
+                    },
+                    {
+                      "Key": "R50",
+                      "Value": "100"
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -18488,12 +18523,12 @@
                             0.06
                           ],
                           "KL": [
-                            0.1,
-                            0.1,
-                            0.04,
-                            0.01,
-                            0.0,
-                            0.0
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11
                           ],
                           "XF": [
                             1.0,
@@ -18941,7 +18976,7 @@
                     },
                     {
                       "Key": "InitialRootDepth",
-                      "Value": "600"
+                      "Value": "2000"
                     },
                     {
                       "Key": "SowingDate",
@@ -18949,7 +18984,7 @@
                     },
                     {
                       "Key": "RootDepth",
-                      "Value": "600"
+                      "Value": "2000"
                     },
                     {
                       "Key": "RFV",
@@ -18957,7 +18992,7 @@
                     },
                     {
                       "Key": "KLReductionFactor",
-                      "Value": "-0.003"
+                      "Value": "-0.001"
                     },
                     {
                       "Key": "KLReductionDepth",
@@ -19537,12 +19572,12 @@
                             0.06
                           ],
                           "KL": [
-                            0.1,
-                            0.1,
-                            0.04,
-                            0.01,
-                            0.0,
-                            0.0
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11
                           ],
                           "XF": [
                             1.0,
@@ -25115,7 +25150,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -25128,6 +25163,30 @@
                     {
                       "Key": "StartAge",
                       "Value": "9"
+                    },
+                    {
+                      "Key": "KLReductionFactor",
+                      "Value": "-0.0005"
+                    },
+                    {
+                      "Key": "KLReductionDepth",
+                      "Value": "150"
+                    },
+                    {
+                      "Key": "YKLModifiers",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "XDepth",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "MaxG",
+                      "Value": "0.006"
+                    },
+                    {
+                      "Key": "R50",
+                      "Value": "100"
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -25298,7 +25357,7 @@
                     },
                     {
                       "Key": "InitialRootDepth",
-                      "Value": "600"
+                      "Value": "2000"
                     },
                     {
                       "Key": "SowingDate",
@@ -25306,7 +25365,7 @@
                     },
                     {
                       "Key": "RootDepth",
-                      "Value": "600"
+                      "Value": "2000"
                     },
                     {
                       "Key": "RFV",
@@ -25314,7 +25373,7 @@
                     },
                     {
                       "Key": "KLReductionFactor",
-                      "Value": "-0.003"
+                      "Value": "-0.001"
                     },
                     {
                       "Key": "KLReductionDepth",
@@ -25900,11 +25959,11 @@
                             0.06
                           ],
                           "KL": [
-                            0.1,
-                            0.04,
-                            0.01,
-                            0.0,
-                            0.0
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11
                           ],
                           "XF": [
                             1.0,
@@ -29754,11 +29813,11 @@
                             0.05
                           ],
                           "KL": [
-                            0.08,
-                            0.01,
-                            0.01,
-                            0.0,
-                            0.0
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11
                           ],
                           "XF": [
                             1.0,
@@ -30151,7 +30210,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -30164,6 +30223,30 @@
                     {
                       "Key": "StartAge",
                       "Value": "9"
+                    },
+                    {
+                      "Key": "KLReductionFactor",
+                      "Value": "-0.0005"
+                    },
+                    {
+                      "Key": "KLReductionDepth",
+                      "Value": "150"
+                    },
+                    {
+                      "Key": "YKLModifiers",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "XDepth",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "MaxG",
+                      "Value": "0.006"
+                    },
+                    {
+                      "Key": "R50",
+                      "Value": "100"
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -30318,7 +30401,7 @@
                     },
                     {
                       "Key": "InitialRootDepth",
-                      "Value": "600"
+                      "Value": "2000"
                     },
                     {
                       "Key": "SowingDate",
@@ -30326,7 +30409,7 @@
                     },
                     {
                       "Key": "RootDepth",
-                      "Value": "600"
+                      "Value": "2000"
                     },
                     {
                       "Key": "RFV",
@@ -30334,7 +30417,7 @@
                     },
                     {
                       "Key": "KLReductionFactor",
-                      "Value": "-0.003"
+                      "Value": "-0.001"
                     },
                     {
                       "Key": "KLReductionDepth",
@@ -30909,11 +30992,11 @@
                             0.05
                           ],
                           "KL": [
-                            0.08,
-                            0.01,
-                            0.01,
-                            0.0,
-                            0.0
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11
                           ],
                           "XF": [
                             1.0,
@@ -32074,11 +32157,11 @@
                         0.06
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -32487,7 +32570,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n                ",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -32500,6 +32583,30 @@
                 {
                   "Key": "StartAge",
                   "Value": "9"
+                },
+                {
+                  "Key": "KLReductionFactor",
+                  "Value": "-0.0005"
+                },
+                {
+                  "Key": "KLReductionDepth",
+                  "Value": "150"
+                },
+                {
+                  "Key": "YKLModifiers",
+                  "Value": ""
+                },
+                {
+                  "Key": "XDepth",
+                  "Value": ""
+                },
+                {
+                  "Key": "MaxG",
+                  "Value": "0.005"
+                },
+                {
+                  "Key": "R50",
+                  "Value": "100"
                 }
               ],
               "Name": "TreeInitialisation",
@@ -33103,7 +33210,7 @@
                 },
                 {
                   "Key": "InitialRootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "SowingDate",
@@ -33111,7 +33218,7 @@
                 },
                 {
                   "Key": "RootDepth",
-                  "Value": "600"
+                  "Value": "2000"
                 },
                 {
                   "Key": "RFV",
@@ -33119,7 +33226,7 @@
                 },
                 {
                   "Key": "KLReductionFactor",
-                  "Value": "-0.003"
+                  "Value": "-0.001"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -33701,11 +33808,11 @@
                         0.06
                       ],
                       "KL": [
-                        0.1,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
                       ],
                       "XF": [
                         1.0,
@@ -34549,7 +34656,7 @@
               "Title": null,
               "Inverted": false,
               "Minimum": "NaN",
-              "Maximum": 12.0,
+              "Maximum": "NaN",
               "Interval": "NaN",
               "DateTimeAxis": false,
               "CrossesAtZero": false
