@@ -721,7 +721,11 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="Resources\FodderBeet.json" />
     <None Include="Resources\Oats1.json" />
+    <None Include="Resources\Potato.json" />
+    <None Include="Resources\Potato1.json" />
+    <None Include="Resources\StandardToolbox.apsimx" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
@@ -780,7 +784,6 @@
     </None>
     <None Include="Resources\Maize.json" />
     <None Include="Resources\Chicory.json" />
-    <None Include="Resources\Potato.json" />
     <None Include="Resources\Plantain.json" />
     <None Include="Resources\SurfaceOrganicMatter.json">
       <SubType>Designer</SubType>
