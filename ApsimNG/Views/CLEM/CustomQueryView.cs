@@ -115,22 +115,14 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// New query execution event
         /// </summary>
-        public event EventHandler OnRunQuery;
+        public event EventHandler RunQuery;
        
         /// <summary>
         /// New file load event
         /// </summary>
-        public event EventHandler OnLoadFile;
+        public event EventHandler LoadFile;
 
-        public event EventHandler<WriteTableEventArgs> OnWriteTable;
-
-        /// <summary>
-        /// Arguments for the WriteTableEvent
-        /// </summary>
-        public class WriteTableEventArgs :  EventArgs
-        {
-            public string Tablename { get; set; }
-        }
+        public event EventHandler WriteTable;
 
         /// <summary>
         /// Select an SQL query file
@@ -167,9 +159,9 @@ namespace ApsimNG.Views.CLEM
             }
 
             // Invoke the loadfile event if it has subscribers
-            if (OnLoadFile != null)
+            if (LoadFile != null)
             {
-                OnLoadFile.Invoke(this, EventArgs.Empty);
+                LoadFile.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -227,9 +219,9 @@ namespace ApsimNG.Views.CLEM
         /// <param name="e">The argument parameters</param>
         private void OnRunClicked(object sender, EventArgs e)
         {
-            if (OnRunQuery != null)
+            if (RunQuery != null)
             {
-                OnRunQuery.Invoke(this, EventArgs.Empty);
+                RunQuery.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -239,15 +231,9 @@ namespace ApsimNG.Views.CLEM
         /// <param name="sender">The sending object</param>
         /// <param name="e">The argument parameters</param>
         private void OnStoreClicked(object sender, EventArgs e)
-        {            
-            if (OnWriteTable != null)
-            {
-                Tablename = tableentry.Text;
-                WriteTableEventArgs args = new WriteTableEventArgs();
-                args.Tablename = tableentry.Text;
-
-                OnWriteTable.Invoke(this, args);
-            }
+        {
+            Tablename = tableentry.Text;
+            WriteTable?.Invoke(this, EventArgs.Empty);            
         }
 
         /// <summary>
