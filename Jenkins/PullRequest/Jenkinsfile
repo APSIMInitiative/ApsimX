@@ -17,7 +17,13 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin master
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xfdq
+							git checkout master
+							git pull origin master
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -40,7 +46,13 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin master
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xfdq
+							git checkout master
+							git pull origin master
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -65,7 +77,13 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin master
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xfdq
+							git checkout master
+							git pull origin master
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -88,7 +106,13 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin master
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xfdq
+							git checkout master
+							git pull origin master
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
@@ -111,7 +135,13 @@ pipeline {
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
 							)
-							git -C APSIM.Shared pull origin master
+							pushd APSIM.Shared
+							git reset .
+							git checkout .
+							git clean -xfdq
+							git checkout master
+							git pull origin master
+							popd
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build

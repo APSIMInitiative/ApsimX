@@ -722,7 +722,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
     <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
-    <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
+    <EmbeddedResource Include="Resources\LargeImages\FodderBeet.png" />
     <EmbeddedResource Include="Resources\MenuImages\Moon.png" />
     <EmbeddedResource Include="Resources\MenuImages\Sun.png" />
     <EmbeddedResource Include="Resources\ElementaryEffectEquation.png" />

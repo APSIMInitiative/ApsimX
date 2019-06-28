@@ -252,10 +252,12 @@ namespace Models.CLEM.Activities
             
             double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
             greenlimit = Math.Max(0.0, greenlimit);
-            if (greenlimit > 0.9)
+            if (propgreen > 0.9)
             {
                 greenlimit = 100;
             }
+
+            //Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + green.ToString() + "\t" + GrazeFoodStoreModel.Amount.ToString() + "\t" + propgreen.ToString() + "\t" + greenlimit.ToString());
 
             foreach (var pool in this.PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
             {
@@ -300,6 +302,8 @@ namespace Models.CLEM.Activities
                             DMD = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).DMD,
                             PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
                         };
+
+                        //Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + food.DMD.ToString() + "\t" + food.PercentN.ToString());
 
                         double shortfall = request.Provided / request.Required;
 

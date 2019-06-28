@@ -159,8 +159,8 @@ namespace UserInterface.Interfaces
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawArea(
             string title,
-            double[] x,
-            double[] y,
+            IEnumerable x,
+            IEnumerable y,
             Axis.AxisType xAxisType,
             Axis.AxisType yAxisType,
             Color colour,
