@@ -102,15 +102,25 @@ namespace Models.CLEM.Activities
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
-                        Status = ActivityStatus.Success;
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
                     if (weanedCount > Convert.ToInt32(count * labourlimit))
                     {
+                        this.Status = ActivityStatus.Partial;
                         break;
                     }
                 }
+
+                if(weanedCount > 0)
+                {
+                    SetStatusSuccess();
+                }
+                else
+                {
+                    this.Status = ActivityStatus.NotNeeded;
+                }
+
             }
         }
 
@@ -162,7 +172,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            Status = ActivityStatus.NotNeeded;
             return;
         }
 
