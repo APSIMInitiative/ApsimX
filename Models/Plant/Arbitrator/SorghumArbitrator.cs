@@ -248,7 +248,6 @@ namespace Models.PMF
                                 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
-
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
@@ -299,7 +298,7 @@ namespace Models.PMF
                             var maxRate = root.MaxNUptakeRate.Value();
 
                             var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
-                            var maxUptake = maxUptakeRateFrac * dltt - actualMassFlow;
+                            var maxUptake = Math.Max(0, maxUptakeRateFrac * dltt - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
 
