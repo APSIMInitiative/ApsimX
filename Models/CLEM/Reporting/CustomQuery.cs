@@ -50,9 +50,6 @@ namespace Models.CLEM.Reporting
 
             data.TableName = Tablename;
             store.Writer.WriteTable(data);
-
-            
-            
         }
     }
 }

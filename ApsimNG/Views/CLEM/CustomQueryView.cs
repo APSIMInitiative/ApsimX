@@ -122,13 +122,14 @@ namespace ApsimNG.Views.CLEM
         /// </summary>
         public event EventHandler LoadFile;
 
+        /// <summary>
+        /// New table write event
+        /// </summary>
         public event EventHandler WriteTable;
 
         /// <summary>
-        /// Select an SQL query file
+        /// Read in an SQL query file
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnLoadClicked(object sender, EventArgs e)
         {
             try
@@ -166,10 +167,8 @@ namespace ApsimNG.Views.CLEM
         }
 
         /// <summary>
-        /// Open an SQL query file
+        /// Save the SQL query as specified
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
         private void OnSaveAsClicked(object sender, EventArgs e)
         {
             try
@@ -195,8 +194,6 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Overwrites the file stored in the entry box with the displayed SQL
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
         private void OnSaveClicked(object sender, EventArgs e)
         {
             try
@@ -215,14 +212,9 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Invokes the RunQuery event if it has subscribers
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
         private void OnRunClicked(object sender, EventArgs e)
-        {
-            if (RunQuery != null)
-            {
-                RunQuery.Invoke(this, EventArgs.Empty);
-            }
+        {          
+            RunQuery?.Invoke(this, EventArgs.Empty);            
         }
 
         /// <summary>

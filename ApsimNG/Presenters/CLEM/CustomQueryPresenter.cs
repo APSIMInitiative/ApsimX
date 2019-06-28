@@ -43,7 +43,6 @@ namespace ApsimNG.Presenters.CLEM
             this.query = model as CustomQuery;
             this.view = view as CustomQueryView;
             this.explorer = explorerPresenter;
-
             
             this.view.RunQuery += OnRunQuery;
             this.view.LoadFile += OnLoadFile;
@@ -69,13 +68,13 @@ namespace ApsimNG.Presenters.CLEM
             view.WriteTable -= OnWriteTable;
             view.Grid.Dispose();
             view.Detach();
-            SaveData();
+            TrackChanges();
         }
 
         /// <summary>
         /// Track changes made to the view
         /// </summary>
-        private void SaveData()
+        private void TrackChanges()
         {
             ChangeProperty sqlcom = new ChangeProperty(this.query, "Sql", view.Sql);
             explorer.CommandHistory.Add(sqlcom);
@@ -97,7 +96,7 @@ namespace ApsimNG.Presenters.CLEM
             var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
             view.Grid.DataSource = store.Reader.GetDataUsingSql(view.Sql);
 
-            SaveData();
+            TrackChanges();
         }
 
         /// <summary>
@@ -113,17 +112,15 @@ namespace ApsimNG.Presenters.CLEM
             var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
             store.Writer.WriteTable(data);
 
-            SaveData();
+            TrackChanges();
         }
 
         /// <summary>
         /// Tracks changes when a new file is loaded
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnLoadFile(object sender, EventArgs e)
         {
-            SaveData();
+            TrackChanges();
         }
 
     }
