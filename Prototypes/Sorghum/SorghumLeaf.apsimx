@@ -1879,88 +1879,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "NumberFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "MinimumFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].FinalGrainNum.Value()",
-                          "Name": "FinalGrainNum",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].FinalGrainNum.Value()",
-                              "Name": "FinalGrainNum",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "DivideFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].TTStartGrainToNow.Value()",
-                                  "Name": "TTStartGrainToNow",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 100.0,
-                                  "Units": null,
-                                  "Name": "RampTT",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].TemperatureFactor.Value()",
-                      "Name": "TemperatureFactor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "StartGrainFill",
                   "ReSetEvent": "Germination",
@@ -2145,6 +2063,97 @@
                       "VariableName": "[Phenology].ThermalTimeFM.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.EndOfDayFunction, Models",
+                  "Name": "NumberFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "NumberFunctionValue",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinimumFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grain].FinalGrainNum.Value()",
+                              "Name": "FinalGrainNum",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "MultiplyFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].FinalGrainNum.Value()",
+                                  "Name": "FinalGrainNum",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "DivideFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grain].TTStartGrainToNow.Value()",
+                                      "Name": "TTStartGrainToNow",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 100.0,
+                                      "Units": null,
+                                      "Name": "RampTT",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grain].TemperatureFactor.Value()",
+                          "Name": "TemperatureFactor",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3961,6 +3970,8 @@
               "LeafInitialisationStage": "Emergence",
               "KDead": 0.03,
               "LAIDead": 0.0,
+              "NitrogenPhotoStress": 0.0,
+              "NitrogenPhenoStress": 0.0,
               "PhosphorusStress": 1.0,
               "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
@@ -8078,15 +8089,6 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stem].Live.N",
                               "Name": "nGreen",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].NDemands.Structural",
-                              "Name": "structural",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -24423,13 +24425,13 @@
                         200.0
                       ],
                       "NO3": [
-                        13.936000000000002,
-                        2.1882200000000003,
+                        13.936,
+                        2.188,
                         3.27978,
                         2.4840000000000004,
-                        3.0800000000000005,
+                        3.080000000000001,
                         4.5477,
-                        11.55294,
+                        11.552939999999998,
                         18.47442,
                         19.256,
                         24.41712

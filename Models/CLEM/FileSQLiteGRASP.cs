@@ -232,18 +232,6 @@ namespace Models.CLEM
                     return this.FileName;
                 }
             }
-            set
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
-                }
-                else
-                {
-                    this.FileName = value;
-                }
-            }
         }
 
         /// <summary>
@@ -386,6 +374,10 @@ namespace Models.CLEM
             }
 
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
+            if(results.Rows.Count == 0)
+            {
+                return null;
+            }
             results.DefaultView.Sort = "Year, Month";
 
             List<PastureDataType> pastureDetails = new List<PastureDataType>();

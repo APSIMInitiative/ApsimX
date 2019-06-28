@@ -32,16 +32,9 @@
         private static string indexTabText = "Home";
 
         /// <summary>
-        /// Stores the size, in points, of the "default" base font
-        /// </summary>
-        private double defaultBaseSize;
-
-        /// <summary>
         /// Keeps track of whether or not the waiting cursor is being used.
         /// </summary>
         private bool waiting = false;
-
-        private double scrollSizeStep = 0.5;
 
         /// <summary>
         /// Number of buttons in the status panel.
@@ -172,6 +165,12 @@
             stopButton.Image.Visible = true;
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
+
+            if (ProcessUtilities.CurrentOS.IsWindows && Utility.Configuration.Settings.Font == null)
+            {
+                // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
+                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+            }
 
             // Can't set font until widgets are initialised.
             if (Utility.Configuration.Settings.Font != null)

@@ -468,6 +468,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WhiteClover.png" />
@@ -720,7 +722,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
     <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
-    <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
+    <EmbeddedResource Include="Resources\LargeImages\FodderBeet.png" />
     <EmbeddedResource Include="Resources\MenuImages\Moon.png" />
     <EmbeddedResource Include="Resources\MenuImages\Sun.png" />
     <EmbeddedResource Include="Resources\ElementaryEffectEquation.png" />
@@ -744,9 +746,6 @@
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
-    <None Include="Resources\XYPairsGraph1.xml" />
-    <None Include="Resources\WaterGraph1.xml" />
-    <None Include="Resources\InitialWaterGraph1.xml" />
     <EmbeddedResource Include="Resources\success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />
