@@ -165,8 +165,8 @@ namespace Models
                 pttr = 0.0;
             else
                 pttr = petRemaining * 0.65 * (1.0 - Math.Exp(-0.020 * avg_live_biomass)) *
-                  ((co2EffectOnProduction[(int)Facet.herb] + co2EffectOnProduction[(int)Facet.shrub] +
-                    co2EffectOnProduction[(int)Facet.tree]) / 3.0);  // NOT facet-based.Water loss will be based on the average of the
+                  ((co2EffectOnProduction[Facet.herb] + co2EffectOnProduction[Facet.shrub] +
+                    co2EffectOnProduction[Facet.tree]) / 3.0);  // NOT facet-based.Water loss will be based on the average of the
                                                                      // three facets.
             if (pttr <= trap)
                 trap = pttr;
@@ -440,35 +440,35 @@ namespace Models
             for (int iFacet = 0; iFacet < nFacets; iFacet++)
             {
                 // decomp_litter_mix_facets determines mixing, litter flows to facets in proportion to their cover. 1 =in proportion to their cover 0 = only to the current facet.
-                switch ((Facet)iFacet)
+                switch (iFacet)
                 {
                     case Facet.herb:
-                        prf[(int)Facet.tree] = facetCover[(int)Facet.tree] * parms.decompLitterMixFacets;
-                        prf[(int)Facet.shrub] = facetCover[(int)Facet.shrub] * parms.decompLitterMixFacets;
-                        prf[(int)Facet.herb] = 1.0 - prf[(int)Facet.shrub] - prf[(int)Facet.tree];
+                        prf[Facet.tree] = facetCover[Facet.tree] * parms.decompLitterMixFacets;
+                        prf[Facet.shrub] = facetCover[Facet.shrub] * parms.decompLitterMixFacets;
+                        prf[Facet.herb] = 1.0 - prf[Facet.shrub] - prf[Facet.tree];
                         break;
                     case Facet.shrub:
-                        prf[(int)Facet.herb] = facetCover[(int)Facet.herb] * parms.decompLitterMixFacets;
-                        prf[(int)Facet.tree] = facetCover[(int)Facet.tree] * parms.decompLitterMixFacets;
-                        prf[(int)Facet.shrub] = 1.0 - prf[(int)Facet.herb] - prf[(int)Facet.tree];
+                        prf[Facet.herb] = facetCover[Facet.herb] * parms.decompLitterMixFacets;
+                        prf[Facet.tree] = facetCover[Facet.tree] * parms.decompLitterMixFacets;
+                        prf[Facet.shrub] = 1.0 - prf[Facet.herb] - prf[Facet.tree];
                         break;
                     case Facet.tree:
-                        prf[(int)Facet.herb] = facetCover[(int)Facet.herb] * parms.decompLitterMixFacets;
-                        prf[(int)Facet.shrub] = facetCover[(int)Facet.shrub] * parms.decompLitterMixFacets;
-                        prf[(int)Facet.tree] = 1.0 - prf[(int)Facet.herb] - prf[(int)Facet.shrub];
+                        prf[Facet.herb] = facetCover[Facet.herb] * parms.decompLitterMixFacets;
+                        prf[Facet.shrub] = facetCover[Facet.shrub] * parms.decompLitterMixFacets;
+                        prf[Facet.tree] = 1.0 - prf[Facet.herb] - prf[Facet.shrub];
                         break;
                 }
 
                 // Cut - off litter input into a facet with 0 cover
-                if (facetCover[(int)Facet.tree] < 0.01 && iFacet != (int)Facet.tree)
+                if (facetCover[Facet.tree] < 0.01 && iFacet != Facet.tree)
                 {
-                    prf[(int)Facet.tree] = 0.0;
-                    prf[(int)Facet.herb] = prf[(int)Facet.herb] + facetCover[(int)Facet.tree];
+                    prf[Facet.tree] = 0.0;
+                    prf[Facet.herb] = prf[Facet.herb] + facetCover[Facet.tree];
                 }
-                if (facetCover[(int)Facet.shrub] < 0.01 && iFacet != (int)Facet.shrub)
+                if (facetCover[Facet.shrub] < 0.01 && iFacet != Facet.shrub)
                 {
-                    prf[(int)Facet.shrub] = 0.0;
-                    prf[(int)Facet.herb] = prf[(int)Facet.herb] + facetCover[(int)Facet.shrub];
+                    prf[Facet.shrub] = 0.0;
+                    prf[Facet.herb] = prf[Facet.herb] + facetCover[Facet.shrub];
                 }
 
                 // Loop skipped that deals with species.
@@ -695,8 +695,8 @@ namespace Models
                 if (tnetmin[iLayer] < 0.0)
                     tnetmin[iLayer] = 0.0;
                 // Structural decomposition, goes to SOM1(fast) and SOM2(intermediate)
-                frac_lignin = (plantLigninFraction[(int)Facet.herb, iLayer] + plantLigninFraction[(int)Facet.shrub, iLayer] +
-                               plantLigninFraction[(int)Facet.tree, iLayer]) / 3.0;
+                frac_lignin = (plantLigninFraction[Facet.herb, iLayer] + plantLigninFraction[Facet.shrub, iLayer] +
+                               plantLigninFraction[Facet.tree, iLayer]) / 3.0;
                 frac_lignin = Math.Max(0.02, frac_lignin);         // From Century CmpLig.f
                 frac_lignin = Math.Min(0.50, frac_lignin);
                 double grmin = 0.0;

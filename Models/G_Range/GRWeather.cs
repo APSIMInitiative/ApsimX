@@ -240,9 +240,14 @@ namespace Models
 
             private DateTime RowDate(int row)
             {
-                int year = (int)(Single)metTable.Rows[row]["year"];
-                int day = (int)(Single)metTable.Rows[row]["day"];
-                return new DateTime(year, 1, 1).AddDays(day - 1);
+                if (metTable.Columns.Contains("date"))
+                    return (DateTime)metTable.Rows[row]["date"];
+                else
+                {
+                    int year = (int)(Single)metTable.Rows[row]["year"];
+                    int day = (int)(Single)metTable.Rows[row]["day"];
+                    return new DateTime(year, 1, 1).AddDays(day - 1);
+                }
             }
 
             public void FakeMonth(int month)

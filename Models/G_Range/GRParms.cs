@@ -630,42 +630,226 @@ namespace Models
             //// Work out where we are, what the vegetation type is, and load suitable params
             parms = parmArray[globe.landscapeType - 1];
 
-            sand[0] = globe.topSand;  // The top and bottom layers get their values directly from the two HWSD layers
-            sand[3] = globe.subSand;  // The top and bottom layers get their values directly from the two HWSD layers
-            sand[1] = (globe.topSand * 0.6667) + (globe.subSand * 0.3333);  // The other layers get weighted values.
-            sand[2] = (globe.topSand * 0.3333) + (globe.subSand * 0.6667);  // The other layers get weighted values.
-            silt[0] = globe.topSilt;   // The top and bottom layers get their values directly from the two HWSD layers
-            silt[3] = globe.subSilt;   // The top and bottom layers get their values directly from the two HWSD layers
-            silt[1] = (globe.topSilt * 0.6667) + (globe.subSilt * 0.3333);  // The other layers get weighted values.
-            silt[2] = (globe.topSilt * 0.3333) + (globe.subSilt * 0.6667);  // The other layers get weighted values.
-            clay[0] = globe.topClay;   // The top and bottom layers get their values directly from the two HWSD layers
-            clay[3] = globe.subClay;   // The top and bottom layers get their values directly from the two HWSD layers
-            clay[1] = (globe.topClay * 0.6667) + (globe.subClay * 0.3333);  // The other layers get weighted values.
-            clay[2] = (globe.topClay * 0.3333) + (globe.subClay * 0.6667);  // The other layers get weighted values.
+            // What shall we use as "topsoil" and "subsoil" layers if we're drawing from APSIM soils? 
+            // The G-Range comment related to this reads as follows:
+            // // Soils as in Century 4.5 NLayer= 4, 0-15, 15-30, 30-45, 45-60 cm.
+            // // These will be initialized using approximations and weighted averages from HWSD soils database, which is 0-30 for TOP, 30-100 for SUB.
+            // So I guess we want to follow suit, and use weighted averages for 0-300 mm for "top" and 300-1000 for "sub"
+            // Or would it be better to go directly to 4 layers? Or get G-Range to handle "n" layers?
+            double[] thickness = null;
+            if (Soil != null)
+                thickness = Soil.Thickness;
+          
+            if (SoilDataSource == SoilDataSourceEnum.APSIM || SoilDataSource == SoilDataSourceEnum.APSIMPhysical)
+            {
+                nSoilLayers = thickness.Length;
+                sand = new double[nSoilLayers];
+                silt = new double[nSoilLayers];
+                clay = new double[nSoilLayers];
+                asmos = new double[nSoilLayers];
+                amov = new double[nSoilLayers];
+                nLeached = new double[nSoilLayers];
+                relativeWaterContent = new double[nSoilLayers];
+                mineralNitrogen = new double[nSoilLayers];
+                fieldCapacity = new double[nSoilLayers];
+                wiltingPoint = new double[nSoilLayers];
+                soilDepth = MathUtilities.Divide_Value(thickness, 10.0);   // Note that "depth" in G-Range is APSIM "thickness", not "depth", and in cm, not mm
+            }
+
             // The following are only used a few lines down, so not storing in Rng, for space - saving purposes.
-            double[] gravel = new double[4];
-            gravel[0] = globe.topGravel;   // The top and bottom layers get their values directly from the two HWSD layers
-            gravel[3] = globe.subGravel;   // The top and bottom layers get their values directly from the two HWSD layers
-            gravel[1] = (globe.topGravel * 0.6667) + (globe.subGravel * 0.3333);   // The other layers get weighted values.
-            gravel[2] = (globe.topGravel * 0.3333) + (globe.subGravel * 0.6667);   // The other layers get weighted values.
-            double[] bulkDensity = new double[4];
-            bulkDensity[0] = globe.topBulkDensity;   // The top and bottom layers get their values directly from the two HWSD layers
-            bulkDensity[3] = globe.subBulkDensity;   // The top and bottom layers get their values directly from the two HWSD layers
-            bulkDensity[1] = (globe.topBulkDensity * 0.6667) + (globe.subBulkDensity * 0.3333);  // The other layers get weighted values.
-            bulkDensity[2] = (globe.topBulkDensity * 0.3333) + (globe.subBulkDensity * 0.6667);  // The other layers get weighted values.
-            double[] organicCarbon = new double[4];
-            organicCarbon[0] = globe.topOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
-            organicCarbon[3] = globe.subOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
+            double[] gravel = new double[nSoilLayers];
+            double[] bulkDensity = new double[nSoilLayers];
+            double[] organicCarbon = new double[nSoilLayers];
+
+            double soilBottom = MathUtilities.Sum(thickness);
+            double layerTop = 0.0;
+            bool useApsimHydraulics = SoilDataSource == SoilDataSourceEnum.APSIM ||
+                                      SoilDataSource == SoilDataSourceEnum.APSIM_2Layer ||
+                                      SoilDataSource == SoilDataSourceEnum.APSIM_4Layer;
+
+            switch (SoilDataSource)
+            {
+                // Original G-Range 
+                case SoilDataSourceEnum.G_Range:
+                default:
+                    sand[0] = globe.topSand;  // The top and bottom layers get their values directly from the two HWSD layers
+                    sand[3] = globe.subSand;  // The top and bottom layers get their values directly from the two HWSD layers
+                    silt[0] = globe.topSilt;   // The top and bottom layers get their values directly from the two HWSD layers
+                    silt[3] = globe.subSilt;   // The top and bottom layers get their values directly from the two HWSD layers
+                    clay[0] = globe.topClay;   // The top and bottom layers get their values directly from the two HWSD layers
+                    clay[3] = globe.subClay;   // The top and bottom layers get their values directly from the two HWSD layers
+                    gravel[0] = globe.topGravel;   // The top and bottom layers get their values directly from the two HWSD layers
+                    gravel[3] = globe.subGravel;   // The top and bottom layers get their values directly from the two HWSD layers
+                    bulkDensity[0] = globe.topBulkDensity;   // The top and bottom layers get their values directly from the two HWSD layers
+                    bulkDensity[3] = globe.subBulkDensity;   // The top and bottom layers get their values directly from the two HWSD layers
+                    organicCarbon[0] = globe.topOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
+                    organicCarbon[3] = globe.subOrganicCarbon;  // The top and bottom layers get their values directly from the two HWSD layers
+                    break;
+
+                case SoilDataSourceEnum.APSIMPhysical_2Layer:
+                case SoilDataSourceEnum.APSIM_2Layer:
+                    // Create "top" and "sub" layers like those of G-Range.
+                    // "Top" is a weighted average of the top 300 mm; "sub" is a weighted average of 300-1000
+                    for (int i = 0; i < thickness.Length; i++)
+                    {
+                        double layerBottom = layerTop + thickness[i];
+                        if (layerTop <= 300.0)
+                        {
+                            double weight = (Math.Min(300.0, layerBottom) - layerTop) / Math.Min(300.0, soilBottom);
+                            sand[0] += Soil.ParticleSizeSand[i] * weight;
+                            silt[0] += Soil.ParticleSizeSilt[i] * weight;
+                            clay[0] += Soil.ParticleSizeClay[i] * weight;
+                            gravel[0] += Soil.Rocks[i] * weight;
+                            bulkDensity[0] += Soil.BD[i] * weight;
+                            organicCarbon[0] += Soil.OC[i] * weight; 
+                            if (useApsimHydraulics)
+                            {
+                                fieldCapacity[0] += Soil.DUL[i] * weight;
+                                wiltingPoint[0] += Soil.LL15[i] * weight;
+                            }
+                        }
+                        if (layerTop < 1000.0 && layerBottom > 300.0 && soilBottom > 300.0)
+                        {
+                            double weight = (Math.Min(1000.0, layerBottom) - Math.Max(300.0, layerTop)) / Math.Min(700.0, soilBottom - 300.0);
+                            sand[3] += Soil.ParticleSizeSand[i] * weight;
+                            silt[3] += Soil.ParticleSizeSilt[i] * weight;
+                            clay[3] += Soil.ParticleSizeClay[i] * weight;
+                            gravel[3] += Soil.Rocks[i] * weight;
+                            bulkDensity[3] += Soil.BD[i] * weight;
+                            organicCarbon[3] += Soil.OC[i] * weight;
+                            if (useApsimHydraulics)
+                            {
+                                fieldCapacity[3] += Soil.DUL[i] * weight;
+                                wiltingPoint[3] += Soil.LL15[i] * weight;
+                            }
+                        }
+                        layerTop = layerBottom;
+                        if (layerTop >= 1000.0)
+                            break;
+                    }
+                    if (useApsimHydraulics)
+                    {
+                        fieldCapacity[1] = (fieldCapacity[0] * 0.6667) + (fieldCapacity[3] * 0.3333);  // The other layers get weighted values.
+                        fieldCapacity[2] = (fieldCapacity[0] * 0.3333) + (fieldCapacity[3] * 0.6667);  // The other layers get weighted values.
+                        wiltingPoint[1] = (wiltingPoint[0] * 0.6667) + (wiltingPoint[3] * 0.3333);  // The other layers get weighted values.
+                        wiltingPoint[2] = (wiltingPoint[0] * 0.3333) + (wiltingPoint[3] * 0.6667);  // The other layers get weighted values.
+                    }
+                    break;
+
+                case SoilDataSourceEnum.APSIMPhysical_4Layer:
+                case SoilDataSourceEnum.APSIM_4Layer:
+                    // Create the 4 layers used in G-Range, but do so directly
+                    // Layers are 0 - 150, 150 - 300, 300 - 450 and 450 - 1000
+                    for (int i = 0; i < thickness.Length; i++)
+                    {
+                        double layerBottom = layerTop + thickness[i];
+                        if (layerTop <= 150.0)
+                        {
+                            double weight = (Math.Min(150.0, layerBottom) - layerTop) / Math.Min(150.0, soilBottom);
+                            sand[0] += Soil.ParticleSizeSand[i] * weight;
+                            silt[0] += Soil.ParticleSizeSilt[i] * weight;
+                            clay[0] += Soil.ParticleSizeClay[i] * weight;
+                            gravel[0] += Soil.Rocks[i] * weight;
+                            bulkDensity[0] += Soil.BD[i] * weight;
+                            organicCarbon[0] += Soil.OC[i] * weight;
+                            if (useApsimHydraulics)
+                            {
+                                fieldCapacity[0] += Soil.DUL[i] * weight;
+                                wiltingPoint[0] += Soil.LL15[i] * weight;
+                            }
+                        }
+                        if (layerTop < 300.0 && layerBottom > 150.0)
+                        {
+                            double weight = (Math.Min(300.0, layerBottom) - Math.Max(150.0, layerTop)) / Math.Min(150.0, soilBottom - 150.0);
+                            sand[1] += Soil.ParticleSizeSand[i] * weight;
+                            silt[1] += Soil.ParticleSizeSilt[i] * weight;
+                            clay[1] += Soil.ParticleSizeClay[i] * weight;
+                            gravel[1] += Soil.Rocks[i] * weight;
+                            bulkDensity[1] += Soil.BD[i] * weight;
+                            organicCarbon[1] += Soil.OC[i] * weight;
+                            if (useApsimHydraulics)
+                            {
+                                fieldCapacity[1] += Soil.DUL[i] * weight;
+                                wiltingPoint[1] += Soil.LL15[i] * weight;
+                            }
+                        }
+                        if (layerTop < 450.0 && layerBottom > 300.0)
+                        {
+                            double weight = (Math.Min(450.0, layerBottom) - Math.Max(300.0, layerTop)) / Math.Min(150.0, soilBottom - 300.0);
+                            sand[2] += Soil.ParticleSizeSand[i] * weight;
+                            silt[2] += Soil.ParticleSizeSilt[i] * weight;
+                            clay[2] += Soil.ParticleSizeClay[i] * weight;
+                            gravel[2] += Soil.Rocks[i] * weight;
+                            bulkDensity[2] += Soil.BD[i] * weight;
+                            organicCarbon[2] += Soil.OC[i] * weight;
+                            if (useApsimHydraulics)
+                            {
+                                fieldCapacity[2] += Soil.DUL[i] * weight;
+                                wiltingPoint[2] += Soil.LL15[i] * weight;
+                            }
+                        }
+                        if (layerTop < 600.0 && layerBottom > 450.0)
+                        {
+                            double weight = (Math.Min(600.0, layerBottom) - Math.Max(450.0, layerTop)) / Math.Min(150.0, soilBottom - 450.0);
+                            sand[3] += Soil.ParticleSizeSand[i] * weight;
+                            silt[3] += Soil.ParticleSizeSilt[i] * weight;
+                            clay[3] += Soil.ParticleSizeClay[i] * weight;
+                            gravel[3] += Soil.Rocks[i] * weight;
+                            bulkDensity[3] += Soil.BD[i] * weight;
+                            organicCarbon[3] += Soil.OC[i] * weight;
+                            if (useApsimHydraulics)
+                            {
+                                fieldCapacity[3] += Soil.DUL[i] * weight;
+                                wiltingPoint[3] += Soil.LL15[i] * weight;
+                            }
+                        }
+                        layerTop = layerBottom;
+                        if (layerTop > 1000.0)
+                            break;
+                    }
+                    break;
+                case SoilDataSourceEnum.APSIMPhysical:
+                case SoilDataSourceEnum.APSIM:
+                    Array.Copy(Soil.ParticleSizeSand, sand, nSoilLayers);
+                    Array.Copy(Soil.ParticleSizeSilt, silt, nSoilLayers);
+                    Array.Copy(Soil.ParticleSizeClay, clay, nSoilLayers);
+                    Array.Copy(Soil.Rocks, gravel, nSoilLayers);
+                    Array.Copy(Soil.BD, bulkDensity, nSoilLayers);
+                    Array.Copy(Soil.OC, organicCarbon, nSoilLayers);
+                    if (useApsimHydraulics)
+                    {
+                        Array.Copy(Soil.DUL, fieldCapacity, nSoilLayers);
+                        Array.Copy(Soil.LL15, wiltingPoint, nSoilLayers);
+                        parms.soilTranspirationFraction = MathUtilities.Multiply_Value(Soil.KL("Wheat"), 10.0);
+                    }
+                    break;
+            }
+
+            // If starting with only 2 layers, interpolate to 4
+            if (SoilDataSource == SoilDataSourceEnum.G_Range ||
+                SoilDataSource == SoilDataSourceEnum.APSIM_2Layer ||
+                SoilDataSource == SoilDataSourceEnum.APSIMPhysical_2Layer)
+            {
+                sand[1] = (sand[0] * 0.6667) + (sand[3] * 0.3333);  // The other layers get weighted values.
+                sand[2] = (sand[0] * 0.3333) + (sand[3] * 0.6667);  // The other layers get weighted values.
+                silt[1] = (silt[0] * 0.6667) + (silt[3] * 0.3333);  // The other layers get weighted values.
+                silt[2] = (silt[0] * 0.3333) + (silt[3] * 0.6667);  // The other layers get weighted values.
+                clay[1] = (clay[0] * 0.6667) + (clay[3] * 0.3333);  // The other layers get weighted values.
+                clay[2] = (clay[0] * 0.3333) + (clay[3] * 0.6667);  // The other layers get weighted values.
+                gravel[1] = (gravel[0] * 0.6667) + (gravel[3] * 0.3333);   // The other layers get weighted values.
+                gravel[2] = (gravel[0] * 0.3333) + (gravel[3] * 0.6667);   // The other layers get weighted values.
+                bulkDensity[1] = (bulkDensity[0] * 0.6667) + (bulkDensity[3] * 0.3333);  // The other layers get weighted values.
+                bulkDensity[2] = (bulkDensity[0] * 0.3333) + (bulkDensity[3] * 0.6667);  // The other layers get weighted values.
 #if G_RANGE_BUG
             // EJZ - THIS BIT IS DELIBERATELY BROKEN, TO CORRESPOND TO AN ERROR IN GRANGE ITSELF
             organicCarbon[1] = (globe.topSand * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
             organicCarbon[2] = (globe.topSand * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
             // EJZ - END OF BROKEN CODE
 #else
-            organicCarbon[1] = (globe.topOrganicCarbon * 0.6667) + (globe.subOrganicCarbon * 0.3333);   // The other layers get weighted values.
-            organicCarbon[2] = (globe.topOrganicCarbon * 0.3333) + (globe.subOrganicCarbon * 0.6667);   // The other layers get weighted values.
+                organicCarbon[1] = (organicCarbon[0] * 0.6667) + (organicCarbon[3] * 0.3333);   // The other layers get weighted values.
+                organicCarbon[2] = (organicCarbon[0] * 0.3333) + (organicCarbon[3] * 0.6667);   // The other layers get weighted values.
 #endif
-
+            }
             // Century uses these soil parameters from 0 - 1, so...
             for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
             {
@@ -704,28 +888,30 @@ namespace Models
 
             for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
             {
-                if (sand[iLayer] + silt[iLayer] + clay[iLayer] + gravel[iLayer] > 0.01)
+                if (!useApsimHydraulics)
                 {
-                    fieldCapacity[iLayer] = (sand[iLayer] * 0.3075) + (silt[iLayer] * 0.5886) +
-                                                      (clay[iLayer] * 0.8039) + (organicCarbon[iLayer] * 0.002208) +
-                                                      (bulkDensity[iLayer] * (-0.14340));
-                    wiltingPoint[iLayer] = (sand[iLayer] * (-0.0059)) + (silt[iLayer] * 0.1142) +
-                                           (clay[iLayer] * 0.5766) + (organicCarbon[iLayer] * 0.002228) +
-                                           (bulkDensity[iLayer] * 0.02671);
-                }
-                else
-                {
-                    fieldCapacity[iLayer] = 0.03;
-                    wiltingPoint[iLayer] = 0.01;
-                    summary.WriteWarning(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
-                    // The following is commented out, to avoid distracting warnings with minor effects on outcomes.But the error to ECHO.GOF is retained.
-                    // write(*, *) 'Warning, check GIS: soil information is not defined for cell: ',icell,' and layer: ',ilayer
-                }
+                    if (sand[iLayer] + silt[iLayer] + clay[iLayer] + gravel[iLayer] > 0.01)
+                    {
+                        fieldCapacity[iLayer] = (sand[iLayer] * 0.3075) + (silt[iLayer] * 0.5886) +
+                                                          (clay[iLayer] * 0.8039) + (organicCarbon[iLayer] * 0.002208) +
+                                                          (bulkDensity[iLayer] * (-0.14340));
+                        wiltingPoint[iLayer] = (sand[iLayer] * (-0.0059)) + (silt[iLayer] * 0.1142) +
+                                               (clay[iLayer] * 0.5766) + (organicCarbon[iLayer] * 0.002228) +
+                                               (bulkDensity[iLayer] * 0.02671);
+                    }
+                    else
+                    {
+                        fieldCapacity[iLayer] = 0.03;
+                        wiltingPoint[iLayer] = 0.01;
+                        summary.WriteWarning(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
+                        // The following is commented out, to avoid distracting warnings with minor effects on outcomes.But the error to ECHO.GOF is retained.
+                        // write(*, *) 'Warning, check GIS: soil information is not defined for cell: ',icell,' and layer: ',ilayer
+                    }
 
-                // Correcting field capacity and wilting point based on gravel volume.
-                fieldCapacity[iLayer] = fieldCapacity[iLayer] * (1.0 - gravel[iLayer]);
-                wiltingPoint[iLayer] = wiltingPoint[iLayer] * (1.0 - gravel[iLayer]);
-
+                    // Correcting field capacity and wilting point based on gravel volume.
+                    fieldCapacity[iLayer] = fieldCapacity[iLayer] * (1.0 - gravel[iLayer]);
+                    wiltingPoint[iLayer] = wiltingPoint[iLayer] * (1.0 - gravel[iLayer]);
+                }
                 relativeWaterContent[iLayer] = 0.50;
                 // Initialize asmos to the range between capacity and wilting, plus the bottom value, wilting.
                 // Then multiply that by the relative water content, and finally soil depth.  The other measures are for 1 cm deep soil, essentially.
@@ -738,8 +924,10 @@ namespace Models
             // forested soils using the grassland initialization is a question.  But we won't be simulating forests per sey.
             double temper = Math.Min(23.0, globe.temperatureAverage);
             double precip = Math.Min(120.0, globe.precipAverage);
-            double avgSilt = (silt[0] + silt[1] + silt[2] + silt[3]) / 4.0;
-            double avgClay = (clay[0] + clay[1] + clay[2] + clay[3]) / 4.0;
+            // double avgSilt = (silt[0] + silt[1] + silt[2] + silt[3]) / 4.0;
+            // double avgClay = (clay[0] + clay[1] + clay[2] + clay[3]) / 4.0;
+            double avgSilt = MathUtilities.Average(silt);
+            double avgClay = MathUtilities.Average(clay);
 
             // Initialize total soil carbon in grams using the formula in Century, which combines som1c, som2c, and som3c
             soilTotalCarbon = (-8.27E-01 * temper + 2.24E-02 * temper * temper + precip * 1.27E-01 - 9.38E-04
@@ -806,28 +994,28 @@ namespace Models
                 globe.egreenTreeCover = globe.egreenTreeCover * (100.0 / tempSum);
             }
             // Facet_cover is the straight proportion of each facet on the 1 km ^ 2.Facet_population includes understory plants.
-            facetCover[(int)Facet.tree] = (globe.decidTreeCover + globe.egreenTreeCover) / 100.0;
-            if (facetCover[(int)Facet.tree] > 0.0001)
-                propAnnualDecid[(int)Facet.tree] = globe.decidTreeCover / (globe.decidTreeCover + globe.egreenTreeCover);
+            facetCover[Facet.tree] = (globe.decidTreeCover + globe.egreenTreeCover) / 100.0;
+            if (facetCover[Facet.tree] > 0.0001)
+                propAnnualDecid[Facet.tree] = globe.decidTreeCover / (globe.decidTreeCover + globe.egreenTreeCover);
             else
-                propAnnualDecid[(int)Facet.tree] = 0.0;
+                propAnnualDecid[Facet.tree] = 0.0;
 
             // Shrub cover, which has no good surface to define it(confirmed by Dr.Hansen himself)
-            facetCover[(int)Facet.shrub] = globe.shrubCover / 100.0;
-            if (facetCover[(int)Facet.shrub] > 0.99)
-                facetCover[(int)Facet.shrub] = 0.99;   // Trim any cell that is 100 % shrubs to allow some herbs
+            facetCover[Facet.shrub] = globe.shrubCover / 100.0;
+            if (facetCover[Facet.shrub] > 0.99)
+                facetCover[Facet.shrub] = 0.99;   // Trim any cell that is 100 % shrubs to allow some herbs
             // THE FOLLOWING COULD BE A PARAMETER.For now, setting shrub deciduous proporation equal to tree deciduous portion, which should capture large - scale biome variation.
-            propAnnualDecid[(int)Facet.shrub] = propAnnualDecid[(int)Facet.tree];
+            propAnnualDecid[Facet.shrub] = propAnnualDecid[Facet.tree];
             // NOTE: Putting 1 % cover into each cell, as an initial value only.
-            facetCover[(int)Facet.herb] = globe.herbCover / 100.0;
-            if (facetCover[(int)Facet.herb] < 0.01)
-                facetCover[(int)Facet.herb] = 0.01;
+            facetCover[Facet.herb] = globe.herbCover / 100.0;
+            if (facetCover[Facet.herb] < 0.01)
+                facetCover[Facet.herb] = 0.01;
             // The following is a parameter...
-            propAnnualDecid[(int)Facet.herb] = parms.propAnnuals;
+            propAnnualDecid[Facet.herb] = parms.propAnnuals;
             // Shrubs are the largest unknown, so if there is a problem, subtract from shrubs
-            if ((facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]) > 1.0)
-                facetCover[(int)Facet.shrub] = 1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.herb]);
-            bareCover = (1.0 - (facetCover[(int)Facet.tree] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.herb]));
+            if ((facetCover[Facet.tree] + facetCover[Facet.shrub] + facetCover[Facet.herb]) > 1.0)
+                facetCover[Facet.shrub] = 1.0 - (facetCover[Facet.tree] + facetCover[Facet.herb]);
+            bareCover = (1.0 - (facetCover[Facet.tree] + facetCover[Facet.shrub] + facetCover[Facet.herb]));
             // !    write(ECHO_FILE, '(A10,I6,5(F7.4,2X))') 'FACETS: ',icell,Rng(icell) % facet_cover(T_FACET),Rng(icell) % facet_cover(S_FACET), &
             // !Rng(icell) % facet_cover(H_FACET), Rng(icell) % bare_cover, (Rng(icell) % facet_cover(T_FACET) + &
             // !Rng(icell) % facet_cover(S_FACET) + Rng(icell) % facet_cover(H_FACET) + Rng(icell) % bare_cover)
@@ -836,25 +1024,25 @@ namespace Models
             //                                   herbs in 1 / 6 understory of trees and shrubs** CONSIDER THIS AND ITS REPERCUSSIONS
             // Ok for initialization, but in the simulation, woody cover.
             // TREES
-            totalPopulation[(int)Layer.tree] = facetCover[(int)Facet.tree] * parms.potPopulation[(int)Facet.tree]; // Tree population and cover are directly related.
+            totalPopulation[Layer.tree] = facetCover[Facet.tree] * parms.potPopulation[Facet.tree]; // Tree population and cover are directly related.
             // SHRUBS
             // Calculate number of shrubs under trees, if 1 / 3 what could be fitted with full packing(trunks etc.are ignored here)
-            double plantCount = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) /
-                                 parms.indivPlantArea[(int)Facet.shrub];
-            totalPopulation[(int)Layer.shrubUnderTree] = plantCount * 0.3334;
+            double plantCount = (totalPopulation[Layer.tree] * parms.indivPlantArea[Facet.tree]) /
+                                 parms.indivPlantArea[Facet.shrub];
+            totalPopulation[Layer.shrubUnderTree] = plantCount * 0.3334;
             // Calculate total shrubs on shrub facet
-            totalPopulation[(int)Layer.shrub] = facetCover[(int)Facet.shrub] * parms.potPopulation[(int)Facet.shrub];
+            totalPopulation[Layer.shrub] = facetCover[Facet.shrub] * parms.potPopulation[Facet.shrub];
             // HERBS
             // Calculate number of herbs under trees, if 1 / 6 what could be fitted with full packing(trunks etc.are ignored here)
-            plantCount = (totalPopulation[(int)Layer.tree] * parms.indivPlantArea[(int)Facet.tree]) /
-                     parms.indivPlantArea[(int)Facet.herb];
-            totalPopulation[(int)Layer.herbUnderTree] = plantCount * 0.16667;
+            plantCount = (totalPopulation[Layer.tree] * parms.indivPlantArea[Facet.tree]) /
+                     parms.indivPlantArea[Facet.herb];
+            totalPopulation[Layer.herbUnderTree] = plantCount * 0.16667;
             // Calculate number of herbs under shrubs, if 1 / 3 what could be fitted with full packing(trunks etc.are ignored here)
-            double plant_count2 = (totalPopulation[(int)Layer.shrub] * parms.indivPlantArea[(int)Facet.shrub]) /
-                      parms.indivPlantArea[(int)Facet.herb];
-            totalPopulation[(int)Layer.herbUnderShrub] = plant_count2 * 0.3334;
+            double plant_count2 = (totalPopulation[Layer.shrub] * parms.indivPlantArea[Facet.shrub]) /
+                      parms.indivPlantArea[Facet.herb];
+            totalPopulation[Layer.herbUnderShrub] = plant_count2 * 0.3334;
             // Calculate total herbs on herb facet, and sum those on tree and shrub facet to yield the total number of herbs
-            totalPopulation[(int)Layer.herb] = facetCover[(int)Facet.herb] * parms.potPopulation[(int)Facet.herb];
+            totalPopulation[Layer.herb] = facetCover[Facet.herb] * parms.potPopulation[Facet.herb];
 
             // Initialize lignin structural residue
             for (int iFacet = 0; iFacet < nFacets; iFacet++)

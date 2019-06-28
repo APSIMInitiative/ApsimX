@@ -38,8 +38,8 @@ namespace Models
         //[Link]
         //private ISummary Summary = null;
 
-        //[Link]
-        //Soils.Soil Soil = null;
+        [Link(IsOptional =true)]
+        Soils.Soil Soil = null;
 
         //[ScopedLinkByName]
         //private ISolute NO3 = null;
@@ -203,35 +203,40 @@ namespace Models
         {
         }
 
+        // I originally used enumerations for layers, facets, and woody parts. This was OK, but since enumerations can't
+        // be used directly as array indices, it required having casts to int all over the place.
+        // Using a class allows almost the same syntax to be used in most places, and avoids the need for casting.
+        // It also maps to the original Fortran a bit more directly, if that matters...
+
         /// <summary>
         /// Vegetation layer constants
         /// </summary>
-        public enum Layer
+        public static class Layer
         {
             /// <summary>
             /// Herb layer index (H_LYR)
             /// </summary>
-            herb = 0, // Was 1 in Fortran!
+            public const int herb = 0; // Was 1 in Fortran!
             /// <summary>
             /// Herbs under shrubs layer index (H_S_LYR)
             /// </summary>
-            herbUnderShrub,
+            public const int herbUnderShrub = 1;
             /// <summary>
             /// Herbs under tree layer index (H_T_LYR)
             /// </summary>
-            herbUnderTree,
+            public const int herbUnderTree = 2;
             /// <summary>
             /// Shrub layer index (S_LYR)
             /// </summary>
-            shrub,
+            public const int shrub = 3;
             /// <summary>
             /// Shrub under tree layer index (S_T_LYR)
             /// </summary>
-            shrubUnderTree,
+            public const int shrubUnderTree = 4;
             /// <summary>
             /// Tree layer index (T_LYR)
             /// </summary>
-            tree
+            public const int tree = 5;
         };
 
         /// <summary>
@@ -242,20 +247,20 @@ namespace Models
         /// <summary>
         /// Vegetation facet constants.  Facets are used for unit input, so that users provide 3 values, rather than 6
         /// </summary>
-        public enum Facet
+        public static class Facet
         {
             /// <summary>
             /// Herb layer index (H_FACET)
             /// </summary>
-            herb = 0,  // Was 1 in Fortran!
+            public const int herb = 0;  // Was 1 in Fortran!
             /// <summary>
             /// Shrub facet index (S_FACET)
             /// </summary>
-            shrub,
+            public const int shrub = 1;
             /// <summary>
             /// Herbs under tree layer index (T_FACET)
             /// </summary>
-            tree
+            public const int tree = 2;
         };
         /// <summary>
         /// Total number of facets (FACETS)
@@ -266,28 +271,28 @@ namespace Models
         /// Woody part constants
         /// Woody parts, leaf, fine root, fine branch, large wood, and coarse root    
         /// </summary>
-        public enum WoodyPart
+        public static class WoodyPart
         {
             /// <summary>
             /// LEAF_INDEX
             /// </summary>
-            leaf = 0, // Was 1 in Fortran!
+            public const int leaf = 0; // Was 1 in Fortran!
             /// <summary>
             /// FINE_ROOT_INDEX
             /// </summary>
-            fineRoot,
+            public const int fineRoot = 1;
             /// <summary>
             /// FINE_BRANCH_INDEX
             /// </summary>
-            fineBranch,
+            public const int fineBranch = 2;
             /// <summary>
             /// COARSE_BRANCH_INDEX
             /// </summary>
-            coarseBranch,
+            public const int coarseBranch = 3;
             /// <summary>
             /// COARSE_ROOT_INDEX
             /// </summary>
-            coarseRoot
+            public const int coarseRoot = 4;
         };
 
         /// <summary>
@@ -296,7 +301,8 @@ namespace Models
         private const int nWoodyParts = 5;
 
         // Soil and layer constants
-        private const int nSoilLayers = 4;                             // The number of soil layers (SOIL_LAYERS)
+        private const int nDefSoilLayers = 4;                          // The number of soil layers (SOIL_LAYERS)
+        private int nSoilLayers = nDefSoilLayers;
 
         private const int surfaceIndex = 0;                            // Surface index in litter array and perhaps elsewhere (SURFACE_INDEX) [Was 1 in Fortran]
         private const int soilIndex = 1;                               // Soil index in litter array and perhaps (SOIL_INDEX) [Was 2 in Fortran]
@@ -463,10 +469,10 @@ namespace Models
         /// Nitrogen leached from soil(AMTLEA in Century)
         /// </summary>
         [Units("g/m^2")]
-        public double[] nLeached { get; private set; } = new double[nSoilLayers]; 
+        public double[] nLeached { get; private set; } = new double[nDefSoilLayers]; 
 
-        private double[] asmos = new double[nSoilLayers];     // Used in summing water
-        private double[] amov = new double[nSoilLayers];      // Used in summing water movement
+        private double[] asmos = new double[nDefSoilLayers];     // Used in summing water
+        private double[] amov = new double[nDefSoilLayers];      // Used in summing water movement
         private double stormFlow;              // Storm flow
         private double holdingTank;            // Stores water temporarily. Was asmos(layers+1) in H2OLos
 
@@ -475,7 +481,7 @@ namespace Models
         /// </summary>
         public double transpiration { get; private set; }
 
-        private double[] relativeWaterContent = new double[nSoilLayers]; // Used to initialize and during simulation in CENTURY.Here, only during simulation
+        private double[] relativeWaterContent = new double[nDefSoilLayers]; // Used to initialize and during simulation in CENTURY.Here, only during simulation
 
         /// <summary>
         /// Water available to plants, available for growth =(1) [0 in C#], survival(2) [1 in C#], and in the two top layers(3) [2 in C#]
@@ -535,37 +541,37 @@ namespace Models
         /// The percent sand in the soil
         /// </summary>
         [Units("0-1")]
-        public double[] sand { get; private set; } = new double[nSoilLayers];
+        public double[] sand { get; private set; } = new double[nDefSoilLayers];
 
         /// <summary>
         /// The percent silt in the soil
         /// </summary>
         [Units("0-1")]
-        public double[] silt { get; private set; } = new double[nSoilLayers];
+        public double[] silt { get; private set; } = new double[nDefSoilLayers];
 
         /// <summary>
         /// The percent clay in the soil
         /// </summary>
         [Units("0-1")]
-        public double[] clay { get; private set; } = new double[nSoilLayers];
+        public double[] clay { get; private set; } = new double[nDefSoilLayers];
 
         /// <summary>
         /// Mineral nitrogen content for layer(g/m2)
         /// </summary>
         [Units("g/m^2")]
-        public double[] mineralNitrogen { get; private set; } = new double[nSoilLayers];
+        public double[] mineralNitrogen { get; private set; } = new double[nDefSoilLayers];
 
-        private double[] soilDepth = new double[nSoilLayers] { 15.0, 15.0, 15.0, 15.0 }; // The depth of soils, in cm.Appears hardwired in some parts of CENTURY, flexible, and up to 9 layers, in other parts of CENTURY.Likely I noted some values from an early version, but this is a simplification, so...
+        private double[] soilDepth = new double[nDefSoilLayers] { 15.0, 15.0, 15.0, 15.0 }; // The depth of soils, in cm.Appears hardwired in some parts of CENTURY, flexible, and up to 9 layers, in other parts of CENTURY.Likely I noted some values from an early version, but this is a simplification, so...
 
         /// <summary>
         /// Field capacity for four soils layers shown above.
         /// </summary>
-        public double[] fieldCapacity { get; private set; } = new double[nSoilLayers];
+        public double[] fieldCapacity { get; private set; } = new double[nDefSoilLayers];
 
         /// <summary>
         /// Wilting point for four soil layers shown above.
         /// </summary>
-        public double[] wiltingPoint { get; private set; } = new double[nSoilLayers];
+        public double[] wiltingPoint { get; private set; } = new double[nDefSoilLayers];
 
         /// <summary>
         /// grams per square meter
@@ -1078,6 +1084,54 @@ namespace Models
 #endregion
 
         /// <summary>
+        /// An enumeration of possible data source mechanisms for initialising soil properties
+        /// </summary>
+        public enum SoilDataSourceEnum {
+            /// <summary>
+            /// Take as much as possible from APSIM
+            /// </summary>
+            [Description("Use soil properties from APSIM (n layers)")]
+            APSIM,
+            /// <summary>
+            /// Use APSIM values, but collapse to 4 layers
+            /// </summary>
+            [Description("Use soil properties from APSIM (4 layers)")]
+            APSIM_4Layer,
+            /// <summary>
+            /// Use APSIM values, but collapse to 2 layers
+            /// </summary>
+            [Description("Use soil properties from APSIM (2 layers)")]
+            APSIM_2Layer,
+            /// <summary>
+            /// Take physical properties from APSIM (sand, silt, clay), but use G-Range pedotransfer functions for wilting point (LL12) and field capacity (DUL)
+            /// </summary>
+            [Description("Use APSIM physical properities, and G-Range pedotransfer functions (n layers)")]
+            APSIMPhysical,
+            /// <summary>
+            /// Take physical properties from APSIM (sand, silt, clay), but use G-Range pedotransfer functions for wilting point (LL12) and field capacity (DUL)
+            /// </summary>
+            [Description("Use APSIM physical properities, and G-Range pedotransfer functions (4 layers)")]
+            APSIMPhysical_4Layer,
+            /// <summary>
+            /// Take physical properties from APSIM (sand, silt, clay), but use G-Range pedotransfer functions for wilting point (LL12) and field capacity (DUL)
+            /// </summary>
+            [Description("Use APSIM physical properities, and G-Range pedotransfer functions (2 layers)")]
+            APSIMPhysical_2Layer,
+            /// <summary>
+            /// Take everything from the G-Range database
+            /// </summary>
+            [Description("Use soil properties from the G-Range database (2 layers)")]
+            G_Range
+        };
+
+        /// <summary>
+        /// Gets or sets the source to use for initialisation of soil properties
+        /// </summary>
+        [Summary]
+        [Description("Source from which to obtain soil properties")]
+        public SoilDataSourceEnum SoilDataSource { get; set; } = SoilDataSourceEnum.G_Range;
+
+        /// <summary>
         /// Gets or sets the latitude for the site being modelled. Should be in the range -90 to 90
         /// </summary>
         [Summary]
@@ -1283,7 +1337,7 @@ namespace Models
         private void UpdateVegetation()
         {
             // Update tree basal area
-            double wdbmas = (fineBranchCarbon[(int)Facet.tree] + coarseBranchCarbon[(int)Facet.tree]) * 2.0;
+            double wdbmas = (fineBranchCarbon[Facet.tree] + coarseBranchCarbon[Facet.tree]) * 2.0;
             if (wdbmas <= 0.0)
                 wdbmas = 50.0;                              // Adjusted to allow trees to grow from zero and avoid underflows.
 
@@ -1346,37 +1400,37 @@ namespace Models
 
             // ABOVEGROUND
             // Using method used in productivity.Does not use plant populations in layers, but uses the facets instead.Not at precise but less prone to vast swings.
-            double totalCover = facetCover[(int)Facet.herb] + facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree];
+            double totalCover = facetCover[Facet.herb] + facetCover[Facet.shrub] + facetCover[Facet.tree];
             double fracCover;
             if (totalCover > 0.000001) {
                 // HERBS
-                fracCover = facetCover[(int)Facet.herb] / totalCover;
-                biomassLivePerLayer[(int)Layer.herb] = (leafCarbon[(int)Facet.herb] + seedCarbon[(int)Facet.herb]) * 2.5 * fracCover;
-                fracCover = facetCover[(int)Facet.shrub] / totalCover;
-                biomassLivePerLayer[(int)Layer.herbUnderShrub] = (leafCarbon[(int)Facet.herb] + seedCarbon[(int)Facet.herb]) * 2.5 * fracCover;
-                fracCover = facetCover[(int)Facet.tree] / totalCover;
-                biomassLivePerLayer[(int)Layer.herbUnderTree] = (leafCarbon[(int)Facet.herb] + seedCarbon[(int)Facet.herb]) * 2.5 * fracCover;
+                fracCover = facetCover[Facet.herb] / totalCover;
+                biomassLivePerLayer[Layer.herb] = (leafCarbon[Facet.herb] + seedCarbon[Facet.herb]) * 2.5 * fracCover;
+                fracCover = facetCover[Facet.shrub] / totalCover;
+                biomassLivePerLayer[Layer.herbUnderShrub] = (leafCarbon[Facet.herb] + seedCarbon[Facet.herb]) * 2.5 * fracCover;
+                fracCover = facetCover[Facet.tree] / totalCover;
+                biomassLivePerLayer[Layer.herbUnderTree] = (leafCarbon[Facet.herb] + seedCarbon[Facet.herb]) * 2.5 * fracCover;
 
                 // SHRUBS
-                if ((facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]) > 0.000001)
+                if ((facetCover[Facet.shrub] + facetCover[Facet.tree]) > 0.000001)
                 {
-                    fracCover = facetCover[(int)Facet.shrub] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
-                    biomassLivePerLayer[(int)Layer.shrub] = (leafCarbon[(int)Facet.shrub] + seedCarbon[(int)Facet.shrub] +
-                          fineBranchCarbon[(int)Facet.shrub] + coarseBranchCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
-                    fracCover = facetCover[(int)Facet.tree] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
-                    biomassLivePerLayer[(int)Layer.shrubUnderTree] = (leafCarbon[(int)Facet.shrub] + seedCarbon[(int)Facet.shrub] +
-                          fineBranchCarbon[(int)Facet.shrub] + coarseBranchCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
+                    fracCover = facetCover[Facet.shrub] / (facetCover[Facet.shrub] + facetCover[Facet.tree]);
+                    biomassLivePerLayer[Layer.shrub] = (leafCarbon[Facet.shrub] + seedCarbon[Facet.shrub] +
+                          fineBranchCarbon[Facet.shrub] + coarseBranchCarbon[Facet.shrub]) * 2.5 * fracCover;
+                    fracCover = facetCover[Facet.tree] / (facetCover[Facet.shrub] + facetCover[Facet.tree]);
+                    biomassLivePerLayer[Layer.shrubUnderTree] = (leafCarbon[Facet.shrub] + seedCarbon[Facet.shrub] +
+                          fineBranchCarbon[Facet.shrub] + coarseBranchCarbon[Facet.shrub]) * 2.5 * fracCover;
                 }
                 else
                 {
-                    biomassLivePerLayer[(int)Layer.shrub] = 0.0;
-                    biomassLivePerLayer[(int)Layer.tree] = 0.0;
+                    biomassLivePerLayer[Layer.shrub] = 0.0;
+                    biomassLivePerLayer[Layer.tree] = 0.0;
                 }
 
                 // TREES
-                fracCover = facetCover[(int)Facet.tree];
-                biomassLivePerLayer[(int)Layer.tree] = (leafCarbon[(int)Facet.tree] + seedCarbon[(int)Facet.tree] +
-                          fineBranchCarbon[(int)Facet.tree] + coarseBranchCarbon[(int)Facet.tree]) * 2.5 * fracCover;
+                fracCover = facetCover[Facet.tree];
+                biomassLivePerLayer[Layer.tree] = (leafCarbon[Facet.tree] + seedCarbon[Facet.tree] +
+                          fineBranchCarbon[Facet.tree] + coarseBranchCarbon[Facet.tree]) * 2.5 * fracCover;
 
                 for (int iLyr = 0; iLyr < nLayers; iLyr++)
                     avgALiveBiomass = avgALiveBiomass + biomassLivePerLayer[iLyr];
@@ -1388,32 +1442,32 @@ namespace Models
             if (totalCover > 0.000001)
             {
                 // HERBS
-                fracCover = facetCover[(int)Facet.herb] / totalCover;
-                biomassLivePerLayer[(int)Layer.herb] = fineRootCarbon[(int)Facet.herb] * 2.5 * fracCover;
-                fracCover = facetCover[(int)Facet.shrub] / totalCover;
-                biomassLivePerLayer[(int)Layer.herbUnderShrub] = fineRootCarbon[(int)Facet.herb] * 2.5 * fracCover;
-                fracCover = facetCover[(int)Facet.tree] / totalCover;
-                biomassLivePerLayer[(int)Layer.herbUnderTree] = fineRootCarbon[(int)Facet.herb] * 2.5 * fracCover;
+                fracCover = facetCover[Facet.herb] / totalCover;
+                biomassLivePerLayer[Layer.herb] = fineRootCarbon[Facet.herb] * 2.5 * fracCover;
+                fracCover = facetCover[Facet.shrub] / totalCover;
+                biomassLivePerLayer[Layer.herbUnderShrub] = fineRootCarbon[Facet.herb] * 2.5 * fracCover;
+                fracCover = facetCover[Facet.tree] / totalCover;
+                biomassLivePerLayer[Layer.herbUnderTree] = fineRootCarbon[Facet.herb] * 2.5 * fracCover;
                 // SHRUBS
-                if ((facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]) > 0.000001)
+                if ((facetCover[Facet.shrub] + facetCover[Facet.tree]) > 0.000001)
                 {
-                    fracCover = facetCover[(int)Facet.shrub] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
-                    biomassLivePerLayer[(int)Layer.shrub] =
-                        (fineRootCarbon[(int)Facet.shrub] + coarseRootCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
-                    fracCover = facetCover[(int)Facet.tree] / (facetCover[(int)Facet.shrub] + facetCover[(int)Facet.tree]);
-                    biomassLivePerLayer[(int)Layer.shrubUnderTree] =
-                         (fineRootCarbon[(int)Facet.shrub] + coarseRootCarbon[(int)Facet.shrub]) * 2.5 * fracCover;
+                    fracCover = facetCover[Facet.shrub] / (facetCover[Facet.shrub] + facetCover[Facet.tree]);
+                    biomassLivePerLayer[Layer.shrub] =
+                        (fineRootCarbon[Facet.shrub] + coarseRootCarbon[Facet.shrub]) * 2.5 * fracCover;
+                    fracCover = facetCover[Facet.tree] / (facetCover[Facet.shrub] + facetCover[Facet.tree]);
+                    biomassLivePerLayer[Layer.shrubUnderTree] =
+                         (fineRootCarbon[Facet.shrub] + coarseRootCarbon[Facet.shrub]) * 2.5 * fracCover;
                 }
                 else
                 {
-                    biomassLivePerLayer[(int)Layer.shrub] = 0.0;
-                    biomassLivePerLayer[(int)Layer.tree] = 0.0;
+                    biomassLivePerLayer[Layer.shrub] = 0.0;
+                    biomassLivePerLayer[Layer.tree] = 0.0;
                 }
 
                 // TREES
-                fracCover = facetCover[(int)Facet.tree];
-                biomassLivePerLayer[(int)Layer.tree] =
-                         (fineRootCarbon[(int)Facet.tree] + coarseRootCarbon[(int)Facet.tree]) * 2.5 * fracCover;
+                fracCover = facetCover[Facet.tree];
+                biomassLivePerLayer[Layer.tree] =
+                         (fineRootCarbon[Facet.tree] + coarseRootCarbon[Facet.tree]) * 2.5 * fracCover;
 
 
                 for (int iLyr = 0; iLyr < nLayers; iLyr++)
@@ -1428,12 +1482,12 @@ namespace Models
 
             // Calculate monthly net primary productivity
             monthlyNetPrimaryProduction =
-                (totalPotProdLimitedByN[(int)Layer.herb] * facetCover[(int)Facet.herb]) +
-                (totalPotProdLimitedByN[(int)Layer.herbUnderShrub] * facetCover[(int)Facet.shrub]) +
-                (totalPotProdLimitedByN[(int)Layer.herbUnderTree] * facetCover[(int)Facet.tree]) +
-                (totalPotProdLimitedByN[(int)Layer.shrub] * facetCover[(int)Facet.shrub]) +
-                (totalPotProdLimitedByN[(int)Layer.shrubUnderTree] * facetCover[(int)Facet.tree]) +
-                (totalPotProdLimitedByN[(int)Layer.tree] * facetCover[(int)Facet.tree]);
+                (totalPotProdLimitedByN[Layer.herb] * facetCover[Facet.herb]) +
+                (totalPotProdLimitedByN[Layer.herbUnderShrub] * facetCover[Facet.shrub]) +
+                (totalPotProdLimitedByN[Layer.herbUnderTree] * facetCover[Facet.tree]) +
+                (totalPotProdLimitedByN[Layer.shrub] * facetCover[Facet.shrub]) +
+                (totalPotProdLimitedByN[Layer.shrubUnderTree] * facetCover[Facet.tree]) +
+                (totalPotProdLimitedByN[Layer.tree] * facetCover[Facet.tree]);
         }
 
         /// <summary>
@@ -1459,24 +1513,24 @@ namespace Models
             if (shrubCSum > 0.0)
             {
                 for (int iPart = 0; iPart < nWoodyParts; iPart++)
-                    carbonAllocation[(int)Facet.shrub, iPart] = (parms.shrubCarbon[iPart, ALIVE] +
+                    carbonAllocation[Facet.shrub, iPart] = (parms.shrubCarbon[iPart, ALIVE] +
                                                                  parms.shrubCarbon[iPart, DEAD]) / shrubCSum;
             }
             else
             {
                 for (int iPart = 0; iPart < nWoodyParts; iPart++)
-                    carbonAllocation[(int)Facet.shrub, iPart] = 0.0;
+                    carbonAllocation[Facet.shrub, iPart] = 0.0;
             }
             if (treeCSum > 0.0)
             {
                 for (int iPart = 0; iPart < nWoodyParts; iPart++)
-                    carbonAllocation[(int)Facet.tree, iPart] = (parms.treeCarbon[iPart, ALIVE] +
+                    carbonAllocation[Facet.tree, iPart] = (parms.treeCarbon[iPart, ALIVE] +
                                                         parms.shrubCarbon[iPart, DEAD]) / treeCSum;
             }
             else
             {
                 for (int iPart = 0; iPart < nWoodyParts; iPart++)
-                    carbonAllocation[(int)Facet.tree, iPart] = 0.0;
+                    carbonAllocation[Facet.tree, iPart] = 0.0;
             }
 
 
@@ -1573,9 +1627,9 @@ namespace Models
             // I can get close to their values with the following:
             double co2 = Math.Max(Weather.CO2, 380.0);
             double co2Effect = 0.8 + (0.19 / Math.Log10(2.0)) * Math.Log10(co2 / 380.0);
-            co2EffectOnProduction[(int)Facet.herb] = co2Effect;
-            co2EffectOnProduction[(int)Facet.shrub] = co2Effect;
-            co2EffectOnProduction[(int)Facet.tree] = co2Effect;
+            co2EffectOnProduction[Facet.herb] = co2Effect;
+            co2EffectOnProduction[Facet.shrub] = co2Effect;
+            co2EffectOnProduction[Facet.tree] = co2Effect;
             // This won't matter for initial testing, as Weather.CO2 will default to 350, and so co2effect will always be 0.8, the G-Range "default"
         }
 
@@ -1619,15 +1673,19 @@ namespace Models
 
             Type myType = GetType();
             double var;
-            // We should see Properties through their backing fields. This is adequate, provided the properties aren't making use of accessors.
+            // Note that I'm calling only GetFields, not GetProperties. However, we should be able to
+            // see Properties through their backing fields. This is adequate, provided the properties aren't making use of accessors.
             FieldInfo[] fields = myType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (FieldInfo fieldInfo in fields)
             {
-                if (fieldInfo.Name.Contains("Latitude") || fieldInfo.Name.Contains("Longitude")) // These can be negative
+                string fieldName = fieldInfo.Name;
+                if (fieldName.EndsWith(">k__BackingField"))
+                    fieldName = fieldName.Substring(1, fieldName.Length - 17);
+                if (fieldName.Equals("Latitude", StringComparison.OrdinalIgnoreCase) || fieldName.Equals("Longitude", StringComparison.OrdinalIgnoreCase)) // These can be negative
                     continue;
                 if (fieldInfo.FieldType == typeof(Double))
                 {
-                    var = TestDouble((double)fieldInfo.GetValue(this), fieldInfo.Name);
+                    var = TestDouble((double)fieldInfo.GetValue(this), fieldName);
                     if (!Double.IsNaN(var))
                         fieldInfo.SetValue(this, var);
                 }
@@ -1636,7 +1694,7 @@ namespace Models
                     Double[] array = (Double[])fieldInfo.GetValue(this);
                     for (int i = 0; i < array.Length; i++)
                     {
-                        var = TestDouble(array[i], fieldInfo.Name + '[' + i.ToString() + ']');
+                        var = TestDouble(array[i], fieldName + '[' + i.ToString() + ']');
                         if (!Double.IsNaN(var))
                             array[i] = var;
                     }
@@ -1648,7 +1706,7 @@ namespace Models
                     {
                         for (int j = 0; j < array.GetLength(1); j++)
                         {
-                            var = TestDouble(array[i, j], fieldInfo.Name + '[' + i.ToString() + ',' + j.ToString() + ']');
+                            var = TestDouble(array[i, j], fieldName + '[' + i.ToString() + ',' + j.ToString() + ']');
                             if (!Double.IsNaN(var))
                                 array[i, j] = var;
                         }
@@ -1658,9 +1716,9 @@ namespace Models
 
             // What it retained here from the Fortran original is the logic for checking the bounds on grazing.
 
-            double live_carbon = leafCarbon[(int)Facet.herb] + leafCarbon[(int)Facet.shrub] + leafCarbon[(int)Facet.tree] +
-                                 fineBranchCarbon[(int)Facet.shrub] + fineBranchCarbon[(int)Facet.tree];
-            double dead_carbon = deadStandingCarbon[(int)Facet.herb] + deadStandingCarbon[(int)Facet.shrub] + deadStandingCarbon[(int)Facet.tree];
+            double live_carbon = leafCarbon[Facet.herb] + leafCarbon[Facet.shrub] + leafCarbon[Facet.tree] +
+                                 fineBranchCarbon[Facet.shrub] + fineBranchCarbon[Facet.tree];
+            double dead_carbon = deadStandingCarbon[Facet.herb] + deadStandingCarbon[Facet.shrub] + deadStandingCarbon[Facet.tree];
             if ((live_carbon + dead_carbon) > 0.0)
             {
                 fractionLiveRemovedGrazing = (parms.fractionGrazed / 12.0) * (live_carbon / (live_carbon + dead_carbon));
