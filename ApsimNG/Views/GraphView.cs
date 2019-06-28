@@ -490,8 +490,8 @@ namespace UserInterface.Views
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawArea(
             string title,
-            double[] x,
-            double[] y,
+            IEnumerable x,
+            IEnumerable y,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
             Color colour,
@@ -499,7 +499,7 @@ namespace UserInterface.Views
         {
             // Just use a region series (colours area between two curves), and use y = 0 for the second curve.
             List<double> y2 = new List<double>();
-            y2.AddRange(Enumerable.Repeat(0d, y.Length));
+            y2.AddRange(Enumerable.Repeat(0d, ((ICollection)y).Count));
 
             DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
         }
