@@ -1,5 +1,6 @@
 ﻿namespace Models.Core.Run
 {
+    using Models.Storage;
     using System;
 
     /// <summary>
@@ -31,9 +32,20 @@
         {
             if (path == null)
             {
+                // Temporarily remove DataStore because we don't want to do any
+                // replacements under DataStore.
+                var dataStore = simulation.Children.Find(model => model is DataStore);
+                if (dataStore != null)
+                    simulation.Children.Remove(dataStore);
+
+                // Do replacements.
                 foreach (IModel match in Apsim.ChildrenRecursively(simulation))
                     if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                         ReplaceModel(match);
+
+                // Reinstate DataStore.
+                if (dataStore != null)
+                    simulation.Children.Add(dataStore);
             }
             else
             {

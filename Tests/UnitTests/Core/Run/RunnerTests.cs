@@ -437,7 +437,6 @@
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
                 Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
-                Assert.IsTrue(argsOfAllCompletedJobs.ElapsedTime.Milliseconds > 0);
 
                 database.CloseDatabase();
             }
@@ -490,7 +489,6 @@
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
                 Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
-                Assert.IsTrue(argsOfAllCompletedJobs.ElapsedTime.Milliseconds > 0);
 
                 database.CloseDatabase();
             }
