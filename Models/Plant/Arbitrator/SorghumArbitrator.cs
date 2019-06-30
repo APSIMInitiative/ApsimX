@@ -213,7 +213,7 @@ namespace Models.PMF
         public double PhotoStress { get; set; }
 
         /// <summary>
-        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
+        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground (this is not true for old sorghum).
         /// </summary>
         public override List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
